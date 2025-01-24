@@ -1,7 +1,8 @@
 ﻿<template>
-	<q-card
+	<q-card-view
 		v-if="variant === 'image'"
 		v-bind="config"
+		class="q-card-view--insert q-card-view--insert-image"
 		@click="$emit('row-action', insertAction)">
 		<template #image>
 			<img
@@ -9,12 +10,11 @@
 				loading="lazy"
 				decoding="async"
 				:alt="texts.cardImage"
-				:class="imgClass"
-				:src="`${listConfig.resourcesPath}insert_card.png`" />
+				:src="`${resourcesPath}insert_card.png`" />
 		</template>
 		<template #title>
 			{{ texts.createText }}
-			{{ listConfig.tableTitle }}
+			{{ tableName.toLowerCase() }}
 		</template>
 		<template #subtitle>
 			<q-table-record-actions-menu
@@ -25,11 +25,11 @@
 				:general-actions="[insertAction]"
 				@row-action="$emit('row-action', $event)" />
 		</template>
-	</q-card>
-	<q-card
+	</q-card-view>
+	<q-card-view
 		v-else
 		v-bind="config"
-		:class="['q-card--insert', `q-card--insert-${variant}`]"
+		:class="['q-card-view--insert', `q-card-view--insert-${variant}`]"
 		@click="$emit('row-action', insertAction)">
 		<template #title></template>
 		<template #subtitle></template>
@@ -41,7 +41,7 @@
 				{{ texts.insertText }}
 			</span>
 		</template>
-	</q-card>
+	</q-card-view>
 </template>
 
 <script>
@@ -49,7 +49,7 @@
 
 	import { validateTexts } from '@/mixins/genericFunctions.js'
 
-	import QCard from '@/components/containers/QCard.vue'
+	import QCardView from '@/components/containers/QCard.vue'
 
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {
@@ -64,7 +64,7 @@
 		emits: ['row-action'],
 
 		components: {
-			QCard,
+			QCardView,
 			QTableRecordActionsMenu: defineAsyncComponent(() => import('@/components/table/QTableRecordActionsMenu.vue'))
 		},
 
@@ -97,6 +97,22 @@
 			 */
 			insertAction: {
 				type: Object,
+				required: true
+			},
+
+			/**
+			 * The table name.
+			 */
+			tableName: {
+				type: String,
+				required: true
+			},
+
+			/**
+			 * Path for the resources.
+			 */
+			resourcesPath: {
+				type: String,
 				required: true
 			},
 

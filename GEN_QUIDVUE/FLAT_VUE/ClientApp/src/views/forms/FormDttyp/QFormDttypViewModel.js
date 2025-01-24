@@ -83,7 +83,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValUuid))
 		watch(() => this.ValUuid.value, (newValue, oldValue) => this.onUpdate('dttyp.uuid', this.ValUuid, newValue, oldValue))
 
-		this.ValMultilin = reactive(new modelFieldType.String({
+		this.ValMultilin = reactive(new modelFieldType.MultiLineString({
 			id: 'ValMultilin',
 			originId: 'ValMultilin',
 			area: 'DTTYP',
@@ -92,7 +92,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValMultilin))
 		watch(() => this.ValMultilin.value, (newValue, oldValue) => this.onUpdate('dttyp.multilin', this.ValMultilin, newValue, oldValue))
 
-		this.ValMultili3 = reactive(new modelFieldType.String({
+		this.ValMultili3 = reactive(new modelFieldType.MultiLineString({
 			type: 'TextEditor',
 			id: 'ValMultili3',
 			originId: 'ValMultili3',
@@ -111,11 +111,13 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValBoolean))
 		watch(() => this.ValBoolean.value, (newValue, oldValue) => this.onUpdate('dttyp.boolean', this.ValBoolean, newValue, oldValue))
 
-		this.ValBoolean2 = reactive(new modelFieldType.Boolean({
+		this.ValBoolean2 = reactive(new modelFieldType.Number({
 			id: 'ValBoolean2',
 			originId: 'ValBoolean2',
 			area: 'DTTYP',
 			field: 'BOOLEAN2',
+			maxDigits: 1,
+			decimalDigits: 0,
 			description: computed(() => this.Resources.CONDITIONAL__SMALLIN41010),
 		}).cloneFrom(values?.ValBoolean2))
 		watch(() => this.ValBoolean2.value, (newValue, oldValue) => this.onUpdate('dttyp.boolean2', this.ValBoolean2, newValue, oldValue))
@@ -277,5 +279,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCoddttyp'
 
 	get QPrimaryKey() { return this.ValCoddttyp.value }
-	set QPrimaryKey(value) { this.ValCoddttyp.value = value }
+	set QPrimaryKey(value) { this.ValCoddttyp.updateValue(value) }
 }

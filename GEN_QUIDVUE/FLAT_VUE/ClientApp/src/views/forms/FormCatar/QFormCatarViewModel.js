@@ -103,6 +103,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'TPCATEG',
 			maxLength: 85,
 			description: computed(() => this.Resources.CATEGORY_TYPE23058),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -114,7 +115,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:itemc.codtpcat'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValTpcateg))
@@ -133,5 +133,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodcatar'
 
 	get QPrimaryKey() { return this.ValCodcatar.value }
-	set QPrimaryKey(value) { this.ValCodcatar.value = value }
+	set QPrimaryKey(value) { this.ValCodcatar.updateValue(value) }
 }

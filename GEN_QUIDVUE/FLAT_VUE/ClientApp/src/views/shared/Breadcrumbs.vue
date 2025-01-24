@@ -138,7 +138,7 @@
 			 */
 			getRouteLink(navEntry)
 			{
-				var params = {
+				const params = {
 					...navEntry.params
 				}
 
@@ -315,10 +315,12 @@
 			{
 				const navDataStore = useNavDataStore()
 				const navHistory = navDataStore.navigation.getHistory(this.navigationId).convertToCollection()
-				var breadcrumbsData = []
+				const breadcrumbsData = []
 
 				for (let navEntry of navHistory)
 				{
+					if (navEntry.isNested)
+						continue
 					if (navEntry.params.skipLastMenu === 'true')
 						breadcrumbsData.pop()
 

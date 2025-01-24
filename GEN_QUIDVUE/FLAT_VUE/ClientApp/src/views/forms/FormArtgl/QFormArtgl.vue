@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,12 +106,12 @@
 							v-on="controls.ARTGL___GITEMITEMDES_.handlers"
 							:loading="controls.ARTGL___GITEMITEMDES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARTGL___GITEMITEMDES_.props"
 								:model-value="model.ValItemdes.value"
-								@update:model-value="model.ValItemdes.fnUpdateValue" />
+								@blur="onBlur(controls.ARTGL___GITEMITEMDES_, model.ValItemdes.value)"
+								@change="model.ValItemdes.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -123,12 +123,12 @@
 							v-on="controls.ARTGL___GITEMITEMGCOD.handlers"
 							:loading="controls.ARTGL___GITEMITEMGCOD.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARTGL___GITEMITEMGCOD.props"
 								:model-value="model.ValItemgcod.value"
-								@update:model-value="model.ValItemgcod.fnUpdateValue" />
+								@blur="onBlur(controls.ARTGL___GITEMITEMGCOD, model.ValItemgcod.value)"
+								@change="model.ValItemgcod.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -140,41 +140,11 @@
 							v-on="controls.ARTGL___GITEMDOCUMENT.handlers"
 							:loading="controls.ARTGL___GITEMDOCUMENT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-document
 								v-if="controls.ARTGL___GITEMDOCUMENT.isVisible"
-								id="ARTGL___GITEMDOCUMENT"
-								size="xxlarge"
-								:model-value="model.ValDocument.value"
-								versioning-is-on
-								:readonly="controls.ARTGL___GITEMDOCUMENT.readonly"
-								:is-in-checkout="controls.ARTGL___GITEMDOCUMENT.isInCheckout"
-								:current-version="controls.ARTGL___GITEMDOCUMENT.currentVersion"
-								:extensions="controls.ARTGL___GITEMDOCUMENT.extensions"
-								:max-file-size="controls.ARTGL___GITEMDOCUMENT.maxFileSize"
-								:versions="controls.ARTGL___GITEMDOCUMENT.documentVersions"
-								:versions-info="controls.ARTGL___GITEMDOCUMENT.versionsInfo"
-								:file-properties="controls.ARTGL___GITEMDOCUMENT.fileProperties"
-								:texts="controls.ARTGL___GITEMDOCUMENT.texts"
-								:popup-is-visible="controls.ARTGL___GITEMDOCUMENT.popupIsVisible"
-								:disallow-removal="controls.ARTGL___GITEMDOCUMENT.isRequired"
-								:resources-path="controls.ARTGL___GITEMDOCUMENT.resourcesPath"
-								:uses-templates="controls.ARTGL___GITEMDOCUMENT.usesTemplates"
-								@file-error="controls.ARTGL___GITEMDOCUMENT.HandleFileError($event)"
-								@submit-file="controls.ARTGL___GITEMDOCUMENT.SetFile($event)"
-								@edit-file="controls.ARTGL___GITEMDOCUMENT.SetCheckoutState()"
-								@get-properties="controls.ARTGL___GITEMDOCUMENT.GetFileProperties()"
-								@get-version-history="controls.ARTGL___GITEMDOCUMENT.GetVersionsInfo()"
-								@get-file="controls.ARTGL___GITEMDOCUMENT.GetFile()"
-								@download-file="controls.ARTGL___GITEMDOCUMENT.DownloadFile()"
-								@get-file-version="controls.ARTGL___GITEMDOCUMENT.GetFileVersion($event)"
-								@delete-last="controls.ARTGL___GITEMDOCUMENT.DeleteFile(0)"
-								@delete-history="controls.ARTGL___GITEMDOCUMENT.DeleteFile(1)"
-								@delete-file="controls.ARTGL___GITEMDOCUMENT.DeleteFile(2)"
-								@show-popup="controls.ARTGL___GITEMDOCUMENT.SetModal($event)"
-								@hide-popup="controls.ARTGL___GITEMDOCUMENT.RemoveModal($event)"
-								@show-templates-popup="controls.ARTGL___GITEMDOCUMENT.handleDocumentTemplates($event)" />
+								v-bind="controls.ARTGL___GITEMDOCUMENT.props"
+								v-on="controls.ARTGL___GITEMDOCUMENT.handlers" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -259,15 +229,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'ARTGL',
-						location: 'form-ARTGL',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'ARTGL',
+					location: 'form-ARTGL',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -313,6 +281,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -385,8 +355,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -468,7 +439,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -522,21 +493,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -547,10 +503,7 @@
 						id: 'ARTGL___GITEMITEMDES_',
 						name: 'ITEMDES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.GLOBAL_ITEM49586),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
@@ -565,15 +518,11 @@
 						id: 'ARTGL___GITEMITEMGCOD',
 						name: 'ITEMGCOD',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CODE49225),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 15,
 						labelId: 'label_ARTGL___GITEMITEMGCOD',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -583,21 +532,22 @@
 						id: 'ARTGL___GITEMDOCUMENT',
 						name: 'DOCUMENT',
 						size: 'xxlarge',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___1537256),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources.___15_VERBOSE09201),
+							}
+						},
 						label: computed(() => this.Resources.CATALOG23832),
-						userHelp: computed(() => this.Resources.___1537256),
-						description: computed(() => this.Resources.___15_VERBOSE09201),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						documentProperties: computed(() => vm.model.ValDocumentPropertiesVM),
-						documentFK: computed(() => vm.model.ValDocumentfk),
-						documentVersions: computed(() => vm.model.ValDocumentPropertiesVM.value ? vm.model.ValDocumentPropertiesVM.value.Versions : {}),
-						isInCheckout: computed(() => vm.model.ValDocumentPropertiesVM.value ? vm.model.ValDocumentPropertiesVM.value.IsCheckout : false),
-						currentVersion: computed(() => vm.model.ValDocumentPropertiesVM.value ? vm.model.ValDocumentPropertiesVM.value.Version : '1'),
-						usesTemplates: false,
+						versioningIsOn: true,
+						viewType: qEnums.documentViewTypeMode.print,
 						extensions: [],
-						viewType: qEnums.documentViewTypeMode.Print,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -635,7 +585,7 @@
 						/** The primary key of the GITEM table */
 						get gitem() { return vm.model.ValCodgitem },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -733,6 +683,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -772,6 +730,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -898,6 +864,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR ARTGL]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -913,6 +895,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS ARTGL]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

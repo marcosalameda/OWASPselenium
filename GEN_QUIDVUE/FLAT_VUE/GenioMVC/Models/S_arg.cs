@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private S_apr _s_apr;
 		[DisplayName("S_apr")]
 		[ShouldSerialize("S_apr")]
-		public virtual S_apr S_apr { 
-			get { 
+		public virtual S_apr S_apr {
+			get {
 				if (!this.isEmptyModel && (_s_apr == null || (!string.IsNullOrEmpty(ValCods_apr) && (_s_apr.isEmptyModel || _s_apr.klass.QPrimaryKey != ValCods_apr))))
 					_s_apr = Models.S_apr.Find(ValCods_apr, m_userContext, Identifier, _fieldsToSerialize);
 				if (_s_apr == null)
 					_s_apr = new Models.S_apr(m_userContext, true, _fieldsToSerialize);
 				return _s_apr;
 			}
-			set { _s_apr = value; } 
+			set { _s_apr = value; }
 		}
-		
+
 
 		[DisplayName("Id")]
 		/// <summary>Field : "Id" Tipo: "C" Formula:  ""</summary>
@@ -66,7 +66,7 @@ namespace GenioMVC.Models
 		[DisplayName("Document")]
 		/// <summary>Field : "Document" Tipo: "IB" Formula:  ""</summary>
 		[ShouldSerialize("S_arg.ValDocument")]
-		[Document("ValDocument", false, true, false, false)]
+		[Document("ValDocument", true, false, false)]
 		public string ValDocument { get { return klass.ValDocument; } set { klass.ValDocument = value; } }
 		public string ValDocumentfk { get { return klass.ValDocumentfk; } set { klass.ValDocumentfk = value; } }
 
@@ -117,19 +117,19 @@ namespace GenioMVC.Models
 		public S_arg(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAs_arg(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public S_arg(UserContext userContext, CSGenioAs_arg val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAs_arg csgenioa)
@@ -151,7 +151,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Equip;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_EQUIP_CANCEL = new NavigationLocation("_EQUIP__REGISTNR____25672", "Equip_Cancel", "Equip") { vueRouteName = "form-EQUIP", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_EQUIP_SHOW = new NavigationLocation("_EQUIP__REGISTNR____25672", "Equip_Show", "Equip") { vueRouteName = "form-EQUIP", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_EQUIP_NEW = new NavigationLocation("_EQUIP__REGISTNR____25672", "Equip_New", "Equip") { vueRouteName = "form-EQUIP", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_EQUIP_EDIT = new NavigationLocation("_EQUIP__REGISTNR____25672", "Equip_Edit", "Equip") { vueRouteName = "form-EQUIP", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_EQUIP_DUPLICATE = new NavigationLocation("_EQUIP__REGISTNR____25672", "Equip_Duplicate", "Equip") { vueRouteName = "form-EQUIP", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_EQUIP_DELETE = new NavigationLocation("_EQUIP__REGISTNR____25672", "Equip_Delete", "Equip") { vueRouteName = "form-EQUIP", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_EQUIP_CANCEL = new("_EQUIP__REGISTNR____25672", "Equip_Cancel", "Equip") { vueRouteName = "form-EQUIP", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_EQUIP_SHOW = new("_EQUIP__REGISTNR____25672", "Equip_Show", "Equip") { vueRouteName = "form-EQUIP", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_EQUIP_NEW = new("_EQUIP__REGISTNR____25672", "Equip_New", "Equip") { vueRouteName = "form-EQUIP", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_EQUIP_EDIT = new("_EQUIP__REGISTNR____25672", "Equip_Edit", "Equip") { vueRouteName = "form-EQUIP", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_EQUIP_DUPLICATE = new("_EQUIP__REGISTNR____25672", "Equip_Duplicate", "Equip") { vueRouteName = "form-EQUIP", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_EQUIP_DELETE = new("_EQUIP__REGISTNR____25672", "Equip_Delete", "Equip") { vueRouteName = "form-EQUIP", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Equip_ModalDBEdit()
-		{
-			Equip_ViewModel model = new Equip_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Equip_Show
 
@@ -336,6 +327,7 @@ namespace GenioMVC.Controllers
 				BeforeOp = (sink, sp) =>
 				{
 // USE /[MANUAL GQT BEFORE_SAVE_DUPLICATE EQUIP]/
+					MergeNN(model.Navigation, "Equip", model.ValCodequip, "Movim", "Codequip", "Codrooms", model.List_Movimevv_SelectedIds);
 				},
 				AfterOp = (sink, sp) =>
 				{
@@ -402,135 +394,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Equip Multiform actions
-
-		//
-		// GET /Equip/MFEquip_New
-		[HttpGet]
-		[ActionName("MFEquip_New")]
-		public ActionResult MFEquip_New()
-		{
-			var model = new Equip_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_EQUIP_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("equip", model.ValCodequip);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFEquip_New_GET()
-		{
-			return MFEquip_New();
-		}
-
-		//
-		// GET /Equip/MFEquip_Edit
-		[HttpGet]
-		[ActionName("MFEquip_Edit")]
-		public ActionResult MFEquip_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("EQUIP", "EDIT", new { id = id, partialView = "MFEquip", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFEquip_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFEquip_Edit(requestModel);
-		}
-
-		//
-		// GET /Equip/MFEquip_Cancel
-		[ActionName("MFEquip_Cancel")]
-		public ActionResult MFEquip_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Equip(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Equip/MFEquip_Save
-		[HttpPost]
-		[ActionName("MFEquip_Save")]
-		public JsonResult MFEquip_Save(Equip_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFEquip_Save",
-				ViewName = "MFEquip",
-				AreaName = "equip"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Equip/MFEquip_Delete
-		[HttpPost]
-		[ActionName("MFEquip_Delete")]
-		public JsonResult MFEquip_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFEquip_Delete",
-				ViewName = "MFEquip",
-				AreaName = "equip",
-				Location = ACTION_EQUIP_EDIT
-			};
-
-			var model = new Equip_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Equip/Equip_CmpnyValDesignat
@@ -541,6 +404,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_cmpny")))
@@ -554,21 +418,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -576,9 +425,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Equip_CmpnyValDesignat_ViewModel model = new Equip_CmpnyValDesignat_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -592,6 +467,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_pess1")))
@@ -605,21 +481,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -627,9 +488,42 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Equip_Pess1ValName_ViewModel model = new Equip_Pess1ValName_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+			// Static filter "order" fields that have changed
+			tableConfigOptions.StaticFiltersKeyShiftValues = new Dictionary<string, int>
+			{
+				{ "filter_Pess1ValName_FILTER1", 0 }
+,
+				{ "filter_Pess1ValName_FILTER2", -1 }
+ 			};
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -643,6 +537,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_tpequ")))
@@ -656,21 +551,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -678,9 +558,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Equip_TpequValTipoequi_ViewModel model = new Equip_TpequValTipoequi_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -694,6 +600,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
@@ -707,21 +614,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -729,9 +621,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Equip_WarehValWarehdes_ViewModel model = new Equip_WarehValWarehdes_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -745,6 +663,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_item")))
@@ -758,21 +677,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -780,9 +684,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Equip_ItemValItemdes_ViewModel model = new Equip_ItemValItemdes_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -817,7 +747,7 @@ namespace GenioMVC.Controllers
 				row.klass.QPrimaryKey = Navigation.GetStrValue("equip");
 			}
 
-			row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true);
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true);
 			model.MapFromModel(row);
 
 			// MH (06/05/2020) - If submission of the form fails, when an exception is thrown (for example when not pass some business validation),
@@ -834,6 +764,68 @@ namespace GenioMVC.Controllers
 		}
 
 		//
+		// GET: /Equip/Equip_ValMovimels
+		// POST: /Equip/Equip_ValMovimels
+		[ActionName("Equip_ValMovimels")]
+		public ActionResult Equip_ValMovimels([FromBody]RequestLookupModel requestModel)
+		{
+			var queryParams = requestModel.QueryParams;
+
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_movim")))
+				UserContext.Current.SetPersistenceReadOnly(true);
+			else
+			{
+				Navigation.DestroyEntry("ForcePrimaryRead_movim");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+
+			var requestValues = new NameValueCollection();
+			if (queryParams != null)
+			{
+				// Add to request values
+				foreach (var kv in queryParams)
+					requestValues.Add(kv.Key, kv.Value);
+			}
+
+			Equip_ValMovimels_ViewModel model = new Equip_ValMovimels_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+			model.setModes(Request.Query["m"].ToString());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
+
+			return JsonOK(model);
+		}
+
+		//
 		// GET: /Equip/Equip_ValInstalag
 		// POST: /Equip/Equip_ValInstalag
 		[ActionName("Equip_ValInstalag")]
@@ -842,6 +834,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_insta")))
@@ -855,30 +848,41 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
 			Equip_ValInstalag_ViewModel model = new Equip_ValInstalag_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -892,6 +896,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_insta")))
@@ -905,30 +910,41 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
 			Equip_ValInstalac_ViewModel model = new Equip_ValInstalac_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -942,6 +958,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_repar")))
@@ -955,130 +972,46 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
 			Equip_ValReparaco_ViewModel model = new Equip_ValReparaco_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+			// Static filter "order" fields that have changed
+			tableConfigOptions.StaticFiltersKeyShiftValues = new Dictionary<string, int>
+			{
+				{ "filter_ValReparaco_STARTED", 0 }
+ 			};
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
-
-		//
-		// GET: /Equip/Equip_ValFotoequi
-		// POST: /Equip/Equip_ValFotoequi
-		[ActionName("Equip_ValFotoequi")]
-		public ActionResult Equip_ValFotoequi([FromBody]RequestLookupModel requestModel)
-		{
-			var queryParams = requestModel.QueryParams;
-
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_photo")))
-				UserContext.Current.SetPersistenceReadOnly(true);
-			else
-			{
-				Navigation.DestroyEntry("ForcePrimaryRead_photo");
-				UserContext.Current.SetPersistenceReadOnly(false);
-			}
-
-			var requestValues = new NameValueCollection();
-			if (queryParams != null)
-			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
-				// Add to request values
-				foreach (var kv in queryParams)
-					requestValues.Add(kv.Key, kv.Value);
-			}
-
-			Equip_ValFotoequi_ViewModel model = new Equip_ValFotoequi_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
-
-		//
-		// GET: /Equip/Equip_ValVisequip
-		// POST: /Equip/Equip_ValVisequip
-		[ActionName("Equip_ValVisequip")]
-		public ActionResult Equip_ValVisequip([FromBody]RequestLookupModel requestModel)
-		{
-			var queryParams = requestModel.QueryParams;
-
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_visit")))
-				UserContext.Current.SetPersistenceReadOnly(true);
-			else
-			{
-				Navigation.DestroyEntry("ForcePrimaryRead_visit");
-				UserContext.Current.SetPersistenceReadOnly(false);
-			}
-
-			var requestValues = new NameValueCollection();
-			if (queryParams != null)
-			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
-				// Add to request values
-				foreach (var kv in queryParams)
-					requestValues.Add(kv.Key, kv.Value);
-			}
-
-			Equip_ValVisequip_ViewModel model = new Equip_ValVisequip_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -1092,6 +1025,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_decom")))
@@ -1105,21 +1039,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -1127,9 +1046,159 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Equip_DecomValDecomnr_ViewModel model = new Equip_DecomValDecomnr_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
+
+			return JsonOK(model);
+		}
+
+		//
+		// GET: /Equip/Equip_ValFotoequi
+		// POST: /Equip/Equip_ValFotoequi
+		[ActionName("Equip_ValFotoequi")]
+		public ActionResult Equip_ValFotoequi([FromBody]RequestLookupModel requestModel)
+		{
+			var queryParams = requestModel.QueryParams;
+
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_photo")))
+				UserContext.Current.SetPersistenceReadOnly(true);
+			else
+			{
+				Navigation.DestroyEntry("ForcePrimaryRead_photo");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+
+			var requestValues = new NameValueCollection();
+			if (queryParams != null)
+			{
+				// Add to request values
+				foreach (var kv in queryParams)
+					requestValues.Add(kv.Key, kv.Value);
+			}
+
+			Equip_ValFotoequi_ViewModel model = new Equip_ValFotoequi_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+			model.setModes(Request.Query["m"].ToString());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
+
+			return JsonOK(model);
+		}
+
+		//
+		// GET: /Equip/Equip_ValVisequip
+		// POST: /Equip/Equip_ValVisequip
+		[ActionName("Equip_ValVisequip")]
+		public ActionResult Equip_ValVisequip([FromBody]RequestLookupModel requestModel)
+		{
+			var queryParams = requestModel.QueryParams;
+
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_visit")))
+				UserContext.Current.SetPersistenceReadOnly(true);
+			else
+			{
+				Navigation.DestroyEntry("ForcePrimaryRead_visit");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+
+			var requestValues = new NameValueCollection();
+			if (queryParams != null)
+			{
+				// Add to request values
+				foreach (var kv in queryParams)
+					requestValues.Add(kv.Key, kv.Value);
+			}
+
+			Equip_ValVisequip_ViewModel model = new Equip_ValVisequip_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+			model.setModes(Request.Query["m"].ToString());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -1143,6 +1212,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_anexd")))
@@ -1156,30 +1226,41 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
 			Equip_ValAnexos_ViewModel model = new Equip_ValAnexos_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -1193,6 +1274,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
@@ -1212,62 +1294,39 @@ namespace GenioMVC.Controllers
 			}
 
 			Equip_ValTlequipa_ViewModel model = new Equip_ValTlequipa_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
 
-		//
-		// GET: /Equip/Equip_ValMovimels
-		// POST: /Equip/Equip_ValMovimels
-		[ActionName("Equip_ValMovimels")]
-		public ActionResult Equip_ValMovimels([FromBody]RequestLookupModel requestModel)
-		{
-			var queryParams = requestModel.QueryParams;
-
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_movim")))
-				UserContext.Current.SetPersistenceReadOnly(true);
-			else
-			{
-				Navigation.DestroyEntry("ForcePrimaryRead_movim");
-				UserContext.Current.SetPersistenceReadOnly(false);
-			}
-
-			var requestValues = new NameValueCollection();
-			if (queryParams != null)
-			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
-				// Add to request values
-				foreach (var kv in queryParams)
-					requestValues.Add(kv.Key, kv.Value);
-			}
-
-			Equip_ValMovimels_ViewModel model = new Equip_ValMovimels_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		// POST: /Equip/Equip_SaveEdit
 		[HttpPost]

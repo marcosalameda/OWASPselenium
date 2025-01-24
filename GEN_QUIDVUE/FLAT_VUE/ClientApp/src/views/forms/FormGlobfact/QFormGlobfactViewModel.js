@@ -75,12 +75,13 @@ export default class ViewModel extends ViewModelBase
 		watch(() => this.TableFactyType.value, (newValue, oldValue) => this.onUpdate('facty.type', this.TableFactyType, newValue, oldValue))
 
 		/** The form fields used only in formulas. */
-		this.ValHome = reactive(new modelFieldType.String({
+		this.ValHome = reactive(new modelFieldType.MultiLineString({
 			id: 'ValHome',
 			originId: 'ValHome',
 			area: 'GLOB',
 			field: 'HOME',
 			description: computed(() => this.Resources.HOME_TEXT11153),
+			isFixed: true,
 		}).cloneFrom(values?.ValHome))
 		watch(() => this.ValHome.value, (newValue, oldValue) => this.onUpdate('glob.home', this.ValHome, newValue, oldValue))
 	}
@@ -97,5 +98,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodglob'
 
 	get QPrimaryKey() { return this.ValCodglob.value }
-	set QPrimaryKey(value) { this.ValCodglob.value = value }
+	set QPrimaryKey(value) { this.ValCodglob.updateValue(value) }
 }

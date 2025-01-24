@@ -7,14 +7,37 @@ public class BaseInputControl : ControlObject
     {
     }
 
+    /// <summary>
+    /// Get the input's value
+    /// </summary>
     public string GetValue()
     {
         return m_control.GetAttribute("value");
     }
 
+    /// <summary>
+    /// Set the input's value
+    /// </summary>
     public void SetValue(string val)
     {
-        m_control.Clear();
+        ClearValue();
         m_control.SendKeys(val);
     }
+
+    /// <summary>
+    /// Clear the input's value. The built-in Clear() method does not always work but this does
+    /// </summary>
+    public void ClearValue()
+    {
+        m_control.SendKeys(Keys.Control + "a");
+        m_control.SendKeys(Keys.Delete);
+    }
+
+    /// <summary>
+    /// Confirm the input's value
+    /// </summary>
+    public void Confirm()
+	{
+		m_control.SendKeys(Keys.Enter);
+	}
 }

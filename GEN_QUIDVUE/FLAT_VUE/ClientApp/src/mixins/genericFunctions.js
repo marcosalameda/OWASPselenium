@@ -10,14 +10,16 @@ import _isEmpty from 'lodash-es/isEmpty'
 import _set from 'lodash-es/set'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 
+import { useAuthDataStore } from '@/stores/authData.js'
 import { useCustomDataStore } from '@/stores/customData.js'
 import { useGenericDataStore } from '@/stores/genericData.js'
-import { useAuthDataStore } from '@/stores/authData.js'
+import { useGenericLayoutDataStore } from '@/stores/genericLayoutData.js'
+import { useGlobalTablesDataStore } from '@/stores/globalTablesData.js'
 import { useLayoutDataStore } from '@/stores/layoutData.js'
 import { useNavDataStore } from '@/stores/navData.js'
 import { useSystemDataStore } from '@/stores/systemData.js'
-import { useUserDataStore } from '@/stores/userData.js'
 import { useTracingDataStore } from '@/stores/tracingData.js'
+import { useUserDataStore } from '@/stores/userData.js'
 import { formModes } from '@/mixins/quidgest.mainEnums.js'
 import eventBus from '@/api/global/eventBus.js'
 import openQSign from '@/api/genio/qSign.js'
@@ -146,6 +148,8 @@ export function setAppConfig(data)
 
 	if (data.defaultListRows)
 		systemDataStore.setDefaultListRows(data.defaultListRows)
+	if (data.numberFormat)
+		systemDataStore.setNumberFormat(data.numberFormat)
 	if (data.dateFormat)
 		systemDataStore.setDateFormat(data.dateFormat)
 	if (data.userName)
@@ -205,9 +209,9 @@ export function getLayoutVariables(layoutConfig)
 
 	for (let i in layoutConfig)
 	{
-		let chosenValue = layoutConfig[i].chosen
-		let defaultValue = layoutConfig[i].default
-		let possibleValues = layoutConfig[i].values
+		const chosenValue = layoutConfig[i].chosen
+		const defaultValue = layoutConfig[i].default
+		const possibleValues = layoutConfig[i].values
 
 		if (typeof chosenValue !== 'undefined')
 		{
@@ -255,6 +259,11 @@ export function getLayoutVariables(layoutConfig)
  *         'aria-label': 'Type your message here'
  *       }
  *     },
+ *     image: {
+ *       url: 'https://placeholder.pics/svg/300x1500',
+ *       alt: 'Custom image',
+ *       height: 1500
+ *     },
  *     timeout: 3000,
  *     hideCloseBtn: false,
  *     hideFooterBtns: false,
@@ -270,13 +279,34 @@ export function getLayoutVariables(layoutConfig)
 export function displayMessage(message, icon, title, buttons, options)
 {
 	return new Promise((resolve) => {
+		const defaultOpts = {
+			input: null,
+			image: null,
+			timeout: undefined,
+			hideCloseBtn: false,
+			hideFooterBtns: false,
+			useHtml: true
+		}
+
+		const usedOpts = {
+			...defaultOpts,
+			...(options ?? {})
+		}
+
 		const prefs = {
 			titleText: title,
 			text: message,
-			icon: icon || 'info',
+			icon: icon ?? 'info',
 			allowOutsideClick: false,
 			allowEscapeKey: false,
-			showCloseButton: true
+			showCloseButton: true,
+			buttonsStyling: false,
+			customClass: {
+				actions: 'swal2-my-actions',
+				cancelButton: 'q-btn q-btn--secondary',
+				confirmButton: 'q-btn q-btn--primary',
+				denyButton: 'q-btn q-btn--danger'
+			}
 		}
 
 		if (buttons)
@@ -297,43 +327,42 @@ export function displayMessage(message, icon, title, buttons, options)
 			{
 				prefs.showDenyButton = true
 				prefs.denyButtonText = buttons.deny.label
-
-				prefs.customClass = {
-					actions: 'swal2-my-actions',
-					cancelButton: 'swal2-order-1 swal2-right-gap',
-					confirmButton: 'swal2-order-2',
-					denyButton: 'swal2-order-3'
-				}
 			}
 		}
 
-		if (options)
+		if (usedOpts.input)
 		{
-			if (options.input)
-			{
-				prefs.input = options.input.type || 'text'
-				prefs.inputLabel = options.input.label
-				prefs.inputPlaceholder = options.input.placeholder
-				prefs.inputValidator = options.input.validator
-				prefs.inputOptions = options.input.choices
-				prefs.inputAttributes = options.input.attrs
-			}
+			prefs.input = usedOpts.input.type || 'text'
+			prefs.inputLabel = usedOpts.input.label
+			prefs.inputPlaceholder = usedOpts.input.placeholder
+			prefs.inputValidator = usedOpts.input.validator
+			prefs.inputOptions = usedOpts.input.choices
+			prefs.inputAttributes = usedOpts.input.attrs
+		}
 
-			if (options.timeout)
-				prefs.timer = options.timeout
+		if (usedOpts.timeout)
+			prefs.timer = usedOpts.timeout
 
-			if (options.hideCloseBtn)
-				prefs.showCloseButton = false
+		if (usedOpts.hideCloseBtn)
+			prefs.showCloseButton = false
 
-			if (options.hideFooterBtns)
-			{
-				prefs.showConfirmButton = false
-				prefs.showCancelButton = false
-				prefs.showDenyButton = false
-			}
+		if (usedOpts.hideFooterBtns)
+		{
+			prefs.showConfirmButton = false
+			prefs.showCancelButton = false
+			prefs.showDenyButton = false
+		}
 
-			if (options.useHtml)
-				prefs.html = message
+		if (usedOpts.useHtml)
+			prefs.html = message
+
+		if (usedOpts.image)
+		{
+			if (usedOpts.image.url)
+				prefs.imageUrl = usedOpts.image.url
+			if (usedOpts.image.height)
+				prefs.imageHeight = usedOpts.image.height
+			prefs.imageAlt = usedOpts.image.alt || 'Custom image'
 		}
 
 		Swal.fire(prefs).then((result) => {
@@ -341,8 +370,8 @@ export function displayMessage(message, icon, title, buttons, options)
 			 * This check must be done this way because callbackParams is not always an object
 			 * and it shouldn't necessarily be. It can be a single value. Using isEmpty() can prevent this from working.
 			 */
-			if (options?.callbackParams !== undefined && options?.callbackParams !== null)
-				result.value = options.callbackParams
+			if (usedOpts?.callbackParams !== undefined && usedOpts?.callbackParams !== null)
+				result.value = usedOpts.callbackParams
 
 			if (buttons)
 			{
@@ -369,6 +398,16 @@ export function displayMessage(message, icon, title, buttons, options)
 }
 
 /**
+ * Sets whether the cookies are visible.
+ * @param {boolean} val The value of the cookies visibility
+ */
+export function setShowCookies(val)
+{
+	const systemDataStore = useSystemDataStore()
+	systemDataStore.setShowCookies(val)
+}
+
+/**
  * Scrolls to the top of the page.
  */
 export function scrollToTop()
@@ -385,14 +424,41 @@ export function scrollToBottom()
 }
 
 /**
+ * Gets the starting Y coordinate of the visible scroll area.
+ */
+export function scrollYStart()
+{
+	// Header bar height (only in vertical layout)
+	const headerbar = document.getElementById('header-container')
+	const headerbarHeight = headerbar ? headerbar.offsetHeight : 0
+
+	// Main navigation bar height (only in horizontal layout)
+	const mainNavbar = document.getElementById('main-header-navbar')
+	const mainNavbarHeight = mainNavbar ? mainNavbar.offsetHeight : 0
+	const mainNabarStyle = mainNavbar ? window.getComputedStyle(mainNavbar, null) : null
+
+	// Visible navigation bar height
+	const visibleNavbarHeight = mainNabarStyle?.display === 'none' ? 0 : mainNavbarHeight
+
+	// Form header bar height (includes form buttons and horizontal anchors)
+	const sticky = document.querySelector('#form-container > .c-sticky-header')
+	const stickyHeaderHeight = sticky ? sticky.offsetHeight : 0
+
+	return headerbarHeight + visibleNavbarHeight + stickyHeaderHeight
+}
+
+/**
  * Scrolls to the specified element.
  * @param {string} id The id of the element to scroll to
  * @param {string} position The scroll position - center or start
+ * @param {string} behavior The behavior of the scroll, either instant or smooth
  */
-export function scrollTo(id, position = 'center')
+export function scrollTo(id, position = 'center', behavior = 'smooth')
 {
+	// The behavior property should be 'instant'
+	// The 'smooth' option has a bug that prevents scrolling to the right location
 	const options = {
-		behavior: 'smooth',
+		behavior: behavior,
 		block: position
 	}
 
@@ -401,16 +467,11 @@ export function scrollTo(id, position = 'center')
 		return
 
 	const initialSPT = document.documentElement.style.scrollPaddingTop
-	const vHeaderHeight = parseInt(document.documentElement.style.getPropertyValue('--visible-header-height'))
-	const sticky = document.querySelector('#form-container > .c-sticky-header')
-	const menu = document.querySelector('#main-header-navbar .n-menu__navbar--double-l2')
 
-	if (sticky)
-	{
-		let extraHeight = menu ? menu.clientHeight : 5
-		let totalHeight = vHeaderHeight ? vHeaderHeight + sticky.clientHeight - extraHeight : sticky.clientHeight + 5
-		document.documentElement.style.scrollPaddingTop = `${totalHeight}px`
-	}
+	// Calculate and set scroll padding
+	// Must be done before scrolling
+	const headerHeight = scrollYStart()
+	document.documentElement.style.scrollPaddingTop = `${headerHeight}px`
 
 	elem.scrollIntoView(options)
 	elem.focus()
@@ -444,7 +505,7 @@ export function removeModal(modalId)
 {
 	// Remove modal popup
 	const genericDataStore = useGenericDataStore()
-	let removedModal = genericDataStore.removeModal(modalId)
+	const removedModal = genericDataStore.removeModal(modalId)
 
 	// Focus on the element / control that opened the popup
 	focusElement(removedModal?.returnElement)
@@ -470,8 +531,8 @@ export function formatString()
 
 	for (let i = 0; i < arguments.length - 1; i++)
 	{
-		let reg = new RegExp('\\{' + i + '\\}', 'gm')
-		string = string.replace(reg, arguments[i + 1] || '')
+		const reg = new RegExp('\\{' + i + '\\}', 'gm')
+		string = string.replace(reg, arguments[i + 1] ?? '')
 	}
 
 	return string
@@ -489,12 +550,12 @@ export function dateToString(date, currentLang, defaultLang)
 	if (!(date instanceof Date))
 		return ''
 
-	let langs = [
+	const langs = [
 		currentLang,
 		defaultLang || 'en-GB'
 	]
 
-	let options = {
+	const options = {
 		dateStyle: 'short',
 		timeStyle: 'medium'
 	}
@@ -526,6 +587,42 @@ export function dateToISOString(date)
 }
 
 /**
+ * Converts a simplified extended ISO-8601 date-time string without a time zone
+ * into a Date object. The input format should match YYYY-MM-DDTHH:mm:ss.sss.
+ * @param {string} isoString The date-time string in ISO-8601 format.
+ * @returns {Date} A Date object representing the given date and time.
+ */
+export function isoStringToDate(isoString)
+{
+	if (typeof isoString !== 'string')
+		throw new Error('Input must be a string.')
+
+	const isoDateTimeFormat = /^(\d{4})-(\d{2})-(\d{2})[T](\d{2}):(\d{2}):(\d{2})(\.\d+)?([+-]\d{2}:?\d{2}|Z)?$/
+	const parts = isoString.match(isoDateTimeFormat)
+
+	if (!parts)
+		throw new Error('Invalid ISO-8601 date-time format.')
+
+	// If the string ends with 'Z', treat it as UTC.
+	if (parts[8] === 'Z')
+		return new Date(isoString)
+	else
+	{
+		// Extract components from the match.
+		const year = parseInt(parts[1], 10),
+			month = parseInt(parts[2], 10) - 1, // Adjust for 0-based index
+			day = parseInt(parts[3], 10),
+			hours = parseInt(parts[4], 10),
+			minutes = parseInt(parts[5], 10),
+			seconds = parseInt(parts[6], 10),
+			// Parse milliseconds, if present; otherwise default to 0.
+			milliseconds = parts[7] ? parseFloat(parts[7]) * 1000 : 0
+
+		return new Date(year, month, day, hours, minutes, seconds, milliseconds)
+	}
+}
+
+/**
  * Converts the specified date time object to a string.
  * @param {object} time The date time object to be converted
  * @returns The time in a string format like: HH:mm.
@@ -549,6 +646,16 @@ export function hasTimeProperties(obj)
 		return false
 
 	return 'hours' in obj && 'minutes' in obj && 'seconds' in obj
+}
+
+/**
+ * Checks if the specified value is a date.
+ * @param {any} value The value
+ * @returns True if it's a date, false otherwise.
+ */
+export function isDate(value)
+{
+	return _isDate(value)
 }
 
 /**
@@ -583,50 +690,55 @@ export function imageObjToSrc(data)
 /**
  * Computes a placeholder color according to the colors of the specified image source.
  * @param {object} src The image source
- * @param {function} callback A function to run afterwards
  */
-export function computeColorPlaceholder(src, callback)
+export async function computeColorPlaceholder(src)
 {
 	if (_isEmpty(src))
-		return
+		return null
 
-	var img = new Image()
+	return new Promise((resolve, reject) => {
+		var img = new Image()
 
-	img.onload = () => {
-		var canvas = document.createElement('canvas')
+		img.onload = () => {
+			const canvas = document.createElement('canvas')
 
-		if (canvas)
-		{
-			canvas.width = img.width
-			canvas.height = img.height
+			if (canvas)
+			{
+				canvas.width = img.width
+				canvas.height = img.height
 
-			const context = canvas.getContext('2d', { willReadFrequently: true })
-			context.drawImage(img, 0, 0, img.width, img.height)
+				const context = canvas.getContext('2d', { willReadFrequently: true })
+				context.drawImage(img, 0, 0, img.width, img.height)
 
-			const x1 = parseInt(img.width * 0.2)
-			const x2 = parseInt(img.width * 0.8)
-			const y1 = parseInt(img.height * 0.2)
-			const y2 = parseInt(img.height * 0.8)
+				const x1 = parseInt(img.width * 0.2)
+				const x2 = parseInt(img.width * 0.8)
+				const y1 = parseInt(img.height * 0.2)
+				const y2 = parseInt(img.height * 0.8)
 
-			const sample1 = context.getImageData(x1, y1, 1, 1).data
-			const sample2 = context.getImageData(x1, y2, 1, 1).data
-			const sample3 = context.getImageData(x2, y1, 1, 1).data
-			const sample4 = context.getImageData(x2, y2, 1, 1).data
+				const sample1 = context.getImageData(x1, y1, 1, 1).data
+				const sample2 = context.getImageData(x1, y2, 1, 1).data
+				const sample3 = context.getImageData(x2, y1, 1, 1).data
+				const sample4 = context.getImageData(x2, y2, 1, 1).data
 
-			const avgR = (sample1[0] + sample2[0] + sample3[0] + sample4[0]) / 4
-			const avgG = (sample1[1] + sample2[1] + sample3[1] + sample4[1]) / 4
-			const avgB = (sample1[2] + sample2[2] + sample3[2] + sample4[2]) / 4
+				const avgR = (sample1[0] + sample2[0] + sample3[0] + sample4[0]) / 4
+				const avgG = (sample1[1] + sample2[1] + sample3[1] + sample4[1]) / 4
+				const avgB = (sample1[2] + sample2[2] + sample3[2] + sample4[2]) / 4
 
-			img = null
+				img = null
 
-			const rgb = `rgb(${parseInt(avgR)} ${parseInt(avgG)} ${parseInt(avgB)})`
+				const rgb = `rgb(${parseInt(avgR)} ${parseInt(avgG)} ${parseInt(avgB)})`
 
-			if (callback)
-				callback(rgb)
+				resolve(rgb)
+			}
 		}
-	}
 
-	img.src = src
+		img.onerror = (error) => {
+			reject(error)
+		}
+
+		// This will trigger the `onload`
+		img.src = src
+	})
 }
 
 /* BEGIN: Dropdowns */
@@ -729,8 +841,6 @@ export function dropdownIsFocused(dropdownElem, toggleElem, event)
 		|| event.relatedTarget === toggleElem
 		/* Focus went to an element outside the "app" element (an element that is used like a popup) */
 		|| (!appElem.contains(event.relatedTarget) && event.relatedTarget !== null)
-		/* Focus came from the Vue date picker */
-		|| event.target.classList.contains('dp__input')
 		/* Focus came from the error popover */
 		|| (event.target.classList.contains('btn-popover') && event.explicitOriginalTarget?.nodeName === '#text')
 }
@@ -741,21 +851,21 @@ export function dropdownIsFocused(dropdownElem, toggleElem, event)
  */
 export function getCoords(elem)
 {
-	var box = elem.getBoundingClientRect()
+	const box = elem.getBoundingClientRect()
 
-	var body = document.body
-	var docEl = document.documentElement
+	const body = document.body
+	const docEl = document.documentElement
 
-	var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop
-	var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft
+	const scrollTop = window.scrollY || docEl.scrollTop || body.scrollTop
+	const scrollLeft = window.scrollX || docEl.scrollLeft || body.scrollLeft
 
-	var clientTop = docEl.clientTop || body.clientTop || 0
-	var clientLeft = docEl.clientLeft || body.clientLeft || 0
+	const clientTop = docEl.clientTop || body.clientTop || 0
+	const clientLeft = docEl.clientLeft || body.clientLeft || 0
 
-	var top = box.top + scrollTop - clientTop
-	var bottom = box.bottom + scrollTop - clientTop
-	var left = box.left + scrollLeft - clientLeft
-	var right = box.right + scrollLeft - clientLeft
+	const top = box.top + scrollTop - clientTop
+	const bottom = box.bottom + scrollTop - clientTop
+	const left = box.left + scrollLeft - clientLeft
+	const right = box.right + scrollLeft - clientLeft
 
 	return {
 		top: Math.round(top),
@@ -770,21 +880,57 @@ export function getCoords(elem)
 /* BEGIN: Formatting field data to display */
 
 /**
+ * Class representing the formatted value.
+ * Includes the original value so we can use it in tooltips for example.
+ */
+export class FormattedValueToDisplay
+{
+	constructor(value, originalValue)
+	{
+		this.value = value
+		this.originalValue = originalValue
+	}
+
+	toString()
+	{
+		return this.value
+	}
+}
+
+/**
+ * The formatted string. In the case of multiple values, it will be a FormattedValueToDisplay object with both a short and a full string.
+ * @param {any|Array.<any>} value The value to be formatted. It can be a single value or an array of values.
+ * @param {function} fnFormat The formatting function.
+ * @returns {any|Array.<any>} The formatted value or the original value if no formatting function is provided.
+ */
+export function formatValueToDisplay(value, fnFormat)
+{
+	if(typeof fnFormat === 'function')
+	{
+		if(Array.isArray(value))
+			return value.map(item => fnFormat(item))
+		else
+			return fnFormat(value)
+	}
+
+	return value
+}
+
+/**
  * Get formatted string representing text
- * @param value {string}
- * @param options {object} [optional]
- * @returns String
+ * @param {string} value  The value to format
+ * @param {object} options [optional] Optional formatting options.
+ * @returns {string|FormattedValueToDisplay} The formatted string. In the case of multiple values, it will be a FormattedValueToDisplay object with both a short and a full string.
  */
 export function textDisplay(value, options)
 {
 	value = _isEmpty(value) ? '' : value
 
 	// Optional options
-	if (Number.isInteger(options?.scrollData))
+	if (Number.isInteger(options?.scrollData) && value.length > options.scrollData && !options?.isHtml)
 	{
-		// Column scroll
-		if (value.length > options.scrollData && !options?.isHtml)
-			value = value.substring(0, options.scrollData) + ' (...)'
+		const shortText = value.substring(0, options.scrollData) + ' (...)'
+		value = options.multipleValues ? new FormattedValueToDisplay(shortText, value) : shortText
 	}
 
 	return value
@@ -792,11 +938,11 @@ export function textDisplay(value, options)
 
 /**
  * Get formatted string representing a number
- * @param value {string}
- * @param decimalSep {string}
- * @param groupSep {string}
- * @param numberFormatOptions {object}
- * @returns String
+ * @param {string} value
+ * @param {string} decimalSep
+ * @param {string} groupSep
+ * @param {object} numberFormatOptions
+ * @returns {string}
  */
 export function numericDisplay(value, decimalSep, groupSep, numberFormatOptions)
 {
@@ -808,7 +954,7 @@ export function numericDisplay(value, decimalSep, groupSep, numberFormatOptions)
 		strValue = new Intl.NumberFormat('en-US').format(value)
 
 	strValue = strValue.replace(/,/g, ';').replace('.', ':')
-	strValue = strValue.replace(':', decimalSep).replace(/;/g, groupSep)
+	strValue = strValue.replace(':', decimalSep ?? '.').replace(/;/g, groupSep ?? ',')
 
 	return strValue
 }
@@ -852,11 +998,11 @@ export function currencyDisplay(value, decimalSep, groupSep, decimalPlaces, curr
 export function dateDisplay(dateTimeStr, dateTimeFormat)
 {
 	// NULL dates
-	if (dateTimeStr === '')
+	if (isEmpty(dateTimeStr))
 		return ''
 
 	const date = new Date(dateTimeStr)
-	return format(date, dateTimeFormat)
+	return format(date, dateTimeFormat ?? 'dd/MM/yyyy HH:mm:ss')
 }
 
 /**
@@ -870,6 +1016,9 @@ export function booleanDisplay(value)
 		return value
 	else if (typeof value === 'number')
 		return value !== 0
+	else if (typeof value === 'string')
+		return value.toLowerCase() === 'true'
+
 	return false
 }
 
@@ -882,7 +1031,7 @@ export function imageDisplay(value)
 {
 	if (validateImageFormat(value))
 		return value
-	return null
+	return ''
 }
 
 /**
@@ -924,36 +1073,6 @@ export function radioDisplay(value)
 }
 
 /**
- * Get formatted string representing a geographic coordinate
- * @param value {String|Object}
- * @param decimalSep {string}
- * @param groupSep {string}
- * @returns String
- */
-export function geographicDisplay(value, decimalSep = '.', groupSep = '')
-{
-	if (typeof value === 'string')
-		return value
-	if (_isEmpty(value) || typeof value.Lat !== 'number' || typeof value.Long !== 'number')
-		return ''
-
-	const x = numericDisplay(value.Lat, decimalSep, groupSep, { minimumFractionDigits: 0, maximumFractionDigits: 20 })
-	const y = numericDisplay(value.Long, decimalSep, groupSep, { minimumFractionDigits: 0, maximumFractionDigits: 20 })
-
-	return `POINT(${y} ${x})`
-}
-
-/**
- * Get formatted string representing a geographic shape
- * @param value {String|Object}
- * @returns String
- */
-export function geographicShapeDisplay(value)
-{
-	return typeof value === 'string' ? value : ''
-}
-
-/**
  * Get value from an enumeration
  * @param enumeration {object}
  * @param value {string}
@@ -980,13 +1099,12 @@ export function enumerationDisplay(enumeration, value)
 /**
  * Checks if value is empty. A value is considered empty unless it's an arguments object, array, string, or
  * jQuery-like collection with a length greater than 0 or an object with own enumerable properties.
- *
  * @param value The value to inspect.
  * @return Returns true if value is empty, else false.
  */
 export function isEmpty(value)
 {
-	return _isDate(value) ? false : _isEmpty(value)
+	return isDate(value) ? false : _isEmpty(value)
 }
 
 /**
@@ -1171,7 +1289,7 @@ export function btnHasPermission(permissions, actionType)
 		case formModes.edit:
 			return permissions.editBtnDisabled !== true
 		case formModes.duplicate:
-			return permissions.insertBtnDisabled !== true && permissions.viewBtnDisabled !== true
+			return permissions.duplicateBtnDisabled !== true
 		case formModes.delete:
 			return permissions.deleteBtnDisabled !== true
 		case formModes.new:
@@ -1213,7 +1331,7 @@ export function getModelStructureObj(row, objectStructure)
  */
 export function setProgressBar(modalProps, props, handlers)
 {
-	const layoutDataStore = useLayoutDataStore()
+	const layoutDataStore = useGenericLayoutDataStore()
 	layoutDataStore.setProgressBar(modalProps, props, handlers)
 }
 
@@ -1223,8 +1341,19 @@ export function setProgressBar(modalProps, props, handlers)
  */
 export function resetProgressBar()
 {
-	const layoutDataStore = useLayoutDataStore()
+	const layoutDataStore = useGenericLayoutDataStore()
 	layoutDataStore.resetProgressBar()
+}
+
+/**
+ * Given the field and table of the column, formats the information into a unique identifier.
+ * @param {string} columnArea The area of the column's field.
+ * @param {string} columnField The column's field.
+ * @returns The list column identifier (of type 'table.field')
+ */
+export function formatColumnIdentifier(columnArea, columnField)
+{
+	return `${columnArea.toLowerCase()}.${columnField.toLowerCase()}`
 }
 
 /**
@@ -1237,7 +1366,9 @@ export function resetStoreState()
 	const genericDataStore = useGenericDataStore()
 	const userDataStore = useUserDataStore()
 	const navDataStore = useNavDataStore()
+	const genericLayoutDataStore = useGenericLayoutDataStore()
 	const layoutDataStore = useLayoutDataStore()
+	const globalTablesDataStore = useGlobalTablesDataStore()
 
 	// Tracing data store is deliberately being left out, since it might be useful to keep it's data.
 	authDataStore.resetStore()
@@ -1245,7 +1376,9 @@ export function resetStoreState()
 	genericDataStore.resetStore()
 	userDataStore.resetStore()
 	navDataStore.resetStore()
+	genericLayoutDataStore.resetStore()
 	layoutDataStore.resetStore()
+	globalTablesDataStore.resetStore()
 }
 
 export default {
@@ -1259,16 +1392,18 @@ export default {
 	buildHumanKey,
 	getLayoutVariables,
 	displayMessage,
+	setShowCookies,
 	scrollToTop,
 	scrollToBottom,
+	scrollYStart,
 	scrollTo,
-	focusElement,
-	removeModal,
 	formatString,
 	dateToString,
 	dateToISOString,
+	isoStringToDate,
 	timeToString,
 	hasTimeProperties,
+	isDate,
 	validateImageFormat,
 	imageObjToSrc,
 	computeColorPlaceholder,
@@ -1276,6 +1411,7 @@ export default {
 	getDropdownPositionOffScreen,
 	dropdownIsFocused,
 	getCoords,
+	formatValueToDisplay,
 	textDisplay,
 	numericDisplay,
 	currencyDisplay,
@@ -1283,8 +1419,6 @@ export default {
 	booleanDisplay,
 	imageDisplay,
 	documentDisplay,
-	geographicDisplay,
-	geographicShapeDisplay,
 	enumerationDisplay,
 	radioDisplay,
 	isEmpty,
@@ -1297,5 +1431,8 @@ export default {
 	getModelStructureObj,
 	setProgressBar,
 	resetProgressBar,
-	resetStoreState
+	formatColumnIdentifier,
+	resetStoreState,
+	focusElement,
+	removeModal
 }

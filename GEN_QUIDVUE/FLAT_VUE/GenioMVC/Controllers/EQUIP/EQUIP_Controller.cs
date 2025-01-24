@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Equip;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER EQUIP]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Equip row = null;
 
-			try
-			{
-				row = Models.Equip.Find(Navigation.GetStrValue("equip"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model equip");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Equip(UserContext.Current);
+				row = new Models.Equip(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("equip");
 			}
 
@@ -82,8 +75,8 @@ namespace GenioMVC.Controllers
 				{
 					case "ACCORDI_CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Accordi_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Accordi_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Accordi_cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
@@ -91,17 +84,35 @@ namespace GenioMVC.Controllers
 						break;
 					case "ACCORDI_PESS1NAME____":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Accordi_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Accordi_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Accordi_pess1name____(qs);
 							result = model.TablePess1Name;
 						}
 						break;
+					case "EQUIGROUPESS1NAME____":	// Field (DB)
+						{
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Equigrou_ViewModel(UserContext.Current) { editable = false };							
+							model.MapFromModel(row);
+							model.Load_Equigroupess1name____(qs);
+							result = model.TablePess1Name;
+						}
+						break;
+					case "EQUIGROUTPEQUTIPOEQUI":	// Field (DB)
+						{
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Equigrou_ViewModel(UserContext.Current) { editable = false };							
+							model.MapFromModel(row);
+							model.Load_Equigroutpequtipoequi(qs);
+							result = model.TableTpequTipoequi;
+						}
+						break;
 					case "EQUIP___CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Equip___cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
@@ -109,8 +120,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___PESS1NAME____":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Equip___pess1name____(qs);
 							result = model.TablePess1Name;
@@ -118,8 +129,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___TPEQUTIPOEQUI":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Equip___tpequtipoequi(qs);
 							result = model.TableTpequTipoequi;
@@ -127,8 +138,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___WAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Equip___warehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -136,8 +147,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___ITEM_ITEMDES_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Equip___item_itemdes_(qs);
 							result = model.TableItemItemdes;
@@ -145,8 +156,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___ROOM1ROOMNR__":	// Field (F1)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Equip___room1roomnr__(qs);
 							result = model.TableRoom1Roomnr;
@@ -154,8 +165,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___DECOMDECOMNR_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Equip___decomdecomnr_(qs);
 							result = model.TableDecomDecomnr;
@@ -163,8 +174,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_TPEQUTIPOEQUI":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Groupbx_tpequtipoequi(qs);
 							result = model.TableTpequTipoequi;
@@ -172,8 +183,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_WAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Groupbx_warehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -181,8 +192,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_ITEM_ITEMDES_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Groupbx_item_itemdes_(qs);
 							result = model.TableItemItemdes;
@@ -190,14 +201,33 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_ROOM1ROOMNR__":	// Field (F1)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Groupbx_room1roomnr__(qs);
 							result = model.TableRoom1Roomnr;
 						}
 						break;
-					default: break;
+					case "WID_IEQUTPEQUTIPOEQUI":	// Field (DB)
+						{
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Wid_iequ_ViewModel(UserContext.Current) { editable = false };							
+							model.MapFromModel(row);
+							model.Load_Wid_iequtpequtipoequi(qs);
+							result = model.TableTpequTipoequi;
+						}
+						break;
+					case "WID_IEQUWAREHWAREHDES":	// Field (DB)
+						{
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Wid_iequ_ViewModel(UserContext.Current) { editable = false };							
+							model.MapFromModel(row);
+							model.Load_Wid_iequwarehwarehdes(qs);
+							result = model.TableWarehWarehdes;
+						}
+						break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -235,6 +265,12 @@ namespace GenioMVC.Controllers
 					case "ACCORDI_PESS1NAME____":	// Field (DB)
 						values = new Accordi_ViewModel(UserContext.Current).GetDependant_AccordiTablePess1Name(Selected);
 						break;
+					case "EQUIGROUPESS1NAME____":	// Field (DB)
+						values = new Equigrou_ViewModel(UserContext.Current).GetDependant_EquigrouTablePess1Name(Selected);
+						break;
+					case "EQUIGROUTPEQUTIPOEQUI":	// Field (DB)
+						values = new Equigrou_ViewModel(UserContext.Current).GetDependant_EquigrouTableTpequTipoequi(Selected);
+						break;
 					case "EQUIP___CMPNYDESIGNAT":	// Field (DB)
 						values = new Equip_ViewModel(UserContext.Current).GetDependant_EquipTableCmpnyDesignat(Selected);
 						break;
@@ -268,6 +304,12 @@ namespace GenioMVC.Controllers
 					case "GROUPBX_ROOM1ROOMNR__":	// Field (F1)
 						values = new Groupbx_ViewModel(UserContext.Current).GetDependant_GroupbxTableRoom1Roomnr(Selected);
 						break;
+					case "WID_IEQUTPEQUTIPOEQUI":	// Field (DB)
+						values = new Wid_iequ_ViewModel(UserContext.Current).GetDependant_Wid_iequTableTpequTipoequi(Selected);
+						break;
+					case "WID_IEQUWAREHWAREHDES":	// Field (DB)
+						values = new Wid_iequ_ViewModel(UserContext.Current).GetDependant_Wid_iequTableWarehWarehdes(Selected);
+						break;
 					default: break;
 				}
 
@@ -279,11 +321,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -292,106 +335,131 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Accordi" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Accordi([FromBody]Accordi_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Accordi([FromBody]Accordi_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "equip",
+			return GenericRecalculateFormulas(formData, "equip",
 				(primaryKey) => Models.Equip.Find(primaryKey, UserContext.Current, "FACCORDI"),
-				(model) => form_data.MapToModel(model as Models.Equip)
+				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Equdocum" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Equdocum([FromBody]Equdocum_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Equdocum([FromBody]Equdocum_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "equip",
+			return GenericRecalculateFormulas(formData, "equip",
 				(primaryKey) => Models.Equip.Find(primaryKey, UserContext.Current, "FEQUDOCUM"),
-				(model) => form_data.MapToModel(model as Models.Equip)
+				(model) => formData.MapToModel(model as Models.Equip)
+			);
+		}
+
+		/// <summary>
+		/// Recalculate formulas of the "Equigrou" form. (++, CT, SR, CL and U1)
+		/// </summary>
+		/// <param name="formData">Current form data</param>
+		/// <returns></returns>
+		[HttpPost]
+		public JsonResult RecalculateFormulas_Equigrou([FromBody]Equigrou_ViewModel formData)
+		{
+			return GenericRecalculateFormulas(formData, "equip",
+				(primaryKey) => Models.Equip.Find(primaryKey, UserContext.Current, "FEQUIGROU"),
+				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Equip" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Equip([FromBody]Equip_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Equip([FromBody]Equip_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "equip",
+			return GenericRecalculateFormulas(formData, "equip",
 				(primaryKey) => Models.Equip.Find(primaryKey, UserContext.Current, "FEQUIP"),
-				(model) => form_data.MapToModel(model as Models.Equip)
+				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Fullcale" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Fullcale([FromBody]Fullcale_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Fullcale([FromBody]Fullcale_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "equip",
+			return GenericRecalculateFormulas(formData, "equip",
 				(primaryKey) => Models.Equip.Find(primaryKey, UserContext.Current, "FFULLCALE"),
-				(model) => form_data.MapToModel(model as Models.Equip)
+				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Gmaps" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Gmaps([FromBody]Gmaps_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Gmaps([FromBody]Gmaps_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "equip",
+			return GenericRecalculateFormulas(formData, "equip",
 				(primaryKey) => Models.Equip.Find(primaryKey, UserContext.Current, "FGMAPS"),
-				(model) => form_data.MapToModel(model as Models.Equip)
+				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Groupbx" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Groupbx([FromBody]Groupbx_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Groupbx([FromBody]Groupbx_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "equip",
+			return GenericRecalculateFormulas(formData, "equip",
 				(primaryKey) => Models.Equip.Find(primaryKey, UserContext.Current, "FGROUPBX"),
-				(model) => form_data.MapToModel(model as Models.Equip)
+				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Timequip" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Timequip([FromBody]Timequip_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Timequip([FromBody]Timequip_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "equip",
+			return GenericRecalculateFormulas(formData, "equip",
 				(primaryKey) => Models.Equip.Find(primaryKey, UserContext.Current, "FTIMEQUIP"),
-				(model) => form_data.MapToModel(model as Models.Equip)
+				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
 
-
+		/// <summary>
+		/// Recalculate formulas of the "Wid_iequ" form. (++, CT, SR, CL and U1)
+		/// </summary>
+		/// <param name="formData">Current form data</param>
+		/// <returns></returns>
+		[HttpPost]
+		public JsonResult RecalculateFormulas_Wid_iequ([FromBody]Wid_iequ_ViewModel formData)
+		{
+			return GenericRecalculateFormulas(formData, "equip",
+				(primaryKey) => Models.Equip.Find(primaryKey, UserContext.Current, "FWID_IEQU"),
+				(model) => formData.MapToModel(model as Models.Equip)
+			);
+		}
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -399,7 +467,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

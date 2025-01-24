@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.LDENTNORWAREHWAREHDES.handlers"
 							:loading="controls.LDENTNORWAREHWAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.LDENTNORWAREHWAREHDES.isVisible"
 								v-bind="controls.LDENTNORWAREHWAREHDES.props"
-								:model-value="model.ValCodwareh.value"
-								v-on="controls.LDENTNORWAREHWAREHDES.handlers"
-								@update:model-value="model.ValCodwareh.fnUpdateValue" />
+								v-on="controls.LDENTNORWAREHWAREHDES.handlers" />
 							<q-see-more-ldentnorwarehwarehdes
 								v-if="controls.LDENTNORWAREHWAREHDES.seeMoreIsVisible"
 								v-bind="controls.LDENTNORWAREHWAREHDES.seeMoreParams"
@@ -129,12 +126,10 @@
 							v-on="controls.LDENTNORLDENTLINE____.handlers"
 							:loading="controls.LDENTNORLDENTLINE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.LDENTNORLDENTLINE____.isVisible"
-								v-bind="controls.LDENTNORLDENTLINE____"
-								:model-value="model.ValLine.value"
+								v-bind="controls.LDENTNORLDENTLINE____.props"
 								@update:model-value="model.ValLine.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -147,14 +142,11 @@
 							v-on="controls.LDENTNORITEM_ITEMDES_.handlers"
 							:loading="controls.LDENTNORITEM_ITEMDES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.LDENTNORITEM_ITEMDES_.isVisible"
 								v-bind="controls.LDENTNORITEM_ITEMDES_.props"
-								:model-value="model.ValCoditem.value"
-								v-on="controls.LDENTNORITEM_ITEMDES_.handlers"
-								@update:model-value="model.ValCoditem.fnUpdateValue" />
+								v-on="controls.LDENTNORITEM_ITEMDES_.handlers" />
 							<q-see-more-ldentnoritem-itemdes
 								v-if="controls.LDENTNORITEM_ITEMDES_.seeMoreIsVisible"
 								v-bind="controls.LDENTNORITEM_ITEMDES_.seeMoreParams"
@@ -170,12 +162,10 @@
 							v-on="controls.LDENTNORLDENTQTDENTRA.handlers"
 							:loading="controls.LDENTNORLDENTQTDENTRA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.LDENTNORLDENTQTDENTRA.isVisible"
-								v-bind="controls.LDENTNORLDENTQTDENTRA"
-								:model-value="model.ValQtdentra.value"
+								v-bind="controls.LDENTNORLDENTQTDENTRA.props"
 								@update:model-value="model.ValQtdentra.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -263,15 +253,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'LDENTNOR',
-						location: 'form-LDENTNOR',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'LDENTNOR',
+					location: 'form-LDENTNOR',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -317,6 +305,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -389,8 +379,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -472,7 +463,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -526,21 +517,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -551,25 +527,9 @@
 						id: 'LDENTNORWAREHWAREHDES',
 						name: 'WAREHDES',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.WAREHOUSE51864),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodwareh',
-							dependencyEvent: 'fieldChange:ldent.codwareh'
-						},
-						dependentFields: () => {
-							return {
-								set 'wareh.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
-								set 'wareh.warehdes'(value) { vm.model.TableWarehWarehdes.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -578,22 +538,29 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodwareh',
+							dependencyEvent: 'fieldChange:ldent.codwareh'
+						},
+						dependentFields: () => ({
+							set 'wareh.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
+							set 'wareh.warehdes'(value) { vm.model.TableWarehWarehdes.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					LDENTNORLDENTLINE____: new fieldControlClass.NumberControl({
 						modelField: 'ValLine',
 						valueChangeEvent: 'fieldChange:ldent.line',
-						maxIntegers: 3,
-						maxDecimals: 1,
-						isSequencial: true,
 						id: 'LDENTNORLDENTLINE____',
 						name: 'LINE',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.LINE27983),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 3,
+						maxDecimals: 1,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -604,31 +571,9 @@
 						id: 'LDENTNORITEM_ITEMDES_',
 						name: 'ITEMDES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ITEM40802),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-							{
-								identifier: ['wareh', 'ldent.codwareh'],
-								dependencyEvents: ['fieldChange:ldent.codwareh'],
-								dependencyField: 'LDENT.CODWAREH',
-								fnValueSelector: (model) => model.ValCodwareh.value
-							},
-						],
-						lookupKeyModelField: {
-							name: 'ValCoditem',
-							dependencyEvent: 'fieldChange:ldent.coditem'
-						},
-						dependentFields: () => {
-							return {
-								set 'item.coditem'(value) { vm.model.ValCoditem.updateValue(value) },
-								set 'item.itemdes'(value) { vm.model.TableItemItemdes.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -637,22 +582,34 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCoditem',
+							dependencyEvent: 'fieldChange:ldent.coditem'
+						},
+						dependentFields: () => ({
+							set 'item.coditem'(value) { vm.model.ValCoditem.updateValue(value) },
+							set 'item.itemdes'(value) { vm.model.TableItemItemdes.updateValue(value) },
+						}),
+						controlLimits: [
+							{
+								identifier: ['wareh', 'ldent.codwareh'],
+								dependencyEvents: ['fieldChange:ldent.codwareh'],
+								dependencyField: 'LDENT.CODWAREH',
+								fnValueSelector: (model) => model.ValCodwareh.value
+							},
+						],
 					}, this),
 					LDENTNORLDENTQTDENTRA: new fieldControlClass.NumberControl({
 						modelField: 'ValQtdentra',
 						valueChangeEvent: 'fieldChange:ldent.qtdentra',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'LDENTNORLDENTQTDENTRA',
 						name: 'QTDENTRA',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.INPUT_QUANTITY01675),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -714,7 +671,7 @@
 						/** The foreign key to the ITEM table */
 						get item() { return vm.model.ValCoditem },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -810,6 +767,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -849,6 +814,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -975,6 +948,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR LDENTNOR]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -990,6 +979,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS LDENTNOR]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

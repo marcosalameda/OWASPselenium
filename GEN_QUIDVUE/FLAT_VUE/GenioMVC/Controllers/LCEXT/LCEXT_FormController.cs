@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Lcext;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_LCEXT_CANCEL = new NavigationLocation("LOCATION_EXTENSION_C10932", "Lcext_Cancel", "Lcext") { vueRouteName = "form-LCEXT", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_LCEXT_SHOW = new NavigationLocation("LOCATION_EXTENSION_C10932", "Lcext_Show", "Lcext") { vueRouteName = "form-LCEXT", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_LCEXT_NEW = new NavigationLocation("LOCATION_EXTENSION_C10932", "Lcext_New", "Lcext") { vueRouteName = "form-LCEXT", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_LCEXT_EDIT = new NavigationLocation("LOCATION_EXTENSION_C10932", "Lcext_Edit", "Lcext") { vueRouteName = "form-LCEXT", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_LCEXT_DUPLICATE = new NavigationLocation("LOCATION_EXTENSION_C10932", "Lcext_Duplicate", "Lcext") { vueRouteName = "form-LCEXT", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_LCEXT_DELETE = new NavigationLocation("LOCATION_EXTENSION_C10932", "Lcext_Delete", "Lcext") { vueRouteName = "form-LCEXT", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_LCEXT_CANCEL = new("LOCATION_EXTENSION_C10932", "Lcext_Cancel", "Lcext") { vueRouteName = "form-LCEXT", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_LCEXT_SHOW = new("LOCATION_EXTENSION_C10932", "Lcext_Show", "Lcext") { vueRouteName = "form-LCEXT", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_LCEXT_NEW = new("LOCATION_EXTENSION_C10932", "Lcext_New", "Lcext") { vueRouteName = "form-LCEXT", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_LCEXT_EDIT = new("LOCATION_EXTENSION_C10932", "Lcext_Edit", "Lcext") { vueRouteName = "form-LCEXT", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_LCEXT_DUPLICATE = new("LOCATION_EXTENSION_C10932", "Lcext_Duplicate", "Lcext") { vueRouteName = "form-LCEXT", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_LCEXT_DELETE = new("LOCATION_EXTENSION_C10932", "Lcext_Delete", "Lcext") { vueRouteName = "form-LCEXT", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Lcext_ModalDBEdit()
-		{
-			Lcext_ViewModel model = new Lcext_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Lcext_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Lcext Multiform actions
-
-		//
-		// GET /Lcext/MFLcext_New
-		[HttpGet]
-		[ActionName("MFLcext_New")]
-		public ActionResult MFLcext_New()
-		{
-			var model = new Lcext_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_LCEXT_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("lcext", model.ValCodlcext);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFLcext_New_GET()
-		{
-			return MFLcext_New();
-		}
-
-		//
-		// GET /Lcext/MFLcext_Edit
-		[HttpGet]
-		[ActionName("MFLcext_Edit")]
-		public ActionResult MFLcext_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("LCEXT", "EDIT", new { id = id, partialView = "MFLcext", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFLcext_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFLcext_Edit(requestModel);
-		}
-
-		//
-		// GET /Lcext/MFLcext_Cancel
-		[ActionName("MFLcext_Cancel")]
-		public ActionResult MFLcext_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Lcext(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Lcext/MFLcext_Save
-		[HttpPost]
-		[ActionName("MFLcext_Save")]
-		public JsonResult MFLcext_Save(Lcext_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFLcext_Save",
-				ViewName = "MFLcext",
-				AreaName = "lcext"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Lcext/MFLcext_Delete
-		[HttpPost]
-		[ActionName("MFLcext_Delete")]
-		public JsonResult MFLcext_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFLcext_Delete",
-				ViewName = "MFLcext",
-				AreaName = "lcext",
-				Location = ACTION_LCEXT_EDIT
-			};
-
-			var model = new Lcext_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Lcext/Lcext_LocatValGln
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_locat")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,12 +422,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Lcext_LocatValGln_ViewModel model = new Lcext_LocatValGln_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodlcext = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Lcext/Lcext_SaveEdit
 		[HttpPost]

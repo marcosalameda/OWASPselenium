@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuIMO_211ViewModel.js'
+
 	const requiredTextResources = ['QMenuIMO_211', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '211',
 					isMenuList: true,
+					designation: computed(() => this.Resources.COUNTRIES64527),
 					acronym: 'IMO_211',
 					name: 'PAIS',
 					route: 'menu-IMO_211',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'IMO_Menu_211',
 						controller: 'CNTRY',
 						action: 'IMO_Menu_211',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -182,8 +192,10 @@
 								area: 'CNTRY',
 								field: 'FLAG',
 								label: computed(() => this.Resources.FLAG51937),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.FLAG51937)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 						],
 						config: {
@@ -198,7 +210,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -302,6 +314,7 @@
 								id: 'RCA_IMO_2111',
 								name: 'form-PAIS',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -318,20 +331,14 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
 							allowFileExport: true,
 							allowFileImport: true,
-							// The list support form: PAIS
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValCountry',
 							defaultSearchColumnNameOriginal: 'ValCountry',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValCountry',
+								sortOrder: 'asc'
+							}
 						},
 						groupFilters: [
 							{
@@ -357,13 +364,14 @@
 										selected: false
 									},
 								],
-								value: '1'
+								value: '1',
+								defaultValue: '1'
 							},
 						],
 						changeEvents: ['changed-CNTRY'],
 						uuid: 'a1f95b79-43d9-4afa-90b0-1c6f2d9334b1',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -392,6 +400,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS IMO_211]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS IMO_MENU_211]/
 // eslint-disable-next-line

@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Agreg;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER AGREG]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Agreg row = null;
 
-			try
-			{
-				row = Models.Agreg.Find(Navigation.GetStrValue("agreg"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model agreg");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Agreg(UserContext.Current);
+				row = new Models.Agreg(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("agreg");
 			}
 
@@ -82,8 +75,8 @@ namespace GenioMVC.Controllers
 				{
 					case "AGREG___PROJEPROJECTO":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Agreg_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Agreg_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Agreg___projeprojecto(qs);
 							result = model.TableProjeProjecto;
@@ -91,14 +84,15 @@ namespace GenioMVC.Controllers
 						break;
 					case "AGREG___YEAR_YEAR____":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Agreg_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Agreg_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Agreg___year_year____(qs);
 							result = model.TableYearYear;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -147,11 +141,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -160,22 +155,19 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Agreg" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Agreg([FromBody]Agreg_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Agreg([FromBody]Agreg_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "agreg",
+			return GenericRecalculateFormulas(formData, "agreg",
 				(primaryKey) => Models.Agreg.Find(primaryKey, UserContext.Current, "FAGREG"),
-				(model) => form_data.MapToModel(model as Models.Agreg)
+				(model) => formData.MapToModel(model as Models.Agreg)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -183,7 +175,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

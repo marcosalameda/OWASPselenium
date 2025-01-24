@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Equip _equip;
 		[DisplayName("Equip")]
 		[ShouldSerialize("Equip")]
-		public virtual Equip Equip { 
-			get { 
+		public virtual Equip Equip {
+			get {
 				if (!this.isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
 					_equip = Models.Equip.Find(ValCodequip, m_userContext, Identifier, _fieldsToSerialize);
 				if (_equip == null)
 					_equip = new Models.Equip(m_userContext, true, _fieldsToSerialize);
 				return _equip;
 			}
-			set { _equip = value; } 
+			set { _equip = value; }
 		}
-		
+
 
 		[DisplayName(">COMPANY")]
 		/// <summary>Field : ">COMPANY" Tipo: "CE" Formula: ++ "[EQUIP->CODEMPRE]"</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Cmpny _cmpny;
 		[DisplayName("Cmpny")]
 		[ShouldSerialize("Cmpny")]
-		public virtual Cmpny Cmpny { 
-			get { 
+		public virtual Cmpny Cmpny {
+			get {
 				if (!this.isEmptyModel && (_cmpny == null || (!string.IsNullOrEmpty(ValCodempre) && (_cmpny.isEmptyModel || _cmpny.klass.QPrimaryKey != ValCodempre))))
 					_cmpny = Models.Cmpny.Find(ValCodempre, m_userContext, Identifier, _fieldsToSerialize);
 				if (_cmpny == null)
 					_cmpny = new Models.Cmpny(m_userContext, true, _fieldsToSerialize);
 				return _cmpny;
 			}
-			set { _cmpny = value; } 
+			set { _cmpny = value; }
 		}
-		
+
 
 		[DisplayName("Fixed in")]
 		/// <summary>Field : "Fixed in" Tipo: "DT" Formula:  ""</summary>
@@ -83,7 +83,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "No rumour in the Company" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Repar.ValNrrepara")]
 		[NumericAttribute(0)]
-		public decimal? ValNrrepara { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrrepara, 0)); } set { klass.ValNrrepara = Convert.ToDouble(value); } }
+		public decimal? ValNrrepara { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrrepara, 0)); } set { klass.ValNrrepara = Convert.ToDecimal(value); } }
 
 		[DisplayName("Technical area")]
 		/// <summary>Field : "Technical area" Tipo: "AC" Formula:  ""</summary>
@@ -100,17 +100,17 @@ namespace GenioMVC.Models
 		private Speci _speci;
 		[DisplayName("Speci")]
 		[ShouldSerialize("Speci")]
-		public virtual Speci Speci { 
-			get { 
+		public virtual Speci Speci {
+			get {
 				if (!this.isEmptyModel && (_speci == null || (!string.IsNullOrEmpty(ValCodespec) && (_speci.isEmptyModel || _speci.klass.QPrimaryKey != ValCodespec))))
 					_speci = Models.Speci.Find(ValCodespec, m_userContext, Identifier, _fieldsToSerialize);
 				if (_speci == null)
 					_speci = new Models.Speci(m_userContext, true, _fieldsToSerialize);
 				return _speci;
 			}
-			set { _speci = value; } 
+			set { _speci = value; }
 		}
-		
+
 
 		[DisplayName(">CATEGORy")]
 		/// <summary>Field : ">CATEGORy" Tipo: "CE" Formula:  ""</summary>
@@ -119,17 +119,17 @@ namespace GenioMVC.Models
 		private Cate1 _cate1;
 		[DisplayName("Cate1")]
 		[ShouldSerialize("Cate1")]
-		public virtual Cate1 Cate1 { 
-			get { 
+		public virtual Cate1 Cate1 {
+			get {
 				if (!this.isEmptyModel && (_cate1 == null || (!string.IsNullOrEmpty(ValCodcateg) && (_cate1.isEmptyModel || _cate1.klass.QPrimaryKey != ValCodcateg))))
 					_cate1 = Models.Cate1.Find(ValCodcateg, m_userContext, Identifier, _fieldsToSerialize);
 				if (_cate1 == null)
 					_cate1 = new Models.Cate1(m_userContext, true, _fieldsToSerialize);
 				return _cate1;
 			}
-			set { _cate1 = value; } 
+			set { _cate1 = value; }
 		}
-		
+
 
 		[DisplayName(">REPAIRER")]
 		/// <summary>Field : ">REPAIRER" Tipo: "CE" Formula:  ""</summary>
@@ -138,17 +138,17 @@ namespace GenioMVC.Models
 		private Pesso _pesso;
 		[DisplayName("Pesso")]
 		[ShouldSerialize("Pesso")]
-		public virtual Pesso Pesso { 
-			get { 
+		public virtual Pesso Pesso {
+			get {
 				if (!this.isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
 					_pesso = Models.Pesso.Find(ValCodpesso, m_userContext, Identifier, _fieldsToSerialize);
 				if (_pesso == null)
 					_pesso = new Models.Pesso(m_userContext, true, _fieldsToSerialize);
 				return _pesso;
 			}
-			set { _pesso = value; } 
+			set { _pesso = value; }
 		}
-		
+
 
 		[DisplayName("Description of the repair")]
 		/// <summary>Field : "Description of the repair" Tipo: "MO" Formula:  ""</summary>
@@ -160,7 +160,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Spent on hours" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Repar.ValHours")]
 		[NumericAttribute(0)]
-		public decimal? ValHours { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValHours, 0)); } set { klass.ValHours = Convert.ToDouble(value); } }
+		public decimal? ValHours { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValHours, 0)); } set { klass.ValHours = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Repar.ValZzstate")]
@@ -170,19 +170,19 @@ namespace GenioMVC.Models
 		public Repar(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioArepar(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Repar(UserContext userContext, CSGenioArepar val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioArepar csgenioa)
@@ -224,7 +224,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

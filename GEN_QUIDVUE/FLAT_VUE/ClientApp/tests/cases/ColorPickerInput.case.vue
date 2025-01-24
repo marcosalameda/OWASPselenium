@@ -15,8 +15,8 @@
 	<div class="demo-container">
 		<div class="demo-main-container">
 			<div>
-				<q-card>
-					<template #content.append>
+				<q-card-view>
+					<template #[`content.append`]>
 						<base-input-structure
 							id="CTRL_1"
 							label="Hexadecimal Color">
@@ -42,7 +42,7 @@
 								:colors-defaults="setColors" />
 						</base-input-structure>
 					</template>
-				</q-card>
+				</q-card-view>
 			</div>
 		</div>
 	</div>
@@ -50,15 +50,19 @@
 
 <script>
 	export default {
+		name: 'QColorPickerContainer',
+
 		docsfile: './docs/inputs/ColorPickerInput.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{
 			return {
 				colorHexa: '#F123F0',
-				colorRGBA: 'rgba(50,0,255,0.5)',
+				colorRGBA: 'rgba(50, 0, 255, 0.5)',
 				theme: 'dark',
 				setColors: [
 					'#FF0000',
@@ -76,7 +80,7 @@
 					'#FC3CAD',
 					'#BF3DCE',
 					'#8E00A7',
-					'rgba(133,133,133,0.7)'
+					'rgba(133, 133, 133, 0.7)'
 				]
 			}
 		}

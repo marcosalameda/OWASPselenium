@@ -36,7 +36,6 @@ export const QArrayA_categ = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -83,7 +82,6 @@ export const QArrayA_facili = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -124,7 +122,6 @@ export const QArrayA_nivele = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -165,7 +162,46 @@ export const QArrayAccustos = {
 			},
 		]
 	},
-	
+}
+
+/**
+ * The aCondTst array.
+ */
+export const QArrayAcondtst = {
+	type: 'C',
+	pluralName: 'CONDICOES28572',
+	singularName: 'CONDICAO44011',
+	fnResources: null,
+	setResources(fnResources)
+	{
+		this.fnResources = fnResources
+		return this
+	},
+	get elements()
+	{
+		// eslint-disable-next-line no-unused-vars
+		const vm = this
+		return [
+			{
+				num: 1,
+				key: 'BLOCK',
+				resourceId: 'BLOCK_FIELD33648',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+			{
+				num: 2,
+				key: 'HIDE',
+				resourceId: 'HIDE_FIELD21772',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+			{
+				num: 3,
+				key: 'REQUIRE',
+				resourceId: 'REQUIRE_FIELD20203',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+		]
+	},
 }
 
 /**
@@ -200,7 +236,6 @@ export const QArrayActive = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -235,7 +270,6 @@ export const QArrayActivida = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -288,7 +322,6 @@ export const QArrayAdatqual = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -314,25 +347,27 @@ export const QArrayAddresst = {
 				key: 'postal',
 				resourceId: 'POSTAL23608',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: ' 1093',
+				helpResourceId: '_109335067',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 			},
 			{
 				num: 2,
 				key: 'physical',
 				resourceId: 'PHYSICAL14657',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: ' 1094',
+				helpResourceId: '_109432218',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 			},
 			{
 				num: 3,
 				key: 'both',
 				resourceId: 'POSTAL___PHYSICAL44710',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: ' 1095',
+				helpResourceId: '_109531561',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 			},
 		]
 	},
-	
 }
 
 /**
@@ -358,39 +393,43 @@ export const QArrayAddressu = {
 				key: 'home',
 				resourceId: 'HOME23643',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: ' 1087',
+				helpResourceId: '_108747561',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 			},
 			{
 				num: 2,
 				key: 'work',
 				resourceId: 'WORK50501',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: ' 1088',
+				helpResourceId: '_108820200',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 			},
 			{
 				num: 3,
 				key: 'temp',
 				resourceId: 'TEMPORARY00792',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: ' 1089',
+				helpResourceId: '_108919783',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 			},
 			{
 				num: 4,
 				key: 'old',
 				resourceId: 'OLD___INCORRECT09129',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: ' 1090',
+				helpResourceId: '_109034838',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 			},
 			{
 				num: 5,
 				key: 'billing',
 				resourceId: 'BILLING63268',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: ' 1091',
+				helpResourceId: '_109131109',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 			},
 		]
 	},
-	
 }
 
 /**
@@ -425,7 +464,6 @@ export const QArrayAddrtyco = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -484,7 +522,6 @@ export const QArrayAestadm = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -543,7 +580,6 @@ export const QArrayAestado = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -590,7 +626,6 @@ export const QArrayAestrate = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -631,7 +666,6 @@ export const QArrayAganttun = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -666,7 +700,6 @@ export const QArrayAhorasse = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -713,7 +746,6 @@ export const QArrayAlaglead = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -748,7 +780,6 @@ export const QArrayAlocregr = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -843,7 +874,52 @@ export const QArrayAmeses = {
 			},
 		]
 	},
-	
+}
+
+/**
+ * The aparttyp array.
+ */
+export const QArrayAparttyp = {
+	type: 'N',
+	pluralName: 'APARTMENT_TYPES10946',
+	singularName: 'APARTMENT_TYPE01925',
+	fnResources: null,
+	setResources(fnResources)
+	{
+		this.fnResources = fnResources
+		return this
+	},
+	get elements()
+	{
+		// eslint-disable-next-line no-unused-vars
+		const vm = this
+		return [
+			{
+				num: 1,
+				key: 0,
+				resourceId: 'T036607',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+			{
+				num: 2,
+				key: 1,
+				resourceId: 'T133664',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+			{
+				num: 3,
+				key: 2,
+				resourceId: 'T233813',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+			{
+				num: 4,
+				key: 3,
+				resourceId: 'T3_AND_OTHERS19907',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+		]
+	},
 }
 
 /**
@@ -878,7 +954,6 @@ export const QArrayAperacum = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -967,7 +1042,6 @@ export const QArrayAperiodi = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1008,7 +1082,6 @@ export const QArrayApolarid = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1049,7 +1122,6 @@ export const QArrayApriorid = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1096,7 +1168,6 @@ export const QArrayAreatecn = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1131,7 +1202,6 @@ export const QArrayArecolha = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1166,7 +1236,6 @@ export const QArrayAscorout = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1213,7 +1282,6 @@ export const QArrayAside = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1254,7 +1322,6 @@ export const QArrayAsimnao = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1307,7 +1374,6 @@ export const QArrayAssettyp = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1348,7 +1414,6 @@ export const QArrayAtipoind = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1395,7 +1460,6 @@ export const QArrayAtipopro = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1430,7 +1494,6 @@ export const QArrayAtipouo = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1465,7 +1528,6 @@ export const QArrayAtpactiv = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1512,7 +1574,6 @@ export const QArrayAtpacumu = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1553,7 +1614,6 @@ export const QArrayAtpavali = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1588,7 +1648,6 @@ export const QArrayAtpbonif = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1629,7 +1688,6 @@ export const QArrayAtpindic = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1664,7 +1722,6 @@ export const QArrayAtpmes = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1705,7 +1762,6 @@ export const QArrayAtpmeta = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1740,7 +1796,6 @@ export const QArrayAtpscore = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1775,7 +1830,6 @@ export const QArrayAtpseg = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1822,7 +1876,74 @@ export const QArrayAvisperi = {
 			},
 		]
 	},
-	
+}
+
+/**
+ * The Baggage array.
+ */
+export const QArrayBaggage = {
+	type: 'C',
+	pluralName: 'BAGGAGES58641',
+	singularName: 'BAGGAGE61714',
+	fnResources: null,
+	setResources(fnResources)
+	{
+		this.fnResources = fnResources
+		return this
+	},
+	get elements()
+	{
+		// eslint-disable-next-line no-unused-vars
+		const vm = this
+		return [
+			{
+				num: 1,
+				key: '0',
+				resourceId: 'CABIN___CHECKIN_LUGG64007',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+			{
+				num: 2,
+				key: '1',
+				resourceId: 'CABIN_LUGGAGE_ONLY28929',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+		]
+	},
+}
+
+/**
+ * The Bagtype array.
+ */
+export const QArrayBagtype = {
+	type: 'C',
+	pluralName: 'BAGGAGE_TYPES55106',
+	singularName: 'BAGGAGE_TYPE35947',
+	fnResources: null,
+	setResources(fnResources)
+	{
+		this.fnResources = fnResources
+		return this
+	},
+	get elements()
+	{
+		// eslint-disable-next-line no-unused-vars
+		const vm = this
+		return [
+			{
+				num: 1,
+				key: '0',
+				resourceId: 'CABIN___CHECKIN_LUGG64007',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+			{
+				num: 2,
+				key: '1',
+				resourceId: 'CABIN_LUGGAGE_ONLY33466',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+		]
+	},
 }
 
 /**
@@ -1881,7 +2002,46 @@ export const QArrayBankcomp = {
 			},
 		]
 	},
-	
+}
+
+/**
+ * The buildtyp array.
+ */
+export const QArrayBuildtyp = {
+	type: 'C',
+	pluralName: 'BUILDING_TYPES23872',
+	singularName: 'BUILDING_TYPE57152',
+	fnResources: null,
+	setResources(fnResources)
+	{
+		this.fnResources = fnResources
+		return this
+	},
+	get elements()
+	{
+		// eslint-disable-next-line no-unused-vars
+		const vm = this
+		return [
+			{
+				num: 1,
+				key: 'A',
+				resourceId: 'APARTMENT12665',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+			{
+				num: 2,
+				key: 'H',
+				resourceId: 'HOUSE01993',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+			{
+				num: 3,
+				key: 'O',
+				resourceId: 'OTHER37293',
+				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+			},
+		]
+	},
 }
 
 /**
@@ -1922,7 +2082,6 @@ export const QArrayClass = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -1948,12 +2107,20 @@ export const QArrayClassnum = {
 				key: 1,
 				resourceId: '_1O_CLASSE38057',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+				helpResourceId: '_114530146',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
+				helpResourceVerboseId: '_1145_VERBOSE04491',
+				get descriptionVerbose() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceVerboseId) : this.helpResourceVerboseId) },
 			},
 			{
 				num: 2,
 				key: 2,
 				resourceId: '_2A_CLASSE35193',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+				helpResourceId: '_114630263',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
+				helpResourceVerboseId: '_1146_VERBOSE39468',
+				get descriptionVerbose() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceVerboseId) : this.helpResourceVerboseId) },
 			},
 			{
 				num: 3,
@@ -1963,7 +2130,6 @@ export const QArrayClassnum = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2004,7 +2170,6 @@ export const QArrayDatatype = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2057,7 +2222,6 @@ export const QArrayDecplace = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2098,7 +2262,6 @@ export const QArrayDispstat = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2139,7 +2302,6 @@ export const QArrayDsiponib = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2198,7 +2360,6 @@ export const QArrayFaciltyp = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2224,7 +2385,8 @@ export const QArrayFreqempr = {
 				key: 7,
 				resourceId: 'AVERAGE50639',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: '   10',
+				helpResourceId: '___1040299',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 				icon: {
 					icon: 'average',
 					type: 'svg',
@@ -2235,7 +2397,8 @@ export const QArrayFreqempr = {
 				key: 1,
 				resourceId: 'HIGH47127',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: '   11',
+				helpResourceId: '___1140948',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 				icon: {
 					icon: 'high',
 					type: 'svg',
@@ -2246,7 +2409,8 @@ export const QArrayFreqempr = {
 				key: 15,
 				resourceId: 'LOW09468',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: '   12',
+				helpResourceId: '___1238797',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 				icon: {
 					icon: 'low',
 					type: 'svg',
@@ -2257,7 +2421,8 @@ export const QArrayFreqempr = {
 				key: 30,
 				resourceId: 'RARE54339',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: '   13',
+				helpResourceId: '___1337918',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 				icon: {
 					icon: 'rare',
 					type: 'svg',
@@ -2265,7 +2430,6 @@ export const QArrayFreqempr = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2312,7 +2476,6 @@ export const QArrayGenconta = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2359,7 +2522,6 @@ export const QArrayGender = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2385,25 +2547,27 @@ export const QArrayGenero = {
 				key: 'M',
 				resourceId: 'MALE32397',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: '    7',
+				helpResourceId: '____715057',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 			},
 			{
 				num: 2,
 				key: 'F',
 				resourceId: 'FEMALE46107',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: '    8',
+				helpResourceId: '____821504',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 			},
 			{
 				num: 3,
 				key: 'I',
 				resourceId: 'UNDIFFERENTIATED28573',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: '    9',
+				helpResourceId: '____921651',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2438,7 +2602,6 @@ export const QArrayGpsinput = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2473,7 +2636,6 @@ export const QArrayIdenttyp = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2568,7 +2730,6 @@ export const QArrayMonths = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2603,7 +2764,6 @@ export const QArrayObjetype = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2644,7 +2804,6 @@ export const QArrayPhonepre = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2670,18 +2829,23 @@ export const QArrayPrimviag = {
 				key: 1,
 				resourceId: 'YES34196',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: ' 1126',
+				helpResourceId: '_112615498',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
+				helpResourceVerboseId: '_1126_VERBOSE07113',
+				get descriptionVerbose() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceVerboseId) : this.helpResourceVerboseId) },
 			},
 			{
 				num: 2,
 				key: 0,
 				resourceId: 'NO57340',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: ' 1125',
+				helpResourceId: '_112514035',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
+				helpResourceVerboseId: '_1125_VERBOSE10394',
+				get descriptionVerbose() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceVerboseId) : this.helpResourceVerboseId) },
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2734,7 +2898,6 @@ export const QArrayQartipqu = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2760,18 +2923,23 @@ export const QArrayRadiobtn = {
 				key: 'Radio',
 				resourceId: 'RADIO44833',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: ' 1126',
+				helpResourceId: '_112615498',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
+				helpResourceVerboseId: '_1126_VERBOSE07113',
+				get descriptionVerbose() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceVerboseId) : this.helpResourceVerboseId) },
 			},
 			{
 				num: 2,
 				key: 'op2',
 				resourceId: 'OPCAO_214220',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-				helpId: ' 1125',
+				helpResourceId: '_112514035',
+				get description() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceId) : this.helpResourceId) },
+				helpResourceVerboseId: '_1125_VERBOSE10394',
+				get descriptionVerbose() { return computed(() => vm.fnResources ? vm.fnResources(this.helpResourceVerboseId) : this.helpResourceVerboseId) },
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2818,7 +2986,6 @@ export const QArrayS_modpro = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2845,7 +3012,6 @@ export const QArrayS_module = {
 
 		return this.array
 	},
-	
 }
 
 /**
@@ -2916,7 +3082,6 @@ export const QArrayS_prstat = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2963,7 +3128,6 @@ export const QArrayS_resul = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -2990,7 +3154,6 @@ export const QArrayS_roles = {
 
 		return this.array
 	},
-	
 }
 
 /**
@@ -3017,7 +3180,6 @@ export const QArrayS_tpproc = {
 
 		return this.array
 	},
-	
 }
 
 /**
@@ -3058,7 +3220,6 @@ export const QArraySexo = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -3111,7 +3272,6 @@ export const QArraySpacetyp = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -3152,7 +3312,6 @@ export const QArrayTipoarti = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -3217,7 +3376,6 @@ export const QArrayTipocond = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -3258,7 +3416,6 @@ export const QArrayTypen = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -3299,7 +3456,6 @@ export const QArrayTypet = {
 			},
 		]
 	},
-	
 }
 
 /**
@@ -3334,7 +3490,6 @@ export const QArrayYesno = {
 			},
 		]
 	},
-	
 }
 
 
@@ -3343,6 +3498,7 @@ export default {
 	QArrayA_facili,
 	QArrayA_nivele,
 	QArrayAccustos,
+	QArrayAcondtst,
 	QArrayActive,
 	QArrayActivida,
 	QArrayAdatqual,
@@ -3357,6 +3513,7 @@ export default {
 	QArrayAlaglead,
 	QArrayAlocregr,
 	QArrayAmeses,
+	QArrayAparttyp,
 	QArrayAperacum,
 	QArrayAperiodi,
 	QArrayApolarid,
@@ -3380,7 +3537,10 @@ export default {
 	QArrayAtpscore,
 	QArrayAtpseg,
 	QArrayAvisperi,
+	QArrayBaggage,
+	QArrayBagtype,
 	QArrayBankcomp,
+	QArrayBuildtyp,
 	QArrayClass,
 	QArrayClassnum,
 	QArrayDatatype,

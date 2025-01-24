@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Equip
 {
-	public class Fullcale_ViewModel : FormViewModel<Models.Equip>
+	public class Fullcale_ViewModel : FormViewModel<Models.Equip>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,6 +29,45 @@ namespace GenioMVC.ViewModels.Equip
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodempre { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCoddeco { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCoditem { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodpess1 { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodrooms { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodtpequ { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodwareh { get; set; }
+
+		#endregion
+
 		#region Navigations
 		#endregion
 
@@ -36,45 +75,6 @@ namespace GenioMVC.ViewModels.Equip
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodempre { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCoddeco { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCoditem { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodpess1 { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodtpequ { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodwareh { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodrooms { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -87,15 +87,17 @@ namespace GenioMVC.ViewModels.Equip
 
 		// Field for formula
 		/// <summary>Field: "No. register" Tipo: "C"</summary>
+		[ValidateSetAccess]
 		public string ValRegistnr { get; set; }
 
 		#endregion
 
 		public string ValCodequip { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Fullcale_ViewModel() : base(null!) { }
@@ -131,6 +133,15 @@ namespace GenioMVC.ViewModels.Equip
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Equip model = new Models.Equip(userContext) { Identifier = "FFULLCALE" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FFULLCALE");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -195,9 +206,9 @@ namespace GenioMVC.ViewModels.Equip
 				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
 				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
+				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
-				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
 				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
@@ -208,6 +219,20 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Equip m)
 		{
 			if (m == null)
@@ -218,25 +243,74 @@ namespace GenioMVC.ViewModels.Equip
 
 			try
 			{
+				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
 				m.ValCodempre = ViewModelConversion.ToString(ValCodempre);
 				m.ValCoddeco = ViewModelConversion.ToString(ValCoddeco);
 				m.ValCoditem = ViewModelConversion.ToString(ValCoditem);
 				m.ValCodpess1 = ViewModelConversion.ToString(ValCodpess1);
+				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
 				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
 				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
-				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
 				m.ValRegistnr = ViewModelConversion.ToString(ValRegistnr);
-				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Fullcale) to Model (Equip) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Fullcale) to Model (Equip) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "equip.codequip":
+						this.ValCodequip = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Fullcale) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Fullcale)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Equip.Find(id ?? Navigation.GetStrValue("equip"), m_userContext, "FFULLCALE"); }
+			finally { Model ??= new Models.Equip(m_userContext) { Identifier = "FFULLCALE" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -250,20 +324,13 @@ namespace GenioMVC.ViewModels.Equip
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FFULLCALE";
@@ -273,6 +340,7 @@ namespace GenioMVC.ViewModels.Equip
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -334,25 +402,19 @@ namespace GenioMVC.ViewModels.Equip
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE FULLCALE]/
 		public override void Save()
 		{
 
-			try { Model = Models.Equip.Find(Navigation.GetStrValue("equip"), m_userContext, "FFULLCALE"); }
-			finally { if (Model == null) Model = new Models.Equip(m_userContext) { Identifier = "FFULLCALE" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY FULLCALE]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Equip.Find(Navigation.GetStrValue("equip"), m_userContext, "FFULLCALE"); }
-			finally { if (Model == null) Model = new Models.Equip(m_userContext) { Identifier = "FFULLCALE" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE FULLCALE]/
 
@@ -380,14 +442,16 @@ namespace GenioMVC.ViewModels.Equip
 				"equip.coddeco" => ViewModelConversion.ToString(modelValue),
 				"equip.coditem" => ViewModelConversion.ToString(modelValue),
 				"equip.codpess1" => ViewModelConversion.ToString(modelValue),
+				"equip.codrooms" => ViewModelConversion.ToString(modelValue),
 				"equip.codtpequ" => ViewModelConversion.ToString(modelValue),
 				"equip.codwareh" => ViewModelConversion.ToString(modelValue),
-				"equip.codrooms" => ViewModelConversion.ToString(modelValue),
 				"equip.registnr" => ViewModelConversion.ToString(modelValue),
 				"equip.codequip" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

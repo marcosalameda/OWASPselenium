@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Contact type
 	/// </summary>
-	public class CSGenioAgenre : DbArea	{
+	public class CSGenioAgenre : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -260,7 +261,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodgenre, value); }
 		}
 
-
 		/// <summary>Field : "Genre" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldGender { get { return m_fldGender; } }
 		private static FieldRef m_fldGender = new FieldRef("genre", "gender");
@@ -271,7 +271,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldGender); }
 			set { insertNameValueField(FldGender, value); }
 		}
-
 
 		/// <summary>Field : "Gender contact" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldAgencont { get { return m_fldAgencont; } }
@@ -284,7 +283,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldAgencont, value); }
 		}
 
-
 		/// <summary>Field : "Background color" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldBackcolo { get { return m_fldBackcolo; } }
 		private static FieldRef m_fldBackcolo = new FieldRef("genre", "backcolo");
@@ -296,7 +294,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldBackcolo, value); }
 		}
 
-
 		/// <summary>Field : "Text color" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTextcolo { get { return m_fldTextcolo; } }
 		private static FieldRef m_fldTextcolo = new FieldRef("genre", "textcolo");
@@ -307,7 +304,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldTextcolo); }
 			set { insertNameValueField(FldTextcolo, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -350,23 +346,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAgenre> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAgenre> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAgenre>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -415,7 +394,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX GENRE]/

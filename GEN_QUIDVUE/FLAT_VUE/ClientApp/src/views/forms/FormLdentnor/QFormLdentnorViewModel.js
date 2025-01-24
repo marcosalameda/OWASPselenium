@@ -75,12 +75,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [INDOC->CODWAREH]
-					// eslint-disable-next-line eqeqeq
 					return this.IndocValCodwareh.value
 				},
-				dependencyEvents: ['fieldChange:indoc.codwareh'],
+				dependencyEvents: ['fieldChange:indoc.codwareh', 'fieldChange:ldent.coddentr'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyG,
 			},
 		}).cloneFrom(values?.ValCodwareh))
@@ -160,6 +158,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODWAREH',
 			relatedArea: 'WARE1',
 			description: computed(() => this.Resources.BY_OMISSION13050),
+			isFixed: true,
 		}).cloneFrom(values?.IndocValCodwareh))
 		watch(() => this.IndocValCodwareh.value, (newValue, oldValue) => this.onUpdate('indoc.codwareh', this.IndocValCodwareh, newValue, oldValue))
 	}
@@ -176,5 +175,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodldent'
 
 	get QPrimaryKey() { return this.ValCodldent.value }
-	set QPrimaryKey(value) { this.ValCodldent.value = value }
+	set QPrimaryKey(value) { this.ValCodldent.updateValue(value) }
 }

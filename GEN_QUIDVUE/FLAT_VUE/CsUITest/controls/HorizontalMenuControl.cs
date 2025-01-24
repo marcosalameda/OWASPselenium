@@ -1,3 +1,4 @@
+using AngleSharp.Text;
 using OpenQA.Selenium.Support.Extensions;
 
 namespace quidgest.uitests.controls;
@@ -7,13 +8,13 @@ public class HorizontalMenuControl: PageObject, IMenuControl {
     private IWebElement navbar => driver.FindElement(By.Id("main-header-navbar"));
 
     private IWebElement modules => navbar.FindElement(By.ClassName("modules__container"));
-    private IWebElement currentModule => modules.FindElement(By.CssSelector(".dropdown a"));
+    private IWebElement currentModule => modules.FindElement(By.CssSelector(".modules__header"));
 
     private IWebElement bookmarks => navbar.FindElement(By.ClassName("bookmarks__container"));
 
-    private IWebElement menus => navbar.FindElement(By.Id("menu-navbar"));
+    protected IWebElement menus => navbar.FindElement(By.Id("menu-navbar"));
 
-    private MenuTree _menuTree;
+    protected MenuTree _menuTree;
 
     public HorizontalMenuControl(IWebDriver driver, MenuTree menuTree): base(driver) 
     {
@@ -23,7 +24,7 @@ public class HorizontalMenuControl: PageObject, IMenuControl {
         wait.Until(c => menus);
     }
 
-    private void WaitForLoading()
+    protected virtual void WaitForLoading()
     {
         wait.Until(c => menus);
         wait.Until(c => modules);
@@ -44,13 +45,14 @@ public class HorizontalMenuControl: PageObject, IMenuControl {
         ClickParentRecursive(moduleId, menuNode);
     }
 
-    private void ClickParentRecursive(string moduleId, MenuTreeNode node)
+    protected virtual void ClickParentRecursive(string moduleId, MenuTreeNode node)
     {
         var parent = node.Parent;
         if (parent != null)
             ClickParentRecursive(moduleId, parent);
 
-        var liTarget = menus.FindElement(By.Id(moduleId + node.Id));
+        // Get the clickable element within the list item element that has the menu ID
+        var liTarget = menus.FindElement(By.CssSelector("#" + moduleId + node.Id + " a"));
         liTarget.Click();
     }
 
@@ -73,5 +75,25 @@ public class HorizontalMenuControl: PageObject, IMenuControl {
         var item = bookmarks.FindElement(ByData.Key(itemId));
         wait.Until(c => item.Displayed);
         item.Click();
+    }
+
+    public int GetMenuCount(string moduleId, string itemId)
+    {
+        WaitForLoading();
+
+        // Get menu item element
+        var menuNode = menus.FindElement(By.Id(moduleId + itemId));
+
+        // Get record counter element
+        IWebElement counterElem = menuNode
+            ?.FindElement(By.CssSelector("a"))
+            ?.FindElement(By.CssSelector("span"))
+            ?.FindElement(By.CssSelector("span"));
+
+        // Get record counter element text
+        string counterElemText = counterElem?.GetDomProperty("innerText");
+
+        // Convert to integer
+        return counterElemText == null ? 0 : counterElemText.ToInteger(0);
     }
 }

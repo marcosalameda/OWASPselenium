@@ -112,6 +112,15 @@ export function isChecklistColumn(column)
 }
 
 /**
+ * Determine if column is a totalizer title column
+ * @param column {Object}
+ * @returns Boolean
+ */
+export function isTotalizerColumn(column) {
+	return column.isTotalizer ?? false
+}
+
+/**
  * Determine if row is checked in checklist column
  * @param row {Object}
  * @returns Boolean
@@ -270,10 +279,9 @@ export function toggleRowSelectMultiple(row, linkRowsSelectedAndChecked = undefi
  */
 export function rowWithoutChildren(row)
 {
-	var newRow = { ...row }
+	const newRow = { ...row }
 	delete newRow.children
-	let rowCopy = clone(newRow)
-	return rowCopy
+	return newRow
 }
 
 /**
@@ -324,6 +332,7 @@ export default {
 	isActionsColumn,
 	isExtendedActionsColumn,
 	isChecklistColumn,
+	isTotalizerColumn,
 	isRowChecked,
 	rowIsValid,
 	getRowClasses,

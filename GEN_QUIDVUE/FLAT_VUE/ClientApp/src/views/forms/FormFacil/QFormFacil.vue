@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.FACIL___ENTITNAME____.handlers"
 							:loading="controls.FACIL___ENTITNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.FACIL___ENTITNAME____.isVisible"
 								v-bind="controls.FACIL___ENTITNAME____.props"
-								:model-value="model.ValCodentit.value"
-								v-on="controls.FACIL___ENTITNAME____.handlers"
-								@update:model-value="model.ValCodentit.fnUpdateValue" />
+								v-on="controls.FACIL___ENTITNAME____.handlers" />
 							<q-see-more-facil-entitname
 								v-if="controls.FACIL___ENTITNAME____.seeMoreIsVisible"
 								v-bind="controls.FACIL___ENTITNAME____.seeMoreParams"
@@ -131,14 +128,13 @@
 							v-on="controls.FACIL___FACILINCORPOR.handlers"
 							:loading="controls.FACIL___FACILINCORPOR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.FACIL___FACILINCORPOR.isVisible"
-								v-bind="controls.FACIL___FACILINCORPOR"
-								format="Date"
+								v-bind="controls.FACIL___FACILINCORPOR.props"
 								:model-value="model.ValIncorpor.value"
-								@update:model-value="model.ValIncorpor.fnUpdateValue" />
+								@reset-icon-click="model.ValIncorpor.fnUpdateValue(model.ValIncorpor.originalValue ?? new Date())"
+								@update:model-value="model.ValIncorpor.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -152,12 +148,12 @@
 							v-on="controls.FACIL___FACILNAME____.handlers"
 							:loading="controls.FACIL___FACILNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACIL___FACILNAME____.props"
 								:model-value="model.ValName.value"
-								@update:model-value="model.ValName.fnUpdateValue" />
+								@blur="onBlur(controls.FACIL___FACILNAME____, model.ValName.value)"
+								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -171,8 +167,7 @@
 							v-on="controls.FACIL___FACILFACILTYP.handlers"
 							:loading="controls.FACIL___FACILFACILTYP.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.FACIL___FACILFACILTYP.isVisible"
 								v-bind="controls.FACIL___FACILFACILTYP.props"
@@ -189,14 +184,11 @@
 							v-on="controls.FACIL___FACTYTYPE____.handlers"
 							:loading="controls.FACIL___FACTYTYPE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.FACIL___FACTYTYPE____.isVisible"
 								v-bind="controls.FACIL___FACTYTYPE____.props"
-								:model-value="model.ValCodfacty.value"
-								v-on="controls.FACIL___FACTYTYPE____.handlers"
-								@update:model-value="model.ValCodfacty.fnUpdateValue" />
+								v-on="controls.FACIL___FACTYTYPE____.handlers" />
 							<q-see-more-facil-factytype
 								v-if="controls.FACIL___FACTYTYPE____.seeMoreIsVisible"
 								v-bind="controls.FACIL___FACTYTYPE____.seeMoreParams"
@@ -212,18 +204,14 @@
 							v-on="controls.FACIL___FACILADDRESS_.handlers"
 							:loading="controls.FACIL___FACILADDRESS_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.FACIL___FACILADDRESS_.isVisible"
+								v-bind="controls.FACIL___FACILADDRESS_.props"
 								id="FACIL___FACILADDRESS_"
-								size="xxlarge"
 								:model-value="model.ValAddress.value"
 								:rows="5"
 								:cols="75"
-								:is-required="controls.FACIL___FACILADDRESS_.isRequired"
-								:readonly="controls.FACIL___FACILADDRESS_.readonly"
-								:placeholder="controls.FACIL___FACILADDRESS_.placeholder"
 								@update:model-value="model.ValAddress.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -238,8 +226,7 @@
 							v-on="controls.FACIL___FACILIMAGE___.handlers"
 							:loading="controls.FACIL___FACILIMAGE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-image
 								v-if="controls.FACIL___FACILIMAGE___.isVisible"
 								v-bind="controls.FACIL___FACILIMAGE___.props"
@@ -258,9 +245,8 @@
 							:label-position="labelAlignment.topleft"
 							:loading="controls.FACIL___FACILGPSINPUT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-radio-button-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-radio-group
 								v-if="controls.FACIL___FACILGPSINPUT.isVisible"
 								id="FACIL___FACILGPSINPUT"
 								:model-value="model.ValGpsinput.value"
@@ -284,12 +270,10 @@
 							v-on="controls.FACIL___FACILLATITUDE.handlers"
 							:loading="controls.FACIL___FACILLATITUDE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.FACIL___FACILLATITUDE.isVisible"
-								v-bind="controls.FACIL___FACILLATITUDE"
-								:model-value="model.ValLatitude.value"
+								v-bind="controls.FACIL___FACILLATITUDE.props"
 								@update:model-value="model.ValLatitude.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -302,12 +286,10 @@
 							v-on="controls.FACIL___FACILLONGITUD.handlers"
 							:loading="controls.FACIL___FACILLONGITUD.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.FACIL___FACILLONGITUD.isVisible"
-								v-bind="controls.FACIL___FACILLONGITUD"
-								:model-value="model.ValLongitud.value"
+								v-bind="controls.FACIL___FACILLONGITUD.props"
 								@update:model-value="model.ValLongitud.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -322,12 +304,12 @@
 							v-on="controls.FACIL___FACILGEOCOORI.handlers"
 							:loading="controls.FACIL___FACILGEOCOORI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACIL___FACILGEOCOORI.props"
 								:model-value="model.ValGeocoori.value"
-								@update:model-value="model.ValGeocoori.fnUpdateValue" />
+								@blur="onBlur(controls.FACIL___FACILGEOCOORI, model.ValGeocoori.value)"
+								@change="model.ValGeocoori.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -414,15 +396,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'FACIL',
-						location: 'form-FACIL',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'FACIL',
+					location: 'form-FACIL',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -468,6 +448,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -540,8 +522,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -623,7 +606,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -677,21 +660,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -702,25 +670,9 @@
 						id: 'FACIL___ENTITNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.LEGAL_NAME42902),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodentit',
-							dependencyEvent: 'fieldChange:facil.codentit'
-						},
-						dependentFields: () => {
-							return {
-								set 'entit.codentit'(value) { vm.model.ValCodentit.updateValue(value) },
-								set 'entit.name'(value) { vm.model.TableEntitName.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -729,22 +681,27 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodentit',
+							dependencyEvent: 'fieldChange:facil.codentit'
+						},
+						dependentFields: () => ({
+							set 'entit.codentit'(value) { vm.model.ValCodentit.updateValue(value) },
+							set 'entit.name'(value) { vm.model.TableEntitName.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					FACIL___FACILINCORPOR: new fieldControlClass.DateControl({
 						modelField: 'ValIncorpor',
 						valueChangeEvent: 'fieldChange:facil.incorpor',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'FACIL___FACILINCORPOR',
 						name: 'INCORPOR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.INCORPORATION10135),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -754,15 +711,11 @@
 						id: 'FACIL___FACILNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.FACILITY_NAME19514),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
 						labelId: 'label_FACIL___FACILNAME____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -772,16 +725,14 @@
 						id: 'FACIL___FACILFACILTYP',
 						name: 'FACILTYP',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.FACILITY_TYPE44577),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						labelId: 'label_FACIL___FACILFACILTYP',
 						arrayName: 'FacilTyp',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -791,25 +742,9 @@
 						id: 'FACIL___FACTYTYPE____',
 						name: 'TYPE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.FACILITY_TYPE44577),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodfacty',
-							dependencyEvent: 'fieldChange:facil.codfacty'
-						},
-						dependentFields: () => {
-							return {
-								set 'facty.codfacty'(value) { vm.model.ValCodfacty.updateValue(value) },
-								set 'facty.type'(value) { vm.model.TableFactyType.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -818,6 +753,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodfacty',
+							dependencyEvent: 'fieldChange:facil.codfacty'
+						},
+						dependentFields: () => ({
+							set 'facty.codfacty'(value) { vm.model.ValCodfacty.updateValue(value) },
+							set 'facty.type'(value) { vm.model.TableFactyType.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					FACIL___FACILADDRESS_: new fieldControlClass.StringControl({
 						modelField: 'ValAddress',
@@ -825,15 +770,9 @@
 						id: 'FACIL___FACILADDRESS_',
 						name: 'ADDRESS',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ADDRESS04342),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
-						labelId: 'label_FACIL___FACILADDRESS_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -843,15 +782,12 @@
 						id: 'FACIL___FACILIMAGE___',
 						name: 'IMAGE',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.IMAGE65174),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						height: 300,
 						width: 400,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.IMAGE65174)),
 						controlLimits: [
 						],
 					}, this),
@@ -861,35 +797,27 @@
 						id: 'FACIL___FACILGPSINPUT',
 						name: 'GPSINPUT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.GPS_INPUT13625),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						labelId: 'label_FACIL___FACILGPSINPUT',
 						arrayName: 'GpsInput',
 						columnNumber: 1,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					FACIL___FACILLATITUDE: new fieldControlClass.NumberControl({
 						modelField: 'ValLatitude',
 						valueChangeEvent: 'fieldChange:facil.latitude',
-						maxIntegers: 3,
-						maxDecimals: 6,
 						id: 'FACIL___FACILLATITUDE',
 						name: 'LATITUDE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.LATITUDE11291),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 6,
 						controlLimits: [
 						],
 						showWhen: {
@@ -897,29 +825,23 @@
 							fnFormula(params)
 							{
 								// Formula: [FACIL->GPSINPUT]=="L"
-								// eslint-disable-next-line eqeqeq
-								return this.ValGpsinput.value=="L"
+								return this.ValGpsinput.value==="L"
 							},
 							dependencyEvents: ['fieldChange:facil.gpsinput'],
 							isServerRecalc: false,
-							isServerFormula: false,
 						},
 					}, this),
 					FACIL___FACILLONGITUD: new fieldControlClass.NumberControl({
 						modelField: 'ValLongitud',
 						valueChangeEvent: 'fieldChange:facil.longitud',
-						maxIntegers: 3,
-						maxDecimals: 6,
 						id: 'FACIL___FACILLONGITUD',
 						name: 'LONGITUD',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.LONGITUDE01015),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 6,
 						controlLimits: [
 						],
 						showWhen: {
@@ -927,12 +849,10 @@
 							fnFormula(params)
 							{
 								// Formula: [FACIL->GPSINPUT]=="L"
-								// eslint-disable-next-line eqeqeq
-								return this.ValGpsinput.value=="L"
+								return this.ValGpsinput.value==="L"
 							},
 							dependencyEvents: ['fieldChange:facil.gpsinput'],
 							isServerRecalc: false,
-							isServerFormula: false,
 						},
 					}, this),
 					FACIL___FACILGEOCOORI: new fieldControlClass.BaseControl({
@@ -943,15 +863,9 @@
 						id: 'FACIL___FACILGEOCOORI',
 						name: 'GEOCOORI',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.GEOGRAPHICAL_COORDIN45869),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
-						labelId: 'label_FACIL___FACILGEOCOORI',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 						showWhen: {
@@ -959,12 +873,10 @@
 							fnFormula(params)
 							{
 								// Formula: [FACIL->GPSINPUT]=="P"
-								// eslint-disable-next-line eqeqeq
-								return this.ValGpsinput.value=="P"
+								return this.ValGpsinput.value==="P"
 							},
 							dependencyEvents: ['fieldChange:facil.gpsinput'],
 							isServerRecalc: false,
-							isServerFormula: false,
 						},
 					}, this),
 				},
@@ -996,6 +908,8 @@
 					Facil: {
 						get ValAddress() { return vm.model.ValAddress.value },
 						set ValAddress(value) { vm.model.ValAddress.updateValue(value) },
+						get ValCodcntry() { return vm.model.ValCodcntry.value },
+						set ValCodcntry(value) { vm.model.ValCodcntry.updateValue(value) },
 						get ValCodentit() { return vm.model.ValCodentit.value },
 						set ValCodentit(value) { vm.model.ValCodentit.updateValue(value) },
 						get ValCodfacty() { return vm.model.ValCodfacty.value },
@@ -1021,6 +935,10 @@
 						get ValType() { return vm.model.TableFactyType.value },
 						set ValType(value) { vm.model.TableFactyType.updateValue(value) },
 					},
+					Glob: {
+						get ValCodfacty() { return vm.model.ValCodfacty.value },
+						set ValCodfacty(value) { vm.model.ValCodfacty.updateValue(value) },
+					},
 					keys: {
 						/** The primary key of the FACIL table */
 						get facil() { return vm.model.ValCodfacil },
@@ -1028,8 +946,10 @@
 						get entit() { return vm.model.ValCodentit },
 						/** The foreign key to the FACTY table */
 						get facty() { return vm.model.ValCodfacty },
+						/** The foreign key to the CNTRY table */
+						get cntry() { return vm.model.ValCodcntry },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1125,6 +1045,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1164,6 +1092,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1290,6 +1226,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR FACIL]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1305,6 +1257,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS FACIL]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

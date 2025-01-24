@@ -39,8 +39,9 @@ export default function getMainRoutes()
 			path: '/CMDLogin',
 			name: 'CMDLog',
 			redirect: to => {
+				const module = to.params.module ? to.params.module : systemDataStore.system.currentModule
 				return {
-					name: `home-${systemDataStore.system.currentModule}`,
+					name: `home-${module}`,
 					params: {
 						culture: to.params.culture ? to.params.culture : systemDataStore.system.currentLang,
 						system: to.params.system ? to.params.system : systemDataStore.system.currentSystem,
@@ -191,6 +192,20 @@ export default function getMainRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/TRN/Home',
+			name: 'home-TRN',
+			meta: {
+				routeType: 'home',
+				module: 'TRN',
+				hasInitialPHE: false,
+				isHomePage: true
+			},
+			component: () => import('@/views/shared/Home.vue'),
+			props: {
+				isHomePage: true
+			}
+		},
+		{
 			path: '/Error',
 			name: 'genericError',
 			component: () => import('@/views/shared/errors/GenericError.vue'),
@@ -218,6 +233,17 @@ export default function getMainRoutes()
 				isPublicPage: true,
 				noBreadcrumbs: true,
 				keepNavigation: true
+			}
+		},
+		{
+			path: '/SystemNotFound',
+			name: 'systemNotFound',
+			component: () => import('@/views/shared/errors/SystemNotFoundError.vue'),
+			meta: {
+				isPublicPage: true,
+				noBreadcrumbs: true,
+				keepNavigation: true,
+				isFullScreenPage: true
 			}
 		},
 		{

@@ -1,90 +1,78 @@
-namespace quidgest.uitests.pages;
+﻿using quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
 
 [System.CodeDom.Compiler.GeneratedCode("Genio", "")]
-public class ArmapessForm: PageObject {
-
-	private By formLocator = By.CssSelector("#form-container");
-	private IWebElement form => driver.FindElement(formLocator);
-
+public class ArmapessForm : Form
+{
 	/// <summary>
 	/// Employee Number
 	/// </summary>
-	public BaseInputControl WpessNfunc => new BaseInputControl(driver, formLocator, "#ARMAPESSWPESSNFUNC___");
+	public BaseInputControl WpessNfunc => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSNFUNC___");
+
 	/// <summary>
 	/// Profille picture
 	/// </summary>
-	public BaseInputControl WpessPfoto => new BaseInputControl(driver, formLocator, "#ARMAPESSWPESSPFOTO___");
+	public BaseInputControl WpessPfoto => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSPFOTO___");
+
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl WpessName => new BaseInputControl(driver, formLocator, "#ARMAPESSWPESSNAME____");
+	public BaseInputControl WpessName => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSNAME____");
+
 	/// <summary>
 	/// Birth date
 	/// </summary>
-	public DateInputControl WpessDate => new DateInputControl(driver, formLocator, "#ARMAPESSWPESSDATE____");
+	public DateInputControl WpessDate => new DateInputControl(driver, ContainerLocator, "#ARMAPESSWPESSDATE____");
+
 	/// <summary>
 	/// Sex
 	/// </summary>
-	public EnumControl WpessSex => new EnumControl(driver, formLocator, "container-ARMAPESSWPESSSEX_____");
+	public EnumControl WpessSex => new EnumControl(driver, ContainerLocator, "container-ARMAPESSWPESSSEX_____");
+
 	/// <summary>
 	/// Country of Birth
 	/// </summary>
-	public BaseInputControl WpessNaturali => new BaseInputControl(driver, formLocator, "#ARMAPESSWPESSNATURALI");
+	public BaseInputControl WpessNaturali => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSNATURALI");
+
 	/// <summary>
 	/// Nationality
 	/// </summary>
-	public BaseInputControl WpessNacional => new BaseInputControl(driver, formLocator, "#ARMAPESSWPESSNACIONAL");
+	public BaseInputControl WpessNacional => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSNACIONAL");
+
 	/// <summary>
 	/// Adress
 	/// </summary>
-	public BaseInputControl WpessAdress => new BaseInputControl(driver, formLocator, "#ARMAPESSWPESSADRESS__");
+	public BaseInputControl WpessAdress => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSADRESS__");
+
 	/// <summary>
 	/// Zipcode
 	/// </summary>
-	public BaseInputControl WpessZipcode => new BaseInputControl(driver, formLocator, "#ARMAPESSWPESSZIPCODE_");
+	public BaseInputControl WpessZipcode => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSZIPCODE_");
+
 	/// <summary>
 	/// Country
 	/// </summary>
-	public BaseInputControl WpessCountry => new BaseInputControl(driver, formLocator, "#ARMAPESSWPESSCOUNTRY_");
+	public BaseInputControl WpessCountry => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSCOUNTRY_");
+
 	/// <summary>
 	/// Email
 	/// </summary>
-	public BaseInputControl WpessEmail => new BaseInputControl(driver, formLocator, "#ARMAPESSWPESSEMAIL___");
+	public BaseInputControl WpessEmail => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSEMAIL___");
+
 	/// <summary>
 	/// Cellphone
 	/// </summary>
-	public BaseInputControl WpessCellphon => new BaseInputControl(driver, formLocator, "#ARMAPESSWPESSCELLPHON");
+	public BaseInputControl WpessCellphon => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSCELLPHON");
+
 	/// <summary>
 	/// Warehouse
 	/// </summary>
-	public LookupControl WarehWarehdes => new LookupControl(driver, formLocator, "container-ARMAPESSWAREHWAREHDES");
-	public SeeMorePage WarehWarehdesSeeMorePage => new SeeMorePage(driver, "ARMAPESS", "WAREH.WAREHDES");
+	public LookupControl WarehWarehdes => new LookupControl(driver, ContainerLocator, "container-ARMAPESSWAREHWAREHDES");
+	public SeeMorePage WarehWarehdesSeeMorePage => new SeeMorePage(driver, "ARMAPESS", "ARMAPESSWAREHWAREHDES");
 
-	private IWebElement saveBtn => form.FindElement(By.CssSelector("#bottom-save-btn"));
-	private IWebElement cancelBtn => form.FindElement(By.CssSelector("#bottom-cancel-btn"));
-	public FORM_MODE mode {get; private set;}
-
-	public ArmapessForm(IWebDriver driver, FORM_MODE mode, By subformLocator=null): base(driver) {
-		this.mode = mode;
-		formLocator = subformLocator ?? formLocator;
-
-		wait.Until(c => form);
-		WaitForLoading();
-	}
-
-	public void WaitForLoading()
-	{
-        wait.Until(c => form.FindElement(ByData.Key("ARMAPESS")).GetAttribute("data-loading") != "true");
-    }
-
-	public void Save() {
-		WaitForLoading();
-		saveBtn.Click();
-	}
-
-	public void Cancel() {
-		WaitForLoading();
-		cancelBtn.Click();
-	}
-
+	public ArmapessForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "ARMAPESS", containerLocator: containerLocator) { }
 }

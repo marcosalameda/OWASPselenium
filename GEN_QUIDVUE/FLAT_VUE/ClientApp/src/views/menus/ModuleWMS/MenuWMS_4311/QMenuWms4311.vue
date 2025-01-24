@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuWMS_4311ViewModel.js'
+
 	const requiredTextResources = ['QMenuWMS_4311', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '4311',
 					isMenuList: true,
+					designation: computed(() => this.Resources.PERSONS18356),
 					acronym: 'WMS_4311',
 					name: 'PERSO',
 					route: 'menu-WMS_4311',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'WMS_Menu_4311',
 						controller: 'PERSO',
 						action: 'WMS_Menu_4311',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -167,8 +177,10 @@
 								area: 'PERSO',
 								field: 'PHOTO',
 								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.DateColumn({
 								order: 5,
@@ -177,7 +189,7 @@
 								field: 'DOB',
 								label: computed(() => this.Resources.DATE_OF_BIRTH63058),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -220,7 +232,7 @@
 								label: computed(() => this.Resources.TIME_OF_BIRTH04797),
 								dataLength: 5,
 								scrollData: 5,
-								dateTimeType: 'Time',
+								dateTimeType: 'time',
 								visibility: false,
 							}),
 						],
@@ -236,7 +248,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -340,6 +352,7 @@
 								id: 'RCA_WMS_43111',
 								name: 'form-PERSO',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -356,23 +369,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: PERSO
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValName',
 							defaultSearchColumnNameOriginal: 'ValName',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValName',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-PERSO'],
 						uuid: '41620bc2-3820-44b2-9922-4b85648ff0b5',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -401,6 +408,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS WMS_4311]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_4311]/
 // eslint-disable-next-line

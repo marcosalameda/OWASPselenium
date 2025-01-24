@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_1711ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_1711', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '1711',
 					isMenuList: true,
+					designation: computed(() => genericFunctions.formatString(vm.Resources.LENDINGS_OF__EQUIP__22198, vm.model.EquipValRegistnr.displayValue, vm.model.EquipTpequValTipoequi.displayValue)),
 					acronym: 'GQT_1711',
 					name: 'LENDI',
 					route: 'menu-GQT_1711',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'GQT_Menu_1711',
 						controller: 'LENDI',
 						action: 'GQT_Menu_1711',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -179,7 +189,7 @@
 								field: 'START',
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.ArrayColumn({
 								order: 6,
@@ -187,8 +197,8 @@
 								area: 'EQUIP',
 								field: 'FREQUENC',
 								label: computed(() => this.Resources.LOAN_FREQUENCY00701),
-								scrollData: 1,
-								maxDigits: 1,
+								scrollData: 2,
+								maxDigits: 2,
 								decimalPlaces: 0,
 								array: qProjArrays.QArrayFreqempr.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayFreqempr.type,
@@ -201,7 +211,7 @@
 								field: 'WARNDT',
 								label: computed(() => this.Resources.WARNING52043),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 8,
@@ -210,7 +220,7 @@
 								field: 'END',
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 9,
@@ -229,11 +239,11 @@
 							tableNamePlural: computed(() => this.Resources.LENDING18782),
 							viewManagement: 'U',
 							showLimitsInfo: true,
-							tableTitle: computed(() => this.Resources.LENDINGS_OF__EQUIP__22198),
+							tableTitle: computed(() => vm.menuInfo.designation),
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -337,6 +347,7 @@
 								id: 'RCA_GQT_17111',
 								name: 'form-COMOD',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -353,23 +364,27 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: COMOD
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValLendinnr',
 							defaultSearchColumnNameOriginal: 'ValLendinnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValStart',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-LENDI', 'changed-EQUIP', 'changed-PESS2', 'changed-PESS1'],
 						uuid: '7477a56b-438b-4cd1-9927-38bc641973fc',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
+						/** Menu limits */
+						controlLimits: [
+							/** DB */
+							{
+								identifier: 'equip',
+								dependencyEvents: [],
+								dependencyField: '',
+								fnValueSelector: () => vm.$route.params['equip'],
+							},
+						]
 					}, this)
 				}
 			}
@@ -398,6 +413,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS GQT_1711]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_1711]/
 // eslint-disable-next-line

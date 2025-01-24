@@ -17,6 +17,7 @@ namespace CSGenio.framework
                     { "WMS", "WAREHOUSE_MANAGEMENT10443" },
                     { "REG", "REGISTRATION03584" },
                     { "IMO", "REAL_ESTATE24996" },
+                    { "TRN", "TRAINING_EXERCISES07801" },
                 },
                 Platform = "VUE",
             };
@@ -33,6 +34,7 @@ namespace CSGenio.framework
                     { "REG", "REGISTRATION03584" },
                     { "TBS", "BASE_TABLES04823" },
                     { "WMS", "WAREHOUSE_MANAGEMENT10443" },
+                    { "TRN", "TRAINING_EXERCISES07801" },
                 },
                 Platform = "VUE",
             };

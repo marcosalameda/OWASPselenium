@@ -13,16 +13,20 @@ export default {
 			])
 		}
 
-		if (process.env.NODE_ENV === 'production')
+		if (import.meta.env.PROD)
 		{
 			// Global handler for uncaught errors propagating from within the application
 			app.config.errorHandler = (err, instance, info) => {
 				const tracing = useTracingDataStore()
-				tracing.addError({ origin: 'Global errorHandler', message: 'Unhandled error', contextData: {
-					err,
-					instance,
-					info
-				}})
+				tracing.addError({
+					origin: 'Global errorHandler',
+					message: 'Unhandled error',
+					contextData: {
+						err,
+						instance,
+						info
+					}
+				})
 			}
 		}
 

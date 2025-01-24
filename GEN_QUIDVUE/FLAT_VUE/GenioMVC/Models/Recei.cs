@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,23 +41,23 @@ namespace GenioMVC.Models
 		private Entit _entit;
 		[DisplayName("Entit")]
 		[ShouldSerialize("Entit")]
-		public virtual Entit Entit { 
-			get { 
+		public virtual Entit Entit {
+			get {
 				if (!this.isEmptyModel && (_entit == null || (!string.IsNullOrEmpty(ValCodentit) && (_entit.isEmptyModel || _entit.klass.QPrimaryKey != ValCodentit))))
 					_entit = Models.Entit.Find(ValCodentit, m_userContext, Identifier, _fieldsToSerialize);
 				if (_entit == null)
 					_entit = new Models.Entit(m_userContext, true, _fieldsToSerialize);
 				return _entit;
 			}
-			set { _entit = value; } 
+			set { _entit = value; }
 		}
-		
+
 
 		[DisplayName("Receipt number")]
 		/// <summary>Field : "Receipt number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Recei.ValNumber")]
 		[NumericAttribute(0)]
-		public decimal? ValNumber { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumber, 0)); } set { klass.ValNumber = Convert.ToDouble(value); } }
+		public decimal? ValNumber { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumber, 0)); } set { klass.ValNumber = Convert.ToDecimal(value); } }
 
 		[DisplayName("Receipt date")]
 		/// <summary>Field : "Receipt date" Tipo: "DT" Formula:  ""</summary>
@@ -103,19 +103,19 @@ namespace GenioMVC.Models
 		public Recei(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioArecei(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Recei(UserContext userContext, CSGenioArecei val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioArecei csgenioa)
@@ -137,7 +137,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,23 +41,23 @@ namespace GenioMVC.Models
 		private Outpt _outpt;
 		[DisplayName("Outpt")]
 		[ShouldSerialize("Outpt")]
-		public virtual Outpt Outpt { 
-			get { 
+		public virtual Outpt Outpt {
+			get {
 				if (!this.isEmptyModel && (_outpt == null || (!string.IsNullOrEmpty(ValCodoutpt) && (_outpt.isEmptyModel || _outpt.klass.QPrimaryKey != ValCodoutpt))))
 					_outpt = Models.Outpt.Find(ValCodoutpt, m_userContext, Identifier, _fieldsToSerialize);
 				if (_outpt == null)
 					_outpt = new Models.Outpt(m_userContext, true, _fieldsToSerialize);
 				return _outpt;
 			}
-			set { _outpt = value; } 
+			set { _outpt = value; }
 		}
-		
+
 
 		[DisplayName("Line")]
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Outpu.ValLine")]
 		[NumericAttribute(1)]
-		public decimal? ValLine { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLine, 1)); } set { klass.ValLine = Convert.ToDouble(value); } }
+		public decimal? ValLine { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLine, 1)); } set { klass.ValLine = Convert.ToDecimal(value); } }
 
 		[DisplayName(">WAREHOUSE")]
 		/// <summary>Field : ">WAREHOUSE" Tipo: "CE" Formula: DF "[OUTPT->CODWAREH]"</summary>
@@ -66,17 +66,17 @@ namespace GenioMVC.Models
 		private Wareh _wareh;
 		[DisplayName("Wareh")]
 		[ShouldSerialize("Wareh")]
-		public virtual Wareh Wareh { 
-			get { 
+		public virtual Wareh Wareh {
+			get {
 				if (!this.isEmptyModel && (_wareh == null || (!string.IsNullOrEmpty(ValCodwareh) && (_wareh.isEmptyModel || _wareh.klass.QPrimaryKey != ValCodwareh))))
 					_wareh = Models.Wareh.Find(ValCodwareh, m_userContext, Identifier, _fieldsToSerialize);
 				if (_wareh == null)
 					_wareh = new Models.Wareh(m_userContext, true, _fieldsToSerialize);
 				return _wareh;
 			}
-			set { _wareh = value; } 
+			set { _wareh = value; }
 		}
-		
+
 
 		[DisplayName(">ARTICLE")]
 		/// <summary>Field : ">ARTICLE" Tipo: "CE" Formula:  ""</summary>
@@ -85,17 +85,17 @@ namespace GenioMVC.Models
 		private Item _item;
 		[DisplayName("Item")]
 		[ShouldSerialize("Item")]
-		public virtual Item Item { 
-			get { 
+		public virtual Item Item {
+			get {
 				if (!this.isEmptyModel && (_item == null || (!string.IsNullOrEmpty(ValCoditem) && (_item.isEmptyModel || _item.klass.QPrimaryKey != ValCoditem))))
 					_item = Models.Item.Find(ValCoditem, m_userContext, Identifier, _fieldsToSerialize);
 				if (_item == null)
 					_item = new Models.Item(m_userContext, true, _fieldsToSerialize);
 				return _item;
 			}
-			set { _item = value; } 
+			set { _item = value; }
 		}
-		
+
 
 		[DisplayName("Exit instant")]
 		/// <summary>Field : "Exit instant" Tipo: "DT" Formula: ++ "[OUTPT->DHDOCUME]"</summary>
@@ -111,23 +111,23 @@ namespace GenioMVC.Models
 		private Oudoc _oudoc;
 		[DisplayName("Oudoc")]
 		[ShouldSerialize("Oudoc")]
-		public virtual Oudoc Oudoc { 
-			get { 
+		public virtual Oudoc Oudoc {
+			get {
 				if (!this.isEmptyModel && (_oudoc == null || (!string.IsNullOrEmpty(ValCoddocsd) && (_oudoc.isEmptyModel || _oudoc.klass.QPrimaryKey != ValCoddocsd))))
 					_oudoc = Models.Oudoc.Find(ValCoddocsd, m_userContext, Identifier, _fieldsToSerialize);
 				if (_oudoc == null)
 					_oudoc = new Models.Oudoc(m_userContext, true, _fieldsToSerialize);
 				return _oudoc;
 			}
-			set { _oudoc = value; } 
+			set { _oudoc = value; }
 		}
-		
+
 
 		[DisplayName("Qtd output")]
 		/// <summary>Field : "Qtd output" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Outpu.ValExitqnty")]
 		[NumericAttribute(0)]
-		public decimal? ValExitqnty { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValExitqnty, 0)); } set { klass.ValExitqnty = Convert.ToDouble(value); } }
+		public decimal? ValExitqnty { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValExitqnty, 0)); } set { klass.ValExitqnty = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Outpu.ValZzstate")]
@@ -137,19 +137,19 @@ namespace GenioMVC.Models
 		public Outpu(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAoutpu(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Outpu(UserContext userContext, CSGenioAoutpu val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAoutpu csgenioa)
@@ -186,7 +186,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

@@ -9,9 +9,9 @@
 		</template>
 
 		<q-text-field
-			:model-value="displayValue"
-			:id="controlId"
 			ref="input"
+			v-bind="$attrs"
+			:id="controlId"
 			role="textbox"
 			:class="styleClass"
 			:readonly="readonly"
@@ -20,35 +20,25 @@
 			:aria-labelledby="labelId"
 			:size="inputSize"
 			:placeholder="inputPlaceholder"
-			@keydown="onKeydownFormat"
-			@keyup="onKeyup"
-			@paste="onPasteFormat"
-			@drop="onDropFormat"
-			@focus="onFocus"
-			@focusout="onFocusout"
-			@update:model-value="setCtrlValue" />
+			@keydown="onKeydown"
+			@cut="onCut"
+			@paste="onPaste"
+			@drop="onDrop"
+			@beforeinput="onBeforeInput"
+			@input="onInput"
+			@change="onChange" />
 	</component>
 </template>
 
 <script>
 	import _isEmpty from 'lodash-es/isEmpty'
 
-	import { validateTexts } from '@/mixins/genericFunctions.js'
 	import { inputSize } from '@/mixins/quidgest.mainEnums.js'
-
-	// The texts needed by the component.
-	const DEFAULT_TEXTS = {
-		emptyText: 'empty'
-	}
 
 	export default {
 		name: 'QNumeric',
 
-		emits: [
-			'update:modelValue',
-			'focus',
-			'focusout'
-		],
+		emits: ['update:modelValue'],
 
 		inheritAttrs: false,
 
@@ -72,10 +62,7 @@
 			/**
 			 * Holds the selection result
 			 */
-			modelValue: {
-				type: Number,
-				default: 0
-			},
+			modelValue: Number,
 
 			/**
 			 * Size of the input
@@ -105,14 +92,6 @@
 			 * For mandatory input
 			 */
 			isRequired: {
-				type: Boolean,
-				default: false
-			},
-
-			/**
-			 * Currency required
-			 */
-			isCurrency: {
 				type: Boolean,
 				default: false
 			},
@@ -171,15 +150,6 @@
 			showEmptyMessage: {
 				type: Boolean,
 				default: false
-			},
-
-			/**
-			 * Necessary strings.
-			 */
-			texts: {
-				type: Object,
-				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
-				default: () => DEFAULT_TEXTS
 			}
 		},
 
@@ -187,20 +157,6 @@
 
 		data()
 		{
-			// Work out the unicode character for the integer and decimal placeholder.
-			// Decimals
-			let u_dec =
-					'\\u' +
-					('0000' + this.decimalPoint.charCodeAt(0).toString(16)).slice(-4),
-				regex_dec_num = new RegExp('[^' + u_dec + '0-9]', 'g'),
-				regex_dec = new RegExp(u_dec, 'g'),
-				// Integer
-				u_int =
-					'\\u' +
-					('0000' + this.thousandsSeparator.charCodeAt(0).toString(16)).slice(-4),
-				regex_int_num = new RegExp('[^' + u_int + '0-9]', 'g'),
-				regex_int = new RegExp(u_int, 'g');
-
 			return {
 				controlId: this.id || `q-numeric-${this._.uid}`,
 				styleClass: [
@@ -208,72 +164,66 @@
 					...this.classes
 				],
 
-				displayValue: '',
-
-				cursorPosition: -(this.maxDecimals + 1),
-
-				regex_dec_num: regex_dec_num,
-				regex_dec: regex_dec,
-				regex_int_num: regex_int_num,
-				regex_int: regex_int,
-
-				init: ('' + this.modelValue).indexOf('.') ? true : false,
-
-				onFocusInputValue: undefined,
-
 				/**
-				 * Substitutions for keydown keycodes.
-				 * Allows conversion from e.which to ascii characters.
+				 * Used to control whether to update the control value when the model value changes.
+				 * Prevented when the user is changing the value in the control
+				 * to prevent the cursor from jumping to the end of the control
 				 */
-				keydown: {
-					codes: {
-						46: 127,
-						188: 44,
-						109: 45,
-						190: 46,
-						191: 47,
-						192: 96,
-						220: 92,
-						222: 39,
-						221: 93,
-						219: 91,
-						173: 45,
-						187: 61, //IE Key codes
-						186: 59, //IE Key codes
-						189: 45, //IE Key codes
-						110: 46, //IE Key codes
-					},
-					shifts: {
-						96: '~',
-						49: '!',
-						50: '@',
-						51: '#',
-						52: '$',
-						53: '%',
-						54: '^',
-						55: '&',
-						56: '*',
-						57: '(',
-						48: ')',
-						45: '_',
-						61: '+',
-						91: '{',
-						93: '}',
-						92: '|',
-						59: ':',
-						39: '\'',
-						44: '<',
-						46: '>',
-						47: '?',
-					}
-				}
+				updateControlOnChange: true,
+				/**
+				 * FOR: OVERRIDE INPUT KEY
+				 * Used to override the input from a key with another key
+				 */
+				overrideInputKey: null
 			}
+		},
+
+		mounted()
+		{
+			// Only update control value if a value is defined, if not, the placeholder will show
+			if (this.modelValue !== undefined && this.modelValue !== null)
+				// Set control value
+				this.updateControlValue()
+
+			if (this.showEmptyMessage)
+				this.getInputElement().value = ''
 		},
 
 		computed: {
 			inputPlaceholder()
 			{
-				return this.showEmptyMessage ? this.texts.emptyText : undefined
+				// Add '1' to the beginning so the formatting function does not remove the 0s
+				// since they would be leading 0s
+				let placeholderWholeNumber = '1' + '0'.repeat(this.maxIntegers)
+				let placeholderFractionNumber = '0'.repeat(this.maxDecimals)
+
+				// Add whole number
+				let placeholderNumber = placeholderWholeNumber
+
+				// If there are fraction number digits, add decimal point and fraction number
+				if (this.maxDecimals > 0)
+					placeholderNumber += this.decimalPoint + placeholderFractionNumber
+
+				// Format number
+				let placeholderFormattedNumber = this.getFormattedInputValue(placeholderNumber, this.decimalPoint, this.thousandsSeparator, this.decimalPoint, this.thousandsSeparator)
+
+				// Remove the unneeded '1' and leading thousands separator so the formatted number has all 0s
+				let startChar = placeholderFormattedNumber.charAt(1) === this.thousandsSeparator ? 2 : 1
+
+				return placeholderFormattedNumber.slice(startChar)
+			},
+
+			/**
+			 * FOR: OVERRIDE INPUT KEY
+			 * Hash table of key codes that cause a different key than what was pressed to be input.
+			 * Keys of this hastable are the event.code property
+			 * Values of this hashtable are the character values that should be used
+			 */
+			keyCodeOverrides()
+			{
+				return {
+					'NumpadDecimal': this.decimalPoint
+				}
 			},
 
 			wrapperComponent()
@@ -300,768 +250,605 @@
 			}
 		},
 
-		mounted()
-		{
-			this.setCtrlValue(this.modelValue)
-
-			if (this.showEmptyMessage)
-				this.setInputValue('')
-		},
-
 		methods: {
-			setInputValue(newValue)
+			/**
+			 * Get the HTML input element
+			 * @return {DOMElement} HTML input element
+			 */
+			getInputElement()
 			{
-				this.displayValue = newValue
+				return this?.$refs?.input?.inputRef
 			},
 
 			/**
-			 * Define the valHook to return normalised field data against an input which has been tagged by the number formatte
-			 * @return mixed : Returns the value that was written to the element as a javascript number, or undefined
+			 * Get the cursor position
+			 * @return {number} Cursor position
 			 */
-			getCtrlValue()
+			getCursorPosition()
 			{
-				// Remove formatting, and return as number.
-				if (this.displayValue === '')
-					return '0';
-
-				// Convert to a number.
-				let num = +this.displayValue
-					.replace(this.regex_dec_num, '')
-					.replace(this.regex_dec, '.');
-
-				// If we've got a finite number, return it.
-				// Otherwise, simply return 0.
-				// Return as a string... thats what we're
-				// used to with .val()
-				return (
-					(this.displayValue.indexOf('-') === 0 ? '-' : '') +
-					(isFinite(num) ? num : 0)
-				);
+				let inputElem = this.getInputElement()
+				return inputElem?.selectionDirection === 'backward' ? inputElem?.selectionStart : inputElem?.selectionEnd
 			},
 
 			/**
-			 * A valhook which formats a number when run against an input which has been tagged by the number formatter
+			 * Set the cursor position
+			 * @param {number} index The index to set the position at
 			 */
-			setCtrlValue(newValue)
+			setCursorPosition(index)
 			{
-				let num = this.formatNumber(
-					newValue,
-					this.maxIntegers,
-					this.maxDecimals,
-					this.decimalPoint,
-					this.thousandsSeparator
-				);
-				this.setInputValue(num);
+				this.getInputElement()?.setSelectionRange(index, index)
 			},
 
 			/**
-			 * Method for selecting a range of characters in an input/textarea.
-			 *
-			 * @param int rangeStart			: Where we want the selection to start.
-			 * @param int rangeEnd				: Where we want the selection to end.
-			 *
-			 * @return void;
+			 * Called when the input value is confirmed, including focusing away
+			 * @param {string} val The input value as text
+			 * @param {string} decimalPoint Decimal point character used in value
+			 * @param {string} thousandsSeparator Thousands separator character used in value
+			 * @param {string} outputDecimalPoint Decimal point character used in output
+			 * @param {string} outputThousandsSeparator Thousands separator character used in output
+			 * @return {string} Value formatted as a string
 			 */
-			setSelectionRange(rangeStart, rangeEnd)
+			getFormattedInputValue(val, decimalPoint, thousandsSeparator, outputDecimalPoint, outputThousandsSeparator)
 			{
-				// Check which way we need to define the text range.
-				if (this.$refs.input.inputRef.createTextRange)
-				{
-					let range = this.$refs.input.inputRef.createTextRange();
-					range.collapse(true);
-					range.moveStart('character', rangeStart);
-					range.moveEnd('character', rangeEnd - rangeStart);
-					range.select();
-				}
+				if (!val) return ''
 
-				// Alternate setSelectionRange method for supporting browsers.
-				else if (this.$refs.input.inputRef.setSelectionRange) {
-					this.$refs.input.inputRef.focus();
-					this.$refs.input.inputRef.setSelectionRange(rangeStart, rangeEnd);
-				}
-			},
+				// Get minus sign
+				let hasSign = val.charAt(0) === '-'
 
-			/**
-			 * Get the selection position for the given part.
-			 *
-			 * @param string part			: Options, 'Start' or 'End'. The selection position to get.
-			 *
-			 * @return int : The index position of the selection part.
-			 */
-			getSelection(part)
-			{
-				var pos = this.displayValue.length;
+				if (hasSign && val.length === 1)
+					return '0'
 
-				// Work out the selection part.
-				part = part.toLowerCase() === 'start' ? 'Start' : 'End';
+				// Get index where whole number starts
+				let wholeNumberIndex = hasSign ? 1 : 0
 
-				if (document.selection)
-				{
-					// The current selection
-					let range = document.selection.createRange(),
-						stored_range,
-						selectionStart,
-						selectionEnd;
-					// We'll use this as a 'dummy'
-					stored_range = range.duplicate();
-					// Select all text
-					//stored_range.moveToElementText( this );
-					stored_range.expand('textedit');
-					// Now move 'dummy' end point to end point of original range
-					stored_range.setEndPoint('EndToEnd', range);
-					// Now we can calculate start and end points
-					selectionStart = stored_range.text.length - range.text.length;
-					selectionEnd = selectionStart + range.text.length;
-					return part === 'Start' ? selectionStart : selectionEnd;
-				} else if (typeof this.$refs.input.inputRef['selection' + part] !== 'undefined') {
-					pos = this.$refs.input.inputRef['selection' + part];
-				}
-				return pos;
-			},
+				// Get index of decimal point
+				let decimalPointIndex = val.indexOf(decimalPoint)
 
-			onFocus()
-			{
-				this.$refs.input.inputRef.select()
-				this.$emit('focus', this.$refs.input.inputRef)
-				this.onFocusInputValue = this.displayValue
-			},
-
-			onFocusout()
-			{
-				// In cases when we don't show the negative value (in sequential fields) we won't react to focusout
-				var currentInputValue = this.displayValue,
-					hasChangesBetweenInOut = this.onFocusInputValue !== currentInputValue
-				if (currentInputValue === '' && !hasChangesBetweenInOut && this.showEmptyMessage)
-					return
-
-				/**
-				 * Model value update
-				 * @property {string} newValue new value set
-				 */
-				this.$emit('update:modelValue', Number(this.getCtrlValue()))
-				this.$emit('focusout')
-			},
-
-			/**
-			 * Handles keyup events, re-formatting numbers.
-			 *
-			 * cursorPosition
-			 * This variable keeps track of where the caret *should* be. It works out the position as
-			 * the number of characters from the end of the string. E.g., '1^,234.56' where ^ denotes the caret,
-			 * would be index -7 (e.g., 7 characters from the end of the string). At the end of both the key down
-			 * and key up events, we'll re-position the caret to wherever cursorPosition tells us the cursor should be.
-			 * This gives us a mechanism for incrementing the cursor position when we come across decimals, commas
-			 * etc. This figure typically doesn't increment for each keypress when to the left of the decimal,
-			 * but does when to the right of the decimal.
-			 *
-			 * @param object e			: The keyup event object.s
-			 *
-			 * @return void;
-			 */
-			onKeydownFormat(e)
-			{
-				// Disable editing on readonly fields
-				if (this.readonly || this.disabled)
-					return;
-
-				const vm = this;
-
-				// Define variables used in the code below.
-				var code = e.keyCode ? e.keyCode : e.which,
-					chara = '', //unescape(e.originalEvent.keyIdentifier.replace('U+','%u')),
-					start = vm.getSelection('start'),
-					end = vm.getSelection('end'),
-					val = '',
-					setPos = false;
-
-				if (Reflect.has(vm.keydown.codes, code)) {
-					code = vm.keydown.codes[code];
-				}
-				if (!e.shiftKey && code >= 65 && code <= 90) {
-					code += 32;
-				} else if (!e.shiftKey && code >= 69 && code <= 105) {
-					code -= 48;
-				} else if (e.shiftKey && Reflect.has(vm.keydown.shifts, code)) {
-					//get shifted keyCode value
-					chara = vm.keydown.shifts[code];
-				}
-
-				if (chara === '') chara = String.fromCharCode(code);
-
-				// Stop executing if the user didn't type a number key, a decimal character, backspace, or delete.
-				if (
-					code !== 8 &&
-					code !== 45 &&
-					code !== 127 &&
-					chara !== vm.decimalPoint &&
-					chara !== ',' &&
-					chara !== '.' &&
-					!chara.match(/[0-9]/)
-				) {
-					// We need the original keycode now...
-					var key = e.keyCode ? e.keyCode : e.which;
-					if (
-						// Allow control keys to go through... (delete, backspace, tab, enter, escape etc)
-						key === 46 ||
-						key === 8 ||
-						key === 127 ||
-						key === 9 ||
-						key === 27 ||
-						key === 13 ||
-						// Allow: Ctrl+A, Ctrl+R, Ctrl+P, Ctrl+S, Ctrl+F, Ctrl+H, Ctrl+B, Ctrl+J, Ctrl+T, Ctrl+Z, Ctrl++, Ctrl+-, Ctrl+0
-						((key === 65 ||
-							key === 82 ||
-							key === 80 ||
-							key === 83 ||
-							key === 70 ||
-							key === 72 ||
-							key === 66 ||
-							key === 74 ||
-							key === 84 ||
-							key === 90 ||
-							key === 61 ||
-							key === 173 ||
-							key === 48) &&
-							(e.ctrlKey || e.metaKey) === true) ||
-						// Allow: Ctrl+V, Ctrl+C, Ctrl+X
-						((key === 86 || key === 67 || key === 88) &&
-							(e.ctrlKey || e.metaKey) === true) ||
-						// Allow: home, end, left, right
-						(key >= 35 && key <= 39) ||
-						// Allow: F1-F12
-						(key >= 112 && key <= 123)
-					) {
-						return;
-					}
-					// But prevent all other keys.
-					e.preventDefault();
-					return false;
-				}
-
-				// The whole lot has been selected, or if the field is empty...
-				if (start === 0 && end === vm.displayValue.length) {
-					if (code === 8) {
-						// Backspace
-						// Blank out the field, but only if the data object has already been instantiated.
-						start = end = 1;
-						vm.setInputValue('0');
-
-						// Reset the cursor position.
-						vm.init = vm.maxDecimals > 0 ? -1 : 0;
-						vm.cursorPosition = vm.maxDecimals > 0 ? -(vm.maxDecimals + 1) : 0;
-						vm.setSelectionRange(0, 0);
-					} else if (chara === vm.decimalPoint || chara === ',' || chara === '.') {
-						start = end = 1;
-						vm.setInputValue(
-							'0' + vm.decimalPoint + new Array(vm.maxDecimals + 1).join('0')
-						);
-
-						// Reset the cursor position.
-						vm.init = vm.maxDecimals > 0 ? 1 : 0;
-						vm.cursorPosition = vm.maxDecimals > 0 ? -(vm.maxDecimals + 1) : 0;
-					} else if (code === 45) {
-						// Negative sign
-						start = end = 2;
-						vm.setInputValue(
-							'-0' +
-								(vm.maxDecimals > 0
-									? vm.decimalPoint + new Array(vm.maxDecimals + 1).join('0')
-									: '')
-						);
-
-						// Reset the cursor position.
-						vm.init = vm.maxDecimals > 0 ? 1 : 0;
-						vm.cursorPosition = vm.maxDecimals > 0 ? -(vm.maxDecimals + 1) : 0;
-
-						vm.setSelectionRange(2, 2);
-					} else {
-						// Reset the cursor position.
-						vm.init = vm.maxDecimals > 0 ? -1 : 0;
-						vm.cursorPosition = vm.maxDecimals > 0 ? -vm.maxDecimals : 0;
-					}
-				}
-
-				// Otherwise, we need to reset the caret position
-				// based on the users selection.
-				else {
-					vm.cursorPosition = end - vm.displayValue.length;
-				}
-
-				// Track if partial selection was used
-				vm.isPartialSelection = start === end ? false : true;
-				// Track if over integer limit
-				// Convert to a number.
-				var decimalPointIndex = vm.displayValue.indexOf(vm.decimalPoint),
-					hasDecimalSeparator = decimalPointIndex !== -1,
-					integerNum = hasDecimalSeparator
-						? vm.displayValue.substring(0, decimalPointIndex)
-						: vm.displayValue,
-					realIntegerNum = integerNum.replace(vm.regex_int, ''),
-					integerPartLength =
-						realIntegerNum.length - (realIntegerNum.indexOf('-') === 0 ? 1 : 0);
-
-				vm.isOverIntegerLimit =
-					integerPartLength >= vm.maxIntegers ? true : false;
-
-				// If the start position is before the decimal point,
-				// and the user has typed a decimal point, we need to move the caret
-				// past the decimal place.
-				if (
-					vm.maxDecimals > 0 &&
-					(chara === vm.decimalPoint || chara === ',' || chara === '.') &&
-					start === vm.displayValue.length - vm.maxDecimals - 1
-				) {
-					vm.cursorPosition++;
-					vm.init = Math.max(0, vm.init);
-					e.preventDefault();
-
-					// Set the selection position.
-					setPos = vm.displayValue.length + vm.cursorPosition;
-				}
-
-				// If the caret is to the right of the decimal place, and the user is entering a
-				// number, remove the following character before putting in the new one.
-				if (
-					vm.maxDecimals > 0 &&
-					start === end &&
-					vm.displayValue.length > vm.maxDecimals + 1 &&
-					start > vm.displayValue.length - vm.maxDecimals - 1 &&
-					isFinite(+chara) &&
-					!e.metaKey &&
-					!e.ctrlKey &&
-					!e.altKey &&
-					chara.length === 1
-				) {
-					// Replace the next character with the one typed
-					if (end < vm.displayValue.length) {
-						val =
-							vm.displayValue.slice(0, start) +
-							chara +
-							vm.displayValue.slice(start + 1);
-						vm.setInputValue(val);
-					}
-					e.preventDefault();
-
-					// Reset the position.
-					setPos = start;
-				}
-				// If the user has typed number and is over the integer limit
-				else if (
-					vm.isOverIntegerLimit &&
-					isFinite(+chara) &&
-					!e.metaKey &&
-					!e.ctrlKey &&
-					!e.altKey &&
-					chara.length === 1 &&
-					realIntegerNum !== '0'
-				) {
-					if (
-						!vm.isPartialSelection &&
-						(vm.maxDecimals === 0 ||
-							(vm.maxDecimals > 0 && start < decimalPointIndex))
-					) {
-						e.preventDefault();
-					}
-
-					// If the start position is before the decimal point,we need to move the caret past the decimal place.
-					if (
-						vm.maxDecimals > 0 &&
-						start === vm.displayValue.length - vm.maxDecimals - 1
-					) {
-						vm.cursorPosition++;
-						vm.init = Math.max(0, vm.init);
-
-						// Set the selection position.
-						setPos = vm.displayValue.length + vm.cursorPosition;
-
-						// Set the digit as the first digit after the decimal point
-						val = vm.displayValue.slice(0, start + 1) + chara
-						// If there are more than 2 decimal digits, add the rest after the replaced character
-						if (vm.maxDecimals > 1)
-							val += vm.displayValue.slice(start + 2)
-						e.preventDefault()
-						vm.setCtrlValue(val)
-					}
-				} else if (
-					/**
-					 * If has selected few numbers with the decimal separator
-					 * put it's back
-					 */
-					vm.maxDecimals > 0 &&
-					vm.isPartialSelection &&
-					(code === 8 || code === 127) &&
-					decimalPointIndex >= start &&
-					decimalPointIndex < end
-				) {
-					e.preventDefault();
-					let _tVal =
-						(start === 0 ? '0' : vm.displayValue.slice(0, start)) +
-						vm.decimalPoint +
-						(end === vm.displayValue.length
-							? '0'
-							: vm.displayValue.slice(end));
-
-					vm.setCtrlValue(_tVal);
-
-					vm.cursorPosition =
-						start > 0 ? start - vm.displayValue.length - 1 : 0;
-					setPos = start > 0 ? start - 1 : 0;
-				}
-
-				// Ignore negative sign unless at beginning of number (and it's not already present)
-				else if (
-					code === 45 &&
-					(start !== 0 || vm.displayValue.indexOf('-') === 0)
-				) {
-					e.preventDefault();
-				}
-
-				// If the user is just typing the decimal place,
-				// we simply ignore it.
-				else if (chara === vm.decimalPoint || chara === ',' || chara === '.') {
-					vm.init = Math.max(0, vm.init);
-					e.preventDefault();
-				}
-
-				// If hitting the delete key, and the cursor is before a decimal place,
-				// we simply move the cursor to the other side of the decimal place.
-				else if (
-					vm.maxDecimals > 0 &&
-					code === 127 &&
-					start === vm.displayValue.length - vm.maxDecimals - 1
-				) {
-					// Just prevent default but don't actually move the caret here because it's done in the keyup event
-					e.preventDefault();
-				}
-
-				// If hitting the backspace key, and the cursor is behind a decimal place,
-				// we simply move the cursor to the other side of the decimal place.
-				else if (
-					vm.maxDecimals > 0 &&
-					code === 8 &&
-					start === vm.displayValue.length - vm.maxDecimals
-				) {
-					e.preventDefault();
-					vm.cursorPosition--;
-
-					// Set the selection position.
-					setPos = vm.displayValue.length + vm.cursorPosition;
-				}
-
-				// If hitting the delete key, and the cursor is to the right of the decimal
-				else if (
-					vm.maxDecimals > 0 &&
-					code === 127 &&
-					start > vm.displayValue.length - vm.maxDecimals - 1
-				) {
-					if (vm.displayValue === '') return;
-
-					val =
-						vm.displayValue.slice(0, start) +
-						vm.displayValue.slice(start + 1);
-					vm.setCtrlValue(val);
-					e.preventDefault();
-
-					// Set the selection position.
-					setPos = vm.displayValue.length + vm.cursorPosition;
-				}
-
-				// If hitting the backspace key, and the cursor is to the right of the decimal
-				// (but not directly to the right)
-				else if (
-					vm.maxDecimals > 0 &&
-					code === 8 &&
-					start > vm.displayValue.length - vm.maxDecimals
-				) {
-					if (vm.displayValue === '') return;
-
-					val =
-						vm.displayValue.slice(0, start - 1) +
-						vm.displayValue.slice(start);
-					vm.setCtrlValue(val);
-					e.preventDefault();
-					vm.cursorPosition--;
-
-					// Set the selection position.
-					setPos = vm.displayValue.length + vm.cursorPosition;
-				}
-
-				// If the delete key was pressed, and the character immediately
-				// after the caret is a thousands_separator character, simply
-				// step over it.
-				else if (
-					code === 127 &&
-					vm.displayValue.slice(start, start + 1) === vm.thousandsSeparator
-				) {
-					// Just prevent default but don't actually move the caret here because it's done in the keyup event
-					e.preventDefault();
-				}
-
-				// If the backspace key was pressed, and the character immediately
-				// before the caret is a thousands_separator character, simply
-				// step over it.
-				else if (
-					code === 8 &&
-					vm.displayValue.slice(start - 1, start) === vm.thousandsSeparator
-				) {
-					e.preventDefault();
-					vm.cursorPosition--;
-
-					// Set the selection position.
-					setPos = vm.displayValue.length + vm.cursorPosition;
-				}
-
-				// If we need to re-position the characters.
-				if (setPos !== false) {
-					vm.setSelectionRange(setPos, setPos);
-				}
-			},
-
-			/**
-			 * Handles keyup events, re-formatting numbers.
-			 * @param object e: The keyup event object.s
-			 * @returns void;
-			 */
-			onKeyupFormat(e)
-			{
-				// Disable editing on readonly fields
-				if (this.readonly || this.disabled) return;
-
-				const vm = this;
-
-				// Store these variables for use below.
-				var code = e.keyCode ? e.keyCode : e.which,
-					start = vm.getSelection('start'),
-					end = vm.getSelection('end'),
-					setPos;
-
-				// Check for negative characters being entered at the start of the string.
-				// If there's any kind of selection, just ignore the input.
-				if (start === 0 && end === 0 && (code === 189 || code === 109)) {
-					vm.setCtrlValue(+('-' + vm.getCtrlValue()));
-
-					start = 1;
-					vm.cursorPosition = 1 - vm.displayValue.length;
-					vm.init = 1;
-
-					setPos = vm.displayValue.length + vm.cursorPosition;
-					vm.setSelectionRange(setPos, setPos);
-				}
-
-				// Stop executing if the user didn't type a number key, a decimal, or a comma.
-				if (
-					vm.displayValue === '' ||
-					((code < 48 || code > 57) &&
-						(code < 96 || code > 105) &&
-						code !== 8 &&
-						code !== 46 &&
-						code !== 110)
-				)
-					return;
-
-				// Re-format the textarea.
-				vm.setCtrlValue(Number(vm.getCtrlValue()));
-
-				if (vm.maxDecimals > 0)
-				{
-					// If we haven't marked this item as 'initialized'
-					// then do so now. It means we should place the caret just
-					// before the decimal. This will never be un-initialized before
-					// the decimal character itself is entered.
-					if (vm.init < 1) {
-						start =
-							vm.displayValue.length - vm.maxDecimals - (vm.init < 0 ? 1 : 0);
-						vm.cursorPosition = start - vm.displayValue.length;
-						vm.init = 1;
-					}
-
-					// Increase the cursor position if the caret is to the right
-					// of the decimal place, and the character pressed isn't the backspace key.
-					else if (
-						start >= vm.displayValue.length - vm.maxDecimals &&
-						!vm.isPartialSelection &&
-						code !== 8 &&
-						code !== 46
-					) {
-						vm.cursorPosition++;
-					}
-				}
-
-				// Move caret to the right after delete key pressed
-				if (
-					code === 46 &&
-					!vm.isPartialSelection &&
-					start < vm.displayValue.length - vm.maxDecimals
-				) {
-					vm.cursorPosition++;
-				}
-
-				// Set the selection position.
-				setPos = vm.displayValue.length + vm.cursorPosition;
-				vm.setSelectionRange(setPos, setPos);
-			},
-
-			/**
-			 * Trigger update value when pressing enter key
-			 * @param object e: Event object.
-			 * @returns false: prevent default action.
-			 */
-			onKeyup(e)
-			{
-				this.onKeyupFormat(e);
-
-				if (e.keyCode === 13)
-					this.onFocusout();
-			},
-
-			/**
-			 * Reformat when pasting into the field.
-			 *
-			 * @param object e: Event object.
-			 *
-			 * @return false: prevent default action.
-			 */
-			onPasteFormat(e)
-			{
-				// Stop the actual content from being pasted.
-				e.preventDefault();
-				//e.stopPropagation();
-
-				// Disable editing on readonly fields
-				if (this.readonly || this.disabled) return false;
-
-				let val = null;
-
-				// Get the text content stream.
-				if (e.clipboardData && e.clipboardData.getData) {
-					val = e.clipboardData.getData('text/plain');
-				}
-
-				// Do the reformat operation.
-				this.setCtrlValue(val);
-
-				// Stop the actual content from being pasted.
-				return false;
-			},
-
-			/**
-			 * Reformat when drag&drop into the field.
-			 *
-			 * @param object e: Event object.
-			 *
-			 * @return false: prevent default action.
-			 */
-			onDropFormat(e)
-			{
-				// Stop the actual content from being pasted.
-				e.preventDefault();
-
-				// Disable editing on readonly fields
-				if (this.readonly || this.disabled) return false;
-
-				let val = null;
-
-				// Get the text content stream.
-				if (e.dataTransfer && e.dataTransfer.getData) {
-					val = e.dataTransfer.getData('text/plain');
-				}
-
-				// Do the reformat operation.
-				this.setCtrlValue(val);
-
-				// Stop the actual content from being pasted.
-				return false;
-			},
-
-			/**
-			 * @param float number			: The number you wish to format, or TRUE to use the text contents
-			 *								  of the element as the number. Please note that this won't work for
-			 *								  elements which have child nodes with text content.
-			 * @param int integers			: The number of integers places that should be displayed. Defaults to 0 (unlimited).
-			 * @param int decimals			: The number of decimal places that should be displayed. Defaults to 0.
-			 * @param string dec_point		: The character to use as a decimal point. Defaults to '.'.
-			 * @param string thousands_sep	: The character to use as a thousands separator. Defaults to ','.
-			 *
-			 * @return string : The formatted number as a string.
-			 */
-			formatNumber(number, integers, decimals, dec_point, thousands_sep)
-			{
-				// Set the default values here, instead so we can use them in the replace below.
-				thousands_sep =
-					typeof thousands_sep === 'undefined'
-						? new Number(1000).toLocaleString() !== '1000'
-							? new Number(1000).toLocaleString().charAt(1)
-							: ''
-						: thousands_sep;
-				dec_point =
-					typeof dec_point === 'undefined'
-						? new Number(0.1).toLocaleString().charAt(1)
-						: dec_point;
-				decimals = !isFinite(+decimals) ? 0 : Math.abs(decimals);
-				integers = !isFinite(+integers) ? 0 : Math.abs(integers);
-
-				// Work out the unicode representation for the decimal place and thousand sep.
-				var u_dec =
-					'\\u' + ('0000' + dec_point.charCodeAt(0).toString(16)).slice(-4);
-				var u_sep =
-					'\\u' + ('0000' + thousands_sep.charCodeAt(0).toString(16)).slice(-4);
-
-				if (number === undefined || number === null)
-					number = '0';
-				else if (typeof number === 'object') {
-					if (number.value) number = number.value + '';
-					else number = '0';
-				}
-				else if (typeof number === 'number') number = number + '';
+				//BEGIN: Get whole and fractional parts of the number
+				let wholeNumberUnformatted = ''
+				let wholeNumber = ''
+				let fractionNumber = ''
+				if (decimalPointIndex < 0)
+					wholeNumberUnformatted = val.slice(wholeNumberIndex)
 				else
-					number = number
-						.replace(new RegExp(u_sep, 'g'), '')
-						.replace(new RegExp(u_dec, 'g'), '.');
-
-				number = number.replace(new RegExp('[^0-9+-Ee.]', 'g'), '');
-
-				// If the integer part of the number is greater than the defined one then does not accept the value
-				let decimalPointIndex = number.indexOf('.'),
-					integerPartLength =
-						(decimalPointIndex !== -1 ? decimalPointIndex : number.length) -
-						(number.indexOf('-') === 0 ? 1 : 0);
-
-				if (integers > 0 && integerPartLength > integers)
-					number = number.slice(
-						0,
-						integers + (number.indexOf('-') === 0 ? 1 : 0)
-					);
-
-				var n = !isFinite(+number) ? 0 : +number,
-					s = '',
-					toFixedFix = function (n, decimals) {
-						return (
-							'' +
-							+(
-								Math.round(('' + n).indexOf('e') > 0 ? n : n + 'e+' + decimals) +
-								'e-' +
-								decimals
-							)
-						);
-					};
-
-				// Fix for IE parseFloat(0.55).toFixed(0) = 0;
-				s = (decimals ? toFixedFix(n, decimals) : '' + Math.round(n)).split('.');
-				if (s[0].length > 3) {
-					s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, thousands_sep);
+				{
+					wholeNumberUnformatted = val.slice(wholeNumberIndex, decimalPointIndex)
+					fractionNumber = val.slice(decimalPointIndex + 1)
 				}
-				if ((s[1] || '').length < decimals) {
-					s[1] = s[1] || '';
-					s[1] += new Array(decimals - s[1].length + 1).join('0');
+
+				// Skip leading 0s to remove them from whole number value
+				let idxWholeNumberUnf = 0
+				while (idxWholeNumberUnf < wholeNumberUnformatted?.length)
+				{
+					let currentChar = wholeNumberUnformatted[idxWholeNumberUnf]
+
+					// If digit greater than 0
+					if (this.isNumericChar(currentChar) && currentChar !== '0')
+						break
+
+					idxWholeNumberUnf++
 				}
-				return s.join(dec_point);
+				// Copy only digits to whole number value
+				// Don't copy thousand separators (at this point they might be in the wrong places)
+				while (idxWholeNumberUnf < wholeNumberUnformatted?.length)
+				{
+					let currentChar = wholeNumberUnformatted[idxWholeNumberUnf]
+
+					// If digit
+					if (this.isNumericChar(currentChar))
+						wholeNumber = wholeNumber.concat(currentChar)
+
+					idxWholeNumberUnf++
+				}
+
+				// Set whole number to 0 if it is empty
+				if (wholeNumber === undefined || wholeNumber === null || wholeNumber === '')
+					wholeNumber += '0'
+
+				// Add remaining 0s to fraction number
+				while (fractionNumber.length < this.maxDecimals)
+					fractionNumber = fractionNumber.concat('0')
+				//END: Get whole and fractional parts of the number
+
+				// Format number
+				let formattedValue = hasSign ? '-' : ''
+
+				// Iterate the whole part of the number
+				for (let idx = 0; idx < wholeNumber.length; idx++)
+				{
+					// Add the current character
+					formattedValue += wholeNumber[idx]
+
+					// Add thousands separators
+					let wholeNumberPlaceIndex = wholeNumber.length - (idx + 1)
+					if (wholeNumberPlaceIndex % 3 === 0 && wholeNumberPlaceIndex > 0 && outputThousandsSeparator)
+						formattedValue += outputThousandsSeparator
+				}
+				// If there are decimal digits, add the decimal point and digits
+				if (decimalPointIndex >= 0 || fractionNumber?.length > 0)
+					formattedValue += outputDecimalPoint + fractionNumber
+
+				// Remove decimal point if it's not necessary
+				if (formattedValue.charAt(formattedValue?.length - 1) === outputDecimalPoint)
+					formattedValue = formattedValue.slice(0, -1)
+
+				// Remove negative sign if the number is 0
+				if (formattedValue.charAt(0) === '-' && parseInt(wholeNumber) === 0 && (parseInt(fractionNumber) === 0 || fractionNumber?.length === 0))
+					formattedValue = formattedValue.slice(1)
+
+				return formattedValue
+			},
+
+			/**
+			 * Validate if the character is a number
+			 * @param {string} value Character
+			 * @return {boolean} Whether the value is valid numeric character
+			 */
+			isNumericChar(value)
+			{
+				return !isNaN(parseInt(value))
+			},
+
+			/**
+			 * Validate character
+			 * @param {string} value Character
+			 * @return {boolean} Whether the value is valid
+			 */
+			isValidChar(value)
+			{
+				return this.isNumericChar(value) || value === '-' || value === this.decimalPoint || value === this.thousandsSeparator
+			},
+
+			/**
+			 * Validate text being input
+			 * @param {string} value Text value
+			 * @return {boolean} Whether the value is valid
+			 */
+			validateInput(value)
+			{
+				let currentChar = null
+
+				// Iterate string value
+				for (let idx = 0; idx < value?.length; idx++)
+				{
+					currentChar = value[idx]
+					// Check for characters that are not valid
+					if (!this.isValidChar(currentChar))
+						return false
+				}
+
+				// All characters are valid
+				return true
+			},
+
+			/**
+			 * Validate whole text value
+			 * @param {string} value Text value
+			 * @return {boolean} Whether the value is valid
+			 */
+			validateValue(value)
+			{
+				let decimalPointFound = false
+				let wholeNumberCount = 0
+				let fractionNumberCount = 0
+				let currentChar = null
+
+				// Iterate string value
+				for (let idx = 0; idx < value?.length; idx++)
+				{
+					currentChar = value[idx]
+
+					// Count number of digits
+					if (this.isNumericChar(currentChar))
+					{
+						if (decimalPointFound)
+							fractionNumberCount++
+						else
+							wholeNumberCount++
+					}
+
+					// Check that negative sign only appears once
+					if (idx > 0 && currentChar === '-')
+						return false
+
+					// Check that decimal point only appears once for floats and not at all for integers
+					if (currentChar === this.decimalPoint)
+					{
+						if (this.maxDecimals === 0 || decimalPointFound)
+							return false
+						decimalPointFound = true
+					}
+
+					// Check that there are no thousand separators after the decimal point
+					if (decimalPointFound && currentChar === this.thousandsSeparator)
+						return false
+
+					// Check for other characters that are not valid
+					if (!this.isValidChar(currentChar))
+						return false
+				}
+
+				// Check if number of whole number or fractional number digits is greater than the maximum allowed
+				if (wholeNumberCount > this.maxIntegers || fractionNumberCount > this.maxDecimals)
+					return false
+
+				return true
+			},
+
+			/**
+			 * Get value with text input added in
+			 * @param {string} value Current text
+			 * @param {string} input New text being input
+			 * @param {number} selectStart Selection start index
+			 * @param {number} selectEnd Selection end index
+			 * @return {boolean} Whether the value with the new input is valid
+			 */
+			getValueWithInput(currentValue, input, selectStart, selectEnd)
+			{
+				if (typeof currentValue !== 'string')
+					currentValue = ''
+
+				if (typeof input !== 'string')
+					input = ''
+
+				// Get the value with the input added
+				return currentValue.substring(0, selectStart) + input + currentValue.substring(selectEnd)
+			},
+
+			/**
+			 * Validate value with text input
+			 * @param {string} value Current text
+			 * @param {string} input New text being input
+			 * @param {number} selectStart Selection start index
+			 * @param {number} selectEnd Selection end index
+			 * @return {boolean} Whether the value with the new input is valid
+			 */
+			validateValueWithInput(currentValue, input, selectStart, selectEnd)
+			{
+				if (typeof currentValue !== 'string')
+					currentValue = ''
+
+				if (typeof input !== 'string')
+					input = ''
+
+				// Get the value with the input added
+				let newValue = this.getValueWithInput(currentValue, input, selectStart, selectEnd)
+
+				// Validate the value with the input added
+				return this.validateValue(newValue)
+			},
+
+			/**
+			 * Validate value with text input
+			 * @param {string} input New text being input
+			 * @return {boolean} Whether the value with the new input is valid
+			 */
+			validateControlValueWithInput(input)
+			{
+				if (typeof input !== 'string')
+					input = ''
+
+				// Get current control value
+				let currentValue = this.getInputElement().value
+
+				// Get selection range
+				let selectStart = this.getInputElement()?.selectionStart
+				let selectEnd = this.getInputElement()?.selectionEnd
+
+				// Validate the value with the input added
+				return this.validateValueWithInput(currentValue, input, selectStart, selectEnd)
+			},
+
+			/**
+			 * Given the offset in an value value, get the corresponding offset in the formatted value
+			 * @param {string} value Text value
+			 * @param {string} formattedValue Text value after being formatted
+			 * @param {number} offset Offset in the text value
+			 * @return {number} Offset in the formatted value
+			 */
+			getFormattedValueOffset(value, formattedValue, offset)
+			{
+				// The offset, ignoring thousands separators and leading 0s
+				let numberValueOffset = 0
+				let numberFormattedValueOffset = 0
+				let afterLeadZeros = false
+				let currentChar = null
+
+				// Prevent going past the end of the value
+				if (offset > value?.length)
+					offset = value.length
+
+				// Iterate value to the given offset
+				for (let idx = 0; idx < offset; idx++)
+				{
+					currentChar = value[idx]
+
+					// Check whether the current position is after the leading 0s
+					if ((this.isNumericChar(currentChar) && currentChar !== '0')
+						|| (currentChar === '0' && idx < offset - 1 && value[idx + 1] === this.decimalPoint)
+						|| currentChar === this.decimalPoint)
+						afterLeadZeros = true
+
+					// Count valid characters, except for the thousands separators and leading 0s
+					if (this.isValidChar(currentChar) && currentChar !== this.thousandsSeparator
+						&& (currentChar !== '0' || afterLeadZeros))
+						numberValueOffset++
+
+					// If there are no whole number digits, count the 0 that gets added
+					if (currentChar === this.decimalPoint && (idx === 0 || !this.isNumericChar(value[idx - 1])))
+						numberValueOffset++
+				}
+
+				let formattedValueIndex = 0
+				// Iterate formatted value until the same number of numeric characters are found,
+				// ignoring thousands separators and leading 0s
+				while (formattedValueIndex < formattedValue?.length && numberFormattedValueOffset < numberValueOffset)
+				{
+					currentChar = formattedValue[formattedValueIndex]
+
+					// Count valid characters, except for the thousands separators and leading 0s
+					if (this.isValidChar(currentChar) && currentChar !== this.thousandsSeparator)
+						numberFormattedValueOffset++
+
+					formattedValueIndex++
+				}
+
+				return formattedValueIndex
+			},
+
+			/**
+			 * Initialize internal properties when starting input. Must be called first any time input happens.
+			 */
+			initForInput()
+			{
+				// FOR: OVERRIDE INPUT KEY
+				// Reset to avoid conflicts with other input
+				this.overrideInputKey = null
+
+				// Prevent the update from changing the control value, which moves the cursor to the end of the control
+				this.updateControlOnChange = false
+			},
+
+			/**
+			 * Keydown handler for the input
+			 * @param {object} event The event
+			 */
+			onKeydown(event)
+			{
+				// Initialize internal properties before input
+				this.initForInput()
+
+				// Get the key
+				const key = event?.key
+
+				// Get the key code
+				const keyCode = event?.code
+
+				// Get the input value of the key or null if it doesn't produce output
+				let input = key?.length === 1 && event?.ctrlKey === false && event?.altKey === false ? key : null
+
+				// FOR: OVERRIDE INPUT KEY
+				// Whether the key pressed will be overridden
+				const keyCodeOverride = this.keyCodeOverrides[keyCode]
+				if (keyCodeOverride)
+					input = keyCodeOverride
+
+				// Get selection range
+				let selectStart = this.getInputElement()?.selectionStart
+				let selectEnd = this.getInputElement()?.selectionEnd
+
+				let currentValue = this.getInputElement().value
+
+				let isValid = false
+
+				// If key pressed does not produce output
+				if (!input)
+				{
+					// Delete key only and not at the end
+					if (key === 'Delete' && event?.ctrlKey === false && event?.altKey === false && selectEnd < currentValue?.length)
+					{
+						// Nothing selected, select the character after the cursor
+						// so the right character is spliced out to check the new value
+						if (selectStart === selectEnd)
+							selectEnd++
+					}
+					// Backspace key only and not at the beginning
+					else if (key === 'Backspace' && event?.ctrlKey === false && event?.altKey === false && selectStart > 0)
+					{
+						// Nothing selected, select the character before the cursor
+						// so the right character is spliced out to check the new value
+						if (selectStart === selectEnd)
+							selectStart--
+					}
+					else
+						return
+				}
+
+				// If the key produces output, validate what the new value would be with this output included
+				isValid = this.validateValueWithInput(currentValue, input, selectStart, selectEnd)
+
+				// If resulting value is invalid, prevent operation
+				if (!isValid)
+					event.preventDefault()
+
+				// FOR: OVERRIDE INPUT KEY
+				// Ex.: If the decimal point on the number pad was pressed
+				else if (keyCodeOverride)
+					this.overrideInputKey = keyCodeOverride
+			},
+
+			/**
+			 * Cut handler for input
+			 * @param {object} event The event
+			 */
+			onCut(event)
+			{
+				// Initialize internal properties before input
+				this.initForInput()
+
+				let isValid = this.validateControlValueWithInput('')
+
+				// If resulting value is invalid, prevent operation
+				if (!isValid)
+					event.preventDefault()
+			},
+
+			/**
+			 * Paste handler for input
+			 * @param {object} event The event
+			 */
+			onPaste(event)
+			{
+				// Initialize internal properties before input
+				this.initForInput()
+
+				let input = event.clipboardData.getData('Text')
+
+				let isValid = this.validateControlValueWithInput(input)
+
+				// If resulting value is invalid, prevent operation
+				if (!isValid)
+					event.preventDefault()
+			},
+
+			/**
+			 * Drop handler for input
+			 * @param {object} event The event
+			 */
+			onDrop(event)
+			{
+				// Prevent drop
+				event.preventDefault()
+			},
+
+			/**
+			 * Beforeinput handler for the input. Called before the control input event.
+			 * @param {object} event The event
+			 */
+			onBeforeInput(event)
+			{
+				let input = event?.data
+
+				// FOR: OVERRIDE INPUT KEY
+				if (this.overrideInputKey)
+					input = this.overrideInputKey
+
+				// Validate text being input
+				let isValid = this.validateControlValueWithInput(input)
+
+				// If text being input is invalid, prevent operation
+				if (!isValid)
+					event.preventDefault()
+			},
+
+			/**
+			 * Input handler for the input. Called by the control input event.
+			 * @param {object} event The event
+			 */
+			onInput(event)
+			{
+				// FOR: OVERRIDE INPUT KEY
+				// If the decimal point on the number pad was pressed
+				if (this.overrideInputKey)
+				{
+					const input = this.overrideInputKey
+
+					// Reset so it does not get applied to any other input after this
+					this.overrideInputKey = null
+
+					// Get selection range
+					const selectStart = this.getInputElement()?.selectionStart
+					const selectEnd = this.getInputElement()?.selectionEnd
+
+					const currentValue = this.getInputElement().value
+
+					// Get the value with the overrideInputKey replacing the key that was pressed
+					const newValue = this.getValueWithInput(currentValue, input, selectStart - 1, selectEnd)
+
+					// Set the vaue of the input, using the overrideInputKey character, and set the cursor position
+					this.getInputElement().value = newValue
+					this.setCursorPosition(selectStart)
+
+					event.preventDefault()
+
+					// Trigger input event since this should normally happen when changing the value
+					const newEvent = new InputEvent('input', { 'data': this.overrideInputKey })
+					this.getInputElement().dispatchEvent(newEvent)
+				}
+			},
+
+			/**
+			 * Change handler for the input. Called when the input value is confirmed, including focusing away.
+			 */
+			onChange()
+			{
+				// Prevent the update from changing the control value, which moves the cursor to the end of the control
+				this.updateControlOnChange = false
+
+				// Get the cursor position
+				let cursorPosition = this.getCursorPosition()
+
+				// Get formatted value
+				let formattedValue = this.getFormattedInputValue(this.getInputElement().value, this.decimalPoint, this.thousandsSeparator, this.decimalPoint, this.thousandsSeparator)
+
+				// Get new cursor position, accounting for difference in formatting
+				cursorPosition = this.getFormattedValueOffset(this.getInputElement().value, formattedValue, cursorPosition)
+
+				// Set the input value
+				this.getInputElement().value = formattedValue
+
+				// Set the cursor position
+				this.setCursorPosition(cursorPosition)
+
+				this.emitModelValue()
+			},
+
+			/**
+			 * Update the control value
+			 */
+			updateControlValue()
+			{
+				// Set control value
+				this.getInputElement().value = this.getFormattedInputValue(this.modelValue?.toString(), '.', null, this.decimalPoint, this.thousandsSeparator)
+
+				// Confirm the value so it is kept when the update hook is triggered
+				// which happens when changing form modes
+				const event = new Event('input')
+				this.getInputElement().dispatchEvent(event)
+			},
+
+			/**
+			 * Emit the model value
+			 */
+			emitModelValue()
+			{
+				// Get formatted string value
+				const strValue = this.getFormattedInputValue(this.getInputElement().value, this.decimalPoint, this.thousandsSeparator, '.', null)
+
+				// Convert to number
+				// If strValue is empty "" it means the user
+				// has cleared the field value, thus it should translate to 0
+				let value = 0
+				if(strValue) value = this.maxDecimals === 0 ? parseInt(strValue) : parseFloat(strValue)
+
+				if (!isNaN(value))
+					this.$emit('update:modelValue', value)
 			}
 		},
 
 		watch: {
-			modelValue(newValue)
+			modelValue()
 			{
-				this.setCtrlValue(newValue)
+				// Control whether to update the control value
+				// Prevented when the user is changing the value in the control
+				// to prevent the cursor from jumping to the end of the control
+				if (this.updateControlOnChange)
+				{
+					// Set control value
+					this.updateControlValue()
+				}
+				else
+					this.updateControlOnChange = true
 			}
 		}
 	}

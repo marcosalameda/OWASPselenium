@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Aero;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_AERO_CANCEL = new NavigationLocation("COMPANHIA_AEREA16237", "Aero_Cancel", "Aero") { vueRouteName = "form-AERO", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_AERO_SHOW = new NavigationLocation("COMPANHIA_AEREA16237", "Aero_Show", "Aero") { vueRouteName = "form-AERO", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_AERO_NEW = new NavigationLocation("COMPANHIA_AEREA16237", "Aero_New", "Aero") { vueRouteName = "form-AERO", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_AERO_EDIT = new NavigationLocation("COMPANHIA_AEREA16237", "Aero_Edit", "Aero") { vueRouteName = "form-AERO", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_AERO_DUPLICATE = new NavigationLocation("COMPANHIA_AEREA16237", "Aero_Duplicate", "Aero") { vueRouteName = "form-AERO", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_AERO_DELETE = new NavigationLocation("COMPANHIA_AEREA16237", "Aero_Delete", "Aero") { vueRouteName = "form-AERO", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_AERO_CANCEL = new("COMPANHIA_AEREA16237", "Aero_Cancel", "Aero") { vueRouteName = "form-AERO", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_AERO_SHOW = new("COMPANHIA_AEREA16237", "Aero_Show", "Aero") { vueRouteName = "form-AERO", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_AERO_NEW = new("COMPANHIA_AEREA16237", "Aero_New", "Aero") { vueRouteName = "form-AERO", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_AERO_EDIT = new("COMPANHIA_AEREA16237", "Aero_Edit", "Aero") { vueRouteName = "form-AERO", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_AERO_DUPLICATE = new("COMPANHIA_AEREA16237", "Aero_Duplicate", "Aero") { vueRouteName = "form-AERO", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_AERO_DELETE = new("COMPANHIA_AEREA16237", "Aero_Delete", "Aero") { vueRouteName = "form-AERO", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Aero_ModalDBEdit()
-		{
-			Aero_ViewModel model = new Aero_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Aero_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Aero Multiform actions
 
-		//
-		// GET /Aero/MFAero_New
-		[HttpGet]
-		[ActionName("MFAero_New")]
-		public ActionResult MFAero_New()
-		{
-			var model = new Aero_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_AERO_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("aero", model.ValCodaero);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFAero_New_GET()
-		{
-			return MFAero_New();
-		}
-
-		//
-		// GET /Aero/MFAero_Edit
-		[HttpGet]
-		[ActionName("MFAero_Edit")]
-		public ActionResult MFAero_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("AERO", "EDIT", new { id = id, partialView = "MFAero", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFAero_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFAero_Edit(requestModel);
-		}
-
-		//
-		// GET /Aero/MFAero_Cancel
-		[ActionName("MFAero_Cancel")]
-		public ActionResult MFAero_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Aero(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Aero/MFAero_Save
-		[HttpPost]
-		[ActionName("MFAero_Save")]
-		public JsonResult MFAero_Save(Aero_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAero_Save",
-				ViewName = "MFAero",
-				AreaName = "aero"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Aero/MFAero_Delete
-		[HttpPost]
-		[ActionName("MFAero_Delete")]
-		public JsonResult MFAero_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAero_Delete",
-				ViewName = "MFAero",
-				AreaName = "aero",
-				Location = ACTION_AERO_EDIT
-			};
-
-			var model = new Aero_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Aero/Aero_SaveEdit
 		[HttpPost]

@@ -5,7 +5,7 @@ namespace CSGenio.business
 	/// <summary>
 	/// Array Months (Month)
 	/// </summary>
-	public class ArrayMonths : Array<double>
+	public class ArrayMonths : Array<decimal>
 	{
 		/// <summary>
 		/// The instance
@@ -28,51 +28,51 @@ namespace CSGenio.business
 		/// <summary>
 		/// January
 		/// </summary>
-		public const double E_1_1 = 1;
+		public const decimal E_1_1 = 1M;
 		/// <summary>
 		/// February
 		/// </summary>
-		public const double E_2_2 = 2;
+		public const decimal E_2_2 = 2M;
 		/// <summary>
 		/// March
 		/// </summary>
-		public const double E_3_3 = 3;
+		public const decimal E_3_3 = 3M;
 		/// <summary>
 		/// April
 		/// </summary>
-		public const double E_4_4 = 4;
+		public const decimal E_4_4 = 4M;
 		/// <summary>
 		/// May
 		/// </summary>
-		public const double E_5_5 = 5;
+		public const decimal E_5_5 = 5M;
 		/// <summary>
 		/// June
 		/// </summary>
-		public const double E_6_6 = 6;
+		public const decimal E_6_6 = 6M;
 		/// <summary>
 		/// July
 		/// </summary>
-		public const double E_7_7 = 7;
+		public const decimal E_7_7 = 7M;
 		/// <summary>
 		/// August
 		/// </summary>
-		public const double E_8_8 = 8;
+		public const decimal E_8_8 = 8M;
 		/// <summary>
 		/// September
 		/// </summary>
-		public const double E_9_9 = 9;
+		public const decimal E_9_9 = 9M;
 		/// <summary>
 		/// October
 		/// </summary>
-		public const double E_10_10 = 10;
+		public const decimal E_10_10 = 10M;
 		/// <summary>
 		/// November
 		/// </summary>
-		public const double E_11_11 = 11;
+		public const decimal E_11_11 = 11M;
 		/// <summary>
 		/// December
 		/// </summary>
-		public const double E_12_12 = 12;
+		public const decimal E_12_12 = 12M;
 
 		/// <summary>
 		/// Prevents a default instance of the <see cref="ArrayMonths"/> class from being created.
@@ -83,9 +83,9 @@ namespace CSGenio.business
         /// Loads the dictionary.
         /// </summary>
         /// <returns></returns>
-		protected override Dictionary<double, ArrayElement> LoadDictionary()
+		protected override Dictionary<decimal, ArrayElement> LoadDictionary()
 		{
-			return new Dictionary<double, ArrayElement>()
+			return new Dictionary<decimal, ArrayElement>()
 			{
 				{ E_1_1, new ArrayElement() { ResourceId = "JANUARY26193", HelpId = "", Group = "" } },
 				{ E_2_2, new ArrayElement() { ResourceId = "FEBRUARY35476", HelpId = "", Group = "" } },
@@ -107,7 +107,7 @@ namespace CSGenio.business
 		/// </summary>
 		/// <param name="cod">The cod.</param>
 		/// <returns></returns>
-		public static string CodToDescricao(double cod)
+		public static string CodToDescricao(decimal cod)
 		{
 			return Instance.CodToDescricaoImpl(cod);
 		}
@@ -116,7 +116,7 @@ namespace CSGenio.business
 		/// Gets the elements.
 		/// </summary>
 		/// <returns></returns>
-		public static List<double> GetElements()
+		public static List<decimal> GetElements()
 		{
 			return Instance.GetElementsImpl();
 		}
@@ -128,14 +128,14 @@ namespace CSGenio.business
 		/// <returns></returns>
 		public static ArrayElement GetElement(string cod)
 		{
-            return Instance.GetElementImpl(double.Parse(cod));
+            return Instance.GetElementImpl(decimal.Parse(cod));
         }
 
 		/// <summary>
 		/// Gets the dictionary.
 		/// </summary>
 		/// <returns></returns>
-		public static IDictionary<double, string> GetDictionary()
+		public static IDictionary<decimal, string> GetDictionary()
 		{
 			return Instance.GetDictionaryImpl();
 		}
@@ -147,7 +147,7 @@ namespace CSGenio.business
 		/// <returns></returns>
 		public static string GetHelpId(string cod)
 		{
-			return Instance.GetHelpIdImpl(double.Parse(cod));
+			return Instance.GetHelpIdImpl(decimal.Parse(cod));
 		}
 	}
 }

@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuSTY_ACCORDViewModel.js'
+
 	const requiredTextResources = ['QMenuSTY_ACCORD', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: 'ACCORD',
 					isMenuList: true,
+					designation: computed(() => this.Resources.EQUIPMENT03632),
 					acronym: 'STY_ACCORD',
 					name: 'EQUIP',
 					route: 'menu-STY_ACCORD',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'STY_Menu_ACCORD',
 						controller: 'EQUIP',
 						action: 'STY_Menu_ACCORD',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -187,7 +197,7 @@
 								field: 'DTAQUISI',
 								label: computed(() => this.Resources.ACQUISITION44180),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 7,
@@ -196,7 +206,7 @@
 								field: 'DTDECO',
 								label: computed(() => this.Resources.DECOMISSION14486),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.HyperLinkColumn({
 								order: 8,
@@ -225,7 +235,7 @@
 								canDelete: false,
 								canInsert: false
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -264,6 +274,7 @@
 								id: 'RCA_STY_21111',
 								name: 'form-ACCORDI',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -280,24 +291,22 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
 							allowFileExport: true,
-							// The list support form: ACCORDI
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValRegistnr',
 							defaultSearchColumnNameOriginal: 'ValRegistnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValRegistnr',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
 						uuid: '63f47415-010f-4c3a-890d-4d78a7386e11',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
+						/** Menu limits */
+						controlLimits: [
+							/** SC */
+						]
 					}, this)
 				}
 			}
@@ -326,6 +335,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS STY_ACCORD]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS STY_MENU_ACCORD]/
 // eslint-disable-next-line

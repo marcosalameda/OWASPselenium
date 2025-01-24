@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Grpb _grpb;
 		[DisplayName("Grpb")]
 		[ShouldSerialize("Grpb")]
-		public virtual Grpb Grpb { 
-			get { 
+		public virtual Grpb Grpb {
+			get {
 				if (!this.isEmptyModel && (_grpb == null || (!string.IsNullOrEmpty(ValFkey1) && (_grpb.isEmptyModel || _grpb.klass.QPrimaryKey != ValFkey1))))
 					_grpb = Models.Grpb.Find(ValFkey1, m_userContext, Identifier, _fieldsToSerialize);
 				if (_grpb == null)
 					_grpb = new Models.Grpb(m_userContext, true, _fieldsToSerialize);
 				return _grpb;
 			}
-			set { _grpb = value; } 
+			set { _grpb = value; }
 		}
-		
+
 
 		[DisplayName("Foreign Key 2")]
 		/// <summary>Field : "Foreign Key 2" Tipo: "CE" Formula:  ""</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Trsb _trsb;
 		[DisplayName("Trsb")]
 		[ShouldSerialize("Trsb")]
-		public virtual Trsb Trsb { 
-			get { 
+		public virtual Trsb Trsb {
+			get {
 				if (!this.isEmptyModel && (_trsb == null || (!string.IsNullOrEmpty(ValFkey2) && (_trsb.isEmptyModel || _trsb.klass.QPrimaryKey != ValFkey2))))
 					_trsb = Models.Trsb.Find(ValFkey2, m_userContext, Identifier, _fieldsToSerialize);
 				if (_trsb == null)
 					_trsb = new Models.Trsb(m_userContext, true, _fieldsToSerialize);
 				return _trsb;
 			}
-			set { _trsb = value; } 
+			set { _trsb = value; }
 		}
-		
+
 
 		[DisplayName("Name")]
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
@@ -85,19 +85,19 @@ namespace GenioMVC.Models
 		public Tblk(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAtblk(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Tblk(UserContext userContext, CSGenioAtblk val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAtblk csgenioa)
@@ -124,7 +124,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

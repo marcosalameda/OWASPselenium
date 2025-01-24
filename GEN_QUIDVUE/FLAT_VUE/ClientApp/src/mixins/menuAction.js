@@ -60,8 +60,9 @@ export default {
 			// TODO: Encapsulate this logic in the Generator (GenGenio.*).
 			if (menuEntry.Action && menuEntry.Action === 'GenGenio.MenuRotinaManual')
 				executeRoutine(this, menuEntry.ActionMVC, {}) // controller ??
-			else if (menuEntry.Action && menuEntry.Action === 'GenGenio.MenuFormNovoRegisto')
-				this.navigateToRouteName(menuEntry.RouteName, { mode: 'NEW', clearHistory: true })
+			else if ((menuEntry.Action && menuEntry.Action === 'GenGenio.MenuFormNovoRegisto') || (menuEntry.IsForm && menuEntry.Mode === 'NEW'))
+				this.navigateToRouteName(menuEntry.RouteName, { mode: 'NEW', id: null, openedMenu: menuEntry.Order, clearHistory: true })
+
 			else if (menuEntry.Action && menuEntry.Action === 'GenGenio.MenuPaginaWeb')
 			{
 				const webPage = menuEntry.WebPage
@@ -78,7 +79,7 @@ export default {
 
 				this.navigateToForm(formName, menuEntry.Mode, null, { openedMenu: menuEntry.Order, clearHistory: true })
 			}
-			else if (menuEntry.Type === 'REPORT')
+			else if (menuEntry.Type === 'REPORT' && !menuEntry.RouteName.startsWith('menu-'))
 				// TODO: If we are only going to have SSRS, we can change the «Mode» property to have the opening type instead of the report type (SSRS / Crystal)
 				// TODO: It's need use the empty history
 				getReport(this, menuEntry.Controller, menuEntry.ActionMVC, {}, menuEntry.RouteName, menuEntry.Preview)
@@ -99,11 +100,37 @@ export default {
 		navigateToDefaultAction(id)
 		{
 			const routeName = `menu-${id}`
-			const route = this.$router.resolve({
-				name: routeName
-			})
+			const route = this.$router.resolve({ name: routeName })
 
 			this.navigateToRouteName(routeName, { openedMenu: route?.meta.order, clearHistory: true })
+		},
+
+		/**
+		 * Method that retrieves the URL of the requested navigation. This method is used for right-click based navigation,
+		 * such as "open in a new tab", since these require specification of the link to navigate to.
+		 * @param {object} _menuEntry - An object representing the menu entry
+		 * @returns {string} The URL of the navigation
+		 */
+		getLinkToMenu(_menuEntry)
+		{
+			const menuEntry = getMenu(_menuEntry)
+			let href
+
+			// TODO: Encapsulate this logic in the Generator (GenGenio.*).
+			if (menuEntry.Action && menuEntry.Action === 'GenGenio.MenuFormNovoRegisto')
+				href = this.linkToRouteName(menuEntry.RouteName, { mode: 'NEW' })
+			if (menuEntry.Action && menuEntry.Action === 'GenGenio.MenuFormVazio')
+			{
+				const lastIndex = menuEntry.ActionMVC.lastIndexOf('_'),
+					formName = (menuEntry.ActionMVC.substr(0, lastIndex) || '').toUpperCase(),
+					formRouteName = `form-${formName}`
+
+				href = this.linkToRouteName(formRouteName, { mode: menuEntry.Mode })
+			}
+			if (menuEntry.RouteName)
+				href = this.linkToRouteName(menuEntry.RouteName, menuEntry.IsForm ? { mode: menuEntry.Mode } : {})
+
+			return href ?? 'javascript:void(0)'
 		}
 	}
 }

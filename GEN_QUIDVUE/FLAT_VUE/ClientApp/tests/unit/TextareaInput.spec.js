@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import '@testing-library/jest-dom'
 import { fireEvent, render } from '@testing-library/vue'
 import { mount } from '@vue/test-utils'

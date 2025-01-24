@@ -1,34 +1,40 @@
 ﻿import _assignIn from 'lodash-es/assignIn'
 
 import { useSystemDataStore } from '@/stores/systemData.js'
-import { postData, forceDownload } from '@/api/network'
+import { forceDownload, getFileNameFromRequest, postData } from '@/api/network'
 import eventBus from '@/api/global/eventBus.js'
+import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 
 export default {
 	methods: {
 		navigateToRouteName(routeName, options, query, prefillValues)
 		{
-			navigateToRouteName(this, routeName, options, query, prefillValues)
+			return navigateToRouteName(this, routeName, options, query, prefillValues)
 		},
 
 		navigateToForm(form, mode, id, options, query, prefillValues)
 		{
-			navigateToForm(this, form, mode, id, options, query, prefillValues)
+			return navigateToForm(this, form, mode, id, options, query, prefillValues)
 		},
 
 		navigateToModule(module)
 		{
-			navigateToModule(this, module)
+			return navigateToModule(this, module)
 		},
 
 		navigateToReport(controller, action, options, preview)
 		{
-			navigateToReport(this, controller, action, options, preview)
+			return navigateToReport(this, controller, action, options, preview)
 		},
 
 		navigateToReportingServicesViewer(controller, action, options)
 		{
-			navigateToReportingServicesViewer(this, controller, action, options)
+			return navigateToReportingServicesViewer(this, controller, action, options)
+		},
+
+		linkToRouteName(routeName, options, query, prefillValues)
+		{
+			return linkToRouteName(this, routeName, options, query, prefillValues)
 		}
 	}
 }
@@ -44,7 +50,7 @@ export function navigateToRouteName(vueInstance, routeName, options, query, pref
 		historyBranchId: vueInstance.navigationId
 	}, options, { prefillValues: JSON.stringify(prefillValues) })
 
-	vueInstance.$router.push({ name: routeName, params, query })
+	return vueInstance.$router.push({ name: routeName, params, query })
 }
 
 export function navigateToForm(vueInstance, form, mode, id, options, query, prefillValues)
@@ -52,36 +58,61 @@ export function navigateToForm(vueInstance, form, mode, id, options, query, pref
 	const params = _assignIn({ mode }, id ? { id } : {}, options),
 		formRouteName = `form-${form}`
 
-	navigateToRouteName(vueInstance, formRouteName, params, query, prefillValues)
+	return navigateToRouteName(vueInstance, formRouteName, params, query, prefillValues)
 }
 
 export function navigateToModule(vueInstance, module)
 {
-	navigateToRouteName(vueInstance, `home-${module}`, { module })
+	return navigateToRouteName(vueInstance, `home-${module}`, { module })
 }
 
 export function navigateToReport(vueInstance, controller, action, options, preview)
 {
-	postData(controller, action, options, (_, request) => {
-		const fileName = request.headers.filename
-		const fileType = request.headers['content-type']
-		if (!fileName)
-			return
+	return new Promise((resolve) => {
+		asyncProcM.addBusy(
+			postData(
+				controller,
+				action,
+				options,
+				(_, request) => {
+					const fileName = getFileNameFromRequest(request)
+					const fileType = request.headers['content-type']
 
-		forceDownload(request.data, fileName, fileType, preview)
-	},
-	() => {},
-	{ responseType: 'arraybuffer' }, vueInstance.navigationId)
+					if (!fileName)
+					{
+						resolve(false)
+						return
+					}
+
+					forceDownload(request.data, fileName, fileType, preview)
+					resolve(true)
+				},
+				undefined,
+				{ responseType: 'arraybuffer' },
+				vueInstance.navigationId))
+	})
 }
 
 export function navigateToReportingServicesViewer(vueInstance, controller, action, options)
 {
-	postData(controller, action, options, (data) => {
-		if (data?.id)
-			navigateToRouteName(vueInstance, 'reporting-services-viewer', { id: data.id })
-	},
-	() => {},
-	undefined, vueInstance.navigationId)
+	return new Promise((resolve) => {
+		postData(
+			controller,
+			action,
+			options,
+			async (data) => {
+				if (data?.id)
+				{
+					const navResult = await navigateToRouteName(vueInstance, 'reporting-services-viewer', { id: data.id })
+					resolve(navResult)
+				}
+				else
+					resolve()
+			},
+			undefined,
+			undefined,
+			vueInstance.navigationId)
+	})
 }
 
 export function processRedirect(vueInstance, data)
@@ -112,11 +143,28 @@ export function processRedirect(vueInstance, data)
 	}
 }
 
+export function linkToRouteName(vueInstance, routeName, options, query, prefillValues)
+{
+	const systemDataStore = useSystemDataStore()
+	const culture = systemDataStore.system.currentLang
+	const system = systemDataStore.system.currentSystem
+	const module = systemDataStore.system.currentModule
+
+	const historyBranchId = 'navigationId' in vueInstance ? vueInstance.navigationId : 'main'
+
+	const params = _assignIn({ culture, system, module }, {
+		historyBranchId
+	}, options, { prefillValues: JSON.stringify(prefillValues) })
+
+	return vueInstance.$router.resolve({ name: routeName, params, query })?.href
+}
+
 export const vueNavigation = {
 	navigateToRouteName,
 	navigateToForm,
 	navigateToModule,
 	navigateToReport,
 	navigateToReportingServicesViewer,
-	processRedirect
+	processRedirect,
+	linkToRouteName
 }

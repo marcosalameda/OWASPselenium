@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODLNHAG',
 			relatedArea: 'LNHAG',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCodlnhag))
 		watch(() => this.ValCodlnhag.value, (newValue, oldValue) => this.onUpdate('lnhde.codlnhag', this.ValCodlnhag, newValue, oldValue))
 
@@ -81,7 +82,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:lnhde.codlnhpd'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyG,
 			},
 		}).cloneFrom(values?.ValCodpedid))
@@ -165,6 +165,29 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValQuantida))
 		watch(() => this.ValQuantida.value, (newValue, oldValue) => this.onUpdate('lnhde.quantida', this.ValQuantida, newValue, oldValue))
 
+		this.ValQuantdec = reactive(new modelFieldType.Number({
+			id: 'ValQuantdec',
+			originId: 'ValQuantdec',
+			area: 'LNHDE',
+			field: 'QUANTDEC',
+			maxDigits: 7,
+			decimalDigits: 2,
+			description: computed(() => this.Resources.AMOUNT46885),
+			valueFormula: {
+				stopRecalcCondition() { return false },
+				// eslint-disable-next-line no-unused-vars
+				fnFormula(params)
+				{
+					// Formula: [LNHPD->QUANTDEC]
+					return this.LnhpdValQuantdec.value
+				},
+				dependencyEvents: ['fieldChange:lnhpd.quantdec', 'fieldChange:lnhde.codlnhpd'],
+				isServerRecalc: false,
+				isEmpty: qApi.emptyN,
+			},
+		}).cloneFrom(values?.ValQuantdec))
+		watch(() => this.ValQuantdec.value, (newValue, oldValue) => this.onUpdate('lnhde.quantdec', this.ValQuantdec, newValue, oldValue))
+
 		this.ValCode = reactive(new modelFieldType.String({
 			id: 'ValCode',
 			originId: 'ValCode',
@@ -175,7 +198,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValCode))
 		watch(() => this.ValCode.value, (newValue, oldValue) => this.onUpdate('lnhde.code', this.ValCode, newValue, oldValue))
 
-		this.ValDescript = reactive(new modelFieldType.String({
+		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
 			originId: 'ValDescript',
 			area: 'LNHDE',
@@ -193,6 +216,19 @@ export default class ViewModel extends ViewModelBase
 			description: computed(() => this.Resources.SITE06486),
 		}).cloneFrom(values?.ValUrl))
 		watch(() => this.ValUrl.value, (newValue, oldValue) => this.onUpdate('lnhde.url', this.ValUrl, newValue, oldValue))
+
+		/** The form fields used only in formulas. */
+		this.LnhpdValQuantdec = reactive(new modelFieldType.Number({
+			id: 'LnhpdValQuantdec',
+			originId: 'ValQuantdec',
+			area: 'LNHPD',
+			field: 'QUANTDEC',
+			maxDigits: 7,
+			decimalDigits: 2,
+			description: computed(() => this.Resources.AMOUNT46885),
+			isFixed: true,
+		}).cloneFrom(values?.LnhpdValQuantdec))
+		watch(() => this.LnhpdValQuantdec.value, (newValue, oldValue) => this.onUpdate('lnhpd.quantdec', this.LnhpdValQuantdec, newValue, oldValue))
 	}
 
 	/**
@@ -207,5 +243,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodlnhde'
 
 	get QPrimaryKey() { return this.ValCodlnhde.value }
-	set QPrimaryKey(value) { this.ValCodlnhde.value = value }
+	set QPrimaryKey(value) { this.ValCodlnhde.updateValue(value) }
 }

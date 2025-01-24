@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuIMO_1311ViewModel.js'
+
 	const requiredTextResources = ['QMenuIMO_1311', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '1311',
 					isMenuList: true,
+					designation: computed(() => this.Resources.REAL_ESTATE24996),
 					acronym: 'IMO_1311',
 					name: 'PROPR',
 					route: 'menu-IMO_1311',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'IMO_Menu_1311',
 						controller: 'PROPR',
 						action: 'IMO_Menu_1311',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -265,7 +275,7 @@
 								field: 'DTDISPON',
 								label: computed(() => this.Resources.AVAILABILITY56489),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.ImageColumn({
 								order: 15,
@@ -273,8 +283,10 @@
 								area: 'PROPR',
 								field: 'PHOTOGRA',
 								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 16,
@@ -298,7 +310,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -402,6 +414,7 @@
 								id: 'RCA_IMO_13111',
 								name: 'form-PROPR00',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -418,23 +431,27 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: PROPR00
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValName',
 							defaultSearchColumnNameOriginal: 'ValName',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValName',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
 						uuid: 'b6a2ec7f-338e-44c1-acf0-952b71cb46b6',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
+						/** Menu limits */
+						controlLimits: [
+							/** DB */
+							{
+								identifier: 'cntry',
+								dependencyEvents: [],
+								dependencyField: '',
+								fnValueSelector: () => vm.$route.params['cntry'],
+							},
+						]
 					}, this)
 				}
 			}
@@ -463,6 +480,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS IMO_1311]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS IMO_MENU_1311]/
 // eslint-disable-next-line

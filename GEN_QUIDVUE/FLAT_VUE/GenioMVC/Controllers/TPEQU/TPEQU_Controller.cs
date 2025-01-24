@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Tpequ;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER TPEQU]/
 
@@ -40,7 +42,7 @@ namespace GenioMVC.Controllers
 			{
 				var isServerReports = !Configuration.SSRSServer.isLocalReports;
 				var reportName = "Teste equip";
-				var reportFileName = reportName + (isServerReports ? "" : ".rdl");
+				var reportFileName = reportName + (isServerReports ? "" : ".rdlc");
 				var reportPath = isServerReports ? Configuration.SSRSServer.path : Configuration.PathReports;
 				var reportFullPath = reportPath + (isServerReports ? "/" : "\\") + reportFileName;
 				if (isServerReports)
@@ -74,24 +76,26 @@ namespace GenioMVC.Controllers
 
 
 // USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 2D2141]/
+				List<string> allowedReportFormats = new List<string> { "PDF" };
+				if (requestModel.Format != null && !allowedReportFormats.Contains(requestModel.Format))
+					throw new Exception(Resources.Resources.O_FORMATO_DE_RELATOR01134);
+
+				string reportFormat = requestModel.Format != null ? ReportSSRS.GetExportType(requestModel.Format) : "PDF";
 				ReportSSRS_Result result;
 				using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
 				{
 					// MH (11/10/2017) - Report Server credentials
 					if (Configuration.SSRSServer.ContainsCredentials())
-						renderer.SetServerCredentials(Configuration.SSRSServer.Username, Configuration.SSRSServer.Password, Configuration.SSRSServer.Domain);
+						renderer.SetServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
 
 					renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
-					result = renderer.Render("PDF");
+					result = renderer.Render(reportFormat);
 				}
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 2D2141]/
 
-				Response.Headers["FileName"] = reportFileName + "." + result.FileNameExtension;
-				if (result.FileNameExtension == "pdf") // If pass file extension, browser will download file instead of opening it in PDF Viewer.
-					return File(result.File, result.MimeType);
-				else
-					return File(result.File, result.MimeType, "Teste equip." + result.FileNameExtension);
+				string fileName = "\"" + "Teste equip." + result.FileNameExtension + "\"";
+				return File(result.File, result.MimeType, fileName);
 			}
 			catch (Exception e)
 			{
@@ -101,7 +105,6 @@ namespace GenioMVC.Controllers
 				return JsonERROR(Resources.Resources.OCORREU_UM_ERRO_INES30674);
 			}
 		}
-
 
 
 		private List<string> GetActionIds(CriteriaSet crs, CSGenio.persistence.PersistentSupport sp = null)
@@ -127,18 +130,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Tpequ row = null;
 
-			try
-			{
-				row = Models.Tpequ.Find(Navigation.GetStrValue("tpequ"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model tpequ");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Tpequ(UserContext.Current);
+				row = new Models.Tpequ(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("tpequ");
 			}
 
@@ -153,14 +147,15 @@ namespace GenioMVC.Controllers
 				{
 					case "TPEQU___FAMILFAMILY__":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Tpequ_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Tpequ_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Tpequ___familfamily__(qs);
 							result = model.TableFamilFamily;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -206,11 +201,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -219,22 +215,19 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Tpequ" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Tpequ([FromBody]Tpequ_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Tpequ([FromBody]Tpequ_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "tpequ",
+			return GenericRecalculateFormulas(formData, "tpequ",
 				(primaryKey) => Models.Tpequ.Find(primaryKey, UserContext.Current, "FTPEQU"),
-				(model) => form_data.MapToModel(model as Models.Tpequ)
+				(model) => formData.MapToModel(model as Models.Tpequ)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -242,7 +235,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

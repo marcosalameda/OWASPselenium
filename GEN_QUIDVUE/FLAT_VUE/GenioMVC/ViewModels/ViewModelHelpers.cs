@@ -4,6 +4,7 @@ using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 
 using CSGenio.business;
 using CSGenio.framework;
+using GenioMVC.Models;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 
@@ -33,33 +34,43 @@ namespace GenioMVC.ViewModels
 
 		public TablePagination Pagination { get; set; }
 
+		public List<Totalizer> Totalizers { get; set; }
+
+		[JsonIgnore]
 		public TableSort Sort { get; set; }
 
 		public TableFiltering Filters { get; set; }
 
+		[JsonIgnore]
 		public string Query { get; set; }
 
+		[JsonIgnore]
 		public bool TableFilters { get; set; }
 
 		public virtual IEnumerable<A> Elements { get; set; }
 
-		public Dictionary<string, SelectList> Distincts { get; set; }
-
-		public string FocusOnRecord { get; set; }
-
-		//Slot report list
+		// Slot report list
+		[JsonIgnore]
 		public Dictionary<string, List<object>> Slots { get; set; }
+
+		public bool HasMore => Pagination.HasMore;
 
 		public TablePartial()
 		{
-			this.Distincts = new Dictionary<string, SelectList>();
-			this.Elements = new List<A>();
-			this.Pagination = new TablePagination(1, 0, false, false, 0);
+			Elements = new List<A>();
+			Totalizers = new List<Totalizer>();
+			Pagination = new TablePagination(1, 0, false, false, 0);
+			Filters = new TableFiltering();
 		}
 
 		public void SetPagination(int pageNumber, int itemsNumber, bool hasMore, bool showTotal, int totalRows)
 		{
 			Pagination = new TablePagination(pageNumber, itemsNumber, hasMore, showTotal, totalRows);
+		}
+
+		public void SetTotalizers(List<Totalizer> totalizers)
+		{
+			Totalizers = new List<Totalizer>(totalizers);
 		}
 
 		public void SetSort(string column, string direction)
@@ -71,11 +82,6 @@ namespace GenioMVC.ViewModels
 		{
 			Filters = new TableFiltering(showTableFilters, hasFilters, new Dictionary<string, string>());
 		}
-
-		public bool HasMore()
-		{
-			return Pagination.HasMore;
-		}
 	}
 
 	public class TableDBEdit<A> : TablePartial<A>
@@ -85,11 +91,6 @@ namespace GenioMVC.ViewModels
 		public string Selected { get; set; }
 
 		public object Value { get; set; }
-
-		public bool FilledByHistory { get; set; }
-
-		[JsonPropertyName("HasMore")]
-		public bool _HasMore { get { return base.HasMore(); } }
 
 		public bool IsLazyLoad { get; set; }
 
@@ -197,18 +198,37 @@ namespace GenioMVC.ViewModels
 		}
 	}
 
+	public class TableRowCrudButtonPermissions
+	{
+		[JsonPropertyName("editBtnDisabled")]
+		public bool EditBtnDisabled { get; set; } = true;
+		[JsonPropertyName("viewBtnDisabled")]
+		public bool ViewBtnDisabled { get; set; } = true;
+		[JsonPropertyName("deleteBtnDisabled")]
+		public bool DeleteBtnDisabled { get; set; } = true;
+		[JsonPropertyName("insertBtnDisabled")]
+		public bool InsertBtnDisabled { get; set; } = true;
+		[JsonPropertyName("duplicateBtnDisabled")]
+		public bool DuplicateBtnDisabled { get; set; } = true;
+	}
+
 	public class GridTableList<T> : TablePartial<T> where T: class, ICrudViewModel
 	{
 		private UserContext m_userContext;
 
+		[JsonPropertyName("elements")]
 		public override IEnumerable<T> Elements { get; set; }
 
+		[JsonPropertyName("newElements")]
 		public List<T> NewElements { get; set; }
 
+		[JsonPropertyName("editedElements")]
 		public List<T> EditedElements { get; set; }
 
+		[JsonPropertyName("removedElements")]
 		public List<string> RemovedElements { get; set; }
 
+		[JsonPropertyName("newRecordTemplate")]
 		public T NewRecordTemplate { get; set; }
 
 		public T CreateModelBase()
@@ -218,7 +238,7 @@ namespace GenioMVC.ViewModels
 
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public GridTableList() { }
@@ -226,7 +246,7 @@ namespace GenioMVC.ViewModels
 		public void Init(UserContext userContext)
 		{
 			m_userContext = userContext;
-			foreach(var e in NewElements)
+			foreach (var e in NewElements)
 				e.Init(userContext);
 			foreach (var e in EditedElements)
 				e.Init(userContext);
@@ -240,11 +260,11 @@ namespace GenioMVC.ViewModels
 			// Make the template row have data already calculated
 			NewRecordTemplate.NewLoad();
 
-			Elements = new List<T>();
+			Elements = [];
 
-			EditedElements = new List<T>();
-			NewElements = new List<T>();
-			RemovedElements = new List<string>();
+			EditedElements = [];
+			NewElements = [];
+			RemovedElements = [];
 		}
 
 		/// <summary>
@@ -262,21 +282,49 @@ namespace GenioMVC.ViewModels
 		{
 			CrudViewModelValidationResult result = new();
 
-			for (int i = 0; i < EditedElements.Count; i++)
+			foreach (var model in EditedElements)
 			{
-				var model = EditedElements[i];
 				var partialResult = model.Validate();
-				result.Merge(partialResult, $"EditedElements[{i}]");
+				result.Merge(partialResult, $"editedElements[{model.QPrimaryKey}]");
 			}
 
 			for (int i = 0; i < NewElements.Count; i++)
 			{
 				var model = NewElements[i];
 				var partialResult = model.Validate();
-				result.Merge(partialResult, $"NewElements[{i}]");
+				result.Merge(partialResult, $"newElements[{i}]");
 			}
 
 			return result;
+		}
+
+		/// <summary>
+		/// Load the empty Models
+		/// </summary>
+		public void LoadModel()
+		{
+			foreach (var model in EditedElements)
+				model.LoadModel();
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the Model to the ViewModel.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if Model is null.</exception>
+		public void MapFromModel()
+		{
+			foreach (var model in EditedElements)
+				model.MapFromModel();
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if Model is null.</exception>
+		public void MapToModel()
+		{
+			foreach (var model in EditedElements)
+				model.MapToModel();
 		}
 
 		public void Save()
@@ -293,7 +341,7 @@ namespace GenioMVC.ViewModels
 				}
 				catch (BusinessException e)
 				{
-					result.MergeStatusMessage(StatusMessage.Error(e.UserMessage, string.Format("RemovedElements[{0}]", RemovedElements.IndexOf(pk))));
+					result.MergeStatusMessage(StatusMessage.Error(e.UserMessage, string.Format("removedElements[{0}]", pk)));
 				}
 			}
 
@@ -307,11 +355,11 @@ namespace GenioMVC.ViewModels
 				catch (FieldValidationException fvExc)
 				{
 					foreach (var message in fvExc.StatusMessage.GetErrorList())
-						result.MergeStatusMessage(StatusMessage.Error(message.PrintMessages(), string.Format("EditedElements[{0}]", NewElements.IndexOf(model))));
+						result.MergeStatusMessage(StatusMessage.Error(message.Message, string.Format("editedElements[{0}]", model.QPrimaryKey)));
 				}
 				catch (BusinessException e)
 				{
-					result.MergeStatusMessage(StatusMessage.Error(e.UserMessage, string.Format("EditedElements[{0}]", NewElements.IndexOf(model))));
+					result.MergeStatusMessage(StatusMessage.Error(e.UserMessage, string.Format("editedElements[{0}]", model.QPrimaryKey)));
 				}
 			}
 
@@ -327,11 +375,11 @@ namespace GenioMVC.ViewModels
 				catch (FieldValidationException fvExc)
 				{
 					foreach (var message in fvExc.StatusMessage.GetErrorList())
-						result.MergeStatusMessage(StatusMessage.Error(message.PrintMessages(), string.Format("NewElements[{0}]", NewElements.IndexOf(model))));
+						result.MergeStatusMessage(StatusMessage.Error(message.Message, string.Format("newElements[{0}]", NewElements.IndexOf(model))));
 				}
 				catch (BusinessException e)
 				{
-					result.MergeStatusMessage(StatusMessage.Error(e.UserMessage, string.Format("NewElements[{0}]", NewElements.IndexOf(model))));
+					result.MergeStatusMessage(StatusMessage.Error(e.UserMessage, string.Format("newElements[{0}]", NewElements.IndexOf(model))));
 				}
 			}
 
@@ -340,19 +388,55 @@ namespace GenioMVC.ViewModels
 		}
 	}
 
-	// New properties added here will need to be accounted for in ImageModelJsonConverter.
-	public class ImageModel
+	public abstract class PropertyList<T>: TablePartial<T> where T : ModelBase
 	{
-		[JsonPropertyName("data")]
-		public string Data { get; set; }
+		public List<T> propertyListRows;
 
-		[JsonPropertyName("dataFormat")]
-		public string DataFormat { get; set; }
+		public PropertyList() { }
 
-		[JsonPropertyName("fileName")]
-		public string FileName { get; set; }
+		public abstract void Init(UserContext userContext);
 
-		[JsonPropertyName("encoding")]
-		public string Encoding { get; set; } = "base64";
+		public void Save()
+		{
+			var result = StatusMessage.GetAggregator();
+			foreach (var row in propertyListRows)
+			{
+				try
+				{
+					row.Save();
+				}
+				catch (FieldValidationException fvExc)
+				{
+					foreach (var message in fvExc.StatusMessage.GetErrorList())
+						result.MergeStatusMessage(StatusMessage.Error(message.Message, string.Format("propertyListRows[{0}]", propertyListRows.IndexOf(row))));
+				}
+				catch (BusinessException e)
+				{
+						result.MergeStatusMessage(StatusMessage.Error(e.UserMessage, string.Format("propertyListRows[{0}]", propertyListRows.IndexOf(row))));
+				}
+			}
+		}
+
+		public abstract CrudViewModelValidationResult Validate();
+
+		public abstract void MapFromModels();
+	}
+
+	public class PropertyListProperty
+	{
+		[JsonPropertyName("rowId")]
+		public string RowId { get; set; }
+
+		[JsonPropertyName("id")]
+		public string Id { get; set; }
+
+		[JsonPropertyName("name")]
+		public string Name { get; set; }
+
+		[JsonPropertyName("value")]
+		public string Value { get; set; }
+
+		[JsonPropertyName("type")]
+		public string Type { get; set; }
 	}
 }

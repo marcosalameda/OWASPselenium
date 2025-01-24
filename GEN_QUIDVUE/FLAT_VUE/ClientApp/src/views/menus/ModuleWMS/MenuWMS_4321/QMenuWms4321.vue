@@ -96,13 +96,13 @@
 
 		created()
 		{
-			this.componentOnLoadProc.AddBusy(loadResources(this, requiredTextResources), this.Resources[hardcodedTexts.genericLoad], 300)
+			this.componentOnLoadProc.addBusy(loadResources(this, requiredTextResources), this.Resources[hardcodedTexts.genericLoad], 300)
 		},
 
 		methods: {
 			followUp(itemKey)
 			{
-				this.setEntryValue({ navigationId: this.navigationId, key: 'perso_gender', value: itemKey })
+				this.setEntryValue({ navigationId: this.navigationId, key: 'perso.gender', value: itemKey })
 				this.navigateToRouteName('menu-WMS_43211', { perso_gender: itemKey })
 			}
 		}

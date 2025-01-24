@@ -13,7 +13,7 @@
 								:class="['i-text', { 'i-text--disabled': false }]"
 								label="Radio Button for select list (Left) with deselect:"
 								:label-attrs="{ class: 'i-text__label' }">
-								<q-radio-button-input
+								<q-radio-group
 									id="CTRL_1"
 									v-model="radio1"
 									:options-list="simpleListItems"
@@ -33,7 +33,7 @@
 								:class="['i-text', { 'i-text--disabled': false }]"
 								label="Radio Button for select list (Right) without deselect:"
 								:label-attrs="{ class: 'i-text__label' }">
-								<q-radio-button-input
+								<q-radio-group
 									id="CTRL_2"
 									v-model="radio2"
 									:options-list="simpleListItems"
@@ -52,7 +52,7 @@
 								:class="['i-text', { 'i-text--disabled': false }]"
 								label="Radio Button for select list with number:"
 								:label-attrs="{ class: 'i-text__label' }">
-								<q-radio-button-input
+								<q-radio-group
 									id="CTRL_3"
 									v-model="radio3"
 									:options-list="numberListItems"
@@ -71,7 +71,7 @@
 								:class="['i-text', { 'i-text--disabled': false }]"
 								label="Radio Button for select list (Disabled):"
 								:label-attrs="{ class: 'i-text__label' }">
-								<q-radio-button-input
+								<q-radio-group
 									id="CTRL_4"
 									v-model="radio4"
 									:options-list="simpleListItems"
@@ -91,9 +91,13 @@
 	import fakeData from './RadioButtonInput.mock'
 
 	export default {
+		name: 'QRadioContainer',
+
 		docsfile: './docs/inputs/RadioButtonInput.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{

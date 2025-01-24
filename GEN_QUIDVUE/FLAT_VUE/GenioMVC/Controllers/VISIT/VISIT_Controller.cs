@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Visit;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER VISIT]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Visit row = null;
 
-			try
-			{
-				row = Models.Visit.Find(Navigation.GetStrValue("visit"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model visit");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Visit(UserContext.Current);
+				row = new Models.Visit(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("visit");
 			}
 
@@ -82,8 +75,8 @@ namespace GenioMVC.Controllers
 				{
 					case "VISIT___EQUIPREGISTNR":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Visit_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Visit_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Visit___equipregistnr(qs);
 							result = model.TableEquipRegistnr;
@@ -91,14 +84,15 @@ namespace GenioMVC.Controllers
 						break;
 					case "VISIT2__EQUIPREGISTNR":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Visit2_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Visit2_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Visit2__equipregistnr(qs);
 							result = model.TableEquipRegistnr;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -147,11 +141,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -160,36 +155,33 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Visit" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Visit([FromBody]Visit_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Visit([FromBody]Visit_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "visit",
+			return GenericRecalculateFormulas(formData, "visit",
 				(primaryKey) => Models.Visit.Find(primaryKey, UserContext.Current, "FVISIT"),
-				(model) => form_data.MapToModel(model as Models.Visit)
+				(model) => formData.MapToModel(model as Models.Visit)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Visit2" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Visit2([FromBody]Visit2_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Visit2([FromBody]Visit2_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "visit",
+			return GenericRecalculateFormulas(formData, "visit",
 				(primaryKey) => Models.Visit.Find(primaryKey, UserContext.Current, "FVISIT2"),
-				(model) => form_data.MapToModel(model as Models.Visit)
+				(model) => formData.MapToModel(model as Models.Visit)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -197,7 +189,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

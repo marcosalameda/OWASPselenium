@@ -9,14 +9,14 @@
 					v-for="skeleton in 10"
 					:key="skeleton"
 					class="col">
-					<q-card
+					<q-card-view
 						loading
 						v-bind="cardConfig">
 						<template #title></template>
 						<template #subtitle></template>
 						<template #text></template>
 						<template #image></template>
-					</q-card>
+					</q-card-view>
 				</div>
 			</template>
 			<slot v-else />

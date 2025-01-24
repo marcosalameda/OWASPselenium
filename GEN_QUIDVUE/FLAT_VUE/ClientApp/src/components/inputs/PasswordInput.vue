@@ -1,5 +1,7 @@
 ﻿<template>
-	<q-input-group :size="size">
+	<q-input-group 
+		:class="classes"
+		:size="size">
 		<template
 			v-if="$slots.prepend"
 			#prepend>
@@ -8,20 +10,23 @@
 		<q-text-field
 			v-model="curValue"
 			:id="controlId"
-			:class="customClasses"
+			:name="name"
 			autocomplete="off"
 			:placeholder="placeholder"
 			:disabled="disabled"
 			:readonly="readonly"
 			:type="inputType"
-			:max-length="maxLength" />
+			:max-length="maxLength"
+			@keyup.enter="emitEnter" />
 		<template
 			v-if="!readonly"
 			#append>
 			<q-button
 				b-style="secondary"
 				:disabled="disabled"
-				@click="toggleProtectedMode">
+				@mousedown="showPassword"
+				@mouseup="hidePassword"
+				@mouseleave="hidePassword">
 				<q-icon :icon="eyeIcon" />
 			</q-button>
 		</template>
@@ -36,7 +41,7 @@
 	export default {
 		name: 'QPassword',
 
-		emits: ['update:modelValue'],
+		emits: ['update:modelValue', 'keyup-enter'],
 
 		inheritAttrs: false,
 
@@ -45,6 +50,11 @@
 			 * Unique identifier for the control.
 			 */
 			id: String,
+
+			/**
+			 * Name attribute for the control.
+			 */
+			name: String,
 
 			/**
 			 * The value bound to the control, reflecting the current input.
@@ -89,8 +99,8 @@
 			/**
 			 * An array of custom classes to be applied to the control.
 			 */
-			customClasses: {
-				type: Array,
+			classes: {
+				type: [String, Array],
 				default: () => []
 			},
 
@@ -148,12 +158,19 @@
 		methods: {
 			isEmpty: _isEmpty,
 
-			/**
-			 * Toggles the protected mode of the password input, to either show or hide the password.
-			 */
-			toggleProtectedMode()
+			showPassword()
 			{
-				this.protectedMode = !this.protectedMode
+				this.protectedMode = false
+			},
+
+			hidePassword()
+			{
+				this.protectedMode = true
+			},
+
+			emitEnter()
+			{
+				this.$emit('keyup-enter')
 			}
 		}
 	}

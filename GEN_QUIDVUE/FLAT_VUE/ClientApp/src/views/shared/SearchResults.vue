@@ -15,7 +15,9 @@
 			<menu-action
 				check-children
 				:menu="value.MenuObj"
-				:description="value.Text">
+				:description="value.Text"
+				:has-sub-menu-toggle="false"
+				@menu-action="(...args) => $emit('menu-action', ...args)">
 				<span class="menu-result__text">
 					<b>{{ value.Text }}</b>
 				</span>
@@ -23,7 +25,7 @@
 				<br />
 
 				<span class="menu-result__full-path">
-					<b>{{ value.Module }} > {{ value.FlatMenu }}</b>
+					<b>{{ value.ModuleText }} > {{ value.FlatMenu }}</b>
 				</span>
 			</menu-action>
 		</li>
@@ -53,6 +55,8 @@
 		mixins: [
 			LayoutHandlers
 		],
+		
+		emits: ['menu-action'],
 
 		props: {
 			/**

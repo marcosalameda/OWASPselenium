@@ -75,13 +75,9 @@ export const labelDisplay = {
  * Opening mode of the file
  */
 export const documentViewTypeMode = {
-	/**
-	 * Open the file in a new tab.
-	 */
+	// Open the file in a new tab.
 	preview: 0,
-	/**
-	 * Download the file.
-	 */
+	// Download the file.
 	print: 1
 }
 

@@ -1,55 +1,34 @@
-namespace quidgest.uitests.pages;
+Ôªøusing quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
 
 [System.CodeDom.Compiler.GeneratedCode("Genio", "")]
-public class Regia_onForm: PageObject {
-
-	private By formLocator = By.CssSelector("#form-container");
-	private IWebElement form => driver.FindElement(formLocator);
+public class Regia_onForm : Form
+{
+	/// <summary>
+	/// Pa√≠s:
+	/// </summary>
+	public LookupControl CntryCountry => new LookupControl(driver, ContainerLocator, "container-REGIA_ONCNTRYCOUNTRY_");
+	public SeeMorePage CntryCountrySeeMorePage => new SeeMorePage(driver, "REGIA_ON", "REGIA_ONCNTRYCOUNTRY_");
 
 	/// <summary>
-	/// PaÌs:
+	/// Regi√£o:
 	/// </summary>
-	public LookupControl CntryCountry => new LookupControl(driver, formLocator, "container-REGIA_ONCNTRYCOUNTRY_");
-	public SeeMorePage CntryCountrySeeMorePage => new SeeMorePage(driver, "REGIA_ON", "CNTRY.COUNTRY");
+	public BaseInputControl RegioRegiao => new BaseInputControl(driver, ContainerLocator, "#REGIA_ONREGIOREGIAO__");
+
 	/// <summary>
-	/// Regi„o:
+	/// Pa√≠s pessoa
 	/// </summary>
-	public BaseInputControl RegioRegiao => new BaseInputControl(driver, formLocator, "#REGIA_ONREGIOREGIAO__");
+	public LookupControl Pais1Country => new LookupControl(driver, ContainerLocator, "container-REGIA_ONPAIS1COUNTRY_");
+	public SeeMorePage Pais1CountrySeeMorePage => new SeeMorePage(driver, "REGIA_ON", "REGIA_ONPAIS1COUNTRY_");
+
 	/// <summary>
-	/// PaÌs pessoa
+	/// Im√≥veis
 	/// </summary>
-	public LookupControl Pais1Country => new LookupControl(driver, formLocator, "container-REGIA_ONPAIS1COUNTRY_");
-	public SeeMorePage Pais1CountrySeeMorePage => new SeeMorePage(driver, "REGIA_ON", "PAIS1.COUNTRY");
-	/// <summary>
-	/// ImÛveis
-	/// </summary>
-	public ListControl PseudImoveisl => new ListControl(driver, formLocator, "#REGIA_ONPSEUDIMOVEISL");
+	public ListControl PseudImoveisl => new ListControl(driver, ContainerLocator, "#REGIA_ONPSEUDIMOVEISL");
 
-	private IWebElement saveBtn => form.FindElement(By.CssSelector("#bottom-save-btn"));
-	private IWebElement cancelBtn => form.FindElement(By.CssSelector("#bottom-cancel-btn"));
-	public FORM_MODE mode {get; private set;}
-
-	public Regia_onForm(IWebDriver driver, FORM_MODE mode, By subformLocator=null): base(driver) {
-		this.mode = mode;
-		formLocator = subformLocator ?? formLocator;
-
-		wait.Until(c => form);
-		WaitForLoading();
-	}
-
-	public void WaitForLoading()
-	{
-        wait.Until(c => form.FindElement(ByData.Key("REGIA_ON")).GetAttribute("data-loading") != "true");
-    }
-
-	public void Save() {
-		WaitForLoading();
-		saveBtn.Click();
-	}
-
-	public void Cancel() {
-		WaitForLoading();
-		cancelBtn.Click();
-	}
-
+	public Regia_onForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "REGIA_ON", containerLocator: containerLocator) { }
 }

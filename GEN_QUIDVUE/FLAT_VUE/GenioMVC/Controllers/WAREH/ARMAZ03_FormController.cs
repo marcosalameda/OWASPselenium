@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Wareh;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ARMAZ03_CANCEL = new NavigationLocation("WAREHOUSE51864", "Armaz03_Cancel", "Wareh") { vueRouteName = "form-ARMAZ03", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ARMAZ03_SHOW = new NavigationLocation("WAREHOUSE51864", "Armaz03_Show", "Wareh") { vueRouteName = "form-ARMAZ03", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ARMAZ03_NEW = new NavigationLocation("WAREHOUSE51864", "Armaz03_New", "Wareh") { vueRouteName = "form-ARMAZ03", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ARMAZ03_EDIT = new NavigationLocation("WAREHOUSE51864", "Armaz03_Edit", "Wareh") { vueRouteName = "form-ARMAZ03", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ARMAZ03_DUPLICATE = new NavigationLocation("WAREHOUSE51864", "Armaz03_Duplicate", "Wareh") { vueRouteName = "form-ARMAZ03", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ARMAZ03_DELETE = new NavigationLocation("WAREHOUSE51864", "Armaz03_Delete", "Wareh") { vueRouteName = "form-ARMAZ03", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ARMAZ03_CANCEL = new("WAREHOUSE51864", "Armaz03_Cancel", "Wareh") { vueRouteName = "form-ARMAZ03", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ARMAZ03_SHOW = new("WAREHOUSE51864", "Armaz03_Show", "Wareh") { vueRouteName = "form-ARMAZ03", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ARMAZ03_NEW = new("WAREHOUSE51864", "Armaz03_New", "Wareh") { vueRouteName = "form-ARMAZ03", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ARMAZ03_EDIT = new("WAREHOUSE51864", "Armaz03_Edit", "Wareh") { vueRouteName = "form-ARMAZ03", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ARMAZ03_DUPLICATE = new("WAREHOUSE51864", "Armaz03_Duplicate", "Wareh") { vueRouteName = "form-ARMAZ03", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ARMAZ03_DELETE = new("WAREHOUSE51864", "Armaz03_Delete", "Wareh") { vueRouteName = "form-ARMAZ03", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Armaz03_ModalDBEdit()
-		{
-			Armaz03_ViewModel model = new Armaz03_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Armaz03_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Armaz03 Multiform actions
-
-		//
-		// GET /Wareh/MFArmaz03_New
-		[HttpGet]
-		[ActionName("MFArmaz03_New")]
-		public ActionResult MFArmaz03_New()
-		{
-			var model = new Armaz03_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_ARMAZ03_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("wareh", model.ValCodwareh);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFArmaz03_New_GET()
-		{
-			return MFArmaz03_New();
-		}
-
-		//
-		// GET /Wareh/MFArmaz03_Edit
-		[HttpGet]
-		[ActionName("MFArmaz03_Edit")]
-		public ActionResult MFArmaz03_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("ARMAZ03", "EDIT", new { id = id, partialView = "MFArmaz03", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFArmaz03_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFArmaz03_Edit(requestModel);
-		}
-
-		//
-		// GET /Wareh/MFArmaz03_Cancel
-		[ActionName("MFArmaz03_Cancel")]
-		public ActionResult MFArmaz03_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Wareh(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Wareh/MFArmaz03_Save
-		[HttpPost]
-		[ActionName("MFArmaz03_Save")]
-		public JsonResult MFArmaz03_Save(Armaz03_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFArmaz03_Save",
-				ViewName = "MFArmaz03",
-				AreaName = "wareh"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Wareh/MFArmaz03_Delete
-		[HttpPost]
-		[ActionName("MFArmaz03_Delete")]
-		public JsonResult MFArmaz03_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFArmaz03_Delete",
-				ViewName = "MFArmaz03",
-				AreaName = "wareh",
-				Location = ACTION_ARMAZ03_EDIT
-			};
-
-			var model = new Armaz03_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Wareh/Armaz03_ValArtigos
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_item")))
@@ -552,33 +415,45 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
 			Armaz03_ValArtigos_ViewModel model = new Armaz03_ValArtigos_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodwareh = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Wareh/Armaz03_SaveEdit
 		[HttpPost]

@@ -70,11 +70,6 @@
 		public int Height { get; set; }
 
 		/// <summary>
-		/// Whether the widget should display a colored left border
-		/// </summary>
-		public bool ColoredLeftBorder { get; set; }
-
-		/// <summary>
 		/// Whether the widget can be removed from the dashboard or not
 		/// </summary>
 		public bool Required { get; set; }
@@ -85,10 +80,20 @@
 		public bool Visible { get; set; }
 
 		/// <summary>
+		/// Whether the widget is visible or not based on a condition
+		/// </summary>
+		public CSGenio.business.Logical ShowWidget { get; set; }
+
+		/// <summary>
 		/// The role required to use the widget
 		/// </summary>
 		public CSGenio.framework.Role Role;
 
+		/// <summary>
+		/// The destination module of the widget that could not be the current one
+		/// </summary>
+		public string Module { get; set; }
+		
 		/// <summary>
 		/// The title of the widget
 		/// </summary>
@@ -98,6 +103,16 @@
 		/// The group that contains this widget
 		/// </summary>
 		public string Group { get; set; }
+		
+		/// <summary>
+		/// The style of the widget
+		/// </summary>
+		public string Style { get; set; }
+
+		/// <summary>
+		/// The border style of the widget
+		/// </summary>
+		public string BorderStyle { get; set; }
 
 		/// <summary>
 		/// The refresh mode of the widget
@@ -131,6 +146,9 @@
 		{
 			Hposition = -1;
 			Vposition = -1;
+			ShowWidget = true;
+			Style = "";
+			BorderStyle = "";
 		}
 	}
 }

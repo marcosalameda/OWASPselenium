@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,23 +41,23 @@ namespace GenioMVC.Models
 		private Indoc _indoc;
 		[DisplayName("Indoc")]
 		[ShouldSerialize("Indoc")]
-		public virtual Indoc Indoc { 
-			get { 
+		public virtual Indoc Indoc {
+			get {
 				if (!this.isEmptyModel && (_indoc == null || (!string.IsNullOrEmpty(ValCoddentr) && (_indoc.isEmptyModel || _indoc.klass.QPrimaryKey != ValCoddentr))))
 					_indoc = Models.Indoc.Find(ValCoddentr, m_userContext, Identifier, _fieldsToSerialize);
 				if (_indoc == null)
 					_indoc = new Models.Indoc(m_userContext, true, _fieldsToSerialize);
 				return _indoc;
 			}
-			set { _indoc = value; } 
+			set { _indoc = value; }
 		}
-		
+
 
 		[DisplayName("Line")]
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Ldent.ValLine")]
 		[NumericAttribute(1)]
-		public decimal? ValLine { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLine, 1)); } set { klass.ValLine = Convert.ToDouble(value); } }
+		public decimal? ValLine { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLine, 1)); } set { klass.ValLine = Convert.ToDecimal(value); } }
 
 		[DisplayName(">ARMAZEM")]
 		/// <summary>Field : ">ARMAZEM" Tipo: "CE" Formula: DF "[INDOC->CODWAREH]"</summary>
@@ -66,17 +66,17 @@ namespace GenioMVC.Models
 		private Wareh _wareh;
 		[DisplayName("Wareh")]
 		[ShouldSerialize("Wareh")]
-		public virtual Wareh Wareh { 
-			get { 
+		public virtual Wareh Wareh {
+			get {
 				if (!this.isEmptyModel && (_wareh == null || (!string.IsNullOrEmpty(ValCodwareh) && (_wareh.isEmptyModel || _wareh.klass.QPrimaryKey != ValCodwareh))))
 					_wareh = Models.Wareh.Find(ValCodwareh, m_userContext, Identifier, _fieldsToSerialize);
 				if (_wareh == null)
 					_wareh = new Models.Wareh(m_userContext, true, _fieldsToSerialize);
 				return _wareh;
 			}
-			set { _wareh = value; } 
+			set { _wareh = value; }
 		}
-		
+
 
 		[DisplayName(">ARTICLE")]
 		/// <summary>Field : ">ARTICLE" Tipo: "CE" Formula:  ""</summary>
@@ -85,23 +85,23 @@ namespace GenioMVC.Models
 		private Item _item;
 		[DisplayName("Item")]
 		[ShouldSerialize("Item")]
-		public virtual Item Item { 
-			get { 
+		public virtual Item Item {
+			get {
 				if (!this.isEmptyModel && (_item == null || (!string.IsNullOrEmpty(ValCoditem) && (_item.isEmptyModel || _item.klass.QPrimaryKey != ValCoditem))))
 					_item = Models.Item.Find(ValCoditem, m_userContext, Identifier, _fieldsToSerialize);
 				if (_item == null)
 					_item = new Models.Item(m_userContext, true, _fieldsToSerialize);
 				return _item;
 			}
-			set { _item = value; } 
+			set { _item = value; }
 		}
-		
+
 
 		[DisplayName("Qtd entry")]
 		/// <summary>Field : "Qtd entry" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Ldent.ValQtdentra")]
 		[NumericAttribute(0)]
-		public decimal? ValQtdentra { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdentra, 0)); } set { klass.ValQtdentra = Convert.ToDouble(value); } }
+		public decimal? ValQtdentra { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdentra, 0)); } set { klass.ValQtdentra = Convert.ToDecimal(value); } }
 
 		[DisplayName("Instant entrance")]
 		/// <summary>Field : "Instant entrance" Tipo: "DT" Formula: ++ "[INDOC->DHDOCUME]"</summary>
@@ -123,19 +123,19 @@ namespace GenioMVC.Models
 		public Ldent(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAldent(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Ldent(UserContext userContext, CSGenioAldent val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAldent csgenioa)
@@ -167,7 +167,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Regis;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_REGIS_CANCEL = new NavigationLocation("REGISTRATION_ON_THE_28460", "Regis_Cancel", "Regis") { vueRouteName = "form-REGIS", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_REGIS_SHOW = new NavigationLocation("REGISTRATION_ON_THE_28460", "Regis_Show", "Regis") { vueRouteName = "form-REGIS", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_REGIS_NEW = new NavigationLocation("REGISTRATION_ON_THE_28460", "Regis_New", "Regis") { vueRouteName = "form-REGIS", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_REGIS_EDIT = new NavigationLocation("REGISTRATION_ON_THE_28460", "Regis_Edit", "Regis") { vueRouteName = "form-REGIS", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_REGIS_DUPLICATE = new NavigationLocation("REGISTRATION_ON_THE_28460", "Regis_Duplicate", "Regis") { vueRouteName = "form-REGIS", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_REGIS_DELETE = new NavigationLocation("REGISTRATION_ON_THE_28460", "Regis_Delete", "Regis") { vueRouteName = "form-REGIS", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_REGIS_CANCEL = new("REGISTRATION_ON_THE_28460", "Regis_Cancel", "Regis") { vueRouteName = "form-REGIS", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_REGIS_SHOW = new("REGISTRATION_ON_THE_28460", "Regis_Show", "Regis") { vueRouteName = "form-REGIS", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_REGIS_NEW = new("REGISTRATION_ON_THE_28460", "Regis_New", "Regis") { vueRouteName = "form-REGIS", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_REGIS_EDIT = new("REGISTRATION_ON_THE_28460", "Regis_Edit", "Regis") { vueRouteName = "form-REGIS", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_REGIS_DUPLICATE = new("REGISTRATION_ON_THE_28460", "Regis_Duplicate", "Regis") { vueRouteName = "form-REGIS", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_REGIS_DELETE = new("REGISTRATION_ON_THE_28460", "Regis_Delete", "Regis") { vueRouteName = "form-REGIS", mode = "DELETE" };
 
 		#endregion
 
@@ -48,22 +50,12 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		public ActionResult Regis_ModalDBEdit()
-		{
-			Regis_ViewModel model = new Regis_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
-
 		#region Regis_Show
 
 // USE /[MANUAL GQT CONTROLLER_SHOW REGIS]/
 
 		[HttpPost]
+		[AllowAnonymous]
 		public ActionResult Regis_Show_GET([FromBody]RequestIdModel requestModel)
 		{
 			var id = requestModel.Id;
@@ -93,6 +85,7 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET REGIS]/
 		[HttpPost]
+		[AllowAnonymous]
 		public ActionResult Regis_New_GET([FromBody]RequestNewGetModel requestModel)
 		{
 			var id = requestModel.Id;
@@ -126,6 +119,7 @@ namespace GenioMVC.Controllers
 		//
 		// POST: /Regis/Regis_New
 // USE /[MANUAL GQT CONTROLLER_NEW_POST REGIS]/
+		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_New([FromBody]Regis_ViewModel model, [FromQuery]bool redirect = true)
 		{
@@ -163,6 +157,7 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET REGIS]/
 		[HttpPost]
+		[AllowAnonymous]
 		public ActionResult Regis_Edit_GET([FromBody]RequestIdModel requestModel)
 		{
 			var id = requestModel.Id;
@@ -190,6 +185,7 @@ namespace GenioMVC.Controllers
 		//
 		// POST: /Regis/Regis_Edit
 // USE /[MANUAL GQT CONTROLLER_EDIT_POST REGIS]/
+		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_Edit([FromBody]Regis_ViewModel model, [FromQuery]bool redirect)
 		{
@@ -227,6 +223,7 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET REGIS]/
 		[HttpPost]
+		[AllowAnonymous]
 		public ActionResult Regis_Delete_GET([FromBody]RequestIdModel requestModel)
 		{
 			var id = requestModel.Id;
@@ -254,6 +251,7 @@ namespace GenioMVC.Controllers
 		//
 		// POST: /Regis/Regis_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST REGIS]/
+		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_Delete([FromBody]RequestIdModel requestModel)
 		{
@@ -293,6 +291,7 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET REGIS]/
 
 		[HttpPost]
+		[AllowAnonymous]
 		public ActionResult Regis_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
 		{
 			var id = requestModel.Id;
@@ -321,6 +320,7 @@ namespace GenioMVC.Controllers
 		//
 		// POST: /Regis/Regis_Duplicate
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_POST REGIS]/
+		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_Duplicate([FromBody]Regis_ViewModel model, [FromQuery]bool redirect = true)
 		{
@@ -359,6 +359,7 @@ namespace GenioMVC.Controllers
 		//
 		// GET: /Regis/Regis_Cancel
 // USE /[MANUAL GQT CONTROLLER_CANCEL_GET REGIS]/
+		[AllowAnonymous]
 		public ActionResult Regis_Cancel()
 		{
 			if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
@@ -400,137 +401,10 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Regis Multiform actions
 
-		//
-		// GET /Regis/MFRegis_New
-		[HttpGet]
-		[ActionName("MFRegis_New")]
-		public ActionResult MFRegis_New()
-		{
-			var model = new Regis_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_REGIS_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("regis", model.ValCodregis);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFRegis_New_GET()
-		{
-			return MFRegis_New();
-		}
-
-		//
-		// GET /Regis/MFRegis_Edit
-		[HttpGet]
-		[ActionName("MFRegis_Edit")]
-		public ActionResult MFRegis_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("REGIS", "EDIT", new { id = id, partialView = "MFRegis", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFRegis_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFRegis_Edit(requestModel);
-		}
-
-		//
-		// GET /Regis/MFRegis_Cancel
-		[ActionName("MFRegis_Cancel")]
-		public ActionResult MFRegis_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Regis(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Regis/MFRegis_Save
-		[HttpPost]
-		[ActionName("MFRegis_Save")]
-		public JsonResult MFRegis_Save(Regis_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRegis_Save",
-				ViewName = "MFRegis",
-				AreaName = "regis"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Regis/MFRegis_Delete
-		[HttpPost]
-		[ActionName("MFRegis_Delete")]
-		public JsonResult MFRegis_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRegis_Delete",
-				ViewName = "MFRegis",
-				AreaName = "regis",
-				Location = ACTION_REGIS_EDIT
-			};
-
-			var model = new Regis_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Regis/Regis_SaveEdit
+		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_SaveEdit([FromBody]Regis_ViewModel model)
 		{

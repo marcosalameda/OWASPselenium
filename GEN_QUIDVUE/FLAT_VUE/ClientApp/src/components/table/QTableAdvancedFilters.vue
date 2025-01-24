@@ -5,7 +5,11 @@
 		:key="domKey"
 		v-if="(showPopup || showInline) && showHeader">
 		<div>
-			<h2 class="c-modal__header-title">{{ texts.advancedFiltersText }}</h2>
+			<h2
+				class="c-modal__header-title"
+				:id="`q-modal-${modalId}_title`">
+				{{ texts.advancedFiltersText }}
+			</h2>
 		</div>
 	</teleport>
 
@@ -28,7 +32,7 @@
 							class="d-inline-flex valign-top">
 							<q-toggle-input
 								:id="'filter_' + filterIdx + '_state'"
-								v-model="editFilter.Active"
+								v-model="editFilter.active"
 								:true-label="texts.activeText"
 								:false-label="texts.inactiveText"
 								style="display: inline" />
@@ -39,7 +43,7 @@
 				<div class="search-filter-conds no-gutters">
 					<!-- BEGIN: Conditions -->
 					<div
-						v-for="(condition, conditionIdx) in editFilter.Conditions"
+						v-for="(condition, conditionIdx) in editFilter.conditions"
 						:key="conditionIdx"
 						class="row no-gutters mb-2">
 						<div class="col-12">
@@ -48,7 +52,7 @@
 						</div>
 						<div class="filter-input-container">
 							<q-select
-								v-model="editFilter.Conditions[conditionIdx].Field"
+								v-model="editFilter.conditions[conditionIdx].field"
 								size="large"
 								:items="searchableColumnOptions"
 								@update:model-value="setFilterDefaultOperator(editFilter, conditionIdx, searchableColumns)" />
@@ -56,7 +60,7 @@
 
 						<div class="filter-input-container">
 							<q-select
-								v-model="editFilter.Conditions[conditionIdx].Operator"
+								v-model="editFilter.conditions[conditionIdx].operator"
 								size="large"
 								:items="getFilterOperatorOptions(editFilter, conditionIdx, filterOperators, searchableColumns)"
 								@update:model-value="setFilterDefaultValues(editFilter, conditionIdx, searchableColumns)" />
@@ -66,7 +70,7 @@
 							<component
 								:is="getFilterInputComponent(editFilter, conditionIdx, searchableColumns)"
 								v-for="(value, valueIdx) in getFilterValueCount(editFilter, conditionIdx, searchableColumns)"
-								:key="editFilter.Conditions[conditionIdx].Field + '_' + valueIdx"
+								:key="editFilter.conditions[conditionIdx].field + '_' + valueIdx"
 								:table-name="tableName + '_filters'"
 								:row-index="filterIdx"
 								:column-name="conditionIdx + '_' + valueIdx"
@@ -74,7 +78,8 @@
 									...getFilterColumnFromName(editFilter, conditionIdx, searchableColumns),
 									...{ keyIsValue: true },
 									component: 'grid-base-input-structure',
-									errorDisplayType: 'text'
+									errorDisplayType: 'text',
+									teleport: true
 								}"
 								:classes="[
 									getFilterColumnFromName(editFilter, conditionIdx, searchableColumns).currency !== undefined
@@ -83,10 +88,11 @@
 								]"
 								:container-classes="['filter-value-container']"
 								size="large"
-								:value="editFilter.Conditions[conditionIdx].Values[valueIdx]"
-								:raw-value="editFilter.Conditions[conditionIdx].Values[valueIdx]"
+								:value="editFilter.conditions[conditionIdx].values[valueIdx]"
+								:raw-value="editFilter.conditions[conditionIdx].values[valueIdx]"
 								:placeholder="getFilterPlaceholder(editFilter, conditionIdx, searchableColumns)"
 								:error-messages="getFilterValueErrorMessages(filterIdx, conditionIdx, valueIdx)"
+								:locale="locale"
 								@update="setFilterConditionValue(editFilter, conditionIdx, valueIdx, $event)">
 							</component>
 						</div>
@@ -95,7 +101,7 @@
 							<q-button
 								b-style="secondary"
 								:title="texts.removeConditionText"
-								:disabled="editFilter.Conditions.length < 2"
+								:disabled="editFilter.conditions.length < 2"
 								@click="removeCondition(editFilter, conditionIdx)">
 								<q-icon icon="remove" />
 							</q-button>
@@ -108,7 +114,7 @@
 						b-style="secondary"
 						:label="texts.createConditionText"
 						:title="texts.createConditionText"
-						@click="addCondition(editFilter, editFilter.Conditions.length, searchableColumns)">
+						@click="addCondition(editFilter, editFilter.conditions.length, searchableColumns)">
 						<q-icon icon="add" />
 					</q-button>
 					<q-button
@@ -180,7 +186,6 @@
 		emits: [
 			'show-popup',
 			'hide-popup',
-			'set-property',
 			'update-config',
 			'add-advanced-filter',
 			'edit-advanced-filter',
@@ -255,6 +260,14 @@
 			mode: {
 				type: String,
 				default: 'new'
+			},
+
+			/**
+			 * Current system locale
+			 */
+			locale: {
+				type: String,
+				default: 'en-US'
 			}
 		},
 
@@ -438,10 +451,10 @@
 
 				//Set filter state to active or inactive
 				if (active !== undefined) {
-					filter.Active = active
+					filter.active = active
 				}
 				//If active, add filter table key to checklist
-				if (filter.Active !== false) {
+				if (filter.active !== false) {
 					this.rowsChecked[selectedFilterIdx.toString()] = true
 				}
 
@@ -533,7 +546,7 @@
 				var filter = {}
 				for (let idx in filters) {
 					filter = filters[idx]
-					if (filter.Active !== false) {
+					if (filter.active !== false) {
 						checkedFilters[idx.toString()] = true
 					}
 				}

@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Article categorization
 	/// </summary>
-	public class CSGenioAitemc : DbArea	{
+	public class CSGenioAitemc : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -260,7 +261,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodcatar, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCoditem { get { return m_fldCoditem; } }
 		private static FieldRef m_fldCoditem = new FieldRef("itemc", "coditem");
@@ -271,7 +271,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCoditem); }
 			set { insertNameValueField(FldCoditem, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodtpcat { get { return m_fldCodtpcat; } }
@@ -284,7 +283,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodtpcat, value); }
 		}
 
-
 		/// <summary>Field : "Category type" Tipo: "C" Formula: ++ "[CATTP->TPCATEGO]"</summary>
 		public static FieldRef FldTpcateg { get { return m_fldTpcateg; } }
 		private static FieldRef m_fldTpcateg = new FieldRef("itemc", "tpcateg");
@@ -295,7 +293,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldTpcateg); }
 			set { insertNameValueField(FldTpcateg, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -338,23 +335,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAitemc> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAitemc> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAitemc>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -403,7 +383,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX ITEMC]/

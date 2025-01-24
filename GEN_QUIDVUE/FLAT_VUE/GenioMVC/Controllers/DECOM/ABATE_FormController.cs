@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Decom;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ABATE_CANCEL = new NavigationLocation("EQUIPMENT_DECOMMISSI11875", "Abate_Cancel", "Decom") { vueRouteName = "form-ABATE", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ABATE_SHOW = new NavigationLocation("EQUIPMENT_DECOMMISSI11875", "Abate_Show", "Decom") { vueRouteName = "form-ABATE", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ABATE_NEW = new NavigationLocation("EQUIPMENT_DECOMMISSI11875", "Abate_New", "Decom") { vueRouteName = "form-ABATE", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ABATE_EDIT = new NavigationLocation("EQUIPMENT_DECOMMISSI11875", "Abate_Edit", "Decom") { vueRouteName = "form-ABATE", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ABATE_DUPLICATE = new NavigationLocation("EQUIPMENT_DECOMMISSI11875", "Abate_Duplicate", "Decom") { vueRouteName = "form-ABATE", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ABATE_DELETE = new NavigationLocation("EQUIPMENT_DECOMMISSI11875", "Abate_Delete", "Decom") { vueRouteName = "form-ABATE", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ABATE_CANCEL = new("EQUIPMENT_DECOMMISSI11875", "Abate_Cancel", "Decom") { vueRouteName = "form-ABATE", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ABATE_SHOW = new("EQUIPMENT_DECOMMISSI11875", "Abate_Show", "Decom") { vueRouteName = "form-ABATE", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ABATE_NEW = new("EQUIPMENT_DECOMMISSI11875", "Abate_New", "Decom") { vueRouteName = "form-ABATE", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ABATE_EDIT = new("EQUIPMENT_DECOMMISSI11875", "Abate_Edit", "Decom") { vueRouteName = "form-ABATE", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ABATE_DUPLICATE = new("EQUIPMENT_DECOMMISSI11875", "Abate_Duplicate", "Decom") { vueRouteName = "form-ABATE", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ABATE_DELETE = new("EQUIPMENT_DECOMMISSI11875", "Abate_Delete", "Decom") { vueRouteName = "form-ABATE", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Abate_ModalDBEdit()
-		{
-			Abate_ViewModel model = new Abate_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Abate_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Abate Multiform actions
 
-		//
-		// GET /Decom/MFAbate_New
-		[HttpGet]
-		[ActionName("MFAbate_New")]
-		public ActionResult MFAbate_New()
-		{
-			var model = new Abate_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_ABATE_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("decom", model.ValCoddeco);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFAbate_New_GET()
-		{
-			return MFAbate_New();
-		}
-
-		//
-		// GET /Decom/MFAbate_Edit
-		[HttpGet]
-		[ActionName("MFAbate_Edit")]
-		public ActionResult MFAbate_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("ABATE", "EDIT", new { id = id, partialView = "MFAbate", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFAbate_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFAbate_Edit(requestModel);
-		}
-
-		//
-		// GET /Decom/MFAbate_Cancel
-		[ActionName("MFAbate_Cancel")]
-		public ActionResult MFAbate_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Decom(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Decom/MFAbate_Save
-		[HttpPost]
-		[ActionName("MFAbate_Save")]
-		public JsonResult MFAbate_Save(Abate_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAbate_Save",
-				ViewName = "MFAbate",
-				AreaName = "decom"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Decom/MFAbate_Delete
-		[HttpPost]
-		[ActionName("MFAbate_Delete")]
-		public JsonResult MFAbate_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAbate_Delete",
-				ViewName = "MFAbate",
-				AreaName = "decom",
-				Location = ACTION_ABATE_EDIT
-			};
-
-			var model = new Abate_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Decom/Abate_SaveEdit
 		[HttpPost]

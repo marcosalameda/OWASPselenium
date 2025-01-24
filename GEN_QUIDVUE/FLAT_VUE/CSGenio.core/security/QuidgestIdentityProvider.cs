@@ -15,9 +15,13 @@ namespace GenioServer.security
     [CredentialProvider(typeof(DomainCredential))]
     [Description("Establishes identity according to the current application database.")]
     [DisplayName("Application Database identity")]
-    public class QuidgestIdentityProvider : IIdentityProvider
+    public class QuidgestIdentityProvider : BaseIdentityProvider
     {
-        public IIdentity Authenticate(Credential credential)
+        /// <inheritdoc/>
+        public override bool HasUsernameAuth() => true;
+
+        /// <inheritdoc/>
+        public override IIdentity Authenticate(Credential credential)
         {
             IList<string> anos = new List<string>(Configuration.Years);
             if (Configuration.Years.Count == 0)
@@ -58,19 +62,6 @@ namespace GenioServer.security
             }
 
             return id;
-        }
-
-        /// <summary>
-        /// Determines whether username and password authentication is enabled.
-        /// </summary>
-        /// <remarks>
-        /// This is used to determine if username and password authentication is enabled
-        /// Note: This method checks for the presence of specific identity providers but does not verify the specific login mode (e.g., AD, Certificate, Username/Password) they are configured for. 
-        /// 	Further checks might be necessary to determine the exact authentication mode each provider supports.
-        /// </remarks>
-        public bool HasUsernameAuth()
-        {
-            return true;
         }
 
         private IIdentity Authenticate(UserPassCredential credential, PersistentSupport sp)

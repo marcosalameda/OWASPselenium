@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.DILIN___DISPADISPANR_.handlers"
 							:loading="controls.DILIN___DISPADISPANR_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.DILIN___DISPADISPANR_.isVisible"
 								v-bind="controls.DILIN___DISPADISPANR_.props"
-								:model-value="model.ValCoddispa.value"
-								v-on="controls.DILIN___DISPADISPANR_.handlers"
-								@update:model-value="model.ValCoddispa.fnUpdateValue" />
+								v-on="controls.DILIN___DISPADISPANR_.handlers" />
 							<q-see-more-dilin-dispadispanr
 								v-if="controls.DILIN___DISPADISPANR_.seeMoreIsVisible"
 								v-bind="controls.DILIN___DISPADISPANR_.seeMoreParams"
@@ -129,12 +126,10 @@
 							v-on="controls.DILIN___DILINLINENUMB.handlers"
 							:loading="controls.DILIN___DILINLINENUMB.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.DILIN___DILINLINENUMB.isVisible"
-								v-bind="controls.DILIN___DILINLINENUMB"
-								:model-value="model.ValLinenumb.value"
+								v-bind="controls.DILIN___DILINLINENUMB.props"
 								@update:model-value="model.ValLinenumb.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -149,14 +144,11 @@
 							v-on="controls.DILIN___PRODUPRODUCT_.handlers"
 							:loading="controls.DILIN___PRODUPRODUCT_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.DILIN___PRODUPRODUCT_.isVisible"
 								v-bind="controls.DILIN___PRODUPRODUCT_.props"
-								:model-value="model.ValCodprodu.value"
-								v-on="controls.DILIN___PRODUPRODUCT_.handlers"
-								@update:model-value="model.ValCodprodu.fnUpdateValue" />
+								v-on="controls.DILIN___PRODUPRODUCT_.handlers" />
 							<q-see-more-dilin-produproduct
 								v-if="controls.DILIN___PRODUPRODUCT_.seeMoreIsVisible"
 								v-bind="controls.DILIN___PRODUPRODUCT_.seeMoreParams"
@@ -174,12 +166,10 @@
 							v-on="controls.DILIN___DILINORDERED_.handlers"
 							:loading="controls.DILIN___DILINORDERED_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.DILIN___DILINORDERED_.isVisible"
-								v-bind="controls.DILIN___DILINORDERED_"
-								:model-value="model.ValOrdered.value"
+								v-bind="controls.DILIN___DILINORDERED_.props"
 								@update:model-value="model.ValOrdered.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -192,12 +182,10 @@
 							v-on="controls.DILIN___DILINDELIVERE.handlers"
 							:loading="controls.DILIN___DILINDELIVERE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.DILIN___DILINDELIVERE.isVisible"
-								v-bind="controls.DILIN___DILINDELIVERE"
-								:model-value="model.ValDelivere.value"
+								v-bind="controls.DILIN___DILINDELIVERE.props"
 								@update:model-value="model.ValDelivere.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -210,12 +198,10 @@
 							v-on="controls.DILIN___DILINOUTSTAND.handlers"
 							:loading="controls.DILIN___DILINOUTSTAND.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.DILIN___DILINOUTSTAND.isVisible"
-								v-bind="controls.DILIN___DILINOUTSTAND"
-								:model-value="model.ValOutstand.value"
+								v-bind="controls.DILIN___DILINOUTSTAND.props"
 								@update:model-value="model.ValOutstand.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -303,15 +289,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'DILIN',
-						location: 'form-DILIN',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'DILIN',
+					location: 'form-DILIN',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -357,6 +341,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -429,8 +415,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -512,7 +499,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -566,21 +553,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -591,25 +563,9 @@
 						id: 'DILIN___DISPADISPANR_',
 						name: 'DISPANR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DISPATCH_NUMBER23616),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCoddispa',
-							dependencyEvent: 'fieldChange:dilin.coddispa'
-						},
-						dependentFields: () => {
-							return {
-								set 'dispa.coddispa'(value) { vm.model.ValCoddispa.updateValue(value) },
-								set 'dispa.dispanr'(value) { vm.model.TableDispaDispanr.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -618,22 +574,29 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCoddispa',
+							dependencyEvent: 'fieldChange:dilin.coddispa'
+						},
+						dependentFields: () => ({
+							set 'dispa.coddispa'(value) { vm.model.ValCoddispa.updateValue(value) },
+							set 'dispa.dispanr'(value) { vm.model.TableDispaDispanr.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					DILIN___DILINLINENUMB: new fieldControlClass.NumberControl({
 						modelField: 'ValLinenumb',
 						valueChangeEvent: 'fieldChange:dilin.linenumb',
-						maxIntegers: 6,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'DILIN___DILINLINENUMB',
 						name: 'LINENUMB',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.LINE27983),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 6,
+						maxDecimals: 0,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -644,25 +607,9 @@
 						id: 'DILIN___PRODUPRODUCT_',
 						name: 'PRODUCT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRODUCT12880),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: true,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodprodu',
-							dependencyEvent: 'fieldChange:dilin.codprodu'
-						},
-						dependentFields: () => {
-							return {
-								set 'produ.codprodu'(value) { vm.model.ValCodprodu.updateValue(value) },
-								set 'produ.product'(value) { vm.model.TableProduProduct.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -671,62 +618,60 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodprodu',
+							dependencyEvent: 'fieldChange:dilin.codprodu'
+						},
+						dependentFields: () => ({
+							set 'produ.codprodu'(value) { vm.model.ValCodprodu.updateValue(value) },
+							set 'produ.product'(value) { vm.model.TableProduProduct.updateValue(value) },
+						}),
+						mustBeFilled: true,
+						controlLimits: [
+						],
 					}, this),
 					DILIN___DILINORDERED_: new fieldControlClass.NumberControl({
 						modelField: 'ValOrdered',
 						valueChangeEvent: 'fieldChange:dilin.ordered',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'DILIN___DILINORDERED_',
 						name: 'ORDERED',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ORDERED04034),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					DILIN___DILINDELIVERE: new fieldControlClass.NumberControl({
 						modelField: 'ValDelivere',
 						valueChangeEvent: 'fieldChange:dilin.delivere',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'DILIN___DILINDELIVERE',
 						name: 'DELIVERE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DELIVERED26597),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					DILIN___DILINOUTSTAND: new fieldControlClass.NumberControl({
 						modelField: 'ValOutstand',
 						valueChangeEvent: 'fieldChange:dilin.outstand',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'DILIN___DILINOUTSTAND',
 						name: 'OUTSTAND',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.OUTSTANDING36400),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 				},
 
@@ -780,7 +725,7 @@
 						/** The foreign key to the PRODU table */
 						get produ() { return vm.model.ValCodprodu },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -876,6 +821,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -915,6 +868,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1041,6 +1002,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR DILIN]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1056,6 +1033,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS DILIN]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

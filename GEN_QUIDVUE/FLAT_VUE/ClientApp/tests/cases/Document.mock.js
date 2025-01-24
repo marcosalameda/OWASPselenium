@@ -7,7 +7,7 @@
 			maximumFileSize: 50,
 			firstVersion: '1',
 			lastVersion: '2.1',
-			versionsInfoArray: [
+			versionsInfo: [
 				{
 					author: 'QUIDGEST',
 					bytes: '197',

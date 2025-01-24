@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuWMS_ASSET_CARDViewModel.js'
+
 	const requiredTextResources = ['QMenuWMS_ASSET_CARD', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: 'ASSET_CARD',
 					isMenuList: true,
+					designation: computed(() => this.Resources.EQUIPMENTS06276),
 					acronym: 'WMS_ASSET_CARD',
 					name: 'ASSET',
 					route: 'menu-WMS_ASSET_CARD',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableSpecialRenderingControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'WMS_Menu_ASSET_CARD',
 						controller: 'ASSET',
 						action: 'WMS_Menu_ASSET_CARD',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.NumericColumn({
 								order: 1,
@@ -197,8 +207,10 @@
 								area: 'ASSET',
 								field: 'PHOTO',
 								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -233,7 +245,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -337,6 +349,7 @@
 								id: 'RCA_WMS_411111',
 								name: 'form-EQUIPM',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -353,20 +366,14 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: EQUIPM
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValName',
 							defaultSearchColumnNameOriginal: 'ValName',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValName',
+								sortOrder: 'asc'
+							}
 						},
-						changeEvents: ['changed-KINDE', 'changed-ASSET', 'changed-MANUF'],
+						changeEvents: ['changed-KINDE', 'changed-MANUF', 'changed-ASSET'],
 						uuid: 'cbba1257-006c-407c-bff6-cb87a80d6f4e',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -543,7 +550,11 @@
 								}
 							},
 						],
-						headerLevel: 1
+						headerLevel: 1,
+						/** Menu limits */
+						controlLimits: [
+							/** SC */
+						]
 					}, this)
 				}
 			}
@@ -572,6 +583,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS WMS_ASSET_CARD]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_ASSET_CARD]/
 // eslint-disable-next-line

@@ -6,9 +6,9 @@
  *****************************************************************/
 
 import { defineStore } from 'pinia'
+import { focusElement } from '@/mixins/genericFunctions.js'
 
 import _remove from 'lodash-es/remove'
-import _assignWith from 'lodash-es/assignWith'
 
 //----------------------------------------------------------------
 // State variables
@@ -16,8 +16,6 @@ import _assignWith from 'lodash-es/assignWith'
 
 const state = () => {
 	return {
-		tGlob: {},
-
 		menus: {},
 
 		menuPath: [],
@@ -25,10 +23,6 @@ const state = () => {
 		infoMessages: [],
 
 		modals: [],
-
-		dropdown: {
-			display: 'none'
-		},
 
 		reportingModeCAV: false,
 
@@ -41,6 +35,8 @@ const state = () => {
 		isPublicRoute: false,
 
 		isFullScreenPage: false,
+
+		asyncProcesses: [],
 
 		busyPageStateStack: []
 	}
@@ -66,7 +62,7 @@ const getters = {
 	 */
 	latestModalId(state)
 	{
-		var id = ''
+		let id = ''
 
 		for (let modal of state.modals)
 			if (modal.hasRoute && modal.isActive)
@@ -91,6 +87,15 @@ const getters = {
 	relativeInfoMessages(state)
 	{
 		return state.infoMessages.filter((message) => !message.pinned)
+	},
+
+	/**
+	 * Whether there are any asynchronous processes currently running.
+	 * @param {object} state The current global state
+	 */
+	isLoading(state)
+	{
+		return state.asyncProcesses.length > 0 || state.busyPageStateStack.length > 0
 	}
 }
 
@@ -99,22 +104,6 @@ const getters = {
 //----------------------------------------------------------------
 
 const actions = {
-	/**
-	 * Sets the current Glob's info, according to the data coming from the server.
-	 * @param {object} data The Glob data
-	 */
-	setGlobData(data)
-	{
-		if (typeof data !== 'object')
-			return
-
-		/*
-		 * Temporary fix - The formulas generate the use of fields with '.value', but tGLob fields do not (yet) have the structure of properties with classes associated with the data type like the view models of the forms.
-		 * TODO: Use view model class (developed in the grid table list branch)
-		 */
-		_assignWith(this.tGlob, data, (_, srcValue) => ({ value: srcValue }))
-	},
-
 	/**
 	 * Sets the available menus.
 	 * @param {string} menus The available menus
@@ -231,7 +220,7 @@ const actions = {
 		if (props.returnElement === undefined || props.returnElement === null)
 			props.returnElement = document.activeElement
 
-		var index = -1
+		let index = -1
 
 		for (let i = 0; i < this.modals.length; i++)
 		{
@@ -270,7 +259,7 @@ const actions = {
 		if (length === 0)
 			return
 
-		var id = modalId
+		let id = modalId
 		if (typeof modalId !== 'string')
 			id = this.modals[length - 1]
 
@@ -280,6 +269,12 @@ const actions = {
 				continue
 
 			let removedModalArr = this.modals.splice(i, 1)
+
+			//Focus on the element that opened the popup, if it still exists
+			let returnElement = removedModalArr[0]?.returnElement;
+			if (returnElement !== undefined && returnElement !== null)
+				focusElement(returnElement)
+
 			return removedModalArr[0]
 		}
 	},
@@ -290,27 +285,6 @@ const actions = {
 	clearModals()
 	{
 		this.modals = []
-	},
-
-	/**
-	 * Sets the state of the dropdown to visible/hidden, according to the specified flag.
-	 * @param {object} props The necessary properties
-	 */
-	setDropdown(props)
-	{
-		if (typeof props.isVisible !== 'boolean')
-			return
-
-		// Clear dropdown properties.
-		this.dropdown = {}
-
-		// Set display property to actual CSS value.
-		this.dropdown.display = props.isVisible !== false ? 'block' : 'none'
-		delete props.isVisible
-
-		// Copy all properties to dropdown.
-		for (let key in props)
-			this.dropdown[key] = props[key]
 	},
 
 	/**
@@ -425,23 +399,44 @@ const actions = {
 
 	/**
 	 * Adds the specified process to the stack of running processes.
-	 * @param {object} process The process
+	 * @param {string} processId The id of the process
 	 */
-	addProcessToBusyPageStack(process)
+	addAsyncProcess(processId)
 	{
-		if (typeof process !== 'object')
+		if (typeof processId !== 'string' || processId.length === 0)
 			return
 
-		this.busyPageStateStack.push(process)
+		this.asyncProcesses.push(processId)
 	},
 
 	/**
 	 * Removes the process with the specified id from the stack of running processes.
 	 * @param {any} processId The id of the process
 	 */
+	removeAsyncProcess(processId)
+	{
+		_remove(this.asyncProcesses, (procId) => procId === processId)
+	},
+
+	/**
+	 * Adds the specified process to the stack of page blocking processes.
+	 * @param {object} process The process
+	 */
+	addProcessToBusyPageStack(process)
+	{
+		if (typeof process !== 'object' || !Reflect.has(process, 'id'))
+			return
+
+		this.busyPageStateStack.push(process)
+	},
+
+	/**
+	 * Removes the process with the specified id from the stack of page blocking processes.
+	 * @param {any} processId The id of the process
+	 */
 	removeProcessFromBusyPageStack(processId)
 	{
-		_remove(this.busyPageStateStack, proc => proc.id === processId)
+		_remove(this.busyPageStateStack, (proc) => proc.id === processId)
 	},
 
 	/**

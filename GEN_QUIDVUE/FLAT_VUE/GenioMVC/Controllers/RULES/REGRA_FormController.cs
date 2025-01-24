@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Rules;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_REGRA_CANCEL = new NavigationLocation("REGRA09608", "Regra_Cancel", "Rules") { vueRouteName = "form-REGRA", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_REGRA_SHOW = new NavigationLocation("REGRA09608", "Regra_Show", "Rules") { vueRouteName = "form-REGRA", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_REGRA_NEW = new NavigationLocation("REGRA09608", "Regra_New", "Rules") { vueRouteName = "form-REGRA", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_REGRA_EDIT = new NavigationLocation("REGRA09608", "Regra_Edit", "Rules") { vueRouteName = "form-REGRA", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_REGRA_DUPLICATE = new NavigationLocation("REGRA09608", "Regra_Duplicate", "Rules") { vueRouteName = "form-REGRA", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_REGRA_DELETE = new NavigationLocation("REGRA09608", "Regra_Delete", "Rules") { vueRouteName = "form-REGRA", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_REGRA_CANCEL = new("REGRA09608", "Regra_Cancel", "Rules") { vueRouteName = "form-REGRA", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_REGRA_SHOW = new("REGRA09608", "Regra_Show", "Rules") { vueRouteName = "form-REGRA", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_REGRA_NEW = new("REGRA09608", "Regra_New", "Rules") { vueRouteName = "form-REGRA", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_REGRA_EDIT = new("REGRA09608", "Regra_Edit", "Rules") { vueRouteName = "form-REGRA", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_REGRA_DUPLICATE = new("REGRA09608", "Regra_Duplicate", "Rules") { vueRouteName = "form-REGRA", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_REGRA_DELETE = new("REGRA09608", "Regra_Delete", "Rules") { vueRouteName = "form-REGRA", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Regra_ModalDBEdit()
-		{
-			Regra_ViewModel model = new Regra_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Regra_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Regra Multiform actions
 
-		//
-		// GET /Rules/MFRegra_New
-		[HttpGet]
-		[ActionName("MFRegra_New")]
-		public ActionResult MFRegra_New()
-		{
-			var model = new Regra_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_REGRA_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("rules", model.ValCodregra);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFRegra_New_GET()
-		{
-			return MFRegra_New();
-		}
-
-		//
-		// GET /Rules/MFRegra_Edit
-		[HttpGet]
-		[ActionName("MFRegra_Edit")]
-		public ActionResult MFRegra_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("REGRA", "EDIT", new { id = id, partialView = "MFRegra", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFRegra_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFRegra_Edit(requestModel);
-		}
-
-		//
-		// GET /Rules/MFRegra_Cancel
-		[ActionName("MFRegra_Cancel")]
-		public ActionResult MFRegra_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Rules(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Rules/MFRegra_Save
-		[HttpPost]
-		[ActionName("MFRegra_Save")]
-		public JsonResult MFRegra_Save(Regra_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRegra_Save",
-				ViewName = "MFRegra",
-				AreaName = "rules"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Rules/MFRegra_Delete
-		[HttpPost]
-		[ActionName("MFRegra_Delete")]
-		public JsonResult MFRegra_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRegra_Delete",
-				ViewName = "MFRegra",
-				AreaName = "rules",
-				Location = ACTION_REGRA_EDIT
-			};
-
-			var model = new Regra_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Rules/Regra_SaveEdit
 		[HttpPost]

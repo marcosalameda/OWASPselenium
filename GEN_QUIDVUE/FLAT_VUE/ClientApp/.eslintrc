@@ -2,16 +2,14 @@
 	"root": true,
 	"env": {
 		"node": true,
-		"commonjs": true
+		"commonjs": true,
+		"jest": true
 	},
 	"parser": "vue-eslint-parser",
 	"parserOptions": {
 		"ecmaVersion": "latest"
 	},
-	"extends": [
-		"plugin:vue/vue3-strongly-recommended",
-		"eslint:recommended"
-	],
+	"extends": ["plugin:vue/vue3-strongly-recommended", "eslint:recommended"],
 	"rules": {
 		"eqeqeq": "error",
 		"indent": ["warn", "tab", { "SwitchCase": 1 }],
@@ -23,7 +21,13 @@
 		"no-unused-vars": "warn",
 		"vue/block-lang": ["error", { "script": { "lang": "js" } }],
 		"vue/block-order": ["warn", { "order": ["template", "script", "style"] }],
-		"vue/custom-event-name-casing": ["warn", "kebab-case"],
+		"vue/custom-event-name-casing": [
+			"warn",
+			"kebab-case",
+			{
+				"ignores": ["/^[a-z]+(?:-[a-z]+)*:[a-z]+(?:-[a-z]+)*$/u"]
+			}
+		],
 		"vue/eqeqeq": "error",
 		"vue/html-button-has-type": "error",
 		"vue/html-closing-bracket-newline": "off",
@@ -51,9 +55,131 @@
 		"vue/require-macro-variable-name": "error",
 		"vue/require-name-property": "warn",
 		"vue/require-prop-comment": ["warn", { "type": "JSDoc" }],
-		"vue/script-indent": ["warn", "tab", { "baseIndent": 1, "switchCase": 1 }],
+		"vue/script-indent": [
+			"warn",
+			"tab",
+			{
+				"baseIndent": 1,
+				"switchCase": 1
+			}
+		],
 		"vue/singleline-html-element-content-newline": "off",
-		"vue/valid-define-options": "error"
+		"vue/valid-define-options": "error",
+		"vue/no-undef-components": [
+			"error",
+			{
+				"ignorePatterns": [
+					"RouterLink",
+					"RouterView",
+					"QValidationSummary",
+					"QControlWrapper",
+					"VFragment",
+					"QBadge",
+					"QButton",
+					"QButtonGroup",
+					"QButtonToggle",
+					"QField",
+					"QIcon",
+					"QIconImg",
+					"QIconFont",
+					"QIconSvg",
+					"QStaticText",
+					"QPopover",
+					"QPageBusyState",
+					"QLineLoader",
+					"QList",
+					"QSelect",
+					"QOverlay",
+					"QSpinnerLoader",
+					"QTooltip",
+					"QInfoMessage",
+					"BaseInputStructure",
+					"QCombobox",
+					"QTextField",
+					"QPasswordInput",
+					"QTextareaInput",
+					"QRadioGroup",
+					"QNumericInput",
+					"QCheckboxInput",
+					"QCheckListInput",
+					"QToggleInput",
+					"QMask",
+					"QListBoxInput",
+					"QLookup",
+					"QInputGroup",
+					"QSkeletonLoader",
+					"GridBaseInputStructure",
+					"QDateTimePicker",
+					"QTextEditor",
+					"QMultiCheckBoxesInput",
+					"QColorPickerInput",
+					"QDocument",
+					"QImage",
+					"QCodeEditor",
+					"QGroupBoxContainer",
+					"QAccordionContainer",
+					"QGroupCollapsible",
+					"QRowContainer",
+					"QTabContainer",
+					"QModalContainer",
+					"QFormContainer",
+					"QKanban",
+					"QKanbanCard",
+					"QKanbanHeader",
+					"QWizard",
+					"QAnchorContainerHorizontal",
+					"QAnchorContainerVertical",
+					"QAnchorElement",
+					"QCard",
+					"QRenderArray",
+					"QRenderBoolean",
+					"QRenderData",
+					"QRenderHyperlink",
+					"QRenderHtml",
+					"QRenderImage",
+					"QRenderDocument",
+					"QEditText",
+					"QEditTextMultiline",
+					"QEditNumeric",
+					"QEditBoolean",
+					"QEditDatetime",
+					"QEditEnumeration",
+					"QEditCheckList",
+					"QEditRadio",
+					"QPasswordMeter",
+					"QProgress",
+					"QPropertyList",
+					"QTimeline",
+					"QDashboard",
+					"QCalendar",
+					"QCards",
+					"QCarousel",
+					"QChart",
+					"QMap",
+					"QTable",
+					"QTableRecordActionsMenu",
+					"QTableSearch",
+					"QTableExport",
+					"QTableImport",
+					"QTableStaticFilters",
+					"QTablePagination",
+					"QTablePaginationAlt",
+					"QTableLimitInfo",
+					"QTableChecklistCheckbox",
+					"QTableSelector",
+					"QTableColumnFilters",
+					"QTableCurrentFilters",
+					"QTableActions",
+					"QTableConfig",
+					"QTableViews",
+					"QTableViewSave",
+					"QTableExtraExtension",
+					"QTableViewModeConfig",
+					"QGridTableList",
+					"QCheckListExtension"
+				]
+			}
+		]
 	},
 	"overrides": [
 		{
@@ -63,7 +189,5 @@
 			}
 		}
 	],
-	"ignorePatterns": [
-		"src/assets/graphics/*"
-	]
+	"ignorePatterns": ["src/assets/graphics/*"]
 }

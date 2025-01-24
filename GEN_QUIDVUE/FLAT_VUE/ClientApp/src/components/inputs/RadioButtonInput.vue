@@ -8,38 +8,29 @@
 				v-for="column in columnList"
 				:key="column"
 				class="column">
-				<label
+				<q-radio-group-item
 					v-for="option in column"
 					:key="option.key"
-					:class="[
-						{
-							'checkfocus': activeEl === option.key,
-							'i-radio--disabled': disabled || readonly
-						},
-						'i-radio',
-						'i-radio__label'
-					]"
-					:for="`input_${controlId}_${option.key}`">
-					{{ String(option.value) }}
+					:id="`input_${controlId}_${option.key}`"
+					:label="String(option.value)"
+					:name="`radio_btn_${controlId}`"
+					:value="option.key"
+					:checked="modelValue === option.key"
+					:focused="activeEl === option.key"
+					:disabled="disabled"
+					:readonly="readonly"
+					@click="selectElement(option.key, $event)"
+					@keyup="selectElement(option.key, $event)"
+					@focus="focusElement(option.key)"
+					@focusout="removeFocus">
+					<template #prepend>
+						<slot :name="`${option.key}.prepend`" />
+					</template>
 
-					<input
-						type="radio"
-						:id="`input_${controlId}_${option.key}`"
-						:ref="`option${option.key}`"
-						:disabled="disabled || readonly"
-						:data-testid="`radio_label_${option.key}`"
-						:name="`radio_btn_${controlId}`"
-						:value="option.key"
-						:title="String(option.value)"
-						:aria-label="String(option.value)"
-						:checked="modelValue === option.key"
-						@click="selectElement(option.key, $event)"
-						@keyup="selectElement(option.key, $event)"
-						@focus="focusElement(option.key)"
-						@focusout="removeFocus(option.key)" />
-
-					<span class="i-radio__field"></span>
-				</label>
+					<template #append>
+						<slot :name="`${option.key}.append`" />
+					</template>
+				</q-radio-group-item>
 			</div>
 		</div>
 	</fieldset>
@@ -48,10 +39,16 @@
 <script>
 	import _isEmpty from 'lodash-es/isEmpty'
 
+	import QRadioGroupItem from './QRadioGroupItem.vue'
+
 	export default {
 		name: 'QRadioGroup',
 
 		emits: ['update:modelValue'],
+
+		components: {
+			QRadioGroupItem
+		},
 
 		inheritAttrs: false,
 
@@ -62,21 +59,21 @@
 			id: String,
 
 			/**
-			 * Holds value of radio input
+			 * Holds the current value.
 			 */
 			modelValue: [Number, String],
 
 			/**
-			 * Options for radio input
+			 * Options for radio input.
 			 */
 			optionsList: {
 				type: Array,
 				required: true,
-				validator: (prop) => prop.every(e => Reflect.has(e, 'key') && Reflect.has(e, 'value'))
+				validator: (prop) => prop.every((e) => Reflect.has(e, 'key') && Reflect.has(e, 'value'))
 			},
 
 			/**
-			 * Radio input value positions
+			 * Radio input value positions.
 			 */
 			labelLeftSide: {
 				type: Boolean,
@@ -84,7 +81,7 @@
 			},
 
 			/**
-			 * Number of columns for options
+			 * Number of columns for options.
 			 */
 			numberOfColumns: {
 				type: Number,
@@ -92,7 +89,7 @@
 			},
 
 			/**
-			 * To deselect radio list options
+			 * To deselect radio list options.
 			 */
 			deselectRadio: {
 				type: Boolean,

@@ -12,96 +12,68 @@
 		:texts="texts"
 		@group-action="$emit('group-action', $event)" />
 
+	<!-- BEGIN: Record count -->
 	<div
-		v-if="showRecordCount || pagination"
-		:class="paginationClasses">
-		<!-- BEGIN: Record count -->
-		<div
-			v-if="showRecordCount"
-			class="e-counter">
-			<q-icon icon="counter" />
+		v-if="showRecordCount"
+		class="e-counter">
+		<q-icon icon="counter" />
 
-			<span class="e-counter__text">
-				{{ rowCount }}
-			</span>
-		</div>
-		<!-- END: Record count -->
-		<!-- BEGIN: Pagination row -->
-		<div
-			v-if="pagination"
-			class="footer-pagination-row"
-			style="display: inline-block">
-			<div class="row vbt-pagination-row no-gutters">
-				<!-- BEGIN: Pagination -->
-				<q-table-pagination-alt
-					v-if="showAlternatePagination"
-					ref="paginationAlt"
-					:texts="texts"
-					:page="page"
-					:per-page="perPage"
-					:per-page-options="perPageOptions"
-					:total="rowCount"
-					:has-more-pages="hasMore"
-					:show-per-page-menu="showPerPageMenu"
-					:per-page-label="perPageLabel"
-					:disabled="disabled"
-					@update:page="$emit('update:page', $event)"
-					@update:per-page="$emit('update:perPage', $event)">
-					<template #vbt-pagination-begin-button>
-						<slot name="pagination-begin-button"> &lt;&lt; </slot>
-					</template>
-					<template #vbt-pagination-previous-button>
-						<slot name="pagination-previous-button"> &lt; </slot>
-					</template>
-					<template #vbt-pagination-next-button>
-						<slot name="pagination-next-button"> &gt; </slot>
-					</template>
-				</q-table-pagination-alt>
-				<q-table-pagination
-					v-else
-					:texts="texts"
-					:page="page"
-					:per-page="perPage"
-					:per-page-options="perPageOptions"
-					:total="rowCount"
-					:num-visibile-pagination-buttons="numVisibilePaginationButtons"
-					:show-per-page-menu="showPerPageMenu"
-					:per-page-label="perPageLabel"
-					:disabled="disabled"
-					@update:page="$emit('update:page', $event)"
-					@update:per-page="$emit('update:perPage', $event)">
-					<template #vbt-pagination-begin-button>
-						<slot name="pagination-begin-button"> &lt;&lt; </slot>
-					</template>
-					<template #vbt-pagination-previous-button>
-						<slot name="pagination-previous-button"> &lt; </slot>
-					</template>
-					<template #vbt-pagination-next-button>
-						<slot name="pagination-next-button"> &gt; </slot>
-					</template>
-					<template #vbt-pagination-end-button>
-						<slot name="pagination-end-button"> &gt;&gt; </slot>
-					</template>
-				</q-table-pagination>
-				<!-- END: Pagination -->
-				<!-- Pagination info was here -->
-			</div>
-		</div>
-		<!-- END: Pagination row -->
-		<!-- BEGIN: Pagination info -->
-		<div
-			v-if="selectedRowsInfo && isSelectable"
-			class="col-md-4">
-			<div class="text-right justify-content-center">
-				<slot
-					name="selected-rows-info"
-					:selected-items-count="selectedItemsCount">
-					{{ selectedItemsCount }} {{ texts.textRowsSelected }}
-				</slot>
-			</div>
-		</div>
-		<!-- END: Pagination info -->
+		<span class="e-counter__text">
+			{{ rowCount }}
+		</span>
 	</div>
+	<!-- END: Record count -->
+	<!-- BEGIN: Pagination row -->
+	<div
+		:class="paginationClasses">
+		<!-- BEGIN: Pagination -->
+		<q-table-pagination-alt
+			v-if="showAlternatePagination"
+			ref="paginationAlt"
+			:texts="texts"
+			:page="page"
+			:per-page="perPage"
+			:per-page-options="perPageOptions"
+			:total="rowCount"
+			:has-more-pages="hasMore"
+			:show-per-page-menu="showPerPageMenu"
+			:per-page-label="perPageLabel"
+			:disabled="disabled"
+			:table-id="tableId"
+			@update:page="$emit('update:page', $event)"
+			@update:per-page="$emit('update:perPage', $event)">
+		</q-table-pagination-alt>
+		<q-table-pagination
+			v-else
+			:texts="texts"
+			:page="page"
+			:per-page="perPage"
+			:per-page-options="perPageOptions"
+			:total="rowCount"
+			:num-visibile-pagination-buttons="numVisibilePaginationButtons"
+			:show-per-page-menu="showPerPageMenu"
+			:per-page-label="perPageLabel"
+			:disabled="disabled"
+			:table-id="tableId"
+			@update:page="$emit('update:page', $event)"
+			@update:per-page="$emit('update:perPage', $event)">
+		</q-table-pagination>
+		<!-- END: Pagination -->
+	</div>
+	<!-- END: Pagination row -->
+	<!-- BEGIN: Pagination info -->
+	<div
+		v-if="selectedRowsInfo && isSelectable"
+		class="col-md-4">
+		<div class="text-right justify-content-center">
+			<slot
+				name="selected-rows-info"
+				:selected-items-count="selectedItemsCount">
+				{{ selectedItemsCount }} {{ texts.textRowsSelected }}
+			</slot>
+		</div>
+	</div>
+	<!-- END: Pagination info -->
 	<div class="d-flex">
 		<!-- BEGIN: Row general action buttons -->
 		<slot name="row-general-actions"></slot>
@@ -227,8 +199,7 @@
 			 * The number of buttons to show in the pagination control for page numbers.
 			 */
 			numVisibilePaginationButtons: {
-				type: Number,
-				default: 5
+				type: Number
 			},
 
 			/**
@@ -336,6 +307,14 @@
 			},
 
 			/**
+			 * The table ID.
+			 */
+			tableId: {
+				type: String,
+				default: ''
+			},
+
+			/**
 			 * The plural form of the table name used in contexts such as messages and tooltips.
 			 */
 			tableNamePlural: {
@@ -356,7 +335,7 @@
 
 		computed: {
 			paginationClasses() {
-				const paginationClasses = ['flex-align-center']
+				const paginationClasses = ['flex-align-center', 'footer-pagination-row']
 
 				if (this.paginationPlacement === 'right') paginationClasses.push('push-pagination-right')
 

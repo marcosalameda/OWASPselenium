@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Attachment
 	/// </summary>
-	public class CSGenioAattac : DbArea	{
+	public class CSGenioAattac : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -273,7 +274,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodattac, value); }
 		}
 
-
 		/// <summary>Field : ">>ASSET" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodasset { get { return m_fldCodasset; } }
 		private static FieldRef m_fldCodasset = new FieldRef("attac", "codasset");
@@ -284,7 +284,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodasset); }
 			set { insertNameValueField(FldCodasset, value); }
 		}
-
 
 		/// <summary>Field : "Attached" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldAttached { get { return m_fldAttached; } }
@@ -297,7 +296,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldAttached, value); }
 		}
 
-
 		/// <summary>Field : "Note" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldNote { get { return m_fldNote; } }
 		private static FieldRef m_fldNote = new FieldRef("attac", "note");
@@ -308,7 +306,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldNote); }
 			set { insertNameValueField(FldNote, value); }
 		}
-
 
 		/// <summary>Field : "Document" Tipo: "IB" Formula:  ""</summary>
 		public static FieldRef FldDocument { get { return m_fldDocument; } }
@@ -375,23 +372,6 @@ namespace CSGenio.business
 		}
 
 
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAattac> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAattac> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAattac>(where, user, fields);
-        }
-
-
         /// <summary>
         /// Search for all records of this area that comply with a condition
         /// </summary>
@@ -438,7 +418,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX ATTAC]/

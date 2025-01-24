@@ -116,7 +116,7 @@
 			},
 
 			/**
-			 * The list of markers to be displayed on the Map.
+			 * The list of markers to be displayed on the map.
 			 */
 			markers: {
 				type: Array,
@@ -140,13 +140,15 @@
 			}
 		},
 
-		expose: [],
+		expose: ['isReady', 'isFullscreen'],
 
 		data()
 		{
 			return {
 				zoom: this.styleVariables.zoomLevel ? this.styleVariables.zoomLevel.value : 2,
-				centerCoords: this.getCenterCoords()
+				centerCoords: this.getCenterCoords(),
+				isReady: false,
+				isFullscreen: false
 			}
 		},
 

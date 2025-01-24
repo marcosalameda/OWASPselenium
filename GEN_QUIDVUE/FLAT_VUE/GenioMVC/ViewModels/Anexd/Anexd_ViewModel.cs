@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Anexd
 {
-	public class Anexd_ViewModel : FormViewModel<Models.Anexd>
+	public class Anexd_ViewModel : FormViewModel<Models.Anexd>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,47 +29,53 @@ namespace GenioMVC.ViewModels.Anexd
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "No. register" | Type: "CE"
+		/// </summary>
+		public string ValCodequip { get; set; }
+		/// <summary>
+		/// Title: "Language" | Type: "CE"
+		/// </summary>
+		public string ValCodlang { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "No. register" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Equip> TableEquipRegistnr { get; set; }
-
 		/// <summary>
 		/// Title: "Attached" | Type: "DT"
 		/// </summary>
 		public DateTime? ValDthranex { get; set; }
-
 		/// <summary>
 		/// Title: "Reference" | Type: "C"
 		/// </summary>
 		public string ValReferenc { get; set; }
-
 		/// <summary>
 		/// Title: "Title" | Type: "C"
 		/// </summary>
 		public string ValTitle { get; set; }
-
 		/// <summary>
 		/// Title: "Language" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Langu> TableLanguLangua { get; set; }
-
 		/// <summary>
 		/// Title: "Translated Title" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValTittradu { get; set; }
-
 		/// <summary>
 		/// Title: "Document" | Type: "IB"
 		/// </summary>
-		[Document("ValDocument", false, true, false, true, DocumentViewTypeMode.Preview)]
+		[Document("ValDocument", true, false, false, DocumentViewTypeMode.Preview)]
 		public string ValDocument { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public string ValDocumentfk { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
@@ -82,20 +88,6 @@ namespace GenioMVC.ViewModels.Anexd
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "No. register" | Type: "CE"
-		/// </summary>
-		public string ValCodequip { get; set; }
-
-		/// <summary>
-		/// Title: "Language" | Type: "CE"
-		/// </summary>
-		public string ValCodlang { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -111,9 +103,10 @@ namespace GenioMVC.ViewModels.Anexd
 
 		public string ValCodanexd { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Anexd_ViewModel() : base(null!) { }
@@ -149,6 +142,15 @@ namespace GenioMVC.ViewModels.Anexd
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Anexd model = new Models.Anexd(userContext) { Identifier = "FANEXD" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FANEXD");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -209,14 +211,14 @@ namespace GenioMVC.ViewModels.Anexd
 
 			try
 			{
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValCodlang = ViewModelConversion.ToString(m.ValCodlang);
 				ValDthranex = ViewModelConversion.ToDateTime(m.ValDthranex);
 				ValReferenc = ViewModelConversion.ToString(m.ValReferenc);
 				ValTitle = ViewModelConversion.ToString(m.ValTitle);
 				ValTittradu = ViewModelConversion.ToString(m.ValTittradu);
 				ValDocument = ViewModelConversion.ToString(m.ValDocument);
 				ValDocumentfk = ViewModelConversion.ToString(m.ValDocumentfk);
-				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
-				ValCodlang = ViewModelConversion.ToString(m.ValCodlang);
 				ValCodanexd = ViewModelConversion.ToString(m.ValCodanexd);
 			}
 			catch (Exception)
@@ -226,6 +228,20 @@ namespace GenioMVC.ViewModels.Anexd
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Anexd m)
 		{
 			if (m == null)
@@ -236,25 +252,92 @@ namespace GenioMVC.ViewModels.Anexd
 
 			try
 			{
+				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
+				m.ValCodlang = ViewModelConversion.ToString(ValCodlang);
 				m.ValDthranex = ViewModelConversion.ToDateTime(ValDthranex);
 				m.ValReferenc = ViewModelConversion.ToString(ValReferenc);
 				m.ValTitle = ViewModelConversion.ToString(ValTitle);
-				m.ValTittradu = ViewModelConversion.ToString(ValTittradu);
 				m.ValDocument = ViewModelConversion.ToString(ValDocument);
 				m.ValDocumentfk = ViewModelConversion.ToString(ValDocumentfk);
-				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
-				m.ValCodlang = ViewModelConversion.ToString(ValCodlang);
 				m.ValCodanexd = ViewModelConversion.ToString(ValCodanexd);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValTittradu = ViewModelConversion.ToString(ValTittradu);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Anexd) to Model (Anexd) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Anexd) to Model (Anexd) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "anexd.codequip":
+						this.ValCodequip = ViewModelConversion.ToString(_value);
+						break;
+					case "anexd.codlang":
+						this.ValCodlang = ViewModelConversion.ToString(_value);
+						break;
+					case "anexd.dthranex":
+						this.ValDthranex = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "anexd.referenc":
+						this.ValReferenc = ViewModelConversion.ToString(_value);
+						break;
+					case "anexd.title":
+						this.ValTitle = ViewModelConversion.ToString(_value);
+						break;
+					case "anexd.document":
+						this.ValDocument = ViewModelConversion.ToString(_value);
+						break;
+					case "anexd.codanexd":
+						this.ValCodanexd = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Anexd) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Anexd)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Anexd.Find(id ?? Navigation.GetStrValue("anexd"), m_userContext, "FANEXD"); }
+			finally { Model ??= new Models.Anexd(m_userContext) { Identifier = "FANEXD" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -268,20 +351,13 @@ namespace GenioMVC.ViewModels.Anexd
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FANEXD";
@@ -291,6 +367,7 @@ namespace GenioMVC.ViewModels.Anexd
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -357,33 +434,27 @@ namespace GenioMVC.ViewModels.Anexd
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValReferenc", Resources.Resources.REFERENCE28402, ValReferenc, 50);
 			validator.StringLength("ValTitle", Resources.Resources.TITLE21885, ValTitle, 85);
 			validator.StringLength("ValTittradu", Resources.Resources.TRANSLATED_TITLE04469, ValTittradu, 85);
 
+
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE ANEXD]/
 		public override void Save()
 		{
 
-			try { Model = Models.Anexd.Find(Navigation.GetStrValue("anexd"), m_userContext, "FANEXD"); }
-			finally { if (Model == null) Model = new Models.Anexd(m_userContext) { Identifier = "FANEXD" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY ANEXD]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Anexd.Find(Navigation.GetStrValue("anexd"), m_userContext, "FANEXD"); }
-			finally { if (Model == null) Model = new Models.Anexd(m_userContext) { Identifier = "FANEXD" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE ANEXD]/
 
@@ -416,8 +487,8 @@ namespace GenioMVC.ViewModels.Anexd
 				object hValue = Navigation.GetValue("equip", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					anexd___equipregistnrConds.Equal(CSGenioAequip.FldCodequip, Navigation.GetValue("equip"));
-					this.ValCodequip = Navigation.GetStrValue("equip");
+					anexd___equipregistnrConds.Equal(CSGenioAequip.FldCodequip, hValue);
+					this.ValCodequip = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -434,8 +505,6 @@ namespace GenioMVC.ViewModels.Anexd
 					Navigation.CurrentLevel.SetEntry("RETURN_equip", null);
 				}
 				FillDependant_AnexdTableEquipRegistnr(lazyLoad);
-				//Check if foreignkey comes from history
-				TableEquipRegistnr.FilledByHistory = Navigation.CheckFilledByHistory("equip");
 				return;
 			}
 
@@ -503,9 +572,6 @@ namespace GenioMVC.ViewModels.Anexd
 
 				TableEquipRegistnr.List = new SelectList(TableEquipRegistnr.Elements.ToSelectList(x => x.ValRegistnr, x => x.ValCodequip,  x => x.ValCodequip == this.ValCodequip), "Value", "Text", this.ValCodequip);
 				FillDependant_AnexdTableEquipRegistnr();
-
-				//Check if foreignkey comes from history
-				TableEquipRegistnr.FilledByHistory = Navigation.CheckFilledByHistory("equip");
 			}
 		}
 
@@ -611,8 +677,8 @@ namespace GenioMVC.ViewModels.Anexd
 				object hValue = Navigation.GetValue("langu", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					anexd___langulangua__Conds.Equal(CSGenioAlangu.FldCodlang, Navigation.GetValue("langu"));
-					this.ValCodlang = Navigation.GetStrValue("langu");
+					anexd___langulangua__Conds.Equal(CSGenioAlangu.FldCodlang, hValue);
+					this.ValCodlang = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -629,8 +695,6 @@ namespace GenioMVC.ViewModels.Anexd
 					Navigation.CurrentLevel.SetEntry("RETURN_langu", null);
 				}
 				FillDependant_AnexdTableLanguLangua(lazyLoad);
-				//Check if foreignkey comes from history
-				TableLanguLangua.FilledByHistory = Navigation.CheckFilledByHistory("langu");
 				return;
 			}
 
@@ -698,9 +762,6 @@ namespace GenioMVC.ViewModels.Anexd
 
 				TableLanguLangua.List = new SelectList(TableLanguLangua.Elements.ToSelectList(x => x.ValLangua, x => x.ValCodlang,  x => x.ValCodlang == this.ValCodlang), "Value", "Text", this.ValCodlang);
 				FillDependant_AnexdTableLanguLangua();
-
-				//Check if foreignkey comes from history
-				TableLanguLangua.FilledByHistory = Navigation.CheckFilledByHistory("langu");
 			}
 		}
 
@@ -797,21 +858,23 @@ namespace GenioMVC.ViewModels.Anexd
 		{
 			return identifier switch
 			{
+				"anexd.codequip" => ViewModelConversion.ToString(modelValue),
+				"anexd.codlang" => ViewModelConversion.ToString(modelValue),
 				"anexd.dthranex" => ViewModelConversion.ToDateTime(modelValue),
 				"anexd.referenc" => ViewModelConversion.ToString(modelValue),
 				"anexd.title" => ViewModelConversion.ToString(modelValue),
 				"anexd.tittradu" => ViewModelConversion.ToString(modelValue),
 				"anexd.document" => ViewModelConversion.ToString(modelValue),
-				"anexd.codequip" => ViewModelConversion.ToString(modelValue),
-				"anexd.codlang" => ViewModelConversion.ToString(modelValue),
 				"anexd.codanexd" => ViewModelConversion.ToString(modelValue),
 				"equip.codequip" => ViewModelConversion.ToString(modelValue),
 				"equip.registnr" => ViewModelConversion.ToString(modelValue),
 				"langu.codlang" => ViewModelConversion.ToString(modelValue),
 				"langu.langua" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

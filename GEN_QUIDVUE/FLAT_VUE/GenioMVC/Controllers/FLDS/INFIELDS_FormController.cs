@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Flds;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_INFIELDS_CANCEL = new NavigationLocation("INPUT_FIELDS51344", "Infields_Cancel", "Flds") { vueRouteName = "form-INFIELDS", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_INFIELDS_SHOW = new NavigationLocation("INPUT_FIELDS51344", "Infields_Show", "Flds") { vueRouteName = "form-INFIELDS", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_INFIELDS_NEW = new NavigationLocation("INPUT_FIELDS51344", "Infields_New", "Flds") { vueRouteName = "form-INFIELDS", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_INFIELDS_EDIT = new NavigationLocation("INPUT_FIELDS51344", "Infields_Edit", "Flds") { vueRouteName = "form-INFIELDS", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_INFIELDS_DUPLICATE = new NavigationLocation("INPUT_FIELDS51344", "Infields_Duplicate", "Flds") { vueRouteName = "form-INFIELDS", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_INFIELDS_DELETE = new NavigationLocation("INPUT_FIELDS51344", "Infields_Delete", "Flds") { vueRouteName = "form-INFIELDS", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_INFIELDS_CANCEL = new("INPUT_FIELDS51344", "Infields_Cancel", "Flds") { vueRouteName = "form-INFIELDS", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_INFIELDS_SHOW = new("INPUT_FIELDS51344", "Infields_Show", "Flds") { vueRouteName = "form-INFIELDS", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_INFIELDS_NEW = new("INPUT_FIELDS51344", "Infields_New", "Flds") { vueRouteName = "form-INFIELDS", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_INFIELDS_EDIT = new("INPUT_FIELDS51344", "Infields_Edit", "Flds") { vueRouteName = "form-INFIELDS", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_INFIELDS_DUPLICATE = new("INPUT_FIELDS51344", "Infields_Duplicate", "Flds") { vueRouteName = "form-INFIELDS", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_INFIELDS_DELETE = new("INPUT_FIELDS51344", "Infields_Delete", "Flds") { vueRouteName = "form-INFIELDS", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Infields_ModalDBEdit()
-		{
-			Infields_ViewModel model = new Infields_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Infields_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Infields Multiform actions
 
-		//
-		// GET /Flds/MFInfields_New
-		[HttpGet]
-		[ActionName("MFInfields_New")]
-		public ActionResult MFInfields_New()
-		{
-			var model = new Infields_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_INFIELDS_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("flds", model.ValCodflds);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFInfields_New_GET()
-		{
-			return MFInfields_New();
-		}
-
-		//
-		// GET /Flds/MFInfields_Edit
-		[HttpGet]
-		[ActionName("MFInfields_Edit")]
-		public ActionResult MFInfields_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("INFIELDS", "EDIT", new { id = id, partialView = "MFInfields", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFInfields_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFInfields_Edit(requestModel);
-		}
-
-		//
-		// GET /Flds/MFInfields_Cancel
-		[ActionName("MFInfields_Cancel")]
-		public ActionResult MFInfields_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Flds(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Flds/MFInfields_Save
-		[HttpPost]
-		[ActionName("MFInfields_Save")]
-		public JsonResult MFInfields_Save(Infields_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFInfields_Save",
-				ViewName = "MFInfields",
-				AreaName = "flds"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Flds/MFInfields_Delete
-		[HttpPost]
-		[ActionName("MFInfields_Delete")]
-		public JsonResult MFInfields_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFInfields_Delete",
-				ViewName = "MFInfields",
-				AreaName = "flds",
-				Location = ACTION_INFIELDS_EDIT
-			};
-
-			var model = new Infields_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Flds/Infields_SaveEdit
 		[HttpPost]

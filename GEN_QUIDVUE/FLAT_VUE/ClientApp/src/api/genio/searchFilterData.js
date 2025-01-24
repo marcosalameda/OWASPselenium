@@ -15,55 +15,87 @@ export const operators = {
 		const vm = this
 		return {
 			'text': {
+				'EQ': {
+					key: 'EQ',
+					resourceId: hardcodedTexts.isEqualTo,
+					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-equal',
+						type: 'svg'
+					}
+				},
+				'NOTEQ': {
+					key: 'NOTEQ',
+					resourceId: hardcodedTexts.notEqual,
+					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-different',
+						type: 'svg'
+					}
+				},
+				'CON': {
+					key: 'CON',
+					resourceId: hardcodedTexts.contains,
+					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-contains',
+						type: 'svg'
+					}
+				},
+				'NOTCON': {
+					key: 'NOTCON',
+					resourceId: hardcodedTexts.notContains,
+					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-no-contains',
+						type: 'svg'
+					}
+				},
+				'STRTWTH': {
+					key: 'STRTWTH',
+					resourceId: hardcodedTexts.startsWith,
+					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-starts-with',
+						type: 'svg'
+					}
+				},
 				'LIKE': {
 					key: 'LIKE',
 					resourceId: hardcodedTexts.isLike,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
 					ValueCount: 1,
 					placeholderResourceId: hardcodedTexts.keyword,
-					get Placeholder() { return '%' + (vm.fnResources ? vm.fnResources(this.placeholderResourceId) : this.placeholderResourceId) + '%' }
-				},
-				'STRTWTH': {
-					key: 'STRTWTH',
-					resourceId: hardcodedTexts.startsWith,
-					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
-				},
-				'CON': {
-					key: 'CON',
-					resourceId: hardcodedTexts.contains,
-					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
-				},
-				'NOTCON': {
-					key: 'NOTCON',
-					resourceId: hardcodedTexts.notContains,
-					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
-				},
-				'EQ': {
-					key: 'EQ',
-					resourceId: hardcodedTexts.isEqualTo,
-					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
-				},
-				'NOTEQ': {
-					key: 'NOTEQ',
-					resourceId: hardcodedTexts.notEqual,
-					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
+					get Placeholder() { return '%' + (vm.fnResources ? vm.fnResources(this.placeholderResourceId) : this.placeholderResourceId) + '%' },
+					icon: {
+						icon: 'filter-is-like',
+						type: 'svg'
+					}
 				},
 				'SET': {
 					key: 'SET',
-					resourceId: hardcodedTexts.isDefined,
+					resourceId: hardcodedTexts.hasValue,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 0
+					ValueCount: 0,
+					icon: {
+						icon: 'filter-has-value-text',
+						type: 'svg'
+					}
 				},
 				'NOTSET': {
 					key: 'NOTSET',
-					resourceId: hardcodedTexts.isNotDefined,
+					resourceId: hardcodedTexts.noValue,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 0
+					ValueCount: 0,
+					icon: {
+						icon: 'filter-no-value',
+						type: 'svg'
+					}
 				}
 			},
 			'num': {
@@ -71,55 +103,91 @@ export const operators = {
 					key: 'EQ',
 					resourceId: hardcodedTexts.isEqualTo,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-equal',
+						type: 'svg'
+					}
 				},
 				'NOTEQ': {
 					key: 'NOTEQ',
 					resourceId: hardcodedTexts.notEqual,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-different',
+						type: 'svg'
+					}
 				},
 				'GREAT': {
 					key: 'GREAT',
 					resourceId: hardcodedTexts.greaterThan,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-greater',
+						type: 'svg'
+					}
 				},
 				'LESS': {
 					key: 'LESS',
 					resourceId: hardcodedTexts.lessThan,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-less',
+						type: 'svg'
+					}
 				},
 				'GREATEQ': {
 					key: 'GREATEQ',
 					resourceId: hardcodedTexts.greaterOrEqual,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-greater-or-equal',
+						type: 'svg'
+					}
 				},
 				'LESSEQ': {
 					key: 'LESSEQ',
 					resourceId: hardcodedTexts.lessOrEqual,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-less-or-equal',
+						type: 'svg'
+					}
 				},
 				'BETW': {
 					key: 'BETW',
 					resourceId: hardcodedTexts.isBetween,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 2
+					ValueCount: 2,
+					icon: {
+						icon: 'filter-between',
+						type: 'svg'
+					}
 				},
 				'SET': {
 					key: 'SET',
-					resourceId: hardcodedTexts.isDefined,
+					resourceId: hardcodedTexts.hasValue,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 0
+					ValueCount: 0,
+					icon: {
+						icon: 'filter-has-value-number',
+						type: 'svg'
+					}
 				},
 				'NOTSET': {
 					key: 'NOTSET',
-					resourceId: hardcodedTexts.isNotDefined,
+					resourceId: hardcodedTexts.noValue,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 0
+					ValueCount: 0,
+					icon: {
+						icon: 'filter-no-value',
+						type: 'svg'
+					}
 				}
 			},
 			'bool': {
@@ -127,13 +195,21 @@ export const operators = {
 					key: 'TRUE',
 					resourceId: hardcodedTexts.isTrue,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 0
+					ValueCount: 0,
+					icon: {
+						icon: 'ok',
+						type: 'svg'
+					}
 				},
 				'FALSE': {
 					key: 'FALSE',
 					resourceId: hardcodedTexts.isFalse,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 0
+					ValueCount: 0,
+					icon: {
+						icon: 'close',
+						type: 'svg'
+					}
 				}
 			},
 			'date': {
@@ -141,55 +217,71 @@ export const operators = {
 					key: 'EQ',
 					resourceId: hardcodedTexts.isEqualTo,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-equal',
+						type: 'svg'
+					}
 				},
 				'NOTEQ': {
 					key: 'NOTEQ',
 					resourceId: hardcodedTexts.notEqual,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
-				},
-				'AFT': {
-					key: 'AFT',
-					resourceId: hardcodedTexts.isAfter,
-					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
-				},
-				'BEF': {
-					key: 'BEF',
-					resourceId: hardcodedTexts.isBefore,
-					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-different',
+						type: 'svg',
+					}
 				},
 				'AFTEQ': {
 					key: 'AFTEQ',
 					resourceId: hardcodedTexts.afterOrEqual,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-greater-or-equal',
+						type: 'svg'
+					}
 				},
 				'BEFEQ': {
 					key: 'BEFEQ',
 					resourceId: hardcodedTexts.beforeOrEqual,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-less-or-equal',
+						type: 'svg'
+					}
 				},
 				'BETW': {
 					key: 'BETW',
 					resourceId: hardcodedTexts.isBetween,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 2
+					ValueCount: 2,
+					icon: {
+						icon: 'filter-between',
+						type: 'svg'
+					}
 				},
 				'SET': {
 					key: 'SET',
-					resourceId: hardcodedTexts.isDefined,
+					resourceId: hardcodedTexts.hasValue,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 0
+					ValueCount: 0,
+					icon: {
+						icon: 'filter-has-value-number',
+						type: 'svg'
+					}
 				},
 				'NOTSET': {
 					key: 'NOTSET',
-					resourceId: hardcodedTexts.isNotDefined,
+					resourceId: hardcodedTexts.noValue,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 0
+					ValueCount: 0,
+					icon: {
+						icon: 'filter-no-value',
+						type: 'svg'
+					}
 				}
 			},
 			'enum': {
@@ -197,13 +289,21 @@ export const operators = {
 					key: 'IS',
 					resourceId: hardcodedTexts.is,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-equal',
+						type: 'svg'
+					}
 				},
 				'ISNOT': {
 					key: 'ISNOT',
 					resourceId: hardcodedTexts.isNot,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 1
+					ValueCount: 1,
+					icon: {
+						icon: 'filter-different',
+						type: 'svg'
+					}
 				},
 				'IN': {
 					key: 'IN',
@@ -211,19 +311,31 @@ export const operators = {
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
 					ValueCount: 1,
 					inputComponent: 'q-edit-check-list',
-					defaultValue: []
+					defaultValue: [],
+					icon: {
+						icon: 'filter-between',
+						type: 'svg'
+					}
 				},
 				'SET': {
 					key: 'SET',
-					resourceId: hardcodedTexts.isDefined,
+					resourceId: hardcodedTexts.hasValue,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 0
+					ValueCount: 0,
+					icon: {
+						icon: 'filter-has-value-text',
+						type: 'svg'
+					}
 				},
 				'NOTSET': {
 					key: 'NOTSET',
-					resourceId: hardcodedTexts.isNotDefined,
+					resourceId: hardcodedTexts.noValue,
 					get Title() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
-					ValueCount: 0
+					ValueCount: 0,
+					icon: {
+						icon: 'filter-no-value',
+						type: 'svg'
+					}
 				}
 			}
 		}
@@ -289,6 +401,8 @@ export const defaultValue = function (column)
 	return value
 }
 
+// Components used by advanced filters, column filters and editable fields in normal tables
+// (different than the ones in the editable table lists)
 export const inputComponents = {
 	text: 'q-edit-text',
 	num: 'q-edit-numeric',

@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Dispatch line
 	/// </summary>
-	public class CSGenioAdilin : DbArea	{
+	public class CSGenioAdilin : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -63,6 +64,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "__DISPATCH53890";
 
 			Qfield.Dupmsg = "";
+            Qfield.SufNDup = "linenumb";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -71,6 +73,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 6;
 			Qfield.CavDesignation = "LINE27983";
 
             Qfield.NotNull = true;
@@ -98,6 +101,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "ORDERED04034";
 
 			Qfield.Dupmsg = "";
@@ -109,6 +113,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "DELIVERED26597";
 
 			Qfield.Dupmsg = "";
@@ -120,13 +125,14 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "OUTSTANDING36400";
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"ordered","delivere"}, new int[] {0,1}, "dilin", "coddilin"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((double)args[0])-((double)args[1]);
+				return ((decimal)args[0])-((decimal)args[1]);
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -173,7 +179,7 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(10);
+			info.Pathways = new Dictionary<string, string>(11);
 			info.Pathways.Add("dispa","dispa");
 			info.Pathways.Add("produ","produ");
 			info.Pathways.Add("perso","dispa");
@@ -184,6 +190,7 @@ namespace CSGenio.business
 			info.Pathways.Add("lcext","produ");
 			info.Pathways.Add("facil","produ");
 			info.Pathways.Add("facty","produ");
+			info.Pathways.Add("cntry","produ");
 		}
 
 		/// <summary>
@@ -331,7 +338,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddilin, value); }
 		}
 
-
 		/// <summary>Field : ">>DISPATCH" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCoddispa { get { return m_fldCoddispa; } }
 		private static FieldRef m_fldCoddispa = new FieldRef("dilin", "coddispa");
@@ -343,18 +349,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddispa, value); }
 		}
 
-
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldLinenumb { get { return m_fldLinenumb; } }
 		private static FieldRef m_fldLinenumb = new FieldRef("dilin", "linenumb");
 
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
-		public double ValLinenumb
+		public decimal ValLinenumb
 		{
-			get { return (double)returnValueField(FldLinenumb); }
+			get { return (decimal)returnValueField(FldLinenumb); }
 			set { insertNameValueField(FldLinenumb, value); }
 		}
-
 
 		/// <summary>Field : ">>PRODUCT" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodprodu { get { return m_fldCodprodu; } }
@@ -367,42 +371,38 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodprodu, value); }
 		}
 
-
 		/// <summary>Field : "Ordered" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldOrdered { get { return m_fldOrdered; } }
 		private static FieldRef m_fldOrdered = new FieldRef("dilin", "ordered");
 
 		/// <summary>Field : "Ordered" Tipo: "N" Formula:  ""</summary>
-		public double ValOrdered
+		public decimal ValOrdered
 		{
-			get { return (double)returnValueField(FldOrdered); }
+			get { return (decimal)returnValueField(FldOrdered); }
 			set { insertNameValueField(FldOrdered, value); }
 		}
-
 
 		/// <summary>Field : "Delivered" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldDelivere { get { return m_fldDelivere; } }
 		private static FieldRef m_fldDelivere = new FieldRef("dilin", "delivere");
 
 		/// <summary>Field : "Delivered" Tipo: "N" Formula:  ""</summary>
-		public double ValDelivere
+		public decimal ValDelivere
 		{
-			get { return (double)returnValueField(FldDelivere); }
+			get { return (decimal)returnValueField(FldDelivere); }
 			set { insertNameValueField(FldDelivere, value); }
 		}
-
 
 		/// <summary>Field : "Outstanding" Tipo: "N" Formula: + "[DILIN->ORDERED]-[DILIN->DELIVERE]"</summary>
 		public static FieldRef FldOutstand { get { return m_fldOutstand; } }
 		private static FieldRef m_fldOutstand = new FieldRef("dilin", "outstand");
 
 		/// <summary>Field : "Outstanding" Tipo: "N" Formula: + "[DILIN->ORDERED]-[DILIN->DELIVERE]"</summary>
-		public double ValOutstand
+		public decimal ValOutstand
 		{
-			get { return (double)returnValueField(FldOutstand); }
+			get { return (decimal)returnValueField(FldOutstand); }
 			set { insertNameValueField(FldOutstand, value); }
 		}
-
 
 		/// <summary>Field : "Instant" Tipo: "DT" Formula: ++ "[DISPA->DISPADT]"</summary>
 		public static FieldRef FldInstant { get { return m_fldInstant; } }
@@ -414,7 +414,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldInstant); }
 			set { insertNameValueField(FldInstant, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -457,23 +456,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAdilin> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAdilin> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAdilin>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -522,7 +504,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX DILIN]/

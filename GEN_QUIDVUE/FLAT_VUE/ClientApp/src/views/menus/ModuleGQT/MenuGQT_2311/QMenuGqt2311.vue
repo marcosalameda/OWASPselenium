@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_2311ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_2311', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '2311',
 					isMenuList: true,
+					designation: computed(() => this.Resources.ROOMS06809),
 					acronym: 'GQT_2311',
 					name: 'SALAS',
 					route: 'menu-GQT_2311',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'GQT_Menu_2311',
 						controller: 'ROOMS',
 						action: 'GQT_Menu_2311',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -163,7 +173,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -271,23 +281,21 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: SALAS
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValRoomnr',
 							defaultSearchColumnNameOriginal: 'ValRoomnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValRoomnr',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-ROOMS'],
 						uuid: '7d91f319-b775-4c60-a166-3454014b284c',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
+						/** Menu limits */
+						controlLimits: [
+							/** DE */
+						]
 					}, this)
 				}
 			}
@@ -316,6 +324,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS GQT_2311]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_2311]/
 // eslint-disable-next-line

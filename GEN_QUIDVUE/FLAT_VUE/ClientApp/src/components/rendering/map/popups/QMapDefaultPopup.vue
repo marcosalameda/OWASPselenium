@@ -1,8 +1,11 @@
 ﻿<template>
 	<div
-		:class="['q-map-info-window', { 'q-map-shape-info': isShape }]"
+		v-if="marker.coords || markerHasDescription || markerHasActions"
+		:class="popupClass"
+		:style="popupStyle"
 		@click.stop.prevent>
 		<q-button
+			v-if="dismissible"
 			borderless
 			size="small"
 			b-style="plain"
@@ -12,31 +15,18 @@
 			<q-icon icon="close" />
 		</q-button>
 
-		<div
-			v-if="enableAddressSearch"
-			class="q-map-marker-address">
-			<q-button
-				v-if="!marker.address || marker.address.length === 0"
-				b-style="primary"
-				:label="texts.getAddress"
-				:title="texts.getAddress"
-				@click="findAddress">
-				<q-icon icon="map-marker" />
-			</q-button>
-
-			<q-row-container v-if="marker.address && marker.address.length > 0">
-				<b>{{ texts.address }}:</b> {{ marker.address }}
-			</q-row-container>
-		</div>
-
 		<div class="q-map-marker-info">
-			<q-row-container>
-				<b>{{ isEuclideanCoord ? 'X' : texts.latitude }}:</b> {{ marker.coords.lat }}
-			</q-row-container>
+			<div
+				v-if="marker.coords"
+				class="q-map-marker-coords">
+				<q-row-container>
+					<b>{{ isEuclideanCoord ? 'X' : texts.latitude }}:</b> {{ marker.coords.lat }}
+				</q-row-container>
 
-			<q-row-container>
-				<b>{{ isEuclideanCoord ? 'Y' : texts.longitude }}:</b> {{ marker.coords.lng }}
-			</q-row-container>
+				<q-row-container>
+					<b>{{ isEuclideanCoord ? 'Y' : texts.longitude }}:</b> {{ marker.coords.lng }}
+				</q-row-container>
+			</div>
 
 			<div
 				v-if="markerHasDescription"
@@ -49,7 +39,9 @@
 					v-for="descText in marker.description"
 					:key="descText.textValue">
 					<q-row-container v-if="descText.textValue && descText.textValue.length > 0">
-						<b v-if="showSourcesInDescription && descText.textLabel"> {{ descText.textLabel }}: </b>
+						<b v-if="showSourcesInDescription && descText.textLabel">
+							{{ descText.textLabel }}:
+						</b>
 
 						<q-render-data
 							:component="descText.source?.component"
@@ -90,7 +82,6 @@
 
 		emits: [
 			'row-action',
-			'find-address',
 			'close-info-window'
 		],
 
@@ -156,12 +147,66 @@
 			resourcesPath: {
 				type: String,
 				required: true
+			},
+
+			/**
+			 * Whether the popup is dismissible.
+			 */
+			dismissible: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
+			 * The mouse X position.
+			 */
+			mouseX: {
+				type: Number,
+				default: 0
+			},
+
+			/**
+			 * The mouse Y position (inverted vertically).
+			 */
+			mouseY: {
+				type: Number,
+				default: 0
 			}
 		},
 
 		expose: [],
 
 		computed: {
+			/**
+			 * The popup class depending on the configuration.
+			 */
+			popupClass()
+			{
+				const classes = ['q-map-info-window']
+
+				if (this.styleVariables.openPopupOnHover?.value)
+					classes.push('q-map-info-window-dynamic')
+				else
+				{
+					classes.push('q-map-info-window-static')
+
+					if (this.isShape)
+						classes.push('q-map-shape-info')
+				}
+
+				return classes
+			},
+
+			/**
+			 * The popup position depending on the configuration.
+			 */
+			popupStyle()
+			{
+				return this.styleVariables.openPopupOnHover?.value
+					? { left: `${this.mouseX}px`, bottom: `${this.mouseY}px`, transform: 'translate(-50%, -1rem)' }
+					: {}
+			},
+
 			/**
 			 * True if the marker has a description, false otherwise.
 			 */
@@ -177,14 +222,6 @@
 			markerHasActions()
 			{
 				return this.markerActions && this.markerActions.length > 0
-			},
-
-			/**
-			 * True if the address search should be enabled, false otherwise.
-			 */
-			enableAddressSearch()
-			{
-				return this.styleVariables.enableAddressSearch && this.styleVariables.enableAddressSearch.value
 			},
 
 			/**
@@ -239,15 +276,6 @@
 				}
 
 				return true
-			},
-
-			/**
-			 * Emits the event to fetch the marker's address.
-			 */
-			findAddress()
-			{
-				if (!this.marker.address)
-					this.$emit('find-address', this.marker)
 			}
 		}
 	}

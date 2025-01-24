@@ -10,11 +10,19 @@ export default class QCollapsiblerowslist extends CustomControl
 		super(controlContext, controlOrder)
 	}
 
-	setCustomProperties(viewMode)
+	/**
+	 * Get the properties for configuring the collapsible rows list component.
+	 * @param {object} viewMode - The current view mode of the collapsible rows list.
+	 * @returns {object} - An object containing collapsible rows list properties.
+	 */
+	getProps(viewMode)
 	{
-		viewMode.items = this.getItems(viewMode)
-		viewMode.isAccordion = this.isAccordion(viewMode)
-		viewMode.supportsHtml = this.supportsHtml(viewMode)
+		return {
+			containerId: viewMode.containerId,
+			items: this.getItems(viewMode),
+			isAccordion: this.isAccordion(viewMode),
+			supportsHtml: this.supportsHtml(viewMode)
+		}
 	}
 
 	getItems(viewMode)

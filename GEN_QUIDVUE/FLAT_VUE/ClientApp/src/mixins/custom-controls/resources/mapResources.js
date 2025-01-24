@@ -8,8 +8,6 @@ export default class MapResources
 		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
 
 		this.search = computed(() => this._fnGetResource('PESQUISAR34506'))
-		this.address = computed(() => this._fnGetResource('MORADA41859'))
-		this.getAddress = computed(() => this._fnGetResource('OBTER_MORADA28608'))
 		this.defaultLayer = computed(() => this._fnGetResource('CAMADA_PADRAO16799'))
 		this.clusterGroupLayer = computed(() => this._fnGetResource('CAMADA_DE_GRUPO23322'))
 		this.shapesLayer = computed(() => this._fnGetResource('CAMADA_DE_FORMAS24489'))

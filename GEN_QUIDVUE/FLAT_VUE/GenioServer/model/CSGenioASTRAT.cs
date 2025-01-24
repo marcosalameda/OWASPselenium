@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Estratégia
 	/// </summary>
-	public class CSGenioAstrat : DbArea	{
+	public class CSGenioAstrat : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -283,7 +284,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodestra, value); }
 		}
 
-
 		/// <summary>Field : "Strategy" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldEstrateg { get { return m_fldEstrateg; } }
 		private static FieldRef m_fldEstrateg = new FieldRef("strat", "estrateg");
@@ -294,7 +294,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldEstrateg); }
 			set { insertNameValueField(FldEstrateg, value); }
 		}
-
 
 		/// <summary>Field : "Creation date" Tipo: "OD" Formula:  ""</summary>
 		public static FieldRef FldCreatdat { get { return m_fldCreatdat; } }
@@ -307,7 +306,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCreatdat, value); }
 		}
 
-
 		/// <summary>Field : "Created by" Tipo: "ON" Formula:  ""</summary>
 		public static FieldRef FldCreatope { get { return m_fldCreatope; } }
 		private static FieldRef m_fldCreatope = new FieldRef("strat", "creatope");
@@ -318,7 +316,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCreatope); }
 			set { insertNameValueField(FldCreatope, value); }
 		}
-
 
 		/// <summary>Field : "Changed on" Tipo: "ED" Formula:  ""</summary>
 		public static FieldRef FldChngdate { get { return m_fldChngdate; } }
@@ -331,7 +328,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldChngdate, value); }
 		}
 
-
 		/// <summary>Field : "Changed by" Tipo: "EN" Formula:  ""</summary>
 		public static FieldRef FldOperchng { get { return m_fldOperchng; } }
 		private static FieldRef m_fldOperchng = new FieldRef("strat", "operchng");
@@ -343,7 +339,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldOperchng, value); }
 		}
 
-
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldDescript { get { return m_fldDescript; } }
 		private static FieldRef m_fldDescript = new FieldRef("strat", "descript");
@@ -354,7 +349,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldDescript); }
 			set { insertNameValueField(FldDescript, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -397,23 +391,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAstrat> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAstrat> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAstrat>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -462,7 +439,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX STRAT]/

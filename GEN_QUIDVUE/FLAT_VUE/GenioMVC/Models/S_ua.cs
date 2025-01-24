@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Psw _psw;
 		[DisplayName("Psw")]
 		[ShouldSerialize("Psw")]
-		public virtual Psw Psw { 
-			get { 
+		public virtual Psw Psw {
+			get {
 				if (!this.isEmptyModel && (_psw == null || (!string.IsNullOrEmpty(ValCodpsw) && (_psw.isEmptyModel || _psw.klass.QPrimaryKey != ValCodpsw))))
 					_psw = Models.Psw.Find(ValCodpsw, m_userContext, Identifier, _fieldsToSerialize);
 				if (_psw == null)
 					_psw = new Models.Psw(m_userContext, true, _fieldsToSerialize);
 				return _psw;
 			}
-			set { _psw = value; } 
+			set { _psw = value; }
 		}
-		
+
 
 		[DisplayName("System")]
 		/// <summary>Field : "System" Tipo: "C" Formula:  ""</summary>
@@ -66,6 +66,11 @@ namespace GenioMVC.Models
 		[JsonIgnore]
 		public SelectList ArrayValmodulo { get { return new SelectList(CSGenio.business.ArrayS_module.GetDictionary(), "Key", "Value", ValModulo); } set { ValModulo = value.SelectedValue as string; } }
 
+		[DisplayName("")]
+		/// <summary>Field : "" Tipo: "C" Formula: + "KeyToString([S_UA->CODPSW]) + [S_UA->MODULO]"</summary>
+		[ShouldSerialize("S_ua.ValNaodupli")]
+		public string ValNaodupli { get { return klass.ValNaodupli; } set { klass.ValNaodupli = value; } }
+
 		[DisplayName("Role")]
 		/// <summary>Field : "Role" Tipo: "AC" Formula:  ""</summary>
 		[ShouldSerialize("S_ua.ValRole")]
@@ -78,7 +83,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Level" Tipo: "N" Formula: + "GetLevelFromRole([S_UA->NIVEL], [S_UA->ROLE])"</summary>
 		[ShouldSerialize("S_ua.ValNivel")]
 		[NumericAttribute(0)]
-		public decimal? ValNivel { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNivel, 0)); } set { klass.ValNivel = Convert.ToDouble(value); } }
+		public decimal? ValNivel { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNivel, 0)); } set { klass.ValNivel = Convert.ToDecimal(value); } }
 
 		[DisplayName("Created by")]
 		/// <summary>Field : "Created by" Tipo: "ON" Formula:  ""</summary>
@@ -112,19 +117,19 @@ namespace GenioMVC.Models
 		public S_ua(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAs_ua(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public S_ua(UserContext userContext, CSGenioAs_ua val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAs_ua csgenioa)
@@ -146,7 +151,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

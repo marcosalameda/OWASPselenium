@@ -1,6 +1,8 @@
 ﻿<template>
 	<!-- Basic Tree Structure -->
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<form class="form-horizontal">
 			<fieldset>
 				<div class="form-flow">
@@ -8,12 +10,12 @@
 						<q-control-wrapper class="row-line-group">
 							<q-table
 								id="CTRL_1"
-								:rowComponent="'q-tree-table-row'"
+								row-component="q-tree-table-row"
 								:rows="arrayToTree(tableData.rows)"
 								:columns="tableData.columns"
 								:config="{...tableData.config, columnHierarchy: getColumnHierarchy(tableData.columns)}"
 								:total-rows="tableData.totalRows"
-								:headerLevel="1"
+								:header-level="1"
 								:readonly="tableData.readonly"
 								@execute-action="executeAction"
 								@row-action="rowAction"
@@ -22,8 +24,7 @@
 								@on-import-data="displayEmit"
 								@on-export-template="exportTemplateAction"
 								@on-show-import-popup="showImportPopupAction"
-								@on-hide-import-popup="hideImportPopupAction"
-							></q-table>
+								@on-hide-import-popup="hideImportPopupAction" />
 						</q-control-wrapper>
 					</q-row-container>
 				</div>
@@ -33,12 +34,12 @@
 						<q-control-wrapper class="row-line-group">
 							<q-table
 								id="CTRL_2"
-								:rowComponent="'q-tree-table-row'"
+								row-component="q-tree-table-row"
 								:rows="arrayToTree(multiLevelTreeData.rows)"
 								:columns="multiLevelTreeData.columns"
 								:config="{...multiLevelTreeData.config, columnHierarchy: getColumnHierarchy(multiLevelTreeData.columns)}"
 								:total-rows="multiLevelTreeData.totalRows"
-								:headerLevel="1"
+								:header-level="1"
 								:readonly="multiLevelTreeData.readonly"
 								@execute-action="executeAction"
 								@row-action="rowAction"
@@ -47,8 +48,7 @@
 								@on-import-data="displayEmit"
 								@on-export-template="exportTemplateAction"
 								@on-show-import-popup="showImportPopupAction"
-								@on-hide-import-popup="hideImportPopupAction"
-							></q-table>
+								@on-hide-import-popup="hideImportPopupAction" />
 						</q-control-wrapper>
 					</q-row-container>
 				</div>
@@ -60,21 +60,27 @@
 								<div style="margin-right: 24px">
 									<div style="font-weight: 600">Expand Icon</div>
 
-									<input type="text" v-model="eIcon" label="Expand Icon" />
+									<input
+										type="text"
+										v-model="eIcon"
+										label="Expand Icon" />
 								</div>
 								<div>
 									<div style="font-weight: 600">Collapse Icon</div>
-									<input type="text" v-model="cIcon" label="Collapse Icon" />
+									<input
+										type="text"
+										v-model="cIcon"
+										label="Collapse Icon" />
 								</div>
 							</div>
 							<q-table
 								id="CTRL_3"
-								:rowComponent="'q-tree-table-row'"
+								row-component="q-tree-table-row"
 								:rows="arrayToTree(iconTreeData.rows)"
 								:columns="iconTreeData.columns"
 								:config="{...iconTreeData.config, columnHierarchy: getColumnHierarchy(iconTreeData.columns)}"
 								:total-rows="iconTreeData.totalRows"
-								:headerLevel="1"
+								:header-level="1"
 								:readonly="iconTreeData.readonly"
 								:expand-icon="eIcon"
 								:collapse-icon="cIcon"
@@ -85,8 +91,7 @@
 								@on-import-data="displayEmit"
 								@on-export-template="exportTemplateAction"
 								@on-show-import-popup="showImportPopupAction"
-								@on-hide-import-popup="hideImportPopupAction"
-							></q-table>
+								@on-hide-import-popup="hideImportPopupAction" />
 						</q-control-wrapper>
 					</q-row-container>
 				</div>
@@ -96,12 +101,12 @@
 						<q-control-wrapper class="row-line-group">
 							<q-table
 								id="CTRL_4"
-								:rowComponent="'q-tree-table-row'"
+								row-component="q-tree-table-row"
 								:rows="arrayToTree(longTreeData.rows)"
 								:columns="longTreeData.columns"
 								:config="{...longTreeData.config, columnHierarchy: getColumnHierarchy(longTreeData.columns)}"
 								:total-rows="longTreeData.totalRows"
-								:headerLevel="1"
+								:header-level="1"
 								:readonly="longTreeData.readonly"
 								expand-icon="play-button"
 								collapse-icon="folder-open"
@@ -112,8 +117,7 @@
 								@on-import-data="displayEmit"
 								@on-export-template="exportTemplateAction"
 								@on-show-import-popup="showImportPopupAction"
-								@on-hide-import-popup="hideImportPopupAction"
-							></q-table>
+								@on-hide-import-popup="hideImportPopupAction" />
 						</q-control-wrapper>
 					</q-row-container>
 				</div>
@@ -123,19 +127,18 @@
 						<q-control-wrapper class="row-line-group">
 							<q-table
 								id="CTRL_4"
-								rowComponent="q-tree-table-row"
+								row-component="q-tree-table-row"
 								:rows="arrayToTree(invalidTreeData.rows)"
 								:columns="invalidTreeData.columns"
 								:config="{...invalidTreeData.config, columnHierarchy: getColumnHierarchy(invalidTreeData.columns)}"
 								:total-rows="invalidTreeData.totalRows"
-								:headerLevel="1"
+								:header-level="1"
 								:readonly="invalidTreeData.readonly"
 								expand-icon="play-button"
 								collapse-icon="folder-open"
 								@execute-action="executeAction"
 								@row-action="rowAction"
-								@cell-action="cellAction"
-							></q-table>
+								@cell-action="cellAction" />
 						</q-control-wrapper>
 					</q-row-container>
 				</div>
@@ -148,9 +151,13 @@
 	import fakeData from './TreeTable.mock'
 
 	export default {
-		docsfile: "./docs/table/QTreeTableRow.md",
+		name: 'QTreeTableContainer',
+
+		docsfile: './docs/table/QTreeTableRow.md',
 		
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{
@@ -165,8 +172,6 @@
 			}
 		},
 
-		methods: {
-			...fakeData.simpleUsageMethods
-		}
+		methods: fakeData.simpleUsageMethods
 	}
 </script>

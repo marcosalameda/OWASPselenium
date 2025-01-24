@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Trsb;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER TRSB]/
 
@@ -42,22 +44,19 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER TRSB]/
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Trsb" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Trsb([FromBody]Trsb_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Trsb([FromBody]Trsb_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "trsb",
+			return GenericRecalculateFormulas(formData, "trsb",
 				(primaryKey) => Models.Trsb.Find(primaryKey, UserContext.Current, "FTRSB"),
-				(model) => form_data.MapToModel(model as Models.Trsb)
+				(model) => formData.MapToModel(model as Models.Trsb)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -65,7 +64,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

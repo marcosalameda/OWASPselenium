@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Facility type
 	/// </summary>
-	public class CSGenioAfacty : DbArea	{
+	public class CSGenioAfacty : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -104,6 +105,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ICON_ANCHOR__X_AXIS_18664";
 
 			Qfield.Dupmsg = "";
@@ -115,6 +117,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ICON_ANCHOR__Y_AXIS_63725";
 
 			Qfield.Dupmsg = "";
@@ -126,6 +129,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ICON_HEIGHT61896";
 
 			Qfield.Dupmsg = "";
@@ -137,6 +141,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ICON_WIDTH02295";
 
 			Qfield.Dupmsg = "";
@@ -148,6 +153,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "POPUP_ANCHOR__X_AXIS15060";
 
 			Qfield.Dupmsg = "";
@@ -159,6 +165,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "POPUP_ANCHOR__Y_AXIS64670";
 
 			Qfield.Dupmsg = "";
@@ -170,6 +177,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "SHADOW_ANCHOR__X_AXI31230";
 
 			Qfield.Dupmsg = "";
@@ -181,6 +189,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "SHADOW_ANCHOR__Y_AXI51495";
 
 			Qfield.Dupmsg = "";
@@ -192,6 +201,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "SHADOW_HEIGHT64343";
 
 			Qfield.Dupmsg = "";
@@ -203,6 +213,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "SHADOW_WIDTH01769";
 
 			Qfield.Dupmsg = "";
@@ -372,7 +383,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodfacty, value); }
 		}
 
-
 		/// <summary>Field : "Facility type" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldType { get { return m_fldType; } }
 		private static FieldRef m_fldType = new FieldRef("facty", "type");
@@ -383,7 +393,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldType); }
 			set { insertNameValueField(FldType, value); }
 		}
-
 
 		/// <summary>Field : "Layer name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldLayrname { get { return m_fldLayrname; } }
@@ -396,7 +405,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldLayrname, value); }
 		}
 
-
 		/// <summary>Field : "Icon URL" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldIconurl { get { return m_fldIconurl; } }
 		private static FieldRef m_fldIconurl = new FieldRef("facty", "iconurl");
@@ -407,7 +415,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldIconurl); }
 			set { insertNameValueField(FldIconurl, value); }
 		}
-
 
 		/// <summary>Field : "Shadow URL" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldShadowur { get { return m_fldShadowur; } }
@@ -420,126 +427,115 @@ namespace CSGenio.business
 			set { insertNameValueField(FldShadowur, value); }
 		}
 
-
 		/// <summary>Field : "Icon anchor (x-axis)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldIconancx { get { return m_fldIconancx; } }
 		private static FieldRef m_fldIconancx = new FieldRef("facty", "iconancx");
 
 		/// <summary>Field : "Icon anchor (x-axis)" Tipo: "N" Formula:  ""</summary>
-		public double ValIconancx
+		public decimal ValIconancx
 		{
-			get { return (double)returnValueField(FldIconancx); }
+			get { return (decimal)returnValueField(FldIconancx); }
 			set { insertNameValueField(FldIconancx, value); }
 		}
-
 
 		/// <summary>Field : "Icon anchor (y-axis)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldIconancy { get { return m_fldIconancy; } }
 		private static FieldRef m_fldIconancy = new FieldRef("facty", "iconancy");
 
 		/// <summary>Field : "Icon anchor (y-axis)" Tipo: "N" Formula:  ""</summary>
-		public double ValIconancy
+		public decimal ValIconancy
 		{
-			get { return (double)returnValueField(FldIconancy); }
+			get { return (decimal)returnValueField(FldIconancy); }
 			set { insertNameValueField(FldIconancy, value); }
 		}
-
 
 		/// <summary>Field : "Icon height" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldIconheig { get { return m_fldIconheig; } }
 		private static FieldRef m_fldIconheig = new FieldRef("facty", "iconheig");
 
 		/// <summary>Field : "Icon height" Tipo: "N" Formula:  ""</summary>
-		public double ValIconheig
+		public decimal ValIconheig
 		{
-			get { return (double)returnValueField(FldIconheig); }
+			get { return (decimal)returnValueField(FldIconheig); }
 			set { insertNameValueField(FldIconheig, value); }
 		}
-
 
 		/// <summary>Field : "Icon width" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldIconwid { get { return m_fldIconwid; } }
 		private static FieldRef m_fldIconwid = new FieldRef("facty", "iconwid");
 
 		/// <summary>Field : "Icon width" Tipo: "N" Formula:  ""</summary>
-		public double ValIconwid
+		public decimal ValIconwid
 		{
-			get { return (double)returnValueField(FldIconwid); }
+			get { return (decimal)returnValueField(FldIconwid); }
 			set { insertNameValueField(FldIconwid, value); }
 		}
-
 
 		/// <summary>Field : "Popup anchor (x-axis)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPopupanx { get { return m_fldPopupanx; } }
 		private static FieldRef m_fldPopupanx = new FieldRef("facty", "popupanx");
 
 		/// <summary>Field : "Popup anchor (x-axis)" Tipo: "N" Formula:  ""</summary>
-		public double ValPopupanx
+		public decimal ValPopupanx
 		{
-			get { return (double)returnValueField(FldPopupanx); }
+			get { return (decimal)returnValueField(FldPopupanx); }
 			set { insertNameValueField(FldPopupanx, value); }
 		}
-
 
 		/// <summary>Field : "Popup anchor (y-axis)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPopupany { get { return m_fldPopupany; } }
 		private static FieldRef m_fldPopupany = new FieldRef("facty", "popupany");
 
 		/// <summary>Field : "Popup anchor (y-axis)" Tipo: "N" Formula:  ""</summary>
-		public double ValPopupany
+		public decimal ValPopupany
 		{
-			get { return (double)returnValueField(FldPopupany); }
+			get { return (decimal)returnValueField(FldPopupany); }
 			set { insertNameValueField(FldPopupany, value); }
 		}
-
 
 		/// <summary>Field : "Shadow anchor (x-axis)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldShadowax { get { return m_fldShadowax; } }
 		private static FieldRef m_fldShadowax = new FieldRef("facty", "shadowax");
 
 		/// <summary>Field : "Shadow anchor (x-axis)" Tipo: "N" Formula:  ""</summary>
-		public double ValShadowax
+		public decimal ValShadowax
 		{
-			get { return (double)returnValueField(FldShadowax); }
+			get { return (decimal)returnValueField(FldShadowax); }
 			set { insertNameValueField(FldShadowax, value); }
 		}
-
 
 		/// <summary>Field : "Shadow anchor (y-axis)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldShadoway { get { return m_fldShadoway; } }
 		private static FieldRef m_fldShadoway = new FieldRef("facty", "shadoway");
 
 		/// <summary>Field : "Shadow anchor (y-axis)" Tipo: "N" Formula:  ""</summary>
-		public double ValShadoway
+		public decimal ValShadoway
 		{
-			get { return (double)returnValueField(FldShadoway); }
+			get { return (decimal)returnValueField(FldShadoway); }
 			set { insertNameValueField(FldShadoway, value); }
 		}
-
 
 		/// <summary>Field : "Shadow height" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldShadowhe { get { return m_fldShadowhe; } }
 		private static FieldRef m_fldShadowhe = new FieldRef("facty", "shadowhe");
 
 		/// <summary>Field : "Shadow height" Tipo: "N" Formula:  ""</summary>
-		public double ValShadowhe
+		public decimal ValShadowhe
 		{
-			get { return (double)returnValueField(FldShadowhe); }
+			get { return (decimal)returnValueField(FldShadowhe); }
 			set { insertNameValueField(FldShadowhe, value); }
 		}
-
 
 		/// <summary>Field : "Shadow width" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldShadowwi { get { return m_fldShadowwi; } }
 		private static FieldRef m_fldShadowwi = new FieldRef("facty", "shadowwi");
 
 		/// <summary>Field : "Shadow width" Tipo: "N" Formula:  ""</summary>
-		public double ValShadowwi
+		public decimal ValShadowwi
 		{
-			get { return (double)returnValueField(FldShadowwi); }
+			get { return (decimal)returnValueField(FldShadowwi); }
 			set { insertNameValueField(FldShadowwi, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -582,23 +578,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAfacty> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAfacty> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAfacty>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -647,7 +626,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX FACTY]/

@@ -26,6 +26,7 @@
 						:title="title" />
 
 					<q-wizard-content
+						:id="controlId"
 						:order="selectedStep"
 						:is-vertical="isVertical"
 						:is-required="isRequired"

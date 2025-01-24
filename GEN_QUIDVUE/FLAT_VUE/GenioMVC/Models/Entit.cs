@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -131,9 +131,9 @@ namespace GenioMVC.Models
 		public string ValContact { get { return klass.ValContact; } set { klass.ValContact = value; } }
 
 		[DisplayName("Owner")]
-		/// <summary>Field : "Owner" Tipo: "L" Formula:  ""</summary>
+		/// <summary>Field : "Owner" Tipo: "C" Formula:  ""</summary>
 		[ShouldSerialize("Entit.ValOwner")]
-		public bool ValOwner { get { return Convert.ToBoolean(klass.ValOwner); } set { klass.ValOwner = Convert.ToInt32(value); } }
+		public string ValOwner { get { return klass.ValOwner; } set { klass.ValOwner = value; } }
 
 		[DisplayName("Carrier")]
 		/// <summary>Field : "Carrier" Tipo: "L" Formula:  ""</summary>
@@ -164,17 +164,17 @@ namespace GenioMVC.Models
 		private Faci1 _faci1;
 		[DisplayName("Faci1")]
 		[ShouldSerialize("Faci1")]
-		public virtual Faci1 Faci1 { 
-			get { 
+		public virtual Faci1 Faci1 {
+			get {
 				if (!this.isEmptyModel && (_faci1 == null || (!string.IsNullOrEmpty(ValFirstfacilitie) && (_faci1.isEmptyModel || _faci1.klass.QPrimaryKey != ValFirstfacilitie))))
 					_faci1 = Models.Faci1.Find(ValFirstfacilitie, m_userContext, Identifier, _fieldsToSerialize);
 				if (_faci1 == null)
 					_faci1 = new Models.Faci1(m_userContext, true, _fieldsToSerialize);
 				return _faci1;
 			}
-			set { _faci1 = value; } 
+			set { _faci1 = value; }
 		}
-		
+
 
 		[DisplayName("Last incorporated facility")]
 		/// <summary>Field : "Last incorporated facility" Tipo: "CE" Formula: CS "FACIL[ENTIT->FOUNDED][FACIL->INCORPOR][FACIL->CODFACIL][ENTIT->CODENTIT][FACIL->CODENTIT](DESC)"</summary>
@@ -183,17 +183,17 @@ namespace GenioMVC.Models
 		private Faci2 _faci2;
 		[DisplayName("Faci2")]
 		[ShouldSerialize("Faci2")]
-		public virtual Faci2 Faci2 { 
-			get { 
+		public virtual Faci2 Faci2 {
+			get {
 				if (!this.isEmptyModel && (_faci2 == null || (!string.IsNullOrEmpty(ValLastfacilitie) && (_faci2.isEmptyModel || _faci2.klass.QPrimaryKey != ValLastfacilitie))))
 					_faci2 = Models.Faci2.Find(ValLastfacilitie, m_userContext, Identifier, _fieldsToSerialize);
 				if (_faci2 == null)
 					_faci2 = new Models.Faci2(m_userContext, true, _fieldsToSerialize);
 				return _faci2;
 			}
-			set { _faci2 = value; } 
+			set { _faci2 = value; }
 		}
-		
+
 
 		[DisplayName("Language")]
 		/// <summary>Field : "Language" Tipo: "C" Formula:  ""</summary>
@@ -213,19 +213,19 @@ namespace GenioMVC.Models
 		public Entit(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAentit(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Entit(UserContext userContext, CSGenioAentit val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAentit csgenioa)
@@ -252,7 +252,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

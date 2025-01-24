@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.DESPE___PROJEPROJECTO.handlers"
 							:loading="controls.DESPE___PROJEPROJECTO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.DESPE___PROJEPROJECTO.isVisible"
 								v-bind="controls.DESPE___PROJEPROJECTO.props"
-								:model-value="model.ValCodproje.value"
-								v-on="controls.DESPE___PROJEPROJECTO.handlers"
-								@update:model-value="model.ValCodproje.fnUpdateValue" />
+								v-on="controls.DESPE___PROJEPROJECTO.handlers" />
 							<q-see-more-despe-projeprojecto
 								v-if="controls.DESPE___PROJEPROJECTO.seeMoreIsVisible"
 								v-bind="controls.DESPE___PROJEPROJECTO.seeMoreParams"
@@ -129,14 +126,11 @@
 							v-on="controls.DESPE___YEAR_YEAR____.handlers"
 							:loading="controls.DESPE___YEAR_YEAR____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.DESPE___YEAR_YEAR____.isVisible"
 								v-bind="controls.DESPE___YEAR_YEAR____.props"
-								:model-value="model.ValCodyear.value"
-								v-on="controls.DESPE___YEAR_YEAR____.handlers"
-								@update:model-value="model.ValCodyear.fnUpdateValue" />
+								v-on="controls.DESPE___YEAR_YEAR____.handlers" />
 							<q-see-more-despe-year-year
 								v-if="controls.DESPE___YEAR_YEAR____.seeMoreIsVisible"
 								v-bind="controls.DESPE___YEAR_YEAR____.seeMoreParams"
@@ -154,14 +148,11 @@
 							v-on="controls.DESPE___AGREGVALUE___.handlers"
 							:loading="controls.DESPE___AGREGVALUE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.DESPE___AGREGVALUE___.isVisible"
 								v-bind="controls.DESPE___AGREGVALUE___.props"
-								:model-value="model.ValCodaggre.value"
-								v-on="controls.DESPE___AGREGVALUE___.handlers"
-								@update:model-value="model.ValCodaggre.fnUpdateValue" />
+								v-on="controls.DESPE___AGREGVALUE___.handlers" />
 							<q-see-more-despe-agregvalue
 								v-if="controls.DESPE___AGREGVALUE___.seeMoreIsVisible"
 								v-bind="controls.DESPE___AGREGVALUE___.seeMoreParams"
@@ -179,12 +170,12 @@
 							v-on="controls.DESPE___EXPENDESCRIPT.handlers"
 							:loading="controls.DESPE___EXPENDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.DESPE___EXPENDESCRIPT.props"
 								:model-value="model.ValDescript.value"
-								@update:model-value="model.ValDescript.fnUpdateValue" />
+								@blur="onBlur(controls.DESPE___EXPENDESCRIPT, model.ValDescript.value)"
+								@change="model.ValDescript.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -198,12 +189,10 @@
 							v-on="controls.DESPE___EXPENVALUE___.handlers"
 							:loading="controls.DESPE___EXPENVALUE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.DESPE___EXPENVALUE___.isVisible"
-								v-bind="controls.DESPE___EXPENVALUE___"
-								:model-value="model.ValValue.value"
+								v-bind="controls.DESPE___EXPENVALUE___.props"
 								@update:model-value="model.ValValue.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -216,12 +205,10 @@
 							v-on="controls.DESPE___EXPENPREVVAL_.handlers"
 							:loading="controls.DESPE___EXPENPREVVAL_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.DESPE___EXPENPREVVAL_.isVisible"
-								v-bind="controls.DESPE___EXPENPREVVAL_"
-								:model-value="model.ValPrevval.value"
+								v-bind="controls.DESPE___EXPENPREVVAL_.props"
 								@update:model-value="model.ValPrevval.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -234,12 +221,10 @@
 							v-on="controls.DESPE___EXPENYEARPREV.handlers"
 							:loading="controls.DESPE___EXPENYEARPREV.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.DESPE___EXPENYEARPREV.isVisible"
-								v-bind="controls.DESPE___EXPENYEARPREV"
-								:model-value="model.ValYearprev.value"
+								v-bind="controls.DESPE___EXPENYEARPREV.props"
 								@update:model-value="model.ValYearprev.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -328,15 +313,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'DESPE',
-						location: 'form-DESPE',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'DESPE',
+					location: 'form-DESPE',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -382,6 +365,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -454,8 +439,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -537,7 +523,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -591,21 +577,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -616,25 +587,9 @@
 						id: 'DESPE___PROJEPROJECTO',
 						name: 'PROJECTO',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.PROJECT37121),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodproje',
-							dependencyEvent: 'fieldChange:expen.codproje'
-						},
-						dependentFields: () => {
-							return {
-								set 'proje.codproje'(value) { vm.model.ValCodproje.updateValue(value) },
-								set 'proje.projecto'(value) { vm.model.TableProjeProjecto.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -643,6 +598,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodproje',
+							dependencyEvent: 'fieldChange:expen.codproje'
+						},
+						dependentFields: () => ({
+							set 'proje.codproje'(value) { vm.model.ValCodproje.updateValue(value) },
+							set 'proje.projecto'(value) { vm.model.TableProjeProjecto.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					DESPE___YEAR_YEAR____: new fieldControlClass.LookupControl({
 						modelField: 'TableYearYear',
@@ -650,26 +615,9 @@
 						id: 'DESPE___YEAR_YEAR____',
 						name: 'YEAR',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.YEAR61794),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodyear',
-							dependencyEvent: 'fieldChange:expen.codyear'
-						},
-						dependentFields: () => {
-							return {
-								set 'year.codyear'(value) { vm.model.ValCodyear.updateValue(value) },
-								set 'year.year'(value) { vm.model.TableYearYear.updateValue(value) },
-								set 'year.yearnum'(value) { vm.model.YearValYearnum.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -678,6 +626,17 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodyear',
+							dependencyEvent: 'fieldChange:expen.codyear'
+						},
+						dependentFields: () => ({
+							set 'year.codyear'(value) { vm.model.ValCodyear.updateValue(value) },
+							set 'year.year'(value) { vm.model.TableYearYear.updateValue(value) },
+							set 'year.yearnum'(value) { vm.model.YearValYearnum.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					DESPE___AGREGVALUE___: new fieldControlClass.LookupControl({
 						modelField: 'TableAgregValue',
@@ -685,13 +644,25 @@
 						id: 'DESPE___AGREGVALUE___',
 						name: 'VALUE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.VALUE10285),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodaggre',
+							dependencyEvent: 'fieldChange:expen.codaggre'
+						},
+						dependentFields: () => ({
+							set 'agreg.codaggre'(value) { vm.model.ValCodaggre.updateValue(value) },
+							set 'agreg.value'(value) { vm.model.TableAgregValue.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: ['year', 'expen.codyear'],
@@ -706,24 +677,6 @@
 								fnValueSelector: (model) => model.ValCodproje.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodaggre',
-							dependencyEvent: 'fieldChange:expen.codaggre'
-						},
-						dependentFields: () => {
-							return {
-								set 'agreg.codaggre'(value) { vm.model.ValCodaggre.updateValue(value) },
-								set 'agreg.value'(value) { vm.model.TableAgregValue.updateValue(value) },
-							}
-						},
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					DESPE___EXPENDESCRIPT: new fieldControlClass.StringControl({
 						modelField: 'ValDescript',
@@ -731,75 +684,57 @@
 						id: 'DESPE___EXPENDESCRIPT',
 						name: 'DESCRIPT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESCRIPTION07383),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
 						labelId: 'label_DESPE___EXPENDESCRIPT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					DESPE___EXPENVALUE___: new fieldControlClass.CurrencyControl({
 						modelField: 'ValValue',
 						valueChangeEvent: 'fieldChange:expen.value',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'DESPE___EXPENVALUE___',
 						name: 'VALUE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.VALUE10285),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
 					DESPE___EXPENPREVVAL_: new fieldControlClass.CurrencyControl({
 						modelField: 'ValPrevval',
 						valueChangeEvent: 'fieldChange:expen.prevval',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'DESPE___EXPENPREVVAL_',
 						name: 'PREVVAL',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.PREVIOUS_VALUE30042),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					DESPE___EXPENYEARPREV: new fieldControlClass.NumberControl({
 						modelField: 'ValYearprev',
 						valueChangeEvent: 'fieldChange:expen.yearprev',
-						maxIntegers: 4,
-						maxDecimals: 0,
 						id: 'DESPE___EXPENYEARPREV',
 						name: 'YEARPREV',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.PREVIOUS_YEAR22440),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 4,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 				},
 
@@ -863,7 +798,7 @@
 						/** The foreign key to the AGREG table */
 						get agreg() { return vm.model.ValCodaggre },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -959,6 +894,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -998,6 +941,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1124,6 +1075,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR DESPE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1139,6 +1106,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS DESPE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

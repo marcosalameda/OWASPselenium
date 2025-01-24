@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -44,8 +44,8 @@ namespace GenioMVC.Models
 		[ShouldSerialize("Cntry.ValActive")]
 		public bool ValActive { get { return Convert.ToBoolean(klass.ValActive); } set { klass.ValActive = Convert.ToInt32(value); } }
 
-		[DisplayName("Numeric")]
-		/// <summary>Field : "Numeric" Tipo: "C" Formula:  ""</summary>
+		[DisplayName("Numeric ISO-3166")]
+		/// <summary>Field : "Numeric ISO-3166" Tipo: "C" Formula:  ""</summary>
 		[ShouldSerialize("Cntry.ValCodigonr")]
 		public string ValCodigonr { get { return klass.ValCodigonr; } set { klass.ValCodigonr = value; } }
 
@@ -63,7 +63,9 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Flag" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Cntry.ValFlag")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValFlag { get { return klass.ValFlag; } set { klass.ValFlag = value; } }
+		public ImageModel ValFlag { get { return new ImageModel(klass.ValFlag) { Ticket = ValFlagQTicket }; } set { klass.ValFlag = value; } }
+		[JsonIgnore]
+		public string ValFlagQTicket = null;
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Cntry.ValZzstate")]
@@ -73,19 +75,19 @@ namespace GenioMVC.Models
 		public Cntry(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAcntry(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Cntry(UserContext userContext, CSGenioAcntry val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAcntry csgenioa)
@@ -102,7 +104,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Person specialty
 	/// </summary>
-	public class CSGenioAesppe : DbArea	{
+	public class CSGenioAesppe : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -104,9 +105,10 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(6);
+			info.Pathways = new Dictionary<string, string>(7);
 			info.Pathways.Add("speci","speci");
 			info.Pathways.Add("pesso","pesso");
+			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("cntry","pesso");
 			info.Pathways.Add("cmpny","pesso");
 			info.Pathways.Add("pais1","pesso");
@@ -243,7 +245,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodesppe, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodpesso { get { return m_fldCodpesso; } }
 		private static FieldRef m_fldCodpesso = new FieldRef("esppe", "codpesso");
@@ -255,7 +256,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodpesso, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodespec { get { return m_fldCodespec; } }
 		private static FieldRef m_fldCodespec = new FieldRef("esppe", "codespec");
@@ -266,7 +266,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodespec); }
 			set { insertNameValueField(FldCodespec, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -309,23 +308,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAesppe> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAesppe> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAesppe>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -374,7 +356,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX ESPPE]/

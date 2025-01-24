@@ -118,5 +118,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodlocat'
 
 	get QPrimaryKey() { return this.ValCodlocat.value }
-	set QPrimaryKey(value) { this.ValCodlocat.value = value }
+	set QPrimaryKey(value) { this.ValCodlocat.updateValue(value) }
 }

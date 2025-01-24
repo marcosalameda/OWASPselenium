@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using JsonNetResult = Microsoft.AspNetCore.Mvc.JsonResult;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 
@@ -24,16 +25,10 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.Controllers
 {
-	public class ControllerExtension : Controller
+	public class ControllerExtension(IUserContextService userContextService) : Controller
 	{
-		protected readonly IUserContextService UserContext;
-		protected readonly UserContext m_userContext;
-
-		public ControllerExtension(IUserContextService userContextService)
-		{
-			UserContext = userContextService;
-			m_userContext = userContextService.Current;
-		}
+		protected readonly IUserContextService UserContext = userContextService;
+		protected readonly UserContext m_userContext = userContextService.Current;
 
 		/// <summary>
 		/// Retrieves server errors to be sent to the client-side.
@@ -43,7 +38,7 @@ namespace GenioMVC.Controllers
 		/// Useful for debugging and tracking what errors occurred during a specific request cycle.
 		/// </remarks>
 		/// <returns>List of error messages.</returns>
-		private List<string> getServerErrorsToClientSide()
+		private List<string> GetServerErrorsToClientSide()
 		{
 			List<string> errors = [];
 
@@ -67,32 +62,47 @@ namespace GenioMVC.Controllers
 		}
 
 		/// <summary>
-		/// Retorno do objeto em Json com uso da serialização do Newtonsoft.
-		/// Para um retorno correto dos dados, não podemos utilizar a serialização do MVC 4 (por exemplo, as datas não estarão no formato correto)
+		/// Returns the object as a JSON result.
 		/// </summary>
-		/// <param name="data"></param>
-		/// <returns></returns>
+		/// <param name="data">The data to be included in the response.</param>
+		/// <returns>A JSON result containing the response data.</returns>
 		private JsonNetResult _jsonResult(object data)
 		{
 			return new JsonNetResult(data);
 		}
 
 		/// <summary>
-		/// Retorno do objeto em Json com uso da serialização do Newtonsoft.
-		/// Para um retorno correto dos dados, não podemos utilizar a serialização do MVC 4 (por exemplo, as datas não estarão no formato correto)
+		/// Prepares the data object for serialization by invoking its
+		/// <c>PrepareContentForClientSide</c> method if it implements
+		/// the <see cref="IPreparableForSerialization"/> interface.
 		/// </summary>
-		/// <param name="data"></param>
-		/// <returns></returns>
+		/// <param name="data">The data object to prepare for serialization.</param>
+		private static void PrepareForSerialization(object data)
+		{
+			if (data is IPreparableForSerialization model)
+				model?.PrepareContentForClientSide();
+
+			// TODO: In the future, we need to consider recursively preparing nested sub-properties
+			// that also implement IPreparableForSerialization.
+		}
+
+		/// <summary>
+		/// Returns the object as a JSON result.
+		/// </summary>
+		/// <param name="data">The data to be included in the response.</param>
+		/// <returns>A JSON result containing the response data.</returns>
 		protected JsonNetResult JsonOK(object data = null)
 		{
+			PrepareForSerialization(data);
 			return _jsonResult(
 				new
 				{
 					Success = true,
 					Data = data,
 					Errors = GetModelErrors(),
+					Maintenance = Maintenance.Current,
 					NavigationData = GetHistoryToUpdateClientSide(),
-					eTracker = getServerErrorsToClientSide()
+					eTracker = GetServerErrorsToClientSide()
 				}
 			);
 		}
@@ -100,7 +110,8 @@ namespace GenioMVC.Controllers
 		protected JsonNetResult JsonERROR(string errorMsg = null, object data = null)
 		{
 			var defaultMsg = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-			
+
+			PrepareForSerialization(data);
 			return _jsonResult(
 				new
 				{
@@ -109,7 +120,7 @@ namespace GenioMVC.Controllers
 					Message = (errorMsg ?? defaultMsg),
 					Errors = GetModelErrors(),
 					NavigationData = GetHistoryToUpdateClientSide(),
-					eTracker = getServerErrorsToClientSide()
+					eTracker = GetServerErrorsToClientSide()
 				}
 			);
 		}
@@ -119,11 +130,6 @@ namespace GenioMVC.Controllers
 		// que no caso das datas, nem pode usar serialização normal do MVC 4
 
 		protected new JsonNetResult Json(object data)
-		{
-			return JsonOK(data);
-		}
-
-		protected JsonNetResult Json(object data, string contentType)
 		{
 			return JsonOK(data);
 		}
@@ -162,19 +168,19 @@ namespace GenioMVC.Controllers
 		protected JsonNetResult PermissionError(string errorMsg = null, object data = null)
 		{
 			var message = errorMsg ?? Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Forbidden, message, data, NavigationData = GetHistoryToUpdateClientSide(), eTracker = getServerErrorsToClientSide() });
+			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Forbidden, message, data, NavigationData = GetHistoryToUpdateClientSide(), eTracker = GetServerErrorsToClientSide() });
 		}
 
 		protected JsonNetResult NotFoundError(string errorMsg = null, object data = null)
 		{
 			var message = errorMsg ?? Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.NotFound, message, data, NavigationData = GetHistoryToUpdateClientSide(), eTracker = getServerErrorsToClientSide() });
+			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.NotFound, message, data, NavigationData = GetHistoryToUpdateClientSide(), eTracker = GetServerErrorsToClientSide() });
 		}
 
 		protected JsonNetResult InternalServerError(string errorMsg = null, object data = null)
 		{
 			var message = errorMsg ?? Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.InternalServerError, message, data, NavigationData = GetHistoryToUpdateClientSide(), eTracker = getServerErrorsToClientSide() });
+			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.InternalServerError, message, data, NavigationData = GetHistoryToUpdateClientSide(), eTracker = GetServerErrorsToClientSide() });
 		}
 
 		private Dictionary<string, IList<string>> GetModelErrors()
@@ -201,32 +207,32 @@ namespace GenioMVC.Controllers
 
 		protected JsonNetResult RedirectToFormAction(string formName, string formMode, object routeValues = null, object model = null)
 		{
-			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "form", formName, formMode, routeValues, Data = model, NavigationData = GetHistoryToUpdateClientSide(), eTracker = getServerErrorsToClientSide() });
+			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "form", formName, formMode, routeValues, Data = model, NavigationData = GetHistoryToUpdateClientSide(), eTracker = GetServerErrorsToClientSide() });
 		}
 
 		protected JsonNetResult RedirectToMenuAction(string menuId, object routeValues = null)
 		{
-			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "menu", menuId, routeValues, NavigationData = GetHistoryToUpdateClientSide(), eTracker = getServerErrorsToClientSide() });
+			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "menu", menuId, routeValues, NavigationData = GetHistoryToUpdateClientSide(), eTracker = GetServerErrorsToClientSide() });
 		}
 
 		protected JsonNetResult RedirectToVueRoute(string routeName, object routeValues = null)
 		{
-			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "route", routeName, routeValues, NavigationData = GetHistoryToUpdateClientSide(), eTracker = getServerErrorsToClientSide() });
+			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "route", routeName, routeValues, NavigationData = GetHistoryToUpdateClientSide(), eTracker = GetServerErrorsToClientSide() });
 		}
 
 		protected JsonNetResult RedirectToErrorPage(string message)
 		{
-			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "erro", message, NavigationData = GetHistoryToUpdateClientSide(), eTracker = getServerErrorsToClientSide() });
+			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "erro", message, NavigationData = GetHistoryToUpdateClientSide(), eTracker = GetServerErrorsToClientSide() });
 		}
 
 		protected JsonNetResult RedirectToMenuCondition(string menuId, object routeValues = null, object model = null)
 		{
-			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "menu-mc", menuId, routeValues, Data = model, NavigationData = GetHistoryToUpdateClientSide(), eTracker = getServerErrorsToClientSide() });
+			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "menu-mc", menuId, routeValues, Data = model, NavigationData = GetHistoryToUpdateClientSide(), eTracker = GetServerErrorsToClientSide() });
 		}
 
 		protected JsonNetResult RedirectToMenuRoutine(string menuId, string routineName, object routeValues = null, object model = null)
 		{
-			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "menu-routine", menuId, routineName, routeValues, Data = model, NavigationData = GetHistoryToUpdateClientSide(), eTracker = getServerErrorsToClientSide() });
+			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "menu-routine", menuId, routineName, routeValues, Data = model, NavigationData = GetHistoryToUpdateClientSide(), eTracker = GetServerErrorsToClientSide() });
 		}
 
 		private string _getRedirectUrlToVue(string page, object queryParameters = null, bool includeCulture = true, bool includeSystemAndModule = false, string module = null)
@@ -244,7 +250,7 @@ namespace GenioMVC.Controllers
 				queryString = String.Join("&", properties.ToArray());
 			}
 
-			return $"{Request.Scheme}://{Request.Host}{Request.PathBase}/#/{culture}{systemAndModule}{page}?{queryString}";
+			return AbsoluteUrlUtils.RelativeToAbsolute(Request, $"{Request.PathBase}/#/{culture}{systemAndModule}{page}?{queryString}");
 		}
 
 		protected ActionResult RedirectToVuePage(string page, object queryParameters = null, bool includeCulture = true, bool includeSystemAndModule = false)
@@ -269,7 +275,17 @@ namespace GenioMVC.Controllers
 		{
 			return RedirectToVueRoute(routeName, routeValues);
 		}
-	}
+
+		protected ActionResult ClientSideRedirect(string endpoint, bool captureHash = false)
+		{
+            endpoint = AbsoluteUrlUtils.RelativeToAbsolute(Request, endpoint);
+            endpoint = System.Web.HttpUtility.JavaScriptStringEncode(endpoint);
+			string hashscript = "'";
+			if(captureHash)
+				hashscript = "?' + window.location.hash.substring(1);";
+            return Content("<script>window.location='" + endpoint + hashscript + "</script>", "text/html");
+        }
+    }
 
 	/// <summary>
 	/// Base class for the controllers
@@ -319,6 +335,8 @@ namespace GenioMVC.Controllers
 			public Action<EventSink, PersistentSupport> AfterException { get; set; }
 		}
 
+		protected ControllerBase(IUserContextService userContextService) : base(userContextService) { }
+
 		/// <summary>
 		/// Validates the provided ICrudViewModel and adds any validation errors to the ModelState.
 		/// </summary>
@@ -334,7 +352,6 @@ namespace GenioMVC.Controllers
 
 		private string HandleException(Exception e)
 		{
-			Log.Error(e.Message);
 			//JGF 2020.12.10 Added multi exception check for multiple write condition errors
 			if (e is FieldValidationException fvExc)
 			{
@@ -408,6 +425,13 @@ namespace GenioMVC.Controllers
 			// Check table permissions
 			var permission = model.CheckPermissions(FormMode.Show);
 
+			// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+				return PermissionError(permission.Message);
+
+			// Read the model from the database
+			model.LoadModel(id);
+
 			// Check form conditions
 			permission.MergeStatusMessage(model.ViewConditions());
 
@@ -454,7 +478,7 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-		protected JsonNetResult GenericHandleGetFormNew(EventSink sink, ICrudViewModel model, string id, bool isNewLocation, Dictionary<string, string> prefillValues = null)
+		protected JsonNetResult GenericHandleGetFormNew(EventSink sink, ICrudViewModel model, string id, bool isNewLocation, Dictionary<string, object> prefillValues = null)
 		{
 			SanitizeHistoryEntries(id, sink.AreaName);
 
@@ -467,6 +491,10 @@ namespace GenioMVC.Controllers
 
 			// Check table permissions
 			var permission = model.CheckPermissions(FormMode.New);
+
+			// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+				return PermissionError(permission.Message);
 
 			// Check form conditions
 			permission.MergeStatusMessage(model.InsertConditions());
@@ -502,26 +530,9 @@ namespace GenioMVC.Controllers
 
 					// FOR: PREFILL_FORM_VALUES
 					// Set property values passed in
-					if (prefillValues != null)
-					{
-						foreach (KeyValuePair<string, string> kvp in prefillValues)
-						{
-							PropertyInfo prop = model.GetType().GetProperty(kvp.Key);
-							if (prop == null)
-								continue;
-
-							Type type = prop.PropertyType;
-							if (type == null)
-								continue;
-
-							var converter = TypeDescriptor.GetConverter(type);
-							if (converter == null)
-								continue;
-
-							var value = converter.ConvertFromString(kvp.Value);
-							prop.SetValue(model, value);
-						}
-					}
+					model.PopulateViewModel(prefillValues);
+					if (prefillValues?.Count > 0)
+						model.MapToModel();
 
 					//---------------------------------------------
 					// USE /[MANUAL AFTER_LOAD_SHOW]/
@@ -577,6 +588,13 @@ namespace GenioMVC.Controllers
 
 			model.setModes(Request.Query["m"]);
 
+			// Check table permissions
+			var permission = model.CheckPermissions(FormMode.Edit);
+
+			// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+				return PermissionError(permission.Message);
+
 			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + Navigation.CurrentLevel.Location.ShortDescription());
 
 			Navigation.SetValue(sink.AreaName, id);
@@ -616,9 +634,6 @@ namespace GenioMVC.Controllers
 			sink.AfterOp?.Invoke(sink, sp);
 			//---------------------------------------------
 
-			// Check table permissions
-			var permission = model.CheckPermissions(FormMode.Edit);
-
 			// Check form conditions
 			permission.MergeStatusMessage(model.UpdateConditions());
 
@@ -641,6 +656,13 @@ namespace GenioMVC.Controllers
 			sink.BeforeAll?.Invoke(sink, sp);
 
 			model.setModes(Request.Query["m"]);
+
+			// Check table permissions
+			var permission = model.CheckPermissions(FormMode.Delete);
+
+			// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+				return PermissionError(permission.Message);
 
 			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + Navigation.CurrentLevel.Location.ShortDescription());
 
@@ -670,9 +692,6 @@ namespace GenioMVC.Controllers
 			sink.AfterOp?.Invoke(sink, sp);
 			//---------------------------------------------
 
-			// Check table permissions
-			var permission = model.CheckPermissions(FormMode.Delete);
-
 			// Check form conditions
 			permission.MergeStatusMessage(model.DeleteConditions());
 
@@ -698,6 +717,10 @@ namespace GenioMVC.Controllers
 
 			// Check table permissions
 			var permission = model.CheckPermissions(FormMode.Duplicate);
+
+			// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+				return PermissionError(permission.Message);
 
 			// Check form conditions
 			permission.MergeStatusMessage(model.InsertConditions());
@@ -777,18 +800,35 @@ namespace GenioMVC.Controllers
 				// Check table permissions
 				var permission = model.CheckPermissions(FormMode.Edit);
 
+				// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
+				if (permission.Status.Equals(CSGenio.framework.Status.E))
+					return PermissionError(permission.Message);
+
+				// Recalculation of the formulas may need the connection to the database to be open (for example, in formulas that use functions that have SQL queries). Therefore,
+				// we must open the transaction before the 'executeModelFormulas' call
+				sp.openTransaction();
+
+				// Read the model from the database, ensuring that the read-only fields have not been changed in the ViewModel.
+				// The validation of CRUD conditions should not and cannot trust on values coming from the interface.
+				// In addition to making the values of the calculated fields valid, invoking the recalculation of the formulas after mapping
+				//	also allows for protecting the fields that could not be filled due to the Fill When condition, but came in the ViewModel with a value.
+				model.LoadModel();
+				model.MapToModel();
+				model.ExecuteModelFormulas();
+
 				// Check form conditions
 				permission.MergeStatusMessage(model.UpdateConditions());
 
 				if (permission.Status.Equals(CSGenio.framework.Status.E))
+				{
+					sp.closeTransaction();
 					return PermissionError(permission.Message);
+				}
 
 				ValidateModel(model);
 
 				if (!ModelState.IsValid)
 					throw new BusinessException(Resources.Resources.NAO_E_POSSIVEL_GRAVA23775, sink.MethodName, "Erro");
-
-				sp.openTransaction();
 
 				//---------------------------------------------
 				// USE /[MANUAL BEFORE_SAVE_EDIT]/
@@ -807,6 +847,7 @@ namespace GenioMVC.Controllers
 					// New insertion in upper table
 					if (Navigation.PreviousLevel.FormMode != FormMode.List)
 						Navigation.SetValue("RETURN_" + sink.AreaName, Navigation.GetValue(sink.AreaName), true);
+
 					// Position the list in the current registry
 					Navigation.SetValue("QMVC_POS_RECORD_" + sink.AreaName, Navigation.GetValue(sink.AreaName), true);
 				}
@@ -820,13 +861,15 @@ namespace GenioMVC.Controllers
 				sp.rollbackTransaction();
 				sp.closeConnection();
 
+				/*
+					NOTE: Given that we are not sending back the ViewModel (it doesn't make sense to send it back, to be overwritten with what's in cache,
+						as the user should not lose the data already filled just because a field has to have a different value),
+						we no longer need the Before and After load. Instead, an OnException can be created.
+				*/
 				//---------------------------------------------
 				// USE /[MANUAL BEFORE_LOAD_EDIT_EX]/
 				sink.BeforeException?.Invoke(sink, sp);
 				//---------------------------------------------
-
-				model.LoadPartial(Request.QueryNameValues(), true);
-				model.MapFromModel();
 
 				//---------------------------------------------
 				// USE /[MANUAL AFTER_LOAD_EDIT_EX]/
@@ -834,9 +877,8 @@ namespace GenioMVC.Controllers
 				//---------------------------------------------
 
 				HandleException(e);
-				model.NestedForm = Request.IsAjaxRequest() && sink.Redirect;
 
-				return JsonERROR(Resources.Resources.ERRO_AO_GUARDAR_O_RE65182, model);
+				return JsonERROR(Resources.Resources.ERRO_AO_GUARDAR_O_RE65182);
 			}
 
 			if (CSGenio.framework.Log.IsDebugEnabled)
@@ -852,7 +894,7 @@ namespace GenioMVC.Controllers
 					GetFlashMessage(model.flashMessage, FormMode.Edit);
 			}
 
-			return Json(new { Success = true, Operation = "Edit", Message = Resources.Resources.ALTERACOES_EFECTUADA64514, Warnings = warningMsgs, currentNavigationLevel = Navigation.CurrentLevel.Level });
+			return Json(new { Success = true, Operation = "Edit", Message = Resources.Resources.ALTERACOES_EFETUADAS10166, Warnings = warningMsgs, currentNavigationLevel = Navigation.CurrentLevel.Level });
 		}
 
 		protected ActionResult GenericHandlePostFormApply(EventSink sink, ICrudViewModel model)
@@ -867,18 +909,35 @@ namespace GenioMVC.Controllers
 				// Check table permissions
 				var permission = model.CheckPermissions(FormMode.Edit);
 
+				// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
+				if (permission.Status.Equals(CSGenio.framework.Status.E))
+					return PermissionError(permission.Message);
+
+				// Recalculation of the formulas may need the connection to the database to be open (for example, in formulas that use functions that have SQL queries). Therefore,
+				// we must open the transaction before the 'executeModelFormulas' call
+				sp.openTransaction();
+
+				// Read the model from the database, ensuring that the read-only fields have not been changed in the ViewModel.
+				// The validation of CRUD conditions should not and cannot trust on values coming from the interface.
+				// In addition to making the values of the calculated fields valid, invoking the recalculation of the formulas after mapping
+				//	also allows for protecting the fields that could not be filled due to the Fill When condition, but came in the ViewModel with a value.
+				model.LoadModel();
+				model.MapToModel();
+				model.ExecuteModelFormulas();
+
 				// Check form conditions
 				permission.MergeStatusMessage(model.UpdateConditions());
 
 				if (permission.Status.Equals(CSGenio.framework.Status.E))
+				{
+					sp.closeTransaction();
 					return PermissionError(permission.Message);
+				}
 
 				ValidateModel(model);
 
 				if (!ModelState.IsValid)
 					throw new BusinessException(Resources.Resources.ERRO_AO_GUARDAR_O_RE65182, sink.MethodName, "The ModelState is not valid.");
-
-				sp.openTransaction();
 
 				//---------------------------------------------
 				// USE /[MANUAL BEFORE_APPLY_EDIT]/
@@ -904,9 +963,6 @@ namespace GenioMVC.Controllers
 			{
 				sp.rollbackTransaction();
 
-				model.LoadPartial(Request.QueryNameValues());
-				model.MapFromModel();
-
 				var exceptionUserMessage = HandleException(ex);
 
 				return JsonERROR(exceptionUserMessage);
@@ -917,7 +973,7 @@ namespace GenioMVC.Controllers
 			else
 				TempData.SetObject("NEW_SAVE_LIST", ""); //Make sure that no custom message is displayed when the flashMessage is empty
 
-			return Json(new { Success = true, Operation = "Apply", Message = Resources.Resources.ALTERACOES_EFECTUADA64514 });
+			return Json(new { Success = true, Operation = "Apply", Message = Resources.Resources.ALTERACOES_EFETUADAS10166 });
 		}
 
 		protected ActionResult GenericHandlePostFormDelete(EventSink sink, ICrudViewModel model)
@@ -928,8 +984,17 @@ namespace GenioMVC.Controllers
 			try
 			{
 				sink.BeforeAll?.Invoke(sink, sp);
+
 				// Check table permissions
 				var permission = model.CheckPermissions(FormMode.Delete);
+
+				// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
+				if (permission.Status.Equals(CSGenio.framework.Status.E))
+					return PermissionError(permission.Message);
+
+				// Read the model from the database, ensuring that the read-only fields have not been changed in the ViewModel.
+				// The validation of CRUD conditions should not and cannot trust on values coming from the interface.
+				model.LoadModel();
 
 				// Check form conditions
 				permission.MergeStatusMessage(model.DeleteConditions());
@@ -953,8 +1018,7 @@ namespace GenioMVC.Controllers
 
 				sp.closeTransaction();
 
-				if (!Navigation.CurrentLevel.IsNestedContext)
-					GetFlashMessage(model.flashMessage, FormMode.Delete);
+				GetFlashMessage(model.flashMessage, FormMode.Delete);
 
 				Navigation.SetValue("PreviouslyRemovedRowKey_" + sink.AreaName, model.QPrimaryKey, true);
 				Navigation.SetValue("ForcePrimaryRead_" + sink.AreaName, "true", true);
@@ -986,21 +1050,39 @@ namespace GenioMVC.Controllers
 			try
 			{
 				sink.BeforeAll?.Invoke(sink, sp);
+
 				// Check table permissions
 				var permission = model.CheckPermissions(FormMode.Duplicate);
+
+				// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
+				if (permission.Status.Equals(CSGenio.framework.Status.E))
+					return PermissionError(permission.Message);
+
+				// Recalculation of the formulas may need the connection to the database to be open (for example, in formulas that use functions that have SQL queries). Therefore,
+				// we must open the transaction before the 'executeModelFormulas' call
+				sp.openTransaction();
+
+				// Read the model from the database, ensuring that the read-only fields have not been changed in the ViewModel.
+				// The validation of CRUD conditions should not and cannot trust on values coming from the interface.
+				// In addition to making the values of the calculated fields valid, invoking the recalculation of the formulas after mapping
+				//	also allows for protecting the fields that could not be filled due to the Fill When condition, but came in the ViewModel with a value.
+				model.LoadModel();
+				model.MapToModel();
+				model.ExecuteModelFormulas();
 
 				// Check form conditions
 				permission.MergeStatusMessage(model.InsertConditions());
 
 				if (permission.Status.Equals(CSGenio.framework.Status.E))
+				{
+					sp.closeTransaction();
 					return PermissionError(permission.Message);
+				}
 
 				ValidateModel(model);
 
 				if (!ModelState.IsValid)
 					throw new BusinessException(Resources.Resources.NAO_E_POSSIVEL_GRAVA23775, sink.MethodName, "Erro");
-
-				sp.openTransaction();
 
 				//---------------------------------------------
 				// USE /[MANUAL BEFORE_SAVE_DUPLICATE]/
@@ -1031,13 +1113,15 @@ namespace GenioMVC.Controllers
 				sp.rollbackTransaction();
 				sp.closeConnection();
 
+				/*
+					NOTE: Given that we are not sending back the ViewModel (it doesn't make sense to send it back, to be overwritten with what's in cache,
+						as the user should not lose the data already filled just because a field has to have a different value),
+						we no longer need the Before and After load. Instead, an OnException can be created.
+				*/
 				//---------------------------------------------
 				// USE /[MANUAL BEFORE_LOAD_DUPLICATE_EX]/
 				sink.BeforeException?.Invoke(sink, sp);
 				//---------------------------------------------
-
-				model.LoadPartial(Request.QueryNameValues());
-				model.MapFromModel();
 
 				//---------------------------------------------
 				// USE /[MANUAL AFTER_LOAD_DUPLICATE_EX]/
@@ -1046,7 +1130,7 @@ namespace GenioMVC.Controllers
 
 				HandleException(e);
 
-				return JsonERROR(Resources.Resources.PEDIMOS_DESCULPA__OC63848, model);
+				return JsonERROR();
 			}
 
 			if (CSGenio.framework.Log.IsDebugEnabled)
@@ -1077,6 +1161,10 @@ namespace GenioMVC.Controllers
 				// Check table permissions
 				var permission = model.CheckPermissions(FormMode.New);
 
+				// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
+				if (permission.Status.Equals(CSGenio.framework.Status.E))
+					return PermissionError(permission.Message);
+
 				// Check form conditions
 				permission.MergeStatusMessage(model.InsertConditions());
 
@@ -1088,7 +1176,17 @@ namespace GenioMVC.Controllers
 				if (!ModelState.IsValid)
 					throw new BusinessException(Resources.Resources.NAO_E_POSSIVEL_GRAVA23775, sink.MethodName, "Erro");
 
+				// Recalculation of the formulas may need the connection to the database to be open (for example, in formulas that use functions that have SQL queries). Therefore,
+				// we must open the transaction before the 'executeModelFormulas' call
 				sp.openTransaction();
+
+				// Read the model from the database, ensuring that the read-only fields have not been changed in the ViewModel.
+				// The validation of CRUD conditions should not and cannot trust on values coming from the interface.
+				// In addition to making the values of the calculated fields valid, invoking the recalculation of the formulas after mapping
+				//	also allows for protecting the fields that could not be filled due to the Fill When condition, but came in the ViewModel with a value.
+				model.LoadModel();
+				model.MapToModel();
+				model.ExecuteModelFormulas();
 
 				//---------------------------------------------
 				// USE /[MANUAL BEFORE_SAVE_NEW]/
@@ -1123,13 +1221,15 @@ namespace GenioMVC.Controllers
 				sp.rollbackTransaction();
 				sp.closeConnection();
 
+				/*
+					NOTE: Given that we are not sending back the ViewModel (it doesn't make sense to send it back, to be overwritten with what's in cache,
+						as the user should not lose the data already filled just because a field has to have a different value),
+						we no longer need the Before and After load. Instead, an OnException can be created.
+				*/
 				//---------------------------------------------
 				// USE /[MANUAL BEFORE_LOAD_NEW_EX]/
 				sink.BeforeException?.Invoke(sink, sp);
 				//---------------------------------------------
-
-				model.LoadPartial(Request.QueryNameValues());
-				model.MapFromModel();
 
 				//---------------------------------------------
 				// USE /[MANUAL AFTER_LOAD_NEW_EX]/
@@ -1137,9 +1237,8 @@ namespace GenioMVC.Controllers
 				//---------------------------------------------
 
 				HandleException(e);
-				model.NestedForm = Request.IsAjaxRequest() && sink.Redirect; //TODO: MUDAR!
 
-				return JsonERROR(Resources.Resources.ERRO_AO_GUARDAR_O_RE65182, model);
+				return JsonERROR(Resources.Resources.ERRO_AO_GUARDAR_O_RE65182);
 			}
 
 			if (CSGenio.framework.Log.IsDebugEnabled)
@@ -1163,70 +1262,6 @@ namespace GenioMVC.Controllers
 			return Json(new { Success = true, Operation = "New", Message = Resources.Resources.REGISTO_CRIADO_COM_S18746, Warnings = warningMsgs, currentNavigationLevel = Navigation.CurrentLevel.Level });
 		}
 
-		protected JsonNetResult GenericHandleMultiFormSave(EventSink sink, ICrudViewModel model, string mode)
-		{
-			var sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				ValidateModel(model);
-
-				if (!ModelState.IsValid)
-					throw new BusinessException(Resources.Resources.NAO_E_POSSIVEL_GRAVA23775, sink.MethodName, "Erro");
-
-				sp.openTransaction();
-				model.Save();
-				sp.closeTransaction();
-			}
-			catch (Exception ex)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-
-				model.LoadPartial(Request.QueryNameValues());
-				model.MapFromModel();
-
-				var exceptionUserMessage = Resources.Resources.ERRO_AO_GUARDAR_O_RE65182;
-				if (ex is GenioException && (ex as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((ex as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage, model);
-			}
-
-			if (model.flashMessage != null && !string.IsNullOrEmpty(model.flashMessage.Message) && model.flashMessage.Status == Status.OK)
-				TempData.SetObject("NEW_SAVE_LIST", model.flashMessage.Message); // Add the save messages so they can be retrived later
-			else
-				TempData.SetObject("NEW_SAVE_LIST", ""); //Make sure that no custom message is displayed when the flashMessage is empty
-
-			if (mode == "INSERT")
-				return Json(new { Success = true, Operation = "MFSave", Message = Resources.Resources.REGISTO_CRIADO_COM_S18746 });
-			return Json(new { Success = true, Operation = "MFSave", Message = Resources.Resources.ALTERACOES_EFECTUADA64514 });
-		}
-
-		protected JsonNetResult GenericHandlePostMultiFormDelete(EventSink sink, ICrudViewModel model)
-		{
-			var sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-
-				model.LoadPartial(Request.QueryNameValues());
-				model.MapFromModel();
-
-				return JsonOK(model);
-			}
-
-			return Json(new { Success = true, Operation = "MFDelete", Message = Resources.Resources.REGISTO_APAGADO_COM_64671 });
-		}
-
-		protected ControllerBase(IUserContextService userContextService) : base(userContextService) { }
-
 		/// <summary>
 		/// Creates Erros message
 		/// </summary>
@@ -1234,7 +1269,7 @@ namespace GenioMVC.Controllers
 		/// <param name="containsHTML>"Indicates whether the message to show contains HTML</param>
 		protected void ErrorMessage(string content, bool containsHTML = false)
 		{
-			Message message = new Message(content, CSGenio.framework.Status.E,containsHTML);
+			Message message = new(content, CSGenio.framework.Status.E,containsHTML);
 			AddMessage(message);
 		}
 
@@ -1245,7 +1280,7 @@ namespace GenioMVC.Controllers
 		/// <param name="containsHTML>"Indicates whether the message to show contains HTML</param>
 		protected void SuccessMessage(string content, bool containsHTML = false)
 		{
-			Message message = new Message(content, CSGenio.framework.Status.OK,containsHTML);
+			Message message = new(content, CSGenio.framework.Status.OK,containsHTML);
 			AddMessage(message);
 		}
 
@@ -1256,7 +1291,7 @@ namespace GenioMVC.Controllers
 		/// <param name="containsHTML>"Indicates whether the message to show contains HTML</param>
 		protected void WarningMessage(string content, bool containsHTML = false)
 		{
-			Message message = new Message(content, CSGenio.framework.Status.W, containsHTML);
+			Message message = new(content, CSGenio.framework.Status.W, containsHTML);
 			AddMessage(message);
 		}
 
@@ -1267,7 +1302,7 @@ namespace GenioMVC.Controllers
 		/// <param name="containsHTML>"Indicates whether the message to show contains HTML</param>
 		protected void InfoMessage(string content, bool containsHTML = false)
 		{
-			Message message = new Message(content, CSGenio.framework.Status.OK_MAIS_W, containsHTML);
+			Message message = new(content, CSGenio.framework.Status.OK_MAIS_W, containsHTML);
 			AddMessage(message);
 		}
 
@@ -1278,7 +1313,7 @@ namespace GenioMVC.Controllers
 		/// <param name="content">Status of the message</param>
 		protected void Message(string content, Status status)
 		{
-			Message message = new Message(content, status);
+			Message message = new(content, status);
 			AddMessage(message);
 		}
 
@@ -1324,7 +1359,7 @@ namespace GenioMVC.Controllers
 							msg = Resources.Resources.REGISTO_CRIADO_COM_S18746;
 							break;
 						case FormMode.Edit:
-							msg = Resources.Resources.ALTERACOES_EFECTUADA64514;
+							msg = Resources.Resources.ALTERACOES_EFETUADAS10166;
 							break;
 						case FormMode.Delete:
 							msg = Resources.Resources.REGISTO_APAGADO_COM_64671;
@@ -1397,43 +1432,92 @@ namespace GenioMVC.Controllers
 		/// <summary>
 		/// Obtains the byte[] image from the corresponding model
 		/// </summary>
-		/// <param name="id">The id of the row</param>
-		/// <param name="modelname">The model we are on</param>
-		/// <param name="fldname">The name of the property where the image is at</param>
+		/// <param name="ticket">The Resource Query ticket</param>
 		/// <param name="formIdentifier">Form Identifier</param>
 		/// <param name="height">The image height</param>
 		/// <param name="width">The image width</param>
 		/// <returns>The image data</returns>
-		public JsonNetResult GetImage(string id, string modelname, string fldname, string formIdentifier, int height = -1, int width = -1)
+		[HttpGet]
+		[AllowAnonymous]
+		public ActionResult GetImage(string ticket, string formIdentifier, int height = -1, int width = -1)
 		{
 			// If a height and width aren't specified, the original dimensions of the image will be used.
+			var sp = m_userContext.PersistentSupport;
 			try
 			{
-				var row = ModelBase.FindGeneric(modelname, id, UserContext.Current, formIdentifier);
-				byte[]? image = row.GetValueGeneric(fldname) as byte[];
+				// NOTE: Error messages will not be returned to the user to prevent brute force attacks, as the action is open to the unauthenticated user.
+				ArgumentException.ThrowIfNullOrEmpty(ticket, nameof(ticket));
+
+				ResourceQuery resource = GetResourceQueryFromTicket(ticket);
+
+				ArgumentException.ThrowIfNullOrEmpty(resource.KeyValue, nameof(resource.KeyValue));
+				ArgumentException.ThrowIfNullOrEmpty(resource.Table, nameof(resource.Table));
+				ArgumentException.ThrowIfNullOrEmpty(resource.KeyData, nameof(resource.KeyData));
+
+				var user = m_userContext.User;
+				var area = CSGenio.business.Area.createArea(resource.Table.ToLowerInvariant(), user, user.CurrentModule)
+					?? throw new BusinessException("Incorrect request.", "GetImage", $"The '{resource.Table}' area does not exist.");
+
+				if (!area.DBFields.ContainsKey(resource.KeyData))
+					throw new BusinessException("Incorrect request.", "GetImage", $"Requested field '{resource.KeyData}' does not exist in '{resource.Table}' area.");
+
+				if (!area.AccessRightsToConsult())
+					throw new BusinessException("Permissions error.", "GetImage", "Permissions error.");
+
+				// The «returnField» could be used, but we need to apply EPHs to limit users who have access to data (if applied)
+				var condition = CriteriaSet.And()
+						.Equal(area.Alias, area.PrimaryKeyName, resource.KeyValue);
+				// Just for security, apply Permanent History Entries
+				var criteriaSetPHE = Listing.CalculateConditionsEphGeneric(area, formIdentifier);
+				condition.SubSet(criteriaSetPHE);
+
+				SelectQuery query = new SelectQuery()
+					.Select(area.Alias, resource.KeyData)
+					.From(area.QSystem, area.TableName, area.Alias)
+					.Where(condition);
+
+				sp.openConnection();
+				var mx = sp.Execute(query);
+				if (mx == null || mx.NumRows < 1)
+					throw new BusinessException("Record not found.", "GetImage", "The requested record does not exist or the user does not have access due to limitation by PHE.");
+
+				byte[]? image = mx.GetBinary(0, 0);
 
 				if (image?.Length > 0)
 				{
 					string imageFormat = ImageResizer.GetImageFormat(image);
-					if (height > 0 && width > 0)
-						image = ImageResizer.ResizeImage(image, width, height, true);
+					bool isThumbnail = false;
 
-					ImageModel imageModel = new()
+					if (height > 0 && width > 0)
+					{
+						image = ImageResizer.ResizeImage(image, width, height, true);
+						isThumbnail = true;
+					}
+
+					ImageModel imageModel = new(image)
 					{
 						Data = System.Convert.ToBase64String(image),
 						DataFormat = imageFormat,
-						FileName = "" // TODO: Save the file name and format.
+						FileName = "", // TODO: Save the file name and format.
+						IsThumbnail = isThumbnail,
+						Ticket = ticket
 					};
 
 					return JsonOK(imageModel);
 				}
-
-				return JsonOK();
 			}
-			catch
+			catch(Exception ex)
 			{
+				if (ex is not GenioException)
+					Log.Error("Error on GetImage - " + ex.Message);
 				return JsonERROR();
 			}
+			finally
+			{
+				sp.closeConnection();
+			}
+
+			return JsonOK();
 		}
 
 		#endregion
@@ -1459,7 +1543,7 @@ namespace GenioMVC.Controllers
 		/// </summary>
 		/// <param name="s">The Path</param>
 		/// <returns>The image</returns>
-		protected byte[] getFile(string s)
+		protected byte[] GetFile(string s)
 		{
 			System.IO.FileStream fs = System.IO.File.OpenRead(s);
 			byte[] data = new byte[fs.Length];
@@ -1494,15 +1578,15 @@ namespace GenioMVC.Controllers
 			//Call the AllModel for reflection.
 			//This code could avoid reflection if its changed to be a generic method and call the generic ModelBase.Where<T> instead.
 			Type type = Type.GetType("GenioMVC.Models." + tableNN)!;
-			MethodInfo allModelMI = type.GetMethod("AllModel", new Type[] {typeof(UserContext), typeof(CriteriaSet), typeof(String) })!;
-			IEnumerable previous = (IEnumerable)allModelMI.Invoke(null, new object?[] { UserContext.Current, criteriaSetAnd, null })!;
+			MethodInfo allModelMI = type.GetMethod("AllModel", [typeof(UserContext), typeof(CriteriaSet), typeof(string)])!;
+			IEnumerable previous = (IEnumerable)allModelMI.Invoke(null, [UserContext.Current, criteriaSetAnd, null])!;
 
 			// Updates the table NN by removing the rows that were not selected this time
-			HashSet<string> previousSelected = new HashSet<string>();
+			HashSet<string> previousSelected = [];
 			foreach (ModelBase row in previous)
 			{
-				var otherKey = row.GetValueGeneric("Val" + otherField) as string;
-				previousSelected.Add((string)otherKey);
+				string otherKey = row.GetValueGeneric("Val" + otherField) as string;
+				previousSelected.Add(otherKey);
 
 				if (!selectedIds.Contains(otherKey))
 					row.Destroy();
@@ -1514,7 +1598,7 @@ namespace GenioMVC.Controllers
 				if (!previousSelected.Contains(id))
 				{
 					// create
-					ModelBase row = (ModelBase)Activator.CreateInstance(type, new object?[] { UserContext.Current, false, null})!;
+					ModelBase row = (ModelBase)Activator.CreateInstance(type, [UserContext.Current, false, null])!;
 					row.SetValueGeneric("Val" + primaryField, key);
 					row.SetValueGeneric("Val" + otherField, id);
 					row.New();
@@ -1531,14 +1615,14 @@ namespace GenioMVC.Controllers
 		/// <param name="tableName">The name of the table</param>
 		/// <param name="fieldName">The name of the field in the view model</param>
 		/// <param name="keyValue">The primary key value</param>
-		/// <returns>A json with the list of ticket keys</returns>
+		/// <returns>A JSON with the list of ticket keys</returns>
 		protected ActionResult GetDocumsTickets(string tableName, string fieldName, string keyValue)
 		{
 			try
 			{
 				User user = m_userContext.User;
 				ModelBase model = ModelBase.FindGeneric(tableName, keyValue, m_userContext, "");
-				DocumsProperties_ViewModel properties = model?.GetInfoDoc(fieldName);
+				GenioMVC.ViewModels.DocumsProperties_ViewModel properties = model?.GetInfoDoc(fieldName);
 				List<object> tickets = [];
 
 				if (model != null)
@@ -1575,152 +1659,70 @@ namespace GenioMVC.Controllers
 		}
 
 		/// <summary>
-		/// Returns a partial view with the docums information as a DBEdit
+		/// Gets the file versions associated to the specified ticket
 		/// </summary>
 		/// <param name="ticket">Encryted ticket</param>
-		/// <returns>Docums versions DBEdit for a specific field</returns>
+		/// <returns>A JSON with all the file versions</returns>
 		[NonAction]
-		protected ActionResult GetDocumsVersionsDBEdit(string ticket)
+		protected ActionResult GetFileVersions(string ticket)
 		{
 			try
 			{
-				object[] objs = QResources.DecryptTicketBase64(ticket);
+				ResourceQuery recq = GetResourceQueryFromTicket(ticket);
 
-				string username = objs[0] as string;
-				string ip = objs[1] as string;
-
-				if (username != UserContext.Current.User.Name || ip != HttpContext.GetIpAddress())
+				if (recq == null)
 					return PermissionError(Resources.Resources.O_REGISTO_PEDIDO_NAO63869);
 
-				Resource rec = objs[2] as Resource;
+				var model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, m_userContext, "");
+				string? docfk = model.GetValueGeneric(recq.KeyData + "fk") as string;
 
-				if (rec is ResourceQuery)
-				{
-					ResourceQuery recq = rec as ResourceQuery;
-					var model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, UserContext.Current, "");
+				NameValueCollection values = [];
+				GenioMVC.ViewModels.DocumsVersionsDBEdit_ViewModel documsDBedit = new(m_userContext, ticket, docfk, recq.Table, recq.KeyData);
+				documsDBedit.Load(Configuration.NrRegDBedit == 0 ? 10 : Configuration.NrRegDBedit, values);
 
-					string? docfk = model.GetValueGeneric(recq.KeyData + "fk") as string;
-
-					bool onlyshow = false;
-					if (Navigation.CurrentLevel.FormMode == FormMode.Show || Navigation.CurrentLevel.FormMode == FormMode.Delete)
-						onlyshow = true;
-
-					GenioMVC.ViewModels.DocumsVersionsDBEdit_ViewModel documsDBedit = new ViewModels.DocumsVersionsDBEdit_ViewModel(UserContext.Current, ticket, docfk, recq.Table, recq.KeyData, onlyshow);
-					var values = new System.Collections.Specialized.NameValueCollection();
-					documsDBedit.Load(Configuration.NrRegDBedit == 0 ? 10 : Configuration.NrRegDBedit, values);
-
-					return JsonOK(documsDBedit);
-				}
-
-				return JsonERROR();
+				return JsonOK(documsDBedit);
 			}
-			catch (Exception)
+			catch
 			{
 				return JsonERROR();
 			}
 		}
 
 		/// <summary>
-		/// Returns a partial view with document properties
+		/// Gets the file properties associated to the specified ticket
 		/// </summary>
 		/// <param name="ticket">Encryted ticket</param>
-		/// <returns>Document properties partial view</returns>
+		/// <returns>A JSON with the file properties</returns>
 		[NonAction]
 		protected ActionResult GetFileProperties(string ticket)
 		{
 			try
 			{
-				object[] objs = QResources.DecryptTicketBase64(ticket);
+				ResourceQuery recq = GetResourceQueryFromTicket(ticket);
 
-				string username = objs[0] as string;
-				string ip = objs[1] as string;
-
-				if (username != UserContext.Current.User.Name || ip != HttpContext.GetIpAddress())
+				if (recq == null)
 					return PermissionError(Resources.Resources.O_REGISTO_PEDIDO_NAO63869);
 
-				Resource rec = objs[2] as Resource;
+				GenioMVC.ViewModels.DocumsProperties_ViewModel properties;
 
-				if (rec is ResourceQuery)
+				if (recq.Table.Equals("DOCUMS", StringComparison.CurrentCultureIgnoreCase))
 				{
-					ResourceQuery recq = rec as ResourceQuery;
-					var model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, UserContext.Current, "");
-					var doc = model.GetInfoDoc(recq.KeyData);
-					return JsonOK(doc);
+					GenioMVC.Models.Docums model = GenioMVC.Models.Docums.Find(recq.KeyValue, m_userContext);
+					CSGenio.business.DBFile file = model.klass.infoDocum(m_userContext.PersistentSupport, "document", model.ValCoddocums, false);
+					properties = new GenioMVC.ViewModels.DocumsProperties_ViewModel(m_userContext, file);
+				}
+				else
+				{
+					ModelBase model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, m_userContext, "");
+					properties = model.GetInfoDoc(recq.KeyData);
 				}
 
-				return JsonERROR();
+				return JsonOK(properties);
 			}
-			catch (Exception)
+			catch
 			{
 				return JsonERROR();
 			}
-		}
-
-		/// <summary>
-		/// Returns a partial view for submitting a document version
-		/// </summary>
-		/// <param name="ticket">Encryted ticket</param>
-		/// <returns>Document version submit menu partial view</returns>
-		[NonAction]
-		protected ActionResult SubmitVersion(string ticket)
-		{
-			object[] objs = QResources.DecryptTicketBase64(ticket);
-
-			string username = objs[0] as string;
-			string ip = objs[1] as string;
-
-			if (username != UserContext.Current.User.Name || ip != HttpContext.GetIpAddress())
-				return PermissionError(Resources.Resources.O_REGISTO_PEDIDO_NAO63869);
-
-			Resource rec = objs[2] as Resource;
-
-			if (rec is ResourceQuery)
-			{
-				ResourceQuery recq = rec as ResourceQuery;
-				var model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, UserContext.Current, "");
-				string? docfk = model.GetValueGeneric(recq.KeyData + "fk") as string;
-				var doc = model.GetInfoDoc(recq.KeyData);
-				GenioMVC.ViewModels.DocumsControl_ViewModel controlDoc = GenioMVC.ViewModels.DocumsControl_ViewModel.FromPropertiesToDocums(UserContext.Current, recq.Table, recq.KeyData, recq.KeyValue, docfk, doc, true);
-
-				return JsonOK(controlDoc);
-			}
-
-			return JsonERROR();
-		}
-
-		/// <summary>
-		/// Returns a JSON response with whether the document was successfully checked out or not
-		/// </summary>
-		/// <param name="ticket">Encryted ticket</param>
-		/// <returns>JSON response</returns>
-		[NonAction]
-		protected ActionResult CheckoutDocum(string ticket)
-		{
-			object[] objs = QResources.DecryptTicketBase64(ticket);
-
-			string username = objs[0] as string;
-			string ip = objs[1] as string;
-
-			if (username != UserContext.Current.User.Name || ip != HttpContext.GetIpAddress())
-				return PermissionError(Resources.Resources.O_REGISTO_PEDIDO_NAO63869);
-
-			Resource rec = objs[2] as Resource;
-
-			if (rec is ResourceQuery)
-			{
-				ResourceQuery recq = rec as ResourceQuery;
-
-				var model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, UserContext.Current, "");
-				bool checkout = model.CheckoutVersion(recq.KeyData);
-
-				if (!checkout)
-					return Json(new { success = false, message = Resources.Resources.O_FICHEIRO_JA_ESTA_E06050 });
-
-				return Json(new { success = true, message = "Checkout efectuado." });
-			}
-
-			// Should not happen
-			return Json(new { success = false, message = Resources.Resources.O_REGISTO_PEDIDO_NAO63869 });
 		}
 
 		public enum VersionDeleteAction
@@ -1729,78 +1731,67 @@ namespace GenioMVC.Controllers
 		}
 
 		/// <summary>
-		/// Returns a JSON response with whether the document (IB or ID) was successfully deleted, accordingly to the version delete action
+		/// Performs changes to the specified documents, either to delete or put them in editing state
 		/// </summary>
-		/// <param name="ticket">Encryted ticket</param>
-		/// <param name="action">The type of delete action</param>
-		/// <returns>JSON response</returns>
+		/// <param name="documents">A list of the changes to perform to each document</param>
+		/// <returns>A JSON response with the result of the operation</returns>
 		[NonAction]
-		protected ActionResult DeleteFile(string ticket, VersionDeleteAction action = VersionDeleteAction.All)
+		protected ActionResult SetFilesState(List<RequestDocumChangeModel> documents)
 		{
 			try
 			{
-				object[] objs = QResources.DecryptTicketBase64(ticket);
-
-				string username = objs[0] as string;
-				string ip = objs[1] as string;
-
-				if (username != UserContext.Current.User.Name || ip != HttpContext.GetIpAddress())
-					return PermissionError(Resources.Resources.O_REGISTO_PEDIDO_NAO63869);
-
-				Resource rec = objs[2] as Resource;
-
-				if (rec is ResourceQuery)
+				foreach (RequestDocumChangeModel docum in documents)
 				{
-					ResourceQuery recq = rec as ResourceQuery;
-					var model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, UserContext.Current, "");
-					Type type = model.GetType();
+					ResourceQuery recq = GetResourceQueryFromTicket(docum.Ticket);
 
-					bool external = false;
-					object[] customAttrs = type.GetProperty(recq.KeyData).GetCustomAttributes(typeof(DocumentAttribute), false);
+					if (recq == null)
+						return PermissionError(Resources.Resources.O_REGISTO_PEDIDO_NAO63869);
 
-					if (customAttrs.FirstOrDefault() != null)
+					var model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, m_userContext, "");
+					GenioMVC.ViewModels.DocumsProperties_ViewModel properties = model.GetInfoDoc(recq.KeyData);
+
+					bool successfulOp = true;
+
+					if (docum.Delete)
 					{
-						DocumentAttribute attr = ((DocumentAttribute)customAttrs.FirstOrDefault());
-						external = attr.IsExternal();
-					}
+						bool success = true;
 
-					if (external)
-					{
-						string? fileName = model.GetValueGeneric(recq.KeyData) as string;
-						FileUpload file = new FileUpload(recq.Table, recq.KeyData, fileName);
-						if (file.Delete())
-						{
-							// Server problem, it is not possible to insert null for type field PATH.
-							model.SetValueGeneric(recq.KeyData, " ");
-							model.Save();
-							return Json(new { success = true, external });
-						}
-
-						throw new Exception();
-					}
-					else
-					{
-						bool result = action switch
+						success = docum.DeleteType switch
 						{
 							VersionDeleteAction.LastVersion => model.DeleteLastVersion(recq.KeyData),
-							VersionDeleteAction.Historic => model.DeleteHistoricVersions(recq.KeyData),
+							VersionDeleteAction.Historic => model.DeleteHistoricVersions(recq.KeyData, docum.CurrentVersion),
 							VersionDeleteAction.All => model.DeleteDocument(recq.KeyData),
-							_ => throw new Exception("Mode '" + action + "' not supported!"),
+							_ => throw new Exception("Mode '" + docum.DeleteType + "' not supported!")
 						};
 
-						if (!result)
-							throw new Exception();
-
-						var properties = model.GetInfoDoc(recq.KeyData);
-						return Json(new { success = result, external, properties });
+						if (!success)
+							successfulOp = false;
 					}
+
+					properties = model.GetInfoDoc(recq.KeyData);
+
+					if (docum.Editing != properties.Editing)
+					{
+						bool success;
+
+						if (docum.Editing)
+							success = model.CheckoutVersion(recq.KeyData);
+						else
+							success = model.SubmitVersion(recq.KeyData, null, null, properties.VersionId, "DESBL", properties.Version);
+
+						if (!success)
+							successfulOp = false;
+					}
+
+					if (!successfulOp)
+						return JsonERROR();
 				}
 
-				return Json(new { success = false, message = Resources.Resources.OCORREU_UM_ERRO_AO_P53091 });
+				return JsonOK();
 			}
-			catch (Exception)
+			catch
 			{
-				return Json(new { success = false, message = Resources.Resources.OCORREU_UM_ERRO_AO_P53091 });
+				return JsonERROR();
 			}
 		}
 
@@ -1821,162 +1812,115 @@ namespace GenioMVC.Controllers
 		{
 			try
 			{
-				object[] objs = QResources.DecryptTicketBase64(ticket);
+				ResourceQuery recq = GetResourceQueryFromTicket(ticket);
 
-				string username = objs[0] as string;
-				string ip = objs[1] as string;
-
-				if (username != UserContext.Current.User.Name || ip != HttpContext.GetIpAddress())
+				if (recq == null)
 					return PermissionError(Resources.Resources.O_REGISTO_PEDIDO_NAO63869);
 
-				Resource rec = objs[2] as Resource;
+				var model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, m_userContext, "");
 
-				if (rec is ResourceQuery)
+				CSGenio.business.DBFile file = null;
+				string contentRangeHeader = Request.Headers.ContentRange;
+
+				// Check if this is a chunked upload.
+				if (string.IsNullOrEmpty(contentRangeHeader) && mode != VersionSubmitAction.UnlockFile)
 				{
-					ResourceQuery recq = rec as ResourceQuery;
+					// Not a chunked upload.
+					file = GetFileFromRequest(recq.KeyData + "_file", version);
 
-					var model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, UserContext.Current, "");
-					string? filefk = model.GetValueGeneric(recq.KeyData + "fk") as string;
-					Type type = model.GetType();
+					if (file == null)
+						return JsonERROR();
+				}
+				else if (mode != VersionSubmitAction.UnlockFile)
+				{
+					// Parse the content range header to determine
+					// the range of bytes in the current chunk.
+					string[] contentRangeParts = contentRangeHeader.Split('/');
+					string[] byteRangeParts = contentRangeParts[0].Split('-');
+					int startByte = int.Parse(byteRangeParts[0].Replace("bytes ", ""));
+					int endByte = int.Parse(byteRangeParts[1]);
 
-					bool external = false;
-					bool versioning = false;
-					object[] customAttrs = type.GetProperty(recq.KeyData).GetCustomAttributes(typeof(DocumentAttribute), false);
+					var f = Request.Form.Files[recq.KeyData + "_file"];
 
-					if (customAttrs.FirstOrDefault() != null)
+					byte[] chunk = StreamToByteArray(f.OpenReadStream(), (int)f.Length);
+
+					// Get the content of any previous chunks from in-memory cache.
+					List<byte[]> parts = (List<byte[]>)QCache.Instance.FileUpload.Get(ticket);
+					parts ??= [];
+					// Combine them with the current chunk.
+					parts.Add(chunk);
+
+					// Check if this is the last chunk.
+					int totalBytes = int.Parse(contentRangeParts[1]);
+					bool isLastChunk = endByte == totalBytes - 1;
+
+					if (isLastChunk)
 					{
-						external = ((DocumentAttribute)customAttrs.FirstOrDefault()).IsExternal();
-						versioning = ((DocumentAttribute)customAttrs.FirstOrDefault()).UsesVersioning();
-					}
+						byte[] part = JoinByteArrays(parts);
 
-					CSGenio.business.DBFile file = null;
-					string contentRangeHeader = Request.Headers["Content-Range"];
+						file = new(
+							Path.GetFileName(f.FileName),
+							Path.GetExtension(f.FileName).Replace(".", ""),
+							version,
+							part,
+							totalBytes);
 
-					// Check if this is a chunked upload.
-					if (string.IsNullOrEmpty(contentRangeHeader) && mode != VersionSubmitAction.UnlockFile)
-					{
-						// Not a chunked upload.
-						file = GetFileFromRequest(recq.KeyData + "_file", version);
-
-						if (file == null)
-							throw new Exception();
-					}
-					else if (mode != VersionSubmitAction.UnlockFile)
-					{
-						// Parse the content range header to determine
-						// the range of bytes in the current chunk.
-						string[] contentRangeParts = contentRangeHeader.Split('/');
-						string[] byteRangeParts = contentRangeParts[0].Split('-');
-						int startByte = int.Parse(byteRangeParts[0].Replace("bytes ", ""));
-						int endByte = int.Parse(byteRangeParts[1]);
-
-						var f = Request.Form.Files[recq.KeyData + "_file"];
-
-						byte[] chunk = StreamToByteArray(f.OpenReadStream(), (int)f.Length);
-
-						// Get the content of any previous chunks from in-memory cache.
-						List<byte[]> parts = (List<byte[]>)QCache.Instance.FileUpload.Get(ticket);
-						parts ??= new List<byte[]>();
-						// Combine them with the current chunk.
-						parts.Add(chunk);
-
-						// Check if this is the last chunk.
-						int totalBytes = int.Parse(contentRangeParts[1]);
-						bool isLastChunk = endByte == totalBytes - 1;
-
-						if (isLastChunk)
-						{
-							byte[] part = JoinByteArrays(parts);
-
-							file = new CSGenio.business.DBFile
-								(
-									Path.GetFileName(f.FileName),
-									Path.GetExtension(f.FileName).Replace(".", ""),
-									version,
-									part,
-									totalBytes
-								);
-
-							// Remove the temporary partial file.
-							QCache.Instance.FileUpload.Invalidate(ticket);
-						}
-						else
-						{
-							// Put the partial file into the in-memory cache.
-							QCache.Instance.FileUpload.Put(ticket, parts);
-
-							return Json(new { success = true, message = "Chunk processed successfully.", startByte, endByte });
-						}
-					}
-
-					// Retrieve the latest version provided for this document.
-					CSGenio.business.DBFile oldFile = null;
-					if (versioning && GlobalFunctions.emptyG(filefk) == 0)
-						oldFile = GenioMVC.Models.ModelBase.GetDocumentsLatestVersion(filefk, UserContext.Current);
-
-					DocumsProperties_ViewModel infoDoc = null;
-					if (version != "1")
-					{
-						// Confirm checkout editor
-						infoDoc = model.GetInfoDoc(recq.KeyData);
-						if (infoDoc.CheckoutEditor != username)
-							throw new Exception($"User that checked out this file {infoDoc.CheckoutEditor} is not the same as the current user");
-					}
-
-					if (external)
-					{
-						string? oldfile = model.GetValueGeneric(recq.KeyData) as string;
-						FileUpload fileupload = new FileUpload(recq.Table, recq.KeyData, file.Name);
-
-						// Delete old file if it exists.
-						if (fileupload.Delete(oldfile))
-						{
-							if (fileupload.Save(file.File))
-							{
-								model.SetValueGeneric(recq.KeyData, fileupload.SavedFileName);
-								model.Save();
-								return Json(new { success = true, filename = fileupload.SavedFileName, external = external });
-							}
-						}
-
-						throw new Exception();
+						// Remove the temporary partial file.
+						QCache.Instance.FileUpload.Invalidate(ticket);
 					}
 					else
 					{
-						//IB type
-						string successMessage = "Sucesso";
-						string failMessage = Resources.Resources.OCORREU_UM_ERRO_AO_P53091;
-						bool result = false;
-						switch (mode)
-						{
-							case VersionSubmitAction.Insert:
-								result = model.SaveDocument(recq.Table, recq.KeyData, file);
-								break;
-							case VersionSubmitAction.Submit:
-							case VersionSubmitAction.UnlockFile:
-								string saveMode = mode == VersionSubmitAction.Submit ? "SUBM" : "DESBL";
-								byte[] bytes = file?.File;
-								string fName = file?.Name;
-
-								result = model.SubmitVersion(recq.Table, recq.KeyData, bytes, fName, infoDoc.Coddocums, saveMode, version);
-								break;
-							default:
-								throw new Exception("Mode '" + mode + "' not supported!");
-						}
-
-						if (!result)
-							return Json(new { success = false, message = failMessage });
-
-						var properties = model.GetInfoDoc(recq.KeyData);
-						return Json(new { success = true, message = successMessage, properties });
+						// Put the partial file into the in-memory cache.
+						QCache.Instance.FileUpload.Put(ticket, parts);
+						return JsonOK(new { message = "Chunk processed successfully.", startByte, endByte });
 					}
 				}
 
-				return Json(new { success = false, message = Resources.Resources.OCORREU_UM_ERRO_AO_P53091 });
+				GenioMVC.ViewModels.DocumsProperties_ViewModel properties = model.GetInfoDoc(recq.KeyData);
+
+				if (version != "1")
+				{
+					string username = GetUsernameFromTicket(ticket);
+
+					if (!properties.Editing)
+					{
+						model.CheckoutVersion(recq.KeyData);
+						properties = model.GetInfoDoc(recq.KeyData);
+					}
+					else if (properties.Editor != username)
+						throw new Exception($"User that checked out this file {properties.Editor} is not the same as the current user");
+				}
+
+				// IB type
+				bool success = false;
+
+				switch (mode)
+				{
+					case VersionSubmitAction.Insert:
+						success = model.SaveDocument(recq.KeyData, file);
+						break;
+					case VersionSubmitAction.Submit:
+					case VersionSubmitAction.UnlockFile:
+						string saveMode = mode == VersionSubmitAction.Submit ? "SUBM" : "DESBL";
+						byte[] bytes = file?.File;
+						string fName = file?.Name;
+
+						success = model.SubmitVersion(recq.KeyData, bytes, fName, properties.VersionId, saveMode, version);
+						break;
+					default:
+						throw new Exception("Mode '" + mode + "' not supported!");
+				}
+
+				if (!success)
+					return JsonERROR();
+
+				// Needs to update the properties with the info of the newly saved file.
+				properties = model.GetInfoDoc(recq.KeyData);
+				return JsonOK(new { message = Resources.Resources.ALTERACOES_EFETUADAS10166, properties });
 			}
-			catch (Exception)
+			catch
 			{
-				return Json(new { success = false, message = Resources.Resources.OCORREU_UM_ERRO_AO_P53091 });
+				return JsonERROR();
 			}
 		}
 
@@ -1984,105 +1928,60 @@ namespace GenioMVC.Controllers
 		/// Download a document (IB or ID)
 		/// </summary>
 		/// <param name="ticket">The resource ticket</param>
-		/// <param name="viewType">DocumentViewTypeMode type that defines if it is a download os a preview</param>
+		/// <param name="viewType">DocumentViewTypeMode type that defines if it is a download or a preview</param>
 		/// <returns>A document</returns>
 		[NonAction]
 		protected ActionResult GetFile(string ticket, DocumentViewTypeMode viewType = DocumentViewTypeMode.Print)
 		{
 			try
 			{
-				object[] objs = QResources.DecryptTicketBase64(ticket);
+				ResourceQuery recq = GetResourceQueryFromTicket(ticket);
 
-				string username = objs[0] as string;
-				string ip = objs[1] as string;
-
-				Resource rec = objs[2] as Resource;
-
-				if (username != UserContext.Current.User.Name || ip != HttpContext.GetIpAddress() || string.IsNullOrEmpty(rec.Name))
-					// Invalid user or null record
+				if (recq == null)
 					return PermissionError(Resources.Resources.O_REGISTO_PEDIDO_NAO63869);
 
-				if (!(rec is ResourceQuery))
-					return JsonERROR();
+				bool isFromDocums = recq.Table.Equals("DOCUMS", StringComparison.CurrentCultureIgnoreCase);
+				string modelName = (string)RouteData.Values["controller"];
+				string modelKey = recq.KeyValue;
 
-				ResourceQuery recq = rec as ResourceQuery;
-				var model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, UserContext.Current, "");
-				string? filefk = model.GetValueGeneric(recq.KeyData + "fk") as string;
-				Type type = model.GetType();
-
-				bool external = false;
-				object[] customAttrs = type.GetProperty(recq.KeyData).GetCustomAttributes(typeof(DocumentAttribute), false);
-				if (customAttrs.FirstOrDefault() != null)
-					external = ((DocumentAttribute)customAttrs.FirstOrDefault()).IsExternal();
-
-				byte[] document;
-				string fileName;
-
-				if (external)
+				if (isFromDocums)
 				{
-					fileName = type.GetProperty(recq.KeyData).GetValue(model, null) as string;
-					document = System.IO.File.ReadAllBytes(Path.Combine(Configuration.PathDocuments, fileName));
+					GenioMVC.Models.Docums documModel = GenioMVC.Models.Docums.Find(recq.KeyValue, m_userContext);
+					modelKey = documModel.ValModelkey;
+					if (!string.IsNullOrEmpty(modelKey) && Guid.TryParse(modelKey, out Guid guidKey))
+						modelKey = guidKey.ToString();
 				}
+
+				ModelBase model = ModelBase.FindGeneric(modelName, modelKey, m_userContext, "");
+
+				CSGenio.business.DBFile file;
+
+				if (isFromDocums)
+					file = DbArea.getFileDB(recq.KeyValue, m_userContext.PersistentSupport);
 				else
-				{
-					var file = model.FindDocument(recq.KeyData);
-					fileName = file.Name;
-					document = file.File;
-				}
+					file = model.FindDocument(recq.KeyData);
+
+				string fileName = file.Name;
+				byte[] document = file.File;
 
 				string contentType = "application/octet-stream";
-				Response.Headers["FileName"] = fileName;
+
 				if (viewType == DocumentViewTypeMode.Preview)
 				{
-					Response.Headers["Content-Disposition"] = "inline";
-					new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider().TryGetContentType(fileName, out contentType);
+					new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider().TryGetContentType(fileName, out string previewContentType);
 
-					// It must be like this to be possible to open the file in a new TAB and preview, if we add fileName parameter it will crash with the following error ERR_RESPONSE_HEADERS_MULTIPLE_CONTENT_DISPOSITION
-					return File(document, contentType);
+					if (!string.IsNullOrWhiteSpace(previewContentType))
+					{
+						Response.Headers.ContentDisposition = "inline";
+						contentType = previewContentType;
+					}
 				}
 
-				return File(document, contentType, fileName);
+				return File(document, contentType, "\"" + fileName + "\"");
 			}
 			catch (Exception ex)
 			{
 				CSGenio.framework.Log.Error("GetFile Error: " + ex.Message);
-				return JsonERROR();
-			}
-		}
-
-		/// <summary>
-		/// Returns a specific version of a file
-		/// </summary>
-		/// <param name="ticket">The resource ticket</param>
-		/// <returns>A document</returns>
-		[NonAction]
-		protected ActionResult GetSpecificFile(string ticket)
-		{
-			try
-			{
-				object[] objs = QResources.DecryptTicketBase64(ticket);
-
-				string username = objs[0] as string;
-				string ip = objs[1] as string;
-
-				Resource rec = objs[2] as Resource;
-
-				if (username != UserContext.Current.User.Name || ip != HttpContext.GetIpAddress() || string.IsNullOrEmpty(rec.Name))
-					return PermissionError(Resources.Resources.O_REGISTO_PEDIDO_NAO63869);
-
-				if (rec is ResourceQuery)
-				{
-					ResourceQuery recq = rec as ResourceQuery;
-
-					CSGenio.business.DBFile file = GenioMVC.Models.ModelBase.GetSpecificDocument(recq.KeyValue, UserContext.Current);
-					Response.Headers["FileName"] = file.Name;
-					return File(file.File, "application/octet-stream", file.Name);
-				}
-
-				return JsonERROR();
-			}
-			catch (Exception)
-			{
 				return JsonERROR();
 			}
 		}
@@ -2102,7 +2001,7 @@ namespace GenioMVC.Controllers
 			{
 				var file = Request.Form.Files[fldname];
 
-				dbfile = new CSGenio.business.DBFile(
+				dbfile = new(
 					Path.GetFileName(file.FileName),
 					Path.GetExtension(file.FileName).Replace(".", ""),
 					version,
@@ -2114,60 +2013,117 @@ namespace GenioMVC.Controllers
 			return dbfile;
 		}
 
-        /// <summary>
-        /// Stream to byte[]
-        /// </summary>
-        /// <param name="input">Stream object</param>
-        /// <param name="capacity">The initial size of the internal array in bytes</param>
-        /// <returns>byte[]</returns>
-        private static byte[] StreamToByteArray(Stream input, int capacity)
+		/// <summary>
+		/// Gets the resource associated to the specified ticket
+		/// </summary>
+		/// <param name="ticket">The ticket</param>
+		/// <returns>The resource, or null if the user doesn't have permission to access it</returns>
+		private Resource GetResourceFromTicket(string ticket)
 		{
-            using MemoryStream ms = new(capacity);
-            input.CopyTo(ms);
-            return ms.ToArray();
-        }
+			if(string.IsNullOrEmpty(ticket))
+				return null;
 
-        /// <summary>
-        /// Joins multiple byte arrays into a single byte array.
-        /// </summary>
-        /// <param name="parts">A list of byte arrays to be joined.</param>
-        /// <returns>A single byte array containing the concatenated elements of the input byte arrays.</returns>
-        private static byte[] JoinByteArrays(List<byte[]> parts)
+			object[] objs = QResources.DecryptTicketBase64(ticket);
+
+			string username = objs[0] as string;
+			if (username != m_userContext.User.Name)
+				return null;
+
+			Resource rec = objs[2] as Resource;
+			return rec;
+		}
+
+		/// <summary>
+		/// Gets the resource query associated to the specified ticket
+		/// </summary>
+		/// <param name="ticket">The ticket</param>
+		/// <returns>The resource, or null if the user doesn't have permission to access it</returns>
+		protected ResourceQuery GetResourceQueryFromTicket(string ticket)
 		{
-            // Check if the list contains only one element and return it directly to avoid unnecessary processing.
-            if (parts.Count == 1)
-            {
-                return parts[0];
-            }
-            else
-            {
-                byte[] part;
-                int totalLength = 0;
+			Resource rec = GetResourceFromTicket(ticket);
 
-                // Calculate the total length of the arrays to allocate enough space for all of them.
-                foreach (var c in parts)
-                    totalLength += c.Length;
+			if (rec is ResourceQuery)
+				return rec as ResourceQuery;
 
-				// Create a new byte array with the calculated total length using GC.AllocateUninitializedArray
-				//  for potential performance benefits in scenarios where the array is immediately filled.
-				// This method reduces overhead by eliminating the initialization step for each element in the array.
-                part = GC.AllocateUninitializedArray<byte>(totalLength);
+			throw new BusinessException(Resources.Resources.OCORREU_UM_ERRO_AO_P53091, "GetResourceQueryFromTicket", "Resource wasn't of type ResourceQuery.");
+		}
 
-                int currentIndex = 0;
+		/// <summary>
+		/// Gets the resource file associated to the specified ticket
+		/// </summary>
+		/// <param name="ticket">The ticket</param>
+		/// <returns>The resource, or null if the user doesn't have permission to access it</returns>
+		protected ResourceFile GetResourceFileFromTicket(string ticket)
+		{
+			Resource rec = GetResourceFromTicket(ticket);
 
-                // Copy each byte array to the final array 'part', maintaining the original order.
-                foreach (var c in parts)
-                {
-                    // Copy the current byte array to 'part', starting at the current index.
-                    Buffer.BlockCopy(c, 0, part, currentIndex, c.Length);
+			if (rec is ResourceFile)
+				return rec as ResourceFile;
 
-                    // Update the current index to the next position after the last copied byte.
-                    currentIndex += c.Length;
-                }
+			throw new BusinessException(Resources.Resources.OCORREU_UM_ERRO_AO_P53091, "GetResourceFileFromTicket", "Resource wasn't of type ResourceFile.");
+		}
 
-                return part;
-            }
-        }
+		/// <summary>
+		/// Gets the username associated to the specified ticket
+		/// </summary>
+		/// <param name="ticket">The ticket</param>
+		/// <returns>The username</returns>
+		protected static string GetUsernameFromTicket(string ticket)
+		{
+			object[] objs = QResources.DecryptTicketBase64(ticket);
+			return objs[0] as string;
+		}
+
+		/// <summary>
+		/// Stream to byte[]
+		/// </summary>
+		/// <param name="input">Stream object</param>
+		/// <param name="capacity">The initial size of the internal array in bytes</param>
+		/// <returns>byte[]</returns>
+		private static byte[] StreamToByteArray(Stream input, int capacity)
+		{
+			using MemoryStream ms = new(capacity);
+			input.CopyTo(ms);
+			return ms.ToArray();
+		}
+
+		/// <summary>
+		/// Joins multiple byte arrays into a single byte array.
+		/// </summary>
+		/// <param name="parts">A list of byte arrays to be joined.</param>
+		/// <returns>A single byte array containing the concatenated elements of the input byte arrays.</returns>
+		private static byte[] JoinByteArrays(List<byte[]> parts)
+		{
+			// Check if the list contains only one element and return it directly to avoid unnecessary processing.
+			if (parts.Count == 1)
+				return parts[0];
+
+			byte[] part;
+			int totalLength = 0;
+
+			// Calculate the total length of the arrays to allocate enough space for all of them.
+			foreach (var c in parts)
+				totalLength += c.Length;
+
+			// Create a new byte array with the calculated total length using GC.AllocateUninitializedArray
+			//  for potential performance benefits in scenarios where the array is immediately filled.
+			// This method reduces overhead by eliminating the initialization step for each element in the array.
+			part = GC.AllocateUninitializedArray<byte>(totalLength);
+
+			int currentIndex = 0;
+
+			// Copy each byte array to the final array 'part', maintaining the original order.
+			foreach (var c in parts)
+			{
+				// Copy the current byte array to 'part', starting at the current index.
+				Buffer.BlockCopy(c, 0, part, currentIndex, c.Length);
+
+				// Update the current index to the next position after the last copied byte.
+				currentIndex += c.Length;
+			}
+
+			return part;
+		}
 
 		/// <summary>
 		/// Returns the information required for download exported file
@@ -2175,15 +2131,15 @@ namespace GenioMVC.Controllers
 		/// <param name="fileId">File ID</param>
 		/// <param name="fileType">File type</param>
 		/// <returns>JSON</returns>
-		protected object getJsonForDownloadExportFile(string fileId, string fileType)
+		protected object GetJsonForDownloadExportFile(string fileId, string fileType)
 		{
 			return new
 			{
 				id = fileId,
 				type = fileType,
 				controller = RouteData.Values["controller"] ?? "Home",
-				action = "downloadExportFile",
-				Url = Url.Action("downloadExportFile", new { id = fileId, type = fileType })
+				action = "DownloadExportFile",
+				Url = Url.Action("DownloadExportFile", new { id = fileId, type = fileType })
 			};
 		}
 
@@ -2199,7 +2155,8 @@ namespace GenioMVC.Controllers
 		/// <param name="id">File ID</param>
 		/// <param name="type">File type</param>
 		/// <returns>Exported file</returns>
-		public FileResult downloadExportFile([FromBody]RequestExportFile requestModel)
+		[AllowAnonymous]
+		public FileResult DownloadExportFile([FromBody]RequestExportFile requestModel)
 		{
 			var id = requestModel.Id;
 			var type = requestModel.Type;
@@ -2207,21 +2164,15 @@ namespace GenioMVC.Controllers
 			byte[] file = QCache.Instance.ExportFiles.Get(id) as byte[];
 			QCache.Instance.ExportFiles.Invalidate(id);
 
-			switch (type)
+			return type switch
 			{
-				case "pdf":
-					return File(file, "application/pdf", id);
-				case "xlsx":
-					return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", id);
-				case "ods":
-					return File(file, "application/vnd.oasis.opendocument.spreadsheet", id);
-				case "csv":
-					return File(file, "text/csv", id);
-				case "xml":
-					return File(file, "text/xml", id);
-				default:
-					return File(file, "application/octet-stream", id);
-			}
+				"pdf" => File(file, "application/pdf", id),
+				"xlsx" => File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", id),
+				"ods" => File(file, "application/vnd.oasis.opendocument.spreadsheet", id),
+				"csv" => File(file, "text/csv", id),
+				"xml" => File(file, "text/xml", id),
+				_ => File(file, "application/octet-stream", id)
+			};
 		}
 
 		#endregion
@@ -2237,8 +2188,9 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public JsonNetResult ExecuteServerFunction([FromBody]RequestServerFunctionModel json)
 		{
-			var user = UserContext.Current.User;
-			var sp = UserContext.Current.PersistentSupport;
+			var user = m_userContext.User;
+			var sp = m_userContext.PersistentSupport;
+
 			try
 			{
 				if (string.IsNullOrEmpty(json.func) || json.args == null)
@@ -2255,7 +2207,7 @@ namespace GenioMVC.Controllers
 						if (je.ValueKind == JsonValueKind.String)
 							args.Add(je.GetString() ?? "");
 						else if (je.ValueKind == JsonValueKind.Number)
-							args.Add(je.GetDouble());
+							args.Add(je.GetDecimal());
 						else if (je.ValueKind == JsonValueKind.True)
 							args.Add(true);
 						else if (je.ValueKind == JsonValueKind.False)
@@ -2350,7 +2302,7 @@ namespace GenioMVC.Controllers
 		}
 
 		[HttpGet]
-		public JsonNetResult GetLevelFromRole(double level, string roleId)
+		public JsonNetResult GetLevelFromRole(decimal level, string roleId)
 		{
 			var value = GlobalFunctions.GetLevelFromRole(level, roleId);
 			return Json(new { Success = true, Operation = "GetLevelFromRole", Value = value });
@@ -2502,9 +2454,9 @@ namespace GenioMVC.Controllers
 		/// <param name="id">eph value</param>
 		/// <param name="formId">origin form</param>
 		/// <returns>Redirect to Home</returns>
-		public ActionResult DefineEphForm(string id, string formId)
+		public ActionResult DefineEphForm([FromBody] RequestInitialEPH requestModel)
 		{
-			return DefineEphFormValues([id], formId);
+			return DefineEphFormValues(new RequestInitialEPHS { SelectedIds = new string[] { requestModel.SelectedId }, FormId = requestModel.FormId });
 		}
 
 		/// <summary>
@@ -2513,7 +2465,20 @@ namespace GenioMVC.Controllers
 		/// <param name="id">eph values</param>
 		/// <param name="formId">origin form</param>
 		/// <returns>A json with the error/success response</returns>
-		public ActionResult DefineEphFormValues(string[] ids, string formId)
+		public ActionResult DefineEphFormValues([FromBody] RequestInitialEPHS requestModel)
+		{
+			if (SetPHEValues(requestModel.SelectedIds, requestModel.FormId))
+				return JsonOK();
+			return JsonERROR(Resources.Resources.OCORREU_UM_ERRO_AO_P53091);
+		}
+
+		/// <summary>
+		/// Add a Permanent History Entry (PHE) to the current user module and level and form id
+		/// </summary>
+		/// <param name="ids">Permanent History Entry values</param>
+		/// <param name="originId">Origin</param>
+		/// <returns>A success or fail</returns>
+		protected bool SetPHEValues(string[] ids, string originId)
 		{
 			try
 			{
@@ -2523,7 +2488,7 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT BEFORE_FILL_EPH]/
 
 				// Fill in the initial EPH value in the User object and get the values to be cached
-				Dictionary<string, InitialEPHCache> initialEPHCache = GenioServer.security.UserFactory.FillEphRuntime(ref user, modules, ids, formId);
+				Dictionary<string, InitialEPHCache> initialEPHCache = GenioServer.security.UserFactory.FillEphRuntime(ref user, modules, ids, originId);
 
 				// If the values of the other initial PHE are in the cache, we merge them.
 				var cachedInitialPHE = UserContext.Current.GetInitialEph();
@@ -2543,12 +2508,12 @@ namespace GenioMVC.Controllers
 
 				UserContext.Current.User = user;
 
-				return JsonOK();
+				return true;
 			}
 			catch (Exception e)
 			{
 				Log.Error(e.Message);
-				return JsonERROR(Resources.Resources.ERRO_NA_EXECUCAO_DE_49457);
+				return false;
 			}
 		}
 
@@ -2578,13 +2543,12 @@ namespace GenioMVC.Controllers
 					return JsonERROR();
 
 				var model = find(primaryKey);
-				var backupFields = model.BackupAgregationFields();
 				map(model);
-				model.MergeFields(backupFields);
 
 				var recalculatedFormulas = model.RecalculateFormulas();
 				var viewModelValues = form_data.ConvertModelToViewModelValues(recalculatedFormulas);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(viewModelValues);
 			}
 			catch (Exception e)
@@ -2600,6 +2564,7 @@ namespace GenioMVC.Controllers
 				Response.Headers[header] = values;
 		}
 
+		[AllowAnonymous]
 		public FileContentResult GetCaptcha(string captchaId)
 		{
 			using (var stream = new MemoryStream())
@@ -2611,13 +2576,15 @@ namespace GenioMVC.Controllers
 			}
 		}
 
-		/*
-		* This method is a temporary measure to stop duplicated code in the controller
-		* implementations. NameValueCollection should be removed!
-		*/
+		/// <summary>
+		/// This method is a temporary measure to stop duplicated code in the controller
+		/// implementations. NameValueCollection should be removed!
+		/// </summary>
+		/// <param name="queryParams">The query parameters</param>
+		/// <returns>A collection</returns>
 		public NameValueCollection FormatQueryString(Dictionary<string, string> queryParams)
 		{
-			NameValueCollection qs = new NameValueCollection();
+			NameValueCollection qs = [];
 
 			foreach (var elem in queryParams)
 				qs.Add(elem.Key.ToString(), (elem.Value != null) ? elem.Value.ToString() : null);

@@ -11,6 +11,7 @@
 </template>
 
 <script>
+	import { computed } from 'vue'
 	import tinymce from '@tinymce/tinymce-vue'
 
 	export default {
@@ -103,7 +104,16 @@
 			apiKey: {
 				type: String,
 				default: 'no-api-key'
-			}
+			},
+
+			/**
+			 * Set tinymce locale.
+			 * This component will calculate the language to use in the tinymce editor based on this locale
+			 */
+			locale: {
+				type: String,
+				default: 'en-US'
+			},
 		},
 
 		expose: [],
@@ -117,7 +127,7 @@
 					mode: 'exact',
 					inline: this.disabled || this.readonly,
 					readonly: this.disabled || this.readonly,
-					//language: '',
+					language: computed(() => this.getSupportedLanguageTinymce()),
 					convert_urls: false,
 					encoding: 'raw',
 					resize: 'both',
@@ -233,6 +243,39 @@
 				this.ctrlOptions.readonly = readonly
 				this.ctrlOptions.inline = readonly
 				this.domKey++
+			},
+
+			/**
+			 * Get the tinymce-compliant language string for the given locale
+			 */
+			getSupportedLanguageTinymce() {
+				switch (this.locale) {
+					case "pt-PT":
+					case "fr-FR":
+					case "zh-CN":
+					case "zh-TW":
+						return this.locale.replace("-","_");
+					case "ar-MA":
+					case "ar":
+						return "ar";
+					case "es-ES":
+					case "es":
+						return "es";
+					case "de-DE":
+					case "de":
+						return "de";
+					case "da-DK":
+					case "da":
+						return "da";
+					case "pl-PL":
+					case "pl":
+						return "pl";
+					case "ca-ES":
+					case "ca":
+						return "ca";
+					default:
+						return "en";
+				}
 			}
 		},
 
@@ -245,6 +288,11 @@
 			readonly(newVal)
 			{
 				this.redraw(newVal)
+			},
+
+			locale()
+			{
+				this.redraw(this.disabled || this.readonly)
 			}
 		}
 	}

@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuWMS_7111ViewModel.js'
+
 	const requiredTextResources = ['QMenuWMS_7111', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '7111',
 					isMenuList: true,
+					designation: computed(() => this.Resources.DATA_TYPES15706),
 					acronym: 'WMS_7111',
 					name: 'DTTYP',
 					route: 'menu-WMS_7111',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'WMS_Menu_7111',
 						controller: 'DTTYP',
 						action: 'WMS_Menu_7111',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -290,7 +300,7 @@
 								field: 'DATE',
 								label: computed(() => this.Resources.DATE02091),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 18,
@@ -299,7 +309,7 @@
 								field: 'DATETIME',
 								label: computed(() => this.Resources.DATETIME62630),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 19,
@@ -308,7 +318,7 @@
 								field: 'DTSESOND',
 								label: computed(() => this.Resources.DATE_TIME_SECOND__IN55990),
 								scrollData: 19,
-								dateTimeType: 'DateTimeSeconds',
+								dateTimeType: 'dateTimeSeconds',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 20,
@@ -318,7 +328,7 @@
 								label: computed(() => this.Resources.TIME50904),
 								dataLength: 5,
 								scrollData: 5,
-								dateTimeType: 'Time',
+								dateTimeType: 'time',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 21,
@@ -335,8 +345,10 @@
 								area: 'DTTYP',
 								field: 'IMAGE',
 								label: computed(() => this.Resources.IMAGE__BINARY_46903),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.IMAGE__BINARY_46903)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.DateColumn({
 								order: 23,
@@ -345,7 +357,7 @@
 								field: 'START',
 								label: computed(() => this.Resources.STARTING_TIME_WITH_I44217),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 24,
@@ -354,7 +366,7 @@
 								field: 'END',
 								label: computed(() => this.Resources.END_TIME_WITH_INCLUS19241),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 						],
 						config: {
@@ -369,7 +381,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -473,6 +485,7 @@
 								id: 'RCA_WMS_71111',
 								name: 'form-DTTYP',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -489,23 +502,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: DTTYP
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValString',
 							defaultSearchColumnNameOriginal: 'ValString',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValString',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-DTTYP'],
 						uuid: 'c2b15f2a-27e8-459e-91be-79fcbdf502e1',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -534,6 +541,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS WMS_7111]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_7111]/
 // eslint-disable-next-line

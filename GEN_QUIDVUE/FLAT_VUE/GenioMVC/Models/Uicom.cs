@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -53,7 +53,9 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Thumbnail" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Uicom.ValThumbnai")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValThumbnai { get { return klass.ValThumbnai; } set { klass.ValThumbnai = value; } }
+		public ImageModel ValThumbnai { get { return new ImageModel(klass.ValThumbnai) { Ticket = ValThumbnaiQTicket }; } set { klass.ValThumbnai = value; } }
+		[JsonIgnore]
+		public string ValThumbnaiQTicket = null;
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Uicom.ValZzstate")]
@@ -63,19 +65,19 @@ namespace GenioMVC.Models
 		public Uicom(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAuicom(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Uicom(UserContext userContext, CSGenioAuicom val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAuicom csgenioa)
@@ -92,7 +94,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

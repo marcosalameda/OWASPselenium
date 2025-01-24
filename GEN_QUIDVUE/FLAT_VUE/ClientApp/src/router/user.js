@@ -7,7 +7,7 @@ export default function getUserRoutes()
 
 	return [
 		{
-			path: '/:culture/:system/:module/Register/:form?/:pswform?/:id?',
+			path: '/:culture/:system/:module/Register/:id?',
 			name: 'user-register-full-path',
 			meta: {
 				module: 'Public',
@@ -19,7 +19,7 @@ export default function getUserRoutes()
 			component: () => import('@/views/shared/Register.vue')
 		},
 		{
-			path: '/Register/:form?/:pswform?/:id?',
+			path: '/Register/:id?',
 			name: 'user-register',
 			redirect: (to) => {
 				return {
@@ -28,10 +28,7 @@ export default function getUserRoutes()
 						culture: to.params.culture ? to.params.culture : systemDataStore.system.currentLang,
 						system: to.params.system ? to.params.system : systemDataStore.system.currentSystem,
 						module: to.params.module ? to.params.module : systemDataStore.system.currentModule,
-						id: to.params.id,
-						component: to.params.component,
-						form: to.params.form,
-						pswform: to.params.pswform
+						id: to.params.id
 					}
 				}
 			}
@@ -123,7 +120,7 @@ export default function getUserRoutes()
 			component: () => import('@/views/shared/Profile.vue'),
 			beforeEnter: () => {
 				const authDataStore = useAuthDataStore()
-				if(!authDataStore.hasUserSettings)
+				if (!authDataStore.hasUserSettings)
 				{
 					// reject the navigation
 					return false

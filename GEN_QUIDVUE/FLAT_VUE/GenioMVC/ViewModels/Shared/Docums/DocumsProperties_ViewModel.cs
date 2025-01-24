@@ -1,155 +1,122 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using System.Globalization;
 
+using CSGenio.business;
 using CSGenio.framework;
 using GenioMVC.Models.Navigation;
 
 namespace GenioMVC.ViewModels
 {
-	[Newtonsoft.Json.JsonObject(memberSerialization: Newtonsoft.Json.MemberSerialization.OptIn)]
 	public class DocumsProperties_ViewModel : ViewModelBase
 	{
-		[Newtonsoft.Json.JsonProperty]
-		public string Coddocums;
+		[JsonPropertyName("versionId")]
+		public string VersionId;
 
-		[Newtonsoft.Json.JsonProperty]
-		public string DocumId { get; set; }
+		[JsonPropertyName("documentId")]
+		public string DocumentId { get; set; }
 
-		[Display(Name = "NOME__48276", ResourceType = typeof(Resources.Resources))]
-		[Newtonsoft.Json.JsonProperty]
+		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
-		[Display(Name = "TAMANHO__48454", ResourceType = typeof(Resources.Resources))]
-		[Newtonsoft.Json.JsonProperty]
+		[JsonPropertyName("size")]
 		public string Size { get; set; }
 
-		[Display(Name = "EXTENSAO__24742", ResourceType = typeof(Resources.Resources))]
-		[Newtonsoft.Json.JsonProperty]
+		[JsonPropertyName("fileType")]
 		public string FileType { get; set; }
 
-		[Display(Name = "AUTOR__36547", ResourceType = typeof(Resources.Resources))]
-		[Newtonsoft.Json.JsonProperty]
+		[JsonPropertyName("author")]
 		public string Author { get; set; }
 
-		[Display(Name = "DATA_DE_CRIACAO__05001", ResourceType = typeof(Resources.Resources))]
-		[Newtonsoft.Json.JsonProperty]
-		public string CreatedAt { get; set; }
+		[JsonPropertyName("createdDate")]
+		public string CreatedDate { get; set; }
 
-		[Display(Name = "VERSAO_ATUAL__01161", ResourceType = typeof(Resources.Resources))]
-		[Newtonsoft.Json.JsonProperty]
+		[JsonPropertyName("version")]
 		public string Version { get; set; }
 
-		[Newtonsoft.Json.JsonProperty]
-		public bool IsCheckout { get; set; }
+		[JsonPropertyName("editing")]
+		public bool Editing { get; set; }
 
-		[Display(Name = "EM_EDICAO_POR__14850", ResourceType = typeof(Resources.Resources))]
-		[Newtonsoft.Json.JsonProperty]
-		public string CheckoutEditor { get; set; }
+		[JsonPropertyName("editor")]
+		public string Editor { get; set; }
 
-		[Newtonsoft.Json.JsonProperty]
-		public SortedList<String, String> Versions { get; set; }
+		[JsonIgnore]
+		public bool IsCurrentUserEditing => m_userContext.User.Name == Editor;
 
-		public DocumsProperties_ViewModel(UserContext userContext, string coddocums, string documId, string name, string size, string extension, string author, string createdAt, string version, bool isCheckout, string checkoutEditor, SortedList<string, string> versions) : base(userContext)
-		{
-			Coddocums = coddocums;
-			DocumId = documId;
-			Name = name;
-			Size = size;
-			FileType = extension;
-			Author = author;
-			if (!string.IsNullOrEmpty(createdAt))
-				CreatedAt = DateTime.Parse(createdAt, CultureInfo.CurrentCulture).ToString(CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern);
-			Version = version;
-			this.IsCheckout = isCheckout;
-			this.CheckoutEditor = checkoutEditor;
-			this.Versions = versions;
-		}
+		[JsonIgnore]
+		public bool IsEmpty => Versions == null || Versions.Count == 0;
+
+		[JsonPropertyName("versions")]
+		public SortedList<string, string> Versions { get; set; }
 
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public DocumsProperties_ViewModel() : base(null!) { }
 
 		public DocumsProperties_ViewModel(UserContext userContext) : base(userContext) { }
 
-		public bool IsCurrentUserEditing()
+		public DocumsProperties_ViewModel(UserContext userContext, string versionId, string documentId, string name, string size, string extension, string author, string createdDate, string version, bool editing, string editor, SortedList<string, string> versions) : base(userContext)
 		{
-			return m_userContext.User.Name == this.CheckoutEditor;
+			SetProperties(versionId, documentId, name, size, extension, author, createdDate, version, editing, editor, versions);
 		}
 
-		public bool IsEmpty()
+		public DocumsProperties_ViewModel(UserContext userContext, DBFile file) : base(userContext)
 		{
-			return Versions == null || Versions.Count == 0;
+			string fileSize = file.GetSizeUnit();
+			string editor = file.CheckoutEditor?.Length > 0 ? file.CheckoutEditor : file.CurrentUser;
+
+			SetProperties(file.Coddocums, file.DocumId, file.Name, fileSize, file.Extension, file.Author, file.CreatedAt, file.Version, file.IsCheckout, editor, file.Versions);
 		}
 
-		public string MinorVersion
+		private void SetProperties(string versionId, string documentId, string name, string size, string extension, string author, string createdDate, string version, bool editing, string editor, SortedList<string, string> versions)
 		{
-			get
-			{
-				if (string.IsNullOrWhiteSpace(Version))
-					return string.Empty;
-
-				int index = Version.IndexOf('.');
-				if (index == -1)
-					return Version + ".1";
-
-				string decimalPart = Version.Substring(index + 1);
-				int intDecimalPart = int.Parse(decimalPart) + 1;
-				return Version.Substring(0, index + 1) + intDecimalPart;
-			}
-		}
-
-		public string MajorVersion
-		{
-			get
-			{
-				if (string.IsNullOrWhiteSpace(Version)) return string.Empty;
-				int index = Version.IndexOf('.');
-				int version = -1;
-				if (index == -1)
-					version = int.Parse(Version);
-				else
-				{
-					string numericPart = Version.Substring(0, index);
-					version = int.Parse(numericPart);
-				}
-				return (version + 1).ToString();
-			}
+			VersionId = versionId;
+			DocumentId = documentId;
+			Name = name;
+			Size = size;
+			FileType = extension;
+			Author = author;
+			if (!string.IsNullOrEmpty(createdDate))
+				CreatedDate = DateTime.Parse(createdDate, CultureInfo.CurrentCulture).ToString(CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern);
+			Version = version;
+			Editing = editing;
+			Editor = editor;
+			Versions = versions;
 		}
 	}
 
 	public class DocumsControl_ViewModel : DocumsProperties_ViewModel
 	{
+		[JsonPropertyName("model")]
 		public string Model { get; set; }
 
+		[JsonPropertyName("fieldName")]
 		public string FieldName { get; set; }
 
+		[JsonPropertyName("fieldNameFK")]
 		public string FieldNameFK { get; set; }
 
+		[JsonPropertyName("modelKey")]
 		public string ModelKey { get; set; }
 
+		[JsonPropertyName("usesTemplates")]
 		public bool UsesTemplates { get; set; }
 
+		[JsonPropertyName("ticket")]
 		public string Ticket { get; set; }
 
-		public DocumsControl_ViewModel(UserContext userContext, string ticket, string model, string fldname, string modelKey, string documId, string coddocums, string name, string size, string extension, string author, string createdAt, string version, bool isCheckout, string checkoutEditor, SortedList<string, string> versions, bool usesTemplates)
-			: base(userContext, coddocums, documId, name, size, extension, author, createdAt, version, isCheckout, checkoutEditor, versions)
+		public DocumsControl_ViewModel(UserContext userContext, string ticket, string model, string fldname, string modelKey, string documentId, string versionId, string name, string size, string extension, string author, string createdDate, string version, bool editing, string editor, SortedList<string, string> versions, bool usesTemplates)
+			: base(userContext, versionId, documentId, name, size, extension, author, createdDate, version, editing, editor, versions)
 		{
-			this.Ticket = ticket;
-			this.Model = model;
-			this.FieldName = fldname;
-			this.FieldNameFK = fldname + "fk";
-			this.ModelKey = modelKey;
-			this.UsesTemplates = usesTemplates;
-		}
-
-		public static DocumsControl_ViewModel FromPropertiesToDocums(UserContext userContext, string model, string fldname, string modelKey, string documId, DocumsProperties_ViewModel other, bool usesTemplates)
-		{
-			ResourceQuery resource = new ResourceQuery(other.Name, model.ToLower(), fldname, "", modelKey);
-			string ticket = QResources.CreateTicketEncryptedBase64(userContext.User.Name, userContext.User.Location, resource);
-			return new DocumsControl_ViewModel(userContext, ticket, model, fldname, modelKey, documId, other.Coddocums, other.Name, other.Size, other.FileType, other.Author, other.CreatedAt, other.Version, other.IsCheckout, other.CheckoutEditor, other.Versions, usesTemplates);
+			Ticket = ticket;
+			Model = model;
+			FieldName = fldname;
+			FieldNameFK = fldname + "fk";
+			ModelKey = modelKey;
+			UsesTemplates = usesTemplates;
 		}
 	}
 }

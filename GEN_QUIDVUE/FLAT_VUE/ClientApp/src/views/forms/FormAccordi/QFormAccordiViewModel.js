@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODTPEQU',
 			relatedArea: 'TPEQU',
 			description: computed(() => this.Resources._TYPE_OF_EQUIPMENT35057),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodtpequ))
 		watch(() => this.ValCodtpequ.value, (newValue, oldValue) => this.onUpdate('equip.codtpequ', this.ValCodtpequ, newValue, oldValue))
 
@@ -69,6 +70,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODROOMS',
 			relatedArea: 'ROOM1',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCodrooms))
 		watch(() => this.ValCodrooms.value, (newValue, oldValue) => this.onUpdate('equip.codrooms', this.ValCodrooms, newValue, oldValue))
 
@@ -79,6 +81,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODDECO',
 			relatedArea: 'DECOM',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCoddeco))
 		watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('equip.coddeco', this.ValCoddeco, newValue, oldValue))
 
@@ -89,6 +92,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODWAREH',
 			relatedArea: 'WAREH',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCodwareh))
 		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('equip.codwareh', this.ValCodwareh, newValue, oldValue))
 
@@ -99,6 +103,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODITEM',
 			relatedArea: 'ITEM',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCoditem))
 		watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('equip.coditem', this.ValCoditem, newValue, oldValue))
 
@@ -174,18 +179,17 @@ export default class ViewModel extends ViewModelBase
 			field: 'REGISTNR',
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: RIGHT("000000"+NumericToString([EQUIP->SEQUENNR],0),6)
-					// eslint-disable-next-line eqeqeq
 					return qApi.RIGHT("000000"+qApi.NumericToString(this.ValSequennr.value,0),6)
 				},
 				dependencyEvents: ['fieldChange:equip.sequennr'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValRegistnr))
@@ -204,5 +208,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodequip'
 
 	get QPrimaryKey() { return this.ValCodequip.value }
-	set QPrimaryKey(value) { this.ValCodequip.value = value }
+	set QPrimaryKey(value) { this.ValCodequip.updateValue(value) }
 }

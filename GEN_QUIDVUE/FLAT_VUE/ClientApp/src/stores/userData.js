@@ -16,7 +16,13 @@ const state = () => {
 	return {
 		username: 'guest',
 
-		valuesOfPHEs: {}
+		valuesOfPHEs: {},
+
+		/**
+		 * The route to be opened after logging in, for cases when there was an attempt to 
+		 * navigate to a URL that requires authentication and login was completed afterward.
+		 */
+		routeAfterLogin: undefined
 	}
 }
 
@@ -67,6 +73,15 @@ const actions = {
 			return
 
 		this.valuesOfPHEs[data.key] = data.value
+	},
+
+	/**
+	 * Method to save or remove the route that should be opened after successful authentication
+	 * @param {object} routeData Route data
+	 */
+	setRedirectRouteAfterLogin(routeData)
+	{
+		this.routeAfterLogin = routeData
 	},
 
 	/**

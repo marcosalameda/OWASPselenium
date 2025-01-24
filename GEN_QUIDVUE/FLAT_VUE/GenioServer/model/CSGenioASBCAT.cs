@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Sub category
 	/// </summary>
-	public class CSGenioAsbcat : DbArea	{
+	public class CSGenioAsbcat : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -228,7 +229,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodsbcat, value); }
 		}
 
-
 		/// <summary>Field : "Sub categoria" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSubcateg { get { return m_fldSubcateg; } }
 		private static FieldRef m_fldSubcateg = new FieldRef("sbcat", "subcateg");
@@ -239,7 +239,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldSubcateg); }
 			set { insertNameValueField(FldSubcateg, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -282,23 +281,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAsbcat> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAsbcat> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAsbcat>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -347,7 +329,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX SBCAT]/

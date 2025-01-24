@@ -1,5 +1,7 @@
 ﻿<template>
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<!-- This control with id CTRL_1 is for showing file upload with all extensions and versioningIsOn allowed -->
 		<base-input-structure
 			id="CTRL_1"
@@ -9,7 +11,7 @@
 				size="xlarge"
 				v-model="ctrl1.fileName"
 				versioning-is-on
-				:is-in-checkout="ctrl1.isInCheckout"
+				:editing="ctrl1.editing"
 				:current-version="ctrl1.currentVersion"
 				:versions="ctrl1.versions"
 				:versions-info="ctrl1.versionsInfo"
@@ -29,7 +31,9 @@
 		</base-input-structure>
 	</div>
 
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<!-- This control with id CTRL_2 is for showing file upload with specified extension to allow and versioningIsOn not allowed -->
 		<base-input-structure
 			id="CTRL_2"
@@ -39,7 +43,7 @@
 				size="xlarge"
 				v-model="ctrl2.fileName"
 				:versioning-is-on="false"
-				:is-in-checkout="ctrl2.isInCheckout"
+				:editing="ctrl2.editing"
 				:current-version="ctrl2.currentVersion"
 				:versions="ctrl2.versions"
 				:versions-info="ctrl2.versionsInfo"
@@ -59,7 +63,9 @@
 		</base-input-structure>
 	</div>
 
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<!-- This control with id CTRL_3 is for showing file upload with readonly property -->
 		<base-input-structure
 			id="CTRL_3"
@@ -70,7 +76,7 @@
 				v-model="ctrl3.fileName"
 				readonly
 				versioning-is-on
-				:is-in-checkout="ctrl3.isInCheckout"
+				:editing="ctrl3.editing"
 				:current-version="ctrl3.currentVersion"
 				:versions="ctrl3.versions"
 				:versions-info="ctrl3.versionsInfo"
@@ -90,7 +96,9 @@
 		</base-input-structure>
 	</div>
 
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<!-- This control with id CTRL_4 is for showing file upload with readonly property -->
 		<base-input-structure
 			id="CTRL_4"
@@ -101,7 +109,7 @@
 				v-model="ctrl4.fileName"
 				readonly
 				versioning-is-on
-				:is-in-checkout="ctrl4.isInCheckout"
+				:editing="ctrl4.editing"
 				:current-version="ctrl4.currentVersion"
 				:versions="ctrl4.versions"
 				:versions-info="ctrl4.versionsInfo"
@@ -121,7 +129,9 @@
 		</base-input-structure>
 	</div>
 
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<!-- This control with id CTRL_5 is for showing the state of the component when a file is being edited -->
 		<base-input-structure
 			id="CTRL_5"
@@ -131,7 +141,7 @@
 				size="xlarge"
 				v-model="ctrl5.fileName"
 				versioning-is-on
-				:is-in-checkout="ctrl5.isInCheckout"
+				:editing="ctrl5.editing"
 				:current-version="ctrl5.currentVersion"
 				:versions="ctrl5.versions"
 				:versions-info="ctrl5.versionsInfo"
@@ -151,7 +161,9 @@
 		</base-input-structure>
 	</div>
 
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<!-- This control with id CTRL_6 is for showing file upload with specified extension to allow -->
 		<base-input-structure
 			id="CTRL_6"
@@ -163,7 +175,7 @@
 				:extensions="fileExtensions"
 				:max-file-size="50000"
 				:versioning-is-on="false"
-				:is-in-checkout="ctrl6.isInCheckout"
+				:editing="ctrl6.editing"
 				:current-version="ctrl6.currentVersion"
 				:versions="ctrl6.versions"
 				:versions-info="ctrl6.versionsInfo"
@@ -183,7 +195,9 @@
 		</base-input-structure>
 	</div>
 
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<!-- This control with id CTRL_7 is for showing file upload with default maximum size -->
 		<base-input-structure
 			id="CTRL_7"
@@ -193,7 +207,7 @@
 				size="xlarge"
 				v-model="ctrl7.fileName"
 				:versioning-is-on="false"
-				:is-in-checkout="ctrl7.isInCheckout"
+				:editing="ctrl7.editing"
 				:current-version="ctrl7.currentVersion"
 				:versions="ctrl7.versions"
 				:versions-info="ctrl7.versionsInfo"
@@ -213,7 +227,9 @@
 		</base-input-structure>
 	</div>
 
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<!-- This control with id CTRL_8 is for showing file upload with specified maximum size -->
 		<base-input-structure
 			id="CTRL_8"
@@ -224,7 +240,7 @@
 				v-model="ctrl8.fileName"
 				:max-file-size="maximumFileSize"
 				:versioning-is-on="false"
-				:is-in-checkout="ctrl8.isInCheckout"
+				:editing="ctrl8.editing"
 				:current-version="ctrl8.currentVersion"
 				:versions="ctrl8.versions"
 				:versions-info="ctrl8.versionsInfo"
@@ -244,7 +260,9 @@
 		</base-input-structure>
 	</div>
 
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<!-- This control with id CTRL_9 is for showing file upload with small size -->
 		<base-input-structure
 			id="CTRL_9"
@@ -254,7 +272,7 @@
 				size="small"
 				v-model="ctrl9.fileName"
 				:versioning-is-on="false"
-				:is-in-checkout="ctrl9.isInCheckout"
+				:editing="ctrl9.editing"
 				:current-version="ctrl9.currentVersion"
 				:versions="ctrl9.versions"
 				:versions-info="ctrl9.versionsInfo"
@@ -274,7 +292,9 @@
 		</base-input-structure>
 	</div>
 
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<!-- This control with id CTRL_10 is for showing file upload with medium size -->
 		<base-input-structure
 			id="CTRL_10"
@@ -284,7 +304,7 @@
 				size="medium"
 				v-model="ctrl10.fileName"
 				:versioning-is-on="false"
-				:is-in-checkout="ctrl10.isInCheckout"
+				:editing="ctrl10.editing"
 				:current-version="ctrl10.currentVersion"
 				:versions="ctrl10.versions"
 				:versions-info="ctrl10.versionsInfo"
@@ -304,7 +324,9 @@
 		</base-input-structure>
 	</div>
 
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<!-- This control with id CTRL_11 is for showing file upload with large size -->
 		<base-input-structure
 			id="CTRL_11"
@@ -314,7 +336,7 @@
 				size="large"
 				v-model="ctrl11.fileName"
 				:versioning-is-on="false"
-				:is-in-checkout="ctrl11.isInCheckout"
+				:editing="ctrl11.editing"
 				:current-version="ctrl11.currentVersion"
 				:versions="ctrl11.versions"
 				:versions-info="ctrl11.versionsInfo"
@@ -334,7 +356,9 @@
 		</base-input-structure>
 	</div>
 
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<!-- This control with id CTRL_12 is for showing file upload with x-large size -->
 		<base-input-structure
 			id="CTRL_12"
@@ -344,7 +368,7 @@
 				size="xlarge"
 				v-model="ctrl12.fileName"
 				:versioning-is-on="false"
-				:is-in-checkout="ctrl12.isInCheckout"
+				:editing="ctrl12.editing"
 				:current-version="ctrl12.currentVersion"
 				:versions="ctrl12.versions"
 				:versions-info="ctrl12.versionsInfo"
@@ -372,7 +396,7 @@
 	{
 		return {
 			fileName: '',
-			isInCheckout: false,
+			editing: false,
 			currentVersion: '',
 			versions: {},
 			versionsInfo: [],
@@ -393,6 +417,8 @@
 	}
 
 	export default {
+		name: 'QDocumentContainer',
+
 		docsfile: './docs/inputs/document/QDocument.md',
 
 		emits: [
@@ -403,11 +429,16 @@
 		inheritAttrs: false,
 
 		props: {
+			/**
+			 * Whether the popup is currently visible.
+			 */
 			popupIsVisible: {
 				type: Boolean,
 				default: false
 			}
 		},
+
+		expose: [],
 
 		data()
 		{
@@ -439,7 +470,7 @@
 			this.ctrl4.currentVersion = this.lastVersion
 
 			this.ctrl5.fileName = this.currentFileName
-			this.ctrl5.isInCheckout = true
+			this.ctrl5.editing = true
 			this.ctrl5.versions = this.versionsObj
 			this.ctrl5.currentVersion = this.lastVersion
 		},
@@ -447,24 +478,27 @@
 		methods: {
 			submitFile(ctrl, data)
 			{
+				// eslint-disable-next-line no-console
 				console.log('Submit file emit was triggered.', data)
 
 				if (data.file)
 					this[ctrl].fileName = data.file.name
-				this[ctrl].isInCheckout = false
+				this[ctrl].editing = false
 				this[ctrl].currentVersion = data.version
 				this[ctrl].versions[data.version] = '00000000-0000-0000-0000-000000000000'
 			},
 
 			editFile(ctrl)
 			{
+				// eslint-disable-next-line no-console
 				console.log('Edit file emit was triggered.')
 
-				this[ctrl].isInCheckout = true
+				this[ctrl].editing = true
 			},
 
 			getProperties(ctrl)
 			{
+				// eslint-disable-next-line no-console
 				console.log('Get properties emit was triggered.')
 
 				this[ctrl].fileProperties = {}
@@ -475,16 +509,18 @@
 
 			getVersionHistory(ctrl)
 			{
+				// eslint-disable-next-line no-console
 				console.log('Get version history emit was triggered.')
 
 				this[ctrl].versionsInfo = []
 				setTimeout(() => {
-					this[ctrl].versionsInfo = this.versionsInfoArray
+					this[ctrl].versionsInfo = this.versionsInfo
 				}, 100)
 			},
 
 			getFile()
 			{
+				// eslint-disable-next-line no-console
 				console.log('Get file emit was triggered.')
 
 				downloadTestFile()
@@ -492,6 +528,7 @@
 
 			getFileVersion(version)
 			{
+				// eslint-disable-next-line no-console
 				console.log('Get file version emit was triggered.', version)
 
 				downloadTestFile(version)
@@ -499,16 +536,18 @@
 
 			deleteFile(ctrl)
 			{
+				// eslint-disable-next-line no-console
 				console.log('Delete file emit was triggered.')
 
 				this[ctrl].fileName = ''
-				this[ctrl].isInCheckout = false
+				this[ctrl].editing = false
 				this[ctrl].currentVersion = ''
 				this[ctrl].versions = {}
 			},
 
 			deleteLast(ctrl)
 			{
+				// eslint-disable-next-line no-console
 				console.log('Delete last version emit was triggered.')
 
 				this[ctrl].currentVersion = this.firstVersion
@@ -517,6 +556,7 @@
 
 			deleteHistory(ctrl)
 			{
+				// eslint-disable-next-line no-console
 				console.log('Delete history emit was triggered.')
 
 				this[ctrl].currentVersion = this.lastVersion
@@ -525,6 +565,7 @@
 
 			openPopup(modalData)
 			{
+				// eslint-disable-next-line no-console
 				console.log(`Opened modal "${modalData.id}".`)
 
 				this.$emit('show-popup', modalData)
@@ -532,6 +573,7 @@
 
 			closePopup(modalId)
 			{
+				// eslint-disable-next-line no-console
 				console.log(`Closed modal "${modalId}".`)
 
 				this.$emit('hide-popup', modalId)

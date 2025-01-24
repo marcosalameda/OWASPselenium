@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import { mount } from './utils'
 import { expect } from 'vitest'
 
@@ -21,9 +18,9 @@ describe('PasswordInput.vue', () => {
 		const input = await wrapper.find('input')
 		expect(input.attributes()).toHaveProperty('type', 'password')
 		const button = await wrapper.find('button')
-		await button.trigger('click')
+		await button.trigger('mousedown')
 		expect(input.attributes()).toHaveProperty('type', 'text')
-		await button.trigger('click')
+		await button.trigger('mouseup')
 		expect(input.attributes()).toHaveProperty('type', 'password')
 	})
 })

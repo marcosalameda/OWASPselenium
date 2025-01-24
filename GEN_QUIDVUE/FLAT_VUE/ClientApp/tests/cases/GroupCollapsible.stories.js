@@ -1,12 +1,11 @@
 import GroupCollapsible from './GroupCollapsible.case.vue'
 
 export default {
-    title: 'Containers/GroupCollapsible',
-    component: GroupCollapsible,
-    tags: [],
-  };
+	title: 'Containers/GroupCollapsible',
+	component: GroupCollapsible,
+	tags: []
+}
 
-  export const Simple = {
-    args: {
-    },
-  };
+export const Simple = {
+	args: {}
+}

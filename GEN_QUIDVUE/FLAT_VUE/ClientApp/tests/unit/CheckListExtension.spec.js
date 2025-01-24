@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import '@testing-library/jest-dom'
 import { nextTick } from 'vue'
 import { fireEvent } from '@testing-library/vue'

@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -109,6 +109,7 @@
 							v-slot="{ onStateChanged }">
 							<!-- Start DTTYP___PSEUDNOVOGR06 -->
 							<q-group-collapsible
+								id="DTTYP___PSEUDNOVOGR01"
 								v-bind="controls.DTTYP___PSEUDNOVOGR01"
 								v-on="controls.DTTYP___PSEUDNOVOGR01.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -123,12 +124,12 @@
 											v-on="controls.DTTYP___DTTYPSTRING__.handlers"
 											:loading="controls.DTTYP___DTTYPSTRING__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.DTTYP___DTTYPSTRING__.props"
 												:model-value="model.ValString.value"
-												@update:model-value="model.ValString.fnUpdateValue" />
+												@blur="onBlur(controls.DTTYP___DTTYPSTRING__, model.ValString.value)"
+												@change="model.ValString.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -142,8 +143,7 @@
 											v-on="controls.DTTYP___DTTYPUPPERCAS.handlers"
 											:loading="controls.DTTYP___DTTYPUPPERCAS.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-mask
 												v-if="controls.DTTYP___DTTYPUPPERCAS.isVisible"
 												v-bind="controls.DTTYP___DTTYPUPPERCAS"
@@ -162,12 +162,12 @@
 											v-on="controls.DTTYP___DTTYPUUID____.handlers"
 											:loading="controls.DTTYP___DTTYPUUID____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.DTTYP___DTTYPUUID____.props"
 												:model-value="model.ValUuid.value"
-												@update:model-value="model.ValUuid.fnUpdateValue" />
+												@blur="onBlur(controls.DTTYP___DTTYPUUID____, model.ValUuid.value)"
+												@change="model.ValUuid.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -181,18 +181,14 @@
 											v-on="controls.DTTYP___DTTYPMULTILIN.handlers"
 											:loading="controls.DTTYP___DTTYPMULTILIN.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-textarea-input
 												v-if="controls.DTTYP___DTTYPMULTILIN.isVisible"
+												v-bind="controls.DTTYP___DTTYPMULTILIN.props"
 												id="DTTYP___DTTYPMULTILIN"
-												size="xxlarge"
 												:model-value="model.ValMultilin.value"
 												:rows="3"
 												:cols="60"
-												:is-required="controls.DTTYP___DTTYPMULTILIN.isRequired"
-												:readonly="controls.DTTYP___DTTYPMULTILIN.readonly"
-												:placeholder="controls.DTTYP___DTTYPMULTILIN.placeholder"
 												@update:model-value="model.ValMultilin.fnUpdateValue" />
 										</base-input-structure>
 									</q-control-wrapper>
@@ -207,8 +203,7 @@
 											v-on="controls.DTTYP___DTTYPMULTILI3.handlers"
 											:loading="controls.DTTYP___DTTYPMULTILI3.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-editor
 												v-if="controls.DTTYP___DTTYPMULTILI3.isVisible"
 												v-bind="controls.DTTYP___DTTYPMULTILI3"
@@ -223,6 +218,7 @@
 								<!-- End DTTYP___PSEUDNOVOGR01 -->
 							</q-group-collapsible>
 							<q-group-collapsible
+								id="DTTYP___PSEUDNOVOGR02"
 								v-bind="controls.DTTYP___PSEUDNOVOGR02"
 								v-on="controls.DTTYP___PSEUDNOVOGR02.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -237,15 +233,11 @@
 											v-on="controls.DTTYP___DTTYPBOOLEAN_.handlers"
 											:loading="controls.DTTYP___DTTYPBOOLEAN_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<template #label>
 												<q-checkbox-input
 													v-if="controls.DTTYP___DTTYPBOOLEAN_.isVisible"
-													id="DTTYP___DTTYPBOOLEAN_"
-													size="large"
-													:model-value="model.ValBoolean.value"
-													:readonly="controls.DTTYP___DTTYPBOOLEAN_.readonly"
+													v-bind="controls.DTTYP___DTTYPBOOLEAN_.props"
 													@update:model-value="model.ValBoolean.fnUpdateValue" />
 											</template>
 										</base-input-structure>
@@ -256,20 +248,16 @@
 										v-show="controls.DTTYP___DTTYPBOOLEAN2.isVisible"
 										class="control-join-group">
 										<base-input-structure
-											class="i-checkbox"
+											class="i-text"
 											v-bind="controls.DTTYP___DTTYPBOOLEAN2"
 											v-on="controls.DTTYP___DTTYPBOOLEAN2.handlers"
 											:loading="controls.DTTYP___DTTYPBOOLEAN2.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<template #label>
 												<q-checkbox-input
 													v-if="controls.DTTYP___DTTYPBOOLEAN2.isVisible"
-													id="DTTYP___DTTYPBOOLEAN2"
-													size="large"
-													:model-value="model.ValBoolean2.value"
-													:readonly="controls.DTTYP___DTTYPBOOLEAN2.readonly"
+													v-bind="controls.DTTYP___DTTYPBOOLEAN2.props"
 													@update:model-value="model.ValBoolean2.fnUpdateValue" />
 											</template>
 										</base-input-structure>
@@ -278,6 +266,7 @@
 								<!-- End DTTYP___PSEUDNOVOGR02 -->
 							</q-group-collapsible>
 							<q-group-collapsible
+								id="DTTYP___PSEUDNOVOGR03"
 								v-bind="controls.DTTYP___PSEUDNOVOGR03"
 								v-on="controls.DTTYP___PSEUDNOVOGR03.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -292,12 +281,10 @@
 											v-on="controls.DTTYP___DTTYPSMALLINT.handlers"
 											:loading="controls.DTTYP___DTTYPSMALLINT.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPSMALLINT.isVisible"
-												v-bind="controls.DTTYP___DTTYPSMALLINT"
-												:model-value="model.ValSmallint.value"
+												v-bind="controls.DTTYP___DTTYPSMALLINT.props"
 												@update:model-value="model.ValSmallint.fnUpdateValue" />
 										</base-input-structure>
 									</q-control-wrapper>
@@ -312,12 +299,10 @@
 											v-on="controls.DTTYP___DTTYPINTEGER_.handlers"
 											:loading="controls.DTTYP___DTTYPINTEGER_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPINTEGER_.isVisible"
-												v-bind="controls.DTTYP___DTTYPINTEGER_"
-												:model-value="model.ValInteger.value"
+												v-bind="controls.DTTYP___DTTYPINTEGER_.props"
 												@update:model-value="model.ValInteger.fnUpdateValue" />
 										</base-input-structure>
 									</q-control-wrapper>
@@ -332,12 +317,10 @@
 											v-on="controls.DTTYP___DTTYPBIGINT__.handlers"
 											:loading="controls.DTTYP___DTTYPBIGINT__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPBIGINT__.isVisible"
-												v-bind="controls.DTTYP___DTTYPBIGINT__"
-												:model-value="model.ValBigint.value"
+												v-bind="controls.DTTYP___DTTYPBIGINT__.props"
 												@update:model-value="model.ValBigint.fnUpdateValue" />
 										</base-input-structure>
 									</q-control-wrapper>
@@ -352,12 +335,10 @@
 											v-on="controls.DTTYP___DTTYPREAL____.handlers"
 											:loading="controls.DTTYP___DTTYPREAL____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPREAL____.isVisible"
-												v-bind="controls.DTTYP___DTTYPREAL____"
-												:model-value="model.ValReal.value"
+												v-bind="controls.DTTYP___DTTYPREAL____.props"
 												@update:model-value="model.ValReal.fnUpdateValue" />
 										</base-input-structure>
 									</q-control-wrapper>
@@ -372,12 +353,10 @@
 											v-on="controls.DTTYP___DTTYPFLOAT___.handlers"
 											:loading="controls.DTTYP___DTTYPFLOAT___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPFLOAT___.isVisible"
-												v-bind="controls.DTTYP___DTTYPFLOAT___"
-												:model-value="model.ValFloat.value"
+												v-bind="controls.DTTYP___DTTYPFLOAT___.props"
 												@update:model-value="model.ValFloat.fnUpdateValue" />
 										</base-input-structure>
 									</q-control-wrapper>
@@ -392,12 +371,10 @@
 											v-on="controls.DTTYP___DTTYPDECIMAL_.handlers"
 											:loading="controls.DTTYP___DTTYPDECIMAL_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPDECIMAL_.isVisible"
-												v-bind="controls.DTTYP___DTTYPDECIMAL_"
-												:model-value="model.ValDecimal.value"
+												v-bind="controls.DTTYP___DTTYPDECIMAL_.props"
 												@update:model-value="model.ValDecimal.fnUpdateValue" />
 										</base-input-structure>
 									</q-control-wrapper>
@@ -412,12 +389,10 @@
 											v-on="controls.DTTYP___DTTYPDECIMAL9.handlers"
 											:loading="controls.DTTYP___DTTYPDECIMAL9.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPDECIMAL9.isVisible"
-												v-bind="controls.DTTYP___DTTYPDECIMAL9"
-												:model-value="model.ValDecimal9.value"
+												v-bind="controls.DTTYP___DTTYPDECIMAL9.props"
 												@update:model-value="model.ValDecimal9.fnUpdateValue" />
 										</base-input-structure>
 									</q-control-wrapper>
@@ -432,12 +407,10 @@
 											v-on="controls.DTTYP___DTTYPMONEY___.handlers"
 											:loading="controls.DTTYP___DTTYPMONEY___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPMONEY___.isVisible"
-												v-bind="controls.DTTYP___DTTYPMONEY___"
-												:model-value="model.ValMoney.value"
+												v-bind="controls.DTTYP___DTTYPMONEY___.props"
 												@update:model-value="model.ValMoney.fnUpdateValue" />
 										</base-input-structure>
 									</q-control-wrapper>
@@ -452,12 +425,10 @@
 											v-on="controls.DTTYP___DTTYPMONEY9__.handlers"
 											:loading="controls.DTTYP___DTTYPMONEY9__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPMONEY9__.isVisible"
-												v-bind="controls.DTTYP___DTTYPMONEY9__"
-												:model-value="model.ValMoney9.value"
+												v-bind="controls.DTTYP___DTTYPMONEY9__.props"
 												@update:model-value="model.ValMoney9.fnUpdateValue" />
 										</base-input-structure>
 									</q-control-wrapper>
@@ -465,6 +436,7 @@
 								<!-- End DTTYP___PSEUDNOVOGR03 -->
 							</q-group-collapsible>
 							<q-group-collapsible
+								id="DTTYP___PSEUDNOVOGR04"
 								v-bind="controls.DTTYP___PSEUDNOVOGR04"
 								v-on="controls.DTTYP___PSEUDNOVOGR04.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -479,14 +451,13 @@
 											v-on="controls.DTTYP___DTTYPDATE____.handlers"
 											:loading="controls.DTTYP___DTTYPDATE____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
-											<q-datetime-input
+											:suggestion-mode-on="suggestionModeOn">
+											<q-date-time-picker
 												v-if="controls.DTTYP___DTTYPDATE____.isVisible"
-												v-bind="controls.DTTYP___DTTYPDATE____"
-												format="Date"
+												v-bind="controls.DTTYP___DTTYPDATE____.props"
 												:model-value="model.ValDate.value"
-												@update:model-value="model.ValDate.fnUpdateValue" />
+												@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
+												@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -500,14 +471,13 @@
 											v-on="controls.DTTYP___DTTYPDATETIME.handlers"
 											:loading="controls.DTTYP___DTTYPDATETIME.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
-											<q-datetime-input
+											:suggestion-mode-on="suggestionModeOn">
+											<q-date-time-picker
 												v-if="controls.DTTYP___DTTYPDATETIME.isVisible"
-												v-bind="controls.DTTYP___DTTYPDATETIME"
-												format="DateTime"
+												v-bind="controls.DTTYP___DTTYPDATETIME.props"
 												:model-value="model.ValDatetime.value"
-												@update:model-value="model.ValDatetime.fnUpdateValue" />
+												@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
+												@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -521,14 +491,13 @@
 											v-on="controls.DTTYP___DTTYPDTSESOND.handlers"
 											:loading="controls.DTTYP___DTTYPDTSESOND.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
-											<q-datetime-input
+											:suggestion-mode-on="suggestionModeOn">
+											<q-date-time-picker
 												v-if="controls.DTTYP___DTTYPDTSESOND.isVisible"
-												v-bind="controls.DTTYP___DTTYPDTSESOND"
-												format="DateTimeSeconds"
+												v-bind="controls.DTTYP___DTTYPDTSESOND.props"
 												:model-value="model.ValDtsesond.value"
-												@update:model-value="model.ValDtsesond.fnUpdateValue" />
+												@reset-icon-click="model.ValDtsesond.fnUpdateValue(model.ValDtsesond.originalValue ?? new Date())"
+												@update:model-value="model.ValDtsesond.fnUpdateValue($event ?? '')" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -542,20 +511,20 @@
 											v-on="controls.DTTYP___DTTYPTIME____.handlers"
 											:loading="controls.DTTYP___DTTYPTIME____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
-											<q-datetime-input
+											:suggestion-mode-on="suggestionModeOn">
+											<q-date-time-picker
 												v-if="controls.DTTYP___DTTYPTIME____.isVisible"
-												v-bind="controls.DTTYP___DTTYPTIME____"
-												format="Time"
+												v-bind="controls.DTTYP___DTTYPTIME____.props"
 												:model-value="model.ValTime.value"
-												@update:model-value="model.ValTime.fnUpdateValue" />
+												@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
+												@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End DTTYP___PSEUDNOVOGR04 -->
 							</q-group-collapsible>
 							<q-group-collapsible
+								id="DTTYP___PSEUDNOVOGR05"
 								v-bind="controls.DTTYP___PSEUDNOVOGR05"
 								v-on="controls.DTTYP___PSEUDNOVOGR05.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -570,8 +539,7 @@
 											v-on="controls.DTTYP___DTTYPIMAGE___.handlers"
 											:loading="controls.DTTYP___DTTYPIMAGE___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-image
 												v-if="controls.DTTYP___DTTYPIMAGE___.isVisible"
 												v-bind="controls.DTTYP___DTTYPIMAGE___.props"
@@ -666,15 +634,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'DTTYP',
-						location: 'form-DTTYP',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'DTTYP',
+					location: 'form-DTTYP',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -720,6 +686,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -792,8 +760,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -875,7 +844,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -929,21 +898,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -952,15 +906,11 @@
 						id: 'DTTYP___PSEUDNOVOGR06',
 						name: 'NOVOGR06',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACCORDION01950),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -968,18 +918,14 @@
 						id: 'DTTYP___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.CHAR_STRING32451),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-DTTYP___PSEUDNOVOGR01',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -989,17 +935,13 @@
 						id: 'DTTYP___DTTYPSTRING__',
 						name: 'STRING',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TEXT04938),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR01',
 						container: 'DTTYP___PSEUDNOVOGR01',
 						maxLength: 50,
 						labelId: 'label_DTTYP___DTTYPSTRING__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1009,17 +951,13 @@
 						id: 'DTTYP___DTTYPUPPERCAS',
 						name: 'UPPERCAS',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TEXT__UPPER_CASE_62204),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR01',
 						container: 'DTTYP___PSEUDNOVOGR01',
 						maxLength: 50,
 						labelId: 'label_DTTYP___DTTYPUPPERCAS',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1029,17 +967,13 @@
 						id: 'DTTYP___DTTYPUUID____',
 						name: 'UUID',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.TEXT__UUID_AKA_GUID_03442),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR01',
 						container: 'DTTYP___PSEUDNOVOGR01',
 						maxLength: 36,
 						labelId: 'label_DTTYP___DTTYPUUID____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1049,17 +983,11 @@
 						id: 'DTTYP___DTTYPMULTILIN',
 						name: 'MULTILIN',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.MULTILINE_TEXT57254),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR01',
 						container: 'DTTYP___PSEUDNOVOGR01',
-						maxLength: 60,
-						labelId: 'label_DTTYP___DTTYPMULTILIN',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1069,15 +997,11 @@
 						id: 'DTTYP___DTTYPMULTILI3',
 						name: 'MULTILI3',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.MULTILINE_TEXT__TEXT35132),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR01',
 						container: 'DTTYP___PSEUDNOVOGR01',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1085,18 +1009,14 @@
 						id: 'DTTYP___PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.BOOLEAN45002),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-DTTYP___PSEUDNOVOGR02',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1106,15 +1026,11 @@
 						id: 'DTTYP___DTTYPBOOLEAN_',
 						name: 'BOOLEAN',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.LOGICAL__TINYINT___S35014),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR02',
 						container: 'DTTYP___PSEUDNOVOGR02',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1124,15 +1040,13 @@
 						id: 'DTTYP___DTTYPBOOLEAN2',
 						name: 'BOOLEAN2',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.CONDITIONAL__SMALLIN41010),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR02',
 						container: 'DTTYP___PSEUDNOVOGR02',
-						mustBeFilled: false,
+						maxIntegers: 1,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -1140,198 +1054,158 @@
 						id: 'DTTYP___PSEUDNOVOGR03',
 						name: 'NOVOGR03',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMERIC19292),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					DTTYP___DTTYPSMALLINT: new fieldControlClass.NumberControl({
 						modelField: 'ValSmallint',
 						valueChangeEvent: 'fieldChange:dttyp.smallint',
-						maxIntegers: 4,
-						maxDecimals: 0,
 						id: 'DTTYP___DTTYPSMALLINT',
 						name: 'SMALLINT',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMERIC__4_0___SMALL21475),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
-						mustBeFilled: false,
+						maxIntegers: 4,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					DTTYP___DTTYPINTEGER_: new fieldControlClass.NumberControl({
 						modelField: 'ValInteger',
 						valueChangeEvent: 'fieldChange:dttyp.integer',
-						maxIntegers: 9,
-						maxDecimals: 0,
 						id: 'DTTYP___DTTYPINTEGER_',
 						name: 'INTEGER',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMERIC__9_0___INTEG03994),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
-						mustBeFilled: false,
+						maxIntegers: 9,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					DTTYP___DTTYPBIGINT__: new fieldControlClass.NumberControl({
 						modelField: 'ValBigint',
 						valueChangeEvent: 'fieldChange:dttyp.bigint',
-						maxIntegers: 15,
-						maxDecimals: 0,
 						id: 'DTTYP___DTTYPBIGINT__',
 						name: 'BIGINT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMERIC_15_0___BIG_I46007),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
-						mustBeFilled: false,
+						maxIntegers: 15,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					DTTYP___DTTYPREAL____: new fieldControlClass.NumberControl({
 						modelField: 'ValReal',
 						valueChangeEvent: 'fieldChange:dttyp.real',
-						maxIntegers: 5,
-						maxDecimals: 2,
 						id: 'DTTYP___DTTYPREAL____',
 						name: 'REAL',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMERIC__8_2_REAL_FL21391),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
-						mustBeFilled: false,
+						maxIntegers: 5,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
 					DTTYP___DTTYPFLOAT___: new fieldControlClass.NumberControl({
 						modelField: 'ValFloat',
 						valueChangeEvent: 'fieldChange:dttyp.float',
-						maxIntegers: 12,
-						maxDecimals: 2,
 						id: 'DTTYP___DTTYPFLOAT___',
 						name: 'FLOAT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMERIC_15_2_DOUBLE_11443),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
-						mustBeFilled: false,
+						maxIntegers: 12,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
 					DTTYP___DTTYPDECIMAL_: new fieldControlClass.NumberControl({
 						modelField: 'ValDecimal',
 						valueChangeEvent: 'fieldChange:dttyp.decimal',
-						maxIntegers: 5,
-						maxDecimals: 4,
 						id: 'DTTYP___DTTYPDECIMAL_',
 						name: 'DECIMAL',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DECIMAL__1_10___STOR64402),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
-						mustBeFilled: false,
+						maxIntegers: 5,
+						maxDecimals: 4,
 						controlLimits: [
 						],
 					}, this),
 					DTTYP___DTTYPDECIMAL9: new fieldControlClass.NumberControl({
 						modelField: 'ValDecimal9',
 						valueChangeEvent: 'fieldChange:dttyp.decimal9',
-						maxIntegers: 10,
-						maxDecimals: 4,
 						id: 'DTTYP___DTTYPDECIMAL9',
 						name: 'DECIMAL9',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.DECIMAL__11_15___STO64707),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 4,
 						controlLimits: [
 						],
 					}, this),
 					DTTYP___DTTYPMONEY___: new fieldControlClass.CurrencyControl({
 						modelField: 'ValMoney',
 						valueChangeEvent: 'fieldChange:dttyp.money',
-						maxIntegers: 5,
-						maxDecimals: 4,
 						id: 'DTTYP___DTTYPMONEY___',
 						name: 'MONEY',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.MONEY___DECIMAL__1_124403),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
-						mustBeFilled: false,
+						maxIntegers: 5,
+						maxDecimals: 4,
 						controlLimits: [
 						],
 					}, this),
 					DTTYP___DTTYPMONEY9__: new fieldControlClass.CurrencyControl({
 						modelField: 'ValMoney9',
 						valueChangeEvent: 'fieldChange:dttyp.money9',
-						maxIntegers: 10,
-						maxDecimals: 4,
 						id: 'DTTYP___DTTYPMONEY9__',
 						name: 'MONEY9',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.MONEY___DECIMAL__11_02101),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 4,
 						controlLimits: [
 						],
 					}, this),
@@ -1339,38 +1213,29 @@
 						id: 'DTTYP___PSEUDNOVOGR04',
 						name: 'NOVOGR04',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE_AND_TIME38906),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-DTTYP___PSEUDNOVOGR04',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					DTTYP___DTTYPDATE____: new fieldControlClass.DateControl({
 						modelField: 'ValDate',
 						valueChangeEvent: 'fieldChange:dttyp.date',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'DTTYP___DTTYPDATE____',
 						name: 'DATE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE18475),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR04',
 						container: 'DTTYP___PSEUDNOVOGR04',
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1380,15 +1245,12 @@
 						id: 'DTTYP___DTTYPDATETIME',
 						name: 'DATETIME',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE_TIME53960),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR04',
 						container: 'DTTYP___PSEUDNOVOGR04',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1398,35 +1260,27 @@
 						id: 'DTTYP___DTTYPDTSESOND',
 						name: 'DTSESOND',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE_TIME_SECOND45106),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR04',
 						container: 'DTTYP___PSEUDNOVOGR04',
-						mustBeFilled: false,
+						format: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
 					DTTYP___DTTYPTIME____: new fieldControlClass.TimeControl({
 						modelField: 'ValTime',
 						valueChangeEvent: 'fieldChange:dttyp.time',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'DTTYP___DTTYPTIME____',
 						name: 'TIME',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.TIME15328),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR04',
 						container: 'DTTYP___PSEUDNOVOGR04',
-						mustBeFilled: false,
+						format: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1434,18 +1288,14 @@
 						id: 'DTTYP___PSEUDNOVOGR05',
 						name: 'NOVOGR05',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.IMAGE65174),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-DTTYP___PSEUDNOVOGR05',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1455,17 +1305,14 @@
 						id: 'DTTYP___DTTYPIMAGE___',
 						name: 'IMAGE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.IMAGE__BINARY_46903),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR05',
 						container: 'DTTYP___PSEUDNOVOGR05',
 						height: 138,
 						width: 115,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.IMAGE__BINARY_46903)),
 						controlLimits: [
 						],
 					}, this),
@@ -1545,7 +1392,7 @@
 						/** The primary key of the DTTYP table */
 						get dttyp() { return vm.model.ValCoddttyp },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1641,6 +1488,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1680,6 +1535,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1806,6 +1669,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR DTTYP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1821,6 +1700,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS DTTYP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

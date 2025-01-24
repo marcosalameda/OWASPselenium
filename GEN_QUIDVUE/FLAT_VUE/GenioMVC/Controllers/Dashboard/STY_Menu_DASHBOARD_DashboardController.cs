@@ -59,6 +59,10 @@ namespace GenioMVC.Controllers
 
 		public ActionResult STY_Menu_DASHBOARD_Save([FromBody]DashboardSaveRequest dto)
 		{
+			// Don't allow changes in maintenance mode
+			if (Maintenance.Current.IsActive)
+				return JsonERROR(Resources.Resources.O_SISTEMA_ENCONTRA_S37912);
+
 			DashboardViewModel vm = new STY_Menu_DASHBOARD_ViewModel(UserContext.Current);
 			vm.Save(dto);
 

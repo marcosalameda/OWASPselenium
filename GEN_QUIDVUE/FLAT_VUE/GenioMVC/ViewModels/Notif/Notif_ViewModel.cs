@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Notif
 {
-	public class Notif_ViewModel : FormViewModel<Models.Notif>
+	public class Notif_ViewModel : FormViewModel<Models.Notif>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,74 +29,71 @@ namespace GenioMVC.ViewModels.Notif
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Name" | Type: "CE"
+		/// </summary>
+		public string ValCodpesso { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Lending No" | Type: "N"
 		/// </summary>
 		public decimal? ValNrcomoda { get; set; }
-
 		/// <summary>
 		/// Title: "Start" | Type: "DT"
 		/// </summary>
 		public DateTime? ValBegin { get; set; }
-
 		/// <summary>
 		/// Title: "End" | Type: "DT"
 		/// </summary>
 		public DateTime? ValEnd { get; set; }
-
 		/// <summary>
 		/// Title: "Receiver's Email" | Type: "C"
 		/// </summary>
 		public string ValEmail { get; set; }
-
 		/// <summary>
 		/// Title: "ID of the notification that generated the message" | Type: "C"
 		/// </summary>
 		public string ValIdnotif { get; set; }
-
 		/// <summary>
 		/// Title: "Mensage ID" | Type: "C"
 		/// </summary>
 		public string ValIdmsg { get; set; }
-
 		/// <summary>
 		/// Title: "Text of sent message" | Type: "MO"
 		/// </summary>
 		public string ValMessage { get; set; }
-
 		/// <summary>
 		/// Title: "Erro on sending the email" | Type: "C"
 		/// </summary>
 		public string ValMailerr { get; set; }
-
 		/// <summary>
 		/// Title: "Receiver" | Type: "C"
 		/// </summary>
 		public string ValDesignat { get; set; }
-
 		/// <summary>
 		/// Title: "Created on" | Type: "OD"
 		/// </summary>
+		[ValidateSetAccess]
 		public DateTime? ValCreatdat { get; set; }
-
 		/// <summary>
 		/// Title: "Created by" | Type: "ON"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValCreatope { get; set; }
-
 		/// <summary>
 		/// Title: "Returned" | Type: "L"
 		/// </summary>
 		public bool ValReturned { get; set; }
-
 		/// <summary>
 		/// Title: "Returned" | Type: "D"
 		/// </summary>
 		public DateTime? ValDtdevolu { get; set; }
-
 		/// <summary>
 		/// Title: "Name" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Pess2> TablePess2Name { get; set; }
 
 		#region Navigations
@@ -106,15 +103,6 @@ namespace GenioMVC.ViewModels.Notif
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Name" | Type: "CE"
-		/// </summary>
-		public string ValCodpesso { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -130,9 +118,10 @@ namespace GenioMVC.ViewModels.Notif
 
 		public string ValCodnotif { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Notif_ViewModel() : base(null!) { }
@@ -168,6 +157,15 @@ namespace GenioMVC.ViewModels.Notif
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Notif model = new Models.Notif(userContext) { Identifier = "FNOTIF" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FNOTIF");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -228,6 +226,7 @@ namespace GenioMVC.ViewModels.Notif
 
 			try
 			{
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 				ValNrcomoda = ViewModelConversion.ToNumeric(m.ValNrcomoda);
 				ValBegin = ViewModelConversion.ToDateTime(m.ValBegin);
 				ValEnd = ViewModelConversion.ToDateTime(m.ValEnd);
@@ -241,7 +240,6 @@ namespace GenioMVC.ViewModels.Notif
 				ValCreatope = ViewModelConversion.ToString(m.ValCreatope);
 				ValReturned = ViewModelConversion.ToLogic(m.ValReturned);
 				ValDtdevolu = ViewModelConversion.ToDateTime(m.ValDtdevolu);
-				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 				ValCodnotif = ViewModelConversion.ToString(m.ValCodnotif);
 			}
 			catch (Exception)
@@ -251,6 +249,20 @@ namespace GenioMVC.ViewModels.Notif
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Notif m)
 		{
 			if (m == null)
@@ -261,6 +273,7 @@ namespace GenioMVC.ViewModels.Notif
 
 			try
 			{
+				m.ValCodpesso = ViewModelConversion.ToString(ValCodpesso);
 				m.ValNrcomoda = ViewModelConversion.ToNumeric(ValNrcomoda);
 				m.ValBegin = ViewModelConversion.ToDateTime(ValBegin);
 				m.ValEnd = ViewModelConversion.ToDateTime(ValEnd);
@@ -270,22 +283,106 @@ namespace GenioMVC.ViewModels.Notif
 				m.ValMessage = ViewModelConversion.ToString(ValMessage);
 				m.ValMailerr = ViewModelConversion.ToString(ValMailerr);
 				m.ValDesignat = ViewModelConversion.ToString(ValDesignat);
-				m.ValCreatdat = ViewModelConversion.ToDateTime(ValCreatdat);
-				m.ValCreatope = ViewModelConversion.ToString(ValCreatope);
 				m.ValReturned = ViewModelConversion.ToLogic(ValReturned);
 				m.ValDtdevolu = ViewModelConversion.ToDateTime(ValDtdevolu);
-				m.ValCodpesso = ViewModelConversion.ToString(ValCodpesso);
 				m.ValCodnotif = ViewModelConversion.ToString(ValCodnotif);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValCreatdat = ViewModelConversion.ToDateTime(ValCreatdat);
+				m.ValCreatope = ViewModelConversion.ToString(ValCreatope);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Notif) to Model (Notif) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Notif) to Model (Notif) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "notif.codpesso":
+						this.ValCodpesso = ViewModelConversion.ToString(_value);
+						break;
+					case "notif.nrcomoda":
+						this.ValNrcomoda = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "notif.begin":
+						this.ValBegin = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "notif.end":
+						this.ValEnd = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "notif.email":
+						this.ValEmail = ViewModelConversion.ToString(_value);
+						break;
+					case "notif.idnotif":
+						this.ValIdnotif = ViewModelConversion.ToString(_value);
+						break;
+					case "notif.idmsg":
+						this.ValIdmsg = ViewModelConversion.ToString(_value);
+						break;
+					case "notif.message":
+						this.ValMessage = ViewModelConversion.ToString(_value);
+						break;
+					case "notif.mailerr":
+						this.ValMailerr = ViewModelConversion.ToString(_value);
+						break;
+					case "notif.designat":
+						this.ValDesignat = ViewModelConversion.ToString(_value);
+						break;
+					case "notif.returned":
+						this.ValReturned = ViewModelConversion.ToLogic(_value);
+						break;
+					case "notif.dtdevolu":
+						this.ValDtdevolu = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "notif.codnotif":
+						this.ValCodnotif = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Notif) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Notif)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Notif.Find(id ?? Navigation.GetStrValue("notif"), m_userContext, "FNOTIF"); }
+			finally { Model ??= new Models.Notif(m_userContext) { Identifier = "FNOTIF" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -299,20 +396,13 @@ namespace GenioMVC.ViewModels.Notif
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FNOTIF";
@@ -322,6 +412,7 @@ namespace GenioMVC.ViewModels.Notif
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -380,35 +471,30 @@ namespace GenioMVC.ViewModels.Notif
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
-			validator.Required("ValBegin", Resources.Resources.START00919, ValBegin);
+			validator.Required("ValBegin", Resources.Resources.START00919, ViewModelConversion.ToDateTime(ValBegin), FieldType.DATAHORA.Formatting);
 			validator.StringLength("ValEmail", Resources.Resources.RECEIVER_S_EMAIL60306, ValEmail, 100);
 			validator.StringLength("ValIdnotif", Resources.Resources.ID_OF_THE_NOTIFICATI28920, ValIdnotif, 50);
 			validator.StringLength("ValIdmsg", Resources.Resources.MENSAGE_ID32109, ValIdmsg, 85);
 			validator.StringLength("ValMailerr", Resources.Resources.ERRO_ON_SENDING_THE_05516, ValMailerr, 300);
 			validator.StringLength("ValDesignat", Resources.Resources.RECEIVER16744, ValDesignat, 85);
 
+
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE NOTIF]/
 		public override void Save()
 		{
 
-			try { Model = Models.Notif.Find(Navigation.GetStrValue("notif"), m_userContext, "FNOTIF"); }
-			finally { if (Model == null) Model = new Models.Notif(m_userContext) { Identifier = "FNOTIF" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY NOTIF]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Notif.Find(Navigation.GetStrValue("notif"), m_userContext, "FNOTIF"); }
-			finally { if (Model == null) Model = new Models.Notif(m_userContext) { Identifier = "FNOTIF" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE NOTIF]/
 
@@ -441,8 +527,8 @@ namespace GenioMVC.ViewModels.Notif
 				object hValue = Navigation.GetValue("pess2", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					notif___pess2name____Conds.Equal(CSGenioApess2.FldCodpesso, Navigation.GetValue("pess2"));
-					this.ValCodpesso = Navigation.GetStrValue("pess2");
+					notif___pess2name____Conds.Equal(CSGenioApess2.FldCodpesso, hValue);
+					this.ValCodpesso = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -459,8 +545,6 @@ namespace GenioMVC.ViewModels.Notif
 					Navigation.CurrentLevel.SetEntry("RETURN_pess2", null);
 				}
 				FillDependant_NotifTablePess2Name(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePess2Name.FilledByHistory = Navigation.CheckFilledByHistory("pess2");
 				return;
 			}
 
@@ -528,9 +612,6 @@ namespace GenioMVC.ViewModels.Notif
 
 				TablePess2Name.List = new SelectList(TablePess2Name.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpesso), "Value", "Text", this.ValCodpesso);
 				FillDependant_NotifTablePess2Name();
-
-				//Check if foreignkey comes from history
-				TablePess2Name.FilledByHistory = Navigation.CheckFilledByHistory("pess2");
 			}
 		}
 
@@ -627,6 +708,7 @@ namespace GenioMVC.ViewModels.Notif
 		{
 			return identifier switch
 			{
+				"notif.codpesso" => ViewModelConversion.ToString(modelValue),
 				"notif.nrcomoda" => ViewModelConversion.ToNumeric(modelValue),
 				"notif.begin" => ViewModelConversion.ToDateTime(modelValue),
 				"notif.end" => ViewModelConversion.ToDateTime(modelValue),
@@ -640,13 +722,14 @@ namespace GenioMVC.ViewModels.Notif
 				"notif.creatope" => ViewModelConversion.ToString(modelValue),
 				"notif.returned" => ViewModelConversion.ToLogic(modelValue),
 				"notif.dtdevolu" => ViewModelConversion.ToDateTime(modelValue),
-				"notif.codpesso" => ViewModelConversion.ToString(modelValue),
 				"notif.codnotif" => ViewModelConversion.ToString(modelValue),
 				"pess2.codpesso" => ViewModelConversion.ToString(modelValue),
 				"pess2.name" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

@@ -35,6 +35,9 @@ namespace GenioMVC.Helpers
 		{
 			var now = DateTime.Now; now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, DateTimeKind.Unspecified);
 
+			if (Qyear == 0)
+				Qyear = now.Year;
+
 			if (Qyear != now.Year)
 				now = new DateTime(Qyear, 12, 31, 23, 59, 59, DateTimeKind.Unspecified);
 
@@ -282,6 +285,22 @@ namespace GenioMVC.Helpers
 			}
 
 			return serverVariables["REMOTE_ADDR"];
+		}
+
+		/// <summary>
+		/// Generates a ticket that can be used by the client-side to access the specified resource.
+		/// </summary>
+		/// <param name="user">The user for whom this ticket is created.</param>
+		/// <param name="table">The table where the resource is located.</param>
+		/// <param name="fieldName">The name of the field in the table that contains the resource.</param>
+		/// <param name="primaryKeyField">The primary key field name of the table that contains resource.</param>
+		/// <param name="keyValue">The primary key value of the record associated with the resource.</param>
+		/// <param name="resourceName">Optional. The name of the resource.</param>
+		/// <returns>A ticket that provide access to the specified resource in the specified table field.</returns>
+		public static string GetFileTicket(User user, Quidgest.Persistence.AreaRef table, string fieldName, string primaryKeyField, string keyValue, string resourceName = null)
+		{
+			ResourceQuery versionResource = new(resourceName, table.Alias, fieldName, primaryKeyField, keyValue);
+			return QResources.CreateTicketEncryptedBase64(user.Name, user.Location, versionResource);
 		}
 	}
 }

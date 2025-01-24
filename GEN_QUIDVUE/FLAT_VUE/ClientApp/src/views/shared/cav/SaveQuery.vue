@@ -26,7 +26,7 @@
 						:class="['i-text', { 'i-text--disabled': false }]"
 						:label="texts.queryAccess"
 						:label-attrs="{ class: 'i-text__label' }">
-						<q-radio-button-input
+						<q-radio-group
 							id="cav-save-query-access"
 							v-model="accessType"
 							deselect-radio

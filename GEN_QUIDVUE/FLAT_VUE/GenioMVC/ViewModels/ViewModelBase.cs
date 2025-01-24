@@ -17,6 +17,16 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels
 {
+	public interface IPreparableForSerialization
+	{
+		/// <summary>
+		/// Method that prepares the ViewModel content to be returned to the client-side.
+		/// 	- Sanitizes the ViewModel content by cleaning HTML fragments and documents from constructs that could lead to XSS attacks and compromise application security.
+		/// 	- Assigns ticket to Image fields.
+		/// </summary>
+		void PrepareContentForClientSide();
+	}
+
 	public interface IViewModel
 	{
 		// Interface Properties
@@ -32,14 +42,9 @@ namespace GenioMVC.ViewModels
 		StatusMessage CheckPermissions(FormMode mode);
 	}
 
-	public abstract class ViewModelBase : IViewModel
+	public abstract class ViewModelBase(UserContext userContext) : IViewModel, IConditionalSerializer
 	{
-		protected UserContext m_userContext;
-
-		public ViewModelBase(UserContext userContext)
-		{
-			m_userContext = userContext;
-		}
+		protected UserContext m_userContext = userContext;
 
 		/// <summary>
 		/// Call this method *immediately* after deserializing this object or allocating it with the empty constructor
@@ -86,6 +91,17 @@ namespace GenioMVC.ViewModels
 
 		[JsonIgnore]
 		public bool NestedForm { get; set; }
+
+		public bool ShouldSerialize(string tag)
+		{
+			return FieldsToSerialize?.Contains(tag) ?? false;
+		}
+
+		/// <summary>
+		/// Gets the list of fields to serialize.
+		/// </summary>
+		virtual protected string[] FieldsToSerialize { get; }
+		
 
 		#region Form modes
 
@@ -154,10 +170,28 @@ namespace GenioMVC.ViewModels
 
 		private Models.Glob _globTable;
 		/// <summary>
-		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas client-side e server-side (alguns)
+		/// Gets a reference to the GLOB table
+		/// to provide access to the necessary fields
+		/// to client and server-side formulas.
 		/// </summary>
 		[ShouldSerialize("Glob")]
-		public virtual Models.Glob TGlob { get { if (_globTable == null) _globTable = Models.Glob.GetGlob(m_userContext); return _globTable; } }
+		public Models.Glob TGlob
+		{
+			get
+			{
+				//Net Core still enters the property even if it doesn't serialize it
+				if (!ShouldSerialize("Glob"))
+					return _globTable;
+
+				if (_globTable == null)
+				{
+					_globTable = Models.Glob.GetGlob(m_userContext, false, this?.FieldsToSerialize);
+					_globTable.SetIsEmptyModel(true);
+				}
+
+				return _globTable;
+			}
+		}
 
 		#region History
 
@@ -254,17 +288,40 @@ namespace GenioMVC.ViewModels
 		/// <param name="area">Table/Area name</param>
 		/// <param name="allSortOrders">Structure of all sortings for the menu list, grouped by column name</param>
 		/// <returns>List of ColumnSorts in the same order the columns are in the sorting for the column clicked.</returns>
-		protected List<ColumnSort> GetRequestSorts<TModel>(TablePartial<TModel> t, string sortStr, string directionStr, NameValueCollection qs, string area, Dictionary<String, OrderedDictionary> allSortOrders) where TModel: class
+		protected List<ColumnSort> GetRequestSorts<TModel>(TablePartial<TModel> t, string sortStr, string directionStr, NameValueCollection qs, string area, Dictionary<String, OrderedDictionary> allSortOrders) where TModel : class
 		{
 			if (String.IsNullOrEmpty(qs[sortStr]))
+				return null;
+
+			CSGenio.framework.TableConfiguration.ColumnOrderBy columnOrderBy = new CSGenio.framework.TableConfiguration.ColumnOrderBy();
+
+			columnOrderBy.ColumnName = (string)qs[sortStr];
+
+			columnOrderBy.SortOrder = (string)qs[directionStr];
+
+			return GetRequestSorts<TModel>(t, columnOrderBy, area, allSortOrders);
+		}
+
+		/// <summary>
+		/// Generates and returns a List<ColumnSorts> with all columns to sort by, in order, based on the column clicked and the data structure that represents all sortings for the menu list.
+		/// </summary>
+		/// <remarks>FOR: MENU LIST SORTING</remarks>
+		/// <param name="t">Menu list</param>
+		/// <param name="columnOrderBy">Object with column name and sort direction</param>
+		/// <param name="area">Table/Area name</param>
+		/// <param name="allSortOrders">Structure of all sortings for the menu list, grouped by column name</param>
+		/// <returns>List of ColumnSorts in the same order the columns are in the sorting for the column clicked.</returns>
+		protected List<ColumnSort> GetRequestSorts<TModel>(TablePartial<TModel> t, CSGenio.framework.TableConfiguration.ColumnOrderBy columnOrderBy, string area, Dictionary<String, OrderedDictionary> allSortOrders) where TModel: class
+		{
+			if (String.IsNullOrEmpty(columnOrderBy?.ColumnName))
 				return null;
 
 			List<ColumnSort> allRequestSorts = new List<ColumnSort>();
 
 			//< Get name, sort direction, area of column clicked
-			string requestColumn = (string)qs[sortStr];
+			string requestColumn = columnOrderBy.ColumnName;
 
-			string requestDir = (string)qs[directionStr];
+			string requestDir = columnOrderBy.SortOrder.ToUpper();
 
 			string[] requestArgs = requestColumn.Split(new char[] { '.' });
 			string requestFieldName = GetDBColumnNameFromFormFieldName(requestArgs[requestArgs.Count() - 1]);
@@ -338,49 +395,64 @@ namespace GenioMVC.ViewModels
 			return allRequestSorts;
 		}
 
-		protected bool IsColumnVisible(TableSearchColumn searchColumn, List<CSGenioAlstcol> userColumns)
+		/// <summary>
+		/// Determines if a column is visible, accounting for the user column configuration.
+		/// </summary>
+		/// <param name="searchColumn">The table column.</param>
+		/// <param name="columnConfig">Column configuration specified by the user.</param>
+		protected bool IsColumnVisible(TableSearchColumn searchColumn, List<CSGenio.framework.TableConfiguration.ColumnConfiguration> userColumns)
 		{
 			// If there is a user column, use the visibility from the user column, otherwise use the TableSearchColumn value
 			if (userColumns != null)
 			{
 				// MH (10/03/2020) - The "Replace('.', '_')" is necessary because the column identifiers in the TableSearchColumn follow the same logic (if I'm not mistaken because of JavaScript).
-				var userColumn = userColumns.Find(uc => searchColumn.AreaField.Area == uc.ValTabela && searchColumn.Field == uc.ValCampo.Replace('.', '_'));
+				var userColumn = userColumns.Find(uc => searchColumn.Field.Equals(uc.Name.Replace('.', '_')));
 				if (userColumn != null)
-					return userColumn.ValVisivel == 1;
-				else
-					return searchColumn.Visible;
+					return userColumn.Visibility == 1;
 			}
-			else
-				return searchColumn.Visible;
+			
+			return searchColumn.Visible;
 		}
 
+		/// <summary>
+		/// Process the search filters (advanced filters, column filters, searchbar filters) from a table
+		/// </summary>
+		/// <typeparam name="A"></typeparam>
+		/// <param name="Menu">Render helper object</param>
+		/// <param name="SearchColumns">Searchable columns in the table</param>
+		/// <param name="requestValues">All request parameters</param>
+		/// <param name="requesValuesPrefix">List table prefix </param>
+		/// <returns>A set of conditions</returns>
 		protected CriteriaSet ProcessSearchFilters<A>(TablePartial<A> Menu, List<TableSearchColumn> SearchColumns, NameValueCollection requestValues, string requesValuesPrefix) where A : class
 		{
-			//FOR: SEARCH FILTERS
-			//Create search filters from JSON data in query parameter
-			string SearchFiltersJSON = requestValues["SearchFilters"] ?? "";
-			SearchFilter[] SearchFilters = JsonConvert.DeserializeObject<SearchFilter[]>(SearchFiltersJSON);
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
 
+			return ProcessSearchFilters<A>(Menu, SearchColumns, tableConfig);
+		}
+
+		/// <summary>
+		/// Process the search filters (advanced filters, column filters, searchbar filters) from a table
+		/// </summary>
+		/// <typeparam name="A"></typeparam>
+		/// <param name="Menu">Render helper object</param>
+		/// <param name="SearchColumns">Searchable columns in the table</param>
+		/// <param name="tableConfig">Table configuration object</param>
+		/// <returns>A set of conditions</returns>
+		protected CriteriaSet ProcessSearchFilters<A>(TablePartial<A> Menu, List<TableSearchColumn> SearchColumns, CSGenio.framework.TableConfiguration.TableConfiguration tableConfig) where A : class
+		{
 			//Create dictionary of search columns using full names as keys (TABLE.COLUMN)
 			Dictionary<string, TableSearchColumn> SearchColumnsDic = new Dictionary<string, TableSearchColumn>();
 			foreach (TableSearchColumn tsc in SearchColumns)
 				SearchColumnsDic.Add(tsc.AreaField.FullName.ToUpper(), tsc);
 
-			Menu.Filters.QueryField = "q" + requesValuesPrefix.TrimEnd(new char[] { '_' });
-			string query = Menu.Filters.Query = Menu.Query = requestValues[Menu.Filters.QueryField] ?? "";
-
-			// TVC - For showing advanced filters after returning from a form (before the filters were lost when opening a form, but were aplied the first time you would return to the main list)
-			Navigation?.SetValue("AdvancedFilters", SearchFiltersJSON);
-
-			//For showing query text in search bar when returning to menu list after navigating to a record
-			Navigation?.SetValue(Menu.Filters.QueryField, query);
+			string query = Menu.Filters.Query = Menu.Query = tableConfig.Query ?? "";
 
 			CriteriaSet search_filters = CriteriaSet.And();
-			//Search with filters for each field (previous method)
-			if (SearchFilters != null)
+			//Search with filters for each field
+			if (tableConfig.SearchFilters != null)
 			{
 				//Iterate search filters
-				foreach (SearchFilter sf in SearchFilters)
+				foreach (CSGenio.framework.TableConfiguration.SearchFilter sf in tableConfig.SearchFilters)
 				{
 					//Inactive condition
 					if (!sf.Active)
@@ -389,7 +461,7 @@ namespace GenioMVC.ViewModels
 					CriteriaSet conditions = CriteriaSet.Or();
 
 					//Iterate conditions in search filter
-					foreach (SearchFilterCondition sfc in sf.Conditions)
+					foreach (CSGenio.framework.TableConfiguration.SearchFilterCondition sfc in sf.Conditions)
 					{
 						//Inactive condition
 						if (!sfc.Active)
@@ -518,17 +590,32 @@ namespace GenioMVC.ViewModels
 							decimal[] Values = new decimal[sfc.Values.Length];
 							decimal parsedValue;
 							int x = 0;
+							bool valueOutOfFieldRangeFound = false;
 							foreach (string value in sfc.Values)
 								if (decimal.TryParse(value, NumberStyles.Any, System.Threading.Thread.CurrentThread.CurrentCulture, out parsedValue))
+								{
+									string[] valueParts = value.Split(".");
+									string integerDigits = valueParts[0];
+									string decimalDigits = valueParts.Length > 1 ? valueParts[1] : "";
+									
+									//Verify if the number of the search value is more than what the field allows
+									if ((integerDigits != null && integerDigits.Length > fieldInfo.IntegerDigits) ||
+									(decimalDigits != null && decimalDigits.Length > fieldInfo.Decimals))
+									{
+										valueOutOfFieldRangeFound = true;
+									}
 									Values[x++] = parsedValue;
+								}
 
 							//Create criteria based on operator code
 							switch (sfc.Operator)
 							{
 								case "EQ":
-									if (x < 1)
-										continue;
-									conditions.Equal(sc.AreaField, Values[0].ToString(CultureInfo.InvariantCulture));
+									//If the search value is more than what the field allows, no results will be returned.
+									if (valueOutOfFieldRangeFound || x < 1)
+										conditions.Equal("1", "0");
+									else
+										conditions.Equal(sc.AreaField, Values[0].ToString(CultureInfo.InvariantCulture));
 									break;
 								case "NOTEQ":
 									if (x < 1)
@@ -579,12 +666,15 @@ namespace GenioMVC.ViewModels
 
 							//Create enumeration dictionary where keys and values are strings
 							Dictionary<string, string> dic;
+
+							//For normal enums the text exists in the resources, but for dynamic enums those texts don't exist
+							//so when the value is null we add the key as the value to ensure searches with the search bar works properly for dynamic enums
 							if (objectDic is Dictionary<string, string>)
-								dic = (objectDic as Dictionary<string, string>).ToDictionary(p => p.Key, p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value));
+								dic = (objectDic as Dictionary<string, string>).ToDictionary(p => p.Key, p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key);
 							else if (objectDic is Dictionary<int, string>)
-								dic = (objectDic as Dictionary<int, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value));
+								dic = (objectDic as Dictionary<int, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key.ToString());
 							else
-								dic = (objectDic as Dictionary<double, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value));
+								dic = (objectDic as Dictionary<decimal, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key.ToString());
 
 							//Get enumeration codes
 							//Values must be an array because the number of values depends on the operation
@@ -607,7 +697,12 @@ namespace GenioMVC.ViewModels
 							{
 								case "IS":
 									if (x < 1)
+									{
+										//if the user used the search bar but searched for something that doesn't match any element of the enum
+										//add this condition to make it return no data instead of "ignoring" the user's search and returning all data that matches the other filters
+										conditions.NotEqual(sc.AreaField, sc.AreaField);
 										continue;
+									}
 									conditions.Equal(sc.AreaField, Values[0]);
 									break;
 								case "ISNOT":
@@ -671,60 +766,6 @@ namespace GenioMVC.ViewModels
 				}
 			}
 
-			//Advanced search filters
-			foreach (TableSearchColumn sc in SearchColumns)
-			{
-				string filterValue = requestValues[requesValuesPrefix + sc.Field];
-				if (!String.IsNullOrWhiteSpace(filterValue) || sc.FieldType.Equals(typeof(DateTime)))
-				{
-					Menu.Filters.FiltersValues.Add(sc.Field, filterValue);
-					if (sc.FieldType.Equals(typeof(DateTime?)))
-					{
-						CriteriaSet dates = CriteriaSet.And();
-						string filterValue2 = requestValues[requesValuesPrefix + sc.Field + "2"];
-
-						bool hasDates = !String.IsNullOrWhiteSpace(filterValue) || !String.IsNullOrWhiteSpace(filterValue2);
-
-						if (!String.IsNullOrWhiteSpace(filterValue))
-						{
-							DateTime t1 = DateTime.Parse(filterValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
-							dates.GreaterOrEqual(sc.AreaField, t1);
-						}
-						else
-							Menu.Filters.FiltersValues.Remove(sc.Field);
-
-						if (!String.IsNullOrWhiteSpace(filterValue2))
-						{
-							DateTime t2 = DateTime.Parse(filterValue2, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
-							dates.LesserOrEqual(sc.AreaField, t2);
-							Menu.Filters.FiltersValues.Add(sc.Field + "2", filterValue2);
-						}
-
-						if (hasDates)
-							search_filters.SubSets.Add(dates);
-					}
-					else if (sc.FieldType.Equals(typeof(bool)))
-					{
-						//FFS -  foi acrescentado porque quando uma checkbox está selecionada, vem true,false
-						if (filterValue.ToLowerInvariant().Contains("true"))
-							filterValue = "true";
-						search_filters.Equal(sc.AreaField, bool.Parse(filterValue.ToLowerInvariant()));
-					}
-					else if (sc.FieldType.Equals(typeof(Array)))
-						search_filters.Equal(sc.AreaField, filterValue);
-					else if (sc.FieldType.Equals(typeof(decimal?)))
-					{
-						decimal value = 0;
-						if (decimal.TryParse(filterValue, NumberStyles.Any, System.Threading.Thread.CurrentThread.CurrentCulture, out value))
-							search_filters.Equal(sc.AreaField, value.ToString(CultureInfo.InvariantCulture));
-						else
-							search_filters.Like(sc.AreaField, filterValue);
-					}
-					else
-						search_filters.Like(sc.AreaField, filterValue);
-				}
-			}
-
 			// If search all columns
 			if (query != "")
 				search_filters.SubSets.Add(SearchAllColumns(SearchColumns, query));
@@ -757,12 +798,15 @@ namespace GenioMVC.ViewModels
 						MethodInfo getDictionary = arrayType.GetMethod("GetDictionary");
 						var objectDic = getDictionary.Invoke(null, null);
 						Dictionary<string, string> dic;
+
+						//For normal enums the text exists in the resources, but for dynamic enums those texts don't exist
+						//so when the value is null we add the key as the value to ensure searches with the search bar works properly for dynamic enums
 						if (objectDic is Dictionary<string, string>)
-							dic = (objectDic as Dictionary<string, string>).ToDictionary(p => p.Key, p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value));
+							dic = (objectDic as Dictionary<string, string>).ToDictionary(p => p.Key, p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key);
 						else if (objectDic is Dictionary<int, string>)
-							dic = (objectDic as Dictionary<int, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value));
+							dic = (objectDic as Dictionary<int, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key.ToString());
 						else
-							dic = (objectDic as Dictionary<double, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value));
+							dic = (objectDic as Dictionary<decimal, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key.ToString());
 
 						foreach (var pair in dic)
 							if (pair.Value.ToLower().Contains(query.ToLower()))
@@ -783,7 +827,7 @@ namespace GenioMVC.ViewModels
 		}
 
 		/// <summary>
-		/// Process the active filter from table list
+		/// Process the active filter from a table
 		/// </summary>
 		/// <typeparam name="A"></typeparam>
 		/// <param name="Menu">Render helper object</param>
@@ -792,6 +836,20 @@ namespace GenioMVC.ViewModels
 		/// <returns>A builded condition</returns>
 		protected CriteriaSet ProcessActiveFilter<A>(TablePartial<A> Menu, NameValueCollection requestValues, string requesValuesPrefix)
 		{
+			CSGenio.framework.TableConfiguration.ActiveFilter activeFilter = new CSGenio.framework.TableConfiguration.ActiveFilter();
+
+			return ProcessActiveFilter<A>(Menu, activeFilter);
+		}
+
+		/// <summary>
+		/// Process the active filter from a table
+		/// </summary>
+		/// <typeparam name="A"></typeparam>
+		/// <param name="Menu">Render helper object</param>
+		/// <param name="activeFilter">Active filter object</param>
+		/// <returns>A builded condition</returns>
+		protected CriteriaSet ProcessActiveFilter<A>(TablePartial<A> Menu, CSGenio.framework.TableConfiguration.ActiveFilter activeFilter)
+		{
 			CriteriaSet activefilters = CriteriaSet.And();
 			DateTime hojeDt = DateTime.Today;
 			bool activo = false;
@@ -799,19 +857,14 @@ namespace GenioMVC.ViewModels
 			bool futuro = false;
 
 			//set active = true, at first load
-			if (!requestValues.AllKeys.Contains("filter_" + requesValuesPrefix + "ActiveFilter_A"))
+			if (activeFilter == null)
 				activo = true;
 			else
 			{
-				activo = Conversion.string2Bool(requestValues["filter_" + requesValuesPrefix + "ActiveFilter_A"]);
-				inactivo = Conversion.string2Bool(requestValues["filter_" + requesValuesPrefix + "ActiveFilter_I"]);
-				futuro = Conversion.string2Bool(requestValues["filter_" + requesValuesPrefix + "ActiveFilter_F"]);
-				string dateString = requestValues[requesValuesPrefix +"dataRef"];
-				DateTime.TryParse(dateString, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind, out hojeDt);
-
-				Navigation.SetValue("filter_" + requesValuesPrefix + "ActiveFilter_A", activo);
-				Navigation.SetValue("filter_" + requesValuesPrefix + "ActiveFilter_I", inactivo);
-				Navigation.SetValue("filter_" + requesValuesPrefix + "ActiveFilter_F", futuro);
+				activo = activeFilter.Active;
+				inactivo = activeFilter.Inactive;
+				futuro = activeFilter.Future;
+				DateTime.TryParse(activeFilter.Date, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind, out hojeDt);
 			}
 
 			FieldRef datainiColumn = Menu.Filters.FilterDateStart;
@@ -1096,10 +1149,17 @@ namespace GenioMVC.ViewModels
 		/// </summary>
 		/// <param name="crs">The CriteriaSet to which the condition will be added.</param>
 		/// <param name="fieldref">The FieldRef indicating the field for the query condition.</param>
+		/// <param name="operationType">The type of the limit operation.</param>
 		/// <param name="key">The key from which to retrieve the historical value for the condition.</param>
 		/// <param name="isMandatory">Indicates whether the limit is mandatory.</param>
 		/// <returns>True if the condition was successfully added or not needed, False if it's a mandatory limit and the value is empty.</returns>
-		protected bool AddCriteriaHistoryLimit(CriteriaSet crs, FieldRef fieldref, string key, bool isMandatory)
+		protected bool AddCriteriaHistoryLimit(
+			CriteriaSet crs,
+			FieldRef fieldref,
+			OperationType operationType,
+			string key,
+			bool isMandatory
+		)
 		{
 			var histValue = Navigation.GetValue(key);
 			var fieldInfo = CSGenio.business.Area.GetFieldInfo(fieldref);
@@ -1112,13 +1172,34 @@ namespace GenioMVC.ViewModels
 			// Handle empty value based on 'isMandatory'
 			else if (histValue == null)
 			{
-				return isMandatory ? false : true;
+				return !isMandatory;
 			}
-			// Add an 'Equal' condition if the value is not empty
-			else
+
+			// Add the condition according to the operation type
+			var value = QueryUtils.ToValidDbValue(histValue, fieldInfo);
+
+			switch (operationType)
 			{
-				var value = QueryUtils.ToValidDbValue(histValue, fieldInfo);
-				crs.Equal(fieldref, value);
+				case OperationType.EQUAL:
+					crs.Equal(fieldref, value);
+					break;
+				case OperationType.LESS:
+					crs.Lesser(fieldref, value);
+					break;
+				case OperationType.LESSEQUAL:
+					crs.LesserOrEqual(fieldref, value);
+					break;
+				case OperationType.GREAT:
+					crs.Greater(fieldref, value);
+					break;
+				case OperationType.GREATEQUAL:
+					crs.GreaterOrEqual(fieldref, value);
+					break;
+				case OperationType.DIFF:
+					crs.NotEqual(fieldref, value);
+					break;
+				default:
+					throw new InvalidOperationException("Invalid operation type: " + operationType);
 			}
 
 			// Successfully applied the limit
@@ -1183,7 +1264,7 @@ namespace GenioMVC.ViewModels
 			bool hasPermission = CheckVMPermissions(mode);
 
 			if (hasPermission)
-				hasPermission = model.CheckTablePremissions(mode);
+				hasPermission = model.CheckTablePermissions(mode);
 
 			if (!hasPermission)
 			   return StatusMessage.Error(GetPermissionMessage(mode));
@@ -1501,11 +1582,32 @@ namespace GenioMVC.ViewModels
 
 			return viewModelValues;
 		}
+
+		/// <summary>
+		///  Sanitizes the contents of fields with HTML support on the client-side by cleaning HTML fragments and documents of constructs that could lead to XSS attacks and compromise application security.
+		/// </summary>
+		protected virtual void SanitizeHTMLFields() { /* Method intentionally left empty. */ }
+
+		/// <summary>
+		/// Assigns ticket to Image fields.
+		/// </summary>
+		protected virtual void SetTicketToImageFields() { /* Method intentionally left empty. */ }
+
+		/// <summary>
+		/// Method that prepares the ViewModel content to be returned to the client-side.
+		/// 	- Sanitizes the ViewModel content by cleaning HTML fragments and documents from constructs that could lead to XSS attacks and compromise application security.
+		/// 	- Assigns ticket to Image fields.
+		/// </summary>
+		public void PrepareContentForClientSide()
+		{
+			SanitizeHTMLFields();
+			SetTicketToImageFields();
+		}
 	}
 
 	public static class ViewModelConversion
 	{
-		public static double ToDouble(object value)
+		public static decimal ToDouble(object value)
 		{
 			return DBConversion.ToNumeric(value);
 		}
@@ -1515,7 +1617,7 @@ namespace GenioMVC.ViewModels
 			if (value == null || value == DBNull.Value)
 				return 0.0M;
 			if (value is double)
-				return Convert.ToDecimal((double)value);
+				return Convert.ToDecimal(value);
 			if (value is int)
 				return (decimal)((int)value);
 			if (value is decimal)
@@ -1561,24 +1663,21 @@ namespace GenioMVC.ViewModels
 			return DBConversion.ToBinary(value);
 		}
 
-		public static byte[] ToImage(GenioMVC.ViewModels.ImageModel value)
+		public static byte[] ToImage(GenioMVC.Models.ImageModel value)
 		{
-			byte[] data = null;
-			if (value != null)
-				data = System.Convert.FromBase64String(value.Data);
-
+			byte[] data = value?.OriginalData ?? (value?.Data?.Length > 0 ? System.Convert.FromBase64String(value.Data) : null);
 			return DBConversion.ToBinary(data);
 		}
 
-		public static GenioMVC.ViewModels.ImageModel ToImage(object value)
+		public static GenioMVC.Models.ImageModel ToImage(object value)
 		{
-			byte[] image = DBConversion.ToBinary(value);
+			byte[] image = value is Models.ImageModel imageModelValue ? DBConversion.ToBinary(imageModelValue?.OriginalData) : DBConversion.ToBinary(value);
 			string imageFormat = ImageResizer.GetImageFormat(image);
 
-			GenioMVC.ViewModels.ImageModel imageModel = null;
+			GenioMVC.Models.ImageModel imageModel = null;
 			if (image?.Length > 0)
 			{
-				imageModel = new()
+				imageModel = new(image)
 				{
 					Data = System.Convert.ToBase64String(image),
 					DataFormat = imageFormat,
@@ -1593,28 +1692,47 @@ namespace GenioMVC.ViewModels
 		{
 			return DBConversion.ToGeographicShape(value);
 		}
+
+		/// <summary>
+		/// Converts a JSON value to its corresponding raw value.
+		/// </summary>
+		/// <param name="value">The JSON value to convert.</param>
+		/// <returns>
+		/// The raw value corresponding to the given JSON value. This will be a direct translation for strings, numbers, booleans, and nulls;
+		/// for other types, it returns the raw JSON text.
+		/// </returns>
+		/// <remarks>
+		/// This method is particularly useful for extracting values from JSON elements that are pre-filled during the insertion of fields,
+		/// handling different JSON value kinds appropriately.
+		/// </remarks>
+		public static object ToRawValue(object value)
+		{
+			// Check if the value is a JsonElement which can come from "prefillValues" during the pre-filling of fields.
+			if (value is System.Text.Json.JsonElement je)
+			{
+				// Return the appropriate type based on the JsonValueKind of the JsonElement.
+				switch (je.ValueKind)
+				{
+					case System.Text.Json.JsonValueKind.String:
+						return je.GetString() ?? ""; // Convert JSON string to C# string, ensuring nulls are converted to empty strings.
+					case System.Text.Json.JsonValueKind.Number:
+						return je.GetDouble(); // Convert JSON number to double. TODO: preserve whole numbers - long/int
+					case System.Text.Json.JsonValueKind.True:
+						return true; // Convert JSON true to boolean true.
+					case System.Text.Json.JsonValueKind.False:
+						return false; // Convert JSON false to boolean false.
+					case System.Text.Json.JsonValueKind.Undefined:
+					case System.Text.Json.JsonValueKind.Null:
+						return null; // Return null for undefined or null JSON values.
+					default:
+						return je.GetRawText(); // For other types (arrays, objects), return the raw JSON text.
+				}
+			}
+			else
+			{
+				return value; // If not a JsonElement, return the value as is.
+			}
+		}
 	}
 
-	//FOR: SEARCH FILTERS
-	public class SearchFilter
-	{
-		public string Name { get; set; }
-
-		public bool Active { get; set; }
-
-		public SearchFilterCondition[] Conditions { get; set; }
-	}
-
-	public class SearchFilterCondition
-	{
-		public string Name { get; set; }
-
-		public bool Active { get; set; }
-
-		public string Field { get; set; }
-
-		public string Operator { get; set; }
-
-		public string[] Values { get; set; }
-	}
 }

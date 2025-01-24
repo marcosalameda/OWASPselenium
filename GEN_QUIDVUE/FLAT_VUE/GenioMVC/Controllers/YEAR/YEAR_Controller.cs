@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Year;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER YEAR]/
 
@@ -42,22 +44,19 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER YEAR]/
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Ano" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Ano([FromBody]Ano_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Ano([FromBody]Ano_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "year",
+			return GenericRecalculateFormulas(formData, "year",
 				(primaryKey) => Models.Year.Find(primaryKey, UserContext.Current, "FANO"),
-				(model) => form_data.MapToModel(model as Models.Year)
+				(model) => formData.MapToModel(model as Models.Year)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -65,7 +64,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Rordf;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_RORDF_CANCEL = new NavigationLocation("ORDER__FLOAT_FIELD_21693", "Rordf_Cancel", "Rordf") { vueRouteName = "form-RORDF", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_RORDF_SHOW = new NavigationLocation("ORDER__FLOAT_FIELD_21693", "Rordf_Show", "Rordf") { vueRouteName = "form-RORDF", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_RORDF_NEW = new NavigationLocation("ORDER__FLOAT_FIELD_21693", "Rordf_New", "Rordf") { vueRouteName = "form-RORDF", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_RORDF_EDIT = new NavigationLocation("ORDER__FLOAT_FIELD_21693", "Rordf_Edit", "Rordf") { vueRouteName = "form-RORDF", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_RORDF_DUPLICATE = new NavigationLocation("ORDER__FLOAT_FIELD_21693", "Rordf_Duplicate", "Rordf") { vueRouteName = "form-RORDF", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_RORDF_DELETE = new NavigationLocation("ORDER__FLOAT_FIELD_21693", "Rordf_Delete", "Rordf") { vueRouteName = "form-RORDF", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_RORDF_CANCEL = new("ORDER__FLOAT_FIELD_21693", "Rordf_Cancel", "Rordf") { vueRouteName = "form-RORDF", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_RORDF_SHOW = new("ORDER__FLOAT_FIELD_21693", "Rordf_Show", "Rordf") { vueRouteName = "form-RORDF", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_RORDF_NEW = new("ORDER__FLOAT_FIELD_21693", "Rordf_New", "Rordf") { vueRouteName = "form-RORDF", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_RORDF_EDIT = new("ORDER__FLOAT_FIELD_21693", "Rordf_Edit", "Rordf") { vueRouteName = "form-RORDF", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_RORDF_DUPLICATE = new("ORDER__FLOAT_FIELD_21693", "Rordf_Duplicate", "Rordf") { vueRouteName = "form-RORDF", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_RORDF_DELETE = new("ORDER__FLOAT_FIELD_21693", "Rordf_Delete", "Rordf") { vueRouteName = "form-RORDF", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Rordf_ModalDBEdit()
-		{
-			Rordf_ViewModel model = new Rordf_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Rordf_Show
 
@@ -138,39 +129,6 @@ namespace GenioMVC.Controllers
 				Redirect = redirect,
 				BeforeOp = (sink, sp) =>
 				{
-					//FOR: ROW_REORDERING
-					string tableName = Navigation.GetStrValue("TableName");
-					string tableViewModelName = Navigation.GetStrValue("TableViewModelName");
-
-					Type tableViewModelType = Type.GetType("GenioMVC.ViewModels." + tableName + "." + tableViewModelName);
-					if (tableViewModelType != null)
-					{
-						dynamic tableViewModel = Activator.CreateInstance(tableViewModelType, this.UserContext.Current);
-						if (tableViewModel != null)
-						{
-							User u = UserContext.Current.User;
-							var row = CSGenioArordf.search(sp, model.ValCodrordf, u);
-
-							var orderField = model.ValOrder;
-							int orderFieldValue = Convert.ToInt32(orderField);
-
-							int maxOrder = 0;
-							try
-							{
-								maxOrder = sp.GetMaxFieldValue(Area.AreaRORDF, CSGenioArordf.FldOrder, tableViewModel.baseConditions, tableViewModel.relations);
-							}
-							catch (Exception ex)
-							{
-								Log.Error(ex.Message);
-							}
-
-							if (maxOrder > 0 && orderFieldValue > maxOrder)
-								model.ValOrder = orderFieldValue = maxOrder + 1;
-
-							row.Reorder_Order(sp, orderFieldValue - 1, tableViewModel.baseConditions, tableViewModel.relations, false);
-						}
-					}
-
 // USE /[MANUAL GQT BEFORE_SAVE_NEW RORDF]/
 				},
 				AfterOp = (sink, sp) =>
@@ -306,17 +264,6 @@ namespace GenioMVC.Controllers
 				},
 				AfterOp = (sink, sp) =>
 				{
-					//FOR: ROW_REORDERING
-					string tableName = Navigation.GetStrValue("TableName");
-					string tableViewModelName = Navigation.GetStrValue("TableViewModelName");
-
-					Type tableViewModelType = Type.GetType("GenioMVC.ViewModels." + tableName + "." + tableViewModelName);
-					if (tableViewModelType != null)
-					{
-						dynamic tableViewModel = Activator.CreateInstance(tableViewModelType, this.UserContext.Current);
-						if (tableViewModel != null)
-							sp.ReorderSequence(CSGenio.business.Area.AreaRORDF, CSGenioArordf.FldOrder, tableViewModel.baseConditions, tableViewModel.relations);
-					}
 // USE /[MANUAL GQT AFTER_DESTROY_DELETE RORDF]/
 				}
 			};
@@ -444,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Rordf Multiform actions
 
-		//
-		// GET /Rordf/MFRordf_New
-		[HttpGet]
-		[ActionName("MFRordf_New")]
-		public ActionResult MFRordf_New()
-		{
-			var model = new Rordf_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_RORDF_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("rordf", model.ValCodrordf);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFRordf_New_GET()
-		{
-			return MFRordf_New();
-		}
-
-		//
-		// GET /Rordf/MFRordf_Edit
-		[HttpGet]
-		[ActionName("MFRordf_Edit")]
-		public ActionResult MFRordf_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("RORDF", "EDIT", new { id = id, partialView = "MFRordf", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFRordf_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFRordf_Edit(requestModel);
-		}
-
-		//
-		// GET /Rordf/MFRordf_Cancel
-		[ActionName("MFRordf_Cancel")]
-		public ActionResult MFRordf_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Rordf(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Rordf/MFRordf_Save
-		[HttpPost]
-		[ActionName("MFRordf_Save")]
-		public JsonResult MFRordf_Save(Rordf_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRordf_Save",
-				ViewName = "MFRordf",
-				AreaName = "rordf"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Rordf/MFRordf_Delete
-		[HttpPost]
-		[ActionName("MFRordf_Delete")]
-		public JsonResult MFRordf_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRordf_Delete",
-				ViewName = "MFRordf",
-				AreaName = "rordf",
-				Location = ACTION_RORDF_EDIT
-			};
-
-			var model = new Rordf_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Rordf/Rordf_SaveEdit
 		[HttpPost]

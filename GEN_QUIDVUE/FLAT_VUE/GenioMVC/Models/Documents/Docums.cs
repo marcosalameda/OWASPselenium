@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 using CSGenio.business;
 using CSGenio.framework;
@@ -10,53 +9,53 @@ using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
 
-using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
-
 namespace GenioMVC.Models
 {
-	public class Docums : ModelBase
+	public class Docums(UserContext userContext, CSGenioAdocums? val = null) : ModelBase(userContext)
 	{
 		[JsonIgnore]
-		public CSGenioAdocums klass;
+		public CSGenioAdocums klass = val;
 
 		[Key]
-		public string ValCoddocums { get { return klass.ValCoddocums; } set { klass.ValCoddocums = value; } }
+		[JsonPropertyName("id")]
+		public string ValCoddocums { get => klass.ValCoddocums; set => klass.ValCoddocums = value; }
 
-		public string ValDocumid { get { return klass.ValDocumid; } set { klass.ValDocumid = value; } }
+		[JsonIgnore]
+		public string ValModelkey => klass.ValChave;
 
-		public byte[] ValDocument { get { return klass.ValDocument; } set { klass.ValDocument = value; } }
+		[JsonIgnore]
+		public string ValModelname => klass.ValTabela;
 
-		public string ValDocpath { get { return klass.ValDocpath; } }
+		[JsonIgnore]
+		public string ValModelfield => klass.ValCampo;
 
-		[Display(Name = "DOCUMENTO60418", ResourceType = typeof(Resources.Resources))]
-		public string ValNome { get { return klass.ValNome; } set { klass.ValNome = value; } }
+		[JsonIgnore]
+		public string ValDocumid { get => klass.ValDocumid; set => klass.ValDocumid = value; }
 
-		[Display(Name = "BYTES25864", ResourceType = typeof(Resources.Resources))]
-		public string ValTamanho { get { return klass.ValTamanho; } set { klass.ValTamanho = value; } }
+		[JsonIgnore]
+		public byte[] ValDocument { get => klass.ValDocument; set => klass.ValDocument = value; }
 
-		public string ValExtensao { get { return klass.ValExtensao; } set { klass.ValExtensao = value; } }
+		[JsonIgnore]
+		public string ValDocpath { get => klass.ValDocpath; set => klass.ValDocpath = value; }
 
-		[Display(Name = "AUTOR45670", ResourceType = typeof(Resources.Resources))]
-		public string ValOpercria { get { return klass.ValOpercria; } set { klass.ValOpercria = value; } }
+		[JsonPropertyName("fileName")]
+		public string ValNome { get => klass.ValNome; set => klass.ValNome = value; }
 
-		[Display(Name = "DATA_DE_CRIACAO16914", ResourceType = typeof(Resources.Resources))]
+		[JsonPropertyName("bytes")]
+		public string ValTamanho { get => klass.ValTamanho; set => klass.ValTamanho = value; }
+
+		[JsonIgnore]
+		public string ValExtensao { get => klass.ValExtensao; set => klass.ValExtensao = value; }
+
+		[JsonPropertyName("author")]
+		public string ValOpercria { get => klass.ValOpercria; set => klass.ValOpercria = value; }
+
+		[JsonPropertyName("createdOn")]
 		[DataType(DataType.DateTime)]
-		public DateTime ValDatacria { get { return klass.ValDatacria; } set { klass.ValDatacria = value; } }
+		public DateTime ValDatacria { get => klass.ValDatacria; set => klass.ValDatacria = value; }
 
-		[Display(Name = "VERSAO61228", ResourceType = typeof(Resources.Resources))]
-		public string ValVersao { get { return klass.ValVersao; } set { klass.ValVersao = value; } }
-
-		/// <summary>
-		/// Just used for the docums versions dbedit
-		/// </summary>
-		public string Ticket { get; set; }
-
-		#region Class Methods
-
-		public Docums(UserContext userContext, CSGenioAdocums? val = null) : base(userContext)
-		{
-			klass = val;
-		}
+		[JsonPropertyName("version")]
+		public string ValVersao { get => klass.ValVersao; set => klass.ValVersao = value; }
 
 		/// <summary>
 		/// Search the row by key.
@@ -78,56 +77,22 @@ namespace GenioMVC.Models
 			return results.First();
 		}
 
-		public static Docums GetLatestVersion(string documid, UserContext userContext)
-		{
-			if (string.IsNullOrEmpty(documid))
-				return null;
-
-			CriteriaSet args = CriteriaSet.And();
-			args.Equal(CSGenio.business.CSGenioAdocums.FldDocumid, documid);
-
-			return Where(userContext, false, args, null, 0, 0, new List<ColumnSort>()).RowsForViewModel<Docums>(d => new Docums(userContext, d)).FirstOrDefault();
-		}
-
 		public static ListingMVC<CSGenioAdocums> Where(UserContext userContext, bool distinct, CriteriaSet args = null, FieldRef[] fields = null, int offset = 0, int numRegs = 0, List<ColumnSort> sorts = null)
 		{
 			User u = userContext.User;
 			PersistentSupport sp = userContext.PersistentSupport;
 
-			//EPH
 			args = Docums.AddEPH<CSGenioAdocums>(ref u, args);
 
-			ColumnSort sortPk = new ColumnSort(new ColumnReference(CSGenioAdocums.FldVersao), SortOrder.Descending);
+			ColumnSort sortPk = new(new ColumnReference(CSGenioAdocums.FldVersao), SortOrder.Descending);
 			if (sorts != null && !sorts.Exists(x => x == sortPk))
 				sorts.Add(sortPk);
 
-			ListingMVC<CSGenioAdocums> listing = new ListingMVC<CSGenioAdocums>(fields, sorts, offset, numRegs, distinct, u, false);
+			ListingMVC<CSGenioAdocums> listing = new(fields, sorts, offset, numRegs, distinct, u, false);
 
 			CSGenioAdocums.searchListAdvancedWhere(sp, u, args, listing);
 
 			return listing;
 		}
-
-		// TODO: check if this static New() with no references
-		// is still necessary
-		public static Docums New(UserContext userContext)
-		{
-			User u = userContext.User;
-
-			Docums new_row = new Docums(userContext);
-			new_row.klass = new CSGenioAdocums(u, u.CurrentModule);
-
-			PersistentSupport sp = userContext.PersistentSupport;
-			sp.openConnection();
-			//Aplicação da EPH
-			//TODO: verificar se exists um método melhor to aplicar a EPH
-			new_row.klass.fillEPH(u, sp, "");
-			new_row.klass.insertPseud(sp);
-			sp.closeConnection();
-
-			return new_row;
-		}
-
-		#endregion
 	}
 }

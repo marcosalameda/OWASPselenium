@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_A31ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_A31', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: 'A31',
 					isMenuList: true,
+					designation: computed(() => this.Resources.ANOS65117),
 					acronym: 'GQT_A31',
 					name: 'ANO',
 					route: 'menu-GQT_A31',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'GQT_Menu_A31',
 						controller: 'YEAR',
 						action: 'GQT_Menu_A31',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -164,7 +174,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -268,6 +278,7 @@
 								id: 'RCA_GQT_A311',
 								name: 'form-ANO',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -284,23 +295,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: ANO
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValYear',
 							defaultSearchColumnNameOriginal: 'ValYear',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValYear',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-YEAR'],
 						uuid: '5b426f5b-f8d9-49b9-9172-1fc20cc05aa6',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -329,6 +334,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS GQT_A31]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_A31]/
 // eslint-disable-next-line

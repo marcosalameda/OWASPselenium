@@ -1,72 +1,68 @@
-﻿.q-document-input__attach {
-	position: absolute;
-	right: 0;
-	margin: 0;
-	opacity: 0;
-	cursor: pointer;
-	height: 26px;
-}
+﻿.q-document {
+	&__field {
+		cursor: pointer;
 
-.properties {
-	margin: 0;
-
-	.input-xlarge {
-		box-sizing: border-box;
-		width: 100%;
-		overflow: auto;
-		text-overflow: clip;
-	}
-
-	// Hide scrollbar
-	.input-xlarge::-webkit-scrollbar {
-		display: none;
-	}
-}
-
-.version-option {
-	justify-content: space-between;
-	margin-bottom: 0.25rem !important;
-
-	.version-option-content {
-		width: 100%;
-		display: flex;
-		align-items: center;
-
-		label {
-			margin-top: 0;
-			margin-right: 0.8rem;
-			flex-grow: 1;
+		&-empty {
+			cursor: default;
 		}
 	}
-}
 
-/* Hides the choose file button from input type="file" in every browser */
-.file-submit-btn::file-selector-button {
-	display: none;
-}
+	&__container {
+		display: flex;
+		flex-direction: column;
+	}
 
-.properties-row {
-	margin-bottom: 0 !important;
-	padding-top: 0 !important;
-}
+	&__attach {
+		display: none;
+	}
 
-.file-input-box {
-	text-align: center;
-}
+	&__editing {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		color: var(--q-theme-on-background);
+		background-color: var(--q-theme-info-light);
+		border-left: 3px solid var(--q-theme-info);
+		border-radius: $border-radius;
+		margin-top: 0.2rem;
+		padding: 0.2rem 0.5rem;
 
-.version-type-options {
-	display: flex;
-	flex-direction: column;
-	width: max-content;
-}
+		.q-icon__svg {
+			fill: var(--q-theme-on-background);
+		}
+	}
 
-.display-as-input {
-	background-color: $input-disabled-bg;
-	color: $on-background;
-	opacity: 1;
-	border: 1px solid $input-border-color;
-	margin: 0 0.25rem 0.25rem 0;
-	padding: $input-btn-padding-y $input-btn-padding-y;
-	min-height: 17px;
-	border-radius: $border-radius;
+	&__version-options {
+		display: flex;
+		flex-direction: column;
+		width: max-content;
+		margin-left: 10%;
+	}
+
+	&__properties {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	&__dropdown {
+		$this: &;
+		z-index: 445;
+
+		&-dirty {
+			$this: &;
+			position: relative;
+
+			.q-btn__content {
+				position: unset;
+
+				& #{$this}-indicator.q-icon__svg {
+					position: absolute;
+					right: 0.6rem;
+					fill: var(--q-theme-warning) !important;
+					opacity: 1;
+				}
+			}
+		}
+	}
 }

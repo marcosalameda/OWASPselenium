@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuPTN_221ViewModel.js'
+
 	const requiredTextResources = ['QMenuPTN_221', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,73 +117,74 @@
 				menuInfo: {
 					id: '221',
 					isMenuList: true,
+					designation: computed(() => this.Resources.REGIONS31874),
 					acronym: 'PTN_221',
-					name: 'ARTIG',
+					name: 'REGIA',
 					route: 'menu-PTN_221',
 					order: '221',
-					controller: 'ITEM',
+					controller: 'REGIO',
 					action: 'PTN_Menu_221',
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
-						controller: 'ITEM',
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'PTN_Menu_221',
+						controller: 'REGIO',
 						action: 'PTN_Menu_221',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
-								name: 'ValItemdes',
-								area: 'ITEM',
-								field: 'ITEMDES',
-								label: computed(() => this.Resources.ARTICLE60065),
-								dataLength: 85,
+								name: 'Cntry.ValCountry',
+								area: 'CNTRY',
+								field: 'COUNTRY',
+								label: computed(() => this.Resources.COUNTRY64133),
+								dataLength: 90,
 								scrollData: 30,
+								pkColumn: 'ValCodcntry',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 2,
-								name: 'ValItemcod',
-								area: 'ITEM',
-								field: 'ITEMCOD',
-								label: computed(() => this.Resources.CODE49225),
-								dataLength: 15,
-								scrollData: 15,
+								name: 'ValRegiao',
+								area: 'REGIO',
+								field: 'REGIAO',
+								label: computed(() => this.Resources.REGION12723),
+								dataLength: 50,
+								scrollData: 30,
 							}),
-							new listColumnTypes.BooleanColumn({
+							new listColumnTypes.TextColumn({
 								order: 3,
-								name: 'ValValid',
-								area: 'ITEM',
-								field: 'VALID',
-								label: computed(() => this.Resources.IN_USE42606),
-								scrollData: 1,
-							}),
-							new listColumnTypes.ArrayColumn({
-								order: 4,
-								name: 'ValItemtype',
-								area: 'ITEM',
-								field: 'ITEMTYPE',
-								label: computed(() => this.Resources.TYPE00312),
-								dataLength: 1,
-								scrollData: 1,
-								array: qProjArrays.QArrayTipoarti.setResources(vm.$getResource).elements,
-								arrayType: qProjArrays.QArrayTipoarti.type,
+								name: 'Pais1.ValCountry',
+								area: 'PAIS1',
+								field: 'COUNTRY',
+								label: computed(() => this.Resources.COUNTRY64133),
+								dataLength: 90,
+								scrollData: 30,
+								pkColumn: 'ValCodcntry',
 							}),
 						],
 						config: {
 							name: 'PTN_Menu_221',
 							serverMode: true,
-							pkColumn: 'ValCoditem',
-							tableAlias: 'ITEM',
-							tableNamePlural: computed(() => this.Resources.ARTICLES59822),
+							pkColumn: 'ValCodregia',
+							tableAlias: 'REGIO',
+							tableNamePlural: computed(() => this.Resources.REGIONS31874),
 							viewManagement: 'U',
 							showLimitsInfo: true,
-							tableTitle: computed(() => this.Resources.ARTICLES59822),
+							tableTitle: computed(() => this.Resources.REGIONS31874),
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -201,7 +203,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'ARTIG',
+										formName: 'REGIA_ML',
 										mode: 'SHOW',
 										isControlled: true
 									}
@@ -217,7 +219,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'ARTIG',
+										formName: 'REGIA_ML',
 										mode: 'EDIT',
 										isControlled: true
 									}
@@ -233,7 +235,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'ARTIG',
+										formName: 'REGIA_ML',
 										mode: 'DUPLICATE',
 										isControlled: true
 									}
@@ -249,7 +251,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'ARTIG',
+										formName: 'REGIA_ML',
 										mode: 'DELETE',
 										isControlled: true
 									}
@@ -267,9 +269,9 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'ARTIG',
+										formName: 'REGIA_ML',
 										mode: 'NEW',
-										repeatInsertion: true,
+										repeatInsertion: false,
 										isControlled: true
 									}
 								},
@@ -284,42 +286,36 @@
 							],
 							rowClickAction: {
 								id: 'RCA_PTN_2211',
-								name: 'form-ARTIG',
+								name: 'form-REGIA_ML',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
-											fnValueSelector: (row) => row.ValCoditem
+											fnValueSelector: (row) => row.ValCodregia
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARTIG',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'REGIA_ML',
 								}
 							},
 							formsDefinition: {
-								'ARTIG': {
-									fnKeySelector: (row) => row.Fields.ValCoditem,
+								'REGIA_ML': {
+									fnKeySelector: (row) => row.Fields.ValCodregia,
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							allowFileExport: true,
-							// The list support form: ARTIG
-							crudConditions: {
-							},
-							defaultSearchColumnName: 'ValItemdes',
-							defaultSearchColumnNameOriginal: 'ValItemdes',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultSearchColumnName: 'ValRegiao',
+							defaultSearchColumnNameOriginal: 'ValRegiao',
+							defaultColumnSorting: {
+								columnName: 'ValRegiao',
+								sortOrder: 'asc'
+							}
 						},
-						changeEvents: ['changed-WAREH', 'changed-GITEM', 'changed-ITEM'],
-						uuid: 'eb3397a7-f7a5-4956-8630-eb249d2c952a',
+						changeEvents: ['changed-REGIO', 'changed-CNTRY', 'changed-PAIS1'],
+						uuid: 'be72babe-0766-42e6-977c-ad7e8bd8b426',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -348,6 +344,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PTN_221]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_221]/
 // eslint-disable-next-line

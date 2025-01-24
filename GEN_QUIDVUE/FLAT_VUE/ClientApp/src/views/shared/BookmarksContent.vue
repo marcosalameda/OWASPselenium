@@ -4,54 +4,51 @@
 			v-for="bmark in model.Bookmarks"
 			:key="bmark.MenuID"
 			class="nav-item n-sidebar__nav-item bookmarks__item">
-			<template v-if="bmark.MenuEntryObj">
-				<menu-action
-					class="bookmarks__btn--link"
-					check-children
-					:title="bmark.Description"
-					:menu="bmark.MenuEntryObj"
-					:description="bmark.Description">
-					{{ bmark.Description }}
-					<template>
-						<span class="bookmarks__text">
-							{{ bmark.MenuEntryObj.Title }}
-						</span>
+			<menu-action
+				v-if="bmark.MenuEntryObj"
+				class="bookmarks__btn--link"
+				:title="bmark.Description"
+				:menu="bmark.MenuEntryObj"
+				:description="bmark.Description"
+				:has-sub-menu-toggle="false"
+				@menu-action="$emit('menu-action')"
+				@keyup="(...args) => $emit('keyup', ...args)">
+				{{ bmark.Description }}
+				<template>
+					<span class="bookmarks__text">
+						{{ bmark.MenuEntryObj.Title }}
+					</span>
 
-						<br />
+					<br />
 
-						<span class="bookmarks__full-path">
-							{{ bmark.Description }}
-						</span>
-					</template>
-				</menu-action>
+					<span class="bookmarks__full-path">
+						{{ bmark.Description }}
+					</span>
+				</template>
+			</menu-action>
+			<span
+				v-else
+				class="bookmarks__text">
+				{{ bmark.Description }}
+			</span>
 
-				<br />
+			<br />
 
-				<q-button
-					v-bind="removeBtnAttrs"
-					@click="bookmarks.RemoveBookmark(bmark.Codusrcfg)">
-					<q-icon icon="remove" />
-				</q-button>
-			</template>
-			<template v-else>
-				<span class="bookmarks__text">
-					{{ bmark.Description }}
-				</span>
-
-				<br />
-
-				<q-button
-					v-bind="removeBtnAttrs"
-					@click="bookmarks.RemoveBookmark(bmark.Codusrcfg)">
-					<q-icon icon="remove" />
-				</q-button>
-			</template>
+			<q-button
+				v-bind="removeBtnAttrs"
+				@click="removeBookmark(bmark.Codusrcfg)"
+				@keyup="(...args) => $emit('keyup', ...args)"
+				class="bookmarks__btn--remove">
+				<q-icon-svg icon="remove" />
+			</q-button>
 		</li>
 
 		<li class="nav-item n-sidebar__nav-item bookmarks__item">
 			<q-button
 				v-bind="addBtnAttrs"
-				@click="bookmarks.ActivateSelectionMode()">
+				@click="activateSelectionMode"
+				@keyup="(...args) => $emit('keyup', ...args)"
+				class="bookmarks__btn--add">
 				<q-icon icon="add" />
 			</q-button>
 		</li>
@@ -69,6 +66,8 @@
 
 	export default {
 		name: 'BookmarksContent',
+
+		emits: ['keyup', 'menu-action', 'add', 'remove'],
 
 		components: {
 			MenuAction
@@ -113,7 +112,7 @@
 		mounted()
 		{
 			this.bookmarks.fetchData()
-
+			
 			this.$eventHub.on('before-execute-menu-action', this.onMenuActionClick)
 		},
 
@@ -193,7 +192,26 @@
 			 */
 			onMenuActionClick(eventData)
 			{
-				this.bookmarks.AddBookmark(eventData.module, eventData.id)
+				this.bookmarks.addBookmark(eventData.module, eventData.id)
+			},
+
+			/**
+			 * Method to handle the event when the bookmark button is clicked.
+			 */
+			activateSelectionMode()
+			{
+				this.bookmarks.activateSelectionMode()
+				this.$emit('add')
+			},
+
+			/**
+			 * Remove bookmark
+			 * @param { string } id Bookmark ID
+			 */
+			removeBookmark(id)
+			{
+				this.bookmarks.removeBookmark(id)
+				this.$emit('remove')
 			}
 		}
 	}

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Langu;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_IDIOM_CANCEL = new NavigationLocation("IDIOMA44057", "Idiom_Cancel", "Langu") { vueRouteName = "form-IDIOM", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_IDIOM_SHOW = new NavigationLocation("IDIOMA44057", "Idiom_Show", "Langu") { vueRouteName = "form-IDIOM", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_IDIOM_NEW = new NavigationLocation("IDIOMA44057", "Idiom_New", "Langu") { vueRouteName = "form-IDIOM", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_IDIOM_EDIT = new NavigationLocation("IDIOMA44057", "Idiom_Edit", "Langu") { vueRouteName = "form-IDIOM", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_IDIOM_DUPLICATE = new NavigationLocation("IDIOMA44057", "Idiom_Duplicate", "Langu") { vueRouteName = "form-IDIOM", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_IDIOM_DELETE = new NavigationLocation("IDIOMA44057", "Idiom_Delete", "Langu") { vueRouteName = "form-IDIOM", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_IDIOM_CANCEL = new("IDIOMA44057", "Idiom_Cancel", "Langu") { vueRouteName = "form-IDIOM", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_IDIOM_SHOW = new("IDIOMA44057", "Idiom_Show", "Langu") { vueRouteName = "form-IDIOM", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_IDIOM_NEW = new("IDIOMA44057", "Idiom_New", "Langu") { vueRouteName = "form-IDIOM", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_IDIOM_EDIT = new("IDIOMA44057", "Idiom_Edit", "Langu") { vueRouteName = "form-IDIOM", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_IDIOM_DUPLICATE = new("IDIOMA44057", "Idiom_Duplicate", "Langu") { vueRouteName = "form-IDIOM", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_IDIOM_DELETE = new("IDIOMA44057", "Idiom_Delete", "Langu") { vueRouteName = "form-IDIOM", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Idiom_ModalDBEdit()
-		{
-			Idiom_ViewModel model = new Idiom_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Idiom_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Idiom Multiform actions
 
-		//
-		// GET /Langu/MFIdiom_New
-		[HttpGet]
-		[ActionName("MFIdiom_New")]
-		public ActionResult MFIdiom_New()
-		{
-			var model = new Idiom_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_IDIOM_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("langu", model.ValCodlang);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFIdiom_New_GET()
-		{
-			return MFIdiom_New();
-		}
-
-		//
-		// GET /Langu/MFIdiom_Edit
-		[HttpGet]
-		[ActionName("MFIdiom_Edit")]
-		public ActionResult MFIdiom_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("IDIOM", "EDIT", new { id = id, partialView = "MFIdiom", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFIdiom_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFIdiom_Edit(requestModel);
-		}
-
-		//
-		// GET /Langu/MFIdiom_Cancel
-		[ActionName("MFIdiom_Cancel")]
-		public ActionResult MFIdiom_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Langu(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Langu/MFIdiom_Save
-		[HttpPost]
-		[ActionName("MFIdiom_Save")]
-		public JsonResult MFIdiom_Save(Idiom_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFIdiom_Save",
-				ViewName = "MFIdiom",
-				AreaName = "langu"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Langu/MFIdiom_Delete
-		[HttpPost]
-		[ActionName("MFIdiom_Delete")]
-		public JsonResult MFIdiom_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFIdiom_Delete",
-				ViewName = "MFIdiom",
-				AreaName = "langu",
-				Location = ACTION_IDIOM_EDIT
-			};
-
-			var model = new Idiom_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Langu/Idiom_SaveEdit
 		[HttpPost]

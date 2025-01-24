@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -117,12 +117,12 @@
 										v-on="controls.PRODUSIMPRODUPRODUCT_.handlers"
 										:loading="controls.PRODUSIMPRODUPRODUCT_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODUSIMPRODUPRODUCT_.props"
 											:model-value="model.ValProduct.value"
-											@update:model-value="model.ValProduct.fnUpdateValue" />
+											@blur="onBlur(controls.PRODUSIMPRODUPRODUCT_, model.ValProduct.value)"
+											@change="model.ValProduct.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -136,18 +136,14 @@
 										v-on="controls.PRODUSIMPRODUDESCRIPT.handlers"
 										:loading="controls.PRODUSIMPRODUDESCRIPT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-textarea-input
 											v-if="controls.PRODUSIMPRODUDESCRIPT.isVisible"
+											v-bind="controls.PRODUSIMPRODUDESCRIPT.props"
 											id="PRODUSIMPRODUDESCRIPT"
-											size="xxlarge"
 											:model-value="model.ValDescript.value"
 											:rows="3"
 											:cols="85"
-											:is-required="controls.PRODUSIMPRODUDESCRIPT.isRequired"
-											:readonly="controls.PRODUSIMPRODUDESCRIPT.readonly"
-											:placeholder="controls.PRODUSIMPRODUDESCRIPT.placeholder"
 											@update:model-value="model.ValDescript.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -160,12 +156,12 @@
 										v-on="controls.PRODUSIMPRODUSKU_____.handlers"
 										:loading="controls.PRODUSIMPRODUSKU_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODUSIMPRODUSKU_____.props"
 											:model-value="model.ValSku.value"
-											@update:model-value="model.ValSku.fnUpdateValue" />
+											@blur="onBlur(controls.PRODUSIMPRODUSKU_____, model.ValSku.value)"
+											@change="model.ValSku.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -177,12 +173,12 @@
 										v-on="controls.PRODUSIMPRODUGTIN____.handlers"
 										:loading="controls.PRODUSIMPRODUGTIN____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODUSIMPRODUGTIN____.props"
 											:model-value="model.ValGtin.value"
-											@update:model-value="model.ValGtin.fnUpdateValue" />
+											@blur="onBlur(controls.PRODUSIMPRODUGTIN____, model.ValGtin.value)"
+											@change="model.ValGtin.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -196,12 +192,12 @@
 										v-on="controls.PRODUSIMPRODUSIZE____.handlers"
 										:loading="controls.PRODUSIMPRODUSIZE____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODUSIMPRODUSIZE____.props"
 											:model-value="model.ValSize.value"
-											@update:model-value="model.ValSize.fnUpdateValue" />
+											@blur="onBlur(controls.PRODUSIMPRODUSIZE____, model.ValSize.value)"
+											@change="model.ValSize.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -213,12 +209,10 @@
 										v-on="controls.PRODUSIMPRODUWEIGHT__.handlers"
 										:loading="controls.PRODUSIMPRODUWEIGHT__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.PRODUSIMPRODUWEIGHT__.isVisible"
-											v-bind="controls.PRODUSIMPRODUWEIGHT__"
-											:model-value="model.ValWeight.value"
+											v-bind="controls.PRODUSIMPRODUWEIGHT__.props"
 											@update:model-value="model.ValWeight.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -234,6 +228,7 @@
 						v-show="controls.PRODUSIMPSEUDNOVOGR02.isVisible"
 						class="row-line-group">
 						<q-group-collapsible
+							id="PRODUSIMPSEUDNOVOGR02"
 							v-bind="controls.PRODUSIMPSEUDNOVOGR02"
 							v-on="controls.PRODUSIMPSEUDNOVOGR02.handlers">
 							<!-- Start PRODUSIMPSEUDNOVOGR02 -->
@@ -247,14 +242,11 @@
 										v-on="controls.PRODUSIMLOCATGLN_____.handlers"
 										:loading="controls.PRODUSIMLOCATGLN_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.PRODUSIMLOCATGLN_____.isVisible"
 											v-bind="controls.PRODUSIMLOCATGLN_____.props"
-											:model-value="model.ValCodlocat.value"
-											v-on="controls.PRODUSIMLOCATGLN_____.handlers"
-											@update:model-value="model.ValCodlocat.fnUpdateValue" />
+											v-on="controls.PRODUSIMLOCATGLN_____.handlers" />
 										<q-see-more-produsimlocatgln
 											v-if="controls.PRODUSIMLOCATGLN_____.seeMoreIsVisible"
 											v-bind="controls.PRODUSIMLOCATGLN_____.seeMoreParams"
@@ -270,14 +262,11 @@
 										v-on="controls.PRODUSIMLCEXTGLNEXT__.handlers"
 										:loading="controls.PRODUSIMLCEXTGLNEXT__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.PRODUSIMLCEXTGLNEXT__.isVisible"
 											v-bind="controls.PRODUSIMLCEXTGLNEXT__.props"
-											:model-value="model.ValCodlcext.value"
-											v-on="controls.PRODUSIMLCEXTGLNEXT__.handlers"
-											@update:model-value="model.ValCodlcext.fnUpdateValue" />
+											v-on="controls.PRODUSIMLCEXTGLNEXT__.handlers" />
 										<q-see-more-produsimlcextglnext
 											v-if="controls.PRODUSIMLCEXTGLNEXT__.seeMoreIsVisible"
 											v-bind="controls.PRODUSIMLCEXTGLNEXT__.seeMoreParams"
@@ -372,15 +361,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'PRODUSIM',
-						location: 'form-PRODUSIM',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'PRODUSIM',
+					location: 'form-PRODUSIM',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -426,6 +413,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -498,8 +487,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -581,7 +571,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -635,21 +625,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -658,12 +633,9 @@
 						id: 'PRODUSIMPSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRODUCT_IDENTIFICATI25169),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
 						mustBeFilled: true,
@@ -676,10 +648,7 @@
 						id: 'PRODUSIMPRODUPRODUCT_',
 						name: 'PRODUCT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRODUCT12880),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODUSIMPSEUDNOVOGR01',
@@ -695,16 +664,10 @@
 						id: 'PRODUSIMPRODUDESCRIPT',
 						name: 'DESCRIPT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESCRIPTION07383),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODUSIMPSEUDNOVOGR01',
-						maxLength: 85,
-						labelId: 'label_PRODUSIMPRODUDESCRIPT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -714,16 +677,12 @@
 						id: 'PRODUSIMPRODUSKU_____',
 						name: 'SKU',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.SKU42303),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODUSIMPSEUDNOVOGR01',
 						maxLength: 20,
 						labelId: 'label_PRODUSIMPRODUSKU_____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -733,16 +692,12 @@
 						id: 'PRODUSIMPRODUGTIN____',
 						name: 'GTIN',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.GTIN45487),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODUSIMPSEUDNOVOGR01',
 						maxLength: 14,
 						labelId: 'label_PRODUSIMPRODUGTIN____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -752,35 +707,27 @@
 						id: 'PRODUSIMPRODUSIZE____',
 						name: 'SIZE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.SIZE10299),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODUSIMPSEUDNOVOGR01',
 						maxLength: 50,
 						labelId: 'label_PRODUSIMPRODUSIZE____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					PRODUSIMPRODUWEIGHT__: new fieldControlClass.NumberControl({
 						modelField: 'ValWeight',
 						valueChangeEvent: 'fieldChange:produ.weight',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'PRODUSIMPRODUWEIGHT__',
 						name: 'WEIGHT',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.WEIGHT36329),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODUSIMPSEUDNOVOGR01',
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
@@ -788,16 +735,12 @@
 						id: 'PRODUSIMPSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.LOCATION54790),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-PRODUSIMPSEUDNOVOGR02',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -807,27 +750,11 @@
 						id: 'PRODUSIMLOCATGLN_____',
 						name: 'GLN',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.GLOBAL_LOCATION_NUMB24637),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PRODUSIMPSEUDNOVOGR02',
 						container: 'PRODUSIMPSEUDNOVOGR02',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodlocat',
-							dependencyEvent: 'fieldChange:produ.codlocat'
-						},
-						dependentFields: () => {
-							return {
-								set 'locat.codlocat'(value) { vm.model.ValCodlocat.updateValue(value) },
-								set 'locat.gln'(value) { vm.model.TableLocatGln.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -836,6 +763,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodlocat',
+							dependencyEvent: 'fieldChange:produ.codlocat'
+						},
+						dependentFields: () => ({
+							set 'locat.codlocat'(value) { vm.model.ValCodlocat.updateValue(value) },
+							set 'locat.gln'(value) { vm.model.TableLocatGln.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					PRODUSIMLCEXTGLNEXT__: new fieldControlClass.LookupControl({
 						modelField: 'TableLcextGlnext',
@@ -843,15 +780,27 @@
 						id: 'PRODUSIMLCEXTGLNEXT__',
 						name: 'GLNEXT',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.GLN_EXTENSION_COMPON55869),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PRODUSIMPSEUDNOVOGR02',
 						container: 'PRODUSIMPSEUDNOVOGR02',
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodlcext',
+							dependencyEvent: 'fieldChange:produ.codlcext'
+						},
+						dependentFields: () => ({
+							set 'lcext.codlcext'(value) { vm.model.ValCodlcext.updateValue(value) },
+							set 'lcext.glnext'(value) { vm.model.TableLcextGlnext.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: ['locat', 'produ.codlocat'],
@@ -860,24 +809,6 @@
 								fnValueSelector: (model) => model.ValCodlocat.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodlcext',
-							dependencyEvent: 'fieldChange:produ.codlcext'
-						},
-						dependentFields: () => {
-							return {
-								set 'lcext.codlcext'(value) { vm.model.ValCodlcext.updateValue(value) },
-								set 'lcext.glnext'(value) { vm.model.TableLcextGlnext.updateValue(value) },
-							}
-						},
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 				},
 
@@ -937,7 +868,7 @@
 						/** The foreign key to the LCEXT table */
 						get lcext() { return vm.model.ValCodlcext },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1033,6 +964,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1072,6 +1011,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1198,6 +1145,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR PRODUSIM]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1213,6 +1176,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PRODUSIM]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

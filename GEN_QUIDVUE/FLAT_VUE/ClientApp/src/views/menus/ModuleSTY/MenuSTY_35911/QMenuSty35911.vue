@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuSTY_35911ViewModel.js'
+
 	const requiredTextResources = ['QMenuSTY_35911', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '35911',
 					isMenuList: true,
+					designation: computed(() => this.Resources.FAQS53959),
 					acronym: 'STY_35911',
 					name: 'FAQS',
 					route: 'menu-STY_35911',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableSpecialRenderingControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'STY_Menu_35911',
 						controller: 'FAQS',
 						action: 'STY_Menu_35911',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -166,7 +176,7 @@
 								canDelete: false,
 								canInsert: false
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -185,17 +195,12 @@
 							},
 							formsDefinition: {
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValQuestion',
 							defaultSearchColumnNameOriginal: 'ValQuestion',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-FAQS', 'changed-CFAQS'],
 						uuid: '2d789e4b-4145-4b00-8473-3b6215ee3fab',
@@ -235,7 +240,17 @@
 								}
 							},
 						],
-						headerLevel: 1
+						headerLevel: 1,
+						/** Menu limits */
+						controlLimits: [
+							/** DB */
+							{
+								identifier: 'cfaqs',
+								dependencyEvents: [],
+								dependencyField: '',
+								fnValueSelector: () => vm.$route.params['cfaqs'],
+							},
+						]
 					}, this)
 				}
 			}
@@ -264,6 +279,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS STY_35911]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS STY_MENU_35911]/
 // eslint-disable-next-line

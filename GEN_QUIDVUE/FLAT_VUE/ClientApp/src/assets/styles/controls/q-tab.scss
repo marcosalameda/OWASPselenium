@@ -4,14 +4,43 @@
 	&__list {
 		button {
 			padding: 0;
+			// Leave some space so the outline on focus-visible is not covered by other elements
+			// This outline can go beyond the space the element uses
+			margin-top: 0.25rem;
 
-			&:hover:not(.q-btn--disabled) {
-				background-color: transparent;
-				border-color: transparent;
+			@if $tab-style == "line" {
+				// Remove small gap that somehow comes from the buttons using display: flex;
+				position: relative;
+				bottom: -1px;
+
+				&:not(.active) {
+					.nav-link {
+						color: rgb($on-background-rgb / 0.7);
+					}
+				}
 			}
 
-			&:focus,
-			&:focus:not(.q-btn--disabled) {
+			&:hover:not([disabled]) {
+				background-color: transparent;
+				border-color: transparent;
+
+				&:not(.active) {
+					.nav-link {
+						@if $tab-style == "line" {
+							color: $on-background;
+							background-color: transparent;
+							box-shadow: inset 0 -0.4rem 0 $primary-dark;
+						}
+						@else if $tab-style == "box" {
+							color: $primary-dark;
+							border-color: $light $light $container;
+						}
+					}
+				}
+			}
+
+			&:focus-visible,
+			&:focus-visible:not([disabled]) {
 				outline: $action-focus-width $action-focus-style $action-focus-color;
 			}
 		}
@@ -28,7 +57,11 @@
 		}
 
 		.active {
-			margin-bottom: -1px;
+			@if $tab-style == "box"
+			{
+				// Make selected tab look like it does not have a bottom border
+				border-bottom: $container;
+			}
 		}
 	}
 
@@ -110,17 +143,17 @@
 .c-tab__divider .show.c-tab__item .nav-link,
 .c-tab__divider .show.c-tab__item .c-tab__item-header {
 	color: $on-background;
-	background-color: $container;
-	border-color: $gray-light $gray-light $container;
-	border-top: 2px solid $gray-light;
-	@if $custom-tab-navigation {
+	@if $tab-style == "line" {
 		// add these lines to remove style from selected
 		border: none;
 		background-color: transparent;
-		margin-bottom: 0.2rem;
-		padding-bottom: 0.2rem;
 		font-weight: 700;
-		box-shadow: 0 0.4rem 0 $primary;
+		box-shadow: inset 0 -0.4rem 0 $primary;
+	}
+	@else if $tab-style == "box" {
+		background-color: $container;
+		border-color: $gray-light $gray-light $container;
+		border-top: 2px solid $gray-light;
 	}
 }
 
@@ -138,12 +171,10 @@
 		border-top-left-radius: $border-radius;
 		border-top-right-radius: $border-radius;
 
-		@if $custom-tab-navigation {
+		@if $tab-style == "line" {
 			color: $black;
 			outline: none;
-		}
 
-		@if $custom-tab-navigation {
 			&:hover {
 				border-color: transparent;
 				color: $primary;

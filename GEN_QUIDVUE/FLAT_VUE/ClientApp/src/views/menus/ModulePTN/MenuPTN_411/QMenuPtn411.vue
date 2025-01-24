@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuPTN_411ViewModel.js'
+
 	const requiredTextResources = ['QMenuPTN_411', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,65 +117,67 @@
 				menuInfo: {
 					id: '411',
 					isMenuList: true,
+					designation: computed(() => this.Resources.ORDERS___FLOAT_FIELD11291),
 					acronym: 'PTN_411',
-					name: 'REGIA',
+					name: 'RORDF',
 					route: 'menu-PTN_411',
 					order: '411',
-					controller: 'REGIO',
+					controller: 'RORDF',
 					action: 'PTN_Menu_411',
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
-						controller: 'REGIO',
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'PTN_Menu_411',
+						controller: 'RORDF',
 						action: 'PTN_Menu_411',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
-							new listColumnTypes.TextColumn({
+							new listColumnTypes.NumericColumn({
 								order: 1,
-								name: 'Cntry.ValCountry',
-								area: 'CNTRY',
-								field: 'COUNTRY',
-								label: computed(() => this.Resources.COUNTRY64133),
-								dataLength: 90,
-								scrollData: 30,
-								pkColumn: 'ValCodcntry',
+								name: 'ValOrder',
+								area: 'RORDF',
+								field: 'ORDER',
+								label: computed(() => this.Resources.ORDER39632),
+								scrollData: 10,
+								maxDigits: 8,
+								decimalPlaces: 1,
+								isOrderingColumn: true,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 2,
-								name: 'ValRegiao',
-								area: 'REGIO',
-								field: 'REGIAO',
-								label: computed(() => this.Resources.REGION12723),
+								name: 'ValTitle',
+								area: 'RORDF',
+								field: 'TITLE',
+								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
-							}),
-							new listColumnTypes.TextColumn({
-								order: 3,
-								name: 'Pais1.ValCountry',
-								area: 'PAIS1',
-								field: 'COUNTRY',
-								label: computed(() => this.Resources.COUNTRY64133),
-								dataLength: 90,
-								scrollData: 30,
-								pkColumn: 'ValCodcntry',
 							}),
 						],
 						config: {
 							name: 'PTN_Menu_411',
 							serverMode: true,
-							pkColumn: 'ValCodregia',
-							tableAlias: 'REGIO',
-							tableNamePlural: computed(() => this.Resources.REGIONS31874),
+							pkColumn: 'ValCodrordf',
+							tableAlias: 'RORDF',
+							tableNamePlural: computed(() => this.Resources.ORDERS___FLOAT_FIELD11291),
 							viewManagement: 'U',
+							sortByField: true,
+							showRowDragAndDropOption: true,
 							showLimitsInfo: true,
-							tableTitle: computed(() => this.Resources.REGIONS31874),
+							tableTitle: computed(() => this.Resources.ORDERS___FLOAT_FIELD11291),
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -193,7 +196,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'REGIA_ON',
+										formName: 'RORDF',
 										mode: 'SHOW',
 										isControlled: true
 									}
@@ -209,7 +212,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'REGIA_ON',
+										formName: 'RORDF',
 										mode: 'EDIT',
 										isControlled: true
 									}
@@ -225,7 +228,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'REGIA_ON',
+										formName: 'RORDF',
 										mode: 'DUPLICATE',
 										isControlled: true
 									}
@@ -241,7 +244,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'REGIA_ON',
+										formName: 'RORDF',
 										mode: 'DELETE',
 										isControlled: true
 									}
@@ -259,7 +262,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'REGIA_ON',
+										formName: 'RORDF',
 										mode: 'NEW',
 										repeatInsertion: false,
 										isControlled: true
@@ -276,41 +279,36 @@
 							],
 							rowClickAction: {
 								id: 'RCA_PTN_4111',
-								name: 'form-REGIA_ON',
+								name: 'form-RORDF',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
-											fnValueSelector: (row) => row.ValCodregia
+											fnValueSelector: (row) => row.ValCodrordf
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'REGIA_ON',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'RORDF',
 								}
 							},
 							formsDefinition: {
-								'REGIA_ON': {
-									fnKeySelector: (row) => row.Fields.ValCodregia,
+								'RORDF': {
+									fnKeySelector: (row) => row.Fields.ValCodrordf,
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: REGIA_ON
-							crudConditions: {
-							},
-							defaultSearchColumnName: 'ValRegiao',
-							defaultSearchColumnNameOriginal: 'ValRegiao',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultSearchColumnName: '',
+							defaultSearchColumnNameOriginal: '',
+							defaultColumnSorting: {
+								columnName: 'ValOrder',
+								sortOrder: 'asc'
+							}
 						},
-						changeEvents: ['changed-REGIO', 'changed-CNTRY', 'changed-PAIS1'],
-						uuid: '3ff5c84d-e77b-442c-b81e-603fe2ba55be',
+						changeEvents: ['changed-RORDF'],
+						uuid: '9af3af7f-ca43-444f-9c90-4c78338ca97d',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -339,6 +337,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PTN_411]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_411]/
 // eslint-disable-next-line

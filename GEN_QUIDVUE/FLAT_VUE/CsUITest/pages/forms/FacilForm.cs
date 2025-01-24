@@ -1,83 +1,69 @@
-namespace quidgest.uitests.pages;
+﻿using quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
 
 [System.CodeDom.Compiler.GeneratedCode("Genio", "")]
-public class FacilForm: PageObject {
-
-	private By formLocator = By.CssSelector("#form-container");
-	private IWebElement form => driver.FindElement(formLocator);
-
+public class FacilForm : Form
+{
 	/// <summary>
 	/// Legal name
 	/// </summary>
-	public LookupControl EntitName => new LookupControl(driver, formLocator, "container-FACIL___ENTITNAME____");
-	public SeeMorePage EntitNameSeeMorePage => new SeeMorePage(driver, "FACIL", "ENTIT.NAME");
+	public LookupControl EntitName => new LookupControl(driver, ContainerLocator, "container-FACIL___ENTITNAME____");
+	public SeeMorePage EntitNameSeeMorePage => new SeeMorePage(driver, "FACIL", "FACIL___ENTITNAME____");
+
 	/// <summary>
 	/// Incorporation
 	/// </summary>
-	public DateInputControl FacilIncorpor => new DateInputControl(driver, formLocator, "#FACIL___FACILINCORPOR");
+	public DateInputControl FacilIncorpor => new DateInputControl(driver, ContainerLocator, "#FACIL___FACILINCORPOR");
+
 	/// <summary>
 	/// Facility name
 	/// </summary>
-	public BaseInputControl FacilName => new BaseInputControl(driver, formLocator, "#FACIL___FACILNAME____");
+	public BaseInputControl FacilName => new BaseInputControl(driver, ContainerLocator, "#FACIL___FACILNAME____");
+
 	/// <summary>
 	/// Facility type
 	/// </summary>
-	public EnumControl FacilFaciltyp => new EnumControl(driver, formLocator, "container-FACIL___FACILFACILTYP");
+	public EnumControl FacilFaciltyp => new EnumControl(driver, ContainerLocator, "container-FACIL___FACILFACILTYP");
+
 	/// <summary>
 	/// Facility type
 	/// </summary>
-	public LookupControl FactyType => new LookupControl(driver, formLocator, "container-FACIL___FACTYTYPE____");
-	public SeeMorePage FactyTypeSeeMorePage => new SeeMorePage(driver, "FACIL", "FACTY.TYPE");
+	public LookupControl FactyType => new LookupControl(driver, ContainerLocator, "container-FACIL___FACTYTYPE____");
+	public SeeMorePage FactyTypeSeeMorePage => new SeeMorePage(driver, "FACIL", "FACIL___FACTYTYPE____");
+
 	/// <summary>
 	/// Address
 	/// </summary>
-	public BaseInputControl FacilAddress => new BaseInputControl(driver, formLocator, "#FACIL___FACILADDRESS_");
+	public BaseInputControl FacilAddress => new BaseInputControl(driver, ContainerLocator, "#FACIL___FACILADDRESS_");
+
 	/// <summary>
 	/// Image
 	/// </summary>
-	public BaseInputControl FacilImage => new BaseInputControl(driver, formLocator, "#FACIL___FACILIMAGE___");
+	public BaseInputControl FacilImage => new BaseInputControl(driver, ContainerLocator, "#FACIL___FACILIMAGE___");
+
 	/// <summary>
 	/// GPS input
 	/// </summary>
-	public RadiobuttonControl FacilGpsinput => new RadiobuttonControl(driver, formLocator, "container-FACIL___FACILGPSINPUT");
+	public RadiobuttonControl FacilGpsinput => new RadiobuttonControl(driver, ContainerLocator, "container-FACIL___FACILGPSINPUT");
+
 	/// <summary>
 	/// Latitude
 	/// </summary>
-	public BaseInputControl FacilLatitude => new BaseInputControl(driver, formLocator, "#FACIL___FACILLATITUDE");
+	public BaseInputControl FacilLatitude => new BaseInputControl(driver, ContainerLocator, "#FACIL___FACILLATITUDE");
+
 	/// <summary>
 	/// Longitude
 	/// </summary>
-	public BaseInputControl FacilLongitud => new BaseInputControl(driver, formLocator, "#FACIL___FACILLONGITUD");
+	public BaseInputControl FacilLongitud => new BaseInputControl(driver, ContainerLocator, "#FACIL___FACILLONGITUD");
+
 	/// <summary>
 	/// Geographical coordinate
 	/// </summary>
-	public BaseInputControl FacilGeocoori => new BaseInputControl(driver, formLocator, "#FACIL___FACILGEOCOORI");
+	public BaseInputControl FacilGeocoori => new BaseInputControl(driver, ContainerLocator, "#FACIL___FACILGEOCOORI");
 
-	private IWebElement saveBtn => form.FindElement(By.CssSelector("#bottom-save-btn"));
-	private IWebElement cancelBtn => form.FindElement(By.CssSelector("#bottom-cancel-btn"));
-	public FORM_MODE mode {get; private set;}
-
-	public FacilForm(IWebDriver driver, FORM_MODE mode, By subformLocator=null): base(driver) {
-		this.mode = mode;
-		formLocator = subformLocator ?? formLocator;
-
-		wait.Until(c => form);
-		WaitForLoading();
-	}
-
-	public void WaitForLoading()
-	{
-        wait.Until(c => form.FindElement(ByData.Key("FACIL")).GetAttribute("data-loading") != "true");
-    }
-
-	public void Save() {
-		WaitForLoading();
-		saveBtn.Click();
-	}
-
-	public void Cancel() {
-		WaitForLoading();
-		cancelBtn.Click();
-	}
-
+	public FacilForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "FACIL", containerLocator: containerLocator) { }
 }

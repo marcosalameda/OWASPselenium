@@ -19,14 +19,17 @@
 	import fakeData from './Carousel.mock.js'
 
 	export default {
-	
-		docsfile: "./docs/rendering/QCarousel.md",
-		
+		name: 'QCarouselContainer',
+
+		docsfile: './docs/rendering/QCarousel.md',
+
 		components: {
 			QCarousel
 		},
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{

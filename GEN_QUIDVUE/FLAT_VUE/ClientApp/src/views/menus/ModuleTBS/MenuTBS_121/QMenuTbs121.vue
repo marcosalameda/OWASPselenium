@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuTBS_121ViewModel.js'
+
 	const requiredTextResources = ['QMenuTBS_121', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '121',
 					isMenuList: true,
+					designation: computed(() => this.Resources.PEOPLE34206),
 					acronym: 'TBS_121',
 					name: 'PESSO',
 					route: 'menu-TBS_121',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'TBS_Menu_121',
 						controller: 'PESSO',
 						action: 'TBS_Menu_121',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -159,7 +169,7 @@
 								field: 'DTNASCIM',
 								label: computed(() => this.Resources.BIRTH21799),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -185,8 +195,10 @@
 								area: 'PESSO',
 								field: 'PHOTOGRA',
 								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 7,
@@ -205,13 +217,13 @@
 								field: 'DTULTCAT',
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 9,
 								name: 'Categ.ValCategoria',
 								area: 'CATEG',
-								field: 'CATEGORY',
+								field: 'CATEGORIA',
 								label: computed(() => this.Resources.CATEGORY18978),
 								dataLength: 50,
 								scrollData: 30,
@@ -229,6 +241,7 @@
 								supportFormIsPopup: true,
 								params: {
 									type: 'form',
+									isRoute: true,
 									formName: 'EMPRE',
 									mode: 'SHOW'
 								},
@@ -248,7 +261,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -352,6 +365,7 @@
 								id: 'RCA_TBS_1211',
 								name: 'form-PESSO',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -372,23 +386,17 @@
 									isPopup: true
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: PESSO
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValName',
 							defaultSearchColumnNameOriginal: 'ValName',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValName',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1'],
 						uuid: '5bbb3c85-0f2b-4e4a-a096-baeef7fb9b34',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -417,6 +425,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS TBS_121]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS TBS_MENU_121]/
 // eslint-disable-next-line

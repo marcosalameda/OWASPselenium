@@ -1,12 +1,11 @@
-/**
- * @jest-environment jsdom
- */
 import '@testing-library/jest-dom'
 import { mount } from '@vue/test-utils'
-import { fireEvent, render } from '@testing-library/vue'
+import { fireEvent } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 
+import { render } from './utils'
 import RadioSelectList from '@/components/inputs/RadioButtonInput'
+import BaseInputStructure from '@/components/inputs/BaseInputStructure'
 
 describe('RadioButtonInput.vue', () => {
 	it('render the radio select list', async () => {
@@ -748,5 +747,26 @@ describe('RadioButtonInput.vue', () => {
 		const validator = RadioSelectList.props.optionsList.validator
 		expect(validator(inValidOptionsArray)).not.toBeTruthy()
 		expect(validator(validOptionsArray)).toBeTruthy()
+	})
+
+	it('verify radio button has label and clickable', async () => {
+		const { getByText, findByTestId } = render({
+			components: { RadioSelectList, BaseInputStructure },
+			template: `
+				<div>
+					<BaseInputStructure label="Teste" labelPosition="" id="test">
+					<RadioSelectList :optionsList="[
+						{ value: 'Rails', key: '1' },
+						{ value: 'Django', key: '2' }
+					]" modelValue="2" />
+					</BaseInputStructure>
+				</div>
+			`
+		})
+		const radioButton = await findByTestId('radio_label_2')
+		await userEvent.click(radioButton)
+
+		expect(radioButton.checked).toBeTruthy()
+		expect(getByText('Teste')).toBeInTheDocument()
 	})
 })

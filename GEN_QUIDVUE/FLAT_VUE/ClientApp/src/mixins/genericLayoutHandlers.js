@@ -3,10 +3,10 @@ import _isEmpty from 'lodash-es/isEmpty'
 
 import { useGenericLayoutDataStore } from '@/stores/genericLayoutData.js'
 import { useGenericDataStore } from '@/stores/genericData.js'
-import { useLayoutDataStore } from '@/stores/layoutData.js'
 import { useSystemDataStore } from '@/stores/systemData.js'
 import { useUserDataStore } from '@/stores/userData.js'
 
+import genericFunctions from '@/mixins/genericFunctions.js'
 import { loadResources } from '@/plugins/i18n.js'
 
 /***************************************************************************
@@ -14,7 +14,7 @@ import { loadResources } from '@/plugins/i18n.js'
  ***************************************************************************/
 export default {
 	created()
-	{	
+	{
 		loadResources(this, ['QLayout'])
 	},
 
@@ -34,18 +34,20 @@ export default {
 
 	computed: {
 		...mapState(useSystemDataStore, [
-			'system'
-		]),
-
-		...mapState(useLayoutDataStore, [
-			'layoutConfig',
-			'rightSidebarIsCollapsed',
-			'progressBar'
+			'system',
+			'maintenance'
 		]),
 
 		...mapState(useGenericLayoutDataStore, [
 			'headerHeight',
+			'layoutConfig',
 			'pageScroll',
+			'progressBar',
+			'bookmarkMenuIsOpen',
+			'moduleMenuIsOpen',
+			'rightSidebarIsCollapsed',
+			'rightSidebarIsVisible',
+			'mobileLayoutActive'
 		]),
 
 		...mapState(useGenericDataStore, [
@@ -94,15 +96,31 @@ export default {
 		containerClasses()
 		{
 			return this.layoutConfig.ContainerWidth === 'reduced' ? 'container' : 'container-fluid'
-		}
+		},
+
+		authenticationClasses()
+		{
+			if (this.layoutConfig.AuthenticationStyle === 'default')
+				return []
+
+			return [`layout-${this.layoutConfig.AuthenticationStyle}`]
+		},
+
+		maintenanceDate() {
+			return genericFunctions.dateToString(this.maintenance.schedule, this.system.currentLang, this.system.defaultLang)
+		},
 	},
 
 	methods: {
-		...mapActions(useLayoutDataStore, [
+		...mapActions(useGenericLayoutDataStore, [
 			'setLayoutConfig',
 			'setHeaderHeight',
+			'setBookmarkMenuState',
+			'setModuleMenuState',
 			'setRightSidebarCollapseState',
+			'setRightSidebarVisibility',
 			'setPageScroll',
+			'updateLayoutMobileState'
 		]),
 
 		...mapActions(useGenericDataStore, [
@@ -134,7 +152,7 @@ export default {
 
 			for (let i = 0; i < menuId.length; i++)
 			{
-				let id = menuId.substring(0, i + 1)
+				const id = menuId.substring(0, i + 1)
 				this.addToMenuPath(id)
 			}
 		},
@@ -150,30 +168,67 @@ export default {
 		},
 
 		/**
-		 * Gets the icon for the given menu
+		 * Gets the icon for the given menu.
 		 * @param {object} menuEntry The menu to check the icon
-		 * @returns an object with the icon and the type
+		 * @returns An object with the icon and the type.
 		 */
-		getMenuIcon(menuEntry){
+		getMenuIcon(menuEntry)
+		{
 			const data = {
 				icon: '',
 				type: 'svg'
 			}
 
-			if(menuEntry.Vector){
+			if (menuEntry.Vector)
 				data.icon = menuEntry.Vector
-			}else if(menuEntry.Font){
+			else if (menuEntry.Font)
+			{
 				data.icon = menuEntry.Font
 				data.type = 'font'
-
-			}else if(menuEntry.Image){
+			}
+			else if (menuEntry.Image)
+			{
 				data.icon = menuEntry.Image
 				data.type = 'img'
-			}else{
-				return undefined
 			}
+			else
+				return undefined
 
 			return data
+		},
+
+		/**
+		 * Toggles the bookmarks menu.
+		 */
+		toggleBookmarksMenu()
+		{
+			this.setBookmarkMenuState(!this.bookmarkMenuIsOpen)
+		},
+
+		/**
+		 * Toggles the modules menu.
+		 */
+		toggleModulesMenu()
+		{
+			this.setModuleMenuState(!this.moduleMenuIsOpen)
+		},
+
+		/**
+		 * Adds listeners common to all layouts.
+		 */
+		setGenericListeners()
+		{
+			window.addEventListener('resize', this.updateLayoutMobileState)
+			window.addEventListener('scroll', this.updatePageScroll)
+		},
+
+		/**
+		 * Removes listeners common to all layouts.
+		 */
+		removeGenericListeners()
+		{
+			window.removeEventListener('resize', this.updateLayoutMobileState)
+			window.removeEventListener('scroll', this.updatePageScroll)
 		}
 	}
 }

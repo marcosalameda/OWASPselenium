@@ -433,7 +433,7 @@ namespace CSGenio.business
                     return false;
                 else
                     return true;
-                   // throw new BusinessException ("GenGenio.Genio. TraduzirF (" This sequential number already exists, write another, and then write again. ")", "DefaultValue. Existevalorsequential", "This sequential number already exists, write another and write again.");
+                   // throw new BusinessException ("$Genio. TraduzirF (" This sequential number already exists, write another, and then write again. ")", "DefaultValue. Existevalorsequential", "This sequential number already exists, write another and write again.");
             }
             catch (GenioException ex)
             {

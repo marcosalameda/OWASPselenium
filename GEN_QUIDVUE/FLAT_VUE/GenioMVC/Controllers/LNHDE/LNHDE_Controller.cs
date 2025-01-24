@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Lnhde;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER LNHDE]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Lnhde row = null;
 
-			try
-			{
-				row = Models.Lnhde.Find(Navigation.GetStrValue("lnhde"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model lnhde");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Lnhde(UserContext.Current);
+				row = new Models.Lnhde(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("lnhde");
 			}
 
@@ -82,8 +75,8 @@ namespace GenioMVC.Controllers
 				{
 					case "LNHDE___PEDIDNRPEDIDO":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Lnhde_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Lnhde_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Lnhde___pedidnrpedido(qs);
 							result = model.TablePedidNrpedido;
@@ -91,8 +84,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "LNHDE___LNHPDLINE____":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Lnhde_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Lnhde_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Lnhde___lnhpdline____(qs);
 							result = model.TableLnhpdLine;
@@ -100,14 +93,15 @@ namespace GenioMVC.Controllers
 						break;
 					case "LNHDE___TPEQ1TIPOEQUI":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Lnhde_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Lnhde_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Lnhde___tpeq1tipoequi(qs);
 							result = model.TableTpeq1Tipoequi;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -159,11 +153,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -172,22 +167,19 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Lnhde" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Lnhde([FromBody]Lnhde_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Lnhde([FromBody]Lnhde_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "lnhde",
+			return GenericRecalculateFormulas(formData, "lnhde",
 				(primaryKey) => Models.Lnhde.Find(primaryKey, UserContext.Current, "FLNHDE"),
-				(model) => form_data.MapToModel(model as Models.Lnhde)
+				(model) => formData.MapToModel(model as Models.Lnhde)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -195,7 +187,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

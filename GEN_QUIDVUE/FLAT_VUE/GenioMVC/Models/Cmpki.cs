@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,23 +41,23 @@ namespace GenioMVC.Models
 		private Tpequ _tpequ;
 		[DisplayName("Tpequ")]
 		[ShouldSerialize("Tpequ")]
-		public virtual Tpequ Tpequ { 
-			get { 
+		public virtual Tpequ Tpequ {
+			get {
 				if (!this.isEmptyModel && (_tpequ == null || (!string.IsNullOrEmpty(ValCodtpequ) && (_tpequ.isEmptyModel || _tpequ.klass.QPrimaryKey != ValCodtpequ))))
 					_tpequ = Models.Tpequ.Find(ValCodtpequ, m_userContext, Identifier, _fieldsToSerialize);
 				if (_tpequ == null)
 					_tpequ = new Models.Tpequ(m_userContext, true, _fieldsToSerialize);
 				return _tpequ;
 			}
-			set { _tpequ = value; } 
+			set { _tpequ = value; }
 		}
-		
+
 
 		[DisplayName("Order")]
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Cmpki.ValOrder")]
 		[NumericAttribute(1)]
-		public decimal? ValOrder { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrder, 1)); } set { klass.ValOrder = Convert.ToDouble(value); } }
+		public decimal? ValOrder { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrder, 1)); } set { klass.ValOrder = Convert.ToDecimal(value); } }
 
 		[DisplayName("TYPE OF COMPONENT EQUIPMENT")]
 		/// <summary>Field : "TYPE OF COMPONENT EQUIPMENT" Tipo: "CE" Formula: DF "[CMPKI->CODTPEQU]"</summary>
@@ -66,23 +66,23 @@ namespace GenioMVC.Models
 		private Tpeq1 _tpeq1;
 		[DisplayName("Tpeq1")]
 		[ShouldSerialize("Tpeq1")]
-		public virtual Tpeq1 Tpeq1 { 
-			get { 
+		public virtual Tpeq1 Tpeq1 {
+			get {
 				if (!this.isEmptyModel && (_tpeq1 == null || (!string.IsNullOrEmpty(ValCodtpeq1) && (_tpeq1.isEmptyModel || _tpeq1.klass.QPrimaryKey != ValCodtpeq1))))
 					_tpeq1 = Models.Tpeq1.Find(ValCodtpeq1, m_userContext, Identifier, _fieldsToSerialize);
 				if (_tpeq1 == null)
 					_tpeq1 = new Models.Tpeq1(m_userContext, true, _fieldsToSerialize);
 				return _tpeq1;
 			}
-			set { _tpeq1 = value; } 
+			set { _tpeq1 = value; }
 		}
-		
+
 
 		[DisplayName("Amount")]
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Cmpki.ValQuantida")]
 		[NumericAttribute(0)]
-		public decimal? ValQuantida { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantida, 0)); } set { klass.ValQuantida = Convert.ToDouble(value); } }
+		public decimal? ValQuantida { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantida, 0)); } set { klass.ValQuantida = Convert.ToDecimal(value); } }
 
 		[DisplayName("Description")]
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
@@ -109,19 +109,19 @@ namespace GenioMVC.Models
 		public Cmpki(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAcmpki(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Cmpki(UserContext userContext, CSGenioAcmpki val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAcmpki csgenioa)
@@ -148,7 +148,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

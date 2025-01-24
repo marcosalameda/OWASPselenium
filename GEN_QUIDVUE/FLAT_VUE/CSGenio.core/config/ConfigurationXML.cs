@@ -6,6 +6,8 @@ using System.Text;
 using System.Xml.Serialization;
 using GenioServer.security;
 using System.Security;
+using GenioServer.framework;
+using CSGenio.config;
 
 namespace CSGenio
 {
@@ -156,14 +158,6 @@ namespace CSGenio
             get;set;
         }
 
-        private AdminCfgEl m_admin = null;
-        [XmlElement("admin")]
-        public AdminCfgEl Admin
-        {
-            get { return m_admin; }
-            set { m_admin = value; }
-        }
-
         private NumberFormatXml m_numberFormat = null;
         [XmlElement("numberFormat")]
         public NumberFormatXml NumberFormat
@@ -218,9 +212,17 @@ namespace CSGenio
             get; set;
         }
 
+        [XmlElement("Messaging")]
+        public MessagingXml Messaging { get; set; } = new MessagingXml();
+
+
+        [XmlElement("Scheduler")]
+        public SchedulerXml Scheduler { get; set; } = new SchedulerXml();
+
         /*
             Functions
         */
+        [Obsolete("Use IConfigurationManager.StoreConfig instead")]
         public void writeXML(string filename)
         {
             using(System.IO.StreamWriter output = new System.IO.StreamWriter(filename))
@@ -230,6 +232,60 @@ namespace CSGenio
             }
         }
 
+        public void FillMissingConfigs()
+        {
+            //inicializamos também as secções que tenham ficado vazias
+            if (DataSystems == null)
+            {
+                DataSystems = new List<DataSystemXml>();
+            }
+
+            if (Security == null)
+            {
+                Security = new List<SecurityCfgEl>();
+            }
+
+            if (Paths == null)
+            {
+                Paths = new List<PathCfgEl>();
+            }
+
+            if (ssrsServer == null)
+            {
+                ssrsServer = new SsrsServerXml();
+            }
+
+            if (maisPropriedades == null)
+            {
+                ExtraProperties.AddMissingValues(maisPropriedades);
+            }
+
+            if (Elasticsearch == null)
+            {
+                Elasticsearch = new ElasticsearchXml();
+                Elasticsearch.Colours = new List<CoreXml>();
+            }
+
+            if (Messaging == null)
+            {
+                Messaging = new MessagingXml();
+            }
+        }
+
+        public void Init()
+        {
+            DataSystems = new List<DataSystemXml>();
+            Security = new List<SecurityCfgEl>();
+            Paths = new List<PathCfgEl>();
+            ssrsServer = new SsrsServerXml();
+            Elasticsearch = new ElasticsearchXml();
+            Elasticsearch.Colours = new List<CoreXml>();
+            maisPropriedades = ExtraProperties.GetInitialValues();
+            ConfigVersion = ConfigXMLMigration.CurConfigurationVerion.ToString();
+            Messaging = new MessagingXml();
+        }
+
+        [Obsolete("Use IConfigurationManager.GetExistingConfig instead")]
         public static ConfigurationXML readXML(string filename)
         {
             ConfigurationXML conf;
@@ -248,50 +304,7 @@ namespace CSGenio
                 conf = new ConfigurationXML();
             }
 
-            //inicializamos também as secções que tenham ficado vazias
-            if (conf.DataSystems == null)
-            {
-                conf.DataSystems = new List<DataSystemXml>();
-            }
-
-            if (conf.Security == null)
-            {
-                conf.Security = new List<SecurityCfgEl>();
-            }
-
-            if(conf.Paths == null)
-            {
-                conf.Paths = new List<PathCfgEl>();
-            }
-
-            if (conf.ssrsServer == null)
-            {
-                conf.ssrsServer = new SsrsServerXml();
-            }
-
-            if (conf.maisPropriedades == null)
-            {
-                conf.maisPropriedades = new SerializableDictionary<string, string>();
-            }
-
-            // Populate extra properties with data from manwin (INITPROPERTIES)
-            foreach (KeyValuePair<string, string> entry in CSGenio.framework.Configuration.initProperties)
-            {
-                // Do not add properties with empty value
-                if (String.IsNullOrEmpty(entry.Value))
-                    continue;
-                // Do not add already existing properties
-                if (conf.maisPropriedades.ContainsKey(entry.Key))
-                    continue;
-
-                conf.maisPropriedades.Add(entry.Key, entry.Value);
-            }
-
-            if (conf.Elasticsearch == null)
-            {
-                conf.Elasticsearch = new ElasticsearchXml();
-                conf.Elasticsearch.Colours = new List<CoreXml>();
-            }
+            conf.FillMissingConfigs();
 
             return conf;
         }
@@ -315,9 +328,6 @@ namespace CSGenio
     [XmlRoot("ChatBotCfg")]
     public class ChatBotCfg
     {
-        [XmlElement("websocketURL")]
-        public string websocketURL { get; set; }
-
         [XmlElement("apiURL")]
         public string apiURL { get; set; }
     }
@@ -376,6 +386,7 @@ namespace CSGenio
     {
         [XmlText]
         public string url { get; set; }
+
         [XmlAttribute("path")]
         public string path { get; set; }
 
@@ -387,10 +398,41 @@ namespace CSGenio
         {
             return !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(Domain);
         }
+
         [XmlAttribute("username")]
         public string Username { get; set; }
+
+        [XmlIgnore]
+        public string UsernameDecode
+        {
+            get
+            {
+                if (Password == null) return null;
+                return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Username));
+            }
+            set
+            {
+                Username = Convert.ToBase64String(Encoding.Unicode.GetBytes(value ?? string.Empty));
+            }
+        }
+
         [XmlAttribute("password")]
         public string Password { get; set; }
+
+        [XmlIgnore]
+        public string PasswordDecode
+        {
+            get
+            {
+                if (Password == null) return null;
+                return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Password));
+            }
+            set
+            {
+                Password = Convert.ToBase64String(Encoding.Unicode.GetBytes(value ?? string.Empty));
+            }
+        }
+
         [XmlAttribute("domain")]
         public string Domain { get; set; }
     }
@@ -432,6 +474,8 @@ namespace CSGenio
 
         public framework.DatabaseType GetDatabaseType()
         {
+            if (string.IsNullOrEmpty(Type) || Type == "SQLSERVER2000" || Type == "SQLSERVER2005" || Type == "SQLSERVER2008")
+                return framework.DatabaseType.SQLSERVERCOMPAT;
             return (framework.DatabaseType)Enum.Parse(typeof(framework.DatabaseType), Type, true);
         }
 
@@ -627,15 +671,28 @@ namespace CSGenio
 
             while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
             {
+                object ak = reader.GetAttribute("key");
+                object av = reader.GetAttribute("value");
+                var isEmpty = reader.IsEmptyElement;
 
                 reader.ReadStartElement("item");
+
+                //no attributes means we are using elements instead
+                if(ak == null)
+                {
                 reader.ReadStartElement("key");
-                TKey key = (TKey)keySerializer.Deserialize(reader);
+                    ak = keySerializer.Deserialize(reader);
                 reader.ReadEndElement();
+                }                
+                if(av == null)
+                {
                 reader.ReadStartElement("value");
-                TValue value = (TValue)valueSerializer.Deserialize(reader);
+                    av = valueSerializer.Deserialize(reader);
                 reader.ReadEndElement();
-                this.Add(key, value);
+                }
+                this.Add((TKey)ak, (TValue)av);
+
+                if(!isEmpty)
                 reader.ReadEndElement();
                 reader.MoveToContent();
 
@@ -648,17 +705,30 @@ namespace CSGenio
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
 
+            bool simplified = typeof(TKey) == typeof(string) && typeof(TValue) == typeof(string);
+
             foreach (TKey key in this.Keys)
             {
-                writer.WriteStartElement("item");
-                writer.WriteStartElement("key");
-                keySerializer.Serialize(writer, key);
-                writer.WriteEndElement();
-                writer.WriteStartElement("value");
-                TValue value = this[key];
-                valueSerializer.Serialize(writer, value);
-                writer.WriteEndElement();
-                writer.WriteEndElement();
+                //string dictionarys can be simplified a single element with attributes
+                if(simplified)
+                {
+                    writer.WriteStartElement("item");
+                    writer.WriteAttributeString("key", key.ToString());
+                    writer.WriteAttributeString("value", this[key].ToString());
+                    writer.WriteEndElement();
+                }
+                else //otherwise do a full key and value serialization
+                {
+	                writer.WriteStartElement("item");
+	                writer.WriteStartElement("key");
+	                keySerializer.Serialize(writer, key);
+	                writer.WriteEndElement();
+	                writer.WriteStartElement("value");
+	                TValue value = this[key];
+	                valueSerializer.Serialize(writer, value);
+	                writer.WriteEndElement();
+	                writer.WriteEndElement();
+                }
             }
         }
 
@@ -708,6 +778,7 @@ namespace CSGenio
             security.m_users = m_users.Select(identity => (UserCfgEl)identity.Clone()).ToList();
             security.m_maxAttempts = m_maxAttempts;
             security.m_sessionTimeOut = m_sessionTimeOut;
+            security.UsePasswordBlacklist = UsePasswordBlacklist;
 
             return security;
         }
@@ -829,6 +900,8 @@ namespace CSGenio
             set { m_sessionTimeOut = value; }
         }
         
+        [XmlAttribute("usePasswordBlacklist")]
+        public bool UsePasswordBlacklist { get; set; } = false;
     }
 
     [XmlRoot("AppPath")]
@@ -848,44 +921,16 @@ namespace CSGenio
         Admin
     }
 
-    [XmlRoot("admin")]
-    public class AdminCfgEl
-    {
-        private string m_name;
-        private string m_password;
-        private string m_password_format;
-
-        [XmlAttribute("name")]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
-
-        [XmlAttribute("password")]
-        public string Password
-        {
-            get { return m_password; }
-            set { m_password = value; }
-        }
-
-        [XmlAttribute("passwordFormat")]
-        public string PasswordFormat
-        {
-            get { return m_password_format; }
-            set { m_password_format = value; }
-        }
-    }
-
     [XmlRoot("numberFormat")]
-    public class NumberFormatXml
+	public class NumberFormatXml
     {
         [XmlAttribute("decimalSeparator")]
-        public string DecimalSeparator { get; set; }
+        public string DecimalSeparator { get; set; } = ",";
 
         [XmlAttribute("groupSeparator")]
-        public string GroupSeparator {get; set;}
+        public string GroupSeparator {get; set;} = " ";
     }
+
 
     [XmlRoot("dateFormat")]
     public class DateFormatXml
@@ -979,40 +1024,30 @@ namespace CSGenio
     [XmlRoot("identityProvider")]
     public class IdentityProviderCfgEl: ICloneable
     {
-        private string m_name;
-        private string m_type;
-        private string m_config;
-
         public object Clone()
         {
-            IdentityProviderCfgEl identity = new IdentityProviderCfgEl();
-            identity.m_name = m_name;
-            identity.m_type = m_type;
-            identity.m_config = m_config;
+            IdentityProviderCfgEl identity = new IdentityProviderCfgEl
+            {
+                Name = Name,
+                Description = Description,
+                Type = Type,
+                Config = Config
+            };
 
             return identity;
         }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
+        public string Name { get; set; }
+
+        [XmlAttribute("description")]
+        public string Description { get; set; }
 
         [XmlAttribute("type")]
-        public string Type
-        {
-            get { return m_type; }
-            set { m_type = value; }
-        }
+        public string Type { get; set; }
 
         [XmlAttribute("config")]
-        public string Config
-        {
-            get { return m_config; }
-            set { m_config = value; }
-        }
+        public string Config { get; set; }
     }
 
 	[Serializable]
@@ -1136,11 +1171,14 @@ namespace CSGenio
         [XmlElement]
         public int Port;
 
+        /// <summary>
+        /// Use STARTTLS
+        /// </summary>
         [XmlElement]
         public bool SSL;
 
         [XmlElement]
-        public bool Auth;
+        public AuthType AuthType;
 
         [XmlElement]
         public string Username;
@@ -1148,6 +1186,8 @@ namespace CSGenio
         [XmlElement]
         public string Password;
 
+        [XmlElement(IsNullable = false)]
+        public OAuth2Options OAuth2Options = null;
 
         [XmlArray("NotificationMessages")]
         [XmlArrayItem("NotificationMessagesPK")]
@@ -1158,6 +1198,84 @@ namespace CSGenio
 
         }
 
+    }
+
+    [XmlRoot("Messaging")]
+    public class MessagingXml
+    {
+        [XmlAttribute]
+        public bool Enabled { get; set; } = false;
+
+        [XmlElement]
+        public MessagingHostXml Host { get; set; } = new MessagingHostXml();
+
+        [XmlArray("Publications")]
+        [XmlArrayItem("Pub")]
+        public List<string> EnabledPublications { get; set; } = new List<string>();
+
+        [XmlArray("Subscriptions")]
+        [XmlArrayItem("Sub")]
+        public List<string> EnabledSubscriptions { get; set; } = new List<string>();
+    }
+
+    [XmlRoot("Host")]
+    public class MessagingHostXml
+    {
+        [XmlElement]
+        public string Provider { get; set; } = "RabbitMq";
+        [XmlElement]
+        public string Endpoint { get; set; } = "amqp://localhost";
+        [XmlElement]
+        public string Username { get; set; } = string.Empty;
+        [XmlElement]
+        public string Password { get; set; } = string.Empty;
+
+        public string PasswordDecode()
+        {
+            if (Password == null) return null;
+            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Password));
+        }
+        public string UsernameDecode()
+        {
+            if (Username == null) return null;
+            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Username));
+        }
+
+    }
+
+    [XmlRoot("Scheduler")]
+    public class SchedulerXml
+    {
+        [XmlAttribute]
+        public bool Enabled { get; set; } = false;
+
+        [XmlArray("Jobs")]
+        [XmlArrayItem("Job")]
+        public List<SchedulerJobXml> Jobs { get; set; } = new List<SchedulerJobXml>();
+    }
+
+    [XmlRoot("Job")]
+    public class SchedulerJobXml
+    {
+        [XmlAttribute]
+        public string Id { get; set; }
+        [XmlAttribute]
+        public string TaskType { get; set; }
+        /// <summary>
+        /// Format is:
+        ///   Second Minute Hour DayOfMonth Month DayOfWeek
+        ///     * for all values
+        ///     x-y for a range between x and y
+        ///     x,y for a list of x and y values
+        ///     */n for running at every n'th value
+        /// </summary>
+        /// <seealso cref="https://github.com/HangfireIO/Cronos"/>
+        [XmlAttribute]
+        public string Cron { get; set; }
+        [XmlAttribute]
+        public bool Enabled { get; set; } = true;
+
+        public SerializableDictionary<string, string> Options { get; set; } = null;
     }
 
 }

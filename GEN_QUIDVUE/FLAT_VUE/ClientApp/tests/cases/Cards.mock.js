@@ -62,7 +62,8 @@ export default {
 				],
 				customActions: [],
 				resourcesPath: 'Content/img/',
-				perPage: 6
+				perPage: 6,
+				tableNamePlural: 'Users'
 			}
 		}
 
@@ -414,7 +415,8 @@ export default {
 					},
 					{
 						$getResource: (resId) => resId
-					}
+					},
+					{}
 				)
 			}
 		}

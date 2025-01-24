@@ -1,12 +1,11 @@
 import DateInput from './DateInput.case.vue'
 
 export default {
-    title: 'Inputs/DateInput',
-    component: DateInput,
-    tags: [],
-  };
+	title: 'Inputs/DateInput',
+	component: DateInput,
+	tags: []
+}
 
-  export const Simple = {
-    args: {
-    },
-  };
+export const Simple = {
+	args: {}
+}

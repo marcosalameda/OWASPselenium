@@ -9,7 +9,7 @@
 				:tabs-list="controls.tabGroup.tabsList"
 				:selected-tab="controls.tabGroup.selectedTab"
 				:is-visible="controls.tabGroup.isVisible"
-				@tab-changed="controls.tabGroup.SelectTab($event)">
+				@tab-changed="controls.tabGroup.selectTab($event)">
 				<template #tab-panel>
 					<section v-show="controls.tabGroup.selectedTab === 'firstTab'">
 						<q-row-container is-large>
@@ -41,8 +41,7 @@
 						<q-row-container is-large>
 							<q-control-wrapper class="row-line-group">
 								<q-button
-									b-style="secondary"
-									:class="['float-left']"
+									b-style="secondary"									
 									:label="Resources.APLICAR33981"
 									:title="Resources.APLICAR33981"
 									@click="applyChanges">
@@ -92,6 +91,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_2511ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_2511', 'hardcoded', 'messages']
 
 	export default {
@@ -139,9 +140,7 @@
 					order: '2511'
 				},
 
-				model: {
-					selectedRows: {}
-				},
+				model: new MenuViewModel(this),
 
 				controls: {
 					firstTab: new controlClass.BaseControl({
@@ -170,6 +169,7 @@
 					}, this),
 
 					firstTable: new controlClass.TableListControl({
+						id: 'GQT_Menu_2511',
 						controller: 'ROOMS',
 						action: 'GQT_Menu_2511',
 						hasDependencies: false,
@@ -206,7 +206,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -314,23 +314,16 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: SALAS
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValRoomnr',
 							defaultSearchColumnNameOriginal: 'ValRoomnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValRoomnr',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-ROOMS'],
 						uuid: 'a8ab9db2-018e-4292-9747-eb8c7b11458e',
 						allSelectedRows: 'false',
-						id: 'GQT_Menu_2511',
 						headerLevel: 1,
 						handlers: {
 							selectRow: (eventData) => {
@@ -348,6 +341,7 @@
 					}, this),
 
 					secondTable: new controlClass.TableListControl({
+						id: 'GQT_Menu_2511',
 						controller: 'ROOMS',
 						action: 'GQT_Menu_2511',
 						hasDependencies: false,
@@ -384,7 +378,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -492,23 +486,16 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: SALAS
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValRoomnr',
 							defaultSearchColumnNameOriginal: 'ValRoomnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValRoomnr',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-ROOMS'],
 						uuid: 'a8ab9db2-018e-4292-9747-eb8c7b11458e',
 						allSelectedRows: 'false',
-						id: 'GQT_Menu_2511',
 						headerLevel: 1,
 						handlers: {
 							selectRow: (eventData) => {
@@ -556,17 +543,12 @@
 							},
 							formsDefinition: {
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: [],
 						uuid: '',

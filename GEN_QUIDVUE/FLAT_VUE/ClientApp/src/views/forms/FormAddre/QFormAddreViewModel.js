@@ -74,7 +74,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValAddresstype))
 		watch(() => this.ValAddresstype.value, (newValue, oldValue) => this.onUpdate('addre.addresstype', this.ValAddresstype, newValue, oldValue))
 
-		this.ValAddresstext = reactive(new modelFieldType.String({
+		this.ValAddresstext = reactive(new modelFieldType.MultiLineString({
 			id: 'ValAddresstext',
 			originId: 'ValAddresstext',
 			area: 'ADDRE',
@@ -92,6 +92,27 @@ export default class ViewModel extends ViewModelBase
 			description: computed(() => this.Resources.ADDRESS_CITY41109),
 		}).cloneFrom(values?.ValAddresscity))
 		watch(() => this.ValAddresscity.value, (newValue, oldValue) => this.onUpdate('addre.addresscity', this.ValAddresscity, newValue, oldValue))
+
+		/** The form fields used only in formulas. */
+		this.ValPeriodstart = reactive(new modelFieldType.DateTime({
+			id: 'ValPeriodstart',
+			originId: 'ValPeriodstart',
+			area: 'ADDRE',
+			field: 'PERISTAR',
+			description: computed(() => this.Resources.PERIOD_START07901),
+			isFixed: true,
+		}).cloneFrom(values?.ValPeriodstart))
+		watch(() => this.ValPeriodstart.value, (newValue, oldValue) => this.onUpdate('addre.periodstart', this.ValPeriodstart, newValue, oldValue))
+
+		this.ValPeriodend = reactive(new modelFieldType.DateTime({
+			id: 'ValPeriodend',
+			originId: 'ValPeriodend',
+			area: 'ADDRE',
+			field: 'PERIEND',
+			description: computed(() => this.Resources.PERIOD_END31576),
+			isFixed: true,
+		}).cloneFrom(values?.ValPeriodend))
+		watch(() => this.ValPeriodend.value, (newValue, oldValue) => this.onUpdate('addre.periodend', this.ValPeriodend, newValue, oldValue))
 	}
 
 	/**
@@ -106,5 +127,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodaddre'
 
 	get QPrimaryKey() { return this.ValCodaddre.value }
-	set QPrimaryKey(value) { this.ValCodaddre.value = value }
+	set QPrimaryKey(value) { this.ValCodaddre.updateValue(value) }
 }

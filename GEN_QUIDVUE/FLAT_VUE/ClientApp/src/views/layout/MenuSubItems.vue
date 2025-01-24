@@ -4,27 +4,33 @@
 		class="dropdown-divider" />
 
 	<li
-		:id="module + menu.Order"
+		:id="menuId"
 		:class="menuClasses">
 		<template v-if="!isEmpty(menu.Children)">
 			<make-link
+				ref="menuItem"
 				:menu="menu"
 				:first-level="level === 0"
-				@click.stop.prevent="toggleDropdownMenu(menu)" />
+				:show-sub-menu="menuIsOpen(menu)"
+				:sub-menu-id="subMenuId"
+				@toggle-menu="toggleDropdownMenu(menu)"
+				@keyup="menuItemKeyup" />
 
 			<transition name="sidebar-dropdown">
 				<ul
 					v-if="menuIsOpen(menu)"
+					:id="subMenuId"
 					:class="['d-block', 'nav', 'nav-treeview', levelClass]">
 					<template
 						v-for="child in menu.Children"
 						:key="child.Id">
-						<menu-sub-items
+						<q-menu-sub-items
 							v-if="child.Type === 'ITEM'"
 							:menu="child"
 							:level="level + 1"
 							:root="false"
-							:module="module" />
+							:module="module"
+							@close-parent-menu="closeMenuAndFocusItem" />
 						<li v-else-if="child.Type === 'REPORT'">
 							<make-link :menu="child" />
 						</li>
@@ -39,7 +45,9 @@
 		<template v-else>
 			<make-link
 				:menu="menu"
-				:first-level="level === 0" />
+				:first-level="level === 0"
+				:sub-menu-id="subMenuId"
+				@keyup="menuItemKeyup" />
 		</template>
 	</li>
 </template>
@@ -51,6 +59,8 @@
 
 	export default {
 		name: 'QMenuSubItems',
+		
+		emits: ['close-parent-menu'],
 
 		components: {
 			MakeLink
@@ -122,6 +132,16 @@
 			levelClass()
 			{
 				return `level-${this.level}`
+			},
+			
+			menuId()
+			{
+				return this.module + this.menu.Id
+			},
+
+			subMenuId()
+			{
+				return this.menuId + '_SUBMENU'
 			}
 		},
 
@@ -129,6 +149,43 @@
 			getMenuList(id)
 			{
 				return `QMenu${this.module}_${id}`
+			},
+			
+			/*
+			 * Close sub-menu and focus on the element that opens and closes it
+			 */
+			closeMenuAndFocusItem()
+			{
+				this.collapseDropdownMenu(this.menu)
+				this.$refs?.menuItem?.focusSubMenuToggle()
+			},
+
+			/*
+			 * Signal to close the menu that contains this item
+			 */
+			closeParentMenu()
+			{
+				this.$emit('close-parent-menu')
+			},
+
+			/*
+			 * Called when pressing a key on any menu item
+			 */
+			menuItemKeyup(event)
+			{
+				const key = event?.key
+				
+				switch(key)
+				{
+					case 'Escape':
+						if(this.level === 0)
+							this.closeMenuAndFocusItem()
+						else
+							this.closeParentMenu()
+						break;
+					default:
+						return
+				}
 			}
 		}
 	}

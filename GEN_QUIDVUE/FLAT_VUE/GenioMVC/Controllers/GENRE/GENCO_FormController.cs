@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Genre;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_GENCO_CANCEL = new NavigationLocation("CONTACT_TYPE65233", "Genco_Cancel", "Genre") { vueRouteName = "form-GENCO", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_GENCO_SHOW = new NavigationLocation("CONTACT_TYPE65233", "Genco_Show", "Genre") { vueRouteName = "form-GENCO", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_GENCO_NEW = new NavigationLocation("CONTACT_TYPE65233", "Genco_New", "Genre") { vueRouteName = "form-GENCO", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_GENCO_EDIT = new NavigationLocation("CONTACT_TYPE65233", "Genco_Edit", "Genre") { vueRouteName = "form-GENCO", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_GENCO_DUPLICATE = new NavigationLocation("CONTACT_TYPE65233", "Genco_Duplicate", "Genre") { vueRouteName = "form-GENCO", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_GENCO_DELETE = new NavigationLocation("CONTACT_TYPE65233", "Genco_Delete", "Genre") { vueRouteName = "form-GENCO", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_GENCO_CANCEL = new("CONTACT_TYPE65233", "Genco_Cancel", "Genre") { vueRouteName = "form-GENCO", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_GENCO_SHOW = new("CONTACT_TYPE65233", "Genco_Show", "Genre") { vueRouteName = "form-GENCO", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_GENCO_NEW = new("CONTACT_TYPE65233", "Genco_New", "Genre") { vueRouteName = "form-GENCO", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_GENCO_EDIT = new("CONTACT_TYPE65233", "Genco_Edit", "Genre") { vueRouteName = "form-GENCO", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_GENCO_DUPLICATE = new("CONTACT_TYPE65233", "Genco_Duplicate", "Genre") { vueRouteName = "form-GENCO", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_GENCO_DELETE = new("CONTACT_TYPE65233", "Genco_Delete", "Genre") { vueRouteName = "form-GENCO", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Genco_ModalDBEdit()
-		{
-			Genco_ViewModel model = new Genco_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Genco_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Genco Multiform actions
 
-		//
-		// GET /Genre/MFGenco_New
-		[HttpGet]
-		[ActionName("MFGenco_New")]
-		public ActionResult MFGenco_New()
-		{
-			var model = new Genco_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_GENCO_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("genre", model.ValCodgenre);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFGenco_New_GET()
-		{
-			return MFGenco_New();
-		}
-
-		//
-		// GET /Genre/MFGenco_Edit
-		[HttpGet]
-		[ActionName("MFGenco_Edit")]
-		public ActionResult MFGenco_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("GENCO", "EDIT", new { id = id, partialView = "MFGenco", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFGenco_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFGenco_Edit(requestModel);
-		}
-
-		//
-		// GET /Genre/MFGenco_Cancel
-		[ActionName("MFGenco_Cancel")]
-		public ActionResult MFGenco_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Genre(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Genre/MFGenco_Save
-		[HttpPost]
-		[ActionName("MFGenco_Save")]
-		public JsonResult MFGenco_Save(Genco_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFGenco_Save",
-				ViewName = "MFGenco",
-				AreaName = "genre"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Genre/MFGenco_Delete
-		[HttpPost]
-		[ActionName("MFGenco_Delete")]
-		public JsonResult MFGenco_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFGenco_Delete",
-				ViewName = "MFGenco",
-				AreaName = "genre",
-				Location = ACTION_GENCO_EDIT
-			};
-
-			var model = new Genco_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Genre/Genco_SaveEdit
 		[HttpPost]

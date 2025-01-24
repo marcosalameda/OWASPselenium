@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.MANUA___KINDEDESIGNAT.handlers"
 							:loading="controls.MANUA___KINDEDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.MANUA___KINDEDESIGNAT.isVisible"
 								v-bind="controls.MANUA___KINDEDESIGNAT.props"
-								:model-value="model.ValCodkinde.value"
-								v-on="controls.MANUA___KINDEDESIGNAT.handlers"
-								@update:model-value="model.ValCodkinde.fnUpdateValue" />
+								v-on="controls.MANUA___KINDEDESIGNAT.handlers" />
 							<q-see-more-manua-kindedesignat
 								v-if="controls.MANUA___KINDEDESIGNAT.seeMoreIsVisible"
 								v-bind="controls.MANUA___KINDEDESIGNAT.seeMoreParams"
@@ -131,12 +128,12 @@
 							v-on="controls.MANUA___MANUANAME____.handlers"
 							:loading="controls.MANUA___MANUANAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MANUA___MANUANAME____.props"
 								:model-value="model.ValName.value"
-								@update:model-value="model.ValName.fnUpdateValue" />
+								@blur="onBlur(controls.MANUA___MANUANAME____, model.ValName.value)"
+								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -150,41 +147,11 @@
 							v-on="controls.MANUA___MANUADIGDOCUM.handlers"
 							:loading="controls.MANUA___MANUADIGDOCUM.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-document
 								v-if="controls.MANUA___MANUADIGDOCUM.isVisible"
-								id="MANUA___MANUADIGDOCUM"
-								size="xxlarge"
-								:model-value="model.ValDigdocum.value"
-								versioning-is-on
-								:readonly="controls.MANUA___MANUADIGDOCUM.readonly"
-								:is-in-checkout="controls.MANUA___MANUADIGDOCUM.isInCheckout"
-								:current-version="controls.MANUA___MANUADIGDOCUM.currentVersion"
-								:extensions="controls.MANUA___MANUADIGDOCUM.extensions"
-								:max-file-size="controls.MANUA___MANUADIGDOCUM.maxFileSize"
-								:versions="controls.MANUA___MANUADIGDOCUM.documentVersions"
-								:versions-info="controls.MANUA___MANUADIGDOCUM.versionsInfo"
-								:file-properties="controls.MANUA___MANUADIGDOCUM.fileProperties"
-								:texts="controls.MANUA___MANUADIGDOCUM.texts"
-								:popup-is-visible="controls.MANUA___MANUADIGDOCUM.popupIsVisible"
-								:disallow-removal="controls.MANUA___MANUADIGDOCUM.isRequired"
-								:resources-path="controls.MANUA___MANUADIGDOCUM.resourcesPath"
-								:uses-templates="controls.MANUA___MANUADIGDOCUM.usesTemplates"
-								@file-error="controls.MANUA___MANUADIGDOCUM.HandleFileError($event)"
-								@submit-file="controls.MANUA___MANUADIGDOCUM.SetFile($event)"
-								@edit-file="controls.MANUA___MANUADIGDOCUM.SetCheckoutState()"
-								@get-properties="controls.MANUA___MANUADIGDOCUM.GetFileProperties()"
-								@get-version-history="controls.MANUA___MANUADIGDOCUM.GetVersionsInfo()"
-								@get-file="controls.MANUA___MANUADIGDOCUM.GetFile()"
-								@download-file="controls.MANUA___MANUADIGDOCUM.DownloadFile()"
-								@get-file-version="controls.MANUA___MANUADIGDOCUM.GetFileVersion($event)"
-								@delete-last="controls.MANUA___MANUADIGDOCUM.DeleteFile(0)"
-								@delete-history="controls.MANUA___MANUADIGDOCUM.DeleteFile(1)"
-								@delete-file="controls.MANUA___MANUADIGDOCUM.DeleteFile(2)"
-								@show-popup="controls.MANUA___MANUADIGDOCUM.SetModal($event)"
-								@hide-popup="controls.MANUA___MANUADIGDOCUM.RemoveModal($event)"
-								@show-templates-popup="controls.MANUA___MANUADIGDOCUM.handleDocumentTemplates($event)" />
+								v-bind="controls.MANUA___MANUADIGDOCUM.props"
+								v-on="controls.MANUA___MANUADIGDOCUM.handlers" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -198,18 +165,14 @@
 							v-on="controls.MANUA___MANUANOTES___.handlers"
 							:loading="controls.MANUA___MANUANOTES___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.MANUA___MANUANOTES___.isVisible"
+								v-bind="controls.MANUA___MANUANOTES___.props"
 								id="MANUA___MANUANOTES___"
-								size="xxlarge"
 								:model-value="model.ValNotes.value"
 								:rows="5"
 								:cols="65"
-								:is-required="controls.MANUA___MANUANOTES___.isRequired"
-								:readonly="controls.MANUA___MANUANOTES___.readonly"
-								:placeholder="controls.MANUA___MANUANOTES___.placeholder"
 								@update:model-value="model.ValNotes.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -296,15 +259,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'MANUA',
-						location: 'form-MANUA',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'MANUA',
+					location: 'form-MANUA',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -350,6 +311,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -422,8 +385,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -505,7 +469,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -559,21 +523,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -584,25 +533,9 @@
 						id: 'MANUA___KINDEDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodkinde',
-							dependencyEvent: 'fieldChange:manua.codkinde'
-						},
-						dependentFields: () => {
-							return {
-								set 'kinde.codkinde'(value) { vm.model.ValCodkinde.updateValue(value) },
-								set 'kinde.designat'(value) { vm.model.TableKindeDesignat.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -611,6 +544,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodkinde',
+							dependencyEvent: 'fieldChange:manua.codkinde'
+						},
+						dependentFields: () => ({
+							set 'kinde.codkinde'(value) { vm.model.ValCodkinde.updateValue(value) },
+							set 'kinde.designat'(value) { vm.model.TableKindeDesignat.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					MANUA___MANUANAME____: new fieldControlClass.StringControl({
 						modelField: 'ValName',
@@ -618,15 +561,11 @@
 						id: 'MANUA___MANUANAME____',
 						name: 'NAME',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.MANUAL_NAME60077),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_MANUA___MANUANAME____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -636,21 +575,12 @@
 						id: 'MANUA___MANUADIGDOCUM',
 						name: 'DIGDOCUM',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DIGITAL_DOCUMENT59580),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						documentProperties: computed(() => vm.model.ValDigdocumPropertiesVM),
-						documentFK: computed(() => vm.model.ValDigdocumfk),
-						documentVersions: computed(() => vm.model.ValDigdocumPropertiesVM.value ? vm.model.ValDigdocumPropertiesVM.value.Versions : {}),
-						isInCheckout: computed(() => vm.model.ValDigdocumPropertiesVM.value ? vm.model.ValDigdocumPropertiesVM.value.IsCheckout : false),
-						currentVersion: computed(() => vm.model.ValDigdocumPropertiesVM.value ? vm.model.ValDigdocumPropertiesVM.value.Version : '1'),
-						usesTemplates: false,
+						versioningIsOn: true,
+						viewType: qEnums.documentViewTypeMode.print,
 						extensions: [],
-						viewType: qEnums.documentViewTypeMode.Print,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -660,15 +590,9 @@
 						id: 'MANUA___MANUANOTES___',
 						name: 'NOTES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.NOTES05274),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 65,
-						labelId: 'label_MANUA___MANUANOTES___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -714,7 +638,7 @@
 						/** The foreign key to the KINDE table */
 						get kinde() { return vm.model.ValCodkinde },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -810,6 +734,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -849,6 +781,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -975,6 +915,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR MANUA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -990,6 +946,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS MANUA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

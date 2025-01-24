@@ -18,7 +18,6 @@
 									size="small"
 									:max-integers="4"
 									:max-decimals="5"
-									is-currency
 									currency-symbol="€"
 									thousands-separator="."
 									decimal-point="," />
@@ -39,7 +38,6 @@
 									size="small"
 									:max-integers="4"
 									:max-decimals="5"
-									is-currency
 									readonly
 									currency-symbol="€"
 									thousands-separator="."
@@ -60,7 +58,6 @@
 									id="CTRL_3"
 									size="large"
 									:max-integers="4"
-									is-currency
 									currency-symbol="CHF"
 									thousands-separator="."
 									decimal-point="," />
@@ -113,9 +110,13 @@
 
 <script>
 	export default {
+		name: 'QNumericContainer',
+
 		docsfile: './docs/inputs/NumericInput.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{

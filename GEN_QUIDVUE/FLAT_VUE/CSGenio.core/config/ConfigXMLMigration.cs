@@ -12,17 +12,20 @@ using Quidgest.Persistence.GenericQuery;
 using Quidgest.Persistence;
 using System.Xml.Serialization;
 using System.Xml.Linq;
+using CSGenio.config;
 
 namespace GenioServer.framework
 {
     public class ConfigXMLMigration
     {
-        public static int CurConfigurationVerion = 10;
 
-        public static void Migration(int fileConfigVersion)
-        {
-            string pathConfig = Configuration.GetConfigPath();
-            pathConfig = Path.Combine(pathConfig, "Configuracoes.xml");
+        public static int CurConfigurationVerion = 11;
+
+        public static void Migration(IConfigurationManager configManager, int fileConfigVersion)
+        {            
+            //Migration routine is expecting direct access to the file
+            var fileConfigManager = (FileConfigurationManager)configManager;
+            string pathConfig = fileConfigManager.GetFileLocation();
 
             //will make a copy of the old file before migrating to the new one
             makeCopyConfig(pathConfig);
@@ -43,6 +46,7 @@ namespace GenioServer.framework
                 configFileTxt = migrateConfigToVersion8(fileConfigVersion, configFileTxt);
                 configFileTxt = migrateConfigToVersion9(fileConfigVersion, configFileTxt);
                 configFileTxt = migrateConfigToVersion10(fileConfigVersion, configFileTxt);
+                configFileTxt = migrateConfigToVersion11(fileConfigVersion, configFileTxt);
             }
 
             //write the final file
@@ -438,7 +442,7 @@ namespace GenioServer.framework
          *
          * [APM]
          * This migration is meant to encrypt (as base64) the username and
-         * password of SQL Server Reporting Services in Configuracoes.xml.
+         * password of SQL Server Reporting Services in the configuration file.
          *
          ****************************************************************/
         private static string migrateConfigToVersion5(int fileVersion, string configFileTxt)
@@ -476,7 +480,7 @@ namespace GenioServer.framework
          *
          * [APM]
          * This migration is meant to fix the incoherences in nomenclature
-         * of the "Paths" tag in Configuracoes.xml.
+         * of the "Paths" tag in the configuration file.
          *
          ****************************************************************/
         private static string migrateConfigToVersion6(int fileVersion, string configFileTxt)
@@ -564,7 +568,7 @@ namespace GenioServer.framework
                 SMTPServer = data.GetString(row, "pmail.SMTPServer"),
                 Port = data.GetInteger(row, "pmail.Port"),
                 SSL = data.GetLogic(row, "pmail.SSL") == 1,
-                Auth = data.GetLogic(row, "pmail.Auth") == 1,
+                AuthType = data.GetLogic(row, "pmail.Auth") == 1 ? CSGenio.config.AuthType.BasicAuth : CSGenio.config.AuthType.None,
                 Username = data.GetString(row, "pmail.Username"),
                 Password = data.GetString(row, "pmail.Password")
             };
@@ -756,6 +760,41 @@ namespace GenioServer.framework
                 }
                 string changedXml_Text = xdoc.Declaration.ToString() + Environment.NewLine + xdoc.ToString();
                 return changeVersion(changedXml_Text, "10");
+            }
+            catch (Exception)
+            {
+                return configFileTxt;
+            }
+        }
+
+        /// <summary>
+        /// Extend authentification type for e-mail server
+        /// </summary>
+        /// <param name="fileVersion"></param>
+        /// <param name="configFileTxt"></param>
+        /// <returns></returns>
+        private static string migrateConfigToVersion11(int fileVersion, string configFileTxt)
+        {
+            // if the file is already on the right version, doesn't migrate.
+            if (fileVersion >= 11)
+                return configFileTxt;
+
+            try
+            {
+                XDocument xdoc = XDocument.Parse(configFileTxt);
+                var emailServers = xdoc.Root.Elements("EmailProperties").Elements("EmailServer");
+                foreach (var element in emailServers)
+                {
+                    var oldElement = element.Element("Auth");
+                    if (oldElement != null)
+                    {
+                        bool oldValueParsed = bool.Parse(oldElement.Value);
+                        XElement newElement = new XElement("AuthType", oldValueParsed ? CSGenio.config.AuthType.BasicAuth : CSGenio.config.AuthType.None);
+                        oldElement.ReplaceWith(newElement);
+                    }
+                }
+                string changedXml_Text = xdoc.Declaration.ToString() + Environment.NewLine + xdoc.ToString();
+                return changeVersion(changedXml_Text, "11");
             }
             catch (Exception)
             {

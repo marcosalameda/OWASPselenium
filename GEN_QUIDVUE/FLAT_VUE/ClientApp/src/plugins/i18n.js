@@ -72,8 +72,12 @@ export const resourcesMixin = {
 	},
 
 	methods: {
-		$getResource (resourceId)
+		$getResource(resourceId)
 		{
+			// Return an empty string for empty resource IDs
+			// The $tm() function doesn't do this. It returns a whole object with resource IDs and values.
+			if (resourceId === undefined || resourceId === null || resourceId === '')
+				return ''
 			return this.$tm(resourceId)
 		},
 

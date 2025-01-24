@@ -38,6 +38,14 @@
 	.control-join-group .c-groupbox {
 		white-space: initial !important;
 	}
+
+	.label-container {
+		display: flex;
+
+		&--inline {
+			display: inline-flex;
+		}
+	}
 }
 
 .control-join-group {
@@ -53,10 +61,22 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
+		align-self: flex-end;
 
-		&.labelleft,
-		&.labelright {
-			flex-direction: row;
+		&.labeltopleft:has(span.q-help__subtext) {
+			max-width: min-content;
+		}
+
+		&.labeltopleft:has(span.q-help__subtext) {
+			max-width: min-content;
+		}
+	}
+
+	.label-container {
+		display: flex;
+
+		&--inline {
+			display: inline-flex;
 		}
 	}
 
@@ -70,13 +90,22 @@
 		}
 	}
 
-	.check-list-extended {
-		white-space: normal;
-	}
-
 	.i-button {
 		display: flex;
 		flex-direction: column-reverse;
+		align-self: flex-end;
+
+		// Positions the popover button next to the button
+		&:has(.btn-popover) {
+			flex-direction: row-reverse;
+			align-items: center;
+		}
+
+		// Positions the popover button on the top side of the button
+		.label-container:has(> .btn-popover) {
+			align-self: flex-start;
+			margin-left: 0.25rem;
+		}
 	}
 }
 

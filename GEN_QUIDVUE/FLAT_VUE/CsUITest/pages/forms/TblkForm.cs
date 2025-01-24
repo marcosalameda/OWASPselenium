@@ -1,51 +1,29 @@
-namespace quidgest.uitests.pages;
+﻿using quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
 
 [System.CodeDom.Compiler.GeneratedCode("Genio", "")]
-public class TblkForm: PageObject {
-
-	private By formLocator = By.CssSelector("#form-container");
-	private IWebElement form => driver.FindElement(formLocator);
+public class TblkForm : Form
+{
+	/// <summary>
+	/// Name
+	/// </summary>
+	public BaseInputControl TblkName => new BaseInputControl(driver, ContainerLocator, "#TBLK____TBLK_NAME____");
 
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl TblkName => new BaseInputControl(driver, formLocator, "#TBLK____TBLK_NAME____");
+	public LookupControl GrpbName => new LookupControl(driver, ContainerLocator, "container-TBLK____GRPB_NAME____");
+	public SeeMorePage GrpbNameSeeMorePage => new SeeMorePage(driver, "TBLK", "TBLK____GRPB_NAME____");
+
 	/// <summary>
 	/// Name
 	/// </summary>
-	public LookupControl GrpbName => new LookupControl(driver, formLocator, "container-TBLK____GRPB_NAME____");
-	public SeeMorePage GrpbNameSeeMorePage => new SeeMorePage(driver, "TBLK", "GRPB.NAME");
-	/// <summary>
-	/// Name
-	/// </summary>
-	public LookupControl TrsbName => new LookupControl(driver, formLocator, "container-TBLK____TRSB_NAME____");
-	public SeeMorePage TrsbNameSeeMorePage => new SeeMorePage(driver, "TBLK", "TRSB.NAME");
+	public LookupControl TrsbName => new LookupControl(driver, ContainerLocator, "container-TBLK____TRSB_NAME____");
+	public SeeMorePage TrsbNameSeeMorePage => new SeeMorePage(driver, "TBLK", "TBLK____TRSB_NAME____");
 
-	private IWebElement saveBtn => form.FindElement(By.CssSelector("#bottom-save-btn"));
-	private IWebElement cancelBtn => form.FindElement(By.CssSelector("#bottom-cancel-btn"));
-	public FORM_MODE mode {get; private set;}
-
-	public TblkForm(IWebDriver driver, FORM_MODE mode, By subformLocator=null): base(driver) {
-		this.mode = mode;
-		formLocator = subformLocator ?? formLocator;
-
-		wait.Until(c => form);
-		WaitForLoading();
-	}
-
-	public void WaitForLoading()
-	{
-        wait.Until(c => form.FindElement(ByData.Key("TBLK")).GetAttribute("data-loading") != "true");
-    }
-
-	public void Save() {
-		WaitForLoading();
-		saveBtn.Click();
-	}
-
-	public void Cancel() {
-		WaitForLoading();
-		cancelBtn.Click();
-	}
-
+	public TblkForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "TBLK", containerLocator: containerLocator) { }
 }

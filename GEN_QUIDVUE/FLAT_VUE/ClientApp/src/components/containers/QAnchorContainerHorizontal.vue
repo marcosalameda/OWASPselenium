@@ -1,25 +1,24 @@
 ﻿<template>
-	<transition name="horizontal-collapse-show">
-		<div
-			v-if="isVisible"
-			class="anchors">
-			<template
-				v-for="ctrlId in anchors"
-				:key="ctrlId">
-				<span
-					v-if="!isTab(controls[ctrlId]) && showAnchor(controls[ctrlId])"
-					:class="getClass(ctrlId)"
-					@click.stop.prevent="anchorClicked(ctrlId)">
-					<q-icon icon="paired" />
-					{{ controls[ctrlId].label }}
-				</span>
-			</template>
-		</div>
-	</transition>
+	<div class="q-anchors">
+		<template
+			v-for="ctrlId in anchors"
+			:key="ctrlId">
+			<a
+				v-if="showAnchor(ctrlId)"
+				href="javascript:void(0)"
+				:class="getClass(ctrlId)"
+				@click.stop.prevent="anchorClicked(ctrlId)">
+				<q-icon icon="paired" />
+				{{ controls[ctrlId].label }}
+			</a>
+		</template>
+	</div>
 </template>
 
 <script>
 	import _isEmpty from 'lodash-es/isEmpty'
+
+	import genericFunctions from '@/mixins/genericFunctions'
 
 	export default {
 		name: 'QAnchorContainerHorizontal',
@@ -29,11 +28,6 @@
 		inheritAttrs: false,
 
 		props: {
-			/**
-			 * Whether or not the control is currently visible.
-			 */
-			isVisible: Boolean,
-
 			/**
 			 * The form controls.
 			 */
@@ -48,14 +42,6 @@
 			anchors: {
 				type: Array,
 				default: () => []
-			},
-
-			/**
-			 * The height of the header.
-			 */
-			headerHeight: {
-				type: Number,
-				default: 0
 			}
 		},
 
@@ -81,35 +67,20 @@
 		},
 
 		methods: {
-			showAnchor(ctrl)
+			showAnchor(ctrlId)
 			{
-				if (ctrl.isCollapsible)
+				const ctrl = this.controls[ctrlId]
+
+				if (ctrl.type === 'Tab' || ctrl.isCollapsible)
 					return false
 
-				const parentId = ctrl.parent
-
-				if (parentId)
-					return ctrl.isVisible && !_isEmpty(ctrl.label) && ctrl.anchored === true && this.showAnchor(this.controls[parentId])
-				else if (this.isTab(ctrl))
-					return ctrl.isVisible
-				return ctrl.isVisible && !_isEmpty(ctrl.label) && ctrl.anchored === true
+				return !_isEmpty(ctrl.label) && ctrl.anchored === true
 			},
 
-			isTab(ctrl)
-			{
-				return ctrl.type === 'Tab'
-			},
-
-			// For know what anchor is clicked
 			selectAnchor(event)
 			{
 				event.preventDefault()
 				this.isSelected = !this.isSelected
-			},
-
-			setSelectedAnchor(ctrlId)
-			{
-				this.selectedAnchor === ctrlId
 			},
 
 			setScrollAnchor(ctrlId)
@@ -117,58 +88,46 @@
 				this.scrollAnchor = ctrlId
 			},
 
-			focusControl(ctrlId)
-			{
-				// Updates the selected anchor
-				this.setSelectedAnchor(ctrlId)
-				this.setScrollAnchor(ctrlId)
-			},
-
 			getClass(ctrlId)
 			{
-				if (this.scrollAnchor === ctrlId)
-					return 'anchor-selected'
-				return 'anchor-title'
+				return `q-anchors__${this.scrollAnchor === ctrlId ? 'selected' : 'title'}`
 			},
 
 			anchorClicked(ctrlId)
 			{
-				this.$emit('focus-control', ctrlId, false, 'start')
+				this.$emit('focus-control', ctrlId, false, 'start', 'instant')
 				this.selectedAnchor = ctrlId
-			},
-
-			// To know in which anchor we are in the page according to scroll
-			findActiveAnchor(ctrlId)
-			{
-				const isThereAnActiveSession = false
-				const offset = this.headerHeight
-
-				const target = document.getElementById(ctrlId)
-
-				if (target)
-				{
-					const pos = target.getBoundingClientRect()
-
-					if (
-						!isThereAnActiveSession &&
-						((pos.top > offset && pos.top < window.innerHeight / 3) || (pos.top < offset && pos.bottom > window.innerHeight / 3))
-					)
-					{
-						if (this.selectedAnchor)
-							this.selectedAnchor = ''
-						else
-							this.setScrollAnchor(ctrlId)
-
-						this.isThereAnActiveSession = true
-					}
-				}
 			},
 
 			handleScroll()
 			{
-				// Looking for the first section whose the top is in the viewport.
+				let anchor
+
+				// Get the Y coordinate starting after the layout header and form header
+				const scrollYStart = genericFunctions.scrollYStart()
+
 				for (let ctrl of this.anchors)
-					this.findActiveAnchor(ctrl)
+				{
+					const target = document.getElementById(ctrl)
+
+					if (target)
+					{
+						const pos = target.getBoundingClientRect()
+
+						// We want to get the last possible anchor, otherwise, nested anchors will always be ignored.
+						// Show the anchor as selected when the scroll reaches 5 pixels before the top of the corresponding zone
+						if (pos.top < scrollYStart + 5 && pos.bottom > scrollYStart)
+							anchor = ctrl
+					}
+				}
+
+				if (this.selectedAnchor)
+					this.selectedAnchor = ''
+
+				this.setScrollAnchor(null)
+
+				if (anchor)
+					this.setScrollAnchor(anchor)
 			},
 
 			registerScrollSpy()

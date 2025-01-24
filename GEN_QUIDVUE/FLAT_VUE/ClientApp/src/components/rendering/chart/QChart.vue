@@ -71,9 +71,7 @@
 			 */
 			mappedValues: {
 				type: Array,
-				default: () => {
-					return []
-				}
+				default: () => []
 			},
 
 			/**
@@ -81,9 +79,7 @@
 			 */
 			styleVariables: {
 				type: Object,
-				default: () => {
-					return {}
-				}
+				default: () => ({})
 			},
 
 			/**
@@ -721,7 +717,7 @@
 							dataLabels: {
 								formatter: function()
 								{
-									return vm.getPieFormatter(this)
+									return vm.getPieFormatter(this).value
 								}
 							}
 						}
@@ -1014,13 +1010,23 @@
 
 					filteredRows.forEach((row) => {
 						let x = row.xaxis?.rawData
-						if (!x) return
+						if (!x)
+							return
+
+						// in case the category value comes from an array, we should convert the value to the description
+						if (row.xaxis.source.dataType === 'Array')
+						{
+							const foundElement = row.xaxis.source.array.find(element => element.key === x)
+							if (foundElement)
+								x = foundElement.value
+						}
 
 						if ('serieSelector' in row)
 						{
 							// only one mapping of y is expected
 							// add only if serieSelector matches current serie
-							if (row.serieSelector.rawData === series.id) {
+							if (row.serieSelector.rawData === series.id)
+							{
 								let y = row.yaxis[0]
 
 								data.push({

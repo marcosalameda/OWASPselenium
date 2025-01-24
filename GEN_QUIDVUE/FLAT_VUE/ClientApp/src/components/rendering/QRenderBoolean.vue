@@ -1,7 +1,7 @@
 ﻿<template>
 	<q-icon
 		:icon="icon"
-		class="render-boolean" />
+		:class="iconClasses" />
 </template>
 
 <script>
@@ -28,6 +28,15 @@
 			icon()
 			{
 				return this.value ? 'ok' : 'close'
+			},
+
+			iconClasses()
+			{
+				const classes = ['render-boolean']
+
+				this.value ? classes.push('true-icon') : classes.push('false-icon')
+
+				return classes
 			}
 		}
 	}

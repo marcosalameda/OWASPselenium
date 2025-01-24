@@ -5,6 +5,8 @@
 		target="_blank"
 		rel="noopener noreferrer"
 		class="column-data-link"
+		data-table-action-selected="false"
+		tabindex="-1"
 		@click.stop>
 		{{ value }}
 	</a>

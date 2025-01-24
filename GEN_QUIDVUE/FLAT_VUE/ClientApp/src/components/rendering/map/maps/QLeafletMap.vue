@@ -19,7 +19,7 @@
 			@zoomend="onZoomEnd"
 			@update:zoom="updateZoom"
 			@update:center="updateCenter"
-			@move="$emit('close-info-window')">
+			@move="closeInfoWindow">
 			<slot />
 		</l-map>
 	</div>
@@ -28,6 +28,7 @@
 <script>
 	import { computed, nextTick, watch } from 'vue'
 	import cloneDeep from 'lodash-es/cloneDeep'
+	import _debounce from 'lodash-es/debounce'
 	import proj4 from 'proj4'
 
 	import { LMap } from '@vue-leaflet/vue-leaflet'
@@ -131,7 +132,7 @@
 			},
 
 			/**
-			 * The list of markers to be displayed on the Map.
+			 * The list of markers to be displayed on the map.
 			 */
 			markers: {
 				type: Array,
@@ -171,7 +172,7 @@
 			}
 		},
 
-		expose: [],
+		expose: ['isReady', 'isFullscreen'],
 
 		data()
 		{
@@ -181,7 +182,7 @@
 				mapMaxZoom: this.styleVariables.maxZoom?.value ?? 18,
 				mapOptions: {
 					zoomControl: !this.styleVariables.disableControls?.value,
-					gestureHandling: this.styleVariables.zoomWithCtrl?.value ?? true,
+					gestureHandling: this.styleVariables.zoomWithCtrl?.rawValue ?? true,
 					gestureHandlingOptions: {
 						duration: 2000
 					}
@@ -213,7 +214,8 @@
 					circle: computed(() => this.styleVariables.circleColor?.value ?? '#f53505')
 				},
 				groupMarkersInCluster: this.styleVariables.groupMarkersInCluster?.value,
-				isLoaded: false,
+				isReady: false,
+				isFullscreen: false,
 				isResetting: false,
 				isMoving: false,
 				drawModeIsOn: false,
@@ -349,7 +351,7 @@
 
 				this.zoomLevel = zoom
 				this.$emit('changed-zoom', zoom)
-				this.$emit('close-info-window')
+				this.closeInfoWindow()
 			},
 
 			/**
@@ -363,7 +365,16 @@
 
 				this.centerCoords = this.projectFromCoords(center, COORD_TYPES.array, false)
 				this.$emit('changed-center', this.projectToCoords(center))
-				this.$emit('close-info-window')
+				this.closeInfoWindow()
+			},
+
+			/**
+			 * Emits the event to close the info window in case it's not a popup that opens on hover.
+			 */
+			closeInfoWindow()
+			{
+				if (!this.styleVariables.openPopupOnHover?.value)
+					this.$emit('close-info-window')
 			},
 
 			/**
@@ -371,11 +382,15 @@
 			 * @param {object} coords The coordinates (must be either an array [lat, lng] or an object { lat, lng })
 			 * @param {function} converter The converter function to be used
 			 * @param {object} outputType The type of the output, can be either object or array
+			 * @param {boolean} inverted Whether the input coordinates are inverted ([lng, lat] instead of [lat, lng])
 			 * @returns The converted coordinates, or null if the conversion failed.
 			 */
-			convertCoords(coords, converter, outputType = COORD_TYPES.object)
+			convertCoords(coords, converter, outputType = COORD_TYPES.object, inverted = false)
 			{
 				let convertedCoords = Array.isArray(coords) ? coords : [coords?.lat ?? 0, coords?.lng ?? 0]
+
+				if (inverted)
+					convertedCoords.reverse()
 
 				// Only needs to convert the coordinates if the CRS's are different.
 				if (this.crs !== this.coordsCrs && typeof converter === 'function')
@@ -396,11 +411,12 @@
 			 * @param {object} coords The coordinates (must be either an array [lat, lng] or an object { lat, lng })
 			 * @param {object} outputType The type of the output, can be either object or array
 			 * @param {boolean} convert Whether to convert the coordinates to the expected CRS
+			 * @param {boolean} inverted Whether the input coordinates are inverted ([lng, lat] instead of [lat, lng])
 			 * @returns The converted coordinates, or null if the conversion failed.
 			 */
-			projectToCoords(coords, outputType = COORD_TYPES.object, convert = true)
+			projectToCoords(coords, outputType = COORD_TYPES.object, convert = true, inverted = false)
 			{
-				return this.convertCoords(coords, convert ? this.projection.forward : null, outputType)
+				return this.convertCoords(coords, convert ? this.projection.forward : null, outputType, inverted)
 			},
 
 			/**
@@ -408,20 +424,23 @@
 			 * @param {object} coords The coordinates (must be either an array [lat, lng] or an object { lat, lng })
 			 * @param {object} outputType The type of the output, can be either object or array
 			 * @param {boolean} convert Whether to convert the coordinates to the expected CRS
+			 * @param {boolean} inverted Whether the input coordinates are inverted ([lng, lat] instead of [lat, lng])
 			 * @returns The converted coordinates, or null if the conversion failed.
 			 */
-			projectFromCoords(coords, outputType = COORD_TYPES.object, convert = true)
+			projectFromCoords(coords, outputType = COORD_TYPES.object, convert = true, inverted = false)
 			{
-				return this.convertCoords(coords, convert ? this.projection.inverse : null, outputType)
+				return this.convertCoords(coords, convert ? this.projection.inverse : null, outputType, inverted)
 			},
 
 			/**
 			 * Converts the coordinates in the specified list to their list format.
 			 * @param {object} coordsList The list of coordinates
+			 * @param {function} converter The converter function to be used
 			 * @param {object} outputType The type of the output, can be either object or array
+			 * @param {boolean} inverted Whether the input coordinates are inverted ([lng, lat] instead of [lat, lng])
 			 * @returns A list with the converted coordinates.
 			 */
-			convertCoordsInList(coordsList, converter, outputType = COORD_TYPES.object)
+			convertCoordsInList(coordsList, converter, outputType = COORD_TYPES.object, inverted = false)
 			{
 				const coordinates = []
 
@@ -432,9 +451,9 @@
 				{
 					let convertedCoord
 					if (Array.isArray(coords) && typeof coords[0] !== 'number')
-						convertedCoord = this.convertCoordsInList(coords, converter, outputType)
+						convertedCoord = this.convertCoordsInList(coords, converter, outputType, inverted)
 					else
-						convertedCoord = converter(coords, outputType)
+						convertedCoord = converter(coords, outputType, true, inverted)
 					coordinates.push(convertedCoord)
 				}
 
@@ -485,6 +504,8 @@
 				this.map.off('overlayremove').on('overlayremove', (overlay) => {
 					this.deactivateLayer(overlay.name)
 
+					this.$emit('close-info-window')
+
 					if (!this.isDrawableMap)
 						return
 
@@ -502,6 +523,9 @@
 
 					this.map.addControl(this.fullscreenControl)
 					this.map.addControl(this.scaleControl)
+
+					this.map.off('enterFullscreen').on('enterFullscreen', () => this.isFullscreen = true)
+					this.map.off('exitFullscreen').on('exitFullscreen', () => this.isFullscreen = false)
 				}
 
 				// Add the search bar.
@@ -530,7 +554,7 @@
 					this.centerCoords = this.getCenterCoords()
 
 				this.$emit('is-ready', this.map)
-				this.isLoaded = true
+				this.isReady = true
 			},
 
 			/**
@@ -601,7 +625,7 @@
 			 */
 			onMapClick(event)
 			{
-				this.$emit('close-info-window')
+				this.closeInfoWindow()
 
 				// Check if it was a Ctrl + Click and the map can be edited.
 				if (!this.readonly && !this.isDrawableMap && event.latlng && event.originalEvent?.ctrlKey)
@@ -672,7 +696,7 @@
 				else
 				{
 					this.centerMap(marker.coords, undefined, { animate: false })
-					this.executeWhenReady(() => this.$emit('open-info-window', { marker, isShape: false }))
+					this.executeWhenReady(() => this.$emit('open-info-window', { marker, isShape: false, shapeClicked: true }))
 				}
 			},
 
@@ -716,7 +740,7 @@
 						}
 						const isShape = !(shape instanceof L.Marker)
 
-						this.executeWhenReady(() => this.$emit('open-info-window', { marker, isShape }))
+						this.executeWhenReady(() => this.$emit('open-info-window', { marker, isShape, shapeClicked: true }))
 					}
 				}
 			},
@@ -725,13 +749,24 @@
 			 * Defines the behavior when a user hovers a shape.
 			 * @param {object} shape The shape that was clicked
 			 * @param {object} shapeOptions The current options of the shape
+			 * @param {object} layerprops The properties of the containing layer (optional)
 			 */
-			onShapeMouseOver(shape, shapeOptions = {})
+			onShapeMouseOver(shape, shapeOptions = {}, layerProps = {})
 			{
-				if (this.drawModeIsOn || shape instanceof L.Marker)
+				const isShape = !(shape instanceof L.Marker)
+
+				if (this.styleVariables.openPopupOnHover?.value)
+					this.executeWhenReady(() => this.$emit('open-info-window', { marker: layerProps, isShape, shapeClicked: false }))
+
+				if (this.drawModeIsOn || !isShape)
 					return
 
-				let options = {
+				if (shape.hovered)
+					return
+
+				shape.hovered = true
+
+				const options = {
 					fillOpacity: 0.5,
 					opacity: 0.9,
 					weight: 8
@@ -754,6 +789,11 @@
 			 */
 			onShapeMouseOut(shape, shapeOptions = {})
 			{
+				if (this.styleVariables.openPopupOnHover?.value)
+					this.executeWhenReady(() => this.$emit('close-info-window'))
+
+				shape.hovered = false
+
 				if (this.drawModeIsOn || shape instanceof L.Marker)
 					return
 
@@ -1024,10 +1064,9 @@
 					this.externalLayers.forEach((layerData) => {
 						const layer = esri.featureLayer({
 							url: layerData.url,
-							requestParams: {
-								...(layerData.requestData ?? {}),
-								...(this.zoomLevel < layerData.minZoom ? { where: '1=0' } : {})
-							},
+							minZoom: layerData.minZoom ?? 0,
+							requestParams: layerData.requestData ?? {},
+							fetchAllFeatures: true,
 							style: (feature) => {
 								let customColor
 
@@ -1048,24 +1087,6 @@
 
 						layer.addTo(this.map)
 						layerCount++
-
-						layer.off('load').on('load', () => {
-							if (!this.isLayerVisible(layer))
-								return
-
-							let condition = layerData.requestData.where
-							if (this.zoomLevel < layerData.minZoom)
-								condition = '1=0'
-
-							const previousWhere = layer.options.requestParams.where
-
-							// If the where condition didn't change, we don't need to refresh the layer.
-							if (previousWhere === condition)
-								return
-
-							layer.options.requestParams.where = condition
-							layer.refresh()
-						})
 
 						layer.off('click').on('click', (event) => {
 							const shape = event.layer
@@ -1090,9 +1111,15 @@
 
 						layer.off('mouseover').on('mouseover', (event) => {
 							const shape = event.layer
+							const feature = shape.feature
+							const shapeProps = {
+								properties: feature?.properties ?? {},
+								layerOptions: layer.service?.options ?? {},
+								event: event.originalEvent
+							}
 
 							shapeOptions = cloneDeep(shape.options)
-							this.onShapeMouseOver(shape, shapeOptions)
+							this.onShapeMouseOver(shape, shapeOptions, shapeProps)
 						})
 
 						layer.off('mouseout').on('mouseout', (event) => {
@@ -1100,6 +1127,8 @@
 
 							this.onShapeMouseOut(shape, shapeOptions)
 						})
+
+						layer.off('removefeature').on('removefeature', _debounce(() => this.$emit('close-info-window'), 400))
 					})
 				}))
 			},
@@ -1109,7 +1138,7 @@
 			 */
 			setSearchBar()
 			{
-				if (this.styleVariables.disableSearch?.value)
+				if (this.styleVariables.disableSearch?.value || this.map === null)
 					return
 
 				if (this.searchControl !== null)
@@ -1653,16 +1682,11 @@
 				if (typeof shape !== 'object')
 					return
 
-				shape.off('click').on('click', (event) => this.onShapeClick(event, shape, layerProps))
-
-				// The events below are only meant for shapes, not markers.
-				if (shape instanceof L.Marker)
-					return
-
 				const shapeOptions = cloneDeep(shape.options)
 
-				shape.off('mouseover').on('mouseover', () => this.onShapeMouseOver(shape, shapeOptions))
-				shape.off('mouseout').on('mouseout', () => this.onShapeMouseOut(shape, shapeOptions))
+				shape.off('click').on('click', (event) => this.onShapeClick(event, shape, layerProps))
+				shape.off('mouseover').on('mouseover', () => this.onShapeMouseOver(shape, shapeOptions, layerProps))
+				shape.off('mouseout').on('mouseout', () => this.onShapeMouseOut(shape, shapeOptions, layerProps))
 			},
 
 			/**
@@ -1848,16 +1872,20 @@
 						// Because of inheritance, the order must be: Rectangle > Polygon > Polyline.
 						if (shape instanceof L.Rectangle)
 						{
+							const latLngs = shape.toGeoJSON().geometry.coordinates
+
 							shapeObj = {
 								type: SHAPE_TYPES.rectangle,
-								shapeParts: this.convertCoordsInList(shape.getLatLngs(), this.projectToCoords)
+								shapeParts: this.convertCoordsInList(latLngs, this.projectToCoords, COORD_TYPES.object, true)
 							}
 						}
 						else if (shape instanceof L.Polygon)
 						{
+							const latLngs = shape.toGeoJSON().geometry.coordinates
+
 							shapeObj = {
 								type: SHAPE_TYPES.polygon,
-								shapeParts: this.convertCoordsInList(shape.getLatLngs(), this.projectToCoords)
+								shapeParts: this.convertCoordsInList(latLngs, this.projectToCoords, COORD_TYPES.object, true)
 							}
 						}
 						else if (shape instanceof L.Polyline)
@@ -2062,14 +2090,14 @@
 
 			'styleVariables.zoomLevel.value'(zoomLevel)
 			{
-				if (!isNaN(zoomLevel) && (this.isLoaded || !this.styleVariables.fitZoom?.value))
+				if (!isNaN(zoomLevel) && (this.isReady || !this.styleVariables.fitZoom?.value))
 					this.executeWhenReady(() => this.updateZoom(zoomLevel))
 			},
 
 			'styleVariables.centerCoord': {
 				handler(centerCoord)
 				{
-					if (typeof centerCoord?.value !== 'object' || (!this.isLoaded && this.styleVariables.fitZoom?.value))
+					if (typeof centerCoord?.value !== 'object' || (!this.isReady && this.styleVariables.fitZoom?.value))
 						return
 
 					const features = []

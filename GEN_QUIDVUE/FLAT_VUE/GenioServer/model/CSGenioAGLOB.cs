@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Global parameters
 	/// </summary>
-	public class CSGenioAglob : DbArea	{
+	public class CSGenioAglob : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -71,6 +72,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "0%";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "_0_14276";
 
@@ -150,6 +152,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Minimum";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "MINIMO33485";
 
@@ -161,6 +164,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Bad";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "MAU45741";
 
@@ -172,6 +176,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Alert";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "ALERTA41713";
 
@@ -183,6 +188,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Good";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "BOM29058";
 
@@ -194,6 +200,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Overcome";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "SUPERADO60727";
 
@@ -205,6 +212,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Maximum";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "MAXIMO52072";
 
@@ -216,6 +224,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "0%";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "_0_14276";
 
@@ -223,7 +232,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"pzero"}, new int[] {0}, "glob", "codglob"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return 100+(100-((double)args[0]));
+				return 100+(100-((decimal)args[0]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -232,6 +241,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Minimum";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "MINIMO33485";
 
@@ -239,7 +249,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"pvalmax"}, new int[] {0}, "glob", "codglob"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return 100+(100-((double)args[0]));
+				return 100+(100-((decimal)args[0]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -248,6 +258,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Alert";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "ALERTA41713";
 
@@ -255,7 +266,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"palert"}, new int[] {0}, "glob", "codglob"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return 100+(100-((double)args[0]));
+				return 100+(100-((decimal)args[0]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -264,6 +275,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Good";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "BOM29058";
 
@@ -271,7 +283,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"plimbom"}, new int[] {0}, "glob", "codglob"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return 100+(100-((double)args[0]));
+				return 100+(100-((decimal)args[0]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -280,6 +292,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Overcome";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "SUPERADO60727";
 
@@ -287,7 +300,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"plimsup"}, new int[] {0}, "glob", "codglob"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return 100+(100-((double)args[0]));
+				return 100+(100-((decimal)args[0]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -296,6 +309,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Maximum";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "MAXIMO52072";
 
@@ -303,7 +317,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"pvalmin"}, new int[] {0}, "glob", "codglob"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return 100+(100-((double)args[0]));
+				return 100+(100-((decimal)args[0]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -325,6 +339,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "0%";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "_0_14276";
 
@@ -336,6 +351,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Minimum";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "MINIMO33485";
 
@@ -347,6 +363,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Bad";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "MAU45741";
 
@@ -358,6 +375,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Alert";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "ALERTA41713";
 
@@ -369,6 +387,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Bad";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "MAU45741";
 
@@ -376,7 +395,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"plimmau"}, new int[] {0}, "glob", "codglob"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return 100+(100-((double)args[0]));
+				return 100+(100-((decimal)args[0]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -385,6 +404,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Good";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "BOM29058";
 
@@ -396,6 +416,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Good sup.";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "BOM_SUP_56812";
 
@@ -403,7 +424,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"pbomc"}, new int[] {0}, "glob", "codglob"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return 100+(100-((double)args[0]));
+				return 100+(100-((decimal)args[0]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -412,6 +433,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Alert sup.";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "ALERTA_SUP_32316";
 
@@ -419,7 +441,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"palertc"}, new int[] {0}, "glob", "codglob"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return 100+(100-((double)args[0]));
+				return 100+(100-((decimal)args[0]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -428,6 +450,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Bad";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "MAU_SUP_16499";
 
@@ -435,7 +458,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"pmauc"}, new int[] {0}, "glob", "codglob"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return 100+(100-((double)args[0]));
+				return 100+(100-((decimal)args[0]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -444,6 +467,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Maximum Sup.";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "MAXIMO_SUP_02835";
 
@@ -451,7 +475,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"pminc"}, new int[] {0}, "glob", "codglob"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return 100+(100-((double)args[0]));
+				return 100+(100-((decimal)args[0]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -460,6 +484,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "100%";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "_100_17544";
 
@@ -467,7 +492,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"pzeroc"}, new int[] {0}, "glob", "codglob"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return 100+(100-((double)args[0]));
+				return 100+(100-((decimal)args[0]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -672,6 +697,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "SMTP Port";
 			Qfield.FieldSize =  5;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 5;
 			Qfield.CavDesignation = "SMTP_PORT50933";
 
 			Qfield.Dupmsg = "";
@@ -853,6 +879,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Gantt - Forward";
 			Qfield.FieldSize =  2;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 2;
 			Qfield.CavDesignation = "GANTT___FORWARD40474";
 
 			Qfield.Dupmsg = "";
@@ -1192,7 +1219,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodglob, value); }
 		}
 
-
 		/// <summary>Field : "Home text" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldHome { get { return m_fldHome; } }
 		private static FieldRef m_fldHome = new FieldRef("glob", "home");
@@ -1204,18 +1230,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldHome, value); }
 		}
 
-
 		/// <summary>Field : "0%" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPzero { get { return m_fldPzero; } }
 		private static FieldRef m_fldPzero = new FieldRef("glob", "pzero");
 
 		/// <summary>Field : "0%" Tipo: "N" Formula:  ""</summary>
-		public double ValPzero
+		public decimal ValPzero
 		{
-			get { return (double)returnValueField(FldPzero); }
+			get { return (decimal)returnValueField(FldPzero); }
 			set { insertNameValueField(FldPzero, value); }
 		}
-
 
 		/// <summary>Field : "Sender Email" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldRemetent { get { return m_fldRemetent; } }
@@ -1228,7 +1252,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldRemetent, value); }
 		}
 
-
 		/// <summary>Field : "Data Responsible" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldSemrspdd { get { return m_fldSemrspdd; } }
 		private static FieldRef m_fldSemrspdd = new FieldRef("glob", "semrspdd");
@@ -1239,7 +1262,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldSemrspdd); }
 			set { insertNameValueField(FldSemrspdd, value); }
 		}
-
 
 		/// <summary>Field : "Indicator Responsible" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldSemrspin { get { return m_fldSemrspin; } }
@@ -1252,7 +1274,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSemrspin, value); }
 		}
 
-
 		/// <summary>Field : "Responsible" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldSemrpbsc { get { return m_fldSemrpbsc; } }
 		private static FieldRef m_fldSemrpbsc = new FieldRef("glob", "semrpbsc");
@@ -1263,7 +1284,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldSemrpbsc); }
 			set { insertNameValueField(FldSemrpbsc, value); }
 		}
-
 
 		/// <summary>Field : "Iniciative Responsible" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldSemrpini { get { return m_fldSemrpini; } }
@@ -1276,7 +1296,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSemrpini, value); }
 		}
 
-
 		/// <summary>Field : "Activity Responsible" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldSemrpact { get { return m_fldSemrpact; } }
 		private static FieldRef m_fldSemrpact = new FieldRef("glob", "semrpact");
@@ -1288,150 +1307,137 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSemrpact, value); }
 		}
 
-
 		/// <summary>Field : "Minimum" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPvalmin { get { return m_fldPvalmin; } }
 		private static FieldRef m_fldPvalmin = new FieldRef("glob", "pvalmin");
 
 		/// <summary>Field : "Minimum" Tipo: "N" Formula:  ""</summary>
-		public double ValPvalmin
+		public decimal ValPvalmin
 		{
-			get { return (double)returnValueField(FldPvalmin); }
+			get { return (decimal)returnValueField(FldPvalmin); }
 			set { insertNameValueField(FldPvalmin, value); }
 		}
-
 
 		/// <summary>Field : "Bad" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPlimmau { get { return m_fldPlimmau; } }
 		private static FieldRef m_fldPlimmau = new FieldRef("glob", "plimmau");
 
 		/// <summary>Field : "Bad" Tipo: "N" Formula:  ""</summary>
-		public double ValPlimmau
+		public decimal ValPlimmau
 		{
-			get { return (double)returnValueField(FldPlimmau); }
+			get { return (decimal)returnValueField(FldPlimmau); }
 			set { insertNameValueField(FldPlimmau, value); }
 		}
-
 
 		/// <summary>Field : "Alert" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPalert { get { return m_fldPalert; } }
 		private static FieldRef m_fldPalert = new FieldRef("glob", "palert");
 
 		/// <summary>Field : "Alert" Tipo: "N" Formula:  ""</summary>
-		public double ValPalert
+		public decimal ValPalert
 		{
-			get { return (double)returnValueField(FldPalert); }
+			get { return (decimal)returnValueField(FldPalert); }
 			set { insertNameValueField(FldPalert, value); }
 		}
-
 
 		/// <summary>Field : "Good" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPlimbom { get { return m_fldPlimbom; } }
 		private static FieldRef m_fldPlimbom = new FieldRef("glob", "plimbom");
 
 		/// <summary>Field : "Good" Tipo: "N" Formula:  ""</summary>
-		public double ValPlimbom
+		public decimal ValPlimbom
 		{
-			get { return (double)returnValueField(FldPlimbom); }
+			get { return (decimal)returnValueField(FldPlimbom); }
 			set { insertNameValueField(FldPlimbom, value); }
 		}
-
 
 		/// <summary>Field : "Overcome" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPlimsup { get { return m_fldPlimsup; } }
 		private static FieldRef m_fldPlimsup = new FieldRef("glob", "plimsup");
 
 		/// <summary>Field : "Overcome" Tipo: "N" Formula:  ""</summary>
-		public double ValPlimsup
+		public decimal ValPlimsup
 		{
-			get { return (double)returnValueField(FldPlimsup); }
+			get { return (decimal)returnValueField(FldPlimsup); }
 			set { insertNameValueField(FldPlimsup, value); }
 		}
-
 
 		/// <summary>Field : "Maximum" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPvalmax { get { return m_fldPvalmax; } }
 		private static FieldRef m_fldPvalmax = new FieldRef("glob", "pvalmax");
 
 		/// <summary>Field : "Maximum" Tipo: "N" Formula:  ""</summary>
-		public double ValPvalmax
+		public decimal ValPvalmax
 		{
-			get { return (double)returnValueField(FldPvalmax); }
+			get { return (decimal)returnValueField(FldPvalmax); }
 			set { insertNameValueField(FldPvalmax, value); }
 		}
-
 
 		/// <summary>Field : "0%" Tipo: "N" Formula: + "100+(100-[GLOB->PZERO])"</summary>
 		public static FieldRef FldPzerod { get { return m_fldPzerod; } }
 		private static FieldRef m_fldPzerod = new FieldRef("glob", "pzerod");
 
 		/// <summary>Field : "0%" Tipo: "N" Formula: + "100+(100-[GLOB->PZERO])"</summary>
-		public double ValPzerod
+		public decimal ValPzerod
 		{
-			get { return (double)returnValueField(FldPzerod); }
+			get { return (decimal)returnValueField(FldPzerod); }
 			set { insertNameValueField(FldPzerod, value); }
 		}
-
 
 		/// <summary>Field : "Minimum" Tipo: "N" Formula: + "100+(100-[GLOB->PVALMAX])"</summary>
 		public static FieldRef FldPvalmind { get { return m_fldPvalmind; } }
 		private static FieldRef m_fldPvalmind = new FieldRef("glob", "pvalmind");
 
 		/// <summary>Field : "Minimum" Tipo: "N" Formula: + "100+(100-[GLOB->PVALMAX])"</summary>
-		public double ValPvalmind
+		public decimal ValPvalmind
 		{
-			get { return (double)returnValueField(FldPvalmind); }
+			get { return (decimal)returnValueField(FldPvalmind); }
 			set { insertNameValueField(FldPvalmind, value); }
 		}
-
 
 		/// <summary>Field : "Alert" Tipo: "N" Formula: + "100+(100-[GLOB->PALERT])"</summary>
 		public static FieldRef FldPalertd { get { return m_fldPalertd; } }
 		private static FieldRef m_fldPalertd = new FieldRef("glob", "palertd");
 
 		/// <summary>Field : "Alert" Tipo: "N" Formula: + "100+(100-[GLOB->PALERT])"</summary>
-		public double ValPalertd
+		public decimal ValPalertd
 		{
-			get { return (double)returnValueField(FldPalertd); }
+			get { return (decimal)returnValueField(FldPalertd); }
 			set { insertNameValueField(FldPalertd, value); }
 		}
-
 
 		/// <summary>Field : "Good" Tipo: "N" Formula: + "100+(100-[GLOB->PLIMBOM])"</summary>
 		public static FieldRef FldPlimbomd { get { return m_fldPlimbomd; } }
 		private static FieldRef m_fldPlimbomd = new FieldRef("glob", "plimbomd");
 
 		/// <summary>Field : "Good" Tipo: "N" Formula: + "100+(100-[GLOB->PLIMBOM])"</summary>
-		public double ValPlimbomd
+		public decimal ValPlimbomd
 		{
-			get { return (double)returnValueField(FldPlimbomd); }
+			get { return (decimal)returnValueField(FldPlimbomd); }
 			set { insertNameValueField(FldPlimbomd, value); }
 		}
-
 
 		/// <summary>Field : "Overcome" Tipo: "N" Formula: + "100+(100-[GLOB->PLIMSUP])"</summary>
 		public static FieldRef FldPlimsupd { get { return m_fldPlimsupd; } }
 		private static FieldRef m_fldPlimsupd = new FieldRef("glob", "plimsupd");
 
 		/// <summary>Field : "Overcome" Tipo: "N" Formula: + "100+(100-[GLOB->PLIMSUP])"</summary>
-		public double ValPlimsupd
+		public decimal ValPlimsupd
 		{
-			get { return (double)returnValueField(FldPlimsupd); }
+			get { return (decimal)returnValueField(FldPlimsupd); }
 			set { insertNameValueField(FldPlimsupd, value); }
 		}
-
 
 		/// <summary>Field : "Maximum" Tipo: "N" Formula: + "100+(100-[GLOB->PVALMIN])"</summary>
 		public static FieldRef FldPvalmaxd { get { return m_fldPvalmaxd; } }
 		private static FieldRef m_fldPvalmaxd = new FieldRef("glob", "pvalmaxd");
 
 		/// <summary>Field : "Maximum" Tipo: "N" Formula: + "100+(100-[GLOB->PVALMIN])"</summary>
-		public double ValPvalmaxd
+		public decimal ValPvalmaxd
 		{
-			get { return (double)returnValueField(FldPvalmaxd); }
+			get { return (decimal)returnValueField(FldPvalmaxd); }
 			set { insertNameValueField(FldPvalmaxd, value); }
 		}
-
 
 		/// <summary>Field : "Beginning of the year" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldIniciano { get { return m_fldIniciano; } }
@@ -1444,138 +1450,126 @@ namespace CSGenio.business
 			set { insertNameValueField(FldIniciano, value); }
 		}
 
-
 		/// <summary>Field : "0%" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPzeroc { get { return m_fldPzeroc; } }
 		private static FieldRef m_fldPzeroc = new FieldRef("glob", "pzeroc");
 
 		/// <summary>Field : "0%" Tipo: "N" Formula:  ""</summary>
-		public double ValPzeroc
+		public decimal ValPzeroc
 		{
-			get { return (double)returnValueField(FldPzeroc); }
+			get { return (decimal)returnValueField(FldPzeroc); }
 			set { insertNameValueField(FldPzeroc, value); }
 		}
-
 
 		/// <summary>Field : "Minimum" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPminc { get { return m_fldPminc; } }
 		private static FieldRef m_fldPminc = new FieldRef("glob", "pminc");
 
 		/// <summary>Field : "Minimum" Tipo: "N" Formula:  ""</summary>
-		public double ValPminc
+		public decimal ValPminc
 		{
-			get { return (double)returnValueField(FldPminc); }
+			get { return (decimal)returnValueField(FldPminc); }
 			set { insertNameValueField(FldPminc, value); }
 		}
-
 
 		/// <summary>Field : "Bad" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPmauc { get { return m_fldPmauc; } }
 		private static FieldRef m_fldPmauc = new FieldRef("glob", "pmauc");
 
 		/// <summary>Field : "Bad" Tipo: "N" Formula:  ""</summary>
-		public double ValPmauc
+		public decimal ValPmauc
 		{
-			get { return (double)returnValueField(FldPmauc); }
+			get { return (decimal)returnValueField(FldPmauc); }
 			set { insertNameValueField(FldPmauc, value); }
 		}
-
 
 		/// <summary>Field : "Alert" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPalertc { get { return m_fldPalertc; } }
 		private static FieldRef m_fldPalertc = new FieldRef("glob", "palertc");
 
 		/// <summary>Field : "Alert" Tipo: "N" Formula:  ""</summary>
-		public double ValPalertc
+		public decimal ValPalertc
 		{
-			get { return (double)returnValueField(FldPalertc); }
+			get { return (decimal)returnValueField(FldPalertc); }
 			set { insertNameValueField(FldPalertc, value); }
 		}
-
 
 		/// <summary>Field : "Bad" Tipo: "N" Formula: + "100+(100-[GLOB->PLIMMAU])"</summary>
 		public static FieldRef FldPlimmaud { get { return m_fldPlimmaud; } }
 		private static FieldRef m_fldPlimmaud = new FieldRef("glob", "plimmaud");
 
 		/// <summary>Field : "Bad" Tipo: "N" Formula: + "100+(100-[GLOB->PLIMMAU])"</summary>
-		public double ValPlimmaud
+		public decimal ValPlimmaud
 		{
-			get { return (double)returnValueField(FldPlimmaud); }
+			get { return (decimal)returnValueField(FldPlimmaud); }
 			set { insertNameValueField(FldPlimmaud, value); }
 		}
-
 
 		/// <summary>Field : "Good" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPbomc { get { return m_fldPbomc; } }
 		private static FieldRef m_fldPbomc = new FieldRef("glob", "pbomc");
 
 		/// <summary>Field : "Good" Tipo: "N" Formula:  ""</summary>
-		public double ValPbomc
+		public decimal ValPbomc
 		{
-			get { return (double)returnValueField(FldPbomc); }
+			get { return (decimal)returnValueField(FldPbomc); }
 			set { insertNameValueField(FldPbomc, value); }
 		}
-
 
 		/// <summary>Field : "Good sup." Tipo: "N" Formula: + "100+(100-[GLOB->PBOMC])"</summary>
 		public static FieldRef FldPbomsc { get { return m_fldPbomsc; } }
 		private static FieldRef m_fldPbomsc = new FieldRef("glob", "pbomsc");
 
 		/// <summary>Field : "Good sup." Tipo: "N" Formula: + "100+(100-[GLOB->PBOMC])"</summary>
-		public double ValPbomsc
+		public decimal ValPbomsc
 		{
-			get { return (double)returnValueField(FldPbomsc); }
+			get { return (decimal)returnValueField(FldPbomsc); }
 			set { insertNameValueField(FldPbomsc, value); }
 		}
-
 
 		/// <summary>Field : "Alert sup." Tipo: "N" Formula: + "100+(100-[GLOB->PALERTC])"</summary>
 		public static FieldRef FldPalertsc { get { return m_fldPalertsc; } }
 		private static FieldRef m_fldPalertsc = new FieldRef("glob", "palertsc");
 
 		/// <summary>Field : "Alert sup." Tipo: "N" Formula: + "100+(100-[GLOB->PALERTC])"</summary>
-		public double ValPalertsc
+		public decimal ValPalertsc
 		{
-			get { return (double)returnValueField(FldPalertsc); }
+			get { return (decimal)returnValueField(FldPalertsc); }
 			set { insertNameValueField(FldPalertsc, value); }
 		}
-
 
 		/// <summary>Field : "Bad" Tipo: "N" Formula: + "100+(100-[GLOB->PMAUC])"</summary>
 		public static FieldRef FldPmausc { get { return m_fldPmausc; } }
 		private static FieldRef m_fldPmausc = new FieldRef("glob", "pmausc");
 
 		/// <summary>Field : "Bad" Tipo: "N" Formula: + "100+(100-[GLOB->PMAUC])"</summary>
-		public double ValPmausc
+		public decimal ValPmausc
 		{
-			get { return (double)returnValueField(FldPmausc); }
+			get { return (decimal)returnValueField(FldPmausc); }
 			set { insertNameValueField(FldPmausc, value); }
 		}
-
 
 		/// <summary>Field : "Maximum Sup." Tipo: "N" Formula: + "100+(100-[GLOB->PMINC])"</summary>
 		public static FieldRef FldPmaxsc { get { return m_fldPmaxsc; } }
 		private static FieldRef m_fldPmaxsc = new FieldRef("glob", "pmaxsc");
 
 		/// <summary>Field : "Maximum Sup." Tipo: "N" Formula: + "100+(100-[GLOB->PMINC])"</summary>
-		public double ValPmaxsc
+		public decimal ValPmaxsc
 		{
-			get { return (double)returnValueField(FldPmaxsc); }
+			get { return (decimal)returnValueField(FldPmaxsc); }
 			set { insertNameValueField(FldPmaxsc, value); }
 		}
-
 
 		/// <summary>Field : "100%" Tipo: "N" Formula: + "100+(100-[GLOB->PZEROC])"</summary>
 		public static FieldRef FldPzerosc { get { return m_fldPzerosc; } }
 		private static FieldRef m_fldPzerosc = new FieldRef("glob", "pzerosc");
 
 		/// <summary>Field : "100%" Tipo: "N" Formula: + "100+(100-[GLOB->PZEROC])"</summary>
-		public double ValPzerosc
+		public decimal ValPzerosc
 		{
-			get { return (double)returnValueField(FldPzerosc); }
+			get { return (decimal)returnValueField(FldPzerosc); }
 			set { insertNameValueField(FldPzerosc, value); }
 		}
-
 
 		/// <summary>Field : "Scorecard type" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldTipscard { get { return m_fldTipscard; } }
@@ -1588,7 +1582,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldTipscard, value); }
 		}
 
-
 		/// <summary>Field : "Organism" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldOrganism { get { return m_fldOrganism; } }
 		private static FieldRef m_fldOrganism = new FieldRef("glob", "organism");
@@ -1599,7 +1592,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldOrganism); }
 			set { insertNameValueField(FldOrganism, value); }
 		}
-
 
 		/// <summary>Field : "Organism code" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldCode { get { return m_fldCode; } }
@@ -1612,7 +1604,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCode, value); }
 		}
 
-
 		/// <summary>Field : "Address" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldMorada { get { return m_fldMorada; } }
 		private static FieldRef m_fldMorada = new FieldRef("glob", "morada");
@@ -1623,7 +1614,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldMorada); }
 			set { insertNameValueField(FldMorada, value); }
 		}
-
 
 		/// <summary>Field : "zipcode" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldCpostal { get { return m_fldCpostal; } }
@@ -1636,7 +1626,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCpostal, value); }
 		}
 
-
 		/// <summary>Field : "Local" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldLpostal { get { return m_fldLpostal; } }
 		private static FieldRef m_fldLpostal = new FieldRef("glob", "lpostal");
@@ -1647,7 +1636,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldLpostal); }
 			set { insertNameValueField(FldLpostal, value); }
 		}
-
 
 		/// <summary>Field : "Phone" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTelephon { get { return m_fldTelephon; } }
@@ -1660,7 +1648,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldTelephon, value); }
 		}
 
-
 		/// <summary>Field : "Fax" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldFax { get { return m_fldFax; } }
 		private static FieldRef m_fldFax = new FieldRef("glob", "fax");
@@ -1671,7 +1658,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldFax); }
 			set { insertNameValueField(FldFax, value); }
 		}
-
 
 		/// <summary>Field : "e-mail" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldEmail { get { return m_fldEmail; } }
@@ -1684,7 +1670,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldEmail, value); }
 		}
 
-
 		/// <summary>Field : "URL" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSite { get { return m_fldSite; } }
 		private static FieldRef m_fldSite = new FieldRef("glob", "site");
@@ -1695,7 +1680,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldSite); }
 			set { insertNameValueField(FldSite, value); }
 		}
-
 
 		/// <summary>Field : "Header" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldSimbolo { get { return m_fldSimbolo; } }
@@ -1708,7 +1692,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSimbolo, value); }
 		}
 
-
 		/// <summary>Field : "Header" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldSimbolol { get { return m_fldSimbolol; } }
 		private static FieldRef m_fldSimbolol = new FieldRef("glob", "simbolol");
@@ -1719,7 +1702,6 @@ namespace CSGenio.business
 			get { return (byte[])returnValueField(FldSimbolol); }
 			set { insertNameValueField(FldSimbolol, value); }
 		}
-
 
 		/// <summary>Field : "Footer" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldFooterp { get { return m_fldFooterp; } }
@@ -1732,7 +1714,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldFooterp, value); }
 		}
 
-
 		/// <summary>Field : "Footer" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldFooterl { get { return m_fldFooterl; } }
 		private static FieldRef m_fldFooterl = new FieldRef("glob", "footerl");
@@ -1743,7 +1724,6 @@ namespace CSGenio.business
 			get { return (byte[])returnValueField(FldFooterl); }
 			set { insertNameValueField(FldFooterl, value); }
 		}
-
 
 		/// <summary>Field : "Watermark" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldMarcagua { get { return m_fldMarcagua; } }
@@ -1756,7 +1736,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldMarcagua, value); }
 		}
 
-
 		/// <summary>Field : "Ministry Logo" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldLogomint { get { return m_fldLogomint; } }
 		private static FieldRef m_fldLogomint = new FieldRef("glob", "logomint");
@@ -1767,7 +1746,6 @@ namespace CSGenio.business
 			get { return (byte[])returnValueField(FldLogomint); }
 			set { insertNameValueField(FldLogomint, value); }
 		}
-
 
 		/// <summary>Field : "Documents path" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldPathdocu { get { return m_fldPathdocu; } }
@@ -1780,7 +1758,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPathdocu, value); }
 		}
 
-
 		/// <summary>Field : "Sender Email" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSmtpmail { get { return m_fldSmtpmail; } }
 		private static FieldRef m_fldSmtpmail = new FieldRef("glob", "smtpmail");
@@ -1791,7 +1768,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldSmtpmail); }
 			set { insertNameValueField(FldSmtpmail, value); }
 		}
-
 
 		/// <summary>Field : "SMTP Server" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldServsmtp { get { return m_fldServsmtp; } }
@@ -1804,18 +1780,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldServsmtp, value); }
 		}
 
-
 		/// <summary>Field : "SMTP Port" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldSmtpport { get { return m_fldSmtpport; } }
 		private static FieldRef m_fldSmtpport = new FieldRef("glob", "smtpport");
 
 		/// <summary>Field : "SMTP Port" Tipo: "N" Formula:  ""</summary>
-		public double ValSmtpport
+		public decimal ValSmtpport
 		{
-			get { return (double)returnValueField(FldSmtpport); }
+			get { return (decimal)returnValueField(FldSmtpport); }
 			set { insertNameValueField(FldSmtpport, value); }
 		}
-
 
 		/// <summary>Field : "SSL?" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldSmtpssl { get { return m_fldSmtpssl; } }
@@ -1828,7 +1802,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSmtpssl, value); }
 		}
 
-
 		/// <summary>Field : "STMP User Access" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSmtpuser { get { return m_fldSmtpuser; } }
 		private static FieldRef m_fldSmtpuser = new FieldRef("glob", "smtpuser");
@@ -1839,7 +1812,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldSmtpuser); }
 			set { insertNameValueField(FldSmtpuser, value); }
 		}
-
 
 		/// <summary>Field : "SMTP Access Password" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSmtppass { get { return m_fldSmtppass; } }
@@ -1852,7 +1824,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSmtppass, value); }
 		}
 
-
 		/// <summary>Field : "Automatic bonuses" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldTpbonifi { get { return m_fldTpbonifi; } }
 		private static FieldRef m_fldTpbonifi = new FieldRef("glob", "tpbonifi");
@@ -1863,7 +1834,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldTpbonifi); }
 			set { insertNameValueField(FldTpbonifi, value); }
 		}
-
 
 		/// <summary>Field : "Show Closed Maps" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldMostrano { get { return m_fldMostrano; } }
@@ -1876,7 +1846,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldMostrano, value); }
 		}
 
-
 		/// <summary>Field : "Calculations exclusively with working days?" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldSodiasut { get { return m_fldSodiasut; } }
 		private static FieldRef m_fldSodiasut = new FieldRef("glob", "sodiasut");
@@ -1887,7 +1856,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldSodiasut); }
 			set { insertNameValueField(FldSodiasut, value); }
 		}
-
 
 		/// <summary>Field : "Executed unique routine" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldExecutou { get { return m_fldExecutou; } }
@@ -1900,7 +1868,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldExecutou, value); }
 		}
 
-
 		/// <summary>Field : "Graphix XML" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldXmlgraph { get { return m_fldXmlgraph; } }
 		private static FieldRef m_fldXmlgraph = new FieldRef("glob", "xmlgraph");
@@ -1911,7 +1878,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldXmlgraph); }
 			set { insertNameValueField(FldXmlgraph, value); }
 		}
-
 
 		/// <summary>Field : "Filter by Organic Unit" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldFiltrorg { get { return m_fldFiltrorg; } }
@@ -1924,7 +1890,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldFiltrorg, value); }
 		}
 
-
 		/// <summary>Field : "Scorecard appearance" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldScoreout { get { return m_fldScoreout; } }
 		private static FieldRef m_fldScoreout = new FieldRef("glob", "scoreout");
@@ -1935,7 +1900,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldScoreout); }
 			set { insertNameValueField(FldScoreout, value); }
 		}
-
 
 		/// <summary>Field : "Ministry" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldMinister { get { return m_fldMinister; } }
@@ -1948,7 +1912,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldMinister, value); }
 		}
 
-
 		/// <summary>Field : "Last notification date" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldDtultnot { get { return m_fldDtultnot; } }
 		private static FieldRef m_fldDtultnot = new FieldRef("glob", "dtultnot");
@@ -1959,7 +1922,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDtultnot); }
 			set { insertNameValueField(FldDtultnot, value); }
 		}
-
 
 		/// <summary>Field : "Does it integrate with Document" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldIntegdoc { get { return m_fldIntegdoc; } }
@@ -1972,7 +1934,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldIntegdoc, value); }
 		}
 
-
 		/// <summary>Field : "Objetivos" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldPrefobje { get { return m_fldPrefobje; } }
 		private static FieldRef m_fldPrefobje = new FieldRef("glob", "prefobje");
@@ -1983,7 +1944,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldPrefobje); }
 			set { insertNameValueField(FldPrefobje, value); }
 		}
-
 
 		/// <summary>Field : "Indicator" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldPrefindi { get { return m_fldPrefindi; } }
@@ -1996,7 +1956,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPrefindi, value); }
 		}
 
-
 		/// <summary>Field : "Gantt - Scale" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldGantunit { get { return m_fldGantunit; } }
 		private static FieldRef m_fldGantunit = new FieldRef("glob", "gantunit");
@@ -2008,18 +1967,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGantunit, value); }
 		}
 
-
 		/// <summary>Field : "Gantt - Forward" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldGantstep { get { return m_fldGantstep; } }
 		private static FieldRef m_fldGantstep = new FieldRef("glob", "gantstep");
 
 		/// <summary>Field : "Gantt - Forward" Tipo: "N" Formula:  ""</summary>
-		public double ValGantstep
+		public decimal ValGantstep
 		{
-			get { return (double)returnValueField(FldGantstep); }
+			get { return (decimal)returnValueField(FldGantstep); }
 			set { insertNameValueField(FldGantstep, value); }
 		}
-
 
 		/// <summary>Field : "Migrate status/report on initiatives and tasks" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldMigrarlt { get { return m_fldMigrarlt; } }
@@ -2032,7 +1989,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldMigrarlt, value); }
 		}
 
-
 		/// <summary>Field : "Filter by responsible" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldFiltrrsp { get { return m_fldFiltrrsp; } }
 		private static FieldRef m_fldFiltrrsp = new FieldRef("glob", "filtrrsp");
@@ -2043,7 +1999,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldFiltrrsp); }
 			set { insertNameValueField(FldFiltrrsp, value); }
 		}
-
 
 		/// <summary>Field : "Document Path" Tipo: "IB" Formula:  ""</summary>
 		public static FieldRef FldDocbd { get { return m_fldDocbd; } }
@@ -2072,12 +2027,11 @@ namespace CSGenio.business
 		private static FieldRef m_fldHorassem = new FieldRef("glob", "horassem");
 
 		/// <summary>Field : "Number of weekly hours" Tipo: "AN" Formula:  ""</summary>
-		public double ValHorassem
+		public decimal ValHorassem
 		{
-			get { return (double)returnValueField(FldHorassem); }
+			get { return (decimal)returnValueField(FldHorassem); }
 			set { insertNameValueField(FldHorassem, value); }
 		}
-
 
 		/// <summary>Field : "Afetação / Contabilidade Custos" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldAfetacao { get { return m_fldAfetacao; } }
@@ -2090,7 +2044,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldAfetacao, value); }
 		}
 
-
 		/// <summary>Field : "Creation date" Tipo: "OD" Formula:  ""</summary>
 		public static FieldRef FldCreatdat { get { return m_fldCreatdat; } }
 		private static FieldRef m_fldCreatdat = new FieldRef("glob", "creatdat");
@@ -2101,7 +2054,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldCreatdat); }
 			set { insertNameValueField(FldCreatdat, value); }
 		}
-
 
 		/// <summary>Field : "Created by" Tipo: "ON" Formula:  ""</summary>
 		public static FieldRef FldCreatope { get { return m_fldCreatope; } }
@@ -2114,7 +2066,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCreatope, value); }
 		}
 
-
 		/// <summary>Field : "Changed on" Tipo: "ED" Formula:  ""</summary>
 		public static FieldRef FldChngdate { get { return m_fldChngdate; } }
 		private static FieldRef m_fldChngdate = new FieldRef("glob", "chngdate");
@@ -2125,7 +2076,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldChngdate); }
 			set { insertNameValueField(FldChngdate, value); }
 		}
-
 
 		/// <summary>Field : "Changed by" Tipo: "EN" Formula:  ""</summary>
 		public static FieldRef FldOperchng { get { return m_fldOperchng; } }
@@ -2138,7 +2088,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldOperchng, value); }
 		}
 
-
 		/// <summary>Field : "Primary color" Tipo: "C" Formula: + ""#009AA5""</summary>
 		public static FieldRef FldPricolor { get { return m_fldPricolor; } }
 		private static FieldRef m_fldPricolor = new FieldRef("glob", "pricolor");
@@ -2149,7 +2098,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldPricolor); }
 			set { insertNameValueField(FldPricolor, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodfacty { get { return m_fldCodfacty; } }
@@ -2162,7 +2110,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodfacty, value); }
 		}
 
-
 		/// <summary>Field : "Legend" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldLegend { get { return m_fldLegend; } }
 		private static FieldRef m_fldLegend = new FieldRef("glob", "legend");
@@ -2174,7 +2121,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldLegend, value); }
 		}
 
-
 		/// <summary>Field : "External API address" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldApiurl { get { return m_fldApiurl; } }
 		private static FieldRef m_fldApiurl = new FieldRef("glob", "apiurl");
@@ -2185,7 +2131,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldApiurl); }
 			set { insertNameValueField(FldApiurl, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -2305,23 +2250,6 @@ namespace CSGenio.business
 		}
 
 
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAglob> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAglob> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAglob>(where, user, fields);
-        }
-
-
         /// <summary>
         /// Search for all records of this area that comply with a condition
         /// </summary>
@@ -2368,7 +2296,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 		/// <summary>
         /// To use routine manual validations and extra calculations
 		/// before the update of the record.

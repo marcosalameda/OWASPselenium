@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace GenioMVC.Helpers
 {
@@ -172,7 +173,7 @@ namespace GenioMVC.Helpers
 	{
 		protected override ValidationResult IsValid(object value, ValidationContext validationContext)
 		{
-			if (value == null || CSGenio.framework.CSmail.validateMail((string)value))
+			if (value == null || CSGenio.core.CSmail.validateMail((string)value))
 				return ValidationResult.Success;
 			else
 				return new ValidationResult(Resources.Resources.POR_FAVOR_INDIQUE_UM47648);

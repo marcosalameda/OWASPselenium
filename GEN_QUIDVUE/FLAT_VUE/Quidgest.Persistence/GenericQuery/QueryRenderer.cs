@@ -43,29 +43,23 @@ namespace Quidgest.Persistence.GenericQuery
             set;
         }
 
-        private List<IDbDataParameter> m_parameters;
         /// <summary>
         /// The list of generated parameters
         /// </summary>
-        /// <remarks>
-        /// <!--
-        /// Author: CX 2011.06.28
-        /// Modified:
-        /// Reviewed:
-        /// -->
-        /// </remarks>
         private List<IDbDataParameter> Parameters
         {
-            get
-            {
-                if (m_parameters == null)
-                {
-                    m_parameters = new List<IDbDataParameter>();
-                }
+            get; 
+            set;
+        } = new List<IDbDataParameter>();
 
-                return m_parameters;
-            }
-        }
+        /// <summary>
+        /// List of named parameters. Used to avoid adding two times the same parameter
+        /// </summary>
+        private List<string> NamedParameters {
+            get; 
+            set;
+        } = new List<string>();
+
 
         /// <summary>
         /// The list of generated parameters
@@ -165,6 +159,7 @@ namespace Quidgest.Persistence.GenericQuery
         {
             ParameterIndex = 0;
             Parameters.Clear();
+            NamedParameters.Clear();
         }
 
         /// <summary>
@@ -182,8 +177,11 @@ namespace Quidgest.Persistence.GenericQuery
         private IDbDataParameter MakeParameter(string name, object value)
         {
             var p = PersistentSupport.CreateParameter(name, value); 
-            Parameters.Add(p);
-
+            if(!NamedParameters.Contains(name))
+            {
+                Parameters.Add(p);
+                NamedParameters.Add(name);
+            }
             return p;
         }
 
@@ -514,8 +512,15 @@ namespace Quidgest.Persistence.GenericQuery
             {
                 return PersistentSupport.Dialect.NullString;
             }
-
-            string pname = NextParameterName();
+            string pname = "";
+            if(String.IsNullOrEmpty(val.ParamName))
+            {
+                pname = NextParameterName();
+            }
+            else
+            {
+                pname = val.ParamName;                
+            }
 
             MakeParameter(pname, val.Value);
 
@@ -529,14 +534,15 @@ namespace Quidgest.Persistence.GenericQuery
             
             if(val.Value is string)
             {
-                string pname = NextParameterName();
-
-                MakeParameter(pname, val.Value);
-
-                return (PersistentSupport.Dialect.UseNamedPrefixInSql ? PersistentSupport.Dialect.NamedPrefix : "") + pname;
+                var strValue = (string)val.Value;
+                //Escape '
+                strValue = strValue.Replace("'", "''");
+                return $"'{strValue}'";
             }
-
-            return val.Value.ToString();
+            else
+            {
+                return val.Value.ToString();
+            }
         }
 
         private string GetSql(SqlKeyword keyword)

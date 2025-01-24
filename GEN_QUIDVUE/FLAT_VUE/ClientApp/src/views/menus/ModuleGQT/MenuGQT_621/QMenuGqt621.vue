@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_621ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_621', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '621',
 					isMenuList: true,
+					designation: computed(() => this.Resources.COMPANIES04875),
 					acronym: 'GQT_621',
 					name: 'EMPRE',
 					route: 'menu-GQT_621',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'GQT_Menu_621',
 						controller: 'CMPNY',
 						action: 'GQT_Menu_621',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -183,8 +193,10 @@
 								area: 'CMPNY',
 								field: 'LOGO',
 								label: computed(() => this.Resources.LOGO62483),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.LOGO62483)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 						],
 						config: {
@@ -199,7 +211,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -303,6 +315,7 @@
 								id: 'RCA_GQT_6211',
 								name: 'menu-GQT_6211',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'cmpny',
@@ -318,24 +331,18 @@
 									isPopup: true
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
 							allowFileExport: true,
-							// The list support form: EMPRE
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValDesignat',
 							defaultSearchColumnNameOriginal: 'ValDesignat',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValDesignat',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-CMPNY', 'changed-CNTRY'],
 						uuid: 'f0fd64e0-b08d-48d6-bafc-1ca4a8009010',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -364,6 +371,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS GQT_621]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_621]/
 // eslint-disable-next-line

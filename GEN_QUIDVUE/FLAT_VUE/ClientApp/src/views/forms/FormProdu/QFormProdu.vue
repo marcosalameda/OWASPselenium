@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -117,12 +117,12 @@
 										v-on="controls.PRODU___PRODUPRODUCT_.handlers"
 										:loading="controls.PRODU___PRODUPRODUCT_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODU___PRODUPRODUCT_.props"
 											:model-value="model.ValProduct.value"
-											@update:model-value="model.ValProduct.fnUpdateValue" />
+											@blur="onBlur(controls.PRODU___PRODUPRODUCT_, model.ValProduct.value)"
+											@change="model.ValProduct.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -131,13 +131,12 @@
 									v-show="controls.PRODU___PRODUIN_USE__.isVisible"
 									class="control-join-group">
 									<base-input-structure
-										class="i-checkbox"
+										class="i-text"
 										v-bind="controls.PRODU___PRODUIN_USE__"
 										v-on="controls.PRODU___PRODUIN_USE__.handlers"
 										:loading="controls.PRODU___PRODUIN_USE__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-toggle-input
 											v-if="controls.PRODU___PRODUIN_USE__.isVisible"
 											id="PRODU___PRODUIN_USE__"
@@ -159,18 +158,14 @@
 										v-on="controls.PRODU___PRODUDESCRIPT.handlers"
 										:loading="controls.PRODU___PRODUDESCRIPT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-textarea-input
 											v-if="controls.PRODU___PRODUDESCRIPT.isVisible"
+											v-bind="controls.PRODU___PRODUDESCRIPT.props"
 											id="PRODU___PRODUDESCRIPT"
-											size="xxlarge"
 											:model-value="model.ValDescript.value"
 											:rows="3"
 											:cols="85"
-											:is-required="controls.PRODU___PRODUDESCRIPT.isRequired"
-											:readonly="controls.PRODU___PRODUDESCRIPT.readonly"
-											:placeholder="controls.PRODU___PRODUDESCRIPT.placeholder"
 											@update:model-value="model.ValDescript.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -185,12 +180,12 @@
 										v-on="controls.PRODU___PRODUSKU_____.handlers"
 										:loading="controls.PRODU___PRODUSKU_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODU___PRODUSKU_____.props"
 											:model-value="model.ValSku.value"
-											@update:model-value="model.ValSku.fnUpdateValue" />
+											@blur="onBlur(controls.PRODU___PRODUSKU_____, model.ValSku.value)"
+											@change="model.ValSku.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -202,12 +197,12 @@
 										v-on="controls.PRODU___PRODUGTIN____.handlers"
 										:loading="controls.PRODU___PRODUGTIN____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODU___PRODUGTIN____.props"
 											:model-value="model.ValGtin.value"
-											@update:model-value="model.ValGtin.fnUpdateValue" />
+											@blur="onBlur(controls.PRODU___PRODUGTIN____, model.ValGtin.value)"
+											@change="model.ValGtin.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -221,12 +216,12 @@
 										v-on="controls.PRODU___PRODUSIZE____.handlers"
 										:loading="controls.PRODU___PRODUSIZE____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODU___PRODUSIZE____.props"
 											:model-value="model.ValSize.value"
-											@update:model-value="model.ValSize.fnUpdateValue" />
+											@blur="onBlur(controls.PRODU___PRODUSIZE____, model.ValSize.value)"
+											@change="model.ValSize.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -238,12 +233,10 @@
 										v-on="controls.PRODU___PRODUWEIGHT__.handlers"
 										:loading="controls.PRODU___PRODUWEIGHT__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.PRODU___PRODUWEIGHT__.isVisible"
-											v-bind="controls.PRODU___PRODUWEIGHT__"
-											:model-value="model.ValWeight.value"
+											v-bind="controls.PRODU___PRODUWEIGHT__.props"
 											@update:model-value="model.ValWeight.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -258,12 +251,10 @@
 										v-on="controls.PRODU___PRODUPRICE___.handlers"
 										:loading="controls.PRODU___PRODUPRICE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.PRODU___PRODUPRICE___.isVisible"
-											v-bind="controls.PRODU___PRODUPRICE___"
-											:model-value="model.ValPrice.value"
+											v-bind="controls.PRODU___PRODUPRICE___.props"
 											@update:model-value="model.ValPrice.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -276,12 +267,10 @@
 										v-on="controls.PRODU___PRODUINPUTS__.handlers"
 										:loading="controls.PRODU___PRODUINPUTS__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.PRODU___PRODUINPUTS__.isVisible"
-											v-bind="controls.PRODU___PRODUINPUTS__"
-											:model-value="model.ValInputs.value"
+											v-bind="controls.PRODU___PRODUINPUTS__.props"
 											@update:model-value="model.ValInputs.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -294,12 +283,10 @@
 										v-on="controls.PRODU___PRODUOUTPUTS_.handlers"
 										:loading="controls.PRODU___PRODUOUTPUTS_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.PRODU___PRODUOUTPUTS_.isVisible"
-											v-bind="controls.PRODU___PRODUOUTPUTS_"
-											:model-value="model.ValOutputs.value"
+											v-bind="controls.PRODU___PRODUOUTPUTS_.props"
 											@update:model-value="model.ValOutputs.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -312,12 +299,10 @@
 										v-on="controls.PRODU___PRODUSTOCK___.handlers"
 										:loading="controls.PRODU___PRODUSTOCK___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.PRODU___PRODUSTOCK___.isVisible"
-											v-bind="controls.PRODU___PRODUSTOCK___"
-											:model-value="model.ValStock.value"
+											v-bind="controls.PRODU___PRODUSTOCK___.props"
 											@update:model-value="model.ValStock.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -333,6 +318,7 @@
 						v-show="controls.PRODU___PSEUDNOVOGR02.isVisible"
 						class="row-line-group">
 						<q-group-collapsible
+							id="PRODU___PSEUDNOVOGR02"
 							v-bind="controls.PRODU___PSEUDNOVOGR02"
 							v-on="controls.PRODU___PSEUDNOVOGR02.handlers">
 							<!-- Start PRODU___PSEUDNOVOGR02 -->
@@ -346,8 +332,7 @@
 										v-on="controls.PRODU___PRODUIMAGE___.handlers"
 										:loading="controls.PRODU___PRODUIMAGE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-image
 											v-if="controls.PRODU___PRODUIMAGE___.isVisible"
 											v-bind="controls.PRODU___PRODUIMAGE___.props"
@@ -372,6 +357,7 @@
 							v-slot="{ onStateChanged }">
 							<!-- Start PRODU___PSEUDNOVOGR06 -->
 							<q-group-collapsible
+								id="PRODU___PSEUDNOVOGR04"
 								v-bind="controls.PRODU___PSEUDNOVOGR04"
 								v-on="controls.PRODU___PSEUDNOVOGR04.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -397,14 +383,11 @@
 														v-on="controls.PRODU___LOCATGLN_____.handlers"
 														:loading="controls.PRODU___LOCATGLN_____.props.loading"
 														:reporting-mode-on="reportingModeCAV"
-														:suggestion-mode-on="suggestionModeOn"
-														:help-style="layoutConfig.HelpStyle">
+														:suggestion-mode-on="suggestionModeOn">
 														<q-lookup
 															v-if="controls.PRODU___LOCATGLN_____.isVisible"
 															v-bind="controls.PRODU___LOCATGLN_____.props"
-															:model-value="model.ValCodlocat.value"
-															v-on="controls.PRODU___LOCATGLN_____.handlers"
-															@update:model-value="model.ValCodlocat.fnUpdateValue" />
+															v-on="controls.PRODU___LOCATGLN_____.handlers" />
 														<q-see-more-produ-locatgln
 															v-if="controls.PRODU___LOCATGLN_____.seeMoreIsVisible"
 															v-bind="controls.PRODU___LOCATGLN_____.seeMoreParams"
@@ -422,14 +405,11 @@
 														v-on="controls.PRODU___LCEXTGLNEXT__.handlers"
 														:loading="controls.PRODU___LCEXTGLNEXT__.props.loading"
 														:reporting-mode-on="reportingModeCAV"
-														:suggestion-mode-on="suggestionModeOn"
-														:help-style="layoutConfig.HelpStyle">
+														:suggestion-mode-on="suggestionModeOn">
 														<q-lookup
 															v-if="controls.PRODU___LCEXTGLNEXT__.isVisible"
 															v-bind="controls.PRODU___LCEXTGLNEXT__.props"
-															:model-value="model.ValCodlcext.value"
-															v-on="controls.PRODU___LCEXTGLNEXT__.handlers"
-															@update:model-value="model.ValCodlcext.fnUpdateValue" />
+															v-on="controls.PRODU___LCEXTGLNEXT__.handlers" />
 														<q-see-more-produ-lcextglnext
 															v-if="controls.PRODU___LCEXTGLNEXT__.seeMoreIsVisible"
 															v-bind="controls.PRODU___LCEXTGLNEXT__.seeMoreParams"
@@ -446,8 +426,7 @@
 										<q-table
 											v-show="controls.PRODU___PSEUDSTOCKEVO.isVisible"
 											v-bind="controls.PRODU___PSEUDSTOCKEVO"
-											v-on="controls.PRODU___PSEUDSTOCKEVO.handlers">
-										</q-table>
+											v-on="controls.PRODU___PSEUDSTOCKEVO.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.PRODU___PSEUDSTOCKEVO"
 											v-on="controls.PRODU___PSEUDSTOCKEVO.handlers" />
@@ -456,6 +435,7 @@
 								<!-- End PRODU___PSEUDNOVOGR04 -->
 							</q-group-collapsible>
 							<q-group-collapsible
+								id="PRODU___PSEUDNOVOGR05"
 								v-bind="controls.PRODU___PSEUDNOVOGR05"
 								v-on="controls.PRODU___PSEUDNOVOGR05.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -467,8 +447,7 @@
 										<q-table
 											v-show="controls.PRODU___PSEUDINPUTSRE.isVisible"
 											v-bind="controls.PRODU___PSEUDINPUTSRE"
-											v-on="controls.PRODU___PSEUDINPUTSRE.handlers">
-										</q-table>
+											v-on="controls.PRODU___PSEUDINPUTSRE.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.PRODU___PSEUDINPUTSRE"
 											v-on="controls.PRODU___PSEUDINPUTSRE.handlers" />
@@ -479,8 +458,7 @@
 										<q-table
 											v-show="controls.PRODU___PSEUDOUTPUTSD.isVisible"
 											v-bind="controls.PRODU___PSEUDOUTPUTSD"
-											v-on="controls.PRODU___PSEUDOUTPUTSD.handlers">
-										</q-table>
+											v-on="controls.PRODU___PSEUDOUTPUTSD.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.PRODU___PSEUDOUTPUTSD"
 											v-on="controls.PRODU___PSEUDOUTPUTSD.handlers" />
@@ -575,15 +553,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'PRODU',
-						location: 'form-PRODU',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'PRODU',
+					location: 'form-PRODU',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -629,6 +605,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -701,8 +679,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -784,7 +763,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -838,21 +817,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -861,12 +825,9 @@
 						id: 'PRODU___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRODUCT_IDENTIFICATI25169),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
 						mustBeFilled: true,
@@ -879,10 +840,7 @@
 						id: 'PRODU___PRODUPRODUCT_',
 						name: 'PRODUCT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRODUCT12880),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
@@ -898,17 +856,15 @@
 						id: 'PRODU___PRODUIN_USE__',
 						name: 'IN_USE',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.IN_USE42606),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
+						maxIntegers: 1,
+						maxDecimals: 0,
 						arrayName: 'YesNo',
 						falseLabel: computed(() => this.Resources.NOT_IN_USE41845),
 						trueLabel: computed(() => this.Resources.IN_USE42606),
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -918,16 +874,10 @@
 						id: 'PRODU___PRODUDESCRIPT',
 						name: 'DESCRIPT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESCRIPTION07383),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
-						maxLength: 85,
-						labelId: 'label_PRODU___PRODUDESCRIPT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -937,16 +887,12 @@
 						id: 'PRODU___PRODUSKU_____',
 						name: 'SKU',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.SKU42303),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
 						maxLength: 20,
 						labelId: 'label_PRODU___PRODUSKU_____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -956,16 +902,12 @@
 						id: 'PRODU___PRODUGTIN____',
 						name: 'GTIN',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.GTIN45487),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
 						maxLength: 14,
 						labelId: 'label_PRODU___PRODUGTIN____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -975,134 +917,103 @@
 						id: 'PRODU___PRODUSIZE____',
 						name: 'SIZE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.SIZE10299),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
 						maxLength: 50,
 						labelId: 'label_PRODU___PRODUSIZE____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					PRODU___PRODUWEIGHT__: new fieldControlClass.NumberControl({
 						modelField: 'ValWeight',
 						valueChangeEvent: 'fieldChange:produ.weight',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'PRODU___PRODUWEIGHT__',
 						name: 'WEIGHT',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.WEIGHT36329),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
 					PRODU___PRODUPRICE___: new fieldControlClass.CurrencyControl({
 						modelField: 'ValPrice',
 						valueChangeEvent: 'fieldChange:produ.price',
-						maxIntegers: 7,
-						maxDecimals: 4,
 						id: 'PRODU___PRODUPRICE___',
 						name: 'PRICE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRICE06900),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 4,
 						controlLimits: [
 						],
 					}, this),
 					PRODU___PRODUINPUTS__: new fieldControlClass.NumberControl({
 						modelField: 'ValInputs',
 						valueChangeEvent: 'fieldChange:produ.inputs',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'PRODU___PRODUINPUTS__',
 						name: 'INPUTS',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.INPUTS19315),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					PRODU___PRODUOUTPUTS_: new fieldControlClass.NumberControl({
 						modelField: 'ValOutputs',
 						valueChangeEvent: 'fieldChange:produ.outputs',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'PRODU___PRODUOUTPUTS_',
 						name: 'OUTPUTS',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.OUTPUTS47833),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					PRODU___PRODUSTOCK___: new fieldControlClass.NumberControl({
 						modelField: 'ValStock',
 						valueChangeEvent: 'fieldChange:produ.stock',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'PRODU___PRODUSTOCK___',
 						name: 'STOCK',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.STOCK37618),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					PRODU___PSEUDNOVOGR02: new fieldControlClass.GroupControl({
 						id: 'PRODU___PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.IMAGE65174),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-PRODU___PSEUDNOVOGR02',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1112,17 +1023,14 @@
 						id: 'PRODU___PRODUIMAGE___',
 						name: 'IMAGE',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.IMAGE65174),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR02',
 						container: 'PRODU___PSEUDNOVOGR02',
 						height: 300,
 						width: 400,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.IMAGE65174)),
 						controlLimits: [
 						],
 					}, this),
@@ -1130,15 +1038,11 @@
 						id: 'PRODU___PSEUDNOVOGR06',
 						name: 'NOVOGR06',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACCORDEON43547),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1146,18 +1050,14 @@
 						id: 'PRODU___PSEUDNOVOGR04',
 						name: 'NOVOGR04',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.STOCK37618),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-PRODU___PSEUDNOVOGR04',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1165,17 +1065,13 @@
 						id: 'PRODU___PSEUDNOVOGR03',
 						name: 'NOVOGR03',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.LOCATION54790),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR04',
 						container: 'PRODU___PSEUDNOVOGR04',
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1185,27 +1081,11 @@
 						id: 'PRODU___LOCATGLN_____',
 						name: 'GLN',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.GLOBAL_LOCATION_NUMB24637),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR04',
 						container: 'PRODU___PSEUDNOVOGR03',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodlocat',
-							dependencyEvent: 'fieldChange:produ.codlocat'
-						},
-						dependentFields: () => {
-							return {
-								set 'locat.codlocat'(value) { vm.model.ValCodlocat.updateValue(value) },
-								set 'locat.gln'(value) { vm.model.TableLocatGln.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1214,6 +1094,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodlocat',
+							dependencyEvent: 'fieldChange:produ.codlocat'
+						},
+						dependentFields: () => ({
+							set 'locat.codlocat'(value) { vm.model.ValCodlocat.updateValue(value) },
+							set 'locat.gln'(value) { vm.model.TableLocatGln.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					PRODU___LCEXTGLNEXT__: new fieldControlClass.LookupControl({
 						modelField: 'TableLcextGlnext',
@@ -1221,15 +1111,27 @@
 						id: 'PRODU___LCEXTGLNEXT__',
 						name: 'GLNEXT',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.GLN_EXTENSION_COMPON55869),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR04',
 						container: 'PRODU___PSEUDNOVOGR03',
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodlcext',
+							dependencyEvent: 'fieldChange:produ.codlcext'
+						},
+						dependentFields: () => ({
+							set 'lcext.codlcext'(value) { vm.model.ValCodlcext.updateValue(value) },
+							set 'lcext.glnext'(value) { vm.model.TableLcextGlnext.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: ['locat', 'produ.codlocat'],
@@ -1238,33 +1140,12 @@
 								fnValueSelector: (model) => model.ValCodlocat.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodlcext',
-							dependencyEvent: 'fieldChange:produ.codlcext'
-						},
-						dependentFields: () => {
-							return {
-								set 'lcext.codlcext'(value) { vm.model.ValCodlcext.updateValue(value) },
-								set 'lcext.glnext'(value) { vm.model.TableLcextGlnext.updateValue(value) },
-							}
-						},
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					PRODU___PSEUDSTOCKEVO: new fieldControlClass.TableListControl({
 						id: 'PRODU___PSEUDSTOCKEVO',
 						name: 'STOCKEVO',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.STOCK_EVOLUTION61800),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR04',
@@ -1291,7 +1172,7 @@
 								field: 'DATE',
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -1344,15 +1225,15 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
-							// eslint-disable-next-line no-unused-vars, eqeqeq
-							rowBgColor: (row) => qApi.iif(row.Fields.ValType=="Input",qApi.RGB(207,255,158),qApi.iif(row.Fields.ValType=="Output",qApi.RGB(255,190,158),qApi.RGB(255,255,255))),
+							// eslint-disable-next-line no-unused-vars
+							rowBgColor: (row) => qApi.iif(row.Fields.ValType==="Input",qApi.RGB(207,255,158),qApi.iif(row.Fields.ValType==="Output",qApi.RGB(255,190,158),qApi.RGB(255,255,255))),
 							generalCustomActions: [
 							],
 							groupActions: [
@@ -1365,17 +1246,12 @@
 							},
 							formsDefinition: {
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValType',
 							defaultSearchColumnNameOriginal: 'ValType',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-RECEI', 'changed-STOCK', 'changed-DISPA', 'changed-PRODU'],
 						uuid: 'Produ_ValStockevo',
@@ -1393,29 +1269,22 @@
 						id: 'PRODU___PSEUDNOVOGR05',
 						name: 'NOVOGR05',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.DETAILS19591),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-PRODU___PSEUDNOVOGR05',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					PRODU___PSEUDINPUTSRE: new fieldControlClass.TableListControl({
 						id: 'PRODU___PSEUDINPUTSRE',
 						name: 'INPUTSRE',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.INPUTS19315),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR05',
@@ -1432,7 +1301,7 @@
 								field: 'INSTANT',
 								label: computed(() => this.Resources.INSTANT35907),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -1508,7 +1377,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -1614,6 +1483,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'RELIN',
@@ -1627,18 +1497,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: RELIN
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValLinenumb',
 							defaultSearchColumnNameOriginal: 'ValLinenumb',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValInstant',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-PRODU', 'changed-RELIN', 'changed-ENTIT', 'changed-RECEI'],
 						uuid: 'Produ_ValInputsre',
@@ -1655,11 +1519,8 @@
 					PRODU___PSEUDOUTPUTSD: new fieldControlClass.TableListControl({
 						id: 'PRODU___PSEUDOUTPUTSD',
 						name: 'OUTPUTSD',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.OUTPUTS47833),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR05',
@@ -1676,7 +1537,7 @@
 								field: 'INSTANT',
 								label: computed(() => this.Resources.INSTANT35907),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -1752,7 +1613,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -1858,6 +1719,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'DILIN',
@@ -1871,18 +1733,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: DILIN
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValLinenumb',
 							defaultSearchColumnNameOriginal: 'ValLinenumb',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValInstant',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-DISPA', 'changed-PRODU', 'changed-DILIN'],
 						uuid: 'Produ_ValOutputsd',
@@ -1973,7 +1829,7 @@
 						/** The foreign key to the LCEXT table */
 						get lcext() { return vm.model.ValCodlcext },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -2069,6 +1925,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2108,6 +1972,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -2234,6 +2106,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR PRODU]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -2249,6 +2137,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PRODU]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

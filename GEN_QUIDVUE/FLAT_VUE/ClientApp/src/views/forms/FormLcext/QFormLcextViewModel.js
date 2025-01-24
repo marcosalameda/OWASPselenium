@@ -107,12 +107,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [LCEXT->SPACETYP]=="O"
-					// eslint-disable-next-line eqeqeq
-					return this.ValSpacetyp.value=="O"
+					return this.ValSpacetyp.value==="O"
 				},
 				dependencyEvents: ['fieldChange:lcext.spacetyp'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 			showWhen: {
@@ -120,12 +118,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [LCEXT->SPACETYP]=="O"
-					// eslint-disable-next-line eqeqeq
-					return this.ValSpacetyp.value=="O"
+					return this.ValSpacetyp.value==="O"
 				},
 				dependencyEvents: ['fieldChange:lcext.spacetyp'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValSpaceobs))
@@ -144,5 +140,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodlcext'
 
 	get QPrimaryKey() { return this.ValCodlcext.value }
-	set QPrimaryKey(value) { this.ValCodlcext.value = value }
+	set QPrimaryKey(value) { this.ValCodlcext.updateValue(value) }
 }

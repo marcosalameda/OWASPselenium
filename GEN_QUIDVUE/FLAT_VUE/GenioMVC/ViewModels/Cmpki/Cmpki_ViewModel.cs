@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Cmpki
 {
-	public class Cmpki_ViewModel : FormViewModel<Models.Cmpki>
+	public class Cmpki_ViewModel : FormViewModel<Models.Cmpki>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,36 +29,43 @@ namespace GenioMVC.ViewModels.Cmpki
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Type of equipment" | Type: "CE"
+		/// </summary>
+		public string ValCodtpeq1 { get; set; }
+		/// <summary>
+		/// Title: "Type of equipment" | Type: "CE"
+		/// </summary>
+		public string ValCodtpequ { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Type of equipment" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Tpequ> TableTpequTipoequi { get; set; }
-
 		/// <summary>
 		/// Title: "Order" | Type: "N"
 		/// </summary>
 		public decimal? ValOrder { get; set; }
-
 		/// <summary>
 		/// Title: "Type of equipment" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Tpeq1> TableTpeq1Tipoequi { get; set; }
-
 		/// <summary>
 		/// Title: "Quantity:" | Type: "N"
 		/// </summary>
 		public decimal? ValQuantida { get; set; }
-
 		/// <summary>
 		/// Title: "Code" | Type: "C"
 		/// </summary>
 		public string ValCode { get; set; }
-
 		/// <summary>
 		/// Title: "Description" | Type: "MO"
 		/// </summary>
 		public string ValDescript { get; set; }
-
 		/// <summary>
 		/// Title: "Site" | Type: "C"
 		/// </summary>
@@ -71,20 +78,6 @@ namespace GenioMVC.ViewModels.Cmpki
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Type of equipment" | Type: "CE"
-		/// </summary>
-		public string ValCodtpeq1 { get; set; }
-
-		/// <summary>
-		/// Title: "Type of equipment" | Type: "CE"
-		/// </summary>
-		public string ValCodtpequ { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -100,9 +93,10 @@ namespace GenioMVC.ViewModels.Cmpki
 
 		public string ValCodcmpki { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Cmpki_ViewModel() : base(null!) { }
@@ -138,6 +132,15 @@ namespace GenioMVC.ViewModels.Cmpki
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Cmpki model = new Models.Cmpki(userContext) { Identifier = "FCMPKI" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FCMPKI");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -198,13 +201,13 @@ namespace GenioMVC.ViewModels.Cmpki
 
 			try
 			{
+				ValCodtpeq1 = ViewModelConversion.ToString(m.ValCodtpeq1);
+				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
 				ValOrder = ViewModelConversion.ToNumeric(m.ValOrder);
 				ValQuantida = ViewModelConversion.ToNumeric(m.ValQuantida);
 				ValCode = ViewModelConversion.ToString(m.ValCode);
 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
 				ValUrl = ViewModelConversion.ToString(m.ValUrl);
-				ValCodtpeq1 = ViewModelConversion.ToString(m.ValCodtpeq1);
-				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
 				ValCodcmpki = ViewModelConversion.ToString(m.ValCodcmpki);
 			}
 			catch (Exception)
@@ -214,6 +217,20 @@ namespace GenioMVC.ViewModels.Cmpki
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Cmpki m)
 		{
 			if (m == null)
@@ -224,24 +241,86 @@ namespace GenioMVC.ViewModels.Cmpki
 
 			try
 			{
+				m.ValCodtpeq1 = ViewModelConversion.ToString(ValCodtpeq1);
+				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
 				m.ValOrder = ViewModelConversion.ToNumeric(ValOrder);
 				m.ValQuantida = ViewModelConversion.ToNumeric(ValQuantida);
 				m.ValCode = ViewModelConversion.ToString(ValCode);
 				m.ValDescript = ViewModelConversion.ToString(ValDescript);
 				m.ValUrl = ViewModelConversion.ToString(ValUrl);
-				m.ValCodtpeq1 = ViewModelConversion.ToString(ValCodtpeq1);
-				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
 				m.ValCodcmpki = ViewModelConversion.ToString(ValCodcmpki);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Cmpki) to Model (Cmpki) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Cmpki) to Model (Cmpki) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "cmpki.codtpeq1":
+						this.ValCodtpeq1 = ViewModelConversion.ToString(_value);
+						break;
+					case "cmpki.codtpequ":
+						this.ValCodtpequ = ViewModelConversion.ToString(_value);
+						break;
+					case "cmpki.order":
+						this.ValOrder = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "cmpki.quantida":
+						this.ValQuantida = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "cmpki.code":
+						this.ValCode = ViewModelConversion.ToString(_value);
+						break;
+					case "cmpki.descript":
+						this.ValDescript = ViewModelConversion.ToString(_value);
+						break;
+					case "cmpki.url":
+						this.ValUrl = ViewModelConversion.ToString(_value);
+						break;
+					case "cmpki.codcmpki":
+						this.ValCodcmpki = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Cmpki) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Cmpki)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Cmpki.Find(id ?? Navigation.GetStrValue("cmpki"), m_userContext, "FCMPKI"); }
+			finally { Model ??= new Models.Cmpki(m_userContext) { Identifier = "FCMPKI" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -255,20 +334,13 @@ namespace GenioMVC.ViewModels.Cmpki
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FCMPKI";
@@ -278,6 +350,7 @@ namespace GenioMVC.ViewModels.Cmpki
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -336,33 +409,27 @@ namespace GenioMVC.ViewModels.Cmpki
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValCode", Resources.Resources.CODE49225, ValCode, 10);
 			validator.StringLength("ValUrl", Resources.Resources.SITE06486, ValUrl, 250);
 			validator.Hyperlink(Resources.Resources.SITE06486, ValUrl);
 
+
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE CMPKI]/
 		public override void Save()
 		{
 
-			try { Model = Models.Cmpki.Find(Navigation.GetStrValue("cmpki"), m_userContext, "FCMPKI"); }
-			finally { if (Model == null) Model = new Models.Cmpki(m_userContext) { Identifier = "FCMPKI" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY CMPKI]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Cmpki.Find(Navigation.GetStrValue("cmpki"), m_userContext, "FCMPKI"); }
-			finally { if (Model == null) Model = new Models.Cmpki(m_userContext) { Identifier = "FCMPKI" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE CMPKI]/
 
@@ -395,8 +462,8 @@ namespace GenioMVC.ViewModels.Cmpki
 				object hValue = Navigation.GetValue("tpequ", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					cmpki___tpequtipoequiConds.Equal(CSGenioAtpequ.FldCodtpequ, Navigation.GetValue("tpequ"));
-					this.ValCodtpequ = Navigation.GetStrValue("tpequ");
+					cmpki___tpequtipoequiConds.Equal(CSGenioAtpequ.FldCodtpequ, hValue);
+					this.ValCodtpequ = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -413,8 +480,6 @@ namespace GenioMVC.ViewModels.Cmpki
 					Navigation.CurrentLevel.SetEntry("RETURN_tpequ", null);
 				}
 				FillDependant_CmpkiTableTpequTipoequi(lazyLoad);
-				//Check if foreignkey comes from history
-				TableTpequTipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpequ");
 				return;
 			}
 
@@ -482,9 +547,6 @@ namespace GenioMVC.ViewModels.Cmpki
 
 				TableTpequTipoequi.List = new SelectList(TableTpequTipoequi.Elements.ToSelectList(x => x.ValTipoequi, x => x.ValCodtpequ,  x => x.ValCodtpequ == this.ValCodtpequ), "Value", "Text", this.ValCodtpequ);
 				FillDependant_CmpkiTableTpequTipoequi();
-
-				//Check if foreignkey comes from history
-				TableTpequTipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpequ");
 			}
 		}
 
@@ -590,8 +652,8 @@ namespace GenioMVC.ViewModels.Cmpki
 				object hValue = Navigation.GetValue("tpeq1", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					cmpki___tpeq1tipoequiConds.Equal(CSGenioAtpeq1.FldCodtpequ, Navigation.GetValue("tpeq1"));
-					this.ValCodtpeq1 = Navigation.GetStrValue("tpeq1");
+					cmpki___tpeq1tipoequiConds.Equal(CSGenioAtpeq1.FldCodtpequ, hValue);
+					this.ValCodtpeq1 = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -608,8 +670,6 @@ namespace GenioMVC.ViewModels.Cmpki
 					Navigation.CurrentLevel.SetEntry("RETURN_tpeq1", null);
 				}
 				FillDependant_CmpkiTableTpeq1Tipoequi(lazyLoad);
-				//Check if foreignkey comes from history
-				TableTpeq1Tipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpeq1");
 				return;
 			}
 
@@ -677,9 +737,6 @@ namespace GenioMVC.ViewModels.Cmpki
 
 				TableTpeq1Tipoequi.List = new SelectList(TableTpeq1Tipoequi.Elements.ToSelectList(x => x.ValTipoequi, x => x.ValCodtpequ,  x => x.ValCodtpequ == this.ValCodtpeq1), "Value", "Text", this.ValCodtpeq1);
 				FillDependant_CmpkiTableTpeq1Tipoequi();
-
-				//Check if foreignkey comes from history
-				TableTpeq1Tipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpeq1");
 			}
 		}
 
@@ -776,21 +833,23 @@ namespace GenioMVC.ViewModels.Cmpki
 		{
 			return identifier switch
 			{
+				"cmpki.codtpeq1" => ViewModelConversion.ToString(modelValue),
+				"cmpki.codtpequ" => ViewModelConversion.ToString(modelValue),
 				"cmpki.order" => ViewModelConversion.ToNumeric(modelValue),
 				"cmpki.quantida" => ViewModelConversion.ToNumeric(modelValue),
 				"cmpki.code" => ViewModelConversion.ToString(modelValue),
 				"cmpki.descript" => ViewModelConversion.ToString(modelValue),
 				"cmpki.url" => ViewModelConversion.ToString(modelValue),
-				"cmpki.codtpeq1" => ViewModelConversion.ToString(modelValue),
-				"cmpki.codtpequ" => ViewModelConversion.ToString(modelValue),
 				"cmpki.codcmpki" => ViewModelConversion.ToString(modelValue),
 				"tpequ.codtpequ" => ViewModelConversion.ToString(modelValue),
 				"tpequ.tipoequi" => ViewModelConversion.ToString(modelValue),
 				"tpeq1.codtpequ" => ViewModelConversion.ToString(modelValue),
 				"tpeq1.tipoequi" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

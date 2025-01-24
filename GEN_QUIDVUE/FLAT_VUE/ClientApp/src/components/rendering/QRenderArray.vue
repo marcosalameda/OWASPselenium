@@ -9,14 +9,16 @@
 		<span
 			v-if="showCode"
 			:style="textElementStyle"
-			:class="textElementClasses">
+			:class="textElementClasses"
+			:data-field-value="true">
 			{{ value.key }}
 		</span>
 
 		<span
 			v-if="showDescription"
 			:style="textElementStyle"
-			:class="textElementClasses">
+			:class="textElementClasses"
+			:data-field-value="true">
 			{{ value.value }}
 		</span>
 	</div>
@@ -33,7 +35,7 @@
 			 * The value of the array element, which may include key, value, and icon.
 			 */
 			value: {
-				type: Object,
+				type: [Object, Array],
 				default: () => ({})
 			},
 
@@ -51,7 +53,7 @@
 			backgroundColor: {
 				type: String,
 				default: ''
-			}
+			},
 		},
 
 		expose: [],

@@ -28,7 +28,11 @@
 				</h3>
 			</div>
 
-			<div class="wizard-content">
+			<div
+				:id="controlId"
+				class="wizard-content">
+				<q-subtitle-help :help-control="helpControlObject" />
+
 				<div class="step wizard-step">
 					<div class="f-wizard-body">
 						<slot></slot>
@@ -40,10 +44,25 @@
 </template>
 
 <script>
+	import { defineAsyncComponent } from 'vue'
+
+	import HelpControl from '@/mixins/helpControls.js'
+
 	export default {
 		name: 'QWizardContent',
 
+		mixins: [HelpControl],
+
+		components: {
+			QSubtitleHelp: defineAsyncComponent(() => import('@/components/QSubtitleHelp.vue'))
+		},
+
 		props: {
+			/**
+			 * Unique identifier for the control.
+			 */
+			id: String,
+
 			/**
 			 * The order of the step.
 			 */
@@ -114,6 +133,24 @@
 				}
 
 				return classes
+			},
+
+			/**
+			 * The help object for wizard steps.
+			 */
+			helpControlObject()
+			{
+				return this.stepData.helpControl
+			},
+
+			/**
+			 * The id of div step for show help.
+			 */
+			controlId()
+			{
+				if (this.id)
+					return this.id + this.stepData.order
+				return null
 			}
 		}
 	}

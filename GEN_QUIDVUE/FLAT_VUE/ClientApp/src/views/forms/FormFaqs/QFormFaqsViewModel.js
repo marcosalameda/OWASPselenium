@@ -59,11 +59,12 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODCFAQS',
 			relatedArea: 'CFAQS',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCodcfaqs))
 		watch(() => this.ValCodcfaqs.value, (newValue, oldValue) => this.onUpdate('faqs.codcfaqs', this.ValCodcfaqs, newValue, oldValue))
 
 		/** The remaining form fields. */
-		this.ValQuestion = reactive(new modelFieldType.String({
+		this.ValQuestion = reactive(new modelFieldType.MultiLineString({
 			id: 'ValQuestion',
 			originId: 'ValQuestion',
 			area: 'FAQS',
@@ -72,7 +73,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValQuestion))
 		watch(() => this.ValQuestion.value, (newValue, oldValue) => this.onUpdate('faqs.question', this.ValQuestion, newValue, oldValue))
 
-		this.ValAnswer = reactive(new modelFieldType.String({
+		this.ValAnswer = reactive(new modelFieldType.MultiLineString({
 			type: 'TextEditor',
 			id: 'ValAnswer',
 			originId: 'ValAnswer',
@@ -95,5 +96,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodfaqs'
 
 	get QPrimaryKey() { return this.ValCodfaqs.value }
-	set QPrimaryKey(value) { this.ValCodfaqs.value = value }
+	set QPrimaryKey(value) { this.ValCodfaqs.updateValue(value) }
 }

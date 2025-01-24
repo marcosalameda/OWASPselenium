@@ -2,23 +2,23 @@
 
 import { useLayoutDataStore } from '@/stores/layoutData.js'
 
-import GenericLayoutHandler from '@/mixins/genericLayoutHandlers.js'
+import GenericLayoutHandlers from '@/mixins/genericLayoutHandlers.js'
 
 /***************************************************************************
  * Mixin with handlers to be reused by the vertical layout components.     *
  ***************************************************************************/
 export default {
 	mixins: [
-		GenericLayoutHandler
+		GenericLayoutHandlers
 	],
 
 	computed: {
 		...mapState(useLayoutDataStore, [
+			'layoutType',
 			'sidebarIsCollapsed',
 			'sidebarIsVisible',
-			'bookmarkMenuIsOpen',
+			'navBarIsVisible',
 			'stickyThreshold',
-			'moduleMenuIsOpen',
 			'isAccordionMenu'
 		]),
 
@@ -52,8 +52,7 @@ export default {
 		...mapActions(useLayoutDataStore, [
 			'setSidebarCollapseState',
 			'setSidebarVisibility',
-			'setBookmarkMenuState',
-			'setModuleMenuState'
+			'setNavBarVisibility'
 		]),
 
 		/**
@@ -149,29 +148,17 @@ export default {
 		},
 
 		/**
-		 * Toggles the bookmarks menu.
-		 */
-		toggleBookmarksMenu()
-		{
-			this.setBookmarkMenuState(!this.bookmarkMenuIsOpen)
-		},
-
-		/**
-		 * Toggles the modules menu.
-		 */
-		toggleModulesMenu()
-		{
-			this.setModuleMenuState(!this.moduleMenuIsOpen)
-		},
-
-		/**
 		 * Sets the necessary listeners to control the state of the layout.
 		 */
 		setListeners()
 		{
-			window.addEventListener('scroll', this.updatePageScroll)
+			this.setGenericListeners()
+
 			if (this.options.autoCollapseSize)
 				window.addEventListener('resize', this.autoCollapseSidebar)
+
+			this.$eventHub.on('right-sidebar-open', this.collapseSidebar)
+			this.$eventHub.on('user-options-menu-open', this.collapseSidebar)
 		},
 
 		/**
@@ -179,13 +166,17 @@ export default {
 		 */
 		removeListeners()
 		{
-			window.removeEventListener('scroll', this.updatePageScroll)
+			this.removeGenericListeners()
+
 			if (this.options.autoCollapseSize)
 				window.removeEventListener('resize', this.autoCollapseSidebar)
+
+			this.$eventHub.off('right-sidebar-open', this.collapseSidebar)
+			this.$eventHub.off('user-options-menu-open', this.collapseSidebar)
 		},
 
 		/**
-		 * Gets the icon type and the icon.
+		 * Gets the icon for the given module.
 		 * @param {object} module The module
 		 * @param {string} defaultIcon The default icon
 		 * @returns The icon properties.

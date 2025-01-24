@@ -1,44 +1,21 @@
 ﻿import { markRaw, readonly } from 'vue'
-import { v4 as uuidv4 } from 'uuid'
 import _forEach from 'lodash-es/forEach'
 import _isEmpty from 'lodash-es/isEmpty'
 import _isEqual from 'lodash-es/isEqual'
 import _some from 'lodash-es/some'
-import _has from 'lodash-es/has'
 import _set from 'lodash-es/set'
 
-import { QEventEmitter } from '@/api/global/eventBus.js'
-import netAPI from '@/api/network'
+import { useTracingDataStore } from '@/stores/tracingData.js'
+
+import { postData } from '@/api/network'
 import modelFieldType from '@/mixins/formModelFieldTypes.js'
+import ViewModelBase from '@/mixins/viewModelBase.js'
 
-import { useGenericDataStore } from '@/stores/genericData.js'
-
-export default class FormViewModelBase
+export default class FormViewModelBase extends ViewModelBase
 {
 	constructor(vueContext, options)
 	{
-		// The Vue context properties
-		Object.defineProperty(this, 'vueContext', {
-			value: (vueContext || {}),
-			enumerable: false
-		})
-
-		Object.defineProperty(this, 'Resources', {
-			get() { return this.vueContext.Resources },
-			enumerable: false
-		})
-
-		Object.defineProperty(this, 'navigationId', {
-			get() { return this.vueContext.navigationId },
-			enumerable: false,
-			configurable: true
-		})
-
-		// Unique identifier
-		Object.defineProperty(this, 'uniqueIdentifier', {
-			value: uuidv4(),
-			enumerable: false
-		})
+		super(vueContext, options)
 
 		// The view model metadata
 		Object.defineProperty(this, 'modelInfo', {
@@ -53,21 +30,6 @@ export default class FormViewModelBase
 			},
 			enumerable: false,
 			configurable: true
-		})
-
-		// Internal events for the formulas
-		Object.defineProperty(this, 'internalEvents', {
-			value: markRaw(new QEventEmitter()),
-			enumerable: false
-		})
-
-		// External callback for invocation of external methods such as onUpdate of fields
-		Object.defineProperty(this, 'externalCallbacks', {
-			value: markRaw({
-				onUpdate: options?.callbacks?.onUpdate,
-				setFormKey: options?.callbacks?.setFormKey
-			}),
-			enumerable: false
 		})
 
 		// The web api request counters - to accept only the last one's response and discard the others
@@ -86,20 +48,11 @@ export default class FormViewModelBase
 	}
 
 	/**
-	 * Getter for the GLOB table (if it exists).
-	 */
-	get tGlob()
-	{
-		const genericData = useGenericDataStore()
-		return genericData.tGlob
-	}
-
-	/**
 	 * A list of the fields with unsaved changes.
 	 */
 	get dirtyFields()
 	{
-		let _dirtyFields = []
+		const dirtyFields = []
 
 		for (let modelField in this)
 		{
@@ -107,10 +60,10 @@ export default class FormViewModelBase
 
 			if (fieldObj instanceof modelFieldType.Base &&
 				fieldObj.isDirty)
-				_dirtyFields.push(fieldObj)
+				dirtyFields.push(fieldObj)
 		}
 
-		return _dirtyFields
+		return dirtyFields
 	}
 
 	/**
@@ -153,70 +106,23 @@ export default class FormViewModelBase
 	}
 
 	/**
-	 * Checks if this model is equal to the specified one.
-	 * @param {object} otherModel The other model
-	 * @returns True if the models are equal, false otherwise.
+	 * True if there are no validations errors, false otherwise.
 	 */
-	equals(otherModel)
+	get isValid()
 	{
-		if (!(otherModel instanceof FormViewModelBase))
-			return false
+		return !_some(this.validateModel(), (fldValidation) => !fldValidation.value || !fldValidation.size)
+	}
 
+	/**
+	 * Resets the values of all model fields back to their original ones.
+	 */
+	resetValues()
+	{
 		for (let modelField in this)
 		{
 			const fieldObj = this[modelField]
-
-			if (!(fieldObj instanceof modelFieldType.Base) ||
-				!fieldObj.hasSameValue(otherModel[modelField]?.value))
-				return false
+			fieldObj.resetValue()
 		}
-
-		return true
-	}
-
-	/**
-	 * Creates a clone of the current instance.
-	 */
-	clone()
-	{
-		throw new Error('This method should be implemented in a sub-class.')
-	}
-
-	/**
-	 * Hydrates the raw data coming from the server with the necessary metadata.
-	 * @param {object} rawData The data to be hydrated
-	 */
-	hydrate(rawData)
-	{
-		for (let modelField in this)
-			if (this[modelField] instanceof modelFieldType.Base)
-				this.hydrateField(modelField, rawData)
-
-		// GLOB table
-		if (Reflect.has(rawData, 'TGlob'))
-		{
-			const genericData = useGenericDataStore()
-			genericData.setGlobData(rawData.TGlob)
-		}
-	}
-
-	/**
-	 * Hydrates the raw data for a given field coming from the server
-	 * with the necessary metadata.
-	 * @param {object} modelField The target field
-	 * @param {object} rawData The data to be hydrated
-	 */
-	hydrateField(modelField, rawData)
-	{
-		const fieldObj = this[modelField]
-
-		if (!(fieldObj instanceof modelFieldType.Base) || fieldObj.isReady || !_has(rawData, modelField))
-			return
-
-		let rawDataFieldValue = rawData[modelField]
-
-		if (typeof fieldObj.hydrate === 'function')
-			fieldObj.hydrate(rawDataFieldValue)
 	}
 
 	/**
@@ -253,45 +159,56 @@ export default class FormViewModelBase
 
 		const model = this.serverObjModel
 
-		return netAPI.postData(this.modelInfo.area, this.modelInfo.actions.recalculateFormulas, model, (data, request) => {
-			const requestNumber = request.headers.recalculateformulasrequestnumber
-			if (Number(requestNumber) !== this.recalculateFormulasRequestNumber)
-				return
-
-			if (request.data.Success)
-			{
-				if (typeof data !== 'object')
+		return postData(
+			this.modelInfo.area,
+			this.modelInfo.actions.recalculateFormulas,
+			model,
+			(data, request) => {
+				const requestNumber = request.headers.recalculateformulasrequestnumber
+				if (Number(requestNumber) !== this.recalculateFormulasRequestNumber)
 					return
 
-				for (let modelField in this)
+				if (request.data?.Success)
 				{
-					const fieldObj = this[modelField]
+					if (typeof data !== 'object')
+						return
 
-					if (_isEmpty(fieldObj.area) || _isEmpty(fieldObj.field))
-						continue
-
-					if (fieldObj instanceof modelFieldType.Base)
+					for (let modelField in this)
 					{
-						const fieldArea = fieldObj.area.toLowerCase()
-						const fieldName = fieldObj.field.toLowerCase()
-						const fieldFullName = `${fieldArea}.${fieldName}`
-						const fieldValue = data[fieldFullName]
+						const fieldObj = this[modelField]
 
-						if (typeof fieldValue !== 'undefined')
-							fieldObj.updateValue(fieldValue)
+						if (_isEmpty(fieldObj.area) || _isEmpty(fieldObj.field))
+							continue
+
+						if (fieldObj instanceof modelFieldType.Base)
+						{
+							const fieldArea = fieldObj.area.toLowerCase()
+							const fieldName = fieldObj.field.toLowerCase()
+							const fieldFullName = `${fieldArea}.${fieldName}`
+							const fieldValue = data[fieldFullName]
+
+							if (typeof fieldValue !== 'undefined')
+								fieldObj.updateValue(fieldValue)
+						}
 					}
 				}
-			}
-		}, null, {
-			headers: {
-				RecalculateFormulasRequestNumber: ++this.recalculateFormulasRequestNumber
-			}
-		}, this.navigationId)
-	}
-
-	emitInternalEvent(eventName, eventData)
-	{
-		this.internalEvents.emit(eventName, eventData)
+				else
+				{
+					const tracingDataStore = useTracingDataStore()
+					tracingDataStore.addError({
+						origin: 'recalculateFormulas',
+						message: `Error found while trying to recalculate the formulas for form "${this.modelInfo.name}".`,
+						contextData: data
+					})
+				}
+			},
+			undefined,
+			{
+				headers: {
+					RecalculateFormulasRequestNumber: ++this.recalculateFormulasRequestNumber
+				}
+			},
+			this.navigationId)
 	}
 
 	/**
@@ -309,7 +226,7 @@ export default class FormViewModelBase
 						if (modelField.valueFormula.stopRecalcCondition())
 							return
 
-						let execCondition = modelField.valueFormula.execCondition
+						const execCondition = modelField.valueFormula.execCondition
 						if (typeof execCondition === 'function' && !execCondition.call(this))
 							return
 
@@ -318,19 +235,11 @@ export default class FormViewModelBase
 							currentField: modelField
 						}
 
-						if (modelField.valueFormula.isServerFormula)
+						// If it's a server-side recalculation, it's value will be set when the recalculateFormulas() function is called.
+						if (!modelField.valueFormula.isServerRecalc)
 						{
-							Promise.resolve(modelField.valueFormula.fnFormula.call(this, params)).then((responseData) => {
-								if (responseData && responseData.Success)
-									modelField.value = responseData.Result
-							})
-						}
-						else
-						{
-							let formulaValue = modelField.valueFormula.fnFormula.call(this, params)
-							// If it's a server-side recalculation, it's value will be set when the recalculateFormulas() function is called.
-							if (!modelField.valueFormula.isServerRecalc)
-								Promise.resolve(formulaValue).then((value) => (modelField.value = value))
+							const evalResult = modelField.valueFormula.fnFormula.call(this, params)
+							Promise.resolve(evalResult).then((value) => modelField.updateValue(value))
 						}
 					}
 				}
@@ -338,82 +247,45 @@ export default class FormViewModelBase
 				this.internalEvents.offMany([...modelField.valueFormula.dependencyEvents, 'CALC_FIELDS_FORMULAS'], modelField.valueFormula.runFormula)
 				this.internalEvents.onMany([...modelField.valueFormula.dependencyEvents, 'CALC_FIELDS_FORMULAS'], modelField.valueFormula.runFormula)
 			}
-
-			// Fill when formula
-			if (modelField.fillWhen)
-			{
-				if (typeof modelField.fillWhen.runFormula !== 'function')
-				{
-					modelField.fillWhen.runFormula = () => {
-						Promise.resolve(modelField.fillWhen.fnFormula.call(this)).then((value) => {
-							if (!value)
-								modelField.clearValue()
-						})
-					}
-				}
-
-				this.internalEvents.offMany([...modelField.fillWhen.dependencyEvents, 'CALC_FILL_WHEN_FORMULAS'], modelField.fillWhen.runFormula)
-				this.internalEvents.onMany([...modelField.fillWhen.dependencyEvents, 'CALC_FILL_WHEN_FORMULAS'], modelField.fillWhen.runFormula)
-			}
 		})
 	}
 
-	onUpdate(modelFieldName, modelField, newValue, oldValue)
-	{
-		// Foreign keys will also enter here, since it's a sub-class of primary key.
-		if (modelField instanceof modelFieldType.PrimaryKey)
-		{
-			if (typeof this.externalCallbacks.setFormKey === 'function')
-				this.externalCallbacks.setFormKey(modelField)
-
-			// Don't emit event when key value is changed between empty string and null.
-			if (!_isEmpty(newValue) || !_isEmpty(oldValue))
-				this.emitInternalEvent(`fieldChange:${modelFieldName}`, { modelFieldName, modelField, newValue, oldValue })
-		}
-		else
-			this.emitInternalEvent(`fieldChange:${modelFieldName}`, { modelFieldName, modelField, newValue, oldValue })
-
-		if (typeof this.externalCallbacks.onUpdate === 'function')
-			this.externalCallbacks.onUpdate(modelFieldName, modelField, newValue, oldValue)
-	}
-
-	setExternalCallback(callbacks)
-	{
-		_forEach(callbacks, (fn, cbName) => Reflect.set(this.externalCallbacks, cbName, fn))
-		return this
-	}
-
-	setNavigationId(propertyRef)
-	{
-		Object.defineProperty(this, 'navigationId', {
-			get() { return propertyRef },
-			enumerable: false,
-			configurable: true
-		})
-
-		return this
-	}
-
+	/**
+	 * Forces the recalculation of the DB fields formulas.
+	 */
 	calcFieldsFormulas()
 	{
 		this.emitInternalEvent('CALC_FIELDS_FORMULAS')
 	}
 
+	/**
+	 * Forces the recalculation of the "Show when" formulas.
+	 */
 	calcShowWhenFormulas()
 	{
 		this.emitInternalEvent('CALC_SHOW_WHEN_FORMULAS')
 	}
 
+	/**
+	 * Forces the recalculation of the "Block when" formulas.
+	 */
 	calcBlockWhenFormulas()
 	{
 		this.emitInternalEvent('CALC_BLOCK_WHEN_FORMULAS')
 	}
 
+	/**
+	 * Forces the recalculation of the "Fill when" formulas.
+	 */
 	calcFillWhenFormulas()
 	{
 		this.emitInternalEvent('CALC_FILL_WHEN_FORMULAS')
 	}
 
+	/**
+	 * Performs validations over the model fields.
+	 * @returns The validation results.
+	 */
 	validateModel()
 	{
 		let modelValidations = {}
@@ -434,38 +306,141 @@ export default class FormViewModelBase
 		return modelValidations
 	}
 
-	get isValid()
+	/**
+	 * Saves the newly uploaded files in document fields, if the form has any.
+	 * @returns A list with the results of the requests sent to the server.
+	 */
+	async saveDocuments()
 	{
-		return !_some(this.validateModel(), (fldValidation) => !fldValidation.value || !fldValidation.size)
-	}
+		const promises = [],
+			documentFields = Object.values(this).filter((e) => e instanceof modelFieldType.Document && e.isDirty && e.type !== 'Lookup')
 
-	hasServerErrorMessages()
-	{
-		for (let modelField in this)
-			if (this[modelField].hasServerErrorMessages())
-				return true
-		return false
-	}
+		for (let field of documentFields)
+		{
+			const currentDocument = field.currentDocument
 
-	clearServerErrorMessages()
-	{
-		for (let modelField in this)
-			this[modelField].clearServerErrorMessages()
+			// Check for a newly uploaded file.
+			if (currentDocument.value.fileData === null)
+				continue
+
+			// Submit a different request for each file.
+			const promise = new Promise((resolve) => {
+				postData(
+					field.area,
+					'SetFile',
+					currentDocument.dataToSubmit,
+					(data, request) => {
+						if (request.data?.Success)
+						{
+							field.properties.updateValue(data.properties)
+							field.documentFK.updateValue(data.properties.documentId)
+
+							const areaKeyField = this.vueContext.dataApi.keys[field.area.toLowerCase()]
+							field.setTickets(areaKeyField.value, this.navigationId)
+							currentDocument.reset()
+
+							resolve(true)
+						}
+						else
+						{
+							const tracingDataStore = useTracingDataStore()
+							tracingDataStore.addError({
+								origin: 'saveDocuments',
+								message: `Error found while trying to save document "${field.id}".`,
+								contextData: field
+							})
+
+							resolve(false)
+						}
+					},
+					undefined,
+					{ contentType: 'application/octet-stream' },
+					this.navigationId)
+			})
+
+			promises.push(promise)
+		}
+
+		return await Promise.all(promises)
 	}
 
 	/**
-	 * Unbinding of all related events
+	 * Saves the editing and deletion state of all the document fields in the form, if any.
+	 * @returns A boolean with the result of the server request.
 	 */
-	unbindEvents()
+	async setDocumentChanges()
 	{
-		this.internalEvents.removeAllListeners()
-	}
+		const unsavedChanges = [],
+			documentFields = Object.values(this).filter((e) => e instanceof modelFieldType.Document && e.isDirty && e.type !== 'Lookup')
 
-	/**
-	 * Destroy current model object
-	 */
-	destroy()
-	{
-		this.unbindEvents()
+		for (let field of documentFields)
+		{
+			const currentDocument = field.currentDocument.value,
+				properties = field.properties,
+				changes = {}
+
+			// Check the editing state.
+			if (currentDocument.fileData === null && properties.value.editing !== (properties.originalValue?.editing ?? false))
+				changes.editing = properties.value.editing
+
+			// Check for versions that should be deleted.
+			if (currentDocument.deleteType !== -1)
+			{
+				changes.currentVersion = properties.value.version
+				changes.deleteType = currentDocument.deleteType
+				changes.delete = true
+			}
+
+			if (!_isEmpty(changes))
+			{
+				changes.ticket = currentDocument.ticket
+				unsavedChanges.push(changes)
+			}
+		}
+
+		// Submit a single request with all the state changes and delete operations.
+		if (unsavedChanges.length > 0)
+		{
+			const promise = new Promise((resolve) => {
+				postData(
+					this.modelInfo.area,
+					'SetFilesState',
+					{ documents: unsavedChanges },
+					(_, request) => {
+						if (request.data?.Success)
+						{
+							for (let field of documentFields)
+							{
+								const areaKeyField = this.vueContext.dataApi.keys[field.area.toLowerCase()]
+								field.setTickets(areaKeyField.value, this.navigationId)
+
+								// Only reset if not also submitting a new file to replace the one that was deleted
+								if (field.currentDocument.value.submitMode === -1)
+									field.currentDocument.reset()
+							}
+
+							resolve(true)
+						}
+						else
+						{
+							const tracingDataStore = useTracingDataStore()
+							tracingDataStore.addError({
+								origin: 'saveDocuments',
+								message: `Error found while trying to set document properties in form "${this.modelInfo.name}".`,
+								contextData: request.data
+							})
+
+							resolve(false)
+						}
+					},
+					undefined,
+					undefined,
+					this.navigationId)
+			})
+
+			return await Promise.resolve(promise)
+		}
+
+		return true
 	}
 }

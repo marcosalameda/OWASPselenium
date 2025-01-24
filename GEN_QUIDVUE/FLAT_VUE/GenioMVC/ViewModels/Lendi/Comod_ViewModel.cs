@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Lendi
 {
-	public class Comod_ViewModel : FormViewModel<Models.Lendi>
+	public class Comod_ViewModel : FormViewModel<Models.Lendi>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,24 +29,40 @@ namespace GenioMVC.ViewModels.Lendi
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Registration No." | Type: "CE"
+		/// </summary>
+		public string ValCodequip { get; set; }
+		/// <summary>
+		/// Title: "Lending" | Type: "CE"
+		/// </summary>
+		public string ValCodpess1 { get; set; }
+		/// <summary>
+		/// Title: "Borrower:" | Type: "CE"
+		/// </summary>
+		public string ValCodpess2 { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Lending" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Pess1> TablePess1Name { get; set; }
-
 		/// <summary>
 		/// Title: "Borrower:" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Pess2> TablePess2Name { get; set; }
-
 		/// <summary>
 		/// Title: "Registration No." | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Equip> TableEquipRegistnr { get; set; }
-
 		/// <summary>
 		/// Title: "Equipment" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public string EquipValDesignat 
 		{
 			get
@@ -60,11 +76,11 @@ namespace GenioMVC.ViewModels.Lendi
 		public Func<string> funcEquipValDesignat { get; set; }
 
 		private string _auxEquipValDesignat { get; set; }
-
 		/// <summary>
 		/// Title: "Loan Frequency" | Type: "AN"
 		/// </summary>
-		public double EquipValFrequenc 
+		[ValidateSetAccess]
+		public decimal EquipValFrequenc 
 		{
 			get
 			{
@@ -74,49 +90,44 @@ namespace GenioMVC.ViewModels.Lendi
 		}
 
 		[JsonIgnore]
-		public Func<double> funcEquipValFrequenc { get; set; }
+		public Func<decimal> funcEquipValFrequenc { get; set; }
 
-		private double _auxEquipValFrequenc { get; set; }
-
+		private decimal _auxEquipValFrequenc { get; set; }
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_EquipValFrequenc { get; set; }
-
 		/// <summary>
 		/// Title: "Lending No" | Type: "N"
 		/// </summary>
 		public decimal? ValLendinnr { get; set; }
-
 		/// <summary>
 		/// Title: "Start:" | Type: "DT"
 		/// </summary>
 		public DateTime? ValStart { get; set; }
-
 		/// <summary>
 		/// Title: "Warning" | Type: "DT"
 		/// </summary>
+		[ValidateSetAccess]
 		public DateTime? ValWarndt { get; set; }
-
 		/// <summary>
 		/// Title: "End" | Type: "DT"
 		/// </summary>
+		[ValidateSetAccess]
 		public DateTime? ValEnd { get; set; }
-
 		/// <summary>
 		/// Title: "Observation" | Type: "MO"
 		/// </summary>
 		public string ValObservat { get; set; }
-
 		/// <summary>
 		/// Title: "Returned" | Type: "D"
 		/// </summary>
 		public DateTime? ValReturndt { get; set; }
-
 		/// <summary>
 		/// Title: "Returned" | Type: "L"
 		/// </summary>
+		[ValidateSetAccess]
 		public bool ValReturned { get; set; }
 
 		#region Navigations
@@ -126,25 +137,6 @@ namespace GenioMVC.ViewModels.Lendi
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Registration No." | Type: "CE"
-		/// </summary>
-		public string ValCodequip { get; set; }
-
-		/// <summary>
-		/// Title: "Lending" | Type: "CE"
-		/// </summary>
-		public string ValCodpess1 { get; set; }
-
-		/// <summary>
-		/// Title: "Borrower:" | Type: "CE"
-		/// </summary>
-		public string ValCodpess2 { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -160,9 +152,10 @@ namespace GenioMVC.ViewModels.Lendi
 
 		public string ValCodlendi { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Comod_ViewModel() : base(null!) { }
@@ -198,6 +191,15 @@ namespace GenioMVC.ViewModels.Lendi
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Lendi model = new Models.Lendi(userContext) { Identifier = "FCOMOD" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FCOMOD");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -258,8 +260,11 @@ namespace GenioMVC.ViewModels.Lendi
 
 			try
 			{
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
+				ValCodpess2 = ViewModelConversion.ToString(m.ValCodpess2);
 				funcEquipValDesignat = () => ViewModelConversion.ToString(m.Equip.ValDesignat);
-				funcEquipValFrequenc = () => ViewModelConversion.ToDouble(m.Equip.ValFrequenc);
+				funcEquipValFrequenc = () => ViewModelConversion.ToNumeric(m.Equip.ValFrequenc);
 				ValLendinnr = ViewModelConversion.ToNumeric(m.ValLendinnr);
 				ValStart = ViewModelConversion.ToDateTime(m.ValStart);
 				ValWarndt = ViewModelConversion.ToDateTime(m.ValWarndt);
@@ -267,9 +272,6 @@ namespace GenioMVC.ViewModels.Lendi
 				ValObservat = ViewModelConversion.ToString(m.ValObservat);
 				ValReturndt = ViewModelConversion.ToDateTime(m.ValReturndt);
 				ValReturned = ViewModelConversion.ToLogic(m.ValReturned);
-				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
-				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
-				ValCodpess2 = ViewModelConversion.ToString(m.ValCodpess2);
 				ValCodlendi = ViewModelConversion.ToString(m.ValCodlendi);
 			}
 			catch (Exception)
@@ -279,6 +281,20 @@ namespace GenioMVC.ViewModels.Lendi
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Lendi m)
 		{
 			if (m == null)
@@ -289,27 +305,97 @@ namespace GenioMVC.ViewModels.Lendi
 
 			try
 			{
-				m.ValLendinnr = ViewModelConversion.ToNumeric(ValLendinnr);
-				m.ValStart = ViewModelConversion.ToDateTime(ValStart);
-				m.ValWarndt = ViewModelConversion.ToDateTime(ValWarndt);
-				m.ValEnd = ViewModelConversion.ToDateTime(ValEnd);
-				m.ValObservat = ViewModelConversion.ToString(ValObservat);
-				m.ValReturndt = ViewModelConversion.ToDateTime(ValReturndt);
-				m.ValReturned = ViewModelConversion.ToLogic(ValReturned);
 				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
 				m.ValCodpess1 = ViewModelConversion.ToString(ValCodpess1);
 				m.ValCodpess2 = ViewModelConversion.ToString(ValCodpess2);
+				m.ValLendinnr = ViewModelConversion.ToNumeric(ValLendinnr);
+				m.ValStart = ViewModelConversion.ToDateTime(ValStart);
+				m.ValObservat = ViewModelConversion.ToString(ValObservat);
+				m.ValReturndt = ViewModelConversion.ToDateTime(ValReturndt);
 				m.ValCodlendi = ViewModelConversion.ToString(ValCodlendi);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValWarndt = ViewModelConversion.ToDateTime(ValWarndt);
+				m.ValEnd = ViewModelConversion.ToDateTime(ValEnd);
+				m.ValReturned = ViewModelConversion.ToLogic(ValReturned);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Comod) to Model (Lendi) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Comod) to Model (Lendi) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "lendi.codequip":
+						this.ValCodequip = ViewModelConversion.ToString(_value);
+						break;
+					case "lendi.codpess1":
+						this.ValCodpess1 = ViewModelConversion.ToString(_value);
+						break;
+					case "lendi.codpess2":
+						this.ValCodpess2 = ViewModelConversion.ToString(_value);
+						break;
+					case "lendi.lendinnr":
+						this.ValLendinnr = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "lendi.start":
+						this.ValStart = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "lendi.observat":
+						this.ValObservat = ViewModelConversion.ToString(_value);
+						break;
+					case "lendi.returndt":
+						this.ValReturndt = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "lendi.codlendi":
+						this.ValCodlendi = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Comod) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Comod)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Lendi.Find(id ?? Navigation.GetStrValue("lendi"), m_userContext, "FCOMOD"); }
+			finally { Model ??= new Models.Lendi(m_userContext) { Identifier = "FCOMOD" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -323,20 +409,13 @@ namespace GenioMVC.ViewModels.Lendi
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FCOMOD";
@@ -346,6 +425,7 @@ namespace GenioMVC.ViewModels.Lendi
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -406,32 +486,28 @@ namespace GenioMVC.ViewModels.Lendi
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
+			validator.Required("ValCodequip", Resources.Resources.REGISTRATION_NO_06209, ViewModelConversion.ToString(ValCodequip), FieldType.CHAVE_ESTRANGEIRA_GUID.Formatting);
 			validator.StringLength("EquipValDesignat", Resources.Resources.EQUIPMENT03632, EquipValDesignat, 85);
-			validator.Required("ValStart", Resources.Resources.START_59353, ValStart);
-			validator.Required("ValCodequip", Resources.Resources.REGISTRATION_NO_06209, ValCodequip);
+
+			validator.Required("ValStart", Resources.Resources.START_59353, ViewModelConversion.ToDateTime(ValStart), FieldType.DATAHORA.Formatting);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE COMOD]/
 		public override void Save()
 		{
 
-			try { Model = Models.Lendi.Find(Navigation.GetStrValue("lendi"), m_userContext, "FCOMOD"); }
-			finally { if (Model == null) Model = new Models.Lendi(m_userContext) { Identifier = "FCOMOD" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY COMOD]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Lendi.Find(Navigation.GetStrValue("lendi"), m_userContext, "FCOMOD"); }
-			finally { if (Model == null) Model = new Models.Lendi(m_userContext) { Identifier = "FCOMOD" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE COMOD]/
 
@@ -464,8 +540,8 @@ namespace GenioMVC.ViewModels.Lendi
 				object hValue = Navigation.GetValue("pess1", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					comod___pess1name____Conds.Equal(CSGenioApess1.FldCodpesso, Navigation.GetValue("pess1"));
-					this.ValCodpess1 = Navigation.GetStrValue("pess1");
+					comod___pess1name____Conds.Equal(CSGenioApess1.FldCodpesso, hValue);
+					this.ValCodpess1 = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -482,8 +558,6 @@ namespace GenioMVC.ViewModels.Lendi
 					Navigation.CurrentLevel.SetEntry("RETURN_pess1", null);
 				}
 				FillDependant_ComodTablePess1Name(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePess1Name.FilledByHistory = Navigation.CheckFilledByHistory("pess1");
 				return;
 			}
 
@@ -551,9 +625,6 @@ namespace GenioMVC.ViewModels.Lendi
 
 				TablePess1Name.List = new SelectList(TablePess1Name.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpess1), "Value", "Text", this.ValCodpess1);
 				FillDependant_ComodTablePess1Name();
-
-				//Check if foreignkey comes from history
-				TablePess1Name.FilledByHistory = Navigation.CheckFilledByHistory("pess1");
 			}
 		}
 
@@ -659,8 +730,8 @@ namespace GenioMVC.ViewModels.Lendi
 				object hValue = Navigation.GetValue("pess2", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					comod___pess2name____Conds.Equal(CSGenioApess2.FldCodpesso, Navigation.GetValue("pess2"));
-					this.ValCodpess2 = Navigation.GetStrValue("pess2");
+					comod___pess2name____Conds.Equal(CSGenioApess2.FldCodpesso, hValue);
+					this.ValCodpess2 = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -677,8 +748,6 @@ namespace GenioMVC.ViewModels.Lendi
 					Navigation.CurrentLevel.SetEntry("RETURN_pess2", null);
 				}
 				FillDependant_ComodTablePess2Name(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePess2Name.FilledByHistory = Navigation.CheckFilledByHistory("pess2");
 				return;
 			}
 
@@ -746,9 +815,6 @@ namespace GenioMVC.ViewModels.Lendi
 
 				TablePess2Name.List = new SelectList(TablePess2Name.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpess2), "Value", "Text", this.ValCodpess2);
 				FillDependant_ComodTablePess2Name();
-
-				//Check if foreignkey comes from history
-				TablePess2Name.FilledByHistory = Navigation.CheckFilledByHistory("pess2");
 			}
 		}
 
@@ -854,14 +920,14 @@ namespace GenioMVC.ViewModels.Lendi
 				object hValue = Navigation.GetValue("equip", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					comod___equipregistnrConds.Equal(CSGenioAequip.FldCodequip, Navigation.GetValue("equip"));
-					this.ValCodequip = Navigation.GetStrValue("equip");
+					comod___equipregistnrConds.Equal(CSGenioAequip.FldCodequip, hValue);
+					this.ValCodequip = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
 
 			// Area limit
-			comod___equipregistnrDoLoad &= AddCriteriaAreaLimit(comod___equipregistnrConds, CSGenio.business.CSGenioApess1.FldCodpesso, "pess1", this.ValCodpess1, false);
+			comod___equipregistnrDoLoad &= AddCriteriaAreaLimit(comod___equipregistnrConds, CSGenio.business.CSGenioApess1.FldCodpesso, "pess1", this.ValCodpess1, true);
 
 			TableEquipRegistnr = new TableDBEdit<Models.Equip>
 			{
@@ -876,8 +942,6 @@ namespace GenioMVC.ViewModels.Lendi
 					Navigation.CurrentLevel.SetEntry("RETURN_equip", null);
 				}
 				FillDependant_ComodTableEquipRegistnr(lazyLoad);
-				//Check if foreignkey comes from history
-				TableEquipRegistnr.FilledByHistory = Navigation.CheckFilledByHistory("equip");
 				return;
 			}
 
@@ -948,9 +1012,6 @@ namespace GenioMVC.ViewModels.Lendi
 
 				TableEquipRegistnr.List = new SelectList(TableEquipRegistnr.Elements.ToSelectList(x => x.ValRegistnr, x => x.ValCodequip,  x => x.ValCodequip == this.ValCodequip), "Value", "Text", this.ValCodequip);
 				FillDependant_ComodTableEquipRegistnr();
-
-				//Check if foreignkey comes from history
-				TableEquipRegistnr.FilledByHistory = Navigation.CheckFilledByHistory("equip");
 			}
 		}
 
@@ -1019,7 +1080,7 @@ namespace GenioMVC.ViewModels.Lendi
 			try
 			{
 				this.funcEquipValDesignat = () => (string)row["equip.designat"];
-				this.funcEquipValFrequenc = () => (double)row["equip.frequenc"];
+				this.funcEquipValFrequenc = () => (decimal)row["equip.frequenc"];
 
 				// Fill List fields
 				this.ValCodequip = ViewModelConversion.ToString(row["equip.codequip"]);
@@ -1058,8 +1119,11 @@ namespace GenioMVC.ViewModels.Lendi
 		{
 			return identifier switch
 			{
+				"lendi.codequip" => ViewModelConversion.ToString(modelValue),
+				"lendi.codpess1" => ViewModelConversion.ToString(modelValue),
+				"lendi.codpess2" => ViewModelConversion.ToString(modelValue),
 				"equip.designat" => ViewModelConversion.ToString(modelValue),
-				"equip.frequenc" => ViewModelConversion.ToDouble(modelValue),
+				"equip.frequenc" => ViewModelConversion.ToNumeric(modelValue),
 				"lendi.lendinnr" => ViewModelConversion.ToNumeric(modelValue),
 				"lendi.start" => ViewModelConversion.ToDateTime(modelValue),
 				"lendi.warndt" => ViewModelConversion.ToDateTime(modelValue),
@@ -1067,9 +1131,6 @@ namespace GenioMVC.ViewModels.Lendi
 				"lendi.observat" => ViewModelConversion.ToString(modelValue),
 				"lendi.returndt" => ViewModelConversion.ToDateTime(modelValue),
 				"lendi.returned" => ViewModelConversion.ToLogic(modelValue),
-				"lendi.codequip" => ViewModelConversion.ToString(modelValue),
-				"lendi.codpess1" => ViewModelConversion.ToString(modelValue),
-				"lendi.codpess2" => ViewModelConversion.ToString(modelValue),
 				"lendi.codlendi" => ViewModelConversion.ToString(modelValue),
 				"pess1.codpesso" => ViewModelConversion.ToString(modelValue),
 				"pess1.name" => ViewModelConversion.ToString(modelValue),
@@ -1077,9 +1138,11 @@ namespace GenioMVC.ViewModels.Lendi
 				"pess2.name" => ViewModelConversion.ToString(modelValue),
 				"equip.codequip" => ViewModelConversion.ToString(modelValue),
 				"equip.registnr" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

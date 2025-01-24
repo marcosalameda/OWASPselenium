@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,12 +106,12 @@
 							v-on="controls.MESSA___MESSAIDNOTIF_.handlers"
 							:loading="controls.MESSA___MESSAIDNOTIF_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSAIDNOTIF_.props"
 								:model-value="model.ValIdnotif.value"
-								@update:model-value="model.ValIdnotif.fnUpdateValue" />
+								@blur="onBlur(controls.MESSA___MESSAIDNOTIF_, model.ValIdnotif.value)"
+								@change="model.ValIdnotif.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -125,12 +125,12 @@
 							v-on="controls.MESSA___MESSAIDMSG___.handlers"
 							:loading="controls.MESSA___MESSAIDMSG___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSAIDMSG___.props"
 								:model-value="model.ValIdmsg.value"
-								@update:model-value="model.ValIdmsg.fnUpdateValue" />
+								@blur="onBlur(controls.MESSA___MESSAIDMSG___, model.ValIdmsg.value)"
+								@change="model.ValIdmsg.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -144,15 +144,11 @@
 							v-on="controls.MESSA___MESSAMAILSENT.handlers"
 							:loading="controls.MESSA___MESSAMAILSENT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.MESSA___MESSAMAILSENT.isVisible"
-									id="MESSA___MESSAMAILSENT"
-									size="small"
-									:model-value="model.ValMailsent.value"
-									:readonly="controls.MESSA___MESSAMAILSENT.readonly"
+									v-bind="controls.MESSA___MESSAMAILSENT.props"
 									@update:model-value="model.ValMailsent.fnUpdateValue" />
 							</template>
 						</base-input-structure>
@@ -168,12 +164,12 @@
 							v-on="controls.MESSA___MESSAMAILERR_.handlers"
 							:loading="controls.MESSA___MESSAMAILERR_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSAMAILERR_.props"
 								:model-value="model.ValMailerr.value"
-								@update:model-value="model.ValMailerr.fnUpdateValue" />
+								@blur="onBlur(controls.MESSA___MESSAMAILERR_, model.ValMailerr.value)"
+								@change="model.ValMailerr.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -187,14 +183,11 @@
 							v-on="controls.MESSA___ENTITNAME____.handlers"
 							:loading="controls.MESSA___ENTITNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.MESSA___ENTITNAME____.isVisible"
 								v-bind="controls.MESSA___ENTITNAME____.props"
-								:model-value="model.ValCodentit.value"
-								v-on="controls.MESSA___ENTITNAME____.handlers"
-								@update:model-value="model.ValCodentit.fnUpdateValue" />
+								v-on="controls.MESSA___ENTITNAME____.handlers" />
 							<q-see-more-messa-entitname
 								v-if="controls.MESSA___ENTITNAME____.seeMoreIsVisible"
 								v-bind="controls.MESSA___ENTITNAME____.seeMoreParams"
@@ -212,14 +205,11 @@
 							v-on="controls.MESSA___PERSONAME____.handlers"
 							:loading="controls.MESSA___PERSONAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.MESSA___PERSONAME____.isVisible"
 								v-bind="controls.MESSA___PERSONAME____.props"
-								:model-value="model.ValCodperso.value"
-								v-on="controls.MESSA___PERSONAME____.handlers"
-								@update:model-value="model.ValCodperso.fnUpdateValue" />
+								v-on="controls.MESSA___PERSONAME____.handlers" />
 							<q-see-more-messa-personame
 								v-if="controls.MESSA___PERSONAME____.seeMoreIsVisible"
 								v-bind="controls.MESSA___PERSONAME____.seeMoreParams"
@@ -237,12 +227,10 @@
 							v-on="controls.MESSA___MESSADOCUM_NR.handlers"
 							:loading="controls.MESSA___MESSADOCUM_NR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.MESSA___MESSADOCUM_NR.isVisible"
-								v-bind="controls.MESSA___MESSADOCUM_NR"
-								:model-value="model.ValDocum_nr.value"
+								v-bind="controls.MESSA___MESSADOCUM_NR.props"
 								@update:model-value="model.ValDocum_nr.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -255,12 +243,12 @@
 							v-on="controls.MESSA___MESSADESIGNAT.handlers"
 							:loading="controls.MESSA___MESSADESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSADESIGNAT.props"
 								:model-value="model.ValDesignat.value"
-								@update:model-value="model.ValDesignat.fnUpdateValue" />
+								@blur="onBlur(controls.MESSA___MESSADESIGNAT, model.ValDesignat.value)"
+								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -272,12 +260,12 @@
 							v-on="controls.MESSA___MESSAEMAIL___.handlers"
 							:loading="controls.MESSA___MESSAEMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSAEMAIL___.props"
 								:model-value="model.ValEmail.value"
-								@update:model-value="model.ValEmail.fnUpdateValue" />
+								@blur="onBlur(controls.MESSA___MESSAEMAIL___, model.ValEmail.value)"
+								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -291,18 +279,14 @@
 							v-on="controls.MESSA___MESSAMESSAGE_.handlers"
 							:loading="controls.MESSA___MESSAMESSAGE_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.MESSA___MESSAMESSAGE_.isVisible"
+								v-bind="controls.MESSA___MESSAMESSAGE_.props"
 								id="MESSA___MESSAMESSAGE_"
-								size="xxlarge"
 								:model-value="model.ValMessage.value"
 								:rows="10"
 								:cols="99"
-								:is-required="controls.MESSA___MESSAMESSAGE_.isRequired"
-								:readonly="controls.MESSA___MESSAMESSAGE_.readonly"
-								:placeholder="controls.MESSA___MESSAMESSAGE_.placeholder"
 								@update:model-value="model.ValMessage.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -317,8 +301,7 @@
 							v-on="controls.MESSA___MESSACREATOPE.handlers"
 							:loading="controls.MESSA___MESSACREATOPE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSACREATOPE.props"
 								:model-value="model.ValCreatope.value" />
@@ -333,14 +316,13 @@
 							v-on="controls.MESSA___MESSACREATDAT.handlers"
 							:loading="controls.MESSA___MESSACREATDAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.MESSA___MESSACREATDAT.isVisible"
-								v-bind="controls.MESSA___MESSACREATDAT"
-								format="Date"
+								v-bind="controls.MESSA___MESSACREATDAT.props"
 								:model-value="model.ValCreatdat.value"
-								@update:model-value="model.ValCreatdat.fnUpdateValue" />
+								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
+								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -427,15 +409,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'MESSA',
-						location: 'form-MESSA',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'MESSA',
+					location: 'form-MESSA',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -481,6 +461,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -553,8 +535,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -636,7 +619,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -690,21 +673,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -715,15 +683,11 @@
 						id: 'MESSA___MESSAIDNOTIF_',
 						name: 'IDNOTIF',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.NOTIFICATION_ID25507),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_MESSA___MESSAIDNOTIF_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -733,15 +697,11 @@
 						id: 'MESSA___MESSAIDMSG___',
 						name: 'IDMSG',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.MESSAGE_ID37133),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_MESSA___MESSAIDMSG___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -751,13 +711,9 @@
 						id: 'MESSA___MESSAMAILSENT',
 						name: 'MAILSENT',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.E_MAIL_SENT51699),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
@@ -767,15 +723,11 @@
 						id: 'MESSA___MESSAMAILERR_',
 						name: 'MAILERR',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ERROR_SENDING_MAIL44674),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 300,
 						labelId: 'label_MESSA___MESSAMAILERR_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -785,25 +737,9 @@
 						id: 'MESSA___ENTITNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ENTITY_NAME37999),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodentit',
-							dependencyEvent: 'fieldChange:messa.codentit'
-						},
-						dependentFields: () => {
-							return {
-								set 'entit.codentit'(value) { vm.model.ValCodentit.updateValue(value) },
-								set 'entit.name'(value) { vm.model.TableEntitName.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -812,6 +748,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodentit',
+							dependencyEvent: 'fieldChange:messa.codentit'
+						},
+						dependentFields: () => ({
+							set 'entit.codentit'(value) { vm.model.ValCodentit.updateValue(value) },
+							set 'entit.name'(value) { vm.model.TableEntitName.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					MESSA___PERSONAME____: new fieldControlClass.LookupControl({
 						modelField: 'TablePersoName',
@@ -819,25 +765,9 @@
 						id: 'MESSA___PERSONAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PERSON_NAME40980),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodperso',
-							dependencyEvent: 'fieldChange:messa.codperso'
-						},
-						dependentFields: () => {
-							return {
-								set 'perso.codperso'(value) { vm.model.ValCodperso.updateValue(value) },
-								set 'perso.name'(value) { vm.model.TablePersoName.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -846,22 +776,28 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodperso',
+							dependencyEvent: 'fieldChange:messa.codperso'
+						},
+						dependentFields: () => ({
+							set 'perso.codperso'(value) { vm.model.ValCodperso.updateValue(value) },
+							set 'perso.name'(value) { vm.model.TablePersoName.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					MESSA___MESSADOCUM_NR: new fieldControlClass.NumberControl({
 						modelField: 'ValDocum_nr',
 						valueChangeEvent: 'fieldChange:messa.docum_nr',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'MESSA___MESSADOCUM_NR',
 						name: 'DOCUM_NR',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.DOCUMENT_NUMBER28451),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -871,15 +807,11 @@
 						id: 'MESSA___MESSADESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TO_WHOM_THE_MESSAGE_02337),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_MESSA___MESSADESIGNAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -889,15 +821,11 @@
 						id: 'MESSA___MESSAEMAIL___',
 						name: 'EMAIL',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.E_MAIL_TO_WHOM_THE_M37668),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 254,
 						labelId: 'label_MESSA___MESSAEMAIL___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -907,15 +835,9 @@
 						id: 'MESSA___MESSAMESSAGE_',
 						name: 'MESSAGE',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.MESSAGE30602),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 100,
-						labelId: 'label_MESSA___MESSAMESSAGE_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -925,37 +847,26 @@
 						id: 'MESSA___MESSACREATOPE',
 						name: 'CREATOPE',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.CREATED_BY12292),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 128,
 						labelId: 'label_MESSA___MESSACREATOPE',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					MESSA___MESSACREATDAT: new fieldControlClass.DateControl({
 						modelField: 'ValCreatdat',
 						valueChangeEvent: 'fieldChange:messa.creatdat',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'MESSA___MESSACREATDAT',
 						name: 'CREATDAT',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.CREATED_ON00051),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 				},
 
@@ -1021,7 +932,7 @@
 						/** The foreign key to the PERSO table */
 						get perso() { return vm.model.ValCodperso },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1117,6 +1028,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1156,6 +1075,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1282,6 +1209,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR MESSA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1297,6 +1240,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS MESSA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

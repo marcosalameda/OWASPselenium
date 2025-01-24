@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODPAISE',
 			relatedArea: 'CNTRY',
 			description: computed(() => this.Resources.COMPANY_PARENTS01581),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodpaise))
 		watch(() => this.ValCodpaise.value, (newValue, oldValue) => this.onUpdate('pesso.codpaise', this.ValCodpaise, newValue, oldValue))
 
@@ -162,18 +163,17 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 5,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.AGE28663),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: Idade([PESSO->DTNASCIM],[Today])
-					// eslint-disable-next-line eqeqeq
 					return qFunctions.Idade(this.ValDtnascim.value,qApi.Hoje())
 				},
 				dependencyEvents: ['fieldChange:pesso.dtnascim'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValIdade))
@@ -214,6 +214,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'PESSO',
 			field: 'DTULTCAT',
 			description: computed(() => this.Resources.SINCE47259),
+			isFixed: true,
 		}).cloneFrom(values?.ValDtultcat))
 		watch(() => this.ValDtultcat.value, (newValue, oldValue) => this.onUpdate('pesso.dtultcat', this.ValDtultcat, newValue, oldValue))
 
@@ -266,6 +267,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'COUNTRY',
 			maxLength: 90,
 			description: computed(() => this.Resources.COUNTRY64133),
+			isFixed: true,
 		}).cloneFrom(values?.CntryValCountry))
 		watch(() => this.CntryValCountry.value, (newValue, oldValue) => this.onUpdate('cntry.country', this.CntryValCountry, newValue, oldValue))
 
@@ -476,13 +478,13 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.List_Especial)
 
 		/** The form fields used only in formulas. */
-		this.CmpnyValHeadloc = reactive(new modelFieldType.String({
+		this.CmpnyValHeadloc = reactive(new modelFieldType.Coordinate({
 			id: 'CmpnyValHeadloc',
 			originId: 'ValHeadloc',
 			area: 'CMPNY',
 			field: 'HEADLOC',
-			maxLength: 50,
 			description: computed(() => this.Resources.HEADQUARTER_LOCATION30734),
+			isFixed: true,
 		}).cloneFrom(values?.CmpnyValHeadloc))
 		watch(() => this.CmpnyValHeadloc.value, (newValue, oldValue) => this.onUpdate('cmpny.headloc', this.CmpnyValHeadloc, newValue, oldValue))
 	}
@@ -499,5 +501,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodpesso'
 
 	get QPrimaryKey() { return this.ValCodpesso.value }
-	set QPrimaryKey(value) { this.ValCodpesso.value = value }
+	set QPrimaryKey(value) { this.ValCodpesso.updateValue(value) }
 }

@@ -5,6 +5,9 @@
 			:classes="classes"
 			:readonly="options.readonly"
 			:model-value="value"
+			data-table-action-selected="false"
+			tabindex="-1"
+			:aria-label="options?.label"
 			@update:model-value="updateValue" />
 	</div>
 </template>

@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Entit _entit;
 		[DisplayName("Entit")]
 		[ShouldSerialize("Entit")]
-		public virtual Entit Entit { 
-			get { 
+		public virtual Entit Entit {
+			get {
 				if (!this.isEmptyModel && (_entit == null || (!string.IsNullOrEmpty(ValCodentit) && (_entit.isEmptyModel || _entit.klass.QPrimaryKey != ValCodentit))))
 					_entit = Models.Entit.Find(ValCodentit, m_userContext, Identifier, _fieldsToSerialize);
 				if (_entit == null)
 					_entit = new Models.Entit(m_userContext, true, _fieldsToSerialize);
 				return _entit;
 			}
-			set { _entit = value; } 
+			set { _entit = value; }
 		}
-		
+
 
 		[DisplayName("Is prepared")]
 		/// <summary>Field : "Is prepared" Tipo: "L" Formula:  ""</summary>
@@ -69,7 +69,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Dispatch number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dispa.ValDispanr")]
 		[NumericAttribute(0)]
-		public decimal? ValDispanr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDispanr, 0)); } set { klass.ValDispanr = Convert.ToDouble(value); } }
+		public decimal? ValDispanr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDispanr, 0)); } set { klass.ValDispanr = Convert.ToDecimal(value); } }
 
 		[DisplayName("Prepared")]
 		/// <summary>Field : "Prepared" Tipo: "DT" Formula: DF "iif(emptyL([DISPA->ISPREPAR])==1,[ZEROD],[Today])"</summary>
@@ -85,17 +85,17 @@ namespace GenioMVC.Models
 		private Perso _perso;
 		[DisplayName("Perso")]
 		[ShouldSerialize("Perso")]
-		public virtual Perso Perso { 
-			get { 
+		public virtual Perso Perso {
+			get {
 				if (!this.isEmptyModel && (_perso == null || (!string.IsNullOrEmpty(ValCodperso) && (_perso.isEmptyModel || _perso.klass.QPrimaryKey != ValCodperso))))
 					_perso = Models.Perso.Find(ValCodperso, m_userContext, Identifier, _fieldsToSerialize);
 				if (_perso == null)
 					_perso = new Models.Perso(m_userContext, true, _fieldsToSerialize);
 				return _perso;
 			}
-			set { _perso = value; } 
+			set { _perso = value; }
 		}
-		
+
 
 		[DisplayName("Status")]
 		/// <summary>Field : "Status" Tipo: "AC" Formula: + "iif(emptyD([DISPA->DISPADT])==0,"D",iif(emptyD([DISPA->PREPARED])==0,"P","I"))"</summary>
@@ -113,19 +113,19 @@ namespace GenioMVC.Models
 		public Dispa(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAdispa(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Dispa(UserContext userContext, CSGenioAdispa val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAdispa csgenioa)
@@ -152,7 +152,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

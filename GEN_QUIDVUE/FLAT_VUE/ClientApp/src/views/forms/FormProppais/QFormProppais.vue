@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -115,12 +115,12 @@
 										v-on="controls.PROPPAISCNTRYCOUNTRY_.handlers"
 										:loading="controls.PROPPAISCNTRYCOUNTRY_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PROPPAISCNTRYCOUNTRY_.props"
 											:model-value="model.ValCountry.value"
-											@update:model-value="model.ValCountry.fnUpdateValue" />
+											@blur="onBlur(controls.PROPPAISCNTRYCOUNTRY_, model.ValCountry.value)"
+											@change="model.ValCountry.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -132,15 +132,11 @@
 										v-on="controls.PROPPAISCNTRYACTIVE__.handlers"
 										:loading="controls.PROPPAISCNTRYACTIVE__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.PROPPAISCNTRYACTIVE__.isVisible"
-												id="PROPPAISCNTRYACTIVE__"
-												size="mini"
-												:model-value="model.ValActive.value"
-												:readonly="controls.PROPPAISCNTRYACTIVE__.readonly"
+												v-bind="controls.PROPPAISCNTRYACTIVE__.props"
 												@update:model-value="model.ValActive.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -149,6 +145,7 @@
 									v-show="controls.PROPPAISPSEUDNOVOGR01.isVisible"
 									class="control-join-group">
 									<q-group-collapsible
+										id="PROPPAISPSEUDNOVOGR01"
 										v-bind="controls.PROPPAISPSEUDNOVOGR01"
 										v-on="controls.PROPPAISPSEUDNOVOGR01.handlers">
 										<!-- Start PROPPAISPSEUDNOVOGR01 -->
@@ -162,12 +159,12 @@
 													v-on="controls.PROPPAISCNTRYCODIGONR.handlers"
 													:loading="controls.PROPPAISCNTRYCODIGONR.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PROPPAISCNTRYCODIGONR.props"
 														:model-value="model.ValCodigonr.value"
-														@update:model-value="model.ValCodigonr.fnUpdateValue" />
+														@blur="onBlur(controls.PROPPAISCNTRYCODIGONR, model.ValCodigonr.value)"
+														@change="model.ValCodigonr.fnUpdateValueOnChange" />
 												</base-input-structure>
 											</q-control-wrapper>
 											<q-control-wrapper
@@ -179,12 +176,12 @@
 													v-on="controls.PROPPAISCNTRYALFA2___.handlers"
 													:loading="controls.PROPPAISCNTRYALFA2___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PROPPAISCNTRYALFA2___.props"
 														:model-value="model.ValAlfa2.value"
-														@update:model-value="model.ValAlfa2.fnUpdateValue" />
+														@blur="onBlur(controls.PROPPAISCNTRYALFA2___, model.ValAlfa2.value)"
+														@change="model.ValAlfa2.fnUpdateValueOnChange" />
 												</base-input-structure>
 											</q-control-wrapper>
 											<q-control-wrapper
@@ -196,12 +193,12 @@
 													v-on="controls.PROPPAISCNTRYALFA3___.handlers"
 													:loading="controls.PROPPAISCNTRYALFA3___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PROPPAISCNTRYALFA3___.props"
 														:model-value="model.ValAlfa3.value"
-														@update:model-value="model.ValAlfa3.fnUpdateValue" />
+														@blur="onBlur(controls.PROPPAISCNTRYALFA3___, model.ValAlfa3.value)"
+														@change="model.ValAlfa3.fnUpdateValueOnChange" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -220,8 +217,7 @@
 						<q-table
 							v-show="controls.PROPPAISPSEUDPROPRIED.isVisible"
 							v-bind="controls.PROPPAISPSEUDPROPRIED"
-							v-on="controls.PROPPAISPSEUDPROPRIED.handlers">
-						</q-table>
+							v-on="controls.PROPPAISPSEUDPROPRIED.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PROPPAISPSEUDPROPRIED"
 							v-on="controls.PROPPAISPSEUDPROPRIED.handlers" />
@@ -308,15 +304,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'PROPPAIS',
-						location: 'form-PROPPAIS',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'PROPPAIS',
+					location: 'form-PROPPAIS',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -362,6 +356,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -434,8 +430,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -517,7 +514,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -571,21 +568,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -594,15 +576,11 @@
 						id: 'PROPPAISPSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COUNTRY64133),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -612,16 +590,12 @@
 						id: 'PROPPAISCNTRYCOUNTRY_',
 						name: 'COUNTRY',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESIGNATION_35800),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPPAISPSEUDNOVOGR02',
 						maxLength: 90,
 						labelId: 'label_PROPPAISCNTRYCOUNTRY_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -631,14 +605,10 @@
 						id: 'PROPPAISCNTRYACTIVE__',
 						name: 'ACTIVE',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACTIVE03270),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'PROPPAISPSEUDNOVOGR02',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -646,17 +616,13 @@
 						id: 'PROPPAISPSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COUNTRY_CODE16360),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPPAISPSEUDNOVOGR02',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-PROPPAISPSEUDNOVOGR01',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -666,17 +632,13 @@
 						id: 'PROPPAISCNTRYCODIGONR',
 						name: 'CODIGONR',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMERIC19292),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PROPPAISPSEUDNOVOGR01',
 						container: 'PROPPAISPSEUDNOVOGR01',
 						maxLength: 3,
 						labelId: 'label_PROPPAISCNTRYCODIGONR',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -686,17 +648,13 @@
 						id: 'PROPPAISCNTRYALFA2___',
 						name: 'ALFA2',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ALPHABETIC_2_16300),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PROPPAISPSEUDNOVOGR01',
 						container: 'PROPPAISPSEUDNOVOGR01',
 						maxLength: 2,
 						labelId: 'label_PROPPAISCNTRYALFA2___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -706,17 +664,13 @@
 						id: 'PROPPAISCNTRYALFA3___',
 						name: 'ALFA3',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ALPHABETIC_3_29295),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PROPPAISPSEUDNOVOGR01',
 						container: 'PROPPAISPSEUDNOVOGR01',
 						maxLength: 3,
 						labelId: 'label_PROPPAISCNTRYALFA3___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -724,10 +678,7 @@
 						id: 'PROPPAISPSEUDPROPRIED',
 						name: 'PROPRIED',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PROPERTIES34868),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'CNTRY',
@@ -860,7 +811,7 @@
 								field: 'DTDISPON',
 								label: computed(() => this.Resources.AVAILABILITY56489),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.ImageColumn({
 								order: 14,
@@ -868,8 +819,10 @@
 								area: 'PROPR',
 								field: 'PHOTOGRA',
 								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 15,
@@ -892,7 +845,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -1003,6 +956,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									canExecuteAction: vm.applyChanges,
 									action: vm.openFormAction,
 									type: 'form',
@@ -1017,18 +971,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: PROPRALL
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
 						uuid: 'Proppais_ValPropried',
@@ -1128,7 +1076,7 @@
 						/** The primary key of the CNTRY table */
 						get cntry() { return vm.model.ValCodcntry },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1224,6 +1172,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1263,6 +1219,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1389,6 +1353,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR PROPPAIS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1404,6 +1384,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PROPPAIS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

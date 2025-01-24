@@ -29,6 +29,7 @@
 								b-style="secondary"
 								borderless
 								:title="texts.saveQuery"
+								:disabled="inMaintenance"
 								@click="onOpenSaveModal">
 								<q-icon icon="save" />
 							</q-toggle-dropdown>
@@ -396,6 +397,7 @@
 	import { postData, fetchData } from '@/api/network'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import { useSystemDataStore } from '@/stores/systemData.js'
 
 	import QToggleDropdown from '@/components/QToggleDropdown.vue'
 
@@ -478,7 +480,7 @@
 
 		created()
 		{
-			this.cavContainerOnLoadProc.Add(loadResources(this, ['cav', 'cavArrays']), true)
+			this.cavContainerOnLoadProc.add(loadResources(this, ['cav', 'cavArrays']), true)
 			this.$eventHub.on('set-culture', this.loadUIResources)
 			this.$eventHub.on('add-cav-field', this.addFieldQuery)
 		},
@@ -504,6 +506,14 @@
 
 			this.cavContainerOnLoadProc.destroy()
 			this.cavDataOnLoadProc.destroy()
+		},
+
+		computed: {
+			inMaintenance()
+			{
+				const systemDataStore = useSystemDataStore()
+				return systemDataStore.maintenance.isActive
+			}
 		},
 
 		methods: {
@@ -567,7 +577,7 @@
 			// Fetch the model from the server
 			fetchModel()
 			{
-				this.cavDataOnLoadProc.Add(fetchData('Cav', 'Index', { area: this.area }, this.setModel), true)
+				this.cavDataOnLoadProc.add(fetchData('Cav', 'Index', { area: this.area }, this.setModel), true)
 			},
 
 			updateQuery(totals)
@@ -575,7 +585,7 @@
 				if (!this.cavDataOnLoadProc.loaded)
 					return
 
-				this.cavDataOnLoadProc.Add(
+				this.cavDataOnLoadProc.add(
 					postData('Cav', 'UpdateQuery',
 						{
 							fields: this.model.FieldsSelectedList || null,
@@ -697,7 +707,7 @@
 			onOpenSaveModal()
 			{
 				this.tabContentStayActive = true
-				this.cavDataOnLoadProc.Once(() => this.tabContentStayActive = false, this)
+				this.cavDataOnLoadProc.once(() => this.tabContentStayActive = false, this)
 				this.updateQuery()
 			},
 

@@ -1,67 +1,47 @@
 ﻿<template>
 	<teleport :to="`#q-modal-file-properties-${controlId}-body`">
-		<div class="content">
-			<div class="list-flow properties">
-				<div class="row no-gutters">
-					<div class="col-12">
-						<div class="flow-label">
-							{{ texts.nameLabel }}
-						</div>
+		<div class="q-document__properties">
+			<q-text-field
+				:model-value="fileProperties.name"
+				readonly
+				size="block"
+				:label="texts.nameLabel" />
 
-						<div class="display-as-input input-xlarge">
-							{{ fileProperties.name }}
-						</div>
+			<q-text-field
+				:model-value="fileProperties.size"
+				readonly
+				size="block"
+				:label="texts.sizeLabel" />
 
-						<div class="flow-label">
-							{{ texts.sizeLabel }}
-						</div>
+			<q-text-field
+				:model-value="fileProperties.fileType"
+				readonly
+				size="block"
+				:label="texts.extensionLabel" />
 
-						<div class="display-as-input input-xlarge">
-							{{ fileProperties.size }}
-						</div>
+			<q-text-field
+				:model-value="fileProperties.author"
+				readonly
+				size="block"
+				:label="texts.authorLabel" />
 
-						<div class="flow-label">
-							{{ texts.extensionLabel }}
-						</div>
+			<q-text-field
+				:model-value="fileProperties.createdDate"
+				readonly
+				size="block"
+				:label="texts.createdDateLabel" />
 
-						<div class="display-as-input input-xlarge">
-							{{ fileProperties.extension }}
-						</div>
+			<q-text-field
+				:model-value="fileProperties.version"
+				readonly
+				size="block"
+				:label="texts.currentVersionLabel" />
 
-						<div class="flow-label">
-							{{ texts.authorLabel }}
-						</div>
-
-						<div class="display-as-input input-xlarge">
-							{{ fileProperties.author }}
-						</div>
-
-						<div class="flow-label">
-							{{ texts.createdDateLabel }}
-						</div>
-
-						<div class="display-as-input input-xlarge">
-							{{ fileProperties.createdDate }}
-						</div>
-
-						<div class="flow-label">
-							{{ texts.currentVersionLabel }}
-						</div>
-
-						<div class="display-as-input input-xlarge">
-							{{ fileProperties.currentVersion }}
-						</div>
-
-						<div class="flow-label">
-							{{ texts.editedByLabel }}
-						</div>
-
-						<div class="display-as-input input-xlarge">
-							{{ fileProperties.editor }}
-						</div>
-					</div>
-				</div>
-			</div>
+			<q-text-field
+				:model-value="fileProperties.editor"
+				readonly
+				size="block"
+				:label="texts.editedByLabel" />
 		</div>
 	</teleport>
 
@@ -82,7 +62,9 @@
 	export default {
 		name: 'QDocumentProperties',
 
-		emits: ['hide-popup'],
+		emits: {
+			'hide-popup': () => true
+		},
 
 		inheritAttrs: false,
 

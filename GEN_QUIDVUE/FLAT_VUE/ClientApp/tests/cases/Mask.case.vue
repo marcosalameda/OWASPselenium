@@ -157,9 +157,13 @@
 
 <script>
 	export default {
+		name: 'QMaskContainer',
+
 		docsfile: './docs/inputs/Mask.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{

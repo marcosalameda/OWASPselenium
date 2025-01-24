@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Affinity
 	/// </summary>
-	public class CSGenioAafini : DbArea	{
+	public class CSGenioAafini : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -75,31 +76,33 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID);
-			Qfield.FieldDescription = ">COMOMODOR";
+			Qfield = new Field("codgafin", FieldType.CHAVE_FALSA_GUID);
+			Qfield.FieldDescription = ">AFFINITY GENRE";
 			Qfield.FieldSize =  36;
 			Qfield.Alias = info.Alias;
-			Qfield.CavDesignation = "_COMOMODOR01469";
+			Qfield.CavDesignation = "_AFFINITY_GENRE64973";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("codpess2", FieldType.CHAVE_ESTRANGEIRA_GUID);
-			Qfield.FieldDescription = ">DADATARY";
+			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.Alias = info.Alias;
-			Qfield.CavDesignation = "_DADATARY21139";
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codgafin", FieldType.CHAVE_FALSA_GUID);
-			Qfield.FieldDescription = ">AFFINITY GENRE";
+			Qfield = new Field("codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.Alias = info.Alias;
-			Qfield.CavDesignation = "_AFFINITY_GENRE64973";
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -135,12 +138,12 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(6);
-			info.Pathways.Add("pess1","pess1");
 			info.Pathways.Add("pess2","pess2");
-			info.Pathways.Add("stake","pess1");
+			info.Pathways.Add("pess1","pess1");
+			info.Pathways.Add("stake","pess2");
+			info.Pathways.Add("cmpny","pess2");
+			info.Pathways.Add("cntry","pess2");
 			info.Pathways.Add("cate2","pess1");
-			info.Pathways.Add("cmpny","pess1");
-			info.Pathways.Add("cntry","pess1");
 		}
 
 		/// <summary>
@@ -289,7 +292,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodafini, value); }
 		}
 
-
 		/// <summary>Field : "Beginning" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldIniafini { get { return m_fldIniafini; } }
 		private static FieldRef m_fldIniafini = new FieldRef("afini", "iniafini");
@@ -300,7 +302,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldIniafini); }
 			set { insertNameValueField(FldIniafini, value); }
 		}
-
 
 		/// <summary>Field : "End" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldEndafini { get { return m_fldEndafini; } }
@@ -313,31 +314,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldEndafini, value); }
 		}
 
-
-		/// <summary>Field : ">COMOMODOR" Tipo: "CE" Formula:  ""</summary>
-		public static FieldRef FldCodpess1 { get { return m_fldCodpess1; } }
-		private static FieldRef m_fldCodpess1 = new FieldRef("afini", "codpess1");
-
-		/// <summary>Field : ">COMOMODOR" Tipo: "CE" Formula:  ""</summary>
-		public string ValCodpess1
-		{
-			get { return (string)returnValueField(FldCodpess1); }
-			set { insertNameValueField(FldCodpess1, value); }
-		}
-
-
-		/// <summary>Field : ">DADATARY" Tipo: "CE" Formula:  ""</summary>
-		public static FieldRef FldCodpess2 { get { return m_fldCodpess2; } }
-		private static FieldRef m_fldCodpess2 = new FieldRef("afini", "codpess2");
-
-		/// <summary>Field : ">DADATARY" Tipo: "CE" Formula:  ""</summary>
-		public string ValCodpess2
-		{
-			get { return (string)returnValueField(FldCodpess2); }
-			set { insertNameValueField(FldCodpess2, value); }
-		}
-
-
 		/// <summary>Field : ">AFFINITY GENRE" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldCodgafin { get { return m_fldCodgafin; } }
 		private static FieldRef m_fldCodgafin = new FieldRef("afini", "codgafin");
@@ -349,6 +325,27 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodgafin, value); }
 		}
 
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldCodpess2 { get { return m_fldCodpess2; } }
+		private static FieldRef m_fldCodpess2 = new FieldRef("afini", "codpess2");
+
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public string ValCodpess2
+		{
+			get { return (string)returnValueField(FldCodpess2); }
+			set { insertNameValueField(FldCodpess2, value); }
+		}
+
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldCodpess1 { get { return m_fldCodpess1; } }
+		private static FieldRef m_fldCodpess1 = new FieldRef("afini", "codpess1");
+
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public string ValCodpess1
+		{
+			get { return (string)returnValueField(FldCodpess1); }
+			set { insertNameValueField(FldCodpess1, value); }
+		}
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -391,23 +388,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAafini> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAafini> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAafini>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -456,7 +436,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX AFINI]/

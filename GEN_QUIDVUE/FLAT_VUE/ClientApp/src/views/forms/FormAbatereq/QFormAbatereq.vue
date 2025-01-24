@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,12 +106,11 @@
 							v-on="controls.ABATEREQPSEUDREQTEXT_.handlers"
 							:loading="controls.ABATEREQPSEUDREQTEXT_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-static-text
 								v-if="controls.ABATEREQPSEUDREQTEXT_.isVisible"
 								id="ABATEREQPSEUDREQTEXT_"
-								size="xxlarge"
+								:size="controls.ABATEREQPSEUDREQTEXT_.size"
 								:text="controls.ABATEREQPSEUDREQTEXT_.label" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -126,12 +125,10 @@
 							v-on="controls.ABATEREQDECOMDECOMNR_.handlers"
 							:loading="controls.ABATEREQDECOMDECOMNR_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.ABATEREQDECOMDECOMNR_.isVisible"
-								v-bind="controls.ABATEREQDECOMDECOMNR_"
-								:model-value="model.ValDecomnr.value"
+								v-bind="controls.ABATEREQDECOMDECOMNR_.props"
 								@update:model-value="model.ValDecomnr.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -141,6 +138,7 @@
 						v-show="controls.ABATEREQPSEUDCOLLAPSE.isVisible"
 						class="control-join-group">
 						<q-group-collapsible
+							id="ABATEREQPSEUDCOLLAPSE"
 							v-bind="controls.ABATEREQPSEUDCOLLAPSE"
 							v-on="controls.ABATEREQPSEUDCOLLAPSE.handlers">
 							<!-- Start ABATEREQPSEUDCOLLAPSE -->
@@ -154,18 +152,14 @@
 										v-on="controls.ABATEREQDECOMNOTE____.handlers"
 										:loading="controls.ABATEREQDECOMNOTE____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-textarea-input
 											v-if="controls.ABATEREQDECOMNOTE____.isVisible"
+											v-bind="controls.ABATEREQDECOMNOTE____.props"
 											id="ABATEREQDECOMNOTE____"
-											size="large"
 											:model-value="model.ValNote.value"
 											:rows="3"
 											:cols="30"
-											:is-required="controls.ABATEREQDECOMNOTE____.isRequired"
-											:readonly="controls.ABATEREQDECOMNOTE____.readonly"
-											:placeholder="controls.ABATEREQDECOMNOTE____.placeholder"
 											@update:model-value="model.ValNote.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -179,17 +173,17 @@
 						v-show="controls.ABATEREQPSEUDABATETAB.isVisible"
 						class="control-join-group">
 						<q-tab-container
-							id="tabs_ABATEREQ"
-							align-tabs="left"
-							:tabs-list="controls.formTabs.tabsList"
-							:selected-tab="controls.formTabs.selectedTab"
-							:is-visible="controls.formTabs.isVisible"
-							@tab-changed="controls.formTabs.SelectTab($event)">
+							id="q-tabs-ABATEREQ"
+							v-bind="controls.formTabs.props"
+							@tab-changed="controls.formTabs.selectTab($event)">
 							<template #tab-panel>
 								<section
 									v-if="controls.ABATEREQPSEUDABATETAB.isVisible"
 									v-show="controls.formTabs.selectedTab === 'ABATEREQPSEUDABATETAB'">
-									<div id="ABATEREQPSEUDABATETAB">
+									<div
+										id="ABATEREQPSEUDABATETAB"
+										role="tabpanel"
+										aria-labelledby="tab-container-ABATEREQPSEUDABATETAB">
 										<q-row-container v-show="controls.ABATETABDECOMDTDECO__.isVisible">
 											<q-control-wrapper
 												v-show="controls.ABATETABDECOMDTDECO__.isVisible"
@@ -200,14 +194,13 @@
 													v-on="controls.ABATETABDECOMDTDECO__.handlers"
 													:loading="controls.ABATETABDECOMDTDECO__.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
-													<q-datetime-input
+													:suggestion-mode-on="suggestionModeOn">
+													<q-date-time-picker
 														v-if="controls.ABATETABDECOMDTDECO__.isVisible"
-														v-bind="controls.ABATETABDECOMDTDECO__"
-														format="DateTime"
+														v-bind="controls.ABATETABDECOMDTDECO__.props"
 														:model-value="model.ValDtdeco.value"
-														@update:model-value="model.ValDtdeco.fnUpdateValue" />
+														@reset-icon-click="model.ValDtdeco.fnUpdateValue(model.ValDtdeco.originalValue ?? new Date())"
+														@update:model-value="model.ValDtdeco.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -298,15 +291,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'ABATEREQ',
-						location: 'form-ABATEREQ',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'ABATEREQ',
+					location: 'form-ABATEREQ',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -352,6 +343,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -424,8 +417,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -507,7 +501,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -561,21 +555,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -586,28 +565,22 @@
 						size: 'xxlarge',
 						hasLabel: false,
 						label: computed(() => this.Resources.AT_REQUIRED65277),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						controlLimits: [
 						],
 					}, this),
 					ABATEREQDECOMDECOMNR_: new fieldControlClass.NumberControl({
 						modelField: 'ValDecomnr',
 						valueChangeEvent: 'fieldChange:decom.decomnr',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'ABATEREQDECOMDECOMNR_',
 						name: 'DECOMNR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMBER35625),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 10,
+						maxDecimals: 0,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -618,16 +591,11 @@
 						id: 'ABATEREQDECOMNOTE____',
 						name: 'NOTE',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.NOTES05274),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ABATEREQPSEUDCOLLAPSE',
 						container: 'ABATEREQPSEUDCOLLAPSE',
-						maxLength: 85,
-						labelId: 'label_ABATEREQDECOMNOTE____',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -636,12 +604,9 @@
 						id: 'ABATEREQPSEUDCOLLAPSE',
 						name: 'COLLAPSE',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.COLLAPSIBLE33154),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-ABATEREQPSEUDCOLLAPSE',
@@ -653,12 +618,9 @@
 						id: 'ABATEREQPSEUDABATETAB',
 						name: 'ABATETAB',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TAB41839),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						openingEvent: 'opened-ABATEREQPSEUDABATETAB',
 						mustBeFilled: true,
 						controlLimits: [
@@ -670,14 +632,12 @@
 						id: 'ABATETABDECOMDTDECO__',
 						name: 'DTDECO',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.DECOMISSION14486),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ABATEREQPSEUDABATETAB',
 						tab: 'ABATEREQPSEUDABATETAB',
+						format: 'dateTime',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -723,7 +683,7 @@
 						/** The primary key of the DECOM table */
 						get decom() { return vm.model.ValCoddeco },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -819,6 +779,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -858,6 +826,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -984,6 +960,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR ABATEREQ]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -999,6 +991,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS ABATEREQ]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

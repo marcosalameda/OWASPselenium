@@ -43,45 +43,45 @@ namespace CSGenio.persistence
         /// </summary>
         /// <param name="valor">O objecto de base de dados</param>
         /// <returns>A objecto convertido to o tipo interno</returns>
-        public static double ToNumeric(object Qvalue)
+        public static decimal ToNumeric(object Qvalue)
         {
             if (Qvalue == null || Qvalue == DBNull.Value)
-                return 0.0;
+                return 0;
             if (Qvalue is double)
-                return (double)Qvalue;
+                return (decimal)((double)Qvalue);
             if (Qvalue is float)
-                return decimal.ToDouble(Convert.ToDecimal(Qvalue));
+                return Convert.ToDecimal(Qvalue);
             if (Qvalue is byte)
-                return (double)((byte)Qvalue);
+                return (decimal)((byte)Qvalue);
             if (Qvalue is short)
-                return (double)((short)Qvalue);
+                return (decimal)((short)Qvalue);
             if (Qvalue is int)
-                return (double)((int)Qvalue);
+                return (decimal)((int)Qvalue);
             if (Qvalue is long)
-                return (double)((long)Qvalue);
+                return (decimal)((long)Qvalue);
             if (Qvalue is decimal)
-                return decimal.ToDouble((decimal)Qvalue);
+                return (decimal)Qvalue;
             if (Qvalue is string)
             {
                 if (Qvalue.Equals(""))
-                    return 0.0;
+                    return 0;
 
-                double temp = 0.0;
-                if (!double.TryParse(Qvalue.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out temp) &&
-                    !double.TryParse(Qvalue.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out temp))
-                    return 0.0;
+                decimal temp = 0;
+                if (!decimal.TryParse(Qvalue.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out temp) &&
+                    !decimal.TryParse(Qvalue.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out temp))
+                    return 0;
                 else
                     return temp;
             }
 
-            return 0.0;
+            return 0;
         }
         /// <summary>
         /// Converte um numérico to um objecto de base de dados
         /// </summary>
         /// <param name="valor">O Qvalue interno</param>
         /// <returns>O Qvalue interno convertido to base de dados</returns>
-        public static string FromNumeric(double Qvalue)
+        public static string FromNumeric(decimal Qvalue)
         {
             return Qvalue.ToString().Replace(',', '.');
         }
@@ -149,15 +149,11 @@ namespace CSGenio.persistence
             string dataString;
             switch (link)
             {
-                case DatabaseType.ACCESS:
-                    dataString = "#" + data.Month + "/" + data.Day + "/" + data.Year + "#";
-                    break;
                 case DatabaseType.ORACLE:
                     dataString = "TO_DATE('" + data.Year + "/" + data.Month + "/" + data.Day + " " + data.Hour + ":" + data.Minute + ":" + data.Second + "', 'YYYY/MM/DD hh24:mi:ss')";
                     break;
-                case DatabaseType.SQLSERVER2000:
-                case DatabaseType.SQLSERVER2005:
-				case DatabaseType.SQLSERVER2008:
+                case DatabaseType.SQLSERVER:
+                case DatabaseType.SQLSERVERCOMPAT:
                     dataString = "convert(datetime, '" + data.Day + "/" + data.Month + "/" + data.Year + " " + data.ToLongTimeString() + "', 103)";
                     break;
                 default:
@@ -284,7 +280,7 @@ namespace CSGenio.persistence
                 return new EncryptedDataType();
             else
                 return new EncryptedDataType(value, null);
-        }   
+        }
 
         /// <summary>
         /// Converte uma binário to um objecto de base de dados
@@ -429,7 +425,7 @@ namespace CSGenio.persistence
                     case FieldFormatting.LOGICO:
                         return FromLogic((int)Qvalue);
                     case FieldFormatting.FLOAT:
-                        return FromNumeric((double)Qvalue);
+                        return FromNumeric((decimal)Qvalue);
                     case FieldFormatting.DATAHORA:
                     case FieldFormatting.DATA:
                     case FieldFormatting.DATASEGUNDO:

@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Flds
 {
-	public class Campo_ViewModel : FormViewModel<Models.Flds>
+	public class Campo_ViewModel : FormViewModel<Models.Flds>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,144 +29,135 @@ namespace GenioMVC.ViewModels.Flds
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Airline" | Type: "CE"
+		/// </summary>
+		public string ValCodaero { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodequip { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Airline" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Aero> TableAeroName { get; set; }
-
 		/// <summary>
 		/// Title: "Description" | Type: "MO"
 		/// </summary>
 		public string ValDescrip { get; set; }
-
 		/// <summary>
 		/// Title: "Passenger capacity on the plane" | Type: "N"
 		/// </summary>
 		public decimal? ValNpassage { get; set; }
-
 		/// <summary>
 		/// Title: "Trip Duration" | Type: "ND"
 		/// </summary>
 		public decimal? ValDuration { get; set; }
-
 		/// <summary>
 		/// Title: "Rounded Ticket Price" | Type: "$"
 		/// </summary>
 		public decimal? ValPrice { get; set; }
-
 		/// <summary>
 		/// Title: "Ticket price at tenths" | Type: "$D"
 		/// </summary>
 		public decimal? ValPrecobil { get; set; }
-
 		/// <summary>
 		/// Title: "Departure date (DD/MM/YEAR)" | Type: "D"
 		/// </summary>
 		public DateTime? ValDate { get; set; }
-
 		/// <summary>
 		/// Title: "Departure date (hour)" | Type: "DT"
 		/// </summary>
 		public DateTime? ValDatetime { get; set; }
-
 		/// <summary>
 		/// Title: "Departure date (seconds)" | Type: "DS"
 		/// </summary>
 		public DateTime? ValDateseco { get; set; }
-
 		/// <summary>
 		/// Title: "Departure hour" | Type: "T"
 		/// </summary>
 		public string ValTime { get; set; }
-
 		/// <summary>
 		/// Title: "Creation year of the airport" | Type: "N"
 		/// </summary>
 		public decimal? ValYear { get; set; }
-
 		/// <summary>
 		/// Title: "1ªViagem" | Type: "L"
 		/// </summary>
 		public bool ValPrimviag { get; set; }
-
 		/// <summary>
 		/// Title: "Have you traveled before?" | Type: "IF"
 		/// </summary>
-		public double ValConditio { get; set; }
-
+		public decimal ValConditio { get; set; }
 		/// <summary>
 		/// Title: "Class (Enumeração de Texto)" | Type: "AC"
 		/// </summary>
 		public string ValClass { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValClass { get; set; }
-
 		/// <summary>
 		/// Title: "Classe (Enumeração Numérica)" | Type: "AN"
 		/// </summary>
-		public double ValClassnum { get; set; }
-
+		public decimal ValClassnum { get; set; }
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValClassnum { get; set; }
-
 		/// <summary>
 		/// Title: "1st trip (Logical Enumeration)" | Type: "AL"
 		/// </summary>
 		public int ValLogicenu { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValLogicenu { get; set; }
-
 		/// <summary>
 		/// Title: "Logo" | Type: "IJ"
 		/// </summary>
 		[ImageThumbnailJsonConverter(100, 50)]
-		public GenioMVC.ViewModels.ImageModel ValLogo { get; set; }
-
+		public GenioMVC.Models.ImageModel ValLogo { get; set; }
 		/// <summary>
 		/// Title: "Attachments" | Type: "IB"
 		/// </summary>
-		[Document("ValAttach", false, true, false, false, DocumentViewTypeMode.Print)]
+		[Document("ValAttach", true, false, false, DocumentViewTypeMode.Print)]
 		public string ValAttach { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public string ValAttachfk { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public DocumsProperties_ViewModel ValAttachPropertiesVM { get; set; }
-
 		/// <summary>
 		/// Title: "Created by" | Type: "ON"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValCreatuse { get; set; }
-
 		/// <summary>
 		/// Title: "Creation Date (DD/MM/YY)" | Type: "OD"
 		/// </summary>
+		[ValidateSetAccess]
 		public DateTime? ValCreatdat { get; set; }
-
 		/// <summary>
 		/// Title: "Creation Date" | Type: "OT"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValCreathou { get; set; }
-
 		/// <summary>
 		/// Title: "Complete Creation Date" | Type: "OI"
 		/// </summary>
+		[ValidateSetAccess]
 		public DateTime? ValCreatins { get; set; }
 
 		#region Navigations
@@ -178,20 +169,6 @@ namespace GenioMVC.ViewModels.Flds
 
 		#endregion
 
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Airline" | Type: "CE"
-		/// </summary>
-		public string ValCodaero { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodequip { get; set; }
-		#endregion
-
 		#region Extra database fields
 
 
@@ -200,14 +177,23 @@ namespace GenioMVC.ViewModels.Flds
 
 		#region Fields for formulas
 
+		// Field for formula
+		/// <summary>Field: "Enforce table conditions" Tipo: "L"</summary>
+		[ValidateSetAccess]
+		public bool ValTblcond { get; set; }
+		// Field for formula
+		/// <summary>Field: "Field state" Tipo: "AC"</summary>
+		[ValidateSetAccess]
+		public string ValCond { get; set; }
 
 		#endregion
 
 		public string ValCodflds { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Campo_ViewModel() : base(null!) { }
@@ -243,6 +229,15 @@ namespace GenioMVC.ViewModels.Flds
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Flds model = new Models.Flds(userContext) { Identifier = "FCAMPO" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FCAMPO");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -303,6 +298,8 @@ namespace GenioMVC.ViewModels.Flds
 
 			try
 			{
+				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 				ValDescrip = ViewModelConversion.ToString(m.ValDescrip);
 				ValNpassage = ViewModelConversion.ToNumeric(m.ValNpassage);
 				ValDuration = ViewModelConversion.ToNumeric(m.ValDuration);
@@ -314,9 +311,9 @@ namespace GenioMVC.ViewModels.Flds
 				ValTime = ViewModelConversion.ToString(m.ValTime);
 				ValYear = ViewModelConversion.ToNumeric(m.ValYear);
 				ValPrimviag = ViewModelConversion.ToLogic(m.ValPrimviag);
-				ValConditio = ViewModelConversion.ToDouble(m.ValConditio);
+				ValConditio = ViewModelConversion.ToNumeric(m.ValConditio);
 				ValClass = ViewModelConversion.ToString(m.ValClass);
-				ValClassnum = ViewModelConversion.ToDouble(m.ValClassnum);
+				ValClassnum = ViewModelConversion.ToNumeric(m.ValClassnum);
 				ValLogicenu = ViewModelConversion.ToInteger(m.ValLogicenu);
 				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
 				ValAttach = ViewModelConversion.ToString(m.ValAttach);
@@ -325,8 +322,8 @@ namespace GenioMVC.ViewModels.Flds
 				ValCreatdat = ViewModelConversion.ToDateTime(m.ValCreatdat);
 				ValCreathou = ViewModelConversion.ToString(m.ValCreathou);
 				ValCreatins = ViewModelConversion.ToDateTime(m.ValCreatins);
-				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
-				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValTblcond = ViewModelConversion.ToLogic(m.ValTblcond);
+				ValCond = ViewModelConversion.ToString(m.ValCond);
 				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
 			}
 			catch (Exception)
@@ -336,6 +333,20 @@ namespace GenioMVC.ViewModels.Flds
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Flds m)
 		{
 			if (m == null)
@@ -346,6 +357,7 @@ namespace GenioMVC.ViewModels.Flds
 
 			try
 			{
+				m.ValCodaero = ViewModelConversion.ToString(ValCodaero);
 				m.ValDescrip = ViewModelConversion.ToString(ValDescrip);
 				m.ValNpassage = ViewModelConversion.ToNumeric(ValNpassage);
 				m.ValDuration = ViewModelConversion.ToNumeric(ValDuration);
@@ -357,30 +369,135 @@ namespace GenioMVC.ViewModels.Flds
 				m.ValTime = ViewModelConversion.ToString(ValTime);
 				m.ValYear = ViewModelConversion.ToNumeric(ValYear);
 				m.ValPrimviag = ViewModelConversion.ToLogic(ValPrimviag);
-				m.ValConditio = ViewModelConversion.ToDouble(ValConditio);
+				m.ValConditio = ViewModelConversion.ToNumeric(ValConditio);
 				m.ValClass = ViewModelConversion.ToString(ValClass);
-				m.ValClassnum = ViewModelConversion.ToDouble(ValClassnum);
+				m.ValClassnum = ViewModelConversion.ToNumeric(ValClassnum);
 				m.ValLogicenu = ViewModelConversion.ToInteger(ValLogicenu);
-				m.ValLogo = ViewModelConversion.ToImage(ValLogo);
+				if (ValLogo == null || !ValLogo.IsThumbnail)
+					m.ValLogo = ViewModelConversion.ToImage(ValLogo);
 				m.ValAttach = ViewModelConversion.ToString(ValAttach);
 				m.ValAttachfk = ViewModelConversion.ToString(ValAttachfk);
+				m.ValCodflds = ViewModelConversion.ToString(ValCodflds);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
 				m.ValCreatuse = ViewModelConversion.ToString(ValCreatuse);
 				m.ValCreatdat = ViewModelConversion.ToDateTime(ValCreatdat);
 				m.ValCreathou = ViewModelConversion.ToString(ValCreathou);
 				m.ValCreatins = ViewModelConversion.ToDateTime(ValCreatins);
-				m.ValCodaero = ViewModelConversion.ToString(ValCodaero);
-				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
-				m.ValCodflds = ViewModelConversion.ToString(ValCodflds);
+				m.ValTblcond = ViewModelConversion.ToLogic(ValTblcond);
+				m.ValCond = ViewModelConversion.ToString(ValCond);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Campo) to Model (Flds) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Campo) to Model (Flds) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "flds.codaero":
+						this.ValCodaero = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.descrip":
+						this.ValDescrip = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.npassage":
+						this.ValNpassage = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "flds.duration":
+						this.ValDuration = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "flds.price":
+						this.ValPrice = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "flds.precobil":
+						this.ValPrecobil = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "flds.date":
+						this.ValDate = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "flds.datetime":
+						this.ValDatetime = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "flds.dateseco":
+						this.ValDateseco = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "flds.time":
+						this.ValTime = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.year":
+						this.ValYear = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "flds.primviag":
+						this.ValPrimviag = ViewModelConversion.ToLogic(_value);
+						break;
+					case "flds.conditio":
+						this.ValConditio = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "flds.class":
+						this.ValClass = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.classnum":
+						this.ValClassnum = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "flds.logicenu":
+						this.ValLogicenu = ViewModelConversion.ToInteger(_value);
+						break;
+					case "flds.logo":
+						this.ValLogo = ViewModelConversion.ToImage(_value);
+						break;
+					case "flds.attach":
+						this.ValAttach = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.codflds":
+						this.ValCodflds = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Campo) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Campo)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Flds.Find(id ?? Navigation.GetStrValue("flds"), m_userContext, "FCAMPO"); }
+			finally { Model ??= new Models.Flds(m_userContext) { Identifier = "FCAMPO" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -394,20 +511,13 @@ namespace GenioMVC.ViewModels.Flds
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FCAMPO";
@@ -417,6 +527,7 @@ namespace GenioMVC.ViewModels.Flds
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -487,25 +598,19 @@ namespace GenioMVC.ViewModels.Flds
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE CAMPO]/
 		public override void Save()
 		{
 
-			try { Model = Models.Flds.Find(Navigation.GetStrValue("flds"), m_userContext, "FCAMPO"); }
-			finally { if (Model == null) Model = new Models.Flds(m_userContext) { Identifier = "FCAMPO" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY CAMPO]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Flds.Find(Navigation.GetStrValue("flds"), m_userContext, "FCAMPO"); }
-			finally { if (Model == null) Model = new Models.Flds(m_userContext) { Identifier = "FCAMPO" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE CAMPO]/
 
@@ -538,8 +643,8 @@ namespace GenioMVC.ViewModels.Flds
 				object hValue = Navigation.GetValue("aero", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					campo___aero_name____Conds.Equal(CSGenioAaero.FldCodaero, Navigation.GetValue("aero"));
-					this.ValCodaero = Navigation.GetStrValue("aero");
+					campo___aero_name____Conds.Equal(CSGenioAaero.FldCodaero, hValue);
+					this.ValCodaero = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -556,8 +661,6 @@ namespace GenioMVC.ViewModels.Flds
 					Navigation.CurrentLevel.SetEntry("RETURN_aero", null);
 				}
 				FillDependant_CampoTableAeroName(lazyLoad);
-				//Check if foreignkey comes from history
-				TableAeroName.FilledByHistory = Navigation.CheckFilledByHistory("aero");
 				return;
 			}
 
@@ -625,9 +728,6 @@ namespace GenioMVC.ViewModels.Flds
 
 				TableAeroName.List = new SelectList(TableAeroName.Elements.ToSelectList(x => x.ValName, x => x.ValCodaero,  x => x.ValCodaero == this.ValCodaero), "Value", "Text", this.ValCodaero);
 				FillDependant_CampoTableAeroName();
-
-				//Check if foreignkey comes from history
-				TableAeroName.FilledByHistory = Navigation.CheckFilledByHistory("aero");
 			}
 		}
 
@@ -724,6 +824,8 @@ namespace GenioMVC.ViewModels.Flds
 		{
 			return identifier switch
 			{
+				"flds.codaero" => ViewModelConversion.ToString(modelValue),
+				"flds.codequip" => ViewModelConversion.ToString(modelValue),
 				"flds.descrip" => ViewModelConversion.ToString(modelValue),
 				"flds.npassage" => ViewModelConversion.ToNumeric(modelValue),
 				"flds.duration" => ViewModelConversion.ToNumeric(modelValue),
@@ -735,9 +837,9 @@ namespace GenioMVC.ViewModels.Flds
 				"flds.time" => ViewModelConversion.ToString(modelValue),
 				"flds.year" => ViewModelConversion.ToNumeric(modelValue),
 				"flds.primviag" => ViewModelConversion.ToLogic(modelValue),
-				"flds.conditio" => ViewModelConversion.ToDouble(modelValue),
+				"flds.conditio" => ViewModelConversion.ToNumeric(modelValue),
 				"flds.class" => ViewModelConversion.ToString(modelValue),
-				"flds.classnum" => ViewModelConversion.ToDouble(modelValue),
+				"flds.classnum" => ViewModelConversion.ToNumeric(modelValue),
 				"flds.logicenu" => ViewModelConversion.ToInteger(modelValue),
 				"flds.logo" => ViewModelConversion.ToImage(modelValue),
 				"flds.attach" => ViewModelConversion.ToString(modelValue),
@@ -745,13 +847,21 @@ namespace GenioMVC.ViewModels.Flds
 				"flds.creatdat" => ViewModelConversion.ToDateTime(modelValue),
 				"flds.creathou" => ViewModelConversion.ToString(modelValue),
 				"flds.creatins" => ViewModelConversion.ToDateTime(modelValue),
-				"flds.codaero" => ViewModelConversion.ToString(modelValue),
-				"flds.codequip" => ViewModelConversion.ToString(modelValue),
+				"flds.tblcond" => ViewModelConversion.ToLogic(modelValue),
+				"flds.cond" => ViewModelConversion.ToString(modelValue),
 				"flds.codflds" => ViewModelConversion.ToString(modelValue),
 				"aero.codaero" => ViewModelConversion.ToString(modelValue),
 				"aero.name" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
+		}
+
+
+		/// <inheritdoc/>
+		protected override void SetTicketToImageFields()
+		{
+			if (ValLogo != null)
+				ValLogo.Ticket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaFLDS, CSGenioAflds.FldLogo.Field, null, ValCodflds);
 		}
 
 		#region Charts

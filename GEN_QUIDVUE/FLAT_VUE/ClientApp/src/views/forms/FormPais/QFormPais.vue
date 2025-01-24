@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -115,12 +115,12 @@
 										v-on="controls.PAIS____CNTRYCOUNTRY_.handlers"
 										:loading="controls.PAIS____CNTRYCOUNTRY_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PAIS____CNTRYCOUNTRY_.props"
 											:model-value="model.ValCountry.value"
-											@update:model-value="model.ValCountry.fnUpdateValue" />
+											@blur="onBlur(controls.PAIS____CNTRYCOUNTRY_, model.ValCountry.value)"
+											@change="model.ValCountry.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -132,15 +132,11 @@
 										v-on="controls.PAIS____CNTRYACTIVE__.handlers"
 										:loading="controls.PAIS____CNTRYACTIVE__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.PAIS____CNTRYACTIVE__.isVisible"
-												id="PAIS____CNTRYACTIVE__"
-												size="mini"
-												:model-value="model.ValActive.value"
-												:readonly="controls.PAIS____CNTRYACTIVE__.readonly"
+												v-bind="controls.PAIS____CNTRYACTIVE__.props"
 												@update:model-value="model.ValActive.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -167,12 +163,12 @@
 													v-on="controls.PAIS____CNTRYCODIGONR.handlers"
 													:loading="controls.PAIS____CNTRYCODIGONR.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PAIS____CNTRYCODIGONR.props"
 														:model-value="model.ValCodigonr.value"
-														@update:model-value="model.ValCodigonr.fnUpdateValue" />
+														@blur="onBlur(controls.PAIS____CNTRYCODIGONR, model.ValCodigonr.value)"
+														@change="model.ValCodigonr.fnUpdateValueOnChange" />
 												</base-input-structure>
 											</q-control-wrapper>
 											<q-control-wrapper
@@ -184,12 +180,12 @@
 													v-on="controls.PAIS____CNTRYALFA2___.handlers"
 													:loading="controls.PAIS____CNTRYALFA2___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PAIS____CNTRYALFA2___.props"
 														:model-value="model.ValAlfa2.value"
-														@update:model-value="model.ValAlfa2.fnUpdateValue" />
+														@blur="onBlur(controls.PAIS____CNTRYALFA2___, model.ValAlfa2.value)"
+														@change="model.ValAlfa2.fnUpdateValueOnChange" />
 												</base-input-structure>
 											</q-control-wrapper>
 											<q-control-wrapper
@@ -201,12 +197,12 @@
 													v-on="controls.PAIS____CNTRYALFA3___.handlers"
 													:loading="controls.PAIS____CNTRYALFA3___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PAIS____CNTRYALFA3___.props"
 														:model-value="model.ValAlfa3.value"
-														@update:model-value="model.ValAlfa3.fnUpdateValue" />
+														@blur="onBlur(controls.PAIS____CNTRYALFA3___, model.ValAlfa3.value)"
+														@change="model.ValAlfa3.fnUpdateValueOnChange" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -222,8 +218,7 @@
 										v-on="controls.PAIS____CNTRYFLAG____.handlers"
 										:loading="controls.PAIS____CNTRYFLAG____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-image
 											v-if="controls.PAIS____CNTRYFLAG____.isVisible"
 											v-bind="controls.PAIS____CNTRYFLAG____.props"
@@ -240,6 +235,7 @@
 						v-show="controls.PAIS____PSEUDIMOVEL__.isVisible"
 						class="control-join-group">
 						<q-form-container
+							:ref="controls.PAIS____PSEUDIMOVEL__.id"
 							v-bind="controls.PAIS____PSEUDIMOVEL__"
 							v-on="controls.PAIS____PSEUDIMOVEL__.handlers" />
 					</q-control-wrapper>
@@ -271,8 +267,7 @@
 												<q-table
 													v-show="controls.PAIS____PSEUDPROPRIE1.isVisible"
 													v-bind="controls.PAIS____PSEUDPROPRIE1"
-													v-on="controls.PAIS____PSEUDPROPRIE1.handlers">
-												</q-table>
+													v-on="controls.PAIS____PSEUDPROPRIE1.handlers" />
 												<q-table-extra-extension
 													:list-ctrl="controls.PAIS____PSEUDPROPRIE1"
 													v-on="controls.PAIS____PSEUDPROPRIE1.handlers" />
@@ -293,8 +288,7 @@
 						<q-table
 							v-show="controls.PAIS____PSEUDPROPRIED.isVisible"
 							v-bind="controls.PAIS____PSEUDPROPRIED"
-							v-on="controls.PAIS____PSEUDPROPRIED.handlers">
-						</q-table>
+							v-on="controls.PAIS____PSEUDPROPRIED.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PAIS____PSEUDPROPRIED"
 							v-on="controls.PAIS____PSEUDPROPRIED.handlers" />
@@ -381,15 +375,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'PAIS',
-						location: 'form-PAIS',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'PAIS',
+					location: 'form-PAIS',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -435,6 +427,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -507,8 +501,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -590,7 +585,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -644,21 +639,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -667,15 +647,11 @@
 						id: 'PAIS____PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COUNTRY64133),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -685,16 +661,12 @@
 						id: 'PAIS____CNTRYCOUNTRY_',
 						name: 'COUNTRY',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESIGNATION_35800),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR02',
 						maxLength: 90,
 						labelId: 'label_PAIS____CNTRYCOUNTRY_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -704,14 +676,10 @@
 						id: 'PAIS____CNTRYACTIVE__',
 						name: 'ACTIVE',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACTIVE03270),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'PAIS____PSEUDNOVOGR02',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -719,16 +687,12 @@
 						id: 'PAIS____PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.COUNTRY_CODE16360),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR02',
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -738,16 +702,12 @@
 						id: 'PAIS____CNTRYCODIGONR',
 						name: 'CODIGONR',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMERIC19292),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR01',
 						maxLength: 3,
 						labelId: 'label_PAIS____CNTRYCODIGONR',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -757,16 +717,12 @@
 						id: 'PAIS____CNTRYALFA2___',
 						name: 'ALFA2',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ALPHABETIC_2_16300),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR01',
 						maxLength: 2,
 						labelId: 'label_PAIS____CNTRYALFA2___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -776,16 +732,12 @@
 						id: 'PAIS____CNTRYALFA3___',
 						name: 'ALFA3',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ALPHABETIC_3_29295),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR01',
 						maxLength: 3,
 						labelId: 'label_PAIS____CNTRYALFA3___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -795,16 +747,13 @@
 						id: 'PAIS____CNTRYFLAG____',
 						name: 'FLAG',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.BANDEIRA32255),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR02',
 						height: 50,
 						width: 100,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.BANDEIRA32255)),
 						controlLimits: [
 						],
 					}, this),
@@ -812,15 +761,9 @@
 						id: 'PAIS____PSEUDIMOVEL__',
 						name: 'IMOVEL',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.REAL_ESTATE15399),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
-						controlLimits: [
-						],
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						targetTableListId: 'PAIS____PSEUDPROPRIE1',
 						supportForm: {
 							name: 'PROPR00',
@@ -830,20 +773,18 @@
 						},
 						allowFormActions: {
 						},
+						controlLimits: [
+						],
 					}, this),
 					PAIS____PSEUDNOVOGR04: new fieldControlClass.GroupControl({
 						id: 'PAIS____PSEUDNOVOGR04',
 						name: 'NOVOGR04',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: '',
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -851,27 +792,20 @@
 						id: 'PAIS____PSEUDNOVOGR03',
 						name: 'NOVOGR03',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: '',
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR04',
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					PAIS____PSEUDPROPRIE1: new fieldControlClass.TableListControl({
 						id: 'PAIS____PSEUDPROPRIE1',
 						name: 'PROPRIE1',
-						size: 'xlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.REAL_ESTATE_LIST36497),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR03',
@@ -913,7 +847,7 @@
 							rowClickActionInternal: 'selectSingle',
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -1019,6 +953,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'PROPR00',
@@ -1032,18 +967,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: PROPR00
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValName',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
 						uuid: 'Pais_ValProprie1',
@@ -1060,11 +989,8 @@
 					PAIS____PSEUDPROPRIED: new fieldControlClass.TableListControl({
 						id: 'PAIS____PSEUDPROPRIED',
 						name: 'PROPRIED',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.REAL_STATE_MAP58776),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'CNTRY',
@@ -1171,7 +1097,7 @@
 								field: 'DTDISPON',
 								label: computed(() => this.Resources.AVAILABLE_FROM53703),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.ImageColumn({
 								order: 12,
@@ -1179,8 +1105,10 @@
 								area: 'PROPR',
 								field: 'PHOTOGRA',
 								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 13,
@@ -1199,6 +1127,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
+								searchable: false,
 							}),
 						],
 						config: {
@@ -1213,7 +1142,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -1319,6 +1248,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'PROPR00',
@@ -1332,18 +1262,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: PROPR00
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
 						uuid: 'Pais_ValPropried',
@@ -1403,7 +1327,7 @@
 						/** The primary key of the CNTRY table */
 						get cntry() { return vm.model.ValCodcntry },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1499,6 +1423,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1538,6 +1470,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1664,6 +1604,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR PAIS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1679,6 +1635,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PAIS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

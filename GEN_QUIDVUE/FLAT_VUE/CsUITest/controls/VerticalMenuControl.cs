@@ -1,3 +1,5 @@
+using AngleSharp.Text;
+
 namespace quidgest.uitests.controls;
 
 public class VerticalMenuControl: PageObject, IMenuControl {
@@ -74,5 +76,26 @@ public class VerticalMenuControl: PageObject, IMenuControl {
         var item = bookmarks.FindElement(ByData.Key(itemId));
         wait.Until(c => item.Displayed);
         item.Click();
+    }
+
+    public int GetMenuCount(string moduleId, string itemId)
+    {
+        WaitForLoading();
+
+        // Get menu item element
+        var menuNode = menus.FindElement(By.Id(moduleId + itemId));
+
+        // Get record counter element
+        IWebElement counterElem = menuNode
+            ?.FindElement(By.CssSelector("a"))
+            ?.FindElement(By.CssSelector("p"))
+            ?.FindElement(By.CssSelector("span"))
+            ?.FindElement(By.CssSelector("span"));
+
+        // Get record counter element text
+        string counterElemText = counterElem?.GetDomProperty("innerText");
+
+        // Convert to integer
+        return counterElemText == null ? 0 : counterElemText.ToInteger(0);
     }
 }

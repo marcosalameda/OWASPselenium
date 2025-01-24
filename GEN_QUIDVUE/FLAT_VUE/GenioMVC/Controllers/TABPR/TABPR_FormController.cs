@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Tabpr;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_TABPR_CANCEL = new NavigationLocation("TABLE_PRICE14309", "Tabpr_Cancel", "Tabpr") { vueRouteName = "form-TABPR", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_TABPR_SHOW = new NavigationLocation("TABLE_PRICE14309", "Tabpr_Show", "Tabpr") { vueRouteName = "form-TABPR", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_TABPR_NEW = new NavigationLocation("TABLE_PRICE14309", "Tabpr_New", "Tabpr") { vueRouteName = "form-TABPR", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_TABPR_EDIT = new NavigationLocation("TABLE_PRICE14309", "Tabpr_Edit", "Tabpr") { vueRouteName = "form-TABPR", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_TABPR_DUPLICATE = new NavigationLocation("TABLE_PRICE14309", "Tabpr_Duplicate", "Tabpr") { vueRouteName = "form-TABPR", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_TABPR_DELETE = new NavigationLocation("TABLE_PRICE14309", "Tabpr_Delete", "Tabpr") { vueRouteName = "form-TABPR", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_TABPR_CANCEL = new("TABLE_PRICE14309", "Tabpr_Cancel", "Tabpr") { vueRouteName = "form-TABPR", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_TABPR_SHOW = new("TABLE_PRICE14309", "Tabpr_Show", "Tabpr") { vueRouteName = "form-TABPR", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_TABPR_NEW = new("TABLE_PRICE14309", "Tabpr_New", "Tabpr") { vueRouteName = "form-TABPR", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_TABPR_EDIT = new("TABLE_PRICE14309", "Tabpr_Edit", "Tabpr") { vueRouteName = "form-TABPR", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_TABPR_DUPLICATE = new("TABLE_PRICE14309", "Tabpr_Duplicate", "Tabpr") { vueRouteName = "form-TABPR", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_TABPR_DELETE = new("TABLE_PRICE14309", "Tabpr_Delete", "Tabpr") { vueRouteName = "form-TABPR", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Tabpr_ModalDBEdit()
-		{
-			Tabpr_ViewModel model = new Tabpr_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Tabpr_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Tabpr Multiform actions
-
-		//
-		// GET /Tabpr/MFTabpr_New
-		[HttpGet]
-		[ActionName("MFTabpr_New")]
-		public ActionResult MFTabpr_New()
-		{
-			var model = new Tabpr_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_TABPR_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("tabpr", model.ValCodtabpr);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFTabpr_New_GET()
-		{
-			return MFTabpr_New();
-		}
-
-		//
-		// GET /Tabpr/MFTabpr_Edit
-		[HttpGet]
-		[ActionName("MFTabpr_Edit")]
-		public ActionResult MFTabpr_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("TABPR", "EDIT", new { id = id, partialView = "MFTabpr", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFTabpr_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFTabpr_Edit(requestModel);
-		}
-
-		//
-		// GET /Tabpr/MFTabpr_Cancel
-		[ActionName("MFTabpr_Cancel")]
-		public ActionResult MFTabpr_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Tabpr(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Tabpr/MFTabpr_Save
-		[HttpPost]
-		[ActionName("MFTabpr_Save")]
-		public JsonResult MFTabpr_Save(Tabpr_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFTabpr_Save",
-				ViewName = "MFTabpr",
-				AreaName = "tabpr"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Tabpr/MFTabpr_Delete
-		[HttpPost]
-		[ActionName("MFTabpr_Delete")]
-		public JsonResult MFTabpr_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFTabpr_Delete",
-				ViewName = "MFTabpr",
-				AreaName = "tabpr",
-				Location = ACTION_TABPR_EDIT
-			};
-
-			var model = new Tabpr_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Tabpr/Tabpr_TpequValTipoequi
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_tpequ")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,12 +422,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Tabpr_TpequValTipoequi_ViewModel model = new Tabpr_TpequValTipoequi_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodtabpr = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Tabpr/Tabpr_SaveEdit
 		[HttpPost]

@@ -10,6 +10,7 @@ namespace GenioMVC.Helpers.Culture
 	public static class CultureManager
 	{
 		const string EngCultureName = "en-us";
+		const string PorCultureName = "pt-pt";
 
 		public const string DefaultCultureName = EngCultureName;
 
@@ -37,6 +38,7 @@ namespace GenioMVC.Helpers.Culture
 		{
 			SupportedCultures = new Dictionary<string, CultureInfo>();
 			AddSupportedCulture(EngCultureName);
+			AddSupportedCulture(PorCultureName);
 		}
 
 		static string ConvertToShortForm(string code)

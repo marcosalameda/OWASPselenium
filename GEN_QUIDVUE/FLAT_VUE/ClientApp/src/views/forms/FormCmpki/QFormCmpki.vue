@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.CMPKI___TPEQUTIPOEQUI.handlers"
 							:loading="controls.CMPKI___TPEQUTIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.CMPKI___TPEQUTIPOEQUI.isVisible"
 								v-bind="controls.CMPKI___TPEQUTIPOEQUI.props"
-								:model-value="model.ValCodtpequ.value"
-								v-on="controls.CMPKI___TPEQUTIPOEQUI.handlers"
-								@update:model-value="model.ValCodtpequ.fnUpdateValue" />
+								v-on="controls.CMPKI___TPEQUTIPOEQUI.handlers" />
 							<q-see-more-cmpki-tpequtipoequi
 								v-if="controls.CMPKI___TPEQUTIPOEQUI.seeMoreIsVisible"
 								v-bind="controls.CMPKI___TPEQUTIPOEQUI.seeMoreParams"
@@ -131,12 +128,10 @@
 							v-on="controls.CMPKI___CMPKIORDER___.handlers"
 							:loading="controls.CMPKI___CMPKIORDER___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.CMPKI___CMPKIORDER___.isVisible"
-								v-bind="controls.CMPKI___CMPKIORDER___"
-								:model-value="model.ValOrder.value"
+								v-bind="controls.CMPKI___CMPKIORDER___.props"
 								@update:model-value="model.ValOrder.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -149,14 +144,11 @@
 							v-on="controls.CMPKI___TPEQ1TIPOEQUI.handlers"
 							:loading="controls.CMPKI___TPEQ1TIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.CMPKI___TPEQ1TIPOEQUI.isVisible"
 								v-bind="controls.CMPKI___TPEQ1TIPOEQUI.props"
-								:model-value="model.ValCodtpeq1.value"
-								v-on="controls.CMPKI___TPEQ1TIPOEQUI.handlers"
-								@update:model-value="model.ValCodtpeq1.fnUpdateValue" />
+								v-on="controls.CMPKI___TPEQ1TIPOEQUI.handlers" />
 							<q-see-more-cmpki-tpeq1tipoequi
 								v-if="controls.CMPKI___TPEQ1TIPOEQUI.seeMoreIsVisible"
 								v-bind="controls.CMPKI___TPEQ1TIPOEQUI.seeMoreParams"
@@ -168,12 +160,10 @@
 							v-on="controls.CMPKI___CMPKIQUANTIDA.handlers"
 							:loading="controls.CMPKI___CMPKIQUANTIDA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.CMPKI___CMPKIQUANTIDA.isVisible"
-								v-bind="controls.CMPKI___CMPKIQUANTIDA"
-								:model-value="model.ValQuantida.value"
+								v-bind="controls.CMPKI___CMPKIQUANTIDA.props"
 								@update:model-value="model.ValQuantida.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -188,12 +178,12 @@
 							v-on="controls.CMPKI___CMPKICODE____.handlers"
 							:loading="controls.CMPKI___CMPKICODE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.CMPKI___CMPKICODE____.props"
 								:model-value="model.ValCode.value"
-								@update:model-value="model.ValCode.fnUpdateValue" />
+								@blur="onBlur(controls.CMPKI___CMPKICODE____, model.ValCode.value)"
+								@change="model.ValCode.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -207,18 +197,14 @@
 							v-on="controls.CMPKI___CMPKIDESCRIPT.handlers"
 							:loading="controls.CMPKI___CMPKIDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.CMPKI___CMPKIDESCRIPT.isVisible"
+								v-bind="controls.CMPKI___CMPKIDESCRIPT.props"
 								id="CMPKI___CMPKIDESCRIPT"
-								size="xxlarge"
 								:model-value="model.ValDescript.value"
 								:rows="2"
 								:cols="85"
-								:is-required="controls.CMPKI___CMPKIDESCRIPT.isRequired"
-								:readonly="controls.CMPKI___CMPKIDESCRIPT.readonly"
-								:placeholder="controls.CMPKI___CMPKIDESCRIPT.placeholder"
 								@update:model-value="model.ValDescript.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -233,12 +219,12 @@
 							v-on="controls.CMPKI___CMPKIURL_____.handlers"
 							:loading="controls.CMPKI___CMPKIURL_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.CMPKI___CMPKIURL_____.props"
 								:model-value="model.ValUrl.value"
-								@update:model-value="model.ValUrl.fnUpdateValue" />
+								@blur="onBlur(controls.CMPKI___CMPKIURL_____, model.ValUrl.value)"
+								@change="model.ValUrl.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -325,15 +311,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'CMPKI',
-						location: 'form-CMPKI',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'CMPKI',
+					location: 'form-CMPKI',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -379,6 +363,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -451,8 +437,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -534,7 +521,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -588,21 +575,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -613,27 +585,9 @@
 						id: 'CMPKI___TPEQUTIPOEQUI',
 						name: 'TIPOEQUI',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodtpequ',
-							dependencyEvent: 'fieldChange:cmpki.codtpequ'
-						},
-						dependentFields: () => {
-							return {
-								set 'tpequ.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
-								set 'tpequ.tipoequi'(value) { vm.model.TableTpequTipoequi.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'TPEQU',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -642,22 +596,31 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodtpequ',
+							dependencyEvent: 'fieldChange:cmpki.codtpequ'
+						},
+						dependentFields: () => ({
+							set 'tpequ.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
+							set 'tpequ.tipoequi'(value) { vm.model.TableTpequTipoequi.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'TPEQU',
+						controlLimits: [
+						],
 					}, this),
 					CMPKI___CMPKIORDER___: new fieldControlClass.NumberControl({
 						modelField: 'ValOrder',
 						valueChangeEvent: 'fieldChange:cmpki.order',
-						maxIntegers: 3,
-						maxDecimals: 1,
-						isSequencial: true,
 						id: 'CMPKI___CMPKIORDER___',
 						name: 'ORDER',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.ORDER39632),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 3,
+						maxDecimals: 1,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -668,25 +631,9 @@
 						id: 'CMPKI___TPEQ1TIPOEQUI',
 						name: 'TIPOEQUI',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodtpeq1',
-							dependencyEvent: 'fieldChange:cmpki.codtpeq1'
-						},
-						dependentFields: () => {
-							return {
-								set 'tpeq1.codtpequ'(value) { vm.model.ValCodtpeq1.updateValue(value) },
-								set 'tpeq1.tipoequi'(value) { vm.model.TableTpeq1Tipoequi.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -695,22 +642,28 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodtpeq1',
+							dependencyEvent: 'fieldChange:cmpki.codtpeq1'
+						},
+						dependentFields: () => ({
+							set 'tpeq1.codtpequ'(value) { vm.model.ValCodtpeq1.updateValue(value) },
+							set 'tpeq1.tipoequi'(value) { vm.model.TableTpeq1Tipoequi.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					CMPKI___CMPKIQUANTIDA: new fieldControlClass.NumberControl({
 						modelField: 'ValQuantida',
 						valueChangeEvent: 'fieldChange:cmpki.quantida',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'CMPKI___CMPKIQUANTIDA',
 						name: 'QUANTIDA',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.QUANTITY_08002),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -720,15 +673,11 @@
 						id: 'CMPKI___CMPKICODE____',
 						name: 'CODE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.CODE49225),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 10,
 						labelId: 'label_CMPKI___CMPKICODE____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -738,15 +687,9 @@
 						id: 'CMPKI___CMPKIDESCRIPT',
 						name: 'DESCRIPT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESCRIPTION07383),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
-						labelId: 'label_CMPKI___CMPKIDESCRIPT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -756,15 +699,11 @@
 						id: 'CMPKI___CMPKIURL_____',
 						name: 'URL',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.SITE06486),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 250,
 						labelId: 'label_CMPKI___CMPKIURL_____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -822,7 +761,7 @@
 						/** The foreign key to the TPEQ1 table */
 						get tpeq1() { return vm.model.ValCodtpeq1 },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -918,6 +857,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -957,6 +904,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1083,6 +1038,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR CMPKI]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1098,6 +1069,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS CMPKI]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

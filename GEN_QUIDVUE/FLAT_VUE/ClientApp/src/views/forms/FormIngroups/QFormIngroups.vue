@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -112,6 +112,7 @@
 									v-show="controls.INGROUPSPSEUDINPUTGR1.isVisible"
 									class="control-join-group">
 									<base-input-structure
+										id="INGROUPSPSEUDINPUTGR1"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR1"
 										v-on="controls.INGROUPSPSEUDINPUTGR1.handlers">
@@ -124,15 +125,16 @@
 													<q-static-text
 														v-if="controls.INGROUPSPSEUDTEXTSPAN.isVisible"
 														id="INGROUPSPSEUDTEXTSPAN"
-														size="mini"
+														:size="controls.INGROUPSPSEUDTEXTSPAN.size"
 														:text="controls.INGROUPSPSEUDTEXTSPAN.label" />
 												</span>
 											</template>
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRTEXTGRO_.props"
 												:model-value="model.ValTextgro.value"
-												@update:model-value="model.ValTextgro.fnUpdateValue" />
-											<!-- End INGROUPSPSEUDINPUTGR1 -->
+												@blur="onBlur(controls.INGROUPSINPGRTEXTGRO_, model.ValTextgro.value)"
+												@change="model.ValTextgro.fnUpdateValueOnChange" />
+											<!-- End INGROUPSINPGRTEXTGRO_ -->
 										</q-input-group>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -157,6 +159,7 @@
 									v-show="controls.INGROUPSPSEUDINPUTGR2.isVisible"
 									class="control-join-group">
 									<base-input-structure
+										id="INGROUPSPSEUDINPUTGR2"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR2"
 										v-on="controls.INGROUPSPSEUDINPUTGR2.handlers">
@@ -169,19 +172,21 @@
 													<q-static-text
 														v-if="controls.INGROUPSPSEUDSPANGRO_.isVisible"
 														id="INGROUPSPSEUDSPANGRO_"
-														size="mini"
+														:size="controls.INGROUPSPSEUDSPANGRO_.size"
 														:text="controls.INGROUPSPSEUDSPANGRO_.label" />
 												</span>
 											</template>
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRNAME____.props"
 												:model-value="model.ValName.value"
-												@update:model-value="model.ValName.fnUpdateValue" />
+												@blur="onBlur(controls.INGROUPSINPGRNAME____, model.ValName.value)"
+												@change="model.ValName.fnUpdateValueOnChange" />
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRLASTNAME.props"
 												:model-value="model.ValLastname.value"
-												@update:model-value="model.ValLastname.fnUpdateValue" />
-											<!-- End INGROUPSPSEUDINPUTGR2 -->
+												@blur="onBlur(controls.INGROUPSINPGRLASTNAME, model.ValLastname.value)"
+												@change="model.ValLastname.fnUpdateValueOnChange" />
+											<!-- End INGROUPSINPGRLASTNAME -->
 										</q-input-group>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -191,6 +196,7 @@
 									v-show="controls.INGROUPSPSEUDINPUTGR5.isVisible"
 									class="control-join-group">
 									<base-input-structure
+										id="INGROUPSPSEUDINPUTGR5"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR5"
 										v-on="controls.INGROUPSPSEUDINPUTGR5.handlers">
@@ -206,8 +212,9 @@
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRWEB_____.props"
 												:model-value="model.ValWeb.value"
-												@update:model-value="model.ValWeb.fnUpdateValue" />
-											<!-- End INGROUPSPSEUDINPUTGR5 -->
+												@blur="onBlur(controls.INGROUPSINPGRWEB_____, model.ValWeb.value)"
+												@change="model.ValWeb.fnUpdateValueOnChange" />
+											<!-- End INGROUPSINPGRWEB_____ -->
 										</q-input-group>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -232,6 +239,7 @@
 									v-show="controls.INGROUPSPSEUDINPUTGR3.isVisible"
 									class="control-join-group">
 									<base-input-structure
+										id="INGROUPSPSEUDINPUTGR3"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR3"
 										v-on="controls.INGROUPSPSEUDINPUTGR3.handlers">
@@ -241,8 +249,7 @@
 											<!-- Start INGROUPSPSEUDINPUTGR3 -->
 											<q-numeric-input
 												v-if="controls.INGROUPSINPGRNUMBGRO_.isVisible"
-												v-bind="controls.INGROUPSINPGRNUMBGRO_"
-												:model-value="model.ValNumbgro.value"
+												v-bind="controls.INGROUPSINPGRNUMBGRO_.props"
 												@update:model-value="model.ValNumbgro.fnUpdateValue" />
 											<template #append>
 												<q-button
@@ -254,7 +261,7 @@
 													<q-icon v-bind="controls.INGROUPSPSEUDBUTTNGRO.icon" />
 												</q-button>
 											</template>
-											<!-- End INGROUPSPSEUDINPUTGR3 -->
+											<!-- End INGROUPSPSEUDBUTTNGRO -->
 										</q-input-group>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -279,6 +286,7 @@
 									v-show="controls.INGROUPSPSEUDINPUTGR4.isVisible"
 									class="control-join-group">
 									<base-input-structure
+										id="INGROUPSPSEUDINPUTGR4"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR4"
 										v-on="controls.INGROUPSPSEUDINPUTGR4.handlers">
@@ -293,8 +301,7 @@
 												@update:model-value="model.ValPrefix.fnUpdateValue" />
 											<q-numeric-input
 												v-if="controls.INGROUPSINPGRPHONE___.isVisible"
-												v-bind="controls.INGROUPSINPGRPHONE___"
-												:model-value="model.ValPhone.value"
+												v-bind="controls.INGROUPSINPGRPHONE___.props"
 												@update:model-value="model.ValPhone.fnUpdateValue" />
 											<q-select
 												v-if="controls.INGROUPSINPGRADRESS__.isVisible"
@@ -304,8 +311,9 @@
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRDIRECTIO.props"
 												:model-value="model.ValDirectio.value"
-												@update:model-value="model.ValDirectio.fnUpdateValue" />
-											<!-- End INGROUPSPSEUDINPUTGR4 -->
+												@blur="onBlur(controls.INGROUPSINPGRDIRECTIO, model.ValDirectio.value)"
+												@change="model.ValDirectio.fnUpdateValueOnChange" />
+											<!-- End INGROUPSINPGRDIRECTIO -->
 										</q-input-group>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -330,6 +338,7 @@
 									v-show="controls.INGROUPSPSEUDINPUTGR6.isVisible"
 									class="control-join-group">
 									<base-input-structure
+										id="INGROUPSPSEUDINPUTGR6"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR6"
 										v-on="controls.INGROUPSPSEUDINPUTGR6.handlers">
@@ -368,7 +377,7 @@
 													@click="controls.INGROUPSPSEUDSENDBTT_.action($event)">
 												</q-button>
 											</template>
-											<!-- End INGROUPSPSEUDINPUTGR6 -->
+											<!-- End INGROUPSPSEUDSENDBTT_ -->
 										</q-input-group>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -458,15 +467,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'INGROUPS',
-						location: 'form-INGROUPS',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'INGROUPS',
+					location: 'form-INGROUPS',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -512,6 +519,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -584,8 +593,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -667,7 +677,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -721,21 +731,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -746,31 +741,24 @@
 						size: 'mini',
 						hasLabel: false,
 						label: computed(() => this.Resources.TEXT04938),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR1',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					INGROUPSINPGRNUMBGRO_: new fieldControlClass.MaskControl({
 						modelField: 'ValNumbgro',
 						valueChangeEvent: 'fieldChange:inpgr.numbgro',
-						maxIntegers: 9,
-						maxDecimals: 0,
 						id: 'INGROUPSINPGRNUMBGRO_',
 						name: 'NUMBGRO',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.VAT_NUMBER24236),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR3',
-						mustBeFilled: false,
+						maxIntegers: 9,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -780,12 +768,9 @@
 						size: 'mini',
 						hasLabel: false,
 						label: computed(() => this.Resources.PROFILE65433),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR2',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -795,14 +780,13 @@
 						size: 'xxlarge',
 						hasLabel: false,
 						label: computed(() => this.Resources.VIEW62547),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR3',
 						icon: {
 							icon: 'low',
 							type: 'svg',
+							role: 'presentation',
 						},
 						// eslint-disable-next-line
 						action: (event) => {
@@ -815,7 +799,7 @@
 								const params = {
 									id: formId,
 									mode: vm.formModes.show,
-									modes: vm.navigation.currentLevel.params.modes,
+									modes: 'vedai',
 									isControlled: false,
 									extraData: JSON.stringify(event)
 								}
@@ -824,7 +808,6 @@
 							}
 							btnAction()
 						},
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -834,16 +817,12 @@
 						id: 'INGROUPSINPGRNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.FIRST_NAME51967),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR2',
 						maxLength: 50,
 						labelId: 'label_INGROUPSINPGRNAME____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -853,16 +832,12 @@
 						id: 'INGROUPSINPGRLASTNAME',
 						name: 'LASTNAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.LAST_NAME63426),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR2',
 						maxLength: 50,
 						labelId: 'label_INGROUPSINPGRLASTNAME',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -872,17 +847,15 @@
 						id: 'INGROUPSINPGRPREFIX__',
 						name: 'PREFIX',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.PREFIX02493),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR4',
 						maxLength: 3,
 						labelId: 'label_INGROUPSINPGRPREFIX__',
 						arrayName: 'phonepre',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -890,16 +863,12 @@
 						id: 'INGROUPSPSEUDINPUTGR1',
 						name: 'INPUTGR1',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.TEXT_WITH_INPUT39903),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDGROUP1__',
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -907,15 +876,11 @@
 						id: 'INGROUPSPSEUDGROUP1__',
 						name: 'GROUP1',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.SINGLE_INPUTS14159),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -923,15 +888,11 @@
 						id: 'INGROUPSPSEUDGROUP2__',
 						name: 'GROUP2',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.MULTIPLE_INPUTS39000),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -939,16 +900,12 @@
 						id: 'INGROUPSPSEUDINPUTGR2',
 						name: 'INPUTGR2',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.USER57012),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDGROUP2__',
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -956,15 +913,11 @@
 						id: 'INGROUPSPSEUDGROUP3__',
 						name: 'GROUP3',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.BUTON_ADDON17405),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -972,35 +925,27 @@
 						id: 'INGROUPSPSEUDINPUTGR3',
 						name: 'INPUTGR3',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TAX_DATA61628),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDGROUP3__',
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					INGROUPSINPGRPHONE___: new fieldControlClass.NumberControl({
 						modelField: 'ValPhone',
 						valueChangeEvent: 'fieldChange:inpgr.phone',
-						maxIntegers: 15,
-						maxDecimals: 0,
 						id: 'INGROUPSINPGRPHONE___',
 						name: 'PHONE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHONE_NUMBER20774),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR4',
-						mustBeFilled: false,
+						maxIntegers: 15,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -1008,15 +953,11 @@
 						id: 'INGROUPSPSEUDGROUP4__',
 						name: 'GROUP4',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.CONTACT_DATA02225),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1024,16 +965,12 @@
 						id: 'INGROUPSPSEUDINPUTGR4',
 						name: 'INPUTGR4',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHONE_NUMBER20774),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDGROUP4__',
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1043,17 +980,15 @@
 						id: 'INGROUPSINPGRADRESS__',
 						name: 'ADRESS',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.ADDRESS_TYPE64627),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR4',
 						maxLength: 8,
 						labelId: 'label_INGROUPSINPGRADRESS__',
 						arrayName: 'AddressT',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -1063,16 +998,12 @@
 						id: 'INGROUPSINPGREMAIL___',
 						name: 'EMAIL',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.E_MAIL42251),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR5',
 						maxLength: 50,
 						labelId: 'label_INGROUPSINPGREMAIL___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1082,16 +1013,12 @@
 						id: 'INGROUPSINPGRWEB_____',
 						name: 'WEB',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.WEB09813),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR5',
 						maxLength: 50,
 						labelId: 'label_INGROUPSINPGRWEB_____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1101,17 +1028,15 @@
 						id: 'INGROUPSINPGRBANKCOMP',
 						name: 'BANKCOMP',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.ENTITY62049),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR6',
 						maxLength: 2,
 						labelId: 'label_INGROUPSINPGRBANKCOMP',
 						arrayName: 'bankComp',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -1121,16 +1046,12 @@
 						id: 'INGROUPSINPGRIBAN____',
 						name: 'IBAN',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.IBAN28506),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR6',
 						maxLength: 34,
 						labelId: 'label_INGROUPSINPGRIBAN____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1140,16 +1061,12 @@
 						id: 'INGROUPSINPGRTEXTGRO_',
 						name: 'TEXTGRO',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TEXT_FIELD41810),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR1',
 						maxLength: 50,
 						labelId: 'label_INGROUPSINPGRTEXTGRO_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1159,16 +1076,12 @@
 						id: 'INGROUPSINPGRBANKACCO',
 						name: 'BANKACCO',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.BANKING_ACCOUNT_NUMB62548),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR6',
 						maxLength: 24,
 						labelId: 'label_INGROUPSINPGRBANKACCO',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1178,16 +1091,12 @@
 						id: 'INGROUPSINPGRDIRECTIO',
 						name: 'DIRECTIO',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ADRESS39816),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR4',
 						maxLength: 50,
 						labelId: 'label_INGROUPSINPGRDIRECTIO',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1197,10 +1106,8 @@
 						size: 'mini',
 						hasLabel: false,
 						label: computed(() => this.Resources.VIEW62547),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR6',
 						// eslint-disable-next-line
 						action: (event) => {
@@ -1213,7 +1120,7 @@
 								const params = {
 									id: formId,
 									mode: vm.formModes.show,
-									modes: vm.navigation.currentLevel.params.modes,
+									modes: 'vedai',
 									isControlled: true,
 									extraData: JSON.stringify(event)
 								}
@@ -1226,7 +1133,6 @@
 							}
 							vm.$eventHub.emit('form-apply', options)
 						},
-						mustBeFilled: false,
 						controlLimits: [
 						],
 						showWhen: {
@@ -1234,12 +1140,10 @@
 							fnFormula(params)
 							{
 								// Formula: emptyC([INPGR->IBAN])==0
-								// eslint-disable-next-line eqeqeq
-								return qApi.emptyC(this.ValIban.value)==0
+								return qApi.emptyC(this.ValIban.value)===0
 							},
 							dependencyEvents: ['fieldChange:inpgr.iban'],
 							isServerRecalc: false,
-							isServerFormula: false,
 						},
 					}, this),
 					INGROUPSPSEUDSENDBTT_: new fieldControlClass.ButtonControl({
@@ -1248,10 +1152,8 @@
 						size: 'mini',
 						hasLabel: false,
 						label: computed(() => this.Resources.VIEW62547),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR6',
 						// eslint-disable-next-line
 						action: (event) => {
@@ -1259,7 +1161,7 @@
 								// Button to open the form "INGROUPS" in "INS" mode.
 								const params = {
 									mode: vm.formModes.new,
-									modes: vm.navigation.currentLevel.params.modes,
+									modes: 'vedai',
 									isControlled: true,
 									extraData: JSON.stringify(event)
 								}
@@ -1272,7 +1174,6 @@
 							}
 							vm.$eventHub.emit('form-apply', options)
 						},
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1280,16 +1181,12 @@
 						id: 'INGROUPSPSEUDINPUTGR6',
 						name: 'INPUTGR6',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.BANK_ACCOUNT11383),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDGROUP6__',
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1297,32 +1194,24 @@
 						id: 'INGROUPSPSEUDGROUP6__',
 						name: 'GROUP6',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.BANK_DATA61943),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					INGROUPSPSEUDINPUTGR5: new fieldControlClass.GroupControl({
 						id: 'INGROUPSPSEUDINPUTGR5',
 						name: 'INPUTGR5',
-						size: 'medium',
-						hasLabel: true,
+						size: 'large',
 						label: computed(() => this.Resources.EMAIL_AND_WEB32577),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDGROUP2__',
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1393,7 +1282,7 @@
 						/** The primary key of the INPGR table */
 						get inpgr() { return vm.model.ValCodinpgr },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1489,6 +1378,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1528,6 +1425,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1654,6 +1559,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR INGROUPS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1669,6 +1590,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS INGROUPS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

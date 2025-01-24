@@ -16,14 +16,14 @@ namespace CSGenio.business
         public StatusMessage StatusMessage;
 
         public FieldValidationException(StatusMessage statusMessage, string exceptionSite) :
-            base(statusMessage.PrintMessages(), exceptionSite, "Field validation failed", null)
+            base(statusMessage.PrintMessages(), exceptionSite, "Field validation failed", null, statusMessage.GetStackMessages())
         {
             this.StatusMessage = statusMessage;
         }
 
         protected override void LogError()
         {
-            LogError(exceptionName);
+            Log.Info(FormatLog(exceptionName));
         }
     }
 
@@ -42,7 +42,7 @@ namespace CSGenio.business
 
         protected override void LogError()
         {
-            LogError(exceptionName);
+            Log.Info(FormatLog(exceptionName));
         }
     }
 }

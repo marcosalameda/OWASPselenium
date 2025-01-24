@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Manua;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER MANUA]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Manua row = null;
 
-			try
-			{
-				row = Models.Manua.Find(Navigation.GetStrValue("manua"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model manua");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Manua(UserContext.Current);
+				row = new Models.Manua(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("manua");
 			}
 
@@ -82,14 +75,15 @@ namespace GenioMVC.Controllers
 				{
 					case "MANUA___KINDEDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Manua_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Manua_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Manua___kindedesignat(qs);
 							result = model.TableKindeDesignat;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -135,11 +129,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -148,22 +143,19 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Manua" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Manua([FromBody]Manua_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Manua([FromBody]Manua_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "manua",
+			return GenericRecalculateFormulas(formData, "manua",
 				(primaryKey) => Models.Manua.Find(primaryKey, UserContext.Current, "FMANUA"),
-				(model) => form_data.MapToModel(model as Models.Manua)
+				(model) => formData.MapToModel(model as Models.Manua)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -171,7 +163,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try
@@ -201,44 +193,30 @@ namespace GenioMVC.Controllers
 			return base.GetDocumsTickets(requestModel.TableName, requestModel.FieldName, requestModel.KeyValue);
 		}
 
-		public ActionResult GetDocumsVersionsDBEdit([FromBody]RequestDocumTicketsModel requestModel)
+		public ActionResult GetFileVersions([FromBody]RequestDocumGetModel requestModel)
 		{
-			return base.GetDocumsVersionsDBEdit(requestModel.Ticket);
+			return base.GetFileVersions(requestModel.Ticket);
 		}
 
-		public ActionResult GetFileProperties([FromBody]RequestDocumTicketsModel requestModel)
+		public ActionResult GetFileProperties([FromBody]RequestDocumGetModel requestModel)
 		{
 			return base.GetFileProperties(requestModel.Ticket);
 		}
 
-		public ActionResult SubmitVersion([FromBody]RequestDocumTicketsModel requestModel)
-		{
-			return base.SubmitVersion(requestModel.Ticket);
-		}
-
-		public ActionResult CheckoutDocum([FromBody]RequestDocumTicketsModel requestModel)
-		{
-			return base.CheckoutDocum(requestModel.Ticket);
-		}
-
-		public ActionResult DeleteFile([FromBody]RequestDocumDeleteModel requestModel)
-		{
-			return base.DeleteFile(requestModel.Ticket, requestModel.Action);
-		}
-
-		public new ActionResult SetFile([FromForm] string ticket, [FromForm] ControllerBase.VersionSubmitAction mode = VersionSubmitAction.Insert, [FromForm] string version = "1")
-		{
-			return base.SetFile(ticket, mode, version);
-		}
-
-		public ActionResult GetFile([FromBody]RequestDocumTicketsModel requestModel)
+		public ActionResult GetFile([FromBody]RequestDocumGetModel requestModel)
 		{
 			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
 		}
 
-		public ActionResult GetSpecificFile([FromBody]RequestDocumTicketsModel requestModel)
+		[DisableRequestSizeLimit]
+		public new ActionResult SetFile([FromForm] string ticket, [FromForm] VersionSubmitAction mode = VersionSubmitAction.Insert, [FromForm] string version = "1")
 		{
-			return base.GetSpecificFile(requestModel.Ticket);
+			return base.SetFile(ticket, mode, version);
+		}
+
+		public ActionResult SetFilesState([FromBody]RequestDocumsChangeModel requestModel)
+		{
+			return base.SetFilesState(requestModel.Documents);
 		}
 	}
 }

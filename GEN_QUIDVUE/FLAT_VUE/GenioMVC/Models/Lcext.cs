@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Locat _locat;
 		[DisplayName("Locat")]
 		[ShouldSerialize("Locat")]
-		public virtual Locat Locat { 
-			get { 
+		public virtual Locat Locat {
+			get {
 				if (!this.isEmptyModel && (_locat == null || (!string.IsNullOrEmpty(ValCodlocat) && (_locat.isEmptyModel || _locat.klass.QPrimaryKey != ValCodlocat))))
 					_locat = Models.Locat.Find(ValCodlocat, m_userContext, Identifier, _fieldsToSerialize);
 				if (_locat == null)
 					_locat = new Models.Locat(m_userContext, true, _fieldsToSerialize);
 				return _locat;
 			}
-			set { _locat = value; } 
+			set { _locat = value; }
 		}
-		
+
 
 		[DisplayName("GLN Extension Component")]
 		/// <summary>Field : "GLN Extension Component" Tipo: "C" Formula:  ""</summary>
@@ -79,19 +79,19 @@ namespace GenioMVC.Models
 		public Lcext(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAlcext(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Lcext(UserContext userContext, CSGenioAlcext val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAlcext csgenioa)
@@ -113,7 +113,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

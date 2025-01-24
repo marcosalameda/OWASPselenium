@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Insta;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER INSTA]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Insta row = null;
 
-			try
-			{
-				row = Models.Insta.Find(Navigation.GetStrValue("insta"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model insta");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Insta(UserContext.Current);
+				row = new Models.Insta(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("insta");
 			}
 
@@ -82,8 +75,8 @@ namespace GenioMVC.Controllers
 				{
 					case "INSTA___TPEQUTIPOEQUI":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Insta_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Insta_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Insta___tpequtipoequi(qs);
 							result = model.TableTpequTipoequi;
@@ -91,8 +84,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "INSTA___EQUIPREGISTNR":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Insta_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Insta_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Insta___equipregistnr(qs);
 							result = model.TableEquipRegistnr;
@@ -100,8 +93,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "LEAFLETDEQUIPREGISTNR":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Leafletd_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Leafletd_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Leafletdequipregistnr(qs);
 							result = model.TableEquipRegistnr;
@@ -109,14 +102,15 @@ namespace GenioMVC.Controllers
 						break;
 					case "LEAFLETTEQUIPREGISTNR":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Leaflett_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Leaflett_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Leaflettequipregistnr(qs);
 							result = model.TableEquipRegistnr;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -171,11 +165,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -184,50 +179,47 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Insta" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Insta([FromBody]Insta_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Insta([FromBody]Insta_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "insta",
+			return GenericRecalculateFormulas(formData, "insta",
 				(primaryKey) => Models.Insta.Find(primaryKey, UserContext.Current, "FINSTA"),
-				(model) => form_data.MapToModel(model as Models.Insta)
+				(model) => formData.MapToModel(model as Models.Insta)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Leafletd" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Leafletd([FromBody]Leafletd_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Leafletd([FromBody]Leafletd_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "insta",
+			return GenericRecalculateFormulas(formData, "insta",
 				(primaryKey) => Models.Insta.Find(primaryKey, UserContext.Current, "FLEAFLETD"),
-				(model) => form_data.MapToModel(model as Models.Insta)
+				(model) => formData.MapToModel(model as Models.Insta)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Leaflett" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Leaflett([FromBody]Leaflett_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Leaflett([FromBody]Leaflett_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "insta",
+			return GenericRecalculateFormulas(formData, "insta",
 				(primaryKey) => Models.Insta.Find(primaryKey, UserContext.Current, "FLEAFLETT"),
-				(model) => form_data.MapToModel(model as Models.Insta)
+				(model) => formData.MapToModel(model as Models.Insta)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -235,7 +227,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

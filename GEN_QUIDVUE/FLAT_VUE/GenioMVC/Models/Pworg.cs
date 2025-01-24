@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Psw _psw;
 		[DisplayName("Psw")]
 		[ShouldSerialize("Psw")]
-		public virtual Psw Psw { 
-			get { 
+		public virtual Psw Psw {
+			get {
 				if (!this.isEmptyModel && (_psw == null || (!string.IsNullOrEmpty(ValCodpsw) && (_psw.isEmptyModel || _psw.klass.QPrimaryKey != ValCodpsw))))
 					_psw = Models.Psw.Find(ValCodpsw, m_userContext, Identifier, _fieldsToSerialize);
 				if (_psw == null)
 					_psw = new Models.Psw(m_userContext, true, _fieldsToSerialize);
 				return _psw;
 			}
-			set { _psw = value; } 
+			set { _psw = value; }
 		}
-		
+
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Organ _organ;
 		[DisplayName("Organ")]
 		[ShouldSerialize("Organ")]
-		public virtual Organ Organ { 
-			get { 
+		public virtual Organ Organ {
+			get {
 				if (!this.isEmptyModel && (_organ == null || (!string.IsNullOrEmpty(ValCodorgan) && (_organ.isEmptyModel || _organ.klass.QPrimaryKey != ValCodorgan))))
 					_organ = Models.Organ.Find(ValCodorgan, m_userContext, Identifier, _fieldsToSerialize);
 				if (_organ == null)
 					_organ = new Models.Organ(m_userContext, true, _fieldsToSerialize);
 				return _organ;
 			}
-			set { _organ = value; } 
+			set { _organ = value; }
 		}
-		
+
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Pworg.ValZzstate")]
@@ -80,19 +80,19 @@ namespace GenioMVC.Models
 		public Pworg(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioApworg(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Pworg(UserContext userContext, CSGenioApworg val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioApworg csgenioa)
@@ -119,7 +119,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

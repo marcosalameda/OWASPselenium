@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Roigi;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ROIGI_CANCEL = new NavigationLocation("ORDER_IN_GROUP__INTE56416", "Roigi_Cancel", "Roigi") { vueRouteName = "form-ROIGI", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ROIGI_SHOW = new NavigationLocation("ORDER_IN_GROUP__INTE56416", "Roigi_Show", "Roigi") { vueRouteName = "form-ROIGI", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ROIGI_NEW = new NavigationLocation("ORDER_IN_GROUP__INTE56416", "Roigi_New", "Roigi") { vueRouteName = "form-ROIGI", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ROIGI_EDIT = new NavigationLocation("ORDER_IN_GROUP__INTE56416", "Roigi_Edit", "Roigi") { vueRouteName = "form-ROIGI", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ROIGI_DUPLICATE = new NavigationLocation("ORDER_IN_GROUP__INTE56416", "Roigi_Duplicate", "Roigi") { vueRouteName = "form-ROIGI", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ROIGI_DELETE = new NavigationLocation("ORDER_IN_GROUP__INTE56416", "Roigi_Delete", "Roigi") { vueRouteName = "form-ROIGI", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ROIGI_CANCEL = new("ORDER_IN_GROUP__INTE56416", "Roigi_Cancel", "Roigi") { vueRouteName = "form-ROIGI", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ROIGI_SHOW = new("ORDER_IN_GROUP__INTE56416", "Roigi_Show", "Roigi") { vueRouteName = "form-ROIGI", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ROIGI_NEW = new("ORDER_IN_GROUP__INTE56416", "Roigi_New", "Roigi") { vueRouteName = "form-ROIGI", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ROIGI_EDIT = new("ORDER_IN_GROUP__INTE56416", "Roigi_Edit", "Roigi") { vueRouteName = "form-ROIGI", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ROIGI_DUPLICATE = new("ORDER_IN_GROUP__INTE56416", "Roigi_Duplicate", "Roigi") { vueRouteName = "form-ROIGI", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ROIGI_DELETE = new("ORDER_IN_GROUP__INTE56416", "Roigi_Delete", "Roigi") { vueRouteName = "form-ROIGI", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Roigi_ModalDBEdit()
-		{
-			Roigi_ViewModel model = new Roigi_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Roigi_Show
 
@@ -138,39 +129,6 @@ namespace GenioMVC.Controllers
 				Redirect = redirect,
 				BeforeOp = (sink, sp) =>
 				{
-					//FOR: ROW_REORDERING
-					string tableName = Navigation.GetStrValue("TableName");
-					string tableViewModelName = Navigation.GetStrValue("TableViewModelName");
-
-					Type tableViewModelType = Type.GetType("GenioMVC.ViewModels." + tableName + "." + tableViewModelName);
-					if (tableViewModelType != null)
-					{
-						dynamic tableViewModel = Activator.CreateInstance(tableViewModelType, this.UserContext.Current);
-						if (tableViewModel != null)
-						{
-							User u = UserContext.Current.User;
-							var row = CSGenioAroigi.search(sp, model.ValCodroigi, u);
-
-							var orderField = model.ValOrder;
-							int orderFieldValue = Convert.ToInt32(orderField);
-
-							int maxOrder = 0;
-							try
-							{
-								maxOrder = sp.GetMaxFieldValue(Area.AreaROIGI, CSGenioAroigi.FldOrder, tableViewModel.baseConditions, tableViewModel.relations);
-							}
-							catch (Exception ex)
-							{
-								Log.Error(ex.Message);
-							}
-
-							if (maxOrder > 0 && orderFieldValue > maxOrder)
-								model.ValOrder = orderFieldValue = maxOrder + 1;
-
-							row.Reorder_Order(sp, orderFieldValue - 1, tableViewModel.baseConditions, tableViewModel.relations, false);
-						}
-					}
-
 // USE /[MANUAL GQT BEFORE_SAVE_NEW ROIGI]/
 				},
 				AfterOp = (sink, sp) =>
@@ -306,17 +264,6 @@ namespace GenioMVC.Controllers
 				},
 				AfterOp = (sink, sp) =>
 				{
-					//FOR: ROW_REORDERING
-					string tableName = Navigation.GetStrValue("TableName");
-					string tableViewModelName = Navigation.GetStrValue("TableViewModelName");
-
-					Type tableViewModelType = Type.GetType("GenioMVC.ViewModels." + tableName + "." + tableViewModelName);
-					if (tableViewModelType != null)
-					{
-						dynamic tableViewModel = Activator.CreateInstance(tableViewModelType, this.UserContext.Current);
-						if (tableViewModel != null)
-							sp.ReorderSequence(CSGenio.business.Area.AreaROIGI, CSGenioAroigi.FldOrder, tableViewModel.baseConditions, tableViewModel.relations);
-					}
 // USE /[MANUAL GQT AFTER_DESTROY_DELETE ROIGI]/
 				}
 			};
@@ -444,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Roigi Multiform actions
-
-		//
-		// GET /Roigi/MFRoigi_New
-		[HttpGet]
-		[ActionName("MFRoigi_New")]
-		public ActionResult MFRoigi_New()
-		{
-			var model = new Roigi_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_ROIGI_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("roigi", model.ValCodroigi);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFRoigi_New_GET()
-		{
-			return MFRoigi_New();
-		}
-
-		//
-		// GET /Roigi/MFRoigi_Edit
-		[HttpGet]
-		[ActionName("MFRoigi_Edit")]
-		public ActionResult MFRoigi_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("ROIGI", "EDIT", new { id = id, partialView = "MFRoigi", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFRoigi_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFRoigi_Edit(requestModel);
-		}
-
-		//
-		// GET /Roigi/MFRoigi_Cancel
-		[ActionName("MFRoigi_Cancel")]
-		public ActionResult MFRoigi_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Roigi(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Roigi/MFRoigi_Save
-		[HttpPost]
-		[ActionName("MFRoigi_Save")]
-		public JsonResult MFRoigi_Save(Roigi_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRoigi_Save",
-				ViewName = "MFRoigi",
-				AreaName = "roigi"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Roigi/MFRoigi_Delete
-		[HttpPost]
-		[ActionName("MFRoigi_Delete")]
-		public JsonResult MFRoigi_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRoigi_Delete",
-				ViewName = "MFRoigi",
-				AreaName = "roigi",
-				Location = ACTION_ROIGI_EDIT
-			};
-
-			var model = new Roigi_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Roigi/Roigi_Rogl1ValTitle
@@ -583,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_rogl1")))
@@ -596,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -618,12 +422,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Roigi_Rogl1ValTitle_ViewModel model = new Roigi_Rogl1ValTitle_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodroigi = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Roigi/Roigi_SaveEdit
 		[HttpPost]

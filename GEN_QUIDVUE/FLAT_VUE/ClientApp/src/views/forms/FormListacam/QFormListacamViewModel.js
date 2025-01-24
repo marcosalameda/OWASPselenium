@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODEQUIP',
 			relatedArea: 'EQUIP',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCodequip))
 		watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('flds.codequip', this.ValCodequip, newValue, oldValue))
 
@@ -69,6 +70,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODAERO',
 			relatedArea: 'AERO',
 			description: computed(() => this.Resources.COMPANY_NAME10342),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodaero))
 		watch(() => this.ValCodaero.value, (newValue, oldValue) => this.onUpdate('flds.codaero', this.ValCodaero, newValue, oldValue))
 
@@ -83,7 +85,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValTxtfield))
 		watch(() => this.ValTxtfield.value, (newValue, oldValue) => this.onUpdate('flds.txtfield', this.ValTxtfield, newValue, oldValue))
 
-		this.ValDescrip = reactive(new modelFieldType.String({
+		this.ValDescrip = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescrip',
 			originId: 'ValDescrip',
 			area: 'FLDS',
@@ -294,11 +296,13 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValClass))
 		watch(() => this.ValClass.value, (newValue, oldValue) => this.onUpdate('flds.class', this.ValClass, newValue, oldValue))
 
-		this.ValLogicenu = reactive(new modelFieldType.Boolean({
+		this.ValLogicenu = reactive(new modelFieldType.Number({
 			id: 'ValLogicenu',
 			originId: 'ValLogicenu',
 			area: 'FLDS',
 			field: 'LOGICENU',
+			maxDigits: 1,
+			decimalDigits: 0,
 			description: computed(() => this.Resources.LOGICAL_ENUMERATION30276),
 		}).cloneFrom(values?.ValLogicenu))
 		watch(() => this.ValLogicenu.value, (newValue, oldValue) => this.onUpdate('flds.logicenu', this.ValLogicenu, newValue, oldValue))
@@ -317,22 +321,32 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValAttach',
 			area: 'FLDS',
 			field: 'ATTACH',
+			properties: computed(() => this.ValAttachPropertiesVM),
+			documentFK: computed(() => this.ValAttachfk),
+			currentDocument: computed(() => this.ValAttachData),
 			description: computed(() => this.Resources.DOCUMENT00695),
 		}).cloneFrom(values?.ValAttach))
 		watch(() => this.ValAttach.value, (newValue, oldValue) => this.onUpdate('flds.attach', this.ValAttach, newValue, oldValue))
 
-		this.ValAttachPropertiesVM = new modelFieldType.Base({
+		this.ValAttachPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'ValAttachPropertiesVM',
 			area: 'FLDS',
 			field: 'ATTACHDOCUM',
 			ignoreFldSubmit: true
-		}).cloneFrom(values?.ValAttachPropertiesVM)
+		}).cloneFrom(values?.ValAttachPropertiesVM))
 		this.ValAttachfk = reactive(new modelFieldType.Base({
 			id: 'ValAttachfk',
 			area: 'FLDS',
-			field: 'ATTACHDOCUMFK'
+			field: 'ATTACHFK'
 		}).cloneFrom(values?.ValAttachfk))
-		watch(() => this.ValAttachfk.value, (newValue, oldValue) => this.onUpdate('flds.attachdocumfk', this.ValAttachfk, newValue, oldValue))
+		watch(() => this.ValAttachfk.value, (newValue, oldValue) => this.onUpdate('flds.attachfk', this.ValAttachfk, newValue, oldValue))
+		this.ValAttachData = reactive(new modelFieldType.DocumentData({
+			id: 'ValAttachData',
+			area: 'FLDS',
+			field: 'ATTACHDATA',
+			ignoreFldSubmit: true
+		}).cloneFrom(values?.ValAttachData))
+		watch(() => this.ValAttachData.value, (newValue, oldValue) => this.onUpdate('flds.attachdata', this.ValAttachData, newValue, oldValue), { deep: true })
 
 		this.ValCreatuse = reactive(new modelFieldType.String({
 			id: 'ValCreatuse',
@@ -341,6 +355,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CREATUSE',
 			maxLength: 20,
 			description: computed(() => this.Resources.CREATED_BY12292),
+			isFixed: true,
 		}).cloneFrom(values?.ValCreatuse))
 		watch(() => this.ValCreatuse.value, (newValue, oldValue) => this.onUpdate('flds.creatuse', this.ValCreatuse, newValue, oldValue))
 
@@ -350,6 +365,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'FLDS',
 			field: 'CREATDAT',
 			description: computed(() => this.Resources.DATE_OF_CREATION__DD02208),
+			isFixed: true,
 		}).cloneFrom(values?.ValCreatdat))
 		watch(() => this.ValCreatdat.value, (newValue, oldValue) => this.onUpdate('flds.creatdat', this.ValCreatdat, newValue, oldValue))
 
@@ -359,17 +375,42 @@ export default class ViewModel extends ViewModelBase
 			area: 'FLDS',
 			field: 'CREATHOU',
 			description: computed(() => this.Resources.HOUR_OF_CREATION33629),
+			isFixed: true,
 		}).cloneFrom(values?.ValCreathou))
 		watch(() => this.ValCreathou.value, (newValue, oldValue) => this.onUpdate('flds.creathou', this.ValCreathou, newValue, oldValue))
 
-		this.ValCreatins = reactive(new modelFieldType.Date({
+		this.ValCreatins = reactive(new modelFieldType.DateTimeSeconds({
 			id: 'ValCreatins',
 			originId: 'ValCreatins',
 			area: 'FLDS',
 			field: 'CREATINS',
 			description: computed(() => this.Resources.COMPLETE_DATE_OF_CRE57046),
+			isFixed: true,
 		}).cloneFrom(values?.ValCreatins))
 		watch(() => this.ValCreatins.value, (newValue, oldValue) => this.onUpdate('flds.creatins', this.ValCreatins, newValue, oldValue))
+
+		/** The form fields used only in formulas. */
+		this.ValTblcond = reactive(new modelFieldType.Boolean({
+			id: 'ValTblcond',
+			originId: 'ValTblcond',
+			area: 'FLDS',
+			field: 'TBLCOND',
+			description: computed(() => this.Resources.ENFORCE_TABLE_CONDIT17491),
+			isFixed: true,
+		}).cloneFrom(values?.ValTblcond))
+		watch(() => this.ValTblcond.value, (newValue, oldValue) => this.onUpdate('flds.tblcond', this.ValTblcond, newValue, oldValue))
+
+		this.ValCond = reactive(new modelFieldType.String({
+			id: 'ValCond',
+			originId: 'ValCond',
+			area: 'FLDS',
+			field: 'COND',
+			arrayOptions: qProjArrays.QArrayAcondtst.setResources(vm.$getResource).elements,
+			maxLength: 8,
+			description: computed(() => this.Resources.FIELD_STATE03599),
+			isFixed: true,
+		}).cloneFrom(values?.ValCond))
+		watch(() => this.ValCond.value, (newValue, oldValue) => this.onUpdate('flds.cond', this.ValCond, newValue, oldValue))
 	}
 
 	/**
@@ -384,5 +425,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodflds'
 
 	get QPrimaryKey() { return this.ValCodflds.value }
-	set QPrimaryKey(value) { this.ValCodflds.value = value }
+	set QPrimaryKey(value) { this.ValCodflds.updateValue(value) }
 }

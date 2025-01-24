@@ -62,9 +62,54 @@ namespace GenioMVC.Models
 	public class RequestMenuModel
 	{
 		[JsonConverter(typeof(VariantToStringDictionaryConverter))]
-		public Dictionary<string, string> QueryParams { get; set; } = new Dictionary<string, string>();
+		public Dictionary<string, string> QueryParams { get; set; } = [];
+		public CSGenio.framework.TableConfiguration.TableConfiguration TableConfiguration { get; set; }
+		public string UserTableConfigName { get; set; }
+		public bool LoadDefaultView { get; set; } = false;
+		public bool IsFirstLoad { get; set; } = false;
+		public bool noRedirect { get; set; } = false;
 		[JsonIgnore]
 		public bool AllSelected { get; set; } = false;
+
+		// Column Totalizers: Props that are only defined if
+		// The table has columns with totalizers enabled.
+		public List<string> TotalizerColumns { get; set; } = [];
+		// The table has multiple selection enabled.
+		public List<string> SelectedRows { get; set; } = [];
+	}
+
+	public class RequestInitialEPH
+	{
+		public string FormId { get; set; }
+		public string SelectedId { get; set; }
+	}
+
+	public class RequestInitialEPHS
+	{
+		public string FormId { get; set; }
+		public string[] SelectedIds { get; set; }
+	}
+
+	public class RequestInitialEPHModule
+	{
+		public string EphModule { get; set; }
+	}
+
+	/// <summary>
+	/// Request model for multiple selection menu (create relations) list requests
+	/// </summary>
+	public class RequestMenuMultiSelectAddModel : RequestMenuModel
+	{
+		public string[] SelectedIds { get; set; }
+		public string DestinationId { get; set; }
+	}
+
+	/// <summary>
+	/// Request model for multiple selection menu (remove relations) list requests
+	/// </summary>
+	public class RequestMenuMultiSelectRemoveModel
+	{
+		public string[] SelectedIds { get; set; }
 	}
 
 	public class RequestRangeLimitModel<T> : RequestMenuModel
@@ -80,57 +125,56 @@ namespace GenioMVC.Models
 
 	public class RequestSelectionsModel
 	{
-		public List<string> Ids { get; set; } = new List<string>();
+		public List<string> Ids { get; set; } = [];
 	}
 
 	public class RequestReportModel
 	{
 		public string? Name { get; set; }
+		public string? Format { get; set; }
 		public bool AllSelected { get; set; } = false;
 	}
 
 	public class RequestNewGetModel : RequestIdModel
 	{
 		public bool IsNewLocation { get; set; } = true;
-		[JsonConverter(typeof(VariantToStringDictionaryConverter))]
-		public Dictionary<string, string>? PrefillValues { get; set; }
+		public Dictionary<string, object>? PrefillValues { get; set; }
 	}
 
 	public class RequestEditModel<T>
 	{
-		public T Model {get; set;}
-		public bool Redirect {get; set;} = true;
+		public T Model { get; set; }
+		public bool Redirect { get; set; } = true;
 	}
 
 	public class RequestSaveAllModel<T>
 	{
-		public T[] Models {get; set;}
-		string FieldToChange {get; set;}
+		public T[] Models { get; set; }
+		string FieldToChange { get; set; }
 	}
 
 	public class RequestInsertAllModel
 	{
-		public List<string[]> Models {get; set;}
+		public List<string[]> Models { get; set; }
 	}
 
 	public class RequestCargaModel
 	{
-		public string Idsrc {get; set;}
-		public string Iddst {get; set;}
+		public string Idsrc { get; set; }
+		public string Iddst { get; set; }
 	}
 
 	public class RequestReorderModel : RequestIdModel
 	{
-		public int Position {get; set;}
+		public int Position { get; set; }
 	}
 
-	public class RequestLookupModel
+	public class RequestLookupModel : RequestMenuModel
 	{
-		public string? Id {get; set;}
+		public string? Id { get; set; }
+		public string? Identifier { get; set; }
 		[JsonConverter(typeof(VariantToStringDictionaryConverter))]
-		public Dictionary<string, string> QueryParams {get; set;} = new Dictionary<string, string>();
-		[JsonConverter(typeof(VariantToStringDictionaryConverter))]
-		public Dictionary<string, string>? Limits {get; set;}
+		public Dictionary<string, string>? Limits { get; set; }
 	}
 
 	public class RequestReloadDBEditModel
@@ -161,15 +205,23 @@ namespace GenioMVC.Models
 		public string KeyValue { get; set; } = string.Empty;
 	}
 
-	public class RequestDocumTicketsModel
+	public class RequestDocumGetModel
 	{
 		public string? Ticket { get; set; }
 		public DocumentViewTypeMode ViewType { get; set; } = DocumentViewTypeMode.Print;
 	}
 
-	public class RequestDocumDeleteModel : RequestDocumTicketsModel
+	public class RequestDocumChangeModel : RequestDocumGetModel
 	{
-		public Controllers.ControllerBase.VersionDeleteAction Action { get; set; } = Controllers.ControllerBase.VersionDeleteAction.All;
+		public Controllers.ControllerBase.VersionDeleteAction DeleteType { get; set; } = Controllers.ControllerBase.VersionDeleteAction.All;
+		public bool Delete { get; set; }
+		public bool Editing { get; set; }
+		public string CurrentVersion { get; set; }
+	}
+
+	public class RequestDocumsChangeModel
+	{
+		public List<RequestDocumChangeModel> Documents { get; set; }
 	}
 
 	public class RequestWidgetModel
@@ -183,7 +235,7 @@ namespace GenioMVC.Models
 		public string CtrlId { get; set; }
 		public string Command { get; set; }
 		public string Param { get; set; }
-		public List<string> HistValues { get; set; } = new List<string>();
+		public List<string> HistValues { get; set; } = [];
 	}
 
 	public class RequestWizardModel
@@ -204,5 +256,8 @@ namespace GenioMVC.Models
 		[JsonConverter(typeof(VariantToStringDictionaryConverter))]
 		public Dictionary<string, string> QueryParams { get; set; }
 		public bool AllSelected { get; set; } = false;
+		public CSGenio.framework.TableConfiguration.TableConfiguration TableConfiguration { get; set; }
+		public string UserTableConfigName { get; set; }
+		public bool LoadDefaultView { get; set; } = false;
 	}
 }

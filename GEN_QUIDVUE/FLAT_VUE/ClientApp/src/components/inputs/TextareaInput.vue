@@ -2,13 +2,12 @@
 	<textarea
 		:id="controlId"
 		v-model="curValue"
+		v-bind="$attrs"
 		:class="['i-textarea__field', 'i-textarea', size ? `input-${size}` : '']"
 		:readonly="readonly"
 		:disabled="disabled"
 		:rows="rows"
 		:cols="cols"
-		:required="isRequired"
-		:aria-labelledby="labelId"
 		:placeholder="placeholder">
 	</textarea>
 </template>
@@ -63,14 +62,6 @@
 			},
 
 			/**
-			 * For mandatory text area
-			 */
-			isRequired: {
-				type: Boolean,
-				default: false
-			},
-
-			/**
 			 * Number of lines of text area
 			 */
 			rows: {
@@ -118,11 +109,6 @@
 				{
 					this.$emit('update:modelValue', newValue)
 				}
-			},
-
-			labelId()
-			{
-				return `label_${this.controlId}`
 			}
 		}
 	}

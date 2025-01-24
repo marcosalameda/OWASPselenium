@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.VISIT___EQUIPREGISTNR.handlers"
 							:loading="controls.VISIT___EQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.VISIT___EQUIPREGISTNR.isVisible"
 								v-bind="controls.VISIT___EQUIPREGISTNR.props"
-								:model-value="model.ValCodequip.value"
-								v-on="controls.VISIT___EQUIPREGISTNR.handlers"
-								@update:model-value="model.ValCodequip.fnUpdateValue" />
+								v-on="controls.VISIT___EQUIPREGISTNR.handlers" />
 							<q-see-more-visit-equipregistnr
 								v-if="controls.VISIT___EQUIPREGISTNR.seeMoreIsVisible"
 								v-bind="controls.VISIT___EQUIPREGISTNR.seeMoreParams"
@@ -129,12 +126,12 @@
 							v-on="controls.VISIT___VISITTITLE___.handlers"
 							:loading="controls.VISIT___VISITTITLE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.VISIT___VISITTITLE___.props"
 								:model-value="model.ValTitle.value"
-								@update:model-value="model.ValTitle.fnUpdateValue" />
+								@blur="onBlur(controls.VISIT___VISITTITLE___, model.ValTitle.value)"
+								@change="model.ValTitle.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -146,14 +143,13 @@
 							v-on="controls.VISIT___VISITSTARTDT_.handlers"
 							:loading="controls.VISIT___VISITSTARTDT_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.VISIT___VISITSTARTDT_.isVisible"
-								v-bind="controls.VISIT___VISITSTARTDT_"
-								format="DateTime"
+								v-bind="controls.VISIT___VISITSTARTDT_.props"
 								:model-value="model.ValStartdt.value"
-								@update:model-value="model.ValStartdt.fnUpdateValue" />
+								@reset-icon-click="model.ValStartdt.fnUpdateValue(model.ValStartdt.originalValue ?? new Date())"
+								@update:model-value="model.ValStartdt.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -165,14 +161,13 @@
 							v-on="controls.VISIT___VISITDTFIM___.handlers"
 							:loading="controls.VISIT___VISITDTFIM___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.VISIT___VISITDTFIM___.isVisible"
-								v-bind="controls.VISIT___VISITDTFIM___"
-								format="DateTime"
+								v-bind="controls.VISIT___VISITDTFIM___.props"
 								:model-value="model.ValDtfim.value"
-								@update:model-value="model.ValDtfim.fnUpdateValue" />
+								@reset-icon-click="model.ValDtfim.fnUpdateValue(model.ValDtfim.originalValue ?? new Date())"
+								@update:model-value="model.ValDtfim.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -184,8 +179,7 @@
 							v-on="controls.VISIT___VISITDESCRIPT.handlers"
 							:loading="controls.VISIT___VISITDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-editor
 								v-if="controls.VISIT___VISITDESCRIPT.isVisible"
 								v-bind="controls.VISIT___VISITDESCRIPT"
@@ -205,15 +199,11 @@
 							v-on="controls.VISIT___VISITTODOODIA.handlers"
 							:loading="controls.VISIT___VISITTODOODIA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.VISIT___VISITTODOODIA.isVisible"
-									id="VISIT___VISITTODOODIA"
-									size="mini"
-									:model-value="model.ValTodoodia.value"
-									:readonly="controls.VISIT___VISITTODOODIA.readonly"
+									v-bind="controls.VISIT___VISITTODOODIA.props"
 									@update:model-value="model.ValTodoodia.fnUpdateValue" />
 							</template>
 						</base-input-structure>
@@ -229,12 +219,12 @@
 							v-on="controls.VISIT___VISITCOLOR___.handlers"
 							:loading="controls.VISIT___VISITCOLOR___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.VISIT___VISITCOLOR___.props"
 								:model-value="model.ValColor.value"
-								@update:model-value="model.ValColor.fnUpdateValue" />
+								@blur="onBlur(controls.VISIT___VISITCOLOR___, model.ValColor.value)"
+								@change="model.ValColor.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -246,12 +236,12 @@
 							v-on="controls.VISIT___VISITOBSERVAT.handlers"
 							:loading="controls.VISIT___VISITOBSERVAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.VISIT___VISITOBSERVAT.props"
 								:model-value="model.ValObservat.value"
-								@update:model-value="model.ValObservat.fnUpdateValue" />
+								@blur="onBlur(controls.VISIT___VISITOBSERVAT, model.ValObservat.value)"
+								@change="model.ValObservat.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -337,15 +327,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'VISIT',
-						location: 'form-VISIT',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'VISIT',
+					location: 'form-VISIT',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -391,6 +379,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -463,8 +453,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -546,7 +537,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -600,21 +591,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -625,27 +601,9 @@
 						id: 'VISIT___EQUIPREGISTNR',
 						name: 'REGISTNR',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.REGISTRATION_NO_06209),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodequip',
-							dependencyEvent: 'fieldChange:visit.codequip'
-						},
-						dependentFields: () => {
-							return {
-								set 'equip.codequip'(value) { vm.model.ValCodequip.updateValue(value) },
-								set 'equip.registnr'(value) { vm.model.TableEquipRegistnr.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'EQUIP',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -654,6 +612,18 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodequip',
+							dependencyEvent: 'fieldChange:visit.codequip'
+						},
+						dependentFields: () => ({
+							set 'equip.codequip'(value) { vm.model.ValCodequip.updateValue(value) },
+							set 'equip.registnr'(value) { vm.model.TableEquipRegistnr.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'EQUIP',
+						controlLimits: [
+						],
 					}, this),
 					VISIT___VISITTITLE___: new fieldControlClass.StringControl({
 						modelField: 'ValTitle',
@@ -661,15 +631,11 @@
 						id: 'VISIT___VISITTITLE___',
 						name: 'TITLE',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TITLE21885),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
 						labelId: 'label_VISIT___VISITTITLE___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -679,13 +645,10 @@
 						id: 'VISIT___VISITSTARTDT_',
 						name: 'STARTDT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.START_59353),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -695,13 +658,10 @@
 						id: 'VISIT___VISITDTFIM___',
 						name: 'DTFIM',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.END47577),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -711,13 +671,9 @@
 						id: 'VISIT___VISITDESCRIPT',
 						name: 'DESCRIPT',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESCRIPTION07383),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -727,13 +683,9 @@
 						id: 'VISIT___VISITTODOODIA',
 						name: 'TODOODIA',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.DAY27593),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
@@ -743,15 +695,11 @@
 						id: 'VISIT___VISITCOLOR___',
 						name: 'COLOR',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COLOR55628),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_VISIT___VISITCOLOR___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -761,15 +709,11 @@
 						id: 'VISIT___VISITOBSERVAT',
 						name: 'OBSERVAT',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.OBSERVATIONS03729),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_VISIT___VISITOBSERVAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -823,7 +767,7 @@
 						/** The foreign key to the EQUIP table */
 						get equip() { return vm.model.ValCodequip },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -919,6 +863,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -958,6 +910,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1084,6 +1044,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR VISIT]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1099,6 +1075,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS VISIT]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

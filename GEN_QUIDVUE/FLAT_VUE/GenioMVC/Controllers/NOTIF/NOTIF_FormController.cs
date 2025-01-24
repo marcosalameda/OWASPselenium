@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Notif;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_NOTIF_CANCEL = new NavigationLocation("NOTIFICATION15372", "Notif_Cancel", "Notif") { vueRouteName = "form-NOTIF", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_NOTIF_SHOW = new NavigationLocation("NOTIFICATION15372", "Notif_Show", "Notif") { vueRouteName = "form-NOTIF", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_NOTIF_NEW = new NavigationLocation("NOTIFICATION15372", "Notif_New", "Notif") { vueRouteName = "form-NOTIF", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_NOTIF_EDIT = new NavigationLocation("NOTIFICATION15372", "Notif_Edit", "Notif") { vueRouteName = "form-NOTIF", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_NOTIF_DUPLICATE = new NavigationLocation("NOTIFICATION15372", "Notif_Duplicate", "Notif") { vueRouteName = "form-NOTIF", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_NOTIF_DELETE = new NavigationLocation("NOTIFICATION15372", "Notif_Delete", "Notif") { vueRouteName = "form-NOTIF", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_NOTIF_CANCEL = new("NOTIFICATION15372", "Notif_Cancel", "Notif") { vueRouteName = "form-NOTIF", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_NOTIF_SHOW = new("NOTIFICATION15372", "Notif_Show", "Notif") { vueRouteName = "form-NOTIF", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_NOTIF_NEW = new("NOTIFICATION15372", "Notif_New", "Notif") { vueRouteName = "form-NOTIF", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_NOTIF_EDIT = new("NOTIFICATION15372", "Notif_Edit", "Notif") { vueRouteName = "form-NOTIF", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_NOTIF_DUPLICATE = new("NOTIFICATION15372", "Notif_Duplicate", "Notif") { vueRouteName = "form-NOTIF", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_NOTIF_DELETE = new("NOTIFICATION15372", "Notif_Delete", "Notif") { vueRouteName = "form-NOTIF", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Notif_ModalDBEdit()
-		{
-			Notif_ViewModel model = new Notif_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Notif_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Notif Multiform actions
-
-		//
-		// GET /Notif/MFNotif_New
-		[HttpGet]
-		[ActionName("MFNotif_New")]
-		public ActionResult MFNotif_New()
-		{
-			var model = new Notif_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_NOTIF_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("notif", model.ValCodnotif);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFNotif_New_GET()
-		{
-			return MFNotif_New();
-		}
-
-		//
-		// GET /Notif/MFNotif_Edit
-		[HttpGet]
-		[ActionName("MFNotif_Edit")]
-		public ActionResult MFNotif_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("NOTIF", "EDIT", new { id = id, partialView = "MFNotif", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFNotif_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFNotif_Edit(requestModel);
-		}
-
-		//
-		// GET /Notif/MFNotif_Cancel
-		[ActionName("MFNotif_Cancel")]
-		public ActionResult MFNotif_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Notif(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Notif/MFNotif_Save
-		[HttpPost]
-		[ActionName("MFNotif_Save")]
-		public JsonResult MFNotif_Save(Notif_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFNotif_Save",
-				ViewName = "MFNotif",
-				AreaName = "notif"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Notif/MFNotif_Delete
-		[HttpPost]
-		[ActionName("MFNotif_Delete")]
-		public JsonResult MFNotif_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFNotif_Delete",
-				ViewName = "MFNotif",
-				AreaName = "notif",
-				Location = ACTION_NOTIF_EDIT
-			};
-
-			var model = new Notif_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Notif/Notif_Pess2ValName
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_pess2")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,12 +422,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Notif_Pess2ValName_ViewModel model = new Notif_Pess2ValName_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodnotif = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Notif/Notif_SaveEdit
 		[HttpPost]

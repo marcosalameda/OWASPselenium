@@ -9,7 +9,7 @@ using Quidgest.Persistence.GenericQuery;
 namespace CSGenio.business
 {
     /// <summary>
-    /// Descreve os tipos possíveis de fórmulas internas.
+    /// Descreve os tipos possï¿½veis de fï¿½rmulas internas.
     /// </summary>
     public class EndPeriodFormula : Formula
     {
@@ -28,17 +28,17 @@ namespace CSGenio.business
         }
 
         /// <summary>
-        /// Decrementa o Qvalue de fim de periodo de acordo com a formatação
+        /// Decrementa o Qvalue de fim de periodo de acordo com a formataï¿½ï¿½o
         /// </summary>
-        /// <param name="valor">O Qvalue to o início do periodo</param>
-        /// <param name="formatacao">A formatação do Qvalue</param>
+        /// <param name="valor">O Qvalue to o inï¿½cio do periodo</param>
+        /// <param name="formatacao">A formataï¿½ï¿½o do Qvalue</param>
         /// <returns>O Qvalue to o fecho do periodo</returns>
         private object DecFimPeriodo(object Qvalue, FieldFormatting formatting)
         {
             if (Field.isEmptyValue(Qvalue, formatting))
                 return Field.GetValorEmpty(formatting);
 
-            //TODO: Usar o FieldType e não o FieldFormatting, alias, só devia existir sempre o FieldType
+            //TODO: Usar o FieldType e nï¿½o o FieldFormatting, alias, sï¿½ devia existir sempre o FieldType
             switch (formatting)
             {
                 case FieldFormatting.DATA:
@@ -52,7 +52,7 @@ namespace CSGenio.business
                 case FieldFormatting.DATASEGUNDO:
                     return ((DateTime)Qvalue).AddSeconds(-1);
                 case FieldFormatting.FLOAT:
-                    return ((double)Qvalue) - 1;
+                    return ((decimal)Qvalue) - 1;
                 case FieldFormatting.TEMPO:
                     return HourFunctions.HoursAdd(Qvalue as string, -1);
                 default:

@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Asset parameter
 	/// </summary>
-	public class CSGenioAasspa : DbArea	{
+	public class CSGenioAasspa : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -107,6 +108,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  1;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 1;
 			Qfield.CavDesignation = "DECIMAL_PLACES62575";
 
 			Qfield.Dupmsg = "";
@@ -129,6 +131,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  12;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 4;
 			Qfield.CavDesignation = "QUANTITY06415";
 
@@ -158,7 +161,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"datatype","text","datatype","quantity","datatype","date","date","date"}, new int[] {0,1,2,3,4,5,6,7}, "asspa", "codasspa"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 8, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((((string)args[0])=="T")?(((string)args[1])):(((((string)args[2])=="N")?(GlobalFunctions.NumericToString(((double)args[3]),0)):(((((string)args[4])=="D")?(GlobalFunctions.NumericToString(GlobalFunctions.Year(((DateTime)args[5])),0)+"-"+GlobalFunctions.RIGHT("00"+GlobalFunctions.NumericToString(GlobalFunctions.Month(((DateTime)args[6])),0),2)+"-"+GlobalFunctions.RIGHT("00"+GlobalFunctions.NumericToString(GlobalFunctions.Day(((DateTime)args[7])),0),2)):(""))))));
+				return ((((string)args[0])=="T")?(((string)args[1])):(((((string)args[2])=="N")?(GlobalFunctions.NumericToString(((decimal)args[3]),0)):(((((string)args[4])=="D")?(GlobalFunctions.NumericToString(GlobalFunctions.Year(((DateTime)args[5])),0)+"-"+GlobalFunctions.RIGHT("00"+GlobalFunctions.NumericToString(GlobalFunctions.Month(((DateTime)args[6])),0),2)+"-"+GlobalFunctions.RIGHT("00"+GlobalFunctions.NumericToString(GlobalFunctions.Day(((DateTime)args[7])),0),2)):(""))))));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -333,7 +336,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodasspa, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodasset { get { return m_fldCodasset; } }
 		private static FieldRef m_fldCodasset = new FieldRef("asspa", "codasset");
@@ -344,7 +346,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodasset); }
 			set { insertNameValueField(FldCodasset, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldCodkinde { get { return m_fldCodkinde; } }
@@ -357,7 +358,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodkinde, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodparam { get { return m_fldCodparam; } }
 		private static FieldRef m_fldCodparam = new FieldRef("asspa", "codparam");
@@ -368,7 +368,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodparam); }
 			set { insertNameValueField(FldCodparam, value); }
 		}
-
 
 		/// <summary>Field : "Data type" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldDatatype { get { return m_fldDatatype; } }
@@ -381,18 +380,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDatatype, value); }
 		}
 
-
 		/// <summary>Field : "Decimal places" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldDecimalplaces { get { return m_fldDecimalplaces; } }
 		private static FieldRef m_fldDecimalplaces = new FieldRef("asspa", "decimalplaces");
 
 		/// <summary>Field : "Decimal places" Tipo: "N" Formula:  ""</summary>
-		public double ValDecimalplaces
+		public decimal ValDecimalplaces
 		{
-			get { return (double)returnValueField(FldDecimalplaces); }
+			get { return (decimal)returnValueField(FldDecimalplaces); }
 			set { insertNameValueField(FldDecimalplaces, value); }
 		}
-
 
 		/// <summary>Field : "Text" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldText { get { return m_fldText; } }
@@ -405,18 +402,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldText, value); }
 		}
 
-
 		/// <summary>Field : "Quantity" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldQuantity { get { return m_fldQuantity; } }
 		private static FieldRef m_fldQuantity = new FieldRef("asspa", "quantity");
 
 		/// <summary>Field : "Quantity" Tipo: "N" Formula:  ""</summary>
-		public double ValQuantity
+		public decimal ValQuantity
 		{
-			get { return (double)returnValueField(FldQuantity); }
+			get { return (decimal)returnValueField(FldQuantity); }
 			set { insertNameValueField(FldQuantity, value); }
 		}
-
 
 		/// <summary>Field : "Date" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldDate { get { return m_fldDate; } }
@@ -429,7 +424,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDate, value); }
 		}
 
-
 		/// <summary>Field : "To show" Tipo: "C" Formula: + "iif([ASSPA->DATATYPE]=="T",[ASSPA->TEXT],iif([ASSPA->DATATYPE]=="N",NumericToString([ASSPA->QUANTITY],0),iif([ASSPA->DATATYPE]=="D",NumericToString(Year([ASSPA->DATE]),0)+"-"+RIGHT("00"+NumericToString(Month([ASSPA->DATE]),0),2)+"-"+RIGHT("00"+NumericToString(Day([ASSPA->DATE]),0),2),"") ) )"</summary>
 		public static FieldRef FldToshow { get { return m_fldToshow; } }
 		private static FieldRef m_fldToshow = new FieldRef("asspa", "toshow");
@@ -440,7 +434,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldToshow); }
 			set { insertNameValueField(FldToshow, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -483,23 +476,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAasspa> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAasspa> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAasspa>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -548,7 +524,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX ASSPA]/

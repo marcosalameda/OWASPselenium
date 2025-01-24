@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Itemc;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_CATAR_CANCEL = new NavigationLocation("ARTICLE_CATEGORIZATI07119", "Catar_Cancel", "Itemc") { vueRouteName = "form-CATAR", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_CATAR_SHOW = new NavigationLocation("ARTICLE_CATEGORIZATI07119", "Catar_Show", "Itemc") { vueRouteName = "form-CATAR", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_CATAR_NEW = new NavigationLocation("ARTICLE_CATEGORIZATI07119", "Catar_New", "Itemc") { vueRouteName = "form-CATAR", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_CATAR_EDIT = new NavigationLocation("ARTICLE_CATEGORIZATI07119", "Catar_Edit", "Itemc") { vueRouteName = "form-CATAR", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_CATAR_DUPLICATE = new NavigationLocation("ARTICLE_CATEGORIZATI07119", "Catar_Duplicate", "Itemc") { vueRouteName = "form-CATAR", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_CATAR_DELETE = new NavigationLocation("ARTICLE_CATEGORIZATI07119", "Catar_Delete", "Itemc") { vueRouteName = "form-CATAR", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_CATAR_CANCEL = new("ARTICLE_CATEGORIZATI07119", "Catar_Cancel", "Itemc") { vueRouteName = "form-CATAR", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_CATAR_SHOW = new("ARTICLE_CATEGORIZATI07119", "Catar_Show", "Itemc") { vueRouteName = "form-CATAR", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_CATAR_NEW = new("ARTICLE_CATEGORIZATI07119", "Catar_New", "Itemc") { vueRouteName = "form-CATAR", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_CATAR_EDIT = new("ARTICLE_CATEGORIZATI07119", "Catar_Edit", "Itemc") { vueRouteName = "form-CATAR", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_CATAR_DUPLICATE = new("ARTICLE_CATEGORIZATI07119", "Catar_Duplicate", "Itemc") { vueRouteName = "form-CATAR", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_CATAR_DELETE = new("ARTICLE_CATEGORIZATI07119", "Catar_Delete", "Itemc") { vueRouteName = "form-CATAR", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Catar_ModalDBEdit()
-		{
-			Catar_ViewModel model = new Catar_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Catar_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Catar Multiform actions
-
-		//
-		// GET /Itemc/MFCatar_New
-		[HttpGet]
-		[ActionName("MFCatar_New")]
-		public ActionResult MFCatar_New()
-		{
-			var model = new Catar_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_CATAR_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("itemc", model.ValCodcatar);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFCatar_New_GET()
-		{
-			return MFCatar_New();
-		}
-
-		//
-		// GET /Itemc/MFCatar_Edit
-		[HttpGet]
-		[ActionName("MFCatar_Edit")]
-		public ActionResult MFCatar_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("CATAR", "EDIT", new { id = id, partialView = "MFCatar", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFCatar_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFCatar_Edit(requestModel);
-		}
-
-		//
-		// GET /Itemc/MFCatar_Cancel
-		[ActionName("MFCatar_Cancel")]
-		public ActionResult MFCatar_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Itemc(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Itemc/MFCatar_Save
-		[HttpPost]
-		[ActionName("MFCatar_Save")]
-		public JsonResult MFCatar_Save(Catar_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFCatar_Save",
-				ViewName = "MFCatar",
-				AreaName = "itemc"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Itemc/MFCatar_Delete
-		[HttpPost]
-		[ActionName("MFCatar_Delete")]
-		public JsonResult MFCatar_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFCatar_Delete",
-				ViewName = "MFCatar",
-				AreaName = "itemc",
-				Location = ACTION_CATAR_EDIT
-			};
-
-			var model = new Catar_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Itemc/Catar_ItemValItemdes
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_item")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,9 +422,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Catar_ItemValItemdes_ViewModel model = new Catar_ItemValItemdes_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodcatar = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -590,6 +464,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_cattp")))
@@ -603,21 +478,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -625,12 +485,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Catar_CattpValTpcatego_ViewModel model = new Catar_CattpValTpcatego_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodcatar = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Itemc/Catar_SaveEdit
 		[HttpPost]

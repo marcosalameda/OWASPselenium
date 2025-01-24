@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Assma
 {
-	public class Assma_ViewModel : FormViewModel<Models.Assma>
+	public class Assma_ViewModel : FormViewModel<Models.Assma>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,32 +29,35 @@ namespace GenioMVC.ViewModels.Assma
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Identification name" | Type: "CE"
+		/// </summary>
+		public string ValCodasset { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Identification name" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Asset> TableAssetName { get; set; }
-
 		/// <summary>
 		/// Title: "Manual name" | Type: "C"
 		/// </summary>
 		public string ValName { get; set; }
-
 		/// <summary>
 		/// Title: "Digital document" | Type: "IB"
 		/// </summary>
-		[Document("ValDigdocum", false, true, false, false, DocumentViewTypeMode.Print)]
+		[Document("ValDigdocum", true, false, false, DocumentViewTypeMode.Print)]
 		public string ValDigdocum { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public string ValDigdocumfk { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public DocumsProperties_ViewModel ValDigdocumPropertiesVM { get; set; }
-
 		/// <summary>
 		/// Title: "Notes" | Type: "MO"
 		/// </summary>
@@ -67,15 +70,6 @@ namespace GenioMVC.ViewModels.Assma
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Identification name" | Type: "CE"
-		/// </summary>
-		public string ValCodasset { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -91,9 +85,10 @@ namespace GenioMVC.ViewModels.Assma
 
 		public string ValCodassma { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Assma_ViewModel() : base(null!) { }
@@ -129,6 +124,15 @@ namespace GenioMVC.ViewModels.Assma
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Assma model = new Models.Assma(userContext) { Identifier = "FASSMA" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FASSMA");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -189,11 +193,11 @@ namespace GenioMVC.ViewModels.Assma
 
 			try
 			{
+				ValCodasset = ViewModelConversion.ToString(m.ValCodasset);
 				ValName = ViewModelConversion.ToString(m.ValName);
 				ValDigdocum = ViewModelConversion.ToString(m.ValDigdocum);
 				ValDigdocumfk = ViewModelConversion.ToString(m.ValDigdocumfk);
 				ValNotes = ViewModelConversion.ToString(m.ValNotes);
-				ValCodasset = ViewModelConversion.ToString(m.ValCodasset);
 				ValCodassma = ViewModelConversion.ToString(m.ValCodassma);
 			}
 			catch (Exception)
@@ -203,6 +207,20 @@ namespace GenioMVC.ViewModels.Assma
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Assma m)
 		{
 			if (m == null)
@@ -213,22 +231,75 @@ namespace GenioMVC.ViewModels.Assma
 
 			try
 			{
+				m.ValCodasset = ViewModelConversion.ToString(ValCodasset);
 				m.ValName = ViewModelConversion.ToString(ValName);
 				m.ValDigdocum = ViewModelConversion.ToString(ValDigdocum);
 				m.ValDigdocumfk = ViewModelConversion.ToString(ValDigdocumfk);
 				m.ValNotes = ViewModelConversion.ToString(ValNotes);
-				m.ValCodasset = ViewModelConversion.ToString(ValCodasset);
 				m.ValCodassma = ViewModelConversion.ToString(ValCodassma);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Assma) to Model (Assma) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Assma) to Model (Assma) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "assma.codasset":
+						this.ValCodasset = ViewModelConversion.ToString(_value);
+						break;
+					case "assma.name":
+						this.ValName = ViewModelConversion.ToString(_value);
+						break;
+					case "assma.digdocum":
+						this.ValDigdocum = ViewModelConversion.ToString(_value);
+						break;
+					case "assma.notes":
+						this.ValNotes = ViewModelConversion.ToString(_value);
+						break;
+					case "assma.codassma":
+						this.ValCodassma = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Assma) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Assma)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Assma.Find(id ?? Navigation.GetStrValue("assma"), m_userContext, "FASSMA"); }
+			finally { Model ??= new Models.Assma(m_userContext) { Identifier = "FASSMA" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -242,20 +313,13 @@ namespace GenioMVC.ViewModels.Assma
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FASSMA";
@@ -265,6 +329,7 @@ namespace GenioMVC.ViewModels.Assma
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -330,31 +395,25 @@ namespace GenioMVC.ViewModels.Assma
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValName", Resources.Resources.MANUAL_NAME60077, ValName, 50);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE ASSMA]/
 		public override void Save()
 		{
 
-			try { Model = Models.Assma.Find(Navigation.GetStrValue("assma"), m_userContext, "FASSMA"); }
-			finally { if (Model == null) Model = new Models.Assma(m_userContext) { Identifier = "FASSMA" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY ASSMA]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Assma.Find(Navigation.GetStrValue("assma"), m_userContext, "FASSMA"); }
-			finally { if (Model == null) Model = new Models.Assma(m_userContext) { Identifier = "FASSMA" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE ASSMA]/
 
@@ -387,8 +446,8 @@ namespace GenioMVC.ViewModels.Assma
 				object hValue = Navigation.GetValue("asset", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					assma___assetname____Conds.Equal(CSGenioAasset.FldCodasset, Navigation.GetValue("asset"));
-					this.ValCodasset = Navigation.GetStrValue("asset");
+					assma___assetname____Conds.Equal(CSGenioAasset.FldCodasset, hValue);
+					this.ValCodasset = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -405,8 +464,6 @@ namespace GenioMVC.ViewModels.Assma
 					Navigation.CurrentLevel.SetEntry("RETURN_asset", null);
 				}
 				FillDependant_AssmaTableAssetName(lazyLoad);
-				//Check if foreignkey comes from history
-				TableAssetName.FilledByHistory = Navigation.CheckFilledByHistory("asset");
 				return;
 			}
 
@@ -474,9 +531,6 @@ namespace GenioMVC.ViewModels.Assma
 
 				TableAssetName.List = new SelectList(TableAssetName.Elements.ToSelectList(x => x.ValName, x => x.ValCodasset,  x => x.ValCodasset == this.ValCodasset), "Value", "Text", this.ValCodasset);
 				FillDependant_AssmaTableAssetName();
-
-				//Check if foreignkey comes from history
-				TableAssetName.FilledByHistory = Navigation.CheckFilledByHistory("asset");
 			}
 		}
 
@@ -573,16 +627,18 @@ namespace GenioMVC.ViewModels.Assma
 		{
 			return identifier switch
 			{
+				"assma.codasset" => ViewModelConversion.ToString(modelValue),
 				"assma.name" => ViewModelConversion.ToString(modelValue),
 				"assma.digdocum" => ViewModelConversion.ToString(modelValue),
 				"assma.notes" => ViewModelConversion.ToString(modelValue),
-				"assma.codasset" => ViewModelConversion.ToString(modelValue),
 				"assma.codassma" => ViewModelConversion.ToString(modelValue),
 				"asset.codasset" => ViewModelConversion.ToString(modelValue),
 				"asset.name" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

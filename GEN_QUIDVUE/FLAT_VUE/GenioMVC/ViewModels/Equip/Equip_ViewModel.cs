@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Equip
 {
-	public class Equip_ViewModel : FormViewModel<Models.Equip>
+	public class Equip_ViewModel : FormViewModel<Models.Equip>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,90 +29,117 @@ namespace GenioMVC.ViewModels.Equip
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Company:" | Type: "CE"
+		/// </summary>
+		public string ValCodempre { get; set; }
+		/// <summary>
+		/// Title: "Decomission No." | Type: "CE"
+		/// </summary>
+		public string ValCoddeco { get; set; }
+		/// <summary>
+		/// Title: "Item:" | Type: "CE"
+		/// </summary>
+		public string ValCoditem { get; set; }
+		/// <summary>
+		/// Title: "Person" | Type: "CE"
+		/// </summary>
+		public string ValCodpess1 { get; set; }
+		/// <summary>
+		/// Title: "Room No:" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodrooms { get; set; }
+		/// <summary>
+		/// Title: "Type of equipment" | Type: "CE"
+		/// </summary>
+		public string ValCodtpequ { get; set; }
+		/// <summary>
+		/// Title: "Warehouse" | Type: "CE"
+		/// </summary>
+		public string ValCodwareh { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Company:" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Cmpny> TableCmpnyDesignat { get; set; }
-
 		/// <summary>
 		/// Title: "Person" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Pess1> TablePess1Name { get; set; }
-
 		/// <summary>
 		/// Title: "Sequential No." | Type: "N"
 		/// </summary>
 		public decimal? ValSequennr { get; set; }
-
 		/// <summary>
 		/// Title: "Registration No." | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValRegistnr { get; set; }
-
 		/// <summary>
 		/// Title: "Type of equipment" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Tpequ> TableTpequTipoequi { get; set; }
-
 		/// <summary>
 		/// Title: "Manufacturer's website:" | Type: "C"
 		/// </summary>
 		public string ValSitefabr { get; set; }
-
 		/// <summary>
 		/// Title: "Warehouse" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Wareh> TableWarehWarehdes { get; set; }
-
 		/// <summary>
 		/// Title: "Item:" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Item> TableItemItemdes { get; set; }
-
 		/// <summary>
 		/// Title: "Designation:" | Type: "C"
 		/// </summary>
 		public string ValDesignat { get; set; }
-
 		/// <summary>
 		/// Title: "Loan Frequency" | Type: "AN"
 		/// </summary>
-		public double ValFrequenc { get; set; }
-
+		public decimal ValFrequenc { get; set; }
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValFrequenc { get; set; }
-
 		/// <summary>
 		/// Title: "Total Value:" | Type: "$D"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValValortot { get; set; }
-
 		/// <summary>
 		/// Title: "Acquisition:" | Type: "D"
 		/// </summary>
 		public DateTime? ValDtaquisi { get; set; }
-
 		/// <summary>
 		/// Title: "Decomission:" | Type: "D"
 		/// </summary>
+		[ValidateSetAccess]
 		public DateTime? ValDtdeco { get; set; }
-
 		/// <summary>
 		/// Title: "bought" | Type: "L"
 		/// </summary>
+		[ValidateSetAccess]
 		public bool ValBought { get; set; }
-
 		/// <summary>
 		/// Title: "Room No:" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Room1> TableRoom1Roomnr { get; set; }
-
 		/// <summary>
 		/// Title: "Room Designation:" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public string Room1ValDesignat 
 		{
 			get
@@ -126,82 +153,77 @@ namespace GenioMVC.ViewModels.Equip
 		public Func<string> funcRoom1ValDesignat { get; set; }
 
 		private string _auxRoom1ValDesignat { get; set; }
-
 		/// <summary>
 		/// Title: "Reference" | Type: "DT"
 		/// </summary>
 		public DateTime? ValDtrefere { get; set; }
-
 		/// <summary>
 		/// Title: "First" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValFirst { get; set; }
-
 		/// <summary>
 		/// Title: "Before" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValBefore { get; set; }
-
 		/// <summary>
 		/// Title: "Following" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValFollowin { get; set; }
-
 		/// <summary>
 		/// Title: "last" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValLast { get; set; }
-
 		/// <summary>
 		/// Title: "Quantity of transactions" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValQtdmovim { get; set; }
-
 		/// <summary>
 		/// Title: "Movements" | Type: "MO"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValMoviment { get; set; }
-
 		/// <summary>
 		/// Title: "Choose room" | Type: "PSEUD"
 		/// </summary>
+		[ValidateSetAccess]
 		public List<GenioMVC.Models.Rooms> List_Movimevv { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public List<GenioMVC.Models.Rooms> List_MovimevvSelected { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public string[] List_Movimevv_SelectedIds { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public string List_Movimevv_Area { get; set; }
-
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
-		[ImageThumbnailJsonConverter(100, 50)]
-		public GenioMVC.ViewModels.ImageModel ValPhotogra { get; set; }
-
+		[ImageThumbnailJsonConverter(30, 50)]
+		public GenioMVC.Models.ImageModel ValPhotogra { get; set; }
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
-		[ImageThumbnailJsonConverter(100, 50)]
-		public GenioMVC.ViewModels.ImageModel ValLastpho { get; set; }
-
+		[ImageThumbnailJsonConverter(30, 50)]
+		[ValidateSetAccess]
+		public GenioMVC.Models.ImageModel ValLastpho { get; set; }
 		/// <summary>
 		/// Title: "Decomission No." | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Decom> TableDecomDecomnr { get; set; }
-
 		/// <summary>
 		/// Title: "Downed equipment" | Type: "L"
 		/// </summary>
+		[ValidateSetAccess]
 		public bool ValIfabatif { get; set; }
 
 		#region Navigations
@@ -211,45 +233,6 @@ namespace GenioMVC.ViewModels.Equip
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Company:" | Type: "CE"
-		/// </summary>
-		public string ValCodempre { get; set; }
-
-		/// <summary>
-		/// Title: "Decomission No." | Type: "CE"
-		/// </summary>
-		public string ValCoddeco { get; set; }
-
-		/// <summary>
-		/// Title: "Item:" | Type: "CE"
-		/// </summary>
-		public string ValCoditem { get; set; }
-
-		/// <summary>
-		/// Title: "Person" | Type: "CE"
-		/// </summary>
-		public string ValCodpess1 { get; set; }
-
-		/// <summary>
-		/// Title: "Type of equipment" | Type: "CE"
-		/// </summary>
-		public string ValCodtpequ { get; set; }
-
-		/// <summary>
-		/// Title: "Warehouse" | Type: "CE"
-		/// </summary>
-		public string ValCodwareh { get; set; }
-
-		/// <summary>
-		/// Title: "Room No:" | Type: "CE"
-		/// </summary>
-		public string ValCodrooms { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -265,9 +248,10 @@ namespace GenioMVC.ViewModels.Equip
 
 		public string ValCodequip { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Equip_ViewModel() : base(null!) { }
@@ -303,6 +287,15 @@ namespace GenioMVC.ViewModels.Equip
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Equip model = new Models.Equip(userContext) { Identifier = "FEQUIP" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FEQUIP");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -363,11 +356,18 @@ namespace GenioMVC.ViewModels.Equip
 
 			try
 			{
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
+				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
+				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
+				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
+				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
 				ValSequennr = ViewModelConversion.ToNumeric(m.ValSequennr);
 				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
 				ValSitefabr = ViewModelConversion.ToString(m.ValSitefabr);
 				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
-				ValFrequenc = ViewModelConversion.ToDouble(m.ValFrequenc);
+				ValFrequenc = ViewModelConversion.ToNumeric(m.ValFrequenc);
 				ValValortot = ViewModelConversion.ToNumeric(m.ValValortot);
 				ValDtaquisi = ViewModelConversion.ToDateTime(m.ValDtaquisi);
 				ValDtdeco = ViewModelConversion.ToDateTime(m.ValDtdeco);
@@ -383,13 +383,6 @@ namespace GenioMVC.ViewModels.Equip
 				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
 				ValLastpho = ViewModelConversion.ToImage(m.ValLastpho);
 				ValIfabatif = ViewModelConversion.ToLogic(m.ValIfabatif);
-				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
-				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
-				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
-				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
-				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
-				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
-				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
 			catch (Exception)
@@ -399,6 +392,20 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Equip m)
 		{
 			if (m == null)
@@ -409,43 +416,133 @@ namespace GenioMVC.ViewModels.Equip
 
 			try
 			{
-				m.ValSequennr = ViewModelConversion.ToNumeric(ValSequennr);
-				m.ValRegistnr = ViewModelConversion.ToString(ValRegistnr);
-				m.ValSitefabr = ViewModelConversion.ToString(ValSitefabr);
-				m.ValDesignat = ViewModelConversion.ToString(ValDesignat);
-				m.ValFrequenc = ViewModelConversion.ToDouble(ValFrequenc);
-				m.ValValortot = ViewModelConversion.ToNumeric(ValValortot);
-				m.ValDtaquisi = ViewModelConversion.ToDateTime(ValDtaquisi);
-				m.ValDtdeco = ViewModelConversion.ToDateTime(ValDtdeco);
-				m.ValBought = ViewModelConversion.ToLogic(ValBought);
-				m.ValDtrefere = ViewModelConversion.ToDateTime(ValDtrefere);
-				m.ValFirst = ViewModelConversion.ToString(ValFirst);
-				m.ValBefore = ViewModelConversion.ToString(ValBefore);
-				m.ValFollowin = ViewModelConversion.ToString(ValFollowin);
-				m.ValLast = ViewModelConversion.ToString(ValLast);
-				m.ValQtdmovim = ViewModelConversion.ToNumeric(ValQtdmovim);
-				m.ValMoviment = ViewModelConversion.ToString(ValMoviment);
-				m.ValPhotogra = ViewModelConversion.ToImage(ValPhotogra);
-				m.ValLastpho = ViewModelConversion.ToImage(ValLastpho);
-				m.ValIfabatif = ViewModelConversion.ToLogic(ValIfabatif);
 				m.ValCodempre = ViewModelConversion.ToString(ValCodempre);
 				m.ValCoddeco = ViewModelConversion.ToString(ValCoddeco);
 				m.ValCoditem = ViewModelConversion.ToString(ValCoditem);
 				m.ValCodpess1 = ViewModelConversion.ToString(ValCodpess1);
 				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
 				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
-				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
+				m.ValSequennr = ViewModelConversion.ToNumeric(ValSequennr);
+				m.ValSitefabr = ViewModelConversion.ToString(ValSitefabr);
+				m.ValDesignat = ViewModelConversion.ToString(ValDesignat);
+				m.ValFrequenc = ViewModelConversion.ToNumeric(ValFrequenc);
+				m.ValDtaquisi = ViewModelConversion.ToDateTime(ValDtaquisi);
+				m.ValDtrefere = ViewModelConversion.ToDateTime(ValDtrefere);
+				if (ValPhotogra == null || !ValPhotogra.IsThumbnail)
+					m.ValPhotogra = ViewModelConversion.ToImage(ValPhotogra);
 				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
+				m.ValRegistnr = ViewModelConversion.ToString(ValRegistnr);
+				m.ValValortot = ViewModelConversion.ToNumeric(ValValortot);
+				m.ValDtdeco = ViewModelConversion.ToDateTime(ValDtdeco);
+				m.ValBought = ViewModelConversion.ToLogic(ValBought);
+				m.ValFirst = ViewModelConversion.ToString(ValFirst);
+				m.ValBefore = ViewModelConversion.ToString(ValBefore);
+				m.ValFollowin = ViewModelConversion.ToString(ValFollowin);
+				m.ValLast = ViewModelConversion.ToString(ValLast);
+				m.ValQtdmovim = ViewModelConversion.ToNumeric(ValQtdmovim);
+				m.ValMoviment = ViewModelConversion.ToString(ValMoviment);
+				if (ValLastpho == null || !ValLastpho.IsThumbnail)
+					m.ValLastpho = ViewModelConversion.ToImage(ValLastpho);
+				m.ValIfabatif = ViewModelConversion.ToLogic(ValIfabatif);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Equip) to Model (Equip) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Equip) to Model (Equip) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "equip.codempre":
+						this.ValCodempre = ViewModelConversion.ToString(_value);
+						break;
+					case "equip.coddeco":
+						this.ValCoddeco = ViewModelConversion.ToString(_value);
+						break;
+					case "equip.coditem":
+						this.ValCoditem = ViewModelConversion.ToString(_value);
+						break;
+					case "equip.codpess1":
+						this.ValCodpess1 = ViewModelConversion.ToString(_value);
+						break;
+					case "equip.codtpequ":
+						this.ValCodtpequ = ViewModelConversion.ToString(_value);
+						break;
+					case "equip.codwareh":
+						this.ValCodwareh = ViewModelConversion.ToString(_value);
+						break;
+					case "equip.sequennr":
+						this.ValSequennr = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "equip.sitefabr":
+						this.ValSitefabr = ViewModelConversion.ToString(_value);
+						break;
+					case "equip.designat":
+						this.ValDesignat = ViewModelConversion.ToString(_value);
+						break;
+					case "equip.frequenc":
+						this.ValFrequenc = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "equip.dtaquisi":
+						this.ValDtaquisi = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "equip.dtrefere":
+						this.ValDtrefere = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "equip.photogra":
+						this.ValPhotogra = ViewModelConversion.ToImage(_value);
+						break;
+					case "equip.codequip":
+						this.ValCodequip = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Equip) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Equip)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Equip.Find(id ?? Navigation.GetStrValue("equip"), m_userContext, "FEQUIP"); }
+			finally { Model ??= new Models.Equip(m_userContext) { Identifier = "FEQUIP" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -459,20 +556,13 @@ namespace GenioMVC.ViewModels.Equip
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FEQUIP";
@@ -482,6 +572,7 @@ namespace GenioMVC.ViewModels.Equip
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -545,7 +636,6 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValRegistnr", Resources.Resources.REGISTRATION_NO_06209, ValRegistnr, 6);
 			validator.StringLength("ValSitefabr", Resources.Resources.MANUFACTURER_S_WEBSI12156, ValSitefabr, 256);
 			validator.Hyperlink(Resources.Resources.MANUFACTURER_S_WEBSI12156, ValSitefabr);
@@ -556,28 +646,23 @@ namespace GenioMVC.ViewModels.Equip
 			validator.StringLength("ValFollowin", Resources.Resources.FOLLOWING22170, ValFollowin, 10);
 			validator.StringLength("ValLast", Resources.Resources.LAST48120, ValLast, 10);
 
+
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE EQUIP]/
 		public override void Save()
 		{
 
-			try { Model = Models.Equip.Find(Navigation.GetStrValue("equip"), m_userContext, "FEQUIP"); }
-			finally { if (Model == null) Model = new Models.Equip(m_userContext) { Identifier = "FEQUIP" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY EQUIP]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Equip.Find(Navigation.GetStrValue("equip"), m_userContext, "FEQUIP"); }
-			finally { if (Model == null) Model = new Models.Equip(m_userContext) { Identifier = "FEQUIP" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE EQUIP]/
 
@@ -611,8 +696,8 @@ namespace GenioMVC.ViewModels.Equip
 				object hValue = Navigation.GetValue("cmpny", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					equip___cmpnydesignatConds.Equal(CSGenioAcmpny.FldCodempre, Navigation.GetValue("cmpny"));
-					this.ValCodempre = Navigation.GetStrValue("cmpny");
+					equip___cmpnydesignatConds.Equal(CSGenioAcmpny.FldCodempre, hValue);
+					this.ValCodempre = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -629,8 +714,6 @@ namespace GenioMVC.ViewModels.Equip
 					Navigation.CurrentLevel.SetEntry("RETURN_cmpny", null);
 				}
 				FillDependant_EquipTableCmpnyDesignat(lazyLoad);
-				//Check if foreignkey comes from history
-				TableCmpnyDesignat.FilledByHistory = Navigation.CheckFilledByHistory("cmpny");
 				return;
 			}
 
@@ -698,9 +781,6 @@ namespace GenioMVC.ViewModels.Equip
 
 				TableCmpnyDesignat.List = new SelectList(TableCmpnyDesignat.Elements.ToSelectList(x => x.ValDesignat, x => x.ValCodempre,  x => x.ValCodempre == this.ValCodempre), "Value", "Text", this.ValCodempre);
 				FillDependant_EquipTableCmpnyDesignat();
-
-				//Check if foreignkey comes from history
-				TableCmpnyDesignat.FilledByHistory = Navigation.CheckFilledByHistory("cmpny");
 			}
 		}
 
@@ -806,14 +886,14 @@ namespace GenioMVC.ViewModels.Equip
 				object hValue = Navigation.GetValue("pess1", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					equip___pess1name____Conds.Equal(CSGenioApess1.FldCodpesso, Navigation.GetValue("pess1"));
-					this.ValCodpess1 = Navigation.GetStrValue("pess1");
+					equip___pess1name____Conds.Equal(CSGenioApess1.FldCodpesso, hValue);
+					this.ValCodpess1 = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
 
 			// Area limit
-			equip___pess1name____DoLoad &= AddCriteriaAreaLimit(equip___pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, false);
+			equip___pess1name____DoLoad &= AddCriteriaAreaLimit(equip___pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
 			TablePess1Name = new TableDBEdit<Models.Pess1>
 			{
@@ -828,8 +908,6 @@ namespace GenioMVC.ViewModels.Equip
 					Navigation.CurrentLevel.SetEntry("RETURN_pess1", null);
 				}
 				FillDependant_EquipTablePess1Name(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePess1Name.FilledByHistory = Navigation.CheckFilledByHistory("pess1");
 				return;
 			}
 
@@ -872,21 +950,21 @@ namespace GenioMVC.ViewModels.Equip
 					weakFilters.Equal(CSGenioApess1.FldCodpesso, selectedValue);
 
 				CriteriaSet subfilters = CriteriaSet.And();
-				if (Navigation.CheckKey("filter_ValCodpess1__1") && (bool)Navigation.GetValue("filter_ValCodpess1__1") == true)
+				if (Navigation.CheckKey("filter_ValCodpess1_FILTER1_1") && (bool)Navigation.GetValue("filter_ValCodpess1_FILTER1_1") == true)
 				{
 						subfilters.Equal(CSGenioApess1.FldGender, "F");
 
 				}
 				else
-					Navigation.SetValue("filter_ValCodpess1__1", false);
+					Navigation.SetValue("filter_ValCodpess1_FILTER1_1", false);
 
-				if (Navigation.CheckKey("filter_ValCodpess1__2") && (bool)Navigation.GetValue("filter_ValCodpess1__2") == true)
+				if (Navigation.CheckKey("filter_ValCodpess1_FILTER2_1") && (bool)Navigation.GetValue("filter_ValCodpess1_FILTER2_1") == true)
 				{
 						subfilters.Equal(CSGenioApess1.FldGender, "M");
 
 				}
 				else
-					Navigation.SetValue("filter_ValCodpess1__2", false);
+					Navigation.SetValue("filter_ValCodpess1_FILTER2_1", false);
 
 				weakFilters.SubSets.Add(subfilters);
 				equip___pess1name____Conds.SubSets.Add(weakFilters);
@@ -935,9 +1013,6 @@ namespace GenioMVC.ViewModels.Equip
 					Navigation.SetValue("pess1", this.ValCodpess1);
 				}
 				FillDependant_EquipTablePess1Name();
-
-				//Check if foreignkey comes from history
-				TablePess1Name.FilledByHistory = Navigation.CheckFilledByHistory("pess1");
 			}
 		}
 
@@ -1056,13 +1131,13 @@ namespace GenioMVC.ViewModels.Equip
 
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_Equip_Pess1ValName__1 = false;
-				if (requestValues["filter_Equip_Pess1ValName_"] != null)
-					filter_Equip_Pess1ValName__1 = requestValues["filter_Equip_Pess1ValName_"].Contains("1");
-				else if (Navigation.CheckKey("filter_Equip_Pess1ValName__1"))
-					filter_Equip_Pess1ValName__1 = (bool)Navigation.GetValue("filter_Equip_Pess1ValName__1");
-				Navigation.SetValue("filter_Equip_Pess1ValName__1", filter_Equip_Pess1ValName__1);
-				if (filter_Equip_Pess1ValName__1)
+				bool filter_Equip_Pess1ValName_FILTER1_1 = false;
+				if (requestValues["filter_Equip_Pess1ValName_FILTER1"] != null)
+					filter_Equip_Pess1ValName_FILTER1_1 = requestValues["filter_Equip_Pess1ValName_FILTER1"].Contains("1");
+				else if (Navigation.CheckKey("filter_Equip_Pess1ValName_FILTER1_1"))
+					filter_Equip_Pess1ValName_FILTER1_1 = (bool)Navigation.GetValue("filter_Equip_Pess1ValName_FILTER1_1");
+				Navigation.SetValue("filter_Equip_Pess1ValName_FILTER1_1", filter_Equip_Pess1ValName_FILTER1_1);
+				if (filter_Equip_Pess1ValName_FILTER1_1)
 				{
 					groupFilters.Equal(CSGenioApess1.FldGender, "F");
 
@@ -1072,13 +1147,13 @@ namespace GenioMVC.ViewModels.Equip
 			}
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_Equip_Pess1ValName__2 = false;
-				if (requestValues["filter_Equip_Pess1ValName_"] != null)
-					filter_Equip_Pess1ValName__2 = requestValues["filter_Equip_Pess1ValName_"].Contains("2");
-				else if (Navigation.CheckKey("filter_Equip_Pess1ValName__2"))
-					filter_Equip_Pess1ValName__2 = (bool)Navigation.GetValue("filter_Equip_Pess1ValName__2");
-				Navigation.SetValue("filter_Equip_Pess1ValName__2", filter_Equip_Pess1ValName__2);
-				if (filter_Equip_Pess1ValName__2)
+				bool filter_Equip_Pess1ValName_FILTER2_1 = false;
+				if (requestValues["filter_Equip_Pess1ValName_FILTER2"] != null)
+					filter_Equip_Pess1ValName_FILTER2_1 = requestValues["filter_Equip_Pess1ValName_FILTER2"].Contains("1");
+				else if (Navigation.CheckKey("filter_Equip_Pess1ValName_FILTER2_1"))
+					filter_Equip_Pess1ValName_FILTER2_1 = (bool)Navigation.GetValue("filter_Equip_Pess1ValName_FILTER2_1");
+				Navigation.SetValue("filter_Equip_Pess1ValName_FILTER2_1", filter_Equip_Pess1ValName_FILTER2_1);
+				if (filter_Equip_Pess1ValName_FILTER2_1)
 				{
 					groupFilters.Equal(CSGenioApess1.FldGender, "M");
 
@@ -1100,7 +1175,7 @@ namespace GenioMVC.ViewModels.Equip
 						// Limits Generation
 
 						// Area limit
-						equip___pess1name____DoLoad &= AddCriteriaAreaLimit(equip___pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, false);
+						equip___pess1name____DoLoad &= AddCriteriaAreaLimit(equip___pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
 						if (!equip___pess1name____DoLoad)
 							return;
@@ -1139,8 +1214,8 @@ namespace GenioMVC.ViewModels.Equip
 				object hValue = Navigation.GetValue("tpequ", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					equip___tpequtipoequiConds.Equal(CSGenioAtpequ.FldCodtpequ, Navigation.GetValue("tpequ"));
-					this.ValCodtpequ = Navigation.GetStrValue("tpequ");
+					equip___tpequtipoequiConds.Equal(CSGenioAtpequ.FldCodtpequ, hValue);
+					this.ValCodtpequ = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -1157,8 +1232,6 @@ namespace GenioMVC.ViewModels.Equip
 					Navigation.CurrentLevel.SetEntry("RETURN_tpequ", null);
 				}
 				FillDependant_EquipTableTpequTipoequi(lazyLoad);
-				//Check if foreignkey comes from history
-				TableTpequTipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpequ");
 				return;
 			}
 
@@ -1226,9 +1299,6 @@ namespace GenioMVC.ViewModels.Equip
 
 				TableTpequTipoequi.List = new SelectList(TableTpequTipoequi.Elements.ToSelectList(x => x.ValTipoequi, x => x.ValCodtpequ,  x => x.ValCodtpequ == this.ValCodtpequ), "Value", "Text", this.ValCodtpequ);
 				FillDependant_EquipTableTpequTipoequi();
-
-				//Check if foreignkey comes from history
-				TableTpequTipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpequ");
 			}
 		}
 
@@ -1386,8 +1456,8 @@ namespace GenioMVC.ViewModels.Equip
 				object hValue = Navigation.GetValue("wareh", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					equip___warehwarehdesConds.Equal(CSGenioAwareh.FldCodwareh, Navigation.GetValue("wareh"));
-					this.ValCodwareh = Navigation.GetStrValue("wareh");
+					equip___warehwarehdesConds.Equal(CSGenioAwareh.FldCodwareh, hValue);
+					this.ValCodwareh = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -1404,8 +1474,6 @@ namespace GenioMVC.ViewModels.Equip
 					Navigation.CurrentLevel.SetEntry("RETURN_wareh", null);
 				}
 				FillDependant_EquipTableWarehWarehdes(lazyLoad);
-				//Check if foreignkey comes from history
-				TableWarehWarehdes.FilledByHistory = Navigation.CheckFilledByHistory("wareh");
 				return;
 			}
 
@@ -1473,9 +1541,6 @@ namespace GenioMVC.ViewModels.Equip
 
 				TableWarehWarehdes.List = new SelectList(TableWarehWarehdes.Elements.ToSelectList(x => x.ValWarehdes, x => x.ValCodwareh,  x => x.ValCodwareh == this.ValCodwareh), "Value", "Text", this.ValCodwareh);
 				FillDependant_EquipTableWarehWarehdes();
-
-				//Check if foreignkey comes from history
-				TableWarehWarehdes.FilledByHistory = Navigation.CheckFilledByHistory("wareh");
 			}
 		}
 
@@ -1581,14 +1646,14 @@ namespace GenioMVC.ViewModels.Equip
 				object hValue = Navigation.GetValue("item", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					equip___item_itemdes_Conds.Equal(CSGenioAitem.FldCoditem, Navigation.GetValue("item"));
-					this.ValCoditem = Navigation.GetStrValue("item");
+					equip___item_itemdes_Conds.Equal(CSGenioAitem.FldCoditem, hValue);
+					this.ValCoditem = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
 
 			// Area limit
-			equip___item_itemdes_DoLoad &= AddCriteriaAreaLimit(equip___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, false);
+			equip___item_itemdes_DoLoad &= AddCriteriaAreaLimit(equip___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, true);
 
 			TableItemItemdes = new TableDBEdit<Models.Item>
 			{
@@ -1603,8 +1668,6 @@ namespace GenioMVC.ViewModels.Equip
 					Navigation.CurrentLevel.SetEntry("RETURN_item", null);
 				}
 				FillDependant_EquipTableItemItemdes(lazyLoad);
-				//Check if foreignkey comes from history
-				TableItemItemdes.FilledByHistory = Navigation.CheckFilledByHistory("item");
 				return;
 			}
 
@@ -1675,9 +1738,6 @@ namespace GenioMVC.ViewModels.Equip
 
 				TableItemItemdes.List = new SelectList(TableItemItemdes.Elements.ToSelectList(x => x.ValItemdes, x => x.ValCoditem,  x => x.ValCoditem == this.ValCoditem), "Value", "Text", this.ValCoditem);
 				FillDependant_EquipTableItemItemdes();
-
-				//Check if foreignkey comes from history
-				TableItemItemdes.FilledByHistory = Navigation.CheckFilledByHistory("item");
 			}
 		}
 
@@ -1792,8 +1852,8 @@ namespace GenioMVC.ViewModels.Equip
 				object hValue = Navigation.GetValue("room1", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					equip___room1roomnr__Conds.Equal(CSGenioAroom1.FldCodrooms, Navigation.GetValue("room1"));
-					this.ValCodrooms = Navigation.GetStrValue("room1");
+					equip___room1roomnr__Conds.Equal(CSGenioAroom1.FldCodrooms, hValue);
+					this.ValCodrooms = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -1810,8 +1870,6 @@ namespace GenioMVC.ViewModels.Equip
 					Navigation.CurrentLevel.SetEntry("RETURN_room1", null);
 				}
 				FillDependant_EquipTableRoom1Roomnr(lazyLoad);
-				//Check if foreignkey comes from history
-				TableRoom1Roomnr.FilledByHistory = Navigation.CheckFilledByHistory("room1");
 				return;
 			}
 
@@ -1878,9 +1936,6 @@ namespace GenioMVC.ViewModels.Equip
 
 				TableRoom1Roomnr.List = new SelectList(TableRoom1Roomnr.Elements.ToSelectList(x => x.ValRoomnr, x => x.ValCodrooms,  x => x.ValCodrooms == this.ValCodrooms), "Value", "Text", this.ValCodrooms);
 				FillDependant_EquipTableRoom1Roomnr();
-
-				//Check if foreignkey comes from history
-				TableRoom1Roomnr.FilledByHistory = Navigation.CheckFilledByHistory("room1");
 			}
 		}
 
@@ -1974,7 +2029,7 @@ namespace GenioMVC.ViewModels.Equip
 
 		private readonly string[] _fieldsToSerialize_EQUIP___ROOM1ROOMNR__ = ["Room1", "Room1.ValCodrooms", "Room1.ValZzstate"];
 		/// <summary>
-		/// List_Movimevv -> (DV)
+		/// List_Movimevv -> (DW)
 		/// </summary>
 		/// <param name="qs"></param>
 		public void Load_Equip___pseudmovimevv(NameValueCollection qs)
@@ -2038,8 +2093,8 @@ namespace GenioMVC.ViewModels.Equip
 				object hValue = Navigation.GetValue("decom", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					equip___decomdecomnr_Conds.Equal(CSGenioAdecom.FldCoddeco, Navigation.GetValue("decom"));
-					this.ValCoddeco = Navigation.GetStrValue("decom");
+					equip___decomdecomnr_Conds.Equal(CSGenioAdecom.FldCoddeco, hValue);
+					this.ValCoddeco = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -2056,8 +2111,6 @@ namespace GenioMVC.ViewModels.Equip
 					Navigation.CurrentLevel.SetEntry("RETURN_decom", null);
 				}
 				FillDependant_EquipTableDecomDecomnr(lazyLoad);
-				//Check if foreignkey comes from history
-				TableDecomDecomnr.FilledByHistory = Navigation.CheckFilledByHistory("decom");
 				return;
 			}
 
@@ -2124,9 +2177,6 @@ namespace GenioMVC.ViewModels.Equip
 
 				TableDecomDecomnr.List = new SelectList(TableDecomDecomnr.Elements.ToSelectList(x => x.ValDecomnr, x => x.ValCoddeco,  x => x.ValCoddeco == this.ValCoddeco), "Value", "Text", this.ValCoddeco);
 				FillDependant_EquipTableDecomDecomnr();
-
-				//Check if foreignkey comes from history
-				TableDecomDecomnr.FilledByHistory = Navigation.CheckFilledByHistory("decom");
 			}
 		}
 
@@ -2192,7 +2242,7 @@ namespace GenioMVC.ViewModels.Equip
 				if (GlobalFunctions.emptyG(this.ValCoddeco) == 1)
 				{
 					this.ValCoddeco = "";
-					TableDecomDecomnr.Value = 0;
+					TableDecomDecomnr.Value = 0m;
 					Navigation.ClearValue("decom");
 				}
 				else if (lazyLoad)
@@ -2223,11 +2273,18 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			return identifier switch
 			{
+				"equip.codempre" => ViewModelConversion.ToString(modelValue),
+				"equip.coddeco" => ViewModelConversion.ToString(modelValue),
+				"equip.coditem" => ViewModelConversion.ToString(modelValue),
+				"equip.codpess1" => ViewModelConversion.ToString(modelValue),
+				"equip.codrooms" => ViewModelConversion.ToString(modelValue),
+				"equip.codtpequ" => ViewModelConversion.ToString(modelValue),
+				"equip.codwareh" => ViewModelConversion.ToString(modelValue),
 				"equip.sequennr" => ViewModelConversion.ToNumeric(modelValue),
 				"equip.registnr" => ViewModelConversion.ToString(modelValue),
 				"equip.sitefabr" => ViewModelConversion.ToString(modelValue),
 				"equip.designat" => ViewModelConversion.ToString(modelValue),
-				"equip.frequenc" => ViewModelConversion.ToDouble(modelValue),
+				"equip.frequenc" => ViewModelConversion.ToNumeric(modelValue),
 				"equip.valortot" => ViewModelConversion.ToNumeric(modelValue),
 				"equip.dtaquisi" => ViewModelConversion.ToDateTime(modelValue),
 				"equip.dtdeco" => ViewModelConversion.ToDateTime(modelValue),
@@ -2243,13 +2300,6 @@ namespace GenioMVC.ViewModels.Equip
 				"equip.photogra" => ViewModelConversion.ToImage(modelValue),
 				"equip.lastpho" => ViewModelConversion.ToImage(modelValue),
 				"equip.ifabatif" => ViewModelConversion.ToLogic(modelValue),
-				"equip.codempre" => ViewModelConversion.ToString(modelValue),
-				"equip.coddeco" => ViewModelConversion.ToString(modelValue),
-				"equip.coditem" => ViewModelConversion.ToString(modelValue),
-				"equip.codpess1" => ViewModelConversion.ToString(modelValue),
-				"equip.codtpequ" => ViewModelConversion.ToString(modelValue),
-				"equip.codwareh" => ViewModelConversion.ToString(modelValue),
-				"equip.codrooms" => ViewModelConversion.ToString(modelValue),
 				"equip.codequip" => ViewModelConversion.ToString(modelValue),
 				"cmpny.codempre" => ViewModelConversion.ToString(modelValue),
 				"cmpny.designat" => ViewModelConversion.ToString(modelValue),
@@ -2265,8 +2315,24 @@ namespace GenioMVC.ViewModels.Equip
 				"room1.roomnr" => ViewModelConversion.ToString(modelValue),
 				"decom.coddeco" => ViewModelConversion.ToString(modelValue),
 				"decom.decomnr" => ViewModelConversion.ToNumeric(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
+		}
+
+
+		/// <inheritdoc/>
+		protected override void SanitizeHTMLFields()
+		{
+			ValMoviment = Helpers.HtmlSanitizerHelper.SanitizeHTML(ValMoviment, false);
+		}
+
+		/// <inheritdoc/>
+		protected override void SetTicketToImageFields()
+		{
+			if (ValPhotogra != null)
+				ValPhotogra.Ticket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaEQUIP, CSGenioAequip.FldPhotogra.Field, null, ValCodequip);
+			if (ValLastpho != null)
+				ValLastpho.Ticket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaEQUIP, CSGenioAequip.FldLastpho.Field, null, ValCodequip);
 		}
 
 		#region Charts

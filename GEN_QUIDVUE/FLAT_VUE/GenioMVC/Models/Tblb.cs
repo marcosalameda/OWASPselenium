@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Grpb _grpb;
 		[DisplayName("Grpb")]
 		[ShouldSerialize("Grpb")]
-		public virtual Grpb Grpb { 
-			get { 
+		public virtual Grpb Grpb {
+			get {
 				if (!this.isEmptyModel && (_grpb == null || (!string.IsNullOrEmpty(ValFkey1) && (_grpb.isEmptyModel || _grpb.klass.QPrimaryKey != ValFkey1))))
 					_grpb = Models.Grpb.Find(ValFkey1, m_userContext, Identifier, _fieldsToSerialize);
 				if (_grpb == null)
 					_grpb = new Models.Grpb(m_userContext, true, _fieldsToSerialize);
 				return _grpb;
 			}
-			set { _grpb = value; } 
+			set { _grpb = value; }
 		}
-		
+
 
 		[DisplayName("Text")]
 		/// <summary>Field : "Text" Tipo: "C" Formula:  ""</summary>
@@ -68,25 +68,25 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Numeric (Integer)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Tblb.ValNumint")]
 		[NumericAttribute(0)]
-		public decimal? ValNumint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumint, 0)); } set { klass.ValNumint = Convert.ToDouble(value); } }
+		public decimal? ValNumint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumint, 0)); } set { klass.ValNumint = Convert.ToDecimal(value); } }
 
 		[DisplayName("Numeric (Decimal)")]
 		/// <summary>Field : "Numeric (Decimal)" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Tblb.ValNumdec")]
 		[NumericAttribute(3)]
-		public decimal? ValNumdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumdec, 3)); } set { klass.ValNumdec = Convert.ToDouble(value); } }
+		public decimal? ValNumdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumdec, 3)); } set { klass.ValNumdec = Convert.ToDecimal(value); } }
 
 		[DisplayName("Currency (Interger)")]
 		/// <summary>Field : "Currency (Interger)" Tipo: "$" Formula:  ""</summary>
 		[ShouldSerialize("Tblb.ValCurint")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValCurint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCurint, 2)); } set { klass.ValCurint = Convert.ToDouble(value); } }
+		public decimal? ValCurint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCurint, 2)); } set { klass.ValCurint = Convert.ToDecimal(value); } }
 
 		[DisplayName("Currency (Decimal)")]
 		/// <summary>Field : "Currency (Decimal)" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Tblb.ValCurdec")]
 		[CurrencyAttribute("EUR", 4)]
-		public decimal? ValCurdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCurdec, 4)); } set { klass.ValCurdec = Convert.ToDouble(value); } }
+		public decimal? ValCurdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCurdec, 4)); } set { klass.ValCurdec = Convert.ToDecimal(value); } }
 
 		[DisplayName("Boolean")]
 		/// <summary>Field : "Boolean" Tipo: "L" Formula:  ""</summary>
@@ -132,9 +132,9 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Enumeration (Numeric)" Tipo: "AN" Formula:  ""</summary>
 		[ShouldSerialize("Tblb.ValEnumn")]
 		[DataArray("Typen", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double ValEnumn { get { return klass.ValEnumn; } set { klass.ValEnumn = value; } }
+		public decimal ValEnumn { get { return klass.ValEnumn; } set { klass.ValEnumn = value; } }
 		[JsonIgnore]
-		public SelectList ArrayValenumn { get { return new SelectList(CSGenio.business.ArrayTypen.GetDictionary(), "Key", "Value", ValEnumn); } set { ValEnumn = Convert.ToDouble(value.SelectedValue); } }
+		public SelectList ArrayValenumn { get { return new SelectList(CSGenio.business.ArrayTypen.GetDictionary(), "Key", "Value", ValEnumn); } set { ValEnumn = Convert.ToDecimal(value.SelectedValue); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Tblb.ValZzstate")]
@@ -144,19 +144,19 @@ namespace GenioMVC.Models
 		public Tblb(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAtblb(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Tblb(UserContext userContext, CSGenioAtblb val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAtblb csgenioa)
@@ -178,7 +178,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

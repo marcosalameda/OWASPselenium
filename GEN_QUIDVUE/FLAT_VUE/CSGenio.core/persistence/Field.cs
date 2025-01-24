@@ -28,7 +28,7 @@ namespace CSGenio.framework
             CriaLog = false;
             VisivelCav = CavVisibilityType.Sempre;
         }
-
+ 
         /// <summary>
         /// Hashcode for the object
         /// </summary>
@@ -121,6 +121,11 @@ namespace CSGenio.framework
         /// Unique prefix
         /// </summary>
         public string PrefNDup { get; set; }
+		
+		/// <summary>
+        /// Unique suffix (The field that has this field as its unique prefix)
+        /// </summary>
+        public string SufNDup { get; set; }
 
         /// <summary>
         /// Unique message
@@ -163,18 +168,9 @@ namespace CSGenio.framework
         public ConditionFormula BlockWhen { get; set; }
 
         /// <summary>
-        /// The ecription function for this field
+        /// The ecription formula/function for this field
         /// </summary>
-        /// <param name="value">The decrypted value of the field.</param>
-        /// <param name="field">The metainformation about a field</param>
-        /// <param name="area">The Record to which the field belongs (In case the encryption function requires the value of one more field)</param>
-        /// <returns>Encrypted data</returns>
-        public delegate object EncryptFieldValue(object value, Field field, persistence.IArea area);
-
-        /// <summary>
-        /// The ecription function for this field
-        /// </summary>
-        public EncryptFieldValue EncryptFieldValueFunction { get; set; }
+        public InternalOperationFormula EncryptFieldValueFormula { get; set; }
 
         /// <summary>
         /// Formating rules
@@ -204,9 +200,20 @@ namespace CSGenio.framework
         public int Decimals { get; set; }
 
         /// <summary>
+        /// Whole number places for numeric fields
+        /// </summary>
+        public int IntegerDigits { get; set; }
+
+        /// <summary>
         /// Its a virtual field in the database and should not be written to
         /// </summary>
         public bool IsVirtual { get; set; }
+
+        /// <summary>
+        /// A client side field does not even exist in the database for reading
+        ///  and is only calculated on demand by the client side.
+        /// </summary>
+        public bool IsClientSide { get; set; }
 
         /// <summary>
         /// Created log
@@ -258,7 +265,11 @@ namespace CSGenio.framework
                         return true;
                     break;
                 case FieldFormatting.LOGICO:
-                    if ((int)Qvalue == 0)
+                    //When a boolean field has a default value in the form (true or false), Qvalue is a bool (true or false).
+                    if (Qvalue is Boolean)
+                        return (bool)Qvalue == false;
+                     //When a boolean field has a default value in the table (true or false), Qvalue is an int (1 or 0).
+                    else if ((int)Qvalue == 0)
                         return true;
                     break;
                 case FieldFormatting.CARACTERES:
@@ -270,7 +281,7 @@ namespace CSGenio.framework
                         return true;
                     break;
                 case FieldFormatting.FLOAT:
-                    if (Convert.ToDouble(Qvalue) == 0.0)
+                    if (Convert.ToDecimal(Qvalue) == 0m)
                         return true;
                     break;
                 case FieldFormatting.TEMPO:
@@ -282,7 +293,7 @@ namespace CSGenio.framework
                         return true;
                     break;
                 case FieldFormatting.ENCRYPTED:
-                    return (Qvalue as EncryptedDataType ?? new EncryptedDataType()).IsEmpty();
+                    return (Qvalue as EncryptedDataType ?? new EncryptedDataType(null, Qvalue)).IsEmpty();
                 default:
                     return false;
             }
@@ -322,7 +333,7 @@ namespace CSGenio.framework
                 case FieldFormatting.GEOMETRIC:
                     return null;
                 case FieldFormatting.FLOAT:
-                    return 0.0;
+                    return 0m;
                 case FieldFormatting.TEMPO:
                     return "__:__";
                 case FieldFormatting.BINARIO:

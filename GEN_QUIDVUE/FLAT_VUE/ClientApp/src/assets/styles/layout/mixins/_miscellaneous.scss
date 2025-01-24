@@ -42,14 +42,19 @@
 @mixin menu-multi-level($padding-left, $opacity) {
 	@if $menu-multi-level {
 		li {
-			a {
+			a, button {
 				padding-left: $padding-left;
+				transition: padding-left ease-in-out $transition-speed;
 				font-weight: 400;
 				letter-spacing: 0.02rem;
 
 				& p {
 					opacity: $opacity;
 				}
+			}
+
+			.q-btn__content .e-icon__svg.right {
+				opacity: $opacity;
 			}
 		}
 	}

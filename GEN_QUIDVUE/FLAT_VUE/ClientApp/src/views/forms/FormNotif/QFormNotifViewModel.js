@@ -122,7 +122,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValIdmsg))
 		watch(() => this.ValIdmsg.value, (newValue, oldValue) => this.onUpdate('notif.idmsg', this.ValIdmsg, newValue, oldValue))
 
-		this.ValMessage = reactive(new modelFieldType.String({
+		this.ValMessage = reactive(new modelFieldType.MultiLineString({
 			id: 'ValMessage',
 			originId: 'ValMessage',
 			area: 'NOTIF',
@@ -157,6 +157,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'NOTIF',
 			field: 'CREATDAT',
 			description: computed(() => this.Resources.CREATION__DATE13180),
+			isFixed: true,
 		}).cloneFrom(values?.ValCreatdat))
 		watch(() => this.ValCreatdat.value, (newValue, oldValue) => this.onUpdate('notif.creatdat', this.ValCreatdat, newValue, oldValue))
 
@@ -167,6 +168,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CREATOPE',
 			maxLength: 20,
 			description: computed(() => this.Resources.CREATION__OPERATOR50535),
+			isFixed: true,
 		}).cloneFrom(values?.ValCreatope))
 		watch(() => this.ValCreatope.value, (newValue, oldValue) => this.onUpdate('notif.creatope', this.ValCreatope, newValue, oldValue))
 
@@ -212,5 +214,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodnotif'
 
 	get QPrimaryKey() { return this.ValCodnotif.value }
-	set QPrimaryKey(value) { this.ValCodnotif.value = value }
+	set QPrimaryKey(value) { this.ValCodnotif.updateValue(value) }
 }

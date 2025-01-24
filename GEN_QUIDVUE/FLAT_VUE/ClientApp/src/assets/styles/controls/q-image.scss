@@ -54,6 +54,12 @@
 		}
 	}
 
+	&__container {
+		a {
+			cursor: pointer;
+		}
+	}
+
 	&-crop__container {
 		margin-top: 0.6rem;
 
@@ -70,62 +76,6 @@
 			margin-right: 6px;
 		}
 	}
-
-	/* Image control popup (to show full size image) */
-	&__modal {
-		&-buttons {
-			display: flex;
-			position: absolute;
-			right: 0.5rem;
-			top: 0.5rem;
-		}
-
-		&-button {
-			color: $background;
-
-			span {
-				font-size: 1.6rem;
-			}
-		}
-
-		&-image {
-			max-height: 90vh;
-			max-width: 90vw;
-			transition: auto 1s $transition-fn;
-			box-shadow: 0 8px 8px #222;
-			animation: q-image__modal-animation 1s $transition-fn;
-		}
-
-		&-main-container,
-		&-container {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			height: 100%;
-			width: 100%;
-		}
-
-		&-main-container {
-			position: fixed;
-			top: 0;
-			left: 0;
-			background-color: rgba(19, 19, 19, 0.8);
-			z-index: 1000;
-		}
-
-		&-container {
-			border-radius: 1rem;
-			object-fit: contain;
-			padding: 0 2rem;
-			position: relative;
-		}
-	}
-}
-
-.q-render-image__thumbnail {
-	height: 2rem;
-	width: 2rem;
 }
 
 .cropper {

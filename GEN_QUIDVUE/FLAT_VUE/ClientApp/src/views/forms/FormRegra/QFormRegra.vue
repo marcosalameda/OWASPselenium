@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,8 +106,7 @@
 							v-on="controls.REGRA___RULESTIPOCOND.handlers"
 							:loading="controls.REGRA___RULESTIPOCOND.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.REGRA___RULESTIPOCOND.isVisible"
 								v-bind="controls.REGRA___RULESTIPOCOND.props"
@@ -124,12 +123,12 @@
 							v-on="controls.REGRA___RULESDESCRIPT.handlers"
 							:loading="controls.REGRA___RULESDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.REGRA___RULESDESCRIPT.props"
 								:model-value="model.ValDescript.value"
-								@update:model-value="model.ValDescript.fnUpdateValue" />
+								@blur="onBlur(controls.REGRA___RULESDESCRIPT, model.ValDescript.value)"
+								@change="model.ValDescript.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -141,8 +140,7 @@
 							v-on="controls.REGRA___RULESLOCAL___.handlers"
 							:loading="controls.REGRA___RULESLOCAL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.REGRA___RULESLOCAL___.isVisible"
 								v-bind="controls.REGRA___RULESLOCAL___.props"
@@ -232,15 +230,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'REGRA',
-						location: 'form-REGRA',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'REGRA',
+					location: 'form-REGRA',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -286,6 +282,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -358,8 +356,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -441,7 +440,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -495,21 +494,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -520,16 +504,14 @@
 						id: 'REGRA___RULESTIPOCOND',
 						name: 'TIPOCOND',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.CONDITION_TYPE57524),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						labelId: 'label_REGRA___RULESTIPOCOND',
 						arrayName: 'tipoCond',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -539,15 +521,11 @@
 						id: 'REGRA___RULESDESCRIPT',
 						name: 'DESCRIPT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESCRIPTION07383),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 100,
 						labelId: 'label_REGRA___RULESDESCRIPT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 						requiredConditions: {
@@ -555,22 +533,18 @@
 							fnFormula(params)
 							{
 								// Formula: [RULES->TIPOCOND]=="M" && [RULES->LOCAL]=="T"
-								// eslint-disable-next-line eqeqeq
-								if (this.ValTipocond.value=="M"&&this.ValLocal.value=="T")
+								if (this.ValTipocond.value==="M"&&this.ValLocal.value==="T")
 									return true
 								// Formula: [RULES->TIPOCOND]=="M"
-								// eslint-disable-next-line eqeqeq
-								if (this.ValTipocond.value=="M")
+								if (this.ValTipocond.value==="M")
 									return true
 								// Formula: [RULES->TIPOCOND]=="M" && [RULES->LOCAL]=="F"
-								// eslint-disable-next-line eqeqeq
-								if (this.ValTipocond.value=="M"&&this.ValLocal.value=="F")
+								if (this.ValTipocond.value==="M"&&this.ValLocal.value==="F")
 									return true
 								return false
 							},
 							dependencyEvents: ['fieldChange:rules.tipocond', 'fieldChange:rules.local'],
 							isServerRecalc: false,
-							isServerFormula: false,
 						},
 					}, this),
 					REGRA___RULESLOCAL___: new fieldControlClass.ArrayStringControl({
@@ -579,16 +553,14 @@
 						id: 'REGRA___RULESLOCAL___',
 						name: 'LOCAL',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.LOCAL_ONDE_EXECUTA12798),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						labelId: 'label_REGRA___RULESLOCAL___',
 						arrayName: 'aLocRegr',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -626,7 +598,7 @@
 						/** The primary key of the RULES table */
 						get rules() { return vm.model.ValCodregra },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -722,6 +694,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -761,6 +741,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -887,6 +875,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR REGRA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -902,6 +906,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS REGRA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

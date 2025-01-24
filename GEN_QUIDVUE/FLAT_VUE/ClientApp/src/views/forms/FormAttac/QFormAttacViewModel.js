@@ -83,7 +83,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValAttached))
 		watch(() => this.ValAttached.value, (newValue, oldValue) => this.onUpdate('attac.attached', this.ValAttached, newValue, oldValue))
 
-		this.ValNote = reactive(new modelFieldType.String({
+		this.ValNote = reactive(new modelFieldType.MultiLineString({
 			id: 'ValNote',
 			originId: 'ValNote',
 			area: 'ATTAC',
@@ -97,22 +97,32 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValDocument',
 			area: 'ATTAC',
 			field: 'DOCUMENT',
+			properties: computed(() => this.ValDocumentPropertiesVM),
+			documentFK: computed(() => this.ValDocumentfk),
+			currentDocument: computed(() => this.ValDocumentData),
 			description: computed(() => this.Resources.DOCUMENT00695),
 		}).cloneFrom(values?.ValDocument))
 		watch(() => this.ValDocument.value, (newValue, oldValue) => this.onUpdate('attac.document', this.ValDocument, newValue, oldValue))
 
-		this.ValDocumentPropertiesVM = new modelFieldType.Base({
+		this.ValDocumentPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'ValDocumentPropertiesVM',
 			area: 'ATTAC',
 			field: 'DOCUMENTDOCUM',
 			ignoreFldSubmit: true
-		}).cloneFrom(values?.ValDocumentPropertiesVM)
+		}).cloneFrom(values?.ValDocumentPropertiesVM))
 		this.ValDocumentfk = reactive(new modelFieldType.Base({
 			id: 'ValDocumentfk',
 			area: 'ATTAC',
-			field: 'DOCUMENTDOCUMFK'
+			field: 'DOCUMENTFK'
 		}).cloneFrom(values?.ValDocumentfk))
-		watch(() => this.ValDocumentfk.value, (newValue, oldValue) => this.onUpdate('attac.documentdocumfk', this.ValDocumentfk, newValue, oldValue))
+		watch(() => this.ValDocumentfk.value, (newValue, oldValue) => this.onUpdate('attac.documentfk', this.ValDocumentfk, newValue, oldValue))
+		this.ValDocumentData = reactive(new modelFieldType.DocumentData({
+			id: 'ValDocumentData',
+			area: 'ATTAC',
+			field: 'DOCUMENTDATA',
+			ignoreFldSubmit: true
+		}).cloneFrom(values?.ValDocumentData))
+		watch(() => this.ValDocumentData.value, (newValue, oldValue) => this.onUpdate('attac.documentdata', this.ValDocumentData, newValue, oldValue), { deep: true })
 	}
 
 	/**
@@ -127,5 +137,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodattac'
 
 	get QPrimaryKey() { return this.ValCodattac.value }
-	set QPrimaryKey(value) { this.ValCodattac.value = value }
+	set QPrimaryKey(value) { this.ValCodattac.updateValue(value) }
 }

@@ -1,6 +1,6 @@
 ﻿<template>
 	<div class="container profile-form">
-		<q-validation-summary :error-data="validationErrors" />
+		<q-validation-summary :messages="validationErrors" />
 
 		<div
 			id="change-2fa"
@@ -345,11 +345,9 @@
 			this.clearHistory()
 
 			// Load data
-			this.componentOnLoadProc.AddBusy(this.fetchData('Change2FA'))
+			this.componentOnLoadProc.addBusy(this.fetchData('Change2FA'))
 			// Only after the data is loaded from the server, init captch control
-			this.componentOnLoadProc.Once(() => {
-				this.initFormControls()
-			}, this)
+			this.componentOnLoadProc.once(() => this.initFormControls(), this)
 		},
 
 		beforeUnmount()
@@ -385,7 +383,7 @@
 					'HasWebAuthN'
 				]
 
-				_forEach(this.controls, ctrl => ctrl.Init(blockedCtrls.includes(ctrl.name) ? false : true))
+				_forEach(this.controls, (ctrl) => ctrl.init(blockedCtrls.includes(ctrl.name) ? false : true))
 			},
 
 			destroyFormControls()

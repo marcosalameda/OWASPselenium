@@ -18,18 +18,18 @@
 				<div class="demo-subtype-options">
 					<div class="demo-option">
 						<label class="i-text__label">Display mode</label>
-						<q-dropdown-input
+						<q-select
 							size="small"
 							v-model="usage.cards.styleVariables.displayMode.value"
-							:options="options.displayModes" />
+							:items="options.displayModes" />
 					</div>
 					<div class="demo-option">
 						<label class="i-text__label">Container alignment</label>
-						<q-dropdown-input
+						<q-select
 							size="small"
 							v-model="usage.cards.styleVariables.containerAlignment.value"
 							readonly="usage.cards.styleVariables.displayMode.value !== 'grid'"
-							:options="options.containerAlignment" />
+							:items="options.containerAlignment" />
 					</div>
 					<label class="i-text__label">Number of cards</label>
 					<q-numeric-input
@@ -40,7 +40,9 @@
 						:max-integers="4"
 						:max-decimals="0"
 						:is-currency="false" />
-					<div class="demo-option" style="margin-top: 0.25rem">
+					<div
+						class="demo-option"
+						style="margin-top: 0.25rem">
 						<base-input-structure
 							id="demo-option-loading"
 							label="Loading"
@@ -62,62 +64,64 @@
 				<div class="demo-subtype-options">
 					<div class="demo-option">
 						<label class="i-text__label">Subtype</label>
-						<q-dropdown-input
+						<q-select
 							size="medium"
 							v-model="usage.cards.subtype"
-							:options="options.variants" />
+							:items="options.variants" />
 					</div>
 					<div class="demo-option">
 						<label class="i-text__label">Size</label>
-						<q-dropdown-input
+						<q-select
 							size="medium"
 							v-model="usage.cards.styleVariables.size.value"
-							:options="options.sizes" />
+							:items="options.sizes" />
 					</div>
 					<div class="demo-option">
 						<label class="i-text__label">Content alignment</label>
-						<q-dropdown-input
+						<q-select
 							size="medium"
 							v-model="usage.cards.styleVariables.contentAlignment.value"
-							:options="options.contentAlignment" />
+							:items="options.contentAlignment" />
 					</div>
 					<div class="demo-option">
 						<label class="i-text__label">Actions alignment</label>
-						<q-dropdown-input
+						<q-select
 							size="medium"
 							v-model="usage.cards.styleVariables.actionsAlignment.value"
-							:options="options.actionsAlignment" />
+							:items="options.actionsAlignment" />
 					</div>
 					<div class="demo-option">
 						<label class="i-text__label">Actions placement</label>
-						<q-dropdown-input
+						<q-select
 							size="medium"
 							v-model="usage.cards.styleVariables.actionsPlacement.value"
-							:options="options.actionsPlacement" />
+							:items="options.actionsPlacement" />
 					</div>
 					<div class="demo-option">
 						<label class="i-text__label">Actions style</label>
-						<q-dropdown-input
+						<q-select
 							size="medium"
 							v-model="usage.cards.styleVariables.actionsStyle.value"
-							:options="options.actionsStyle" />
+							:items="options.actionsStyle" />
 					</div>
 					<div class="demo-option">
 						<label class="i-text__label">Image shape</label>
-						<q-dropdown-input
+						<q-select
 							size="medium"
 							v-model="usage.cards.styleVariables.imageShape.value"
-							:options="options.shape" />
+							:items="options.shape" />
 					</div>
 					<div class="demo-option">
 						<label class="i-text__label">Hover scale amount</label>
-						<q-dropdown-input
+						<q-select
 							size="medium"
 							v-model="usage.cards.styleVariables.hoverScaleAmount.value"
-							:options="options.hoverScaleAmounts" />
+							:items="options.hoverScaleAmounts" />
 					</div>
 
-					<div class="demo-option" style="margin-top: 0.25rem">
+					<div
+						class="demo-option"
+						style="margin-top: 0.25rem">
 						<base-input-structure
 							id="demo-show-insert-card"
 							label="Show insert card"
@@ -133,7 +137,9 @@
 						</base-input-structure>
 					</div>
 
-					<div class="demo-option" style="margin-top: 0.25rem">
+					<div
+						class="demo-option"
+						style="margin-top: 0.25rem">
 						<base-input-structure
 							id="demo-show-col-titles-option"
 							label="Show column titles"
@@ -158,9 +164,13 @@
 	import fakeData from './Cards.mock'
 
 	export default {
+		name: 'QCardsContainer',
+
 		docsfile: './docs/containers/QCard.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{

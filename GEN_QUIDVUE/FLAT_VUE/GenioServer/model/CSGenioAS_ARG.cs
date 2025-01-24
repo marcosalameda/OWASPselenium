@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Async process argument
 	/// </summary>
-	public class CSGenioAs_arg : DbArea	{
+	public class CSGenioAs_arg : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -354,7 +355,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodargpr, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCods_apr { get { return m_fldCods_apr; } }
 		private static FieldRef m_fldCods_apr = new FieldRef("s_arg", "cods_apr");
@@ -365,7 +365,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCods_apr); }
 			set { insertNameValueField(FldCods_apr, value); }
 		}
-
 
 		/// <summary>Field : "Id" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldId { get { return m_fldId; } }
@@ -378,7 +377,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldId, value); }
 		}
 
-
 		/// <summary>Field : "Value" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldValor { get { return m_fldValor; } }
 		private static FieldRef m_fldValor = new FieldRef("s_arg", "valor");
@@ -389,7 +387,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldValor); }
 			set { insertNameValueField(FldValor, value); }
 		}
-
 
 		/// <summary>Field : "Document" Tipo: "IB" Formula:  ""</summary>
 		public static FieldRef FldDocument { get { return m_fldDocument; } }
@@ -424,7 +421,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldTipo, value); }
 		}
 
-
 		/// <summary>Field : "Description" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldDesignac { get { return m_fldDesignac; } }
 		private static FieldRef m_fldDesignac = new FieldRef("s_arg", "designac");
@@ -435,7 +431,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldDesignac); }
 			set { insertNameValueField(FldDesignac, value); }
 		}
-
 
 		/// <summary>Field : "Hidden" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldHidden { get { return m_fldHidden; } }
@@ -448,7 +443,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldHidden, value); }
 		}
 
-
 		/// <summary>Field : "Created by" Tipo: "ON" Formula:  ""</summary>
 		public static FieldRef FldOpercria { get { return m_fldOpercria; } }
 		private static FieldRef m_fldOpercria = new FieldRef("s_arg", "opercria");
@@ -459,7 +453,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldOpercria); }
 			set { insertNameValueField(FldOpercria, value); }
 		}
-
 
 		/// <summary>Field : "Created on" Tipo: "OD" Formula:  ""</summary>
 		public static FieldRef FldDatacria { get { return m_fldDatacria; } }
@@ -472,7 +465,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDatacria, value); }
 		}
 
-
 		/// <summary>Field : "Changed by" Tipo: "EN" Formula:  ""</summary>
 		public static FieldRef FldOpermuda { get { return m_fldOpermuda; } }
 		private static FieldRef m_fldOpermuda = new FieldRef("s_arg", "opermuda");
@@ -484,7 +476,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldOpermuda, value); }
 		}
 
-
 		/// <summary>Field : "Changed on" Tipo: "ED" Formula:  ""</summary>
 		public static FieldRef FldDatamuda { get { return m_fldDatamuda; } }
 		private static FieldRef m_fldDatamuda = new FieldRef("s_arg", "datamuda");
@@ -495,7 +486,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDatamuda); }
 			set { insertNameValueField(FldDatamuda, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -538,23 +528,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAs_arg> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAs_arg> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAs_arg>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -603,7 +576,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX S_ARG]/

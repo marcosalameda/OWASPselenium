@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuPTN_211ViewModel.js'
+
 	const requiredTextResources = ['QMenuPTN_211', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,99 +117,74 @@
 				menuInfo: {
 					id: '211',
 					isMenuList: true,
+					designation: computed(() => this.Resources.REGIONS31874),
 					acronym: 'PTN_211',
-					name: 'ABATE',
+					name: 'REGIA',
 					route: 'menu-PTN_211',
 					order: '211',
-					controller: 'DECOM',
+					controller: 'REGIO',
 					action: 'PTN_Menu_211',
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
-						controller: 'DECOM',
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'PTN_Menu_211',
+						controller: 'REGIO',
 						action: 'PTN_Menu_211',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
-							new listColumnTypes.DateColumn({
+							new listColumnTypes.TextColumn({
 								order: 1,
-								name: 'ValDtdeco',
-								area: 'DECOM',
-								field: 'DTDECO',
-								label: computed(() => this.Resources.DECOMISSION14486),
-								scrollData: 16,
-								dateTimeType: 'DateTime',
+								name: 'Cntry.ValCountry',
+								area: 'CNTRY',
+								field: 'COUNTRY',
+								label: computed(() => this.Resources.COUNTRY64133),
+								dataLength: 90,
+								scrollData: 30,
+								pkColumn: 'ValCodcntry',
 							}),
-							new listColumnTypes.NumericColumn({
+							new listColumnTypes.TextColumn({
 								order: 2,
-								name: 'ValDecomnr',
-								area: 'DECOM',
-								field: 'DECOMNR',
-								label: computed(() => this.Resources.NO_BATE21045),
-								scrollData: 10,
-								maxDigits: 10,
-								decimalPlaces: 0,
+								name: 'ValRegiao',
+								area: 'REGIO',
+								field: 'REGIAO',
+								label: computed(() => this.Resources.REGION12723),
+								dataLength: 50,
+								scrollData: 30,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 3,
-								name: 'ValNote',
-								area: 'DECOM',
-								field: 'NOTE',
-								label: computed(() => this.Resources.NOTES05274),
+								name: 'Pais1.ValCountry',
+								area: 'PAIS1',
+								field: 'COUNTRY',
+								label: computed(() => this.Resources.COUNTRY64133),
+								dataLength: 90,
 								scrollData: 30,
-							}),
-							new listColumnTypes.DateColumn({
-								order: 4,
-								name: 'ValCreatdat',
-								area: 'DECOM',
-								field: 'CREATDAT',
-								label: computed(() => this.Resources.CRIADO_EM61283),
-								scrollData: 8,
-								dateTimeType: 'Date',
-							}),
-							new listColumnTypes.TextColumn({
-								order: 5,
-								name: 'ValCreatope',
-								area: 'DECOM',
-								field: 'CREATOPE',
-								label: computed(() => this.Resources.CRIADO_POR17895),
-								dataLength: 20,
-								scrollData: 20,
-							}),
-							new listColumnTypes.DateColumn({
-								order: 6,
-								name: 'ValChngdate',
-								area: 'DECOM',
-								field: 'CHNGDATE',
-								label: computed(() => this.Resources.ALTERADO_EM23573),
-								scrollData: 8,
-								dateTimeType: 'Date',
-							}),
-							new listColumnTypes.TextColumn({
-								order: 7,
-								name: 'ValOperchng',
-								area: 'DECOM',
-								field: 'OPERCHNG',
-								label: computed(() => this.Resources.ALTERADO_POR39254),
-								dataLength: 20,
-								scrollData: 20,
+								pkColumn: 'ValCodcntry',
 							}),
 						],
 						config: {
 							name: 'PTN_Menu_211',
 							serverMode: true,
-							pkColumn: 'ValCoddeco',
-							tableAlias: 'DECOM',
-							tableNamePlural: computed(() => this.Resources.EQUIPMENT_DECOMISSIO62648),
+							pkColumn: 'ValCodregia',
+							tableAlias: 'REGIO',
+							tableNamePlural: computed(() => this.Resources.REGIONS31874),
 							viewManagement: 'U',
 							showLimitsInfo: true,
-							tableTitle: computed(() => this.Resources.EQUIPMENT_DECOMISSIO62648),
+							tableTitle: computed(() => this.Resources.REGIONS31874),
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -227,7 +203,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'ABATEREQ',
+										formName: 'REGIA_ON',
 										mode: 'SHOW',
 										isControlled: true
 									}
@@ -243,7 +219,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'ABATEREQ',
+										formName: 'REGIA_ON',
 										mode: 'EDIT',
 										isControlled: true
 									}
@@ -259,7 +235,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'ABATEREQ',
+										formName: 'REGIA_ON',
 										mode: 'DUPLICATE',
 										isControlled: true
 									}
@@ -275,7 +251,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'ABATEREQ',
+										formName: 'REGIA_ON',
 										mode: 'DELETE',
 										isControlled: true
 									}
@@ -293,7 +269,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'ABATEREQ',
+										formName: 'REGIA_ON',
 										mode: 'NEW',
 										repeatInsertion: false,
 										isControlled: true
@@ -310,41 +286,36 @@
 							],
 							rowClickAction: {
 								id: 'RCA_PTN_2111',
-								name: 'form-ABATEREQ',
+								name: 'form-REGIA_ON',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
-											fnValueSelector: (row) => row.ValCoddeco
+											fnValueSelector: (row) => row.ValCodregia
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'ABATEREQ',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'REGIA_ON',
 								}
 							},
 							formsDefinition: {
-								'ABATEREQ': {
-									fnKeySelector: (row) => row.Fields.ValCoddeco,
+								'REGIA_ON': {
+									fnKeySelector: (row) => row.Fields.ValCodregia,
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: ABATEREQ
-							crudConditions: {
-							},
-							defaultSearchColumnName: 'ValDecomnr',
-							defaultSearchColumnNameOriginal: 'ValDecomnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultSearchColumnName: 'ValRegiao',
+							defaultSearchColumnNameOriginal: 'ValRegiao',
+							defaultColumnSorting: {
+								columnName: 'ValRegiao',
+								sortOrder: 'asc'
+							}
 						},
-						changeEvents: ['changed-DECOM'],
-						uuid: '08896786-8e39-461e-b166-e259f92211f7',
+						changeEvents: ['changed-REGIO', 'changed-CNTRY', 'changed-PAIS1'],
+						uuid: '3ff5c84d-e77b-442c-b81e-603fe2ba55be',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -373,6 +344,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PTN_211]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_211]/
 // eslint-disable-next-line

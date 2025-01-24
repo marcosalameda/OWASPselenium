@@ -1,12 +1,11 @@
 import TextareaInput from './TextareaInput.case.vue'
 
 export default {
-    title: 'Inputs/TextareaInput',
-    component: TextareaInput,
-    tags: [],
-  };
+	title: 'Inputs/TextareaInput',
+	component: TextareaInput,
+	tags: []
+}
 
-  export const Simple = {
-    args: {
-    },
-  };
+export const Simple = {
+	args: {}
+}

@@ -16,6 +16,7 @@
 			:disabled="options.disabled"
 			:readonly="options.readonly"
 			:placeholder="placeholder"
+			:aria-label="options?.label"
 			@update:model-value="$emit('update', $event)" />
 	</component>
 </template>

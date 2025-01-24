@@ -1,17 +1,10 @@
 ﻿import { readonly } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import _assignIn from 'lodash-es/assignIn'
-import _assignWith from 'lodash-es/assignInWith'
-import _cloneDeep from 'lodash-es/cloneDeep'
 import _forEach from 'lodash-es/forEach'
-import _head from 'lodash-es/head'
 import _isArray from 'lodash-es/isArray'
-import _isBoolean from 'lodash-es/isBoolean'
 import _isDate from 'lodash-es/isDate'
 import _isEmpty from 'lodash-es/isEmpty'
-import _isInteger from 'lodash-es/isInteger'
-import _isNumber from 'lodash-es/isNumber'
-import _isString from 'lodash-es/isString'
 import _upperFirst from 'lodash-es/upperFirst'
 
 import { dateToISOString } from '@/mixins/genericFunctions.js'
@@ -44,14 +37,18 @@ export class HistoryLevel
 		}, options || {})
 	}
 
-	setPreviousLevel(previousLevel)
-	{
-		this.previousLevel = previousLevel
-	}
-
 	get level()
 	{
 		return _isEmpty(this.previousLevel) ? 0 : this.previousLevel.level + 1
+	}
+
+	/**
+	 * Sets the previous history level.
+	 * @param {HistoryLevel} previousLevel The previous history level
+	 */
+	setPreviousLevel(previousLevel)
+	{
+		this.previousLevel = previousLevel
 	}
 
 	/**
@@ -112,6 +109,15 @@ export class HistoryLevel
 	}
 
 	/**
+	 * Sets the value of the form mode in the navigation
+	 * @param {string} mode The new mode to set
+	 */
+	setMode(mode)
+	{
+		Reflect.set(this.params, 'mode', mode)
+	}
+
+	/**
 	 * Adds/updates a value in the properties of the current level.
 	 * @param {object} param0 The key and value to set
 	 */
@@ -129,6 +135,11 @@ export class HistoryLevel
 		delete this.properties[key]
 	}
 
+	/**
+	 * Checks if the provided object's location matches to the current one.
+	 * @param {object} param0 An object with the location
+	 * @returns True if it the location matches, false otherwise.
+	 */
 	// TODO: Validate params | the record Id ?
 	checkLocation({ location })
 	{
@@ -216,21 +227,32 @@ export class HistoryLevel
 	}
 
 	/**
+	 * Finds the first previous level from a different area than the specified one.
+	 * @param {string} area The area
+	 * @returns The first previous level, that was found, from a different area than the specified one.
+	 */
+	getPrevLevelFromOtherArea(area)
+	{
+		return getPrevLevelFromOtherArea(area, null, this.previousLevel)
+	}
+
+	/**
 	 * Checks if the specified key exists in history.
 	 * @param {string} key The key
 	 * @param {boolean} includeNulls Whether or not to check in keys with null values
 	 * @param {boolean} startAtPrevious Whether or not to also check the previous history level
+	 * @param {string} currentArea The area of the current history level
 	 * @returns True if the entry exists, false otherwise.
 	 */
-	hasEntry(key, includeNulls = true, startAtPrevious = false)
+	hasEntry(key, includeNulls = true, startAtPrevious = false, currentArea = '')
 	{
 		if (!startAtPrevious && Reflect.has(this.entries, key))
 		{
-			let entryValue = Reflect.get(this.entries, key)
+			const entryValue = Reflect.get(this.entries, key)
 			return entryValue !== undefined && (entryValue !== null || includeNulls)
 		}
 		else if (!_isEmpty(this.previousLevel))
-			return this.previousLevel.hasEntry(key, includeNulls)
+			return this.getPrevLevelFromOtherArea(currentArea).hasEntry(key, includeNulls)
 		return false
 	}
 
@@ -253,7 +275,7 @@ export class HistoryLevel
 			fieldId: field.id
 		}
 		const dataValue = readonly({
-			value: _cloneDeep(field.value),
+			value: field.cloneValue(),
 			oldValue: field.originalValue
 		})
 
@@ -354,38 +376,43 @@ export class HistoryLevel
 # Utils
 ##########################################*/
 
-function _entryConvert(_, srcValue)
+/**
+ * Recursively converts values in an object, including dates to ISO strings
+ * and deeply nested structures.
+ * @param {any} srcValue The source value to be converted
+ * @returns The converted value.
+ */
+function _entryConvert(srcValue)
 {
-	// { "$type": "System.String[], mscorlib", "$values": [] } / System.Object[]
-	if (_isArray(srcValue))
-	{
-		let firstElem = _head(srcValue),
-			elementType = 'Object'
-
-		if (firstElem === undefined)
-			elementType = 'Object'
-		else if (_isString(firstElem))
-			elementType = 'String'
-		else if (_isInteger(firstElem))
-			elementType = 'Int32'
-		else if (_isBoolean(firstElem))
-			elementType = 'Boolean'
-		else if (_isDate(firstElem))
-			elementType = 'DateTime'
-		else if (_isNumber(firstElem))
-			elementType = 'Decimal'
-
-		return {
-			'$type': `System.${elementType}[]`,
-			'$values': srcValue
-		}
-	}
-	else if (_isDate(srcValue))
+	// Convert Date objects to ISO string format.
+	if (_isDate(srcValue))
 		return dateToISOString(srcValue)
+	// Recursively process arrays, converting each element.
+	if (_isArray(srcValue))
+		return srcValue.map((item) => _entryConvert(item))
+	// Recursively process objects, converting each value.
+	if (typeof srcValue === 'object' && srcValue !== null)
+	{
+		const convertedObject = {}
+		Object.entries(srcValue).forEach(([key, value]) => {
+			// Use the conversion function for each value.
+			convertedObject[key] = _entryConvert(value)
+		})
+		return convertedObject
+	}
+
+	// Return all other values unchanged.
 	return srcValue
 }
 
-function _transformHistoryLevels(hLevel)
+/**
+ * Processes and transforms the history levels, including converting
+ * dates within 'entries' to a specific string format.
+ * @param {Object} hLevel The current history level to process
+ * @param {string} currentArea The area of the current history level
+ * @returns {Array} An array of processed history levels.
+ */
+function _transformHistoryLevels(hLevel, currentArea = '')
 {
 	let mode = 'None',
 		result = []
@@ -398,7 +425,7 @@ function _transformHistoryLevels(hLevel)
 			mode = _upperFirst((hLevel.params || {}).mode || 'Show')
 
 		result.push({
-			Entries: _assignWith({}, hLevel.entries, _entryConvert),
+			Entries: _entryConvert(hLevel.entries, _entryConvert),
 			Level: hLevel.level,
 			FormMode: mode,
 			Location: {
@@ -409,11 +436,29 @@ function _transformHistoryLevels(hLevel)
 			uniqueIdentifier: hLevel.uniqueIdentifier
 		})
 
-		if (!_isEmpty(hLevel.previousLevel))
-			result.push(..._transformHistoryLevels(hLevel.previousLevel))
+		const previousLevel = getPrevLevelFromOtherArea(currentArea, null, hLevel.previousLevel)
+		if (!_isEmpty(previousLevel))
+			result.push(..._transformHistoryLevels(previousLevel))
 	}
 
 	return result
+}
+
+/**
+ * Finds the first previous level from a different area than the specified one.
+ * @param {string} area The area
+ * @param {object} previousLevel The previous level to take into account
+ * @param {object} defaultLevel The default level to use, in case no previous level from a different area is found
+ * @returns The first previous level, that was found, from a different area than the specified one.
+ */
+function getPrevLevelFromOtherArea(area, previousLevel, defaultLevel)
+{
+	if (typeof previousLevel !== 'object' || previousLevel === null)
+		previousLevel = defaultLevel
+
+	if (typeof area !== 'string' || area.trim().length === 0 || !previousLevel?.hasEntry(area))
+		return previousLevel
+	return getPrevLevelFromOtherArea(area, previousLevel.previousLevel, defaultLevel)
 }
 
 /**
@@ -513,7 +558,7 @@ export class NavigationContext
 			this.updateHistoryLevelData(options)
 		else
 		{
-			let historyLevel = new HistoryLevel(previousLevel || this.currentLevel, options)
+			const historyLevel = new HistoryLevel(previousLevel || this.currentLevel, options)
 			if (!_isEmpty(historyLevel.previousLevel))
 				historyLevel.previousLevel.upperLevels.set(historyLevel.uniqueIdentifier, historyLevel)
 
@@ -720,14 +765,16 @@ export class NavigationContext
 	}
 
 	/**
-	 * Returns a History structure in the format expected by the server
+	 * Transforms the current history into the format expected by the server.
+	 * @param {string} currentArea The area of the current history level
+	 * @returns A History structure in the format expected by the server.
 	 */
-	historyToSend()
+	historyToSend(currentArea = '')
 	{
-		let history = _transformHistoryLevels(this.currentLevel),
+		const history = _transformHistoryLevels(this.currentLevel, currentArea),
 			historyToSend = []
 
-		_forEach(history, h => historyToSend.push(h))
+		_forEach(history, (h) => historyToSend.push(h))
 
 		return {
 			History: historyToSend.reverse(),
@@ -737,7 +784,7 @@ export class NavigationContext
 
 	/**
 	 * Convert the structure in graph to a collection of levels.
-	 * @returns Array of history levels.
+	 * @returns An array of history levels.
 	 */
 	convertToCollection()
 	{
@@ -746,13 +793,17 @@ export class NavigationContext
 		return []
 	}
 
+	/**
+	 * Updates the history entries according to history coming from the server.
+	 * @param {object} srvHistory The history coming from the server
+	 */
 	applyServerChanges(srvHistory)
 	{
-		_forEach(srvHistory, hLevel => {
-			let level = this.getLevelByUId(hLevel.uId)
+		_forEach(srvHistory, (hLevel) => {
+			const level = this.getLevelByUId(hLevel.uId)
 			if (level !== null)
 			{
-				_forEach(hLevel.remove, entryKey => level.removeEntryValue(entryKey))
+				_forEach(hLevel.remove, (entryKey) => level.removeEntryValue(entryKey))
 				_forEach(hLevel.set, (value, key) => level.setEntryValue({ key, value }))
 			}
 		})
@@ -774,7 +825,7 @@ export class NavigationContext
 	 */
 	storeValue({ key, formInfo, field, levelNumber })
 	{
-		var navLevel = this.currentLevel
+		let navLevel = this.currentLevel
 
 		if (levelNumber !== '')
 		{

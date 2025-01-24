@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Receipt of good
 	/// </summary>
-	public class CSGenioArecei : DbArea	{
+	public class CSGenioArecei : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -71,6 +72,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "RECEIPT_NUMBER31380";
 
             Qfield.NotNull = true;
@@ -341,7 +343,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodrecei, value); }
 		}
 
-
 		/// <summary>Field : ">>SUPPLIER" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodentit { get { return m_fldCodentit; } }
 		private static FieldRef m_fldCodentit = new FieldRef("recei", "codentit");
@@ -353,18 +354,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodentit, value); }
 		}
 
-
 		/// <summary>Field : "Receipt number" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldNumber { get { return m_fldNumber; } }
 		private static FieldRef m_fldNumber = new FieldRef("recei", "number");
 
 		/// <summary>Field : "Receipt number" Tipo: "N" Formula:  ""</summary>
-		public double ValNumber
+		public decimal ValNumber
 		{
-			get { return (double)returnValueField(FldNumber); }
+			get { return (decimal)returnValueField(FldNumber); }
 			set { insertNameValueField(FldNumber, value); }
 		}
-
 
 		/// <summary>Field : "Receipt date" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDtreceip { get { return m_fldDtreceip; } }
@@ -377,7 +376,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDtreceip, value); }
 		}
 
-
 		/// <summary>Field : "Receipt verification" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDtcheck { get { return m_fldDtcheck; } }
 		private static FieldRef m_fldDtcheck = new FieldRef("recei", "dtcheck");
@@ -388,7 +386,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDtcheck); }
 			set { insertNameValueField(FldDtcheck, value); }
 		}
-
 
 		/// <summary>Field : "Checked" Tipo: "L" Formula: + "iif(isEmptyD([RECEI->DTCHECK]),0,1)"</summary>
 		public static FieldRef FldChecked { get { return m_fldChecked; } }
@@ -401,7 +398,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldChecked, value); }
 		}
 
-
 		/// <summary>Field : "To check" Tipo: "L" Formula: + "iif(!isEmptyD([RECEI->DTRECEIP]) && isEmptyD([RECEI->DTCHECK]),1,0)"</summary>
 		public static FieldRef FldTocheck { get { return m_fldTocheck; } }
 		private static FieldRef m_fldTocheck = new FieldRef("recei", "tocheck");
@@ -412,7 +408,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldTocheck); }
 			set { insertNameValueField(FldTocheck, value); }
 		}
-
 
 		/// <summary>Field : "Stored" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldStored { get { return m_fldStored; } }
@@ -425,7 +420,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldStored, value); }
 		}
 
-
 		/// <summary>Field : "Storage date" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDtstorag { get { return m_fldDtstorag; } }
 		private static FieldRef m_fldDtstorag = new FieldRef("recei", "dtstorag");
@@ -436,7 +430,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDtstorag); }
 			set { insertNameValueField(FldDtstorag, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -479,23 +472,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioArecei> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioArecei> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioArecei>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -544,7 +520,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX RECEI]/

@@ -4,18 +4,19 @@
 		v-bind="params">
 		<div :class="gridStackContentClasses">
 			<div class="q-widget__menu">
-				<span class="q-widget__group">
+				<span
+					v-if="showGroupTitle"
+					class="q-widget__group">
 					{{ group.title }}
 				</span>
 
 				<div
-					class="q-widget__menubar"
-					role="menubar">
-					<ul
-						v-if="config.inEditMode && widget.Type === 3 && hasPagination"
+					v-if="showMenubar"
+					class="q-widget__menubar">
+					<div
+						v-if="showPaginationButtons"
 						class="custom-widget-pagination">
 						<q-button
-							role="menuitem"
 							borderless
 							:title="texts.previousPageText"
 							:disabled="!hasPrev"
@@ -24,18 +25,16 @@
 						</q-button>
 
 						<q-button
-							role="menuitem"
 							borderless
 							:title="texts.nextPageText"
 							:disabled="!hasNext"
 							@click="next">
 							<q-icon icon="step-forward" />
 						</q-button>
-					</ul>
+					</div>
 
 					<q-button
-						v-if="!widget.Required && config.inEditMode"
-						role="menuitem"
+						v-if="showRemoveButton"
 						borderless
 						:title="texts.removeButtonText"
 						@click="$emit('delete-widget', widget.uuid)">
@@ -43,8 +42,7 @@
 					</q-button>
 
 					<q-button
-						v-if="widget.RefreshMode === 1 && !config.inEditMode"
-						role="menuitem"
+						v-if="showRefreshButton"
 						borderless
 						:title="texts.refreshButtonText"
 						@click="refresh">
@@ -195,12 +193,34 @@
 			gridStackContentClasses()
 			{
 				const baseClass = 'q-widget'
-				const classes = ['grid-stack-item-content', baseClass]
+				const classes = ['grid-stack-item-content', baseClass, this.styleClass]
 
 				if (this.borderColor)
 					classes.push(`${baseClass}--border-${this.borderColor}`)
 
+				// Alert widget with the apply color set to the background.
+				if (this.widget.Type === 0 && this.widget?.ApplyColorTo === 0)
+					classes.push(`q-widget--${this.borderColor}`)
+
 				return classes
+			},
+
+			/**
+			 * The style class to be applied to the widget based on it's Style property.
+			 */
+			styleClass()
+			{
+				const classes = {
+					primary: 'q-widget--primary',
+					secondary: 'q-widget--secondary',
+					info: 'q-widget--info',
+					success: 'q-widget--success',
+					warning: 'q-widget--warning',
+					danger: 'q-widget--danger',
+					neutral: 'q-widget--neutral'
+				}
+
+				return classes[this.widget.Style] || ''
 			},
 
 			/**
@@ -220,6 +240,14 @@
 			},
 
 			/**
+			 * Whether to show the group title.
+			 */
+			showGroupTitle()
+			{
+				return !this.group.hideGroup && this.group.title
+			},
+
+			/**
 			 * Determines if the "next page" pagination button should be enabled.
 			 */
 			hasNext()
@@ -227,6 +255,43 @@
 				if (this.widget.Keys)
 					return this.page + 1 < this.widget.Keys.length
 				return false
+			},
+
+			/**
+			 * Whether to show the pagination buttons.
+			 */
+			showPaginationButtons()
+			{
+				const inEditModeWithPagination = this.config.inEditMode && this.widget.Type === 3 && this.hasPagination
+				const AggregatedWidgetWithPagination = this.widget.InstantionMethod === 0 && this.widget.Type === 3 && this.hasPagination
+
+				return inEditModeWithPagination || AggregatedWidgetWithPagination
+			},
+
+			/**
+			 * Whether to show the pagination buttons.
+			 */
+			showRemoveButton()
+			{
+				return !this.widget.Required && this.config.inEditMode
+			},
+
+			/**
+			 * Whether to show the pagination buttons.
+			 */
+			showRefreshButton()
+			{
+				return this.widget.RefreshMode === 1 && !this.config.inEditMode
+			},
+
+			/**
+			 * Whether to show the pagination buttons.
+			 */
+			showMenubar()
+			{
+				return this.showPaginationButtons
+					|| this.showRemoveButton
+					|| this.showRefreshButton
 			}
 		},
 

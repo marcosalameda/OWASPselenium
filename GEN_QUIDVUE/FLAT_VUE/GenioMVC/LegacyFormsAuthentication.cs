@@ -26,6 +26,7 @@ public class LegacyFormsAuthenticationOptions: AuthenticationSchemeOptions
 
 public class LegacyFormsAuthentication : SignInAuthenticationHandler<LegacyFormsAuthenticationOptions>
 {
+    private readonly IConfiguration _config;
     LegacyFormsAuthenticationTicketEncryptor GetEncryptor()
     {
         var algo = Options.Algorithm switch
@@ -39,9 +40,10 @@ public class LegacyFormsAuthentication : SignInAuthenticationHandler<LegacyForms
         return new LegacyFormsAuthenticationTicketEncryptor(Options.DecryptionKey, Options.ValidationKey, algo, CompatibilityMode.Framework45);
     }
 
-    public LegacyFormsAuthentication(IOptionsMonitor<LegacyFormsAuthenticationOptions> options, ILoggerFactory logger, UrlEncoder encoder)
+    public LegacyFormsAuthentication(IOptionsMonitor<LegacyFormsAuthenticationOptions> options, ILoggerFactory logger, UrlEncoder encoder, IConfiguration config)
         : base(options, logger, encoder)
     {
+        _config = config;
     }
 
 
@@ -105,11 +107,11 @@ public class LegacyFormsAuthentication : SignInAuthenticationHandler<LegacyForms
         {
             HttpOnly = true,
             Expires = ticket.Expiration,
-            //SameSite = SameSiteMode.Strict
-            SameSite = SameSiteMode.None,
+            SameSite = SameSiteMode.Strict,
             Secure = true,
         };
-
+        _config.GetSection("CookieAuthOptions").Bind(options);
+        
         Response.Cookies.Append(Options.CookieName, encTicket, options);
     }
 

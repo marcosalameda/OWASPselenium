@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Cmpny;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_EMPRE_CANCEL = new NavigationLocation("COMPANY52963", "Empre_Cancel", "Cmpny") { vueRouteName = "form-EMPRE", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_EMPRE_SHOW = new NavigationLocation("COMPANY52963", "Empre_Show", "Cmpny") { vueRouteName = "form-EMPRE", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_EMPRE_NEW = new NavigationLocation("COMPANY52963", "Empre_New", "Cmpny") { vueRouteName = "form-EMPRE", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_EMPRE_EDIT = new NavigationLocation("COMPANY52963", "Empre_Edit", "Cmpny") { vueRouteName = "form-EMPRE", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_EMPRE_DUPLICATE = new NavigationLocation("COMPANY52963", "Empre_Duplicate", "Cmpny") { vueRouteName = "form-EMPRE", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_EMPRE_DELETE = new NavigationLocation("COMPANY52963", "Empre_Delete", "Cmpny") { vueRouteName = "form-EMPRE", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_EMPRE_CANCEL = new("COMPANY52963", "Empre_Cancel", "Cmpny") { vueRouteName = "form-EMPRE", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_EMPRE_SHOW = new("COMPANY52963", "Empre_Show", "Cmpny") { vueRouteName = "form-EMPRE", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_EMPRE_NEW = new("COMPANY52963", "Empre_New", "Cmpny") { vueRouteName = "form-EMPRE", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_EMPRE_EDIT = new("COMPANY52963", "Empre_Edit", "Cmpny") { vueRouteName = "form-EMPRE", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_EMPRE_DUPLICATE = new("COMPANY52963", "Empre_Duplicate", "Cmpny") { vueRouteName = "form-EMPRE", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_EMPRE_DELETE = new("COMPANY52963", "Empre_Delete", "Cmpny") { vueRouteName = "form-EMPRE", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Empre_ModalDBEdit()
-		{
-			Empre_ViewModel model = new Empre_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Empre_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Empre Multiform actions
-
-		//
-		// GET /Cmpny/MFEmpre_New
-		[HttpGet]
-		[ActionName("MFEmpre_New")]
-		public ActionResult MFEmpre_New()
-		{
-			var model = new Empre_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_EMPRE_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("cmpny", model.ValCodempre);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFEmpre_New_GET()
-		{
-			return MFEmpre_New();
-		}
-
-		//
-		// GET /Cmpny/MFEmpre_Edit
-		[HttpGet]
-		[ActionName("MFEmpre_Edit")]
-		public ActionResult MFEmpre_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("EMPRE", "EDIT", new { id = id, partialView = "MFEmpre", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFEmpre_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFEmpre_Edit(requestModel);
-		}
-
-		//
-		// GET /Cmpny/MFEmpre_Cancel
-		[ActionName("MFEmpre_Cancel")]
-		public ActionResult MFEmpre_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Cmpny(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Cmpny/MFEmpre_Save
-		[HttpPost]
-		[ActionName("MFEmpre_Save")]
-		public JsonResult MFEmpre_Save(Empre_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFEmpre_Save",
-				ViewName = "MFEmpre",
-				AreaName = "cmpny"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Cmpny/MFEmpre_Delete
-		[HttpPost]
-		[ActionName("MFEmpre_Delete")]
-		public JsonResult MFEmpre_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFEmpre_Delete",
-				ViewName = "MFEmpre",
-				AreaName = "cmpny",
-				Location = ACTION_EMPRE_EDIT
-			};
-
-			var model = new Empre_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Cmpny/Empre_CntryValCountry
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_cntry")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,12 +422,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Empre_CntryValCountry_ViewModel model = new Empre_CntryValCountry_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodempre = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Cmpny/Empre_SaveEdit
 		[HttpPost]

@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Repar
 {
-	public class Repar_ViewModel : FormViewModel<Models.Repar>
+	public class Repar_ViewModel : FormViewModel<Models.Repar>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,14 +29,40 @@ namespace GenioMVC.ViewModels.Repar
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodcateg { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodempre { get; set; }
+		/// <summary>
+		/// Title: "Registration No." | Type: "CE"
+		/// </summary>
+		public string ValCodequip { get; set; }
+		/// <summary>
+		/// Title: "Technician" | Type: "CE"
+		/// </summary>
+		public string ValCodpesso { get; set; }
+		/// <summary>
+		/// Title: "Specialty" | Type: "CE"
+		/// </summary>
+		public string ValCodespec { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Registration No." | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Equip> TableEquipRegistnr { get; set; }
-
 		/// <summary>
 		/// Title: "Designation" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public string EquipValDesignat 
 		{
 			get
@@ -50,12 +76,12 @@ namespace GenioMVC.ViewModels.Repar
 		public Func<string> funcEquipValDesignat { get; set; }
 
 		private string _auxEquipValDesignat { get; set; }
-
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
 		[ImageThumbnailJsonConverter(100, 50)]
-		public GenioMVC.ViewModels.ImageModel EquipValPhotogra 
+		[ValidateSetAccess]
+		public GenioMVC.Models.ImageModel EquipValPhotogra 
 		{
 			get
 			{
@@ -65,46 +91,40 @@ namespace GenioMVC.ViewModels.Repar
 		}
 
 		[JsonIgnore]
-		public Func<GenioMVC.ViewModels.ImageModel> funcEquipValPhotogra { get; set; }
+		public Func<GenioMVC.Models.ImageModel> funcEquipValPhotogra { get; set; }
 
-		private GenioMVC.ViewModels.ImageModel _auxEquipValPhotogra { get; set; }
-
+		private GenioMVC.Models.ImageModel _auxEquipValPhotogra { get; set; }
 		/// <summary>
 		/// Title: "Repaired on" | Type: "DT"
 		/// </summary>
 		public DateTime? ValDtrepara { get; set; }
-
 		/// <summary>
 		/// Title: "Company Repair Number" | Type: "N"
 		/// </summary>
 		public decimal? ValNrrepara { get; set; }
-
 		/// <summary>
 		/// Title: "Technical area" | Type: "AC"
 		/// </summary>
 		public string ValTipoarea { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValTipoarea { get; set; }
-
 		/// <summary>
 		/// Title: "Specialty" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Speci> TableSpeciEspecial { get; set; }
-
 		/// <summary>
 		/// Title: "Technician" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Pesso> TablePessoName { get; set; }
-
 		/// <summary>
 		/// Title: "Repair Description" | Type: "MO"
 		/// </summary>
 		public string ValDescript { get; set; }
-
 		/// <summary>
 		/// Title: "Spent in Hours" | Type: "N"
 		/// </summary>
@@ -119,35 +139,6 @@ namespace GenioMVC.ViewModels.Repar
 
 		#endregion
 
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodcateg { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodempre { get; set; }
-
-		/// <summary>
-		/// Title: "Registration No." | Type: "CE"
-		/// </summary>
-		public string ValCodequip { get; set; }
-
-		/// <summary>
-		/// Title: "Technician" | Type: "CE"
-		/// </summary>
-		public string ValCodpesso { get; set; }
-
-		/// <summary>
-		/// Title: "Specialty" | Type: "CE"
-		/// </summary>
-		public string ValCodespec { get; set; }
-		#endregion
-
 		#region Extra database fields
 
 
@@ -156,14 +147,24 @@ namespace GenioMVC.ViewModels.Repar
 
 		#region Fields for formulas
 
+		// Field for formula
+		/// <summary>Used only for lazy loading of the SpeciValAreatecn field</summary>
+		[JsonIgnore]
+		[ValidateSetAccess]
+		public Func<string> funcSpeciValAreatecn { get; set; }
+		private string _auxSpeciValAreatecn { get; set; }
+		/// <summary>Field: "Technical area" Tipo: "AC"</summary>
+		[ValidateSetAccess]
+		public string SpeciValAreatecn { get { return funcSpeciValAreatecn != null ? funcSpeciValAreatecn() : _auxSpeciValAreatecn; } private set { funcSpeciValAreatecn = () => value; } }
 
 		#endregion
 
 		public string ValCodrepar { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Repar_ViewModel() : base(null!) { }
@@ -199,6 +200,15 @@ namespace GenioMVC.ViewModels.Repar
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Repar model = new Models.Repar(userContext) { Identifier = "FREPAR" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FREPAR");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -259,6 +269,11 @@ namespace GenioMVC.ViewModels.Repar
 
 			try
 			{
+				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValCodespec = ViewModelConversion.ToString(m.ValCodespec);
 				funcEquipValDesignat = () => ViewModelConversion.ToString(m.Equip.ValDesignat);
 				funcEquipValPhotogra = () => ViewModelConversion.ToImage(m.Equip.ValPhotogra);
 				ValDtrepara = ViewModelConversion.ToDateTime(m.ValDtrepara);
@@ -266,11 +281,7 @@ namespace GenioMVC.ViewModels.Repar
 				ValTipoarea = ViewModelConversion.ToString(m.ValTipoarea);
 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
 				ValHours = ViewModelConversion.ToNumeric(m.ValHours);
-				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
-				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
-				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
-				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
-				ValCodespec = ViewModelConversion.ToString(m.ValCodespec);
+				funcSpeciValAreatecn = () => ViewModelConversion.ToString(m.Speci.ValAreatecn);
 				ValCodrepar = ViewModelConversion.ToString(m.ValCodrepar);
 			}
 			catch (Exception)
@@ -280,6 +291,20 @@ namespace GenioMVC.ViewModels.Repar
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Repar m)
 		{
 			if (m == null)
@@ -290,27 +315,100 @@ namespace GenioMVC.ViewModels.Repar
 
 			try
 			{
+				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
+				m.ValCodpesso = ViewModelConversion.ToString(ValCodpesso);
+				m.ValCodespec = ViewModelConversion.ToString(ValCodespec);
 				m.ValDtrepara = ViewModelConversion.ToDateTime(ValDtrepara);
 				m.ValNrrepara = ViewModelConversion.ToNumeric(ValNrrepara);
 				m.ValTipoarea = ViewModelConversion.ToString(ValTipoarea);
 				m.ValDescript = ViewModelConversion.ToString(ValDescript);
 				m.ValHours = ViewModelConversion.ToNumeric(ValHours);
+				m.ValCodrepar = ViewModelConversion.ToString(ValCodrepar);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
 				m.ValCodcateg = ViewModelConversion.ToString(ValCodcateg);
 				m.ValCodempre = ViewModelConversion.ToString(ValCodempre);
-				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
-				m.ValCodpesso = ViewModelConversion.ToString(ValCodpesso);
-				m.ValCodespec = ViewModelConversion.ToString(ValCodespec);
-				m.ValCodrepar = ViewModelConversion.ToString(ValCodrepar);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Repar) to Model (Repar) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Repar) to Model (Repar) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "repar.codequip":
+						this.ValCodequip = ViewModelConversion.ToString(_value);
+						break;
+					case "repar.codpesso":
+						this.ValCodpesso = ViewModelConversion.ToString(_value);
+						break;
+					case "repar.codespec":
+						this.ValCodespec = ViewModelConversion.ToString(_value);
+						break;
+					case "repar.dtrepara":
+						this.ValDtrepara = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "repar.nrrepara":
+						this.ValNrrepara = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "repar.tipoarea":
+						this.ValTipoarea = ViewModelConversion.ToString(_value);
+						break;
+					case "repar.descript":
+						this.ValDescript = ViewModelConversion.ToString(_value);
+						break;
+					case "repar.hours":
+						this.ValHours = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "repar.codrepar":
+						this.ValCodrepar = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Repar) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Repar)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Repar.Find(id ?? Navigation.GetStrValue("repar"), m_userContext, "FREPAR"); }
+			finally { Model ??= new Models.Repar(m_userContext) { Identifier = "FREPAR" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -324,20 +422,13 @@ namespace GenioMVC.ViewModels.Repar
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FREPAR";
@@ -347,6 +438,7 @@ namespace GenioMVC.ViewModels.Repar
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -406,31 +498,25 @@ namespace GenioMVC.ViewModels.Repar
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("EquipValDesignat", Resources.Resources.DESIGNATION35876, EquipValDesignat, 85);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE REPAR]/
 		public override void Save()
 		{
 
-			try { Model = Models.Repar.Find(Navigation.GetStrValue("repar"), m_userContext, "FREPAR"); }
-			finally { if (Model == null) Model = new Models.Repar(m_userContext) { Identifier = "FREPAR" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY REPAR]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Repar.Find(Navigation.GetStrValue("repar"), m_userContext, "FREPAR"); }
-			finally { if (Model == null) Model = new Models.Repar(m_userContext) { Identifier = "FREPAR" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE REPAR]/
 
@@ -463,8 +549,8 @@ namespace GenioMVC.ViewModels.Repar
 				object hValue = Navigation.GetValue("equip", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					repar___equipregistnrConds.Equal(CSGenioAequip.FldCodequip, Navigation.GetValue("equip"));
-					this.ValCodequip = Navigation.GetStrValue("equip");
+					repar___equipregistnrConds.Equal(CSGenioAequip.FldCodequip, hValue);
+					this.ValCodequip = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -481,8 +567,6 @@ namespace GenioMVC.ViewModels.Repar
 					Navigation.CurrentLevel.SetEntry("RETURN_equip", null);
 				}
 				FillDependant_ReparTableEquipRegistnr(lazyLoad);
-				//Check if foreignkey comes from history
-				TableEquipRegistnr.FilledByHistory = Navigation.CheckFilledByHistory("equip");
 				return;
 			}
 
@@ -550,9 +634,6 @@ namespace GenioMVC.ViewModels.Repar
 
 				TableEquipRegistnr.List = new SelectList(TableEquipRegistnr.Elements.ToSelectList(x => x.ValRegistnr, x => x.ValCodequip,  x => x.ValCodequip == this.ValCodequip), "Value", "Text", this.ValCodequip);
 				FillDependant_ReparTableEquipRegistnr();
-
-				//Check if foreignkey comes from history
-				TableEquipRegistnr.FilledByHistory = Navigation.CheckFilledByHistory("equip");
 			}
 		}
 
@@ -612,7 +693,7 @@ namespace GenioMVC.ViewModels.Repar
 			try
 			{
 				this.funcEquipValDesignat = () => (string)row["equip.designat"];
-				this.funcEquipValPhotogra = () => (GenioMVC.ViewModels.ImageModel)row["equip.photogra"];
+				this.funcEquipValPhotogra = () => (GenioMVC.Models.ImageModel)row["equip.photogra"];
 
 				// Fill List fields
 				this.ValCodequip = ViewModelConversion.ToString(row["equip.codequip"]);
@@ -660,8 +741,8 @@ namespace GenioMVC.ViewModels.Repar
 				object hValue = Navigation.GetValue("speci", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					repar___speciespecialConds.Equal(CSGenioAspeci.FldCodespec, Navigation.GetValue("speci"));
-					this.ValCodespec = Navigation.GetStrValue("speci");
+					repar___speciespecialConds.Equal(CSGenioAspeci.FldCodespec, hValue);
+					this.ValCodespec = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
@@ -684,8 +765,6 @@ namespace GenioMVC.ViewModels.Repar
 					Navigation.CurrentLevel.SetEntry("RETURN_speci", null);
 				}
 				FillDependant_ReparTableSpeciEspecial(lazyLoad);
-				//Check if foreignkey comes from history
-				TableSpeciEspecial.FilledByHistory = Navigation.CheckFilledByHistory("speci");
 				return;
 			}
 
@@ -753,9 +832,6 @@ namespace GenioMVC.ViewModels.Repar
 
 				TableSpeciEspecial.List = new SelectList(TableSpeciEspecial.Elements.ToSelectList(x => x.ValEspecial, x => x.ValCodespec,  x => x.ValCodespec == this.ValCodespec), "Value", "Text", this.ValCodespec);
 				FillDependant_ReparTableSpeciEspecial();
-
-				//Check if foreignkey comes from history
-				TableSpeciEspecial.FilledByHistory = Navigation.CheckFilledByHistory("speci");
 			}
 		}
 
@@ -765,7 +841,7 @@ namespace GenioMVC.ViewModels.Repar
 		/// <param name="PKey">Primary Key of Speci</param>
 		public ConcurrentDictionary<string, object> GetDependant_ReparTableSpeciEspecial(string PKey)
 		{
-			FieldRef[] refDependantFields = [CSGenioAspeci.FldCodespec, CSGenioAspeci.FldEspecial];
+			FieldRef[] refDependantFields = [CSGenioAspeci.FldCodespec, CSGenioAspeci.FldEspecial, CSGenioAspeci.FldAreatecn];
 
 			var returnEmptyDependants = false;
 			CriteriaSet wherecodition = CriteriaSet.And();
@@ -814,6 +890,7 @@ namespace GenioMVC.ViewModels.Repar
 			var row = GetDependant_ReparTableSpeciEspecial(this.ValCodespec);
 			try
 			{
+				this.funcSpeciValAreatecn = () => (string)row["speci.areatecn"];
 
 				// Fill List fields
 				this.ValCodespec = ViewModelConversion.ToString(row["speci.codespec"]);
@@ -861,8 +938,8 @@ namespace GenioMVC.ViewModels.Repar
 				object hValue = Navigation.GetValue("pesso", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					repar___pessoname____Conds.Equal(CSGenioApesso.FldCodpesso, Navigation.GetValue("pesso"));
-					this.ValCodpesso = Navigation.GetStrValue("pesso");
+					repar___pessoname____Conds.Equal(CSGenioApesso.FldCodpesso, hValue);
+					this.ValCodpesso = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
@@ -900,8 +977,6 @@ namespace GenioMVC.ViewModels.Repar
 					Navigation.CurrentLevel.SetEntry("RETURN_pesso", null);
 				}
 				FillDependant_ReparTablePessoName(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
 				return;
 			}
 
@@ -969,9 +1044,6 @@ namespace GenioMVC.ViewModels.Repar
 
 				TablePessoName.List = new SelectList(TablePessoName.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpesso), "Value", "Text", this.ValCodpesso);
 				FillDependant_ReparTablePessoName();
-
-				//Check if foreignkey comes from history
-				TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
 			}
 		}
 
@@ -1068,6 +1140,11 @@ namespace GenioMVC.ViewModels.Repar
 		{
 			return identifier switch
 			{
+				"repar.codcateg" => ViewModelConversion.ToString(modelValue),
+				"repar.codempre" => ViewModelConversion.ToString(modelValue),
+				"repar.codequip" => ViewModelConversion.ToString(modelValue),
+				"repar.codpesso" => ViewModelConversion.ToString(modelValue),
+				"repar.codespec" => ViewModelConversion.ToString(modelValue),
 				"equip.designat" => ViewModelConversion.ToString(modelValue),
 				"equip.photogra" => ViewModelConversion.ToImage(modelValue),
 				"repar.dtrepara" => ViewModelConversion.ToDateTime(modelValue),
@@ -1075,11 +1152,7 @@ namespace GenioMVC.ViewModels.Repar
 				"repar.tipoarea" => ViewModelConversion.ToString(modelValue),
 				"repar.descript" => ViewModelConversion.ToString(modelValue),
 				"repar.hours" => ViewModelConversion.ToNumeric(modelValue),
-				"repar.codcateg" => ViewModelConversion.ToString(modelValue),
-				"repar.codempre" => ViewModelConversion.ToString(modelValue),
-				"repar.codequip" => ViewModelConversion.ToString(modelValue),
-				"repar.codpesso" => ViewModelConversion.ToString(modelValue),
-				"repar.codespec" => ViewModelConversion.ToString(modelValue),
+				"speci.areatecn" => ViewModelConversion.ToString(modelValue),
 				"repar.codrepar" => ViewModelConversion.ToString(modelValue),
 				"equip.codequip" => ViewModelConversion.ToString(modelValue),
 				"equip.registnr" => ViewModelConversion.ToString(modelValue),
@@ -1087,8 +1160,16 @@ namespace GenioMVC.ViewModels.Repar
 				"speci.especial" => ViewModelConversion.ToString(modelValue),
 				"pesso.codpesso" => ViewModelConversion.ToString(modelValue),
 				"pesso.name" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
+		}
+
+
+		/// <inheritdoc/>
+		protected override void SetTicketToImageFields()
+		{
+			if (EquipValPhotogra != null)
+				EquipValPhotogra.Ticket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaEQUIP, CSGenioAequip.FldPhotogra.Field, null, ValCodequip);
 		}
 
 		#region Charts

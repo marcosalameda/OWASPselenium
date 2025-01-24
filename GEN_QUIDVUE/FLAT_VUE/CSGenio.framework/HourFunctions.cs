@@ -12,17 +12,16 @@ namespace CSGenio.framework
         /// </summary>
         /// <param name="cHoras0">A hour em format __:__</param>
         /// <returns>O número de horas decorridos desde 00:00</returns>
-        public static double HoursToDouble(string cHours0)
+        public static decimal HoursToDouble(string cHours0)
         {
-            int h0 = 0, m0 = 0;
             if (cHours0.Length < 5)
-                return 0.0;
+                return 0;
             cHours0 = cHours0.Replace('_', '0');
-            Int32.TryParse(cHours0.Substring(0, 2), out h0);
-            Int32.TryParse(cHours0.Substring(3, 2), out m0);
+            int.TryParse(cHours0.Substring(0, 2), out int h0);
+            int.TryParse(cHours0.Substring(3, 2), out int m0);
             if (h0 < 0 || h0 > 23 || m0 < 0 || m0 > 59)
-                return 0.0;
-            return (h0 * 60.0 + m0) / 60.0;
+                return 0;
+            return h0 + (m0 / 60m);
         }
 
         /// <summary>
@@ -32,16 +31,15 @@ namespace CSGenio.framework
         /// <param name="cHoras0">A hour em format __:__</param>
         /// <param name="minutos">O number de minutes a adicionar</param>
         /// <returns>A nova hour com os minutes adicionados</returns>
-        public static string HoursAdd(string cHours0, double minutes)
+        public static string HoursAdd(string cHours0, decimal minutes)
         {
             if (cHours0 == null)
                 return "__:__";
-            int h0 = 0, m0 = 0;
             if (cHours0.Length < 5)
                 return "__:__";
             cHours0 = cHours0.Replace('_', '0');
-            Int32.TryParse(cHours0.Substring(0, 2), out h0);
-            Int32.TryParse(cHours0.Substring(3, 2), out m0);
+            Int32.TryParse(cHours0.Substring(0, 2), out int h0);
+            Int32.TryParse(cHours0.Substring(3, 2), out int m0);
             if (h0 < 0 || h0 > 23 || m0 < 0 || m0 > 59)
                 return "__:__";
 

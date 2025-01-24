@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Feeca;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_FEECA_CANCEL = new NavigationLocation("FEEDBACK_CAMPO42437", "Feeca_Cancel", "Feeca") { vueRouteName = "form-FEECA", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_FEECA_SHOW = new NavigationLocation("FEEDBACK_CAMPO42437", "Feeca_Show", "Feeca") { vueRouteName = "form-FEECA", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_FEECA_NEW = new NavigationLocation("FEEDBACK_CAMPO42437", "Feeca_New", "Feeca") { vueRouteName = "form-FEECA", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_FEECA_EDIT = new NavigationLocation("FEEDBACK_CAMPO42437", "Feeca_Edit", "Feeca") { vueRouteName = "form-FEECA", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_FEECA_DUPLICATE = new NavigationLocation("FEEDBACK_CAMPO42437", "Feeca_Duplicate", "Feeca") { vueRouteName = "form-FEECA", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_FEECA_DELETE = new NavigationLocation("FEEDBACK_CAMPO42437", "Feeca_Delete", "Feeca") { vueRouteName = "form-FEECA", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_FEECA_CANCEL = new("FEEDBACK_CAMPO42437", "Feeca_Cancel", "Feeca") { vueRouteName = "form-FEECA", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_FEECA_SHOW = new("FEEDBACK_CAMPO42437", "Feeca_Show", "Feeca") { vueRouteName = "form-FEECA", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_FEECA_NEW = new("FEEDBACK_CAMPO42437", "Feeca_New", "Feeca") { vueRouteName = "form-FEECA", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_FEECA_EDIT = new("FEEDBACK_CAMPO42437", "Feeca_Edit", "Feeca") { vueRouteName = "form-FEECA", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_FEECA_DUPLICATE = new("FEEDBACK_CAMPO42437", "Feeca_Duplicate", "Feeca") { vueRouteName = "form-FEECA", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_FEECA_DELETE = new("FEEDBACK_CAMPO42437", "Feeca_Delete", "Feeca") { vueRouteName = "form-FEECA", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Feeca_ModalDBEdit()
-		{
-			Feeca_ViewModel model = new Feeca_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Feeca_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Feeca Multiform actions
-
-		//
-		// GET /Feeca/MFFeeca_New
-		[HttpGet]
-		[ActionName("MFFeeca_New")]
-		public ActionResult MFFeeca_New()
-		{
-			var model = new Feeca_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_FEECA_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("feeca", model.ValCodfeeca);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFFeeca_New_GET()
-		{
-			return MFFeeca_New();
-		}
-
-		//
-		// GET /Feeca/MFFeeca_Edit
-		[HttpGet]
-		[ActionName("MFFeeca_Edit")]
-		public ActionResult MFFeeca_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("FEECA", "EDIT", new { id = id, partialView = "MFFeeca", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFFeeca_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFFeeca_Edit(requestModel);
-		}
-
-		//
-		// GET /Feeca/MFFeeca_Cancel
-		[ActionName("MFFeeca_Cancel")]
-		public ActionResult MFFeeca_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Feeca(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Feeca/MFFeeca_Save
-		[HttpPost]
-		[ActionName("MFFeeca_Save")]
-		public JsonResult MFFeeca_Save(Feeca_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFFeeca_Save",
-				ViewName = "MFFeeca",
-				AreaName = "feeca"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Feeca/MFFeeca_Delete
-		[HttpPost]
-		[ActionName("MFFeeca_Delete")]
-		public JsonResult MFFeeca_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFFeeca_Delete",
-				ViewName = "MFFeeca",
-				AreaName = "feeca",
-				Location = ACTION_FEECA_EDIT
-			};
-
-			var model = new Feeca_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Feeca/Feeca_FldsValDescrip
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_flds")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,12 +422,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Feeca_FldsValDescrip_ViewModel model = new Feeca_FldsValDescrip_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodfeeca = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Feeca/Feeca_SaveEdit
 		[HttpPost]

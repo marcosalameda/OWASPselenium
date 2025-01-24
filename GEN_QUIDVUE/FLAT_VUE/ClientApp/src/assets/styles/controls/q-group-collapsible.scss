@@ -18,19 +18,23 @@
 	border-radius: $border-radius;
 
 	&__header {
-		cursor: pointer;
 		display: flex;
 		align-items: center;
 		padding: 0.35rem 0.3rem;
 		border-bottom: 1px solid $input-border-color;
 
-		.q-btn__content {
-			justify-content: start;
+		.q-btn {
+			padding: 0.4rem 0.1rem 0.4rem 0.4rem;
+			cursor: pointer;
 
-			span {
-				display: flex;
-				color: inherit;
-				line-height: inherit;
+			&__content {
+				justify-content: start;
+
+				span {
+					display: flex;
+					color: inherit;
+					line-height: inherit;
+				}
 			}
 		}
 	}
@@ -69,17 +73,19 @@
 			border-bottom: transparent;
 			padding: 0;
 
-			button.q-btn.q-btn--tertiary.q-btn--block {
-				padding-left: 0;
+			button.q-btn.q-btn--tertiary {
+				&.q-btn--block {
+					padding-left: 0;
+				}
 
 				span.q-group-collapsible__label {
-					font-size: .8rem;
-					line-height: .7;
+					font-size: 0.8rem;
+					line-height: 0.7;
 				}
 
 				.q-icon__svg {
-					width: .7em;
-					height: .7em;
+					width: 0.7em;
+					height: 0.7em;
 				}
 			}
 		}

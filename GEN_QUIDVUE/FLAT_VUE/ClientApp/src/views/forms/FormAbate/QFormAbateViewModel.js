@@ -75,25 +75,14 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [Now]
-					// eslint-disable-next-line eqeqeq
 					return qApi.Agora()
 				},
 				dependencyEvents: [],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyD,
 			},
 		}).cloneFrom(values?.ValDtdeco))
 		watch(() => this.ValDtdeco.value, (newValue, oldValue) => this.onUpdate('decom.dtdeco', this.ValDtdeco, newValue, oldValue))
-
-		this.ValNote = reactive(new modelFieldType.String({
-			id: 'ValNote',
-			originId: 'ValNote',
-			area: 'DECOM',
-			field: 'NOTE',
-			description: computed(() => this.Resources.NOTES05274),
-		}).cloneFrom(values?.ValNote))
-		watch(() => this.ValNote.value, (newValue, oldValue) => this.onUpdate('decom.note', this.ValNote, newValue, oldValue))
 	}
 
 	/**
@@ -108,5 +97,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCoddeco'
 
 	get QPrimaryKey() { return this.ValCoddeco.value }
-	set QPrimaryKey(value) { this.ValCoddeco.value = value }
+	set QPrimaryKey(value) { this.ValCoddeco.updateValue(value) }
 }

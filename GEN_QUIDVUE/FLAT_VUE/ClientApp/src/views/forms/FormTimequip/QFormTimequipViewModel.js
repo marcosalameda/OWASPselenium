@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODTPEQU',
 			relatedArea: 'TPEQU',
 			description: computed(() => this.Resources._TYPE_OF_EQUIPMENT35057),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodtpequ))
 		watch(() => this.ValCodtpequ.value, (newValue, oldValue) => this.onUpdate('equip.codtpequ', this.ValCodtpequ, newValue, oldValue))
 
@@ -69,6 +70,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODROOMS',
 			relatedArea: 'ROOM1',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCodrooms))
 		watch(() => this.ValCodrooms.value, (newValue, oldValue) => this.onUpdate('equip.codrooms', this.ValCodrooms, newValue, oldValue))
 
@@ -79,6 +81,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODDECO',
 			relatedArea: 'DECOM',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCoddeco))
 		watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('equip.coddeco', this.ValCoddeco, newValue, oldValue))
 
@@ -89,6 +92,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODPESS1',
 			relatedArea: 'PESS1',
 			description: computed(() => this.Resources._COMOMODOR01469),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodpess1))
 		watch(() => this.ValCodpess1.value, (newValue, oldValue) => this.onUpdate('equip.codpess1', this.ValCodpess1, newValue, oldValue))
 
@@ -99,6 +103,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODEMPRE',
 			relatedArea: 'CMPNY',
 			description: computed(() => this.Resources._COMPANY02087),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodempre))
 		watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('equip.codempre', this.ValCodempre, newValue, oldValue))
 
@@ -109,6 +114,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODWAREH',
 			relatedArea: 'WAREH',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCodwareh))
 		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('equip.codwareh', this.ValCodwareh, newValue, oldValue))
 
@@ -119,6 +125,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODITEM',
 			relatedArea: 'ITEM',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCoditem))
 		watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('equip.coditem', this.ValCoditem, newValue, oldValue))
 
@@ -130,16 +137,23 @@ export default class ViewModel extends ViewModelBase
 			field: 'REGISTNR',
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
-					return netAPI.postData('EQUIP', 'TIMEQUIP_EQUIP_REGISTNR_Formula', this.serverObjModel, undefined, undefined, undefined, this.navigationId)
+					return netAPI.postData(
+						'Equip',
+						'TIMEQUIP_EQUIP_REGISTNR_Formula',
+						this.serverObjModel,
+						undefined,
+						undefined,
+						undefined,
+						this.navigationId)
 				},
 				dependencyEvents: ['fieldChange:equip.sequennr'],
 				isServerRecalc: false,
-				isServerFormula: true,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValRegistnr))
@@ -158,5 +172,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodequip'
 
 	get QPrimaryKey() { return this.ValCodequip.value }
-	set QPrimaryKey(value) { this.ValCodequip.value = value }
+	set QPrimaryKey(value) { this.ValCodequip.updateValue(value) }
 }

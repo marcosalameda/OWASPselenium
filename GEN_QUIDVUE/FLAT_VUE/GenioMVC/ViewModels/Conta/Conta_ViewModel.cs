@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Conta
 {
-	public class Conta_ViewModel : FormViewModel<Models.Conta>
+	public class Conta_ViewModel : FormViewModel<Models.Conta>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,21 +29,36 @@ namespace GenioMVC.ViewModels.Conta
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Genre" | Type: "CE"
+		/// </summary>
+		public string ValCodgenre { get; set; }
+		/// <summary>
+		/// Title: "Name:" | Type: "CE"
+		/// </summary>
+		public string ValCodpesso { get; set; }
+		/// <summary>
+		/// Title: "Contact Type:" | Type: "CE"
+		/// </summary>
+		public string ValCodtpcon { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Name:" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Pesso> TablePessoName { get; set; }
-
 		/// <summary>
 		/// Title: "Genre" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Genre> TableGenreGender { get; set; }
-
 		/// <summary>
 		/// Title: "Contact Type:" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Tpcon> TableTpconTipocont { get; set; }
-
 		/// <summary>
 		/// Title: "Contact" | Type: "C"
 		/// </summary>
@@ -56,25 +71,6 @@ namespace GenioMVC.ViewModels.Conta
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Genre" | Type: "CE"
-		/// </summary>
-		public string ValCodgenre { get; set; }
-
-		/// <summary>
-		/// Title: "Name:" | Type: "CE"
-		/// </summary>
-		public string ValCodpesso { get; set; }
-
-		/// <summary>
-		/// Title: "Contact Type:" | Type: "CE"
-		/// </summary>
-		public string ValCodtpcon { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -90,9 +86,10 @@ namespace GenioMVC.ViewModels.Conta
 
 		public string ValCodconta { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Conta_ViewModel() : base(null!) { }
@@ -128,6 +125,15 @@ namespace GenioMVC.ViewModels.Conta
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Conta model = new Models.Conta(userContext) { Identifier = "FCONTA" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FCONTA");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -188,10 +194,10 @@ namespace GenioMVC.ViewModels.Conta
 
 			try
 			{
-				ValContacto = ViewModelConversion.ToString(m.ValContacto);
 				ValCodgenre = ViewModelConversion.ToString(m.ValCodgenre);
 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 				ValCodtpcon = ViewModelConversion.ToString(m.ValCodtpcon);
+				ValContacto = ViewModelConversion.ToString(m.ValContacto);
 				ValCodconta = ViewModelConversion.ToString(m.ValCodconta);
 			}
 			catch (Exception)
@@ -201,6 +207,20 @@ namespace GenioMVC.ViewModels.Conta
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Conta m)
 		{
 			if (m == null)
@@ -211,21 +231,74 @@ namespace GenioMVC.ViewModels.Conta
 
 			try
 			{
-				m.ValContacto = ViewModelConversion.ToString(ValContacto);
 				m.ValCodgenre = ViewModelConversion.ToString(ValCodgenre);
 				m.ValCodpesso = ViewModelConversion.ToString(ValCodpesso);
 				m.ValCodtpcon = ViewModelConversion.ToString(ValCodtpcon);
+				m.ValContacto = ViewModelConversion.ToString(ValContacto);
 				m.ValCodconta = ViewModelConversion.ToString(ValCodconta);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Conta) to Model (Conta) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Conta) to Model (Conta) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "conta.codgenre":
+						this.ValCodgenre = ViewModelConversion.ToString(_value);
+						break;
+					case "conta.codpesso":
+						this.ValCodpesso = ViewModelConversion.ToString(_value);
+						break;
+					case "conta.codtpcon":
+						this.ValCodtpcon = ViewModelConversion.ToString(_value);
+						break;
+					case "conta.contacto":
+						this.ValContacto = ViewModelConversion.ToString(_value);
+						break;
+					case "conta.codconta":
+						this.ValCodconta = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Conta) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Conta)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Conta.Find(id ?? Navigation.GetStrValue("conta"), m_userContext, "FCONTA"); }
+			finally { Model ??= new Models.Conta(m_userContext) { Identifier = "FCONTA" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -239,20 +312,13 @@ namespace GenioMVC.ViewModels.Conta
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FCONTA";
@@ -262,6 +328,7 @@ namespace GenioMVC.ViewModels.Conta
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -321,31 +388,25 @@ namespace GenioMVC.ViewModels.Conta
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValContacto", Resources.Resources.CONTACT59247, ValContacto, 254);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE CONTA]/
 		public override void Save()
 		{
 
-			try { Model = Models.Conta.Find(Navigation.GetStrValue("conta"), m_userContext, "FCONTA"); }
-			finally { if (Model == null) Model = new Models.Conta(m_userContext) { Identifier = "FCONTA" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY CONTA]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Conta.Find(Navigation.GetStrValue("conta"), m_userContext, "FCONTA"); }
-			finally { if (Model == null) Model = new Models.Conta(m_userContext) { Identifier = "FCONTA" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE CONTA]/
 
@@ -378,8 +439,8 @@ namespace GenioMVC.ViewModels.Conta
 				object hValue = Navigation.GetValue("pesso", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					conta___pessoname____Conds.Equal(CSGenioApesso.FldCodpesso, Navigation.GetValue("pesso"));
-					this.ValCodpesso = Navigation.GetStrValue("pesso");
+					conta___pessoname____Conds.Equal(CSGenioApesso.FldCodpesso, hValue);
+					this.ValCodpesso = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -396,8 +457,6 @@ namespace GenioMVC.ViewModels.Conta
 					Navigation.CurrentLevel.SetEntry("RETURN_pesso", null);
 				}
 				FillDependant_ContaTablePessoName(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
 				return;
 			}
 
@@ -465,9 +524,6 @@ namespace GenioMVC.ViewModels.Conta
 
 				TablePessoName.List = new SelectList(TablePessoName.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpesso), "Value", "Text", this.ValCodpesso);
 				FillDependant_ContaTablePessoName();
-
-				//Check if foreignkey comes from history
-				TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
 			}
 		}
 
@@ -573,8 +629,8 @@ namespace GenioMVC.ViewModels.Conta
 				object hValue = Navigation.GetValue("genre", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					conta___genregender__Conds.Equal(CSGenioAgenre.FldCodgenre, Navigation.GetValue("genre"));
-					this.ValCodgenre = Navigation.GetStrValue("genre");
+					conta___genregender__Conds.Equal(CSGenioAgenre.FldCodgenre, hValue);
+					this.ValCodgenre = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -591,8 +647,6 @@ namespace GenioMVC.ViewModels.Conta
 					Navigation.CurrentLevel.SetEntry("RETURN_genre", null);
 				}
 				FillDependant_ContaTableGenreGender(lazyLoad);
-				//Check if foreignkey comes from history
-				TableGenreGender.FilledByHistory = Navigation.CheckFilledByHistory("genre");
 				return;
 			}
 
@@ -660,9 +714,6 @@ namespace GenioMVC.ViewModels.Conta
 
 				TableGenreGender.List = new SelectList(TableGenreGender.Elements.ToSelectList(x => x.ValGender, x => x.ValCodgenre,  x => x.ValCodgenre == this.ValCodgenre), "Value", "Text", this.ValCodgenre);
 				FillDependant_ContaTableGenreGender();
-
-				//Check if foreignkey comes from history
-				TableGenreGender.FilledByHistory = Navigation.CheckFilledByHistory("genre");
 			}
 		}
 
@@ -768,14 +819,14 @@ namespace GenioMVC.ViewModels.Conta
 				object hValue = Navigation.GetValue("tpcon", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					conta___tpcontipocontConds.Equal(CSGenioAtpcon.FldCodtpcon, Navigation.GetValue("tpcon"));
-					this.ValCodtpcon = Navigation.GetStrValue("tpcon");
+					conta___tpcontipocontConds.Equal(CSGenioAtpcon.FldCodtpcon, hValue);
+					this.ValCodtpcon = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
 
 			// Area limit
-			conta___tpcontipocontDoLoad &= AddCriteriaAreaLimit(conta___tpcontipocontConds, CSGenio.business.CSGenioAgenre.FldCodgenre, "genre", this.ValCodgenre, false);
+			conta___tpcontipocontDoLoad &= AddCriteriaAreaLimit(conta___tpcontipocontConds, CSGenio.business.CSGenioAgenre.FldCodgenre, "genre", this.ValCodgenre, true);
 
 			TableTpconTipocont = new TableDBEdit<Models.Tpcon>
 			{
@@ -790,8 +841,6 @@ namespace GenioMVC.ViewModels.Conta
 					Navigation.CurrentLevel.SetEntry("RETURN_tpcon", null);
 				}
 				FillDependant_ContaTableTpconTipocont(lazyLoad);
-				//Check if foreignkey comes from history
-				TableTpconTipocont.FilledByHistory = Navigation.CheckFilledByHistory("tpcon");
 				return;
 			}
 
@@ -862,9 +911,6 @@ namespace GenioMVC.ViewModels.Conta
 
 				TableTpconTipocont.List = new SelectList(TableTpconTipocont.Elements.ToSelectList(x => x.ValTipocont, x => x.ValCodtpcon,  x => x.ValCodtpcon == this.ValCodtpcon), "Value", "Text", this.ValCodtpcon);
 				FillDependant_ContaTableTpconTipocont();
-
-				//Check if foreignkey comes from history
-				TableTpconTipocont.FilledByHistory = Navigation.CheckFilledByHistory("tpcon");
 			}
 		}
 
@@ -970,10 +1016,10 @@ namespace GenioMVC.ViewModels.Conta
 		{
 			return identifier switch
 			{
-				"conta.contacto" => ViewModelConversion.ToString(modelValue),
 				"conta.codgenre" => ViewModelConversion.ToString(modelValue),
 				"conta.codpesso" => ViewModelConversion.ToString(modelValue),
 				"conta.codtpcon" => ViewModelConversion.ToString(modelValue),
+				"conta.contacto" => ViewModelConversion.ToString(modelValue),
 				"conta.codconta" => ViewModelConversion.ToString(modelValue),
 				"pesso.codpesso" => ViewModelConversion.ToString(modelValue),
 				"pesso.name" => ViewModelConversion.ToString(modelValue),
@@ -981,9 +1027,11 @@ namespace GenioMVC.ViewModels.Conta
 				"genre.gender" => ViewModelConversion.ToString(modelValue),
 				"tpcon.codtpcon" => ViewModelConversion.ToString(modelValue),
 				"tpcon.tipocont" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

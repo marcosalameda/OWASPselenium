@@ -16,11 +16,13 @@
 			:max-integers="options.maxDigits"
 			:is-decimal="options.decimalPlaces !== undefined && options.decimalPlaces > 0"
 			:max-decimals="options.decimalPlaces"
-			:is-currency="options.currency !== undefined"
 			:currency-symbol="options.currencySymbol"
 			:readonly="options.readonly"
 			:model-value="rawValue"
-			@update:model-value="$emit('update', $event)" />
+			data-table-action-selected="false"
+			tabindex="-1"
+			:aria-label="options?.label"
+			@update:model-value="onUpdateModelValue" />
 	</component>
 </template>
 
@@ -30,8 +32,6 @@
 	import { inputSize } from '@/mixins/quidgest.mainEnums.js'
 	import modelFieldType from '@/mixins/formModelFieldTypes.js'
 
-	import BaseInputStructure from '@/components/inputs/BaseInputStructure.vue'
-	import GridBaseInputStructure from '@/components/inputs/GridBaseInputStructure.vue'
 	import QNumericInput from '@/components/inputs/NumericInput.vue'
 
 	export default {
@@ -40,8 +40,6 @@
 		emits: ['update', 'loaded'],
 
 		components: {
-			BaseInputStructure,
-			GridBaseInputStructure,
 			QNumericInput
 		},
 
@@ -139,6 +137,17 @@
 		mounted()
 		{
 			this.$emit('loaded')
+		},
+
+		methods: {
+			/**
+			 * Called when the model value is updated.
+			 * @param {Object} event
+			 */
+			onUpdateModelValue(event)
+			{
+				this.$emit('update', event)
+			}
 		},
 
 		watch: {

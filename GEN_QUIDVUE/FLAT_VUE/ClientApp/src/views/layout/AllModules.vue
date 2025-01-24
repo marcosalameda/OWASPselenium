@@ -4,10 +4,11 @@
 		:key="mod.id"
 		:class="[{ 'n-sidebar__nav-link--active': mod.id === system.currentModule }, 'has-treeview', 'nav-item', 'n-sidebar__nav-item']">
 		<a
-			href="javascript:void(0)"
-			class="nav-link n-sidebar__nav-link n-sidebar__module-link"
+			:href="getLinkToModule(mod.id)"
+			class="d-block nav-link n-sidebar__nav-link n-sidebar__module-link"
 			:data-key="mod.id"
-			@click.prevent="handleClick(mod.id)">
+			@click.prevent="handleClick(mod.id)"
+			@keyup="(...args) => $emit('keyup', ...args)">
 
 			<q-icon 
 				v-if="getModuleIconProps(mod)"
@@ -31,7 +32,8 @@
 		name: 'QMenuAllModules',
 
 		emits: [
-			'navigate-to-module'
+			'navigate-to-module',
+			'keyup'
 		],
 
 		mixins: [
@@ -46,6 +48,10 @@
 			{
 				this.navigateToModule(moduleId)
 				this.$emit('navigate-to-module')
+			},
+
+			getLinkToModule(moduleId) {
+				return this.linkToRouteName(`home-${moduleId}`)
 			}
 		}
 	}

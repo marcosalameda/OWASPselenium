@@ -53,7 +53,6 @@
 	/* eslint-disable no-unused-vars */
 	import { computed } from 'vue'
 	import { mapActions } from 'pinia'
-	import _assignIn from 'lodash-es/assignIn'
 	import _merge from 'lodash-es/merge'
 
 	import { useGenericDataStore } from '@/stores/genericData.js'
@@ -68,12 +67,14 @@
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 
-	import netAPI from '@/api/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import genericFunctions from '@/mixins/genericFunctions.js'
+	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
+
+	import ViewModelBase from '@/mixins/viewModelBase.js'
 
 	const requiredTextResources = ['INSTA___TPEQUTIPOEQUI_SeeMore', 'hardcoded', 'messages']
 
@@ -139,6 +140,9 @@
 
 				listCtrl: new TableListControl(this.getListConfig(), this),
 
+				// Basic view model to handle access to GLOB, if necessary.
+				model: new ViewModelBase(this),
+
 				isTreeMode: false,
 
 				treeIsInitialized: false,
@@ -163,18 +167,14 @@
 
 		created()
 		{
-			let params = {
-				id: this.id || null,
-				Limits: this.limits || []
-			}
+			this.componentOnLoadProc.addImmediateBusy(loadResources(this, requiredTextResources))
 
-			_merge(params, this.limits)
+			this.listCtrl.init()
+			this.onTableDBDataChanged()
 
-			this.componentOnLoadProc.AddImmediateBusy(loadResources(this, requiredTextResources))
-			this.componentOnLoadProc.AddImmediateBusy(this.fetchListData(this.listCtrl, params))
-			this.componentOnLoadProc.Once(() => {
+			this.componentOnLoadProc.once(() => {
 				this.isReady = true
-				this.listCtrl.Init()
+				this.listCtrl.initData()
 			}, this)
 		},
 
@@ -192,7 +192,7 @@
 				dismissWithEsc: true,
 				dismissAction: this.close,
 				isActive: true,
-				returnElement: 'INSTA___TPEQUTIPOEQUI'
+				returnElement: 'INSTA___TPEQUTIPOEQUI_lookup_see-more_button'
 			}
 			this.setModal(modalProps)
 		},
@@ -224,13 +224,17 @@
 					if (prevMode !== this.isTreeMode)
 						this.onTableDBDataChanged()
 				}
+			},
+
+			activeList()
+			{
+				return this.isTreeMode ? this.treeListCtrl : this.listCtrl
 			}
 		},
 
 		methods: {
 			...mapActions(useGenericDataStore, [
-				'setModal',
-				'setDropdown'
+				'setModal'
 			]),
 
 			...mapActions(useNavDataStore, [
@@ -245,27 +249,27 @@
 
 			onTableDBDataChanged()
 			{
-				let params = {
+				const params = {
 					id: this.id || null,
-					Identifier: 'INSTA___TPEQUTIPOEQUI',
-					Limits: this.limits
+					identifier: 'INSTA___TPEQUTIPOEQUI',
+					limits: this.limits,
+					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
 				}
-
-				_merge(params, this.limits)
 
 				if (this.isTreeMode)
 				{
-					this.componentOnLoadProc.AddBusy(this.fetchListData(this.treeListCtrl, params))
-					this.componentOnLoadProc.Once(() => {
+					this.treeListCtrl.init()
+					this.componentOnLoadProc.addBusy(this.fetchListData(this.treeListCtrl, params))
+					this.componentOnLoadProc.once(() => {
 						if (!this.treeIsInitialized)
 						{
 							this.treeIsInitialized = true
-							this.treeListCtrl.Init()
+							this.treeListCtrl.initData()
 						}
 					}, this)
 				}
 				else
-					this.componentOnLoadProc.AddBusy(this.fetchListData(this.listCtrl, params))
+					this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
 			},
 
 			handleRowAction(eventData)
@@ -273,13 +277,13 @@
 				if (eventData.id === 'see-more-choice')
 				{
 					let rowKey = eventData?.rowKeyPath
-					if(Array.isArray(eventData?.rowKeyPath) && eventData?.rowKeyPath.length > 0)
+					if (Array.isArray(eventData?.rowKeyPath) && eventData?.rowKeyPath.length > 0)
 						rowKey = eventData?.rowKeyPath[eventData?.rowKeyPath.length - 1]
 
 					this.$emit('see-more-choice', rowKey)
 				}
 				else
-					this.onTableListExecuteAction(this.listCtrl, eventData)
+					this.onTableListExecuteAction(this.activeList, eventData)
 			},
 
 			getListConfig()
@@ -329,10 +333,11 @@
 							tableNamePlural: computed(() => this.Resources.TYPES_OF_EQUIPMENT61264),
 							viewManagement: '',
 							showLimitsInfo: true,
+							tableTitle: '',
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -353,17 +358,27 @@
 							},
 							formsDefinition: {
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
+							treeListDefinitions: {
+								branchAreas: {
+									TPEQU: {
+										tpequ: (row) => row.rowKey,
+									},
+								},
+								rowModel: (row) => {
+									return genericFunctions.getModelStructureObj(row, {
+										'ValCodtpequ': (rowFields) => rowFields['tpequ.codtpequ'],
+										'ValTpequcod': (rowFields) => rowFields['tpequ.tpequcod'],
+										'ValTipoequi': (rowFields) => rowFields['tpequ.tipoequi'],
+										'ValQtdequip': (rowFields) => rowFields['tpequ.qtdequip'],
+									})
+								},
 							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValTpequcod',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-FAMIL', 'changed-TPEQU'],
 						uuid: 'Insta_Insta_TpequValTipoequi',

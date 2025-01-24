@@ -395,7 +395,7 @@ function getTableTest(context)
 					searchFieldType: 'date',
 					dataDisplay: listFunctions.dateDisplayCell,
 					dataSearch: listFunctions.dateSearchCell,
-					dateTimeType: 'DateTimeSeconds',
+					dateTimeType: 'dateTimeSeconds',
 					sortable: true
 				},
 				{
@@ -570,12 +570,8 @@ function getTableTest(context)
 					return qapi.iif(row.Fields.Array === '5', '#E0E0E0', '#FFFFFF')
 				},
 				rowValidation: {
-					fnValidate: (row) =>
-					{
-						return row.Fields.ValZzstate == 0
-					},
-					message: 'ATENCAO__ESTA_FICHA_24725',
-					class: 'c-table__row--pending'
+					fnValidate: (row) => row.Fields.ValZzstate === 0,
+					message: 'ATENCAO__ESTA_FICHA_24725'
 				},
 				allowFileExport: true,
 				exportOptions: [
@@ -592,7 +588,8 @@ function getTableTest(context)
 				rowClickActionInternal: 'selectMultiple',
 				hasTextWrap: false,
 				defaultSearchColumnName: 'Key',
-				resourcesPath: 'dist/Content/img/'
+				resourcesPath: 'dist/Content/img/',
+				canInsert: true
 			},
 			readonly: false,
 			advancedFilters: [],
@@ -645,7 +642,7 @@ function getTableTest(context)
 					}
 				],
 				dateValue: {
-					type: 'Date',
+					type: 'date',
 					title: 'Date',
 					id: 'GQT_Menu_111_dataRef',
 					value: ''
@@ -656,7 +653,8 @@ function getTableTest(context)
 		},
 		context || {
 			$getResource: (resId) => resId
-		}
+		},
+		{}
 	)
 }
 
@@ -984,10 +982,7 @@ export default {
 					sortable: true,
 					initialSort: true,
 					initialSortOrder: 'asc',
-					bgColor: (row, column) =>
-					{
-						return qapi.iif(row.Fields.Key.length > 3, '#C0C0C0', '#FFFFFF')
-					},
+					bgColor: (row) => qapi.iif(row.Fields.Key.length > 3, '#C0C0C0', '#FFFFFF'),
 					params: {
 						type: 'form',
 						formName: 'FORMX',
@@ -1003,10 +998,7 @@ export default {
 					dataDisplay: listFunctions.textDisplayCell,
 					dataSearch: listFunctions.textSearchCell,
 					sortable: true,
-					textColor: (row, column) =>
-					{
-						return qapi.iif(row.Fields.Val.length > 3, '#C08000', '#000000')
-					},
+					textColor: (row) => qapi.iif(row.Fields.Val.length > 3, '#C08000', '#000000'),
 					distinctValues: [],
 					component: 'q-edit-text',
 					componentOptions: {}
@@ -1032,7 +1024,6 @@ export default {
 					component: 'q-edit-numeric',
 					componentOptions: {
 						maxDigits: 10,
-						isCurrency: false,
 						isDecimal: true,
 						thousandsSep: ' ',
 						decimalSep: '.'
@@ -1044,7 +1035,7 @@ export default {
 					dataType: 'Date',
 					dataDisplay: listFunctions.dateDisplayCell,
 					dataSearch: listFunctions.dateSearchCell,
-					dateTimeType: 'DateTimeSeconds',
+					dateTimeType: 'dateTimeSeconds',
 					sortable: true
 				},
 				{
@@ -1200,12 +1191,8 @@ export default {
 					return qapi.iif(row.Fields.Array === '5', '#E0E0E0', '#FFFFFF')
 				},
 				rowValidation: {
-					fnValidate: (row) =>
-					{
-						return row.Fields.ValZzstate == 0
-					},
-					message: 'ATENCAO__ESTA_FICHA_24725',
-					class: 'c-table__row--pending'
+					fnValidate: (row) => row.Fields.ValZzstate === 0,
+					message: 'ATENCAO__ESTA_FICHA_24725'
 				},
 				allowFileExport: true,
 				exportOptions: [
@@ -1270,7 +1257,7 @@ export default {
 					}
 				],
 				dateValue: {
-					type: 'Date',
+					type: 'date',
 					title: 'Date',
 					id: 'GQT_Menu_111_dataRef',
 					value: ''
@@ -1278,6 +1265,7 @@ export default {
 			},
 			dataImportResponse: {}
 		},
+		{},
 		{}
 	),
 	tableTestReorder: new controlClass.TableListControl(
@@ -1599,10 +1587,7 @@ export default {
 					dataDisplay: listFunctions.textDisplayCell,
 					dataSearch: listFunctions.textSearchCell,
 					sortable: true,
-					bgColor: (row, column) =>
-					{
-						return qapi.iif(row.Fields.Key.length > 3, '#C0C0C0', '#FFFFFF')
-					},
+					bgColor: (row) => qapi.iif(row.Fields.Key.length > 3, '#C0C0C0', '#FFFFFF'),
 					params: {
 						type: 'form',
 						formName: 'FORMX',
@@ -1618,10 +1603,7 @@ export default {
 					dataDisplay: listFunctions.textDisplayCell,
 					dataSearch: listFunctions.textSearchCell,
 					sortable: true,
-					textColor: (row, column) =>
-					{
-						return qapi.iif(row.Fields.Val.length > 3, '#C08000', '#000000')
-					},
+					textColor: (row) => qapi.iif(row.Fields.Val.length > 3, '#C08000', '#000000'),
 					distinctValues: [],
 					component: 'q-edit-text',
 					componentOptions: {}
@@ -1648,7 +1630,6 @@ export default {
 					component: 'q-edit-numeric',
 					componentOptions: {
 						maxDigits: 10,
-						isCurrency: false,
 						isDecimal: false,
 						thousandsSep: ' ',
 						decimalSep: '.'
@@ -1661,7 +1642,7 @@ export default {
 					dataType: 'Date',
 					dataDisplay: listFunctions.dateDisplayCell,
 					dataSearch: listFunctions.dateSearchCell,
-					dateTimeType: 'DateTimeSeconds',
+					dateTimeType: 'dateTimeSeconds',
 					sortable: true
 				},
 				{
@@ -1808,21 +1789,11 @@ export default {
 					params: { type: 'form', formName: 'FORMX', mode: 'EDIT' }
 				},
 				actionsPlacement: 'left',
-				rowTextColor: (row) =>
-				{
-					return qapi.iif(row.Fields.Currency > 100, '#00A000', '#000000')
-				},
-				rowBgColor: (row) =>
-				{
-					return qapi.iif(row.Fields.Array === '5', '#E0E0E0', '#FFFFFF')
-				},
+				rowTextColor: (row) => qapi.iif(row.Fields.Currency > 100, '#00A000', '#000000'),
+				rowBgColor: (row) => qapi.iif(row.Fields.Array === '5', '#E0E0E0', '#FFFFFF'),
 				rowValidation: {
-					fnValidate: (row) =>
-					{
-						return row.Fields.ValZzstate == 0
-					},
-					message: 'ATENCAO__ESTA_FICHA_24725',
-					class: 'c-table__row--pending'
+					fnValidate: (row) => row.Fields.ValZzstate === 0,
+					message: 'ATENCAO__ESTA_FICHA_24725'
 				},
 				allowFileExport: true,
 				exportOptions: [
@@ -1889,7 +1860,7 @@ export default {
 					}
 				],
 				dateValue: {
-					type: 'Date',
+					type: 'date',
 					title: 'Date',
 					id: 'GQT_Menu_111_dataRef',
 					value: ''
@@ -1897,6 +1868,7 @@ export default {
 			},
 			dataImportResponse: {}
 		},
+		{},
 		{}
 	),
 	tableTestDates: new controlClass.TableListControl(
@@ -2091,7 +2063,7 @@ export default {
 					dataType: 'Date',
 					dataDisplay: listFunctions.dateDisplayCell,
 					dataSearch: listFunctions.dateSearchCell,
-					dateTimeType: 'Date',
+					dateTimeType: 'date',
 					sortable: true
 				},
 				{
@@ -2100,7 +2072,7 @@ export default {
 					dataType: 'Date',
 					dataDisplay: listFunctions.dateDisplayCell,
 					dataSearch: listFunctions.dateSearchCell,
-					dateTimeType: 'DateTime',
+					dateTimeType: 'dateTime',
 					sortable: true
 				},
 				{
@@ -2109,7 +2081,7 @@ export default {
 					dataType: 'Date',
 					dataDisplay: listFunctions.dateDisplayCell,
 					dataSearch: listFunctions.dateSearchCell,
-					dateTimeType: 'DateTimeSeconds',
+					dateTimeType: 'dateTimeSeconds',
 					sortable: true
 				},
 				{
@@ -2118,7 +2090,7 @@ export default {
 					dataType: 'Date',
 					dataDisplay: listFunctions.dateDisplayCell,
 					dataSearch: listFunctions.dateSearchCell,
-					dateTimeType: 'Time',
+					dateTimeType: 'time',
 					sortable: true
 				}
 			],
@@ -2201,6 +2173,7 @@ export default {
 				]
 			}
 		},
+		{},
 		{}
 	),
 	tableTestOther: new controlClass.TableListControl(
@@ -2614,6 +2587,7 @@ export default {
 				]
 			}
 		},
+		{},
 		{}
 	),
 	tableTestTotaler: new controlClass.TableListControl(
@@ -3028,12 +3002,12 @@ export default {
 						}
 					}
 				],
-				actionsPlacement: 'left',
-				showColumnTotals: true
+				actionsPlacement: 'left'
 			},
 			rowsSelected: {},
 			rowsChecked: {}
 		},
+		{},
 		{}
 	),
 	tableTestTotalerSelected: new controlClass.TableListControl(
@@ -3451,12 +3425,12 @@ export default {
 				actionsPlacement: 'left',
 				rowClickActionInternal: 'selectMultiple',
 				rowBgColorSelected: '#e0e0e0',
-				showColumnTotalsSelected: true,
 				showRowsSelectedCount: true
 			},
 			rowsSelected: {},
 			rowsChecked: {}
 		},
+		{},
 		{}
 	),
 	tableTestSelectMultiple: new controlClass.TableListControl(
@@ -3880,6 +3854,7 @@ export default {
 			rowsSelected: {},
 			rowsChecked: {}
 		},
+		{},
 		{}
 	),
 	tableTestSelectMultipleMultiAction: new controlClass.TableListControl(
@@ -4341,6 +4316,7 @@ export default {
 			rowsSelected: {},
 			rowsChecked: {}
 		},
+		{},
 		{}
 	),
 	tableTestSelectSingle: new controlClass.TableListControl(
@@ -4762,6 +4738,7 @@ export default {
 			rowsSelected: {},
 			rowsChecked: {}
 		},
+		{},
 		{}
 	),
 	tableTestRemoveRows: new controlClass.TableListControl(
@@ -5121,7 +5098,6 @@ export default {
 				actionsPlacement: 'left',
 				rowClickActionInternal: '',
 				rowBgColorSelected: '#e0e0e0',
-				showColumnTotalsSelected: false,
 				showRowsSelectedCount: false,
 				extendedActions: ['remove', 'remove-reset'],
 				perPage: 5
@@ -5129,6 +5105,7 @@ export default {
 			rowsSelected: {},
 			rowsChecked: {}
 		},
+		{},
 		{}
 	),
 	tableTestPaginationNormal: new controlClass.TableListControl(
@@ -5412,6 +5389,7 @@ export default {
 				showRecordCount: true
 			}
 		},
+		{},
 		{}
 	),
 	tableTestPaginationNormalServer: new controlClass.TableListControl(
@@ -5497,6 +5475,7 @@ export default {
 				hydrate: listFunctions.hydrateTableData
 			}
 		},
+		{},
 		{}
 	),
 	tableTestPaginationAlt: new controlClass.TableListControl(
@@ -5779,6 +5758,7 @@ export default {
 				showAlternatePagination: true
 			}
 		},
+		{},
 		{}
 	),
 	columns01: [
@@ -5799,12 +5779,10 @@ export default {
 			searchFieldType: 'text',
 			dataDisplay: listFunctions.textDisplayCell,
 			dataSearch: listFunctions.textSearchCell,
+			searchable: true,
 			sortable: true,
 			initialSortOrder: 'asc',
-			bgColor: (row, column) =>
-			{
-				return qapi.iif(row.Fields.Key.length > 3, '#C0C0C0', '#FFFFFF')
-			},
+			bgColor: (row) => qapi.iif(row.Fields.Key.length > 3, '#C0C0C0', '#FFFFFF'),
 			params: {
 				type: 'form',
 				formName: 'FORMX',
@@ -5824,10 +5802,7 @@ export default {
 			dataSearch: listFunctions.textSearchCell,
 			isDefaultSearch: true,
 			sortable: true,
-			textColor: (row, column) =>
-			{
-				return qapi.iif(row.Fields.Val.length > 3, '#C08000', '#000000')
-			},
+			textColor: (row) => qapi.iif(row.Fields.Val.length > 3, '#C08000', '#000000'),
 			distinctValues: [
 				'thing',
 				'things',
@@ -5875,7 +5850,7 @@ export default {
 			searchFieldType: 'date',
 			dataDisplay: listFunctions.dateDisplayCell,
 			dataSearch: listFunctions.dateSearchCell,
-			dateTimeType: 'DateTimeSeconds',
+			dateTimeType: 'dateTimeSeconds',
 			sortable: true
 		},
 		{
@@ -5934,6 +5909,7 @@ export default {
 			component: 'q-render-hyperlink'
 		}
 	],
+	searchableColumns01TableName: 'search_columns_01_table',
 	searchableColumns01: [
 		{
 			label: 'KEY',
@@ -5946,10 +5922,7 @@ export default {
 			dataSearch: listFunctions.textSearchCell,
 			sortable: true,
 			initialSortOrder: 'asc',
-			bgColor: (row, column) =>
-			{
-				return qapi.iif(row.Fields.Key.length > 3, '#C0C0C0', '#FFFFFF')
-			},
+			bgColor: (row) => qapi.iif(row.Fields.Key.length > 3, '#C0C0C0', '#FFFFFF'),
 			params: {
 				type: 'form',
 				formName: 'FORMX',
@@ -5969,10 +5942,7 @@ export default {
 			dataSearch: listFunctions.textSearchCell,
 			isDefaultSearch: true,
 			sortable: true,
-			textColor: (row) =>
-			{
-				return qapi.iif(row.Fields.Val.length > 3, '#C08000', '#000000')
-			},
+			textColor: (row) => qapi.iif(row.Fields.Val.length > 3, '#C08000', '#000000'),
 			distinctValues: [
 				'thing',
 				'things',
@@ -6020,7 +5990,7 @@ export default {
 			searchFieldType: 'date',
 			dataDisplay: listFunctions.dateDisplayCell,
 			dataSearch: listFunctions.dateSearchCell,
-			dateTimeType: 'DateTimeSeconds',
+			dateTimeType: 'dateTimeSeconds',
 			sortable: true
 		},
 		{
@@ -6099,10 +6069,7 @@ export default {
 			dataSearch: listFunctions.textSearchCell,
 			sortable: true,
 			initialSortOrder: 'asc',
-			bgColor: (row, column) =>
-			{
-				return qapi.iif(row.Fields.Key.length > 3, '#C0C0C0', '#FFFFFF')
-			},
+			bgColor: (row) => qapi.iif(row.Fields.Key.length > 3, '#C0C0C0', '#FFFFFF'),
 			params: {
 				type: 'form',
 				formName: 'FORMX',
@@ -6122,10 +6089,7 @@ export default {
 			dataSearch: listFunctions.textSearchCell,
 			isDefaultSearch: true,
 			sortable: true,
-			textColor: (row, column) =>
-			{
-				return qapi.iif(row.Fields.Val.length > 3, '#C08000', '#000000')
-			},
+			textColor: (row) => qapi.iif(row.Fields.Val.length > 3, '#C08000', '#000000'),
 			distinctValues: [
 				'thing',
 				'things',
@@ -6159,7 +6123,7 @@ export default {
 			searchFieldType: 'date',
 			dataDisplay: listFunctions.dateDisplayCell,
 			dataSearch: listFunctions.dateSearchCell,
-			dateTimeType: 'DateTimeSeconds',
+			dateTimeType: 'dateTimeSeconds',
 			sortable: true
 		},
 		{
@@ -6570,7 +6534,7 @@ export default {
 			}
 		],
 		dateValue: {
-			type: 'Date',
+			type: 'date',
 			title: 'Date',
 			id: 'active_filter_dataRef',
 			value: ''
@@ -6831,51 +6795,51 @@ export default {
 		rowKey: 'F8C4'
 	},
 	columnFilter01: {
-		Name: '',
-		Active: true,
-		Field: '',
-		Operator: '',
-		Values: []
+		name: '',
+		active: true,
+		field: '',
+		operator: '',
+		values: []
 	},
 	filterArray01: [
 		{
-			Name: 'filter 1',
-			Active: true,
-			Field: '',
-			Operator: '',
-			Values: []
+			name: 'filter 1',
+			active: true,
+			field: '',
+			operator: '',
+			values: []
 		},
 		{
-			Name: 'filter 2',
-			Active: true,
-			Field: '',
-			Operator: '',
-			Values: []
+			name: 'filter 2',
+			active: true,
+			field: '',
+			operator: '',
+			values: []
 		}
 	],
 	filterHash01: {
 		column01: {
-			Name: 'filter a',
-			Active: true,
-			Field: '',
-			Operator: '',
-			Values: []
+			name: 'filter a',
+			active: true,
+			field: '',
+			operator: '',
+			values: []
 		},
 		column02: {
-			Name: 'filter b',
-			Active: true,
-			Field: '',
-			Operator: '',
-			Values: []
+			name: 'filter b',
+			active: true,
+			field: '',
+			operator: '',
+			values: []
 		}
 	},
 	filterHash02: {
 		columnA: {
-			Name: 'filter a',
-			Active: true,
-			Field: '',
-			Operator: '',
-			Values: []
+			name: 'filter a',
+			active: true,
+			field: '',
+			operator: '',
+			values: []
 		}
 	},
 	cssClasses: {
@@ -6911,8 +6875,7 @@ export default {
 		actionsPlacement: 'left',
 		rowValidation: {
 			fnValidate: (row) => { return row.Fields.ValZzstate === 0 },
-			message: 'ATENCAO__ESTA_FICHA_24725',
-			class: 'c-table__row--pending'
+			message: 'ATENCAO__ESTA_FICHA_24725'
 		},
 		columnConfigIsVisible: false,
 		hasTextWrap: false,
@@ -6983,19 +6946,6 @@ export default {
 		resetColumnConfig(emittedAction)
 		{
 			this.displayAction('reset-column-config', emittedAction)
-		},
-		setDropdown(props)
-		{
-			this.$emit('set-dropdown', props)
-			// Clear dropdown properties
-			this.dropdown = {}
-
-			// Set display property to actual CSS value
-			props.display = props.isVisible !== false ? 'block' : 'none'
-			delete props.isVisible
-
-			// Copy all properties to dropdown
-			for (let key in props) this.dropdown[key] = props[key]
 		},
 		//FOR: EXTENDED ROW ACTIONS - REMOVE
 		removeRow(rows, rowKey)
@@ -7162,7 +7112,7 @@ export default {
 		 */
 		setAdvancedFilterState(listConf, index, active)
 		{
-			listConf.advancedFilters[index].Active = active
+			listConf.advancedFilters[index].active = active
 		},
 
 		/**
@@ -7177,7 +7127,7 @@ export default {
 			for (let idx in selectedFilterIdxs)
 			{
 				selectedFilterIdx = selectedFilterIdxs[idx]
-				listConf.advancedFilters[selectedFilterIdx].Active = active
+				listConf.advancedFilters[selectedFilterIdx].active = active
 			}
 		},
 
@@ -7189,7 +7139,7 @@ export default {
 		{
 			for (let idx in listConf.advancedFilters)
 			{
-				listConf.advancedFilters[idx].Active = false
+				listConf.advancedFilters[idx].active = false
 			}
 		},
 

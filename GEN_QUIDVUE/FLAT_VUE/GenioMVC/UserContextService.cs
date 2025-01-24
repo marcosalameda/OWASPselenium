@@ -1,4 +1,5 @@
-﻿using CSGenio.framework;
+﻿using CSGenio;
+using CSGenio.framework;
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.Culture;
 using GenioMVC.Models.Navigation;
@@ -67,10 +68,8 @@ public class UserContextService : IUserContextService
         // Check for maintenance Status
         Maintenance.GetMaintenanceStatus(Current.PersistentSupport);
 
-        CSGenio.framework.Log.SetContext("utilizador", user.Name);
         CSGenio.framework.Log.Debug(httpContext.Request.Method + " " + httpContext.Request.Path.ToString());
     }
-
 
     private string ValidateInputYear(string year)
     {

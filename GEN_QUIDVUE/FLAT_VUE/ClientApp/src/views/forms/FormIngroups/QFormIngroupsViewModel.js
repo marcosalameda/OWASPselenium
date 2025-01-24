@@ -60,7 +60,6 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 9,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.VAT_NUMBER24236),
-			maskType: 'NC',
 		}).cloneFrom(values?.ValNumbgro))
 		watch(() => this.ValNumbgro.value, (newValue, oldValue) => this.onUpdate('inpgr.numbgro', this.ValNumbgro, newValue, oldValue))
 
@@ -199,6 +198,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'ICONGRO',
 			maxLength: 50,
 			description: computed(() => this.Resources.ICON41974),
+			isFixed: true,
 		}).cloneFrom(values?.ValIcongro))
 		watch(() => this.ValIcongro.value, (newValue, oldValue) => this.onUpdate('inpgr.icongro', this.ValIcongro, newValue, oldValue))
 	}
@@ -215,5 +215,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodinpgr'
 
 	get QPrimaryKey() { return this.ValCodinpgr.value }
-	set QPrimaryKey(value) { this.ValCodinpgr.value = value }
+	set QPrimaryKey(value) { this.ValCodinpgr.updateValue(value) }
 }

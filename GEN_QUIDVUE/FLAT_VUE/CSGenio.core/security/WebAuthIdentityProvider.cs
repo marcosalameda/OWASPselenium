@@ -1,4 +1,5 @@
 ﻿using CSGenio.business;
+using CSGenio.framework;
 using CSGenio.persistence;
 using Fido2NetLib;
 using Fido2NetLib.Development;
@@ -56,22 +57,12 @@ namespace GenioServer.security
     [CredentialProvider(typeof(TokenCredential))]
     [Description("Establishes identity using WebAuthN using hardware.")]
     [DisplayName("WebAuthN")]
-    public class WebAuthIdentityProvider : IIdentityProvider
+    public class WebAuthIdentityProvider : BaseIdentityProvider
     {
-        public IIdentity Authenticate(Credential credential)
+        /// <inheritdoc/>
+        public override IIdentity Authenticate(Credential credential)
         {
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Determines whether username and password authentication is enabled.
-        /// </summary>
-        /// <remarks>
-        /// This is used to determine if username and password authentication is enabled.
-        /// </remarks>
-        public bool HasUsernameAuth()
-        {
-            return false;
         }
 
         private Fido2 _lib;

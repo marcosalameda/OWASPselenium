@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.VENDA___ORGANORGANIZA.handlers"
 							:loading="controls.VENDA___ORGANORGANIZA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.VENDA___ORGANORGANIZA.isVisible"
 								v-bind="controls.VENDA___ORGANORGANIZA.props"
-								:model-value="model.ValCodorgan.value"
-								v-on="controls.VENDA___ORGANORGANIZA.handlers"
-								@update:model-value="model.ValCodorgan.fnUpdateValue" />
+								v-on="controls.VENDA___ORGANORGANIZA.handlers" />
 							<q-see-more-venda-organorganiza
 								v-if="controls.VENDA___ORGANORGANIZA.seeMoreIsVisible"
 								v-bind="controls.VENDA___ORGANORGANIZA.seeMoreParams"
@@ -131,12 +128,10 @@
 							v-on="controls.VENDA___SALE_NRLIDE__.handlers"
 							:loading="controls.VENDA___SALE_NRLIDE__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.VENDA___SALE_NRLIDE__.isVisible"
-								v-bind="controls.VENDA___SALE_NRLIDE__"
-								:model-value="model.ValNrlide.value"
+								v-bind="controls.VENDA___SALE_NRLIDE__.props"
 								@update:model-value="model.ValNrlide.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -149,14 +144,13 @@
 							v-on="controls.VENDA___SALE_STARTDT_.handlers"
 							:loading="controls.VENDA___SALE_STARTDT_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.VENDA___SALE_STARTDT_.isVisible"
-								v-bind="controls.VENDA___SALE_STARTDT_"
-								format="DateTime"
+								v-bind="controls.VENDA___SALE_STARTDT_.props"
 								:model-value="model.ValStartdt.value"
-								@update:model-value="model.ValStartdt.fnUpdateValue" />
+								@reset-icon-click="model.ValStartdt.fnUpdateValue(model.ValStartdt.originalValue ?? new Date())"
+								@update:model-value="model.ValStartdt.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -181,12 +175,12 @@
 										v-on="controls.VENDA___SALE_IDENTIFI.handlers"
 										:loading="controls.VENDA___SALE_IDENTIFI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.VENDA___SALE_IDENTIFI.props"
 											:model-value="model.ValIdentifi.value"
-											@update:model-value="model.ValIdentifi.fnUpdateValue" />
+											@blur="onBlur(controls.VENDA___SALE_IDENTIFI, model.ValIdentifi.value)"
+											@change="model.ValIdentifi.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -198,12 +192,12 @@
 										v-on="controls.VENDA___SALE_POTCOMPR.handlers"
 										:loading="controls.VENDA___SALE_POTCOMPR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.VENDA___SALE_POTCOMPR.props"
 											:model-value="model.ValPotcompr.value"
-											@update:model-value="model.ValPotcompr.fnUpdateValue" />
+											@blur="onBlur(controls.VENDA___SALE_POTCOMPR, model.ValPotcompr.value)"
+											@change="model.ValPotcompr.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -215,15 +209,11 @@
 										v-on="controls.VENDA___SALE_PROSPECC.handlers"
 										:loading="controls.VENDA___SALE_PROSPECC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_PROSPECC.isVisible"
-												id="VENDA___SALE_PROSPECC"
-												size="medium"
-												:model-value="model.ValProspecc.value"
-												:readonly="controls.VENDA___SALE_PROSPECC.readonly"
+												v-bind="controls.VENDA___SALE_PROSPECC.props"
 												@update:model-value="model.ValProspecc.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -254,15 +244,11 @@
 										v-on="controls.VENDA___SALE_INTERESS.handlers"
 										:loading="controls.VENDA___SALE_INTERESS.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_INTERESS.isVisible"
-												id="VENDA___SALE_INTERESS"
-												size="small"
-												:model-value="model.ValInteress.value"
-												:readonly="controls.VENDA___SALE_INTERESS.readonly"
+												v-bind="controls.VENDA___SALE_INTERESS.props"
 												@update:model-value="model.ValInteress.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -276,15 +262,11 @@
 										v-on="controls.VENDA___SALE_SEMRFINA.handlers"
 										:loading="controls.VENDA___SALE_SEMRFINA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_SEMRFINA.isVisible"
-												id="VENDA___SALE_SEMRFINA"
-												size="medium"
-												:model-value="model.ValSemrfina.value"
-												:readonly="controls.VENDA___SALE_SEMRFINA.readonly"
+												v-bind="controls.VENDA___SALE_SEMRFINA.props"
 												@update:model-value="model.ValSemrfina.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -298,15 +280,11 @@
 										v-on="controls.VENDA___SALE_SEMCAPAC.handlers"
 										:loading="controls.VENDA___SALE_SEMCAPAC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_SEMCAPAC.isVisible"
-												id="VENDA___SALE_SEMCAPAC"
-												size="large"
-												:model-value="model.ValSemcapac.value"
-												:readonly="controls.VENDA___SALE_SEMCAPAC.readonly"
+												v-bind="controls.VENDA___SALE_SEMCAPAC.props"
 												@update:model-value="model.ValSemcapac.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -320,14 +298,13 @@
 										v-on="controls.VENDA___SALE_DTQUALIF.handlers"
 										:loading="controls.VENDA___SALE_DTQUALIF.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTQUALIF.isVisible"
-											v-bind="controls.VENDA___SALE_DTQUALIF"
-											format="DateTime"
+											v-bind="controls.VENDA___SALE_DTQUALIF.props"
 											:model-value="model.ValDtqualif.value"
-											@update:model-value="model.ValDtqualif.fnUpdateValue" />
+											@reset-icon-click="model.ValDtqualif.fnUpdateValue(model.ValDtqualif.originalValue ?? new Date())"
+											@update:model-value="model.ValDtqualif.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -339,15 +316,11 @@
 										v-on="controls.VENDA___SALE_QUALIFIC.handlers"
 										:loading="controls.VENDA___SALE_QUALIFIC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_QUALIFIC.isVisible"
-												id="VENDA___SALE_QUALIFIC"
-												size="medium"
-												:model-value="model.ValQualific.value"
-												:readonly="controls.VENDA___SALE_QUALIFIC.readonly"
+												v-bind="controls.VENDA___SALE_QUALIFIC.props"
 												@update:model-value="model.ValQualific.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -378,14 +351,13 @@
 										v-on="controls.VENDA___SALE_PREABORD.handlers"
 										:loading="controls.VENDA___SALE_PREABORD.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.VENDA___SALE_PREABORD.isVisible"
-											v-bind="controls.VENDA___SALE_PREABORD"
-											format="DateTime"
+											v-bind="controls.VENDA___SALE_PREABORD.props"
 											:model-value="model.ValPreabord.value"
-											@update:model-value="model.ValPreabord.fnUpdateValue" />
+											@reset-icon-click="model.ValPreabord.fnUpdateValue(model.ValPreabord.originalValue ?? new Date())"
+											@update:model-value="model.ValPreabord.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -397,15 +369,11 @@
 										v-on="controls.VENDA___SALE_HOMEWORK.handlers"
 										:loading="controls.VENDA___SALE_HOMEWORK.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_HOMEWORK.isVisible"
-												id="VENDA___SALE_HOMEWORK"
-												size="large"
-												:model-value="model.ValHomework.value"
-												:readonly="controls.VENDA___SALE_HOMEWORK.readonly"
+												v-bind="controls.VENDA___SALE_HOMEWORK.props"
 												@update:model-value="model.ValHomework.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -436,14 +404,13 @@
 										v-on="controls.VENDA___SALE_DTABORDA.handlers"
 										:loading="controls.VENDA___SALE_DTABORDA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTABORDA.isVisible"
-											v-bind="controls.VENDA___SALE_DTABORDA"
-											format="DateTime"
+											v-bind="controls.VENDA___SALE_DTABORDA.props"
 											:model-value="model.ValDtaborda.value"
-											@update:model-value="model.ValDtaborda.fnUpdateValue" />
+											@reset-icon-click="model.ValDtaborda.fnUpdateValue(model.ValDtaborda.originalValue ?? new Date())"
+											@update:model-value="model.ValDtaborda.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -455,15 +422,11 @@
 										v-on="controls.VENDA___SALE_APPROACH.handlers"
 										:loading="controls.VENDA___SALE_APPROACH.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_APPROACH.isVisible"
-												id="VENDA___SALE_APPROACH"
-												size="medium"
-												:model-value="model.ValApproach.value"
-												:readonly="controls.VENDA___SALE_APPROACH.readonly"
+												v-bind="controls.VENDA___SALE_APPROACH.props"
 												@update:model-value="model.ValApproach.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -494,14 +457,13 @@
 										v-on="controls.VENDA___SALE_DTAPRESE.handlers"
 										:loading="controls.VENDA___SALE_DTAPRESE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTAPRESE.isVisible"
-											v-bind="controls.VENDA___SALE_DTAPRESE"
-											format="DateTime"
+											v-bind="controls.VENDA___SALE_DTAPRESE.props"
 											:model-value="model.ValDtaprese.value"
-											@update:model-value="model.ValDtaprese.fnUpdateValue" />
+											@reset-icon-click="model.ValDtaprese.fnUpdateValue(model.ValDtaprese.originalValue ?? new Date())"
+											@update:model-value="model.ValDtaprese.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -513,15 +475,11 @@
 										v-on="controls.VENDA___SALE_APRESENT.handlers"
 										:loading="controls.VENDA___SALE_APRESENT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_APRESENT.isVisible"
-												id="VENDA___SALE_APRESENT"
-												size="medium"
-												:model-value="model.ValApresent.value"
-												:readonly="controls.VENDA___SALE_APRESENT.readonly"
+												v-bind="controls.VENDA___SALE_APRESENT.props"
 												@update:model-value="model.ValApresent.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -552,14 +510,13 @@
 										v-on="controls.VENDA___SALE_DTSUPERA.handlers"
 										:loading="controls.VENDA___SALE_DTSUPERA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTSUPERA.isVisible"
-											v-bind="controls.VENDA___SALE_DTSUPERA"
-											format="DateTime"
+											v-bind="controls.VENDA___SALE_DTSUPERA.props"
 											:model-value="model.ValDtsupera.value"
-											@update:model-value="model.ValDtsupera.fnUpdateValue" />
+											@reset-icon-click="model.ValDtsupera.fnUpdateValue(model.ValDtsupera.originalValue ?? new Date())"
+											@update:model-value="model.ValDtsupera.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -588,14 +545,13 @@
 										v-on="controls.VENDA___SALE_TENTFECH.handlers"
 										:loading="controls.VENDA___SALE_TENTFECH.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.VENDA___SALE_TENTFECH.isVisible"
-											v-bind="controls.VENDA___SALE_TENTFECH"
-											format="DateTime"
+											v-bind="controls.VENDA___SALE_TENTFECH.props"
 											:model-value="model.ValTentfech.value"
-											@update:model-value="model.ValTentfech.fnUpdateValue" />
+											@reset-icon-click="model.ValTentfech.fnUpdateValue(model.ValTentfech.originalValue ?? new Date())"
+											@update:model-value="model.ValTentfech.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -607,14 +563,13 @@
 										v-on="controls.VENDA___SALE_DTVENDA_.handlers"
 										:loading="controls.VENDA___SALE_DTVENDA_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTVENDA_.isVisible"
-											v-bind="controls.VENDA___SALE_DTVENDA_"
-											format="DateTime"
+											v-bind="controls.VENDA___SALE_DTVENDA_.props"
 											:model-value="model.ValDtvenda.value"
-											@update:model-value="model.ValDtvenda.fnUpdateValue" />
+											@reset-icon-click="model.ValDtvenda.fnUpdateValue(model.ValDtvenda.originalValue ?? new Date())"
+											@update:model-value="model.ValDtvenda.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -643,14 +598,13 @@
 										v-on="controls.VENDA___SALE_DTACOMPA.handlers"
 										:loading="controls.VENDA___SALE_DTACOMPA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTACOMPA.isVisible"
-											v-bind="controls.VENDA___SALE_DTACOMPA"
-											format="DateTime"
+											v-bind="controls.VENDA___SALE_DTACOMPA.props"
 											:model-value="model.ValDtacompa.value"
-											@update:model-value="model.ValDtacompa.fnUpdateValue" />
+											@reset-icon-click="model.ValDtacompa.fnUpdateValue(model.ValDtacompa.originalValue ?? new Date())"
+											@update:model-value="model.ValDtacompa.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -740,15 +694,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'VENDA',
-						location: 'form-VENDA',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'VENDA',
+					location: 'form-VENDA',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -794,6 +746,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -866,8 +820,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -949,7 +904,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -1003,21 +958,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -1028,25 +968,9 @@
 						id: 'VENDA___ORGANORGANIZA',
 						name: 'ORGANIZA',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ORGANIZATION64123),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodorgan',
-							dependencyEvent: 'fieldChange:sale.codorgan'
-						},
-						dependentFields: () => {
-							return {
-								set 'organ.codorgan'(value) { vm.model.ValCodorgan.updateValue(value) },
-								set 'organ.organiza'(value) { vm.model.TableOrganOrganiza.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1055,22 +979,28 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodorgan',
+							dependencyEvent: 'fieldChange:sale.codorgan'
+						},
+						dependentFields: () => ({
+							set 'organ.codorgan'(value) { vm.model.ValCodorgan.updateValue(value) },
+							set 'organ.organiza'(value) { vm.model.TableOrganOrganiza.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					VENDA___SALE_NRLIDE__: new fieldControlClass.NumberControl({
 						modelField: 'ValNrlide',
 						valueChangeEvent: 'fieldChange:sale.nrlide',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'VENDA___SALE_NRLIDE__',
 						name: 'NRLIDE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.LEADER_NO_11905),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -1080,13 +1010,10 @@
 						id: 'VENDA___SALE_STARTDT_',
 						name: 'STARTDT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.START00919),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1094,15 +1021,11 @@
 						id: 'VENDA___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.PROSPECTION06755),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1112,16 +1035,12 @@
 						id: 'VENDA___SALE_IDENTIFI',
 						name: 'IDENTIFI',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.IDENTIFICATION_OF_BU58085),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR01',
 						maxLength: 85,
 						labelId: 'label_VENDA___SALE_IDENTIFI',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1131,16 +1050,12 @@
 						id: 'VENDA___SALE_POTCOMPR',
 						name: 'POTCOMPR',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.POTENTIAL_BUYERS56564),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR01',
 						maxLength: 50,
 						labelId: 'label_VENDA___SALE_POTCOMPR',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1150,14 +1065,10 @@
 						id: 'VENDA___SALE_PROSPECC',
 						name: 'PROSPECC',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PROSPECTION_CARRIED_20791),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'VENDA___PSEUDNOVOGR01',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1165,15 +1076,11 @@
 						id: 'VENDA___PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.QUALIFICATION64257),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1183,14 +1090,10 @@
 						id: 'VENDA___SALE_INTERESS',
 						name: 'INTERESS',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.INTERESTED34576),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'VENDA___PSEUDNOVOGR02',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1200,14 +1103,10 @@
 						id: 'VENDA___SALE_SEMRFINA',
 						name: 'SEMRFINA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.WITHOUT_FINANCIAL_RE10399),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'VENDA___PSEUDNOVOGR02',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1217,14 +1116,10 @@
 						id: 'VENDA___SALE_SEMCAPAC',
 						name: 'SEMCAPAC',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.NO_DECISION_MAKING_P36615),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'VENDA___PSEUDNOVOGR02',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1234,14 +1129,11 @@
 						id: 'VENDA___SALE_DTQUALIF',
 						name: 'DTQUALIF',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.QUALIFICATION64257),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR02',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1251,14 +1143,10 @@
 						id: 'VENDA___SALE_QUALIFIC',
 						name: 'QUALIFIC',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.QUALIFICATION_CARRIE05255),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'VENDA___PSEUDNOVOGR02',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1266,15 +1154,11 @@
 						id: 'VENDA___PSEUDNOVOGR03',
 						name: 'NOVOGR03',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRE_APPROACH58979),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1284,14 +1168,11 @@
 						id: 'VENDA___SALE_PREABORD',
 						name: 'PREABORD',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRE_APPROACH58979),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR03',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1301,14 +1182,10 @@
 						id: 'VENDA___SALE_HOMEWORK',
 						name: 'HOMEWORK',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.HOMEWORK_DONE45166),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'VENDA___PSEUDNOVOGR03',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1316,15 +1193,11 @@
 						id: 'VENDA___PSEUDNOVOGR04',
 						name: 'NOVOGR04',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.APPROACH06577),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1334,14 +1207,11 @@
 						id: 'VENDA___SALE_DTABORDA',
 						name: 'DTABORDA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.APPROACH06577),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR04',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1351,14 +1221,10 @@
 						id: 'VENDA___SALE_APPROACH',
 						name: 'APPROACH',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.APPROACH_MADE54225),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'VENDA___PSEUDNOVOGR04',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1366,15 +1232,11 @@
 						id: 'VENDA___PSEUDNOVOGR05',
 						name: 'NOVOGR05',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRESENTATION64246),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1384,14 +1246,11 @@
 						id: 'VENDA___SALE_DTAPRESE',
 						name: 'DTAPRESE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRESENTATION_MADE15117),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR05',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1401,14 +1260,10 @@
 						id: 'VENDA___SALE_APRESENT',
 						name: 'APRESENT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRESENTATION64246),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'VENDA___PSEUDNOVOGR05',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1416,15 +1271,11 @@
 						id: 'VENDA___PSEUDNOVOGR06',
 						name: 'NOVOGR06',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.OVERCOMING_OBJECTION04521),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1434,14 +1285,11 @@
 						id: 'VENDA___SALE_DTSUPERA',
 						name: 'DTSUPERA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.OVERCOMING_OBJECTION04521),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR06',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1449,15 +1297,11 @@
 						id: 'VENDA___PSEUDNOVOGR07',
 						name: 'NOVOGR07',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.CLOSING_OF_THE_SALE05493),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1467,14 +1311,11 @@
 						id: 'VENDA___SALE_TENTFECH',
 						name: 'TENTFECH',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CLOSING_ATTEMPTS65102),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR07',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1484,14 +1325,11 @@
 						id: 'VENDA___SALE_DTVENDA_',
 						name: 'DTVENDA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CLOSING_OF_THE_SALE05493),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR07',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1499,15 +1337,11 @@
 						id: 'VENDA___PSEUDNOVOGR08',
 						name: 'NOVOGR08',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.FOLLOW_UP22119),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1517,14 +1351,11 @@
 						id: 'VENDA___SALE_DTACOMPA',
 						name: 'DTACOMPA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.FOLLOW_UP22119),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR08',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1612,7 +1443,7 @@
 						/** The foreign key to the ORGAN table */
 						get organ() { return vm.model.ValCodorgan },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1708,6 +1539,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1747,6 +1586,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1873,6 +1720,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR VENDA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1888,6 +1751,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS VENDA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

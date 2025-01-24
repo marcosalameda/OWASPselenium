@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -103,6 +103,7 @@
 						v-show="controls.EQUIP___PSEUDNOVOGR02.isVisible"
 						class="row-line-group">
 						<q-group-collapsible
+							id="EQUIP___PSEUDNOVOGR02"
 							v-bind="controls.EQUIP___PSEUDNOVOGR02"
 							v-on="controls.EQUIP___PSEUDNOVOGR02.handlers">
 							<!-- Start EQUIP___PSEUDNOVOGR02 -->
@@ -116,14 +117,11 @@
 										v-on="controls.EQUIP___CMPNYDESIGNAT.handlers"
 										:loading="controls.EQUIP___CMPNYDESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.EQUIP___CMPNYDESIGNAT.isVisible"
 											v-bind="controls.EQUIP___CMPNYDESIGNAT.props"
-											:model-value="model.ValCodempre.value"
-											v-on="controls.EQUIP___CMPNYDESIGNAT.handlers"
-											@update:model-value="model.ValCodempre.fnUpdateValue" />
+											v-on="controls.EQUIP___CMPNYDESIGNAT.handlers" />
 										<q-see-more-equip-cmpnydesignat
 											v-if="controls.EQUIP___CMPNYDESIGNAT.seeMoreIsVisible"
 											v-bind="controls.EQUIP___CMPNYDESIGNAT.seeMoreParams"
@@ -139,14 +137,11 @@
 										v-on="controls.EQUIP___PESS1NAME____.handlers"
 										:loading="controls.EQUIP___PESS1NAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.EQUIP___PESS1NAME____.isVisible"
 											v-bind="controls.EQUIP___PESS1NAME____.props"
-											:model-value="model.ValCodpess1.value"
-											v-on="controls.EQUIP___PESS1NAME____.handlers"
-											@update:model-value="model.ValCodpess1.fnUpdateValue" />
+											v-on="controls.EQUIP___PESS1NAME____.handlers" />
 										<q-see-more-equip-pess1name
 											v-if="controls.EQUIP___PESS1NAME____.seeMoreIsVisible"
 											v-bind="controls.EQUIP___PESS1NAME____.seeMoreParams"
@@ -166,6 +161,7 @@
 						class="row-line-group">
 						<q-group-box-container
 							id="EQUIP___PSEUDNOVOGR01"
+							class="c-groupbox--title-background"
 							v-bind="controls.EQUIP___PSEUDNOVOGR01"
 							:is-visible="controls.EQUIP___PSEUDNOVOGR01.isVisible">
 							<!-- Start EQUIP___PSEUDNOVOGR01 -->
@@ -179,12 +175,10 @@
 										v-on="controls.EQUIP___EQUIPSEQUENNR.handlers"
 										:loading="controls.EQUIP___EQUIPSEQUENNR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.EQUIP___EQUIPSEQUENNR.isVisible"
-											v-bind="controls.EQUIP___EQUIPSEQUENNR"
-											:model-value="model.ValSequennr.value"
+											v-bind="controls.EQUIP___EQUIPSEQUENNR.props"
 											@update:model-value="model.ValSequennr.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -197,8 +191,7 @@
 										v-on="controls.EQUIP___EQUIPREGISTNR.handlers"
 										:loading="controls.EQUIP___EQUIPREGISTNR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPREGISTNR.props"
 											:model-value="model.ValRegistnr.value" />
@@ -213,14 +206,11 @@
 										v-on="controls.EQUIP___TPEQUTIPOEQUI.handlers"
 										:loading="controls.EQUIP___TPEQUTIPOEQUI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.EQUIP___TPEQUTIPOEQUI.isVisible"
 											v-bind="controls.EQUIP___TPEQUTIPOEQUI.props"
-											:model-value="model.ValCodtpequ.value"
-											v-on="controls.EQUIP___TPEQUTIPOEQUI.handlers"
-											@update:model-value="model.ValCodtpequ.fnUpdateValue" />
+											v-on="controls.EQUIP___TPEQUTIPOEQUI.handlers" />
 										<q-see-more-equip-tpequtipoequi
 											v-if="controls.EQUIP___TPEQUTIPOEQUI.seeMoreIsVisible"
 											v-bind="controls.EQUIP___TPEQUTIPOEQUI.seeMoreParams"
@@ -238,12 +228,12 @@
 										v-on="controls.EQUIP___EQUIPSITEFABR.handlers"
 										:loading="controls.EQUIP___EQUIPSITEFABR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPSITEFABR.props"
 											:model-value="model.ValSitefabr.value"
-											@update:model-value="model.ValSitefabr.fnUpdateValue" />
+											@blur="onBlur(controls.EQUIP___EQUIPSITEFABR, model.ValSitefabr.value)"
+											@change="model.ValSitefabr.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -257,14 +247,11 @@
 										v-on="controls.EQUIP___WAREHWAREHDES.handlers"
 										:loading="controls.EQUIP___WAREHWAREHDES.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.EQUIP___WAREHWAREHDES.isVisible"
 											v-bind="controls.EQUIP___WAREHWAREHDES.props"
-											:model-value="model.ValCodwareh.value"
-											v-on="controls.EQUIP___WAREHWAREHDES.handlers"
-											@update:model-value="model.ValCodwareh.fnUpdateValue" />
+											v-on="controls.EQUIP___WAREHWAREHDES.handlers" />
 										<q-see-more-equip-warehwarehdes
 											v-if="controls.EQUIP___WAREHWAREHDES.seeMoreIsVisible"
 											v-bind="controls.EQUIP___WAREHWAREHDES.seeMoreParams"
@@ -280,14 +267,11 @@
 										v-on="controls.EQUIP___ITEM_ITEMDES_.handlers"
 										:loading="controls.EQUIP___ITEM_ITEMDES_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.EQUIP___ITEM_ITEMDES_.isVisible"
 											v-bind="controls.EQUIP___ITEM_ITEMDES_.props"
-											:model-value="model.ValCoditem.value"
-											v-on="controls.EQUIP___ITEM_ITEMDES_.handlers"
-											@update:model-value="model.ValCoditem.fnUpdateValue" />
+											v-on="controls.EQUIP___ITEM_ITEMDES_.handlers" />
 										<q-see-more-equip-item-itemdes
 											v-if="controls.EQUIP___ITEM_ITEMDES_.seeMoreIsVisible"
 											v-bind="controls.EQUIP___ITEM_ITEMDES_.seeMoreParams"
@@ -303,12 +287,12 @@
 										v-on="controls.EQUIP___EQUIPDESIGNAT.handlers"
 										:loading="controls.EQUIP___EQUIPDESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPDESIGNAT.props"
 											:model-value="model.ValDesignat.value"
-											@update:model-value="model.ValDesignat.fnUpdateValue" />
+											@blur="onBlur(controls.EQUIP___EQUIPDESIGNAT, model.ValDesignat.value)"
+											@change="model.ValDesignat.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -320,9 +304,8 @@
 										v-on="controls.EQUIP___EQUIPFREQUENC.handlers"
 										:loading="controls.EQUIP___EQUIPFREQUENC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-select
+										:suggestion-mode-on="suggestionModeOn">
+										<q-combobox
 											v-if="controls.EQUIP___EQUIPFREQUENC.isVisible"
 											v-bind="controls.EQUIP___EQUIPFREQUENC.props"
 											:model-value="model.ValFrequenc.value"
@@ -338,12 +321,10 @@
 										v-on="controls.EQUIP___EQUIPVALORTOT.handlers"
 										:loading="controls.EQUIP___EQUIPVALORTOT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.EQUIP___EQUIPVALORTOT.isVisible"
-											v-bind="controls.EQUIP___EQUIPVALORTOT"
-											:model-value="model.ValValortot.value"
+											v-bind="controls.EQUIP___EQUIPVALORTOT.props"
 											@update:model-value="model.ValValortot.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -356,14 +337,13 @@
 										v-on="controls.EQUIP___EQUIPDTAQUISI.handlers"
 										:loading="controls.EQUIP___EQUIPDTAQUISI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.EQUIP___EQUIPDTAQUISI.isVisible"
-											v-bind="controls.EQUIP___EQUIPDTAQUISI"
-											format="Date"
+											v-bind="controls.EQUIP___EQUIPDTAQUISI.props"
 											:model-value="model.ValDtaquisi.value"
-											@update:model-value="model.ValDtaquisi.fnUpdateValue" />
+											@reset-icon-click="model.ValDtaquisi.fnUpdateValue(model.ValDtaquisi.originalValue ?? new Date())"
+											@update:model-value="model.ValDtaquisi.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -375,14 +355,13 @@
 										v-on="controls.EQUIP___EQUIPDTDECO__.handlers"
 										:loading="controls.EQUIP___EQUIPDTDECO__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.EQUIP___EQUIPDTDECO__.isVisible"
-											v-bind="controls.EQUIP___EQUIPDTDECO__"
-											format="Date"
+											v-bind="controls.EQUIP___EQUIPDTDECO__.props"
 											:model-value="model.ValDtdeco.value"
-											@update:model-value="model.ValDtdeco.fnUpdateValue" />
+											@reset-icon-click="model.ValDtdeco.fnUpdateValue(model.ValDtdeco.originalValue ?? new Date())"
+											@update:model-value="model.ValDtdeco.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -394,15 +373,11 @@
 										v-on="controls.EQUIP___EQUIPBOUGHT__.handlers"
 										:loading="controls.EQUIP___EQUIPBOUGHT__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.EQUIP___EQUIPBOUGHT__.isVisible"
-												id="EQUIP___EQUIPBOUGHT__"
-												size="mini"
-												:model-value="model.ValBought.value"
-												:readonly="controls.EQUIP___EQUIPBOUGHT__.readonly"
+												v-bind="controls.EQUIP___EQUIPBOUGHT__.props"
 												@update:model-value="model.ValBought.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -433,14 +408,11 @@
 										v-on="controls.EQUIP___ROOM1ROOMNR__.handlers"
 										:loading="controls.EQUIP___ROOM1ROOMNR__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.EQUIP___ROOM1ROOMNR__.isVisible"
 											v-bind="controls.EQUIP___ROOM1ROOMNR__.props"
-											:model-value="model.ValCodrooms.value"
-											v-on="controls.EQUIP___ROOM1ROOMNR__.handlers"
-											@update:model-value="model.ValCodrooms.fnUpdateValue" />
+											v-on="controls.EQUIP___ROOM1ROOMNR__.handlers" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -452,8 +424,7 @@
 										v-on="controls.EQUIP___ROOM1DESIGNAT.handlers"
 										:loading="controls.EQUIP___ROOM1DESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___ROOM1DESIGNAT.props"
 											:model-value="model.Room1ValDesignat.value" />
@@ -468,14 +439,13 @@
 										v-on="controls.EQUIP___EQUIPDTREFERE.handlers"
 										:loading="controls.EQUIP___EQUIPDTREFERE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.EQUIP___EQUIPDTREFERE.isVisible"
-											v-bind="controls.EQUIP___EQUIPDTREFERE"
-											format="DateTime"
+											v-bind="controls.EQUIP___EQUIPDTREFERE.props"
 											:model-value="model.ValDtrefere.value"
-											@update:model-value="model.ValDtrefere.fnUpdateValue" />
+											@reset-icon-click="model.ValDtrefere.fnUpdateValue(model.ValDtrefere.originalValue ?? new Date())"
+											@update:model-value="model.ValDtrefere.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -487,8 +457,7 @@
 										v-on="controls.EQUIP___EQUIPFIRST___.handlers"
 										:loading="controls.EQUIP___EQUIPFIRST___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPFIRST___.props"
 											:model-value="model.ValFirst.value" />
@@ -503,8 +472,7 @@
 										v-on="controls.EQUIP___EQUIPBEFORE__.handlers"
 										:loading="controls.EQUIP___EQUIPBEFORE__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPBEFORE__.props"
 											:model-value="model.ValBefore.value" />
@@ -519,8 +487,7 @@
 										v-on="controls.EQUIP___EQUIPFOLLOWIN.handlers"
 										:loading="controls.EQUIP___EQUIPFOLLOWIN.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPFOLLOWIN.props"
 											:model-value="model.ValFollowin.value" />
@@ -535,8 +502,7 @@
 										v-on="controls.EQUIP___EQUIPLAST____.handlers"
 										:loading="controls.EQUIP___EQUIPLAST____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPLAST____.props"
 											:model-value="model.ValLast.value" />
@@ -551,12 +517,10 @@
 										v-on="controls.EQUIP___EQUIPQTDMOVIM.handlers"
 										:loading="controls.EQUIP___EQUIPQTDMOVIM.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.EQUIP___EQUIPQTDMOVIM.isVisible"
-											v-bind="controls.EQUIP___EQUIPQTDMOVIM"
-											:model-value="model.ValQtdmovim.value"
+											v-bind="controls.EQUIP___EQUIPQTDMOVIM.props"
 											@update:model-value="model.ValQtdmovim.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -571,12 +535,11 @@
 										v-on="controls.EQUIP___EQUIPMOVIMENT.handlers"
 										:loading="controls.EQUIP___EQUIPMOVIMENT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-static-text
 											v-if="controls.EQUIP___EQUIPMOVIMENT.isVisible"
 											id="EQUIP___EQUIPMOVIMENT"
-											size="large"
+											:size="controls.EQUIP___EQUIPMOVIMENT.size"
 											:text="model.ValMoviment.value"
 											supports-html />
 									</base-input-structure>
@@ -589,29 +552,32 @@
 									v-show="controls.EQUIP___PSEUDNOVOGR10.isVisible"
 									class="row-line-group">
 									<q-group-collapsible
+										id="EQUIP___PSEUDNOVOGR10"
 										v-bind="controls.EQUIP___PSEUDNOVOGR10"
 										v-on="controls.EQUIP___PSEUDNOVOGR10.handlers">
 										<!-- Start EQUIP___PSEUDNOVOGR10 -->
 										<q-row-container v-show="controls.EQUIP___PSEUDMOVIMEVV.isVisible || controls.EQUIP___PSEUDROOMSMVE.isVisible">
 											<q-control-wrapper
-												v-show="controls.EQUIP___PSEUDMOVIMEVV.isVisible || controls.EQUIP___PSEUDROOMSMVE.isVisible"
+												v-show="controls.EQUIP___PSEUDMOVIMEVV.isVisible"
 												class="control-join-group">
 												<q-table
 													v-show="controls.EQUIP___PSEUDMOVIMEVV.isVisible"
 													v-bind="controls.EQUIP___PSEUDMOVIMEVV"
-													v-on="controls.EQUIP___PSEUDMOVIMEVV.handlers">
-												</q-table>
+													v-on="controls.EQUIP___PSEUDMOVIMEVV.handlers" />
 												<q-table-extra-extension
 													:list-ctrl="controls.EQUIP___PSEUDMOVIMEVV"
 													v-on="controls.EQUIP___PSEUDMOVIMEVV.handlers" />
+											</q-control-wrapper>
+											<q-control-wrapper
+												v-show="controls.EQUIP___PSEUDROOMSMVE.isVisible"
+												class="control-join-group">
 												<base-input-structure
 													class="i-text"
 													v-bind="controls.EQUIP___PSEUDROOMSMVE"
 													v-on="controls.EQUIP___PSEUDROOMSMVE.handlers"
 													:loading="controls.EQUIP___PSEUDROOMSMVE.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-check-list-extension
 														v-if="controls.EQUIP___PSEUDROOMSMVE.isVisible"
 														id="EQUIP___PSEUDROOMSMVE"
@@ -627,17 +593,14 @@
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
-										<q-row-container
-											v-show="controls.EQUIP___PSEUDMOVIMELS.isVisible"
-											is-large>
+										<q-row-container v-show="controls.EQUIP___PSEUDMOVIMELS.isVisible">
 											<q-control-wrapper
 												v-show="controls.EQUIP___PSEUDMOVIMELS.isVisible"
-												class="row-line-group">
+												class="control-join-group">
 												<q-table
 													v-show="controls.EQUIP___PSEUDMOVIMELS.isVisible"
 													v-bind="controls.EQUIP___PSEUDMOVIMELS"
-													v-on="controls.EQUIP___PSEUDMOVIMELS.handlers">
-												</q-table>
+													v-on="controls.EQUIP___PSEUDMOVIMELS.handlers" />
 												<q-table-extra-extension
 													:list-ctrl="controls.EQUIP___PSEUDMOVIMELS"
 													v-on="controls.EQUIP___PSEUDMOVIMELS.handlers" />
@@ -658,6 +621,7 @@
 						v-show="controls.EQUIP___PSEUDNOVOGR06.isVisible"
 						class="row-line-group">
 						<q-group-collapsible
+							id="EQUIP___PSEUDNOVOGR06"
 							v-bind="controls.EQUIP___PSEUDNOVOGR06"
 							v-on="controls.EQUIP___PSEUDNOVOGR06.handlers">
 							<!-- Start EQUIP___PSEUDNOVOGR06 -->
@@ -671,8 +635,7 @@
 										v-on="controls.EQUIP___EQUIPPHOTOGRA.handlers"
 										:loading="controls.EQUIP___EQUIPPHOTOGRA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-image
 											v-if="controls.EQUIP___EQUIPPHOTOGRA.isVisible"
 											v-bind="controls.EQUIP___EQUIPPHOTOGRA.props"
@@ -688,8 +651,7 @@
 										v-on="controls.EQUIP___EQUIPLASTPHO_.handlers"
 										:loading="controls.EQUIP___EQUIPLASTPHO_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-image
 											v-if="controls.EQUIP___EQUIPLASTPHO_.isVisible"
 											v-bind="controls.EQUIP___EQUIPLASTPHO_.props"
@@ -714,21 +676,19 @@
 							v-slot="{ onStateChanged }">
 							<!-- Start EQUIP___PSEUDNOVOGR05 -->
 							<q-group-collapsible
+								id="EQUIP___PSEUDNOVOGR03"
 								v-bind="controls.EQUIP___PSEUDNOVOGR03"
 								v-on="controls.EQUIP___PSEUDNOVOGR03.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
 								<!-- Start EQUIP___PSEUDNOVOGR03 -->
-								<q-row-container
-									v-show="controls.EQUIP___PSEUDINSTALAG.isVisible"
-									is-large>
+								<q-row-container v-show="controls.EQUIP___PSEUDINSTALAG.isVisible">
 									<q-control-wrapper
 										v-show="controls.EQUIP___PSEUDINSTALAG.isVisible"
-										class="row-line-group">
+										class="control-join-group">
 										<q-table
 											v-show="controls.EQUIP___PSEUDINSTALAG.isVisible"
 											v-bind="controls.EQUIP___PSEUDINSTALAG"
-											v-on="controls.EQUIP___PSEUDINSTALAG.handlers">
-										</q-table>
+											v-on="controls.EQUIP___PSEUDINSTALAG.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.EQUIP___PSEUDINSTALAG"
 											v-on="controls.EQUIP___PSEUDINSTALAG.handlers" />
@@ -737,21 +697,19 @@
 								<!-- End EQUIP___PSEUDNOVOGR03 -->
 							</q-group-collapsible>
 							<q-group-collapsible
+								id="EQUIP___PSEUDNOVOGR04"
 								v-bind="controls.EQUIP___PSEUDNOVOGR04"
 								v-on="controls.EQUIP___PSEUDNOVOGR04.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
 								<!-- Start EQUIP___PSEUDNOVOGR04 -->
-								<q-row-container
-									v-show="controls.EQUIP___PSEUDINSTALAC.isVisible"
-									is-large>
+								<q-row-container v-show="controls.EQUIP___PSEUDINSTALAC.isVisible">
 									<q-control-wrapper
 										v-show="controls.EQUIP___PSEUDINSTALAC.isVisible"
-										class="row-line-group">
+										class="control-join-group">
 										<q-table
 											v-show="controls.EQUIP___PSEUDINSTALAC.isVisible"
 											v-bind="controls.EQUIP___PSEUDINSTALAC"
-											v-on="controls.EQUIP___PSEUDINSTALAC.handlers">
-										</q-table>
+											v-on="controls.EQUIP___PSEUDINSTALAC.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.EQUIP___PSEUDINSTALAC"
 											v-on="controls.EQUIP___PSEUDINSTALAC.handlers" />
@@ -760,21 +718,19 @@
 								<!-- End EQUIP___PSEUDNOVOGR04 -->
 							</q-group-collapsible>
 							<q-group-collapsible
+								id="EQUIP___PSEUDNOVOGR11"
 								v-bind="controls.EQUIP___PSEUDNOVOGR11"
 								v-on="controls.EQUIP___PSEUDNOVOGR11.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
 								<!-- Start EQUIP___PSEUDNOVOGR11 -->
-								<q-row-container
-									v-show="controls.EQUIP___PSEUDREPARACO.isVisible || controls.EQUIP___DECOMDECOMNR_.isVisible || controls.EQUIP___EQUIPIFABATIF.isVisible"
-									is-large>
+								<q-row-container v-show="controls.EQUIP___PSEUDREPARACO.isVisible || controls.EQUIP___DECOMDECOMNR_.isVisible || controls.EQUIP___EQUIPIFABATIF.isVisible">
 									<q-control-wrapper
 										v-show="controls.EQUIP___PSEUDREPARACO.isVisible"
-										class="row-line-group">
+										class="control-join-group">
 										<q-table
 											v-show="controls.EQUIP___PSEUDREPARACO.isVisible"
 											v-bind="controls.EQUIP___PSEUDREPARACO"
-											v-on="controls.EQUIP___PSEUDREPARACO.handlers">
-										</q-table>
+											v-on="controls.EQUIP___PSEUDREPARACO.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.EQUIP___PSEUDREPARACO"
 											v-on="controls.EQUIP___PSEUDREPARACO.handlers" />
@@ -788,14 +744,11 @@
 											v-on="controls.EQUIP___DECOMDECOMNR_.handlers"
 											:loading="controls.EQUIP___DECOMDECOMNR_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-lookup
 												v-if="controls.EQUIP___DECOMDECOMNR_.isVisible"
 												v-bind="controls.EQUIP___DECOMDECOMNR_.props"
-												:model-value="model.ValCoddeco.value"
-												v-on="controls.EQUIP___DECOMDECOMNR_.handlers"
-												@update:model-value="model.ValCoddeco.fnUpdateValue" />
+												v-on="controls.EQUIP___DECOMDECOMNR_.handlers" />
 											<q-see-more-equip-decomdecomnr
 												v-if="controls.EQUIP___DECOMDECOMNR_.seeMoreIsVisible"
 												v-bind="controls.EQUIP___DECOMDECOMNR_.seeMoreParams"
@@ -811,15 +764,11 @@
 											v-on="controls.EQUIP___EQUIPIFABATIF.handlers"
 											:loading="controls.EQUIP___EQUIPIFABATIF.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<template #label>
 												<q-checkbox-input
 													v-if="controls.EQUIP___EQUIPIFABATIF.isVisible"
-													id="EQUIP___EQUIPIFABATIF"
-													size="medium"
-													:model-value="model.ValIfabatif.value"
-													:readonly="controls.EQUIP___EQUIPIFABATIF.readonly"
+													v-bind="controls.EQUIP___EQUIPIFABATIF.props"
 													@update:model-value="model.ValIfabatif.fnUpdateValue" />
 											</template>
 										</base-input-structure>
@@ -845,8 +794,7 @@
 									<q-table
 										v-show="controls.EQUIP___PSEUDFOTOEQUI.isVisible"
 										v-bind="controls.EQUIP___PSEUDFOTOEQUI"
-										v-on="controls.EQUIP___PSEUDFOTOEQUI.handlers">
-									</q-table>
+										v-on="controls.EQUIP___PSEUDFOTOEQUI.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.EQUIP___PSEUDFOTOEQUI"
 										v-on="controls.EQUIP___PSEUDFOTOEQUI.handlers" />
@@ -857,7 +805,7 @@
 					</q-control-wrapper>
 				</q-row-container>
 				<q-row-container
-					v-show="controls.EQUIP___PSEUDNOVOGR07.isVisible"
+					v-show="controls.EQUIP___PSEUDNOVOGR07.isVisible || controls.EQUIP___PSEUDNOVOGR12.isVisible"
 					is-large>
 					<q-control-wrapper
 						v-show="controls.EQUIP___PSEUDNOVOGR07.isVisible"
@@ -867,17 +815,14 @@
 							v-bind="controls.EQUIP___PSEUDNOVOGR07"
 							:is-visible="controls.EQUIP___PSEUDNOVOGR07.isVisible">
 							<!-- Start EQUIP___PSEUDNOVOGR07 -->
-							<q-row-container
-								v-show="controls.EQUIP___PSEUDVISEQUIP.isVisible"
-								is-large>
+							<q-row-container v-show="controls.EQUIP___PSEUDVISEQUIP.isVisible">
 								<q-control-wrapper
 									v-show="controls.EQUIP___PSEUDVISEQUIP.isVisible"
-									class="row-line-group">
+									class="control-join-group">
 									<q-table
 										v-show="controls.EQUIP___PSEUDVISEQUIP.isVisible"
 										v-bind="controls.EQUIP___PSEUDVISEQUIP"
-										v-on="controls.EQUIP___PSEUDVISEQUIP.handlers">
-									</q-table>
+										v-on="controls.EQUIP___PSEUDVISEQUIP.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.EQUIP___PSEUDVISEQUIP"
 										v-on="controls.EQUIP___PSEUDVISEQUIP.handlers" />
@@ -886,8 +831,6 @@
 							<!-- End EQUIP___PSEUDNOVOGR07 -->
 						</q-group-box-container>
 					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.EQUIP___PSEUDNOVOGR12.isVisible">
 					<q-control-wrapper
 						v-show="controls.EQUIP___PSEUDNOVOGR12.isVisible"
 						class="control-join-group">
@@ -896,17 +839,14 @@
 							v-bind="controls.EQUIP___PSEUDNOVOGR12"
 							:is-visible="controls.EQUIP___PSEUDNOVOGR12.isVisible">
 							<!-- Start EQUIP___PSEUDNOVOGR12 -->
-							<q-row-container
-								v-show="controls.EQUIP___PSEUDANEXOS__.isVisible"
-								is-large>
+							<q-row-container v-show="controls.EQUIP___PSEUDANEXOS__.isVisible">
 								<q-control-wrapper
 									v-show="controls.EQUIP___PSEUDANEXOS__.isVisible"
-									class="row-line-group">
+									class="control-join-group">
 									<q-table
 										v-show="controls.EQUIP___PSEUDANEXOS__.isVisible"
 										v-bind="controls.EQUIP___PSEUDANEXOS__"
-										v-on="controls.EQUIP___PSEUDANEXOS__.handlers">
-									</q-table>
+										v-on="controls.EQUIP___PSEUDANEXOS__.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.EQUIP___PSEUDANEXOS__"
 										v-on="controls.EQUIP___PSEUDANEXOS__.handlers" />
@@ -1015,15 +955,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'EQUIP',
-						location: 'form-EQUIP',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'EQUIP',
+					location: 'form-EQUIP',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -1069,6 +1007,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -1141,8 +1081,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -1224,7 +1165,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -1278,21 +1219,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -1301,16 +1227,12 @@
 						id: 'EQUIP___PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY52963),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-EQUIP___PSEUDNOVOGR02',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1320,29 +1242,11 @@
 						id: 'EQUIP___CMPNYDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY_22615),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR02',
 						container: 'EQUIP___PSEUDNOVOGR02',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodempre',
-							dependencyEvent: 'fieldChange:equip.codempre'
-						},
-						dependentFields: () => {
-							return {
-								set 'cmpny.codempre'(value) { vm.model.ValCodempre.updateValue(value) },
-								set 'cmpny.designat'(value) { vm.model.TableCmpnyDesignat.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'EMPRE',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1351,6 +1255,18 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodempre',
+							dependencyEvent: 'fieldChange:equip.codempre'
+						},
+						dependentFields: () => ({
+							set 'cmpny.codempre'(value) { vm.model.ValCodempre.updateValue(value) },
+							set 'cmpny.designat'(value) { vm.model.TableCmpnyDesignat.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'EMPRE',
+						controlLimits: [
+						],
 					}, this),
 					EQUIP___PESS1NAME____: new fieldControlClass.LookupControl({
 						modelField: 'TablePess1Name',
@@ -1358,15 +1274,27 @@
 						id: 'EQUIP___PESS1NAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PERSON10446),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR02',
 						container: 'EQUIP___PSEUDNOVOGR02',
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodpess1',
+							dependencyEvent: 'fieldChange:equip.codpess1'
+						},
+						dependentFields: () => ({
+							set 'pess1.codpesso'(value) { vm.model.ValCodpess1.updateValue(value) },
+							set 'pess1.name'(value) { vm.model.TablePess1Name.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: ['cmpny', 'equip.codempre'],
@@ -1375,58 +1303,42 @@
 								fnValueSelector: (model) => model.ValCodempre.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodpess1',
-							dependencyEvent: 'fieldChange:equip.codpess1'
-						},
-						dependentFields: () => {
-							return {
-								set 'pess1.codpesso'(value) { vm.model.ValCodpess1.updateValue(value) },
-								set 'pess1.name'(value) { vm.model.TablePess1Name.updateValue(value) },
-							}
-						},
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					EQUIP___PSEUDNOVOGR01: new fieldControlClass.GroupControl({
 						id: 'EQUIP___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: '',
+								text: computed(() => this.Resources._111418227),
+							},
+							detailedHelp: {
+								type: '',
+								text: computed(() => this.Resources._1114_VERBOSE42095),
+							}
+						},
 						label: computed(() => this.Resources.EQUIPMENT38184),
-						userHelp: computed(() => this.Resources.___1537256),
-						description: computed(() => this.Resources.___15_VERBOSE09201),
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
-						anchored: false,
-						mustBeFilled: false,
+						anchored: true,
 						controlLimits: [
 						],
 					}, this),
 					EQUIP___EQUIPSEQUENNR: new fieldControlClass.NumberControl({
 						modelField: 'ValSequennr',
 						valueChangeEvent: 'fieldChange:equip.sequennr',
-						maxIntegers: 6,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'EQUIP___EQUIPSEQUENNR',
 						name: 'SEQUENNR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.SEQUENTIAL_NO_04803),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
-						mustBeFilled: false,
+						maxIntegers: 6,
+						maxDecimals: 0,
+						isSequencial: true,
 						controlLimits: [
 						],
 					}, this),
@@ -1436,20 +1348,15 @@
 						id: 'EQUIP___EQUIPREGISTNR',
 						name: 'REGISTNR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.REGISTRATION_NO_06209),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
 						isFormulaBlocked: true,
 						maxLength: 6,
 						labelId: 'label_EQUIP___EQUIPREGISTNR',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EQUIP___TPEQUTIPOEQUI: new fieldControlClass.LookupControl({
 						modelField: 'TableTpequTipoequi',
@@ -1457,28 +1364,10 @@
 						id: 'EQUIP___TPEQUTIPOEQUI',
 						name: 'TIPOEQUI',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodtpequ',
-							dependencyEvent: 'fieldChange:equip.codtpequ'
-						},
-						dependentFields: () => {
-							return {
-								set 'tpequ.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
-								set 'tpequ.tipoequi'(value) { vm.model.TableTpequTipoequi.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'TPEQU',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1487,6 +1376,18 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodtpequ',
+							dependencyEvent: 'fieldChange:equip.codtpequ'
+						},
+						dependentFields: () => ({
+							set 'tpequ.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
+							set 'tpequ.tipoequi'(value) { vm.model.TableTpequTipoequi.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'TPEQU',
+						controlLimits: [
+						],
 					}, this),
 					EQUIP___EQUIPSITEFABR: new fieldControlClass.StringControl({
 						modelField: 'ValSitefabr',
@@ -1494,16 +1395,12 @@
 						id: 'EQUIP___EQUIPSITEFABR',
 						name: 'SITEFABR',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.MANUFACTURER_S_WEBSI12156),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
 						maxLength: 256,
 						labelId: 'label_EQUIP___EQUIPSITEFABR',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1513,26 +1410,10 @@
 						id: 'EQUIP___WAREHWAREHDES',
 						name: 'WAREHDES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.WAREHOUSE51864),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodwareh',
-							dependencyEvent: 'fieldChange:equip.codwareh'
-						},
-						dependentFields: () => {
-							return {
-								set 'wareh.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
-								set 'wareh.warehdes'(value) { vm.model.TableWarehWarehdes.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1541,6 +1422,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodwareh',
+							dependencyEvent: 'fieldChange:equip.codwareh'
+						},
+						dependentFields: () => ({
+							set 'wareh.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
+							set 'wareh.warehdes'(value) { vm.model.TableWarehWarehdes.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					EQUIP___ITEM_ITEMDES_: new fieldControlClass.LookupControl({
 						modelField: 'TableItemItemdes',
@@ -1548,14 +1439,26 @@
 						id: 'EQUIP___ITEM_ITEMDES_',
 						name: 'ITEMDES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ITEM_31041),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCoditem',
+							dependencyEvent: 'fieldChange:equip.coditem'
+						},
+						dependentFields: () => ({
+							set 'item.coditem'(value) { vm.model.ValCoditem.updateValue(value) },
+							set 'item.itemdes'(value) { vm.model.TableItemItemdes.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: ['wareh', 'equip.codwareh'],
@@ -1564,24 +1467,6 @@
 								fnValueSelector: (model) => model.ValCodwareh.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCoditem',
-							dependencyEvent: 'fieldChange:equip.coditem'
-						},
-						dependentFields: () => {
-							return {
-								set 'item.coditem'(value) { vm.model.ValCoditem.updateValue(value) },
-								set 'item.itemdes'(value) { vm.model.TableItemItemdes.updateValue(value) },
-							}
-						},
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					EQUIP___EQUIPDESIGNAT: new fieldControlClass.StringControl({
 						modelField: 'ValDesignat',
@@ -1589,99 +1474,81 @@
 						id: 'EQUIP___EQUIPDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESIGNATION_35800),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
 						maxLength: 85,
 						labelId: 'label_EQUIP___EQUIPDESIGNAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					EQUIP___EQUIPFREQUENC: new fieldControlClass.ArrayNumberControl({
 						modelField: 'ValFrequenc',
 						valueChangeEvent: 'fieldChange:equip.frequenc',
-						maxIntegers: 1,
-						maxDecimals: 0,
 						id: 'EQUIP___EQUIPFREQUENC',
 						name: 'FREQUENC',
 						size: 'small',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___1438719),
+							},
+						},
 						label: computed(() => this.Resources.LOAN_FREQUENCY00930),
-						userHelp: computed(() => this.Resources.___1438719),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
 						arrayName: 'FreqEmpr',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
 					EQUIP___EQUIPVALORTOT: new fieldControlClass.CurrencyControl({
 						modelField: 'ValValortot',
 						valueChangeEvent: 'fieldChange:equip.valortot',
-						maxIntegers: 9,
-						maxDecimals: 2,
 						id: 'EQUIP___EQUIPVALORTOT',
 						name: 'VALORTOT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.TOTAL_VALUE_07456),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 9,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EQUIP___EQUIPDTAQUISI: new fieldControlClass.DateControl({
 						modelField: 'ValDtaquisi',
 						valueChangeEvent: 'fieldChange:equip.dtaquisi',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'EQUIP___EQUIPDTAQUISI',
 						name: 'DTAQUISI',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACQUISITION_53832),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
 					EQUIP___EQUIPDTDECO__: new fieldControlClass.DateControl({
 						modelField: 'ValDtdeco',
 						valueChangeEvent: 'fieldChange:equip.dtdeco',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'EQUIP___EQUIPDTDECO__',
 						name: 'DTDECO',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DECOMISSION_04392),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EQUIP___EQUIPBOUGHT__: new fieldControlClass.BooleanControl({
 						modelField: 'ValBought',
@@ -1689,32 +1556,23 @@
 						id: 'EQUIP___EQUIPBOUGHT__',
 						name: 'BOUGHT',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.BOUGHT35496),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.layoutConfig.CheckboxLabelAlignment),
 						container: 'EQUIP___PSEUDNOVOGR01',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EQUIP___PSEUDNOVOGR09: new fieldControlClass.GroupControl({
 						id: 'EQUIP___PSEUDNOVOGR09',
 						name: 'NOVOGR09',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.ASSET_LOCATION64080),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
-						anchored: false,
-						mustBeFilled: false,
+						anchored: true,
 						controlLimits: [
 						],
 					}, this),
@@ -1724,29 +1582,11 @@
 						id: 'EQUIP___ROOM1ROOMNR__',
 						name: 'ROOMNR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ROOM_NO_15796),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodrooms',
-							dependencyEvent: 'fieldChange:equip.codrooms'
-						},
-						dependentFields: () => {
-							return {
-								set 'room1.codrooms'(value) { vm.model.ValCodrooms.updateValue(value) },
-								set 'room1.roomnr'(value) { vm.model.TableRoom1Roomnr.updateValue(value) },
-								set 'room1.designat'(value) { vm.model.Room1ValDesignat.updateValue(value) },
-							}
-						},
-						isFixed: true,
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1755,6 +1595,17 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodrooms',
+							dependencyEvent: 'fieldChange:equip.codrooms'
+						},
+						dependentFields: () => ({
+							set 'room1.codrooms'(value) { vm.model.ValCodrooms.updateValue(value) },
+							set 'room1.roomnr'(value) { vm.model.TableRoom1Roomnr.updateValue(value) },
+							set 'room1.designat'(value) { vm.model.Room1ValDesignat.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					EQUIP___ROOM1DESIGNAT: new fieldControlClass.StringControl({
 						modelField: 'Room1ValDesignat',
@@ -1764,20 +1615,15 @@
 						id: 'EQUIP___ROOM1DESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ROOM_DESIGNATION_33759),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isFormulaBlocked: true,
 						maxLength: 50,
 						labelId: 'label_EQUIP___ROOM1DESIGNAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EQUIP___EQUIPDTREFERE: new fieldControlClass.DateControl({
 						modelField: 'ValDtrefere',
@@ -1785,14 +1631,11 @@
 						id: 'EQUIP___EQUIPDTREFERE',
 						name: 'DTREFERE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.REFERENCE28402),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR09',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1802,20 +1645,15 @@
 						id: 'EQUIP___EQUIPFIRST___',
 						name: 'FIRST',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.FIRST42972),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isFormulaBlocked: true,
 						maxLength: 10,
 						labelId: 'label_EQUIP___EQUIPFIRST___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EQUIP___EQUIPBEFORE__: new fieldControlClass.StringControl({
 						modelField: 'ValBefore',
@@ -1823,20 +1661,15 @@
 						id: 'EQUIP___EQUIPBEFORE__',
 						name: 'BEFORE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.BEFORE60156),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isFormulaBlocked: true,
 						maxLength: 10,
 						labelId: 'label_EQUIP___EQUIPBEFORE__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EQUIP___EQUIPFOLLOWIN: new fieldControlClass.StringControl({
 						modelField: 'ValFollowin',
@@ -1844,20 +1677,15 @@
 						id: 'EQUIP___EQUIPFOLLOWIN',
 						name: 'FOLLOWIN',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.FOLLOWING22170),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isFormulaBlocked: true,
 						maxLength: 10,
 						labelId: 'label_EQUIP___EQUIPFOLLOWIN',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EQUIP___EQUIPLAST____: new fieldControlClass.StringControl({
 						modelField: 'ValLast',
@@ -1865,41 +1693,31 @@
 						id: 'EQUIP___EQUIPLAST____',
 						name: 'LAST',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.LAST48120),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isFormulaBlocked: true,
 						maxLength: 10,
 						labelId: 'label_EQUIP___EQUIPLAST____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EQUIP___EQUIPQTDMOVIM: new fieldControlClass.NumberControl({
 						modelField: 'ValQtdmovim',
 						valueChangeEvent: 'fieldChange:equip.qtdmovim',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'EQUIP___EQUIPQTDMOVIM',
 						name: 'QTDMOVIM',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.QUANTITY_OF_TRANSACT63133),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EQUIP___EQUIPMOVIMENT: new fieldControlClass.StringControl({
 						modelField: 'ValMoviment',
@@ -1907,48 +1725,44 @@
 						id: 'EQUIP___EQUIPMOVIMENT',
 						name: 'MOVIMENT',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.MOVEMENTS47007),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						supportsHtml: true,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EQUIP___PSEUDNOVOGR10: new fieldControlClass.GroupControl({
 						id: 'EQUIP___PSEUDNOVOGR10',
 						name: 'NOVOGR10',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.WHERE_DID_THE_EQUIPM11916),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-EQUIP___PSEUDNOVOGR10',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					EQUIP___PSEUDMOVIMEVV: new fieldControlClass.MultipleValuesControl({
-						modelField: 'List_Movimevv_SelectedIds',
-						valueChangeEvent: 'fieldChange:pseud.List_Movimevv_SelectedIds',
-						modelFieldOptions: 'List_Movimevv',
 						id: 'EQUIP___PSEUDMOVIMEVV',
 						name: 'MOVIMEVV',
-						size: 'xlarge',
-						hasLabel: true,
+						size: '',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtitle',
+								text: computed(() => this.Resources._112319369),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1123_VERBOSE50467),
+							}
+						},
 						label: computed(() => this.Resources.CHOOSE_ROOM04275),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR10',
@@ -1988,6 +1802,7 @@
 							tableTitle: computed(() => this.Resources.CHOOSE_ROOM04275),
 							showAlternatePagination: true,
 							rowClickActionInternal: 'selectMultiple',
+							showRowsSelectedTotalizer: true,
 							permissions: {
 							},
 							generalCustomActions: [
@@ -1998,54 +1813,253 @@
 							},
 							formsDefinition: {
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-ROOMS'],
 						uuid: 'Equip_ValMovimevv',
 						allSelectedRows: 'false',
+						modelField: 'List_Movimevv_SelectedIds',
+						valueChangeEvent: 'fieldChange:pseud.List_Movimevv_SelectedIds',
+						modelFieldOptions: 'List_Movimevv',
 						controlLimits: [
+							{
+								identifier: ['id', 'equip'],
+								dependencyEvents: ['fieldChange:equip.codequip'],
+								dependencyField: 'EQUIP.CODEQUIP',
+								fnValueSelector: (model) => model.ValCodequip.value
+							},
 						],
 					}, this),
 					EQUIP___PSEUDROOMSMVE: new fieldControlClass.MultipleValuesExtensionControl({
 						id: 'EQUIP___PSEUDROOMSMVE',
 						name: 'ROOMSMVE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.MULTIPLE_VALUES_EXTE07457),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR10',
 						container: 'EQUIP___PSEUDNOVOGR10',
-						mustBeFilled: false,
 						controlLimits: [
+						],
+					}, this),
+					EQUIP___PSEUDMOVIMELS: new fieldControlClass.TableListControl({
+						id: 'EQUIP___PSEUDMOVIMELS',
+						name: 'MOVIMELS',
+						size: '',
+						label: computed(() => this.Resources.EQUIPMENT_MOVEMENT_H06876),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR10',
+						container: 'EQUIP___PSEUDNOVOGR10',
+						controller: 'EQUIP',
+						action: 'Equip_ValMovimels',
+						hasDependencies: true,
+						isInCollapsible: true,
+						columnsOriginal: [
+							new listColumnTypes.DateColumn({
+								order: 1,
+								name: 'ValDhmudanc',
+								area: 'MOVIM',
+								field: 'DHMUDANC',
+								label: computed(() => this.Resources.CHANGE36355),
+								scrollData: 16,
+								dateTimeType: 'dateTime',
+							}),
+							new listColumnTypes.TextColumn({
+								order: 2,
+								name: 'Rooms.ValRoomnr',
+								area: 'ROOMS',
+								field: 'ROOMNR',
+								label: computed(() => this.Resources.N_R__ROOM43805),
+								dataLength: 10,
+								scrollData: 10,
+								pkColumn: 'ValCodrooms',
+							}),
+							new listColumnTypes.TextColumn({
+								order: 3,
+								name: 'Rooms.ValDesignat',
+								area: 'ROOMS',
+								field: 'DESIGNAT',
+								label: computed(() => this.Resources.ROOM_DESIGNATION37895),
+								dataLength: 50,
+								scrollData: 30,
+								pkColumn: 'ValCodrooms',
+							}),
+							new listColumnTypes.TextColumn({
+								order: 4,
+								name: 'ValObservat',
+								area: 'MOVIM',
+								field: 'OBSERVAT',
+								label: computed(() => this.Resources.OBSERVATION37880),
+								scrollData: 30,
+							}),
+						],
+						config: {
+							name: 'ValMovimels',
+							serverMode: true,
+							pkColumn: 'ValCodmovim',
+							tableAlias: 'MOVIM',
+							tableNamePlural: computed(() => this.Resources.DRIVES34119),
+							viewManagement: '',
+							showLimitsInfo: true,
+							tableTitle: computed(() => this.Resources.EQUIPMENT_MOVEMENT_H06876),
+							showAlternatePagination: true,
+							permissions: {
+							},
+							searchBarConfig: {
+								visibility: false,
+								searchOnPressEnter: true
+							},
+							filtersVisible: false,
+							allowColumnFilters: false,
+							allowColumnSort: true,
+							crudActions: [
+								{
+									id: 'show',
+									name: 'show',
+									title: computed(() => this.Resources.CONSULTAR57388),
+									icon: {
+										icon: 'view'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'MOVIM',
+										mode: 'SHOW',
+										isControlled: true
+									}
+								},
+								{
+									id: 'edit',
+									name: 'edit',
+									title: computed(() => this.Resources.EDITAR11616),
+									icon: {
+										icon: 'pencil'
+									},
+									isInReadOnly: false,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'MOVIM',
+										mode: 'EDIT',
+										isControlled: true
+									}
+								},
+								{
+									id: 'duplicate',
+									name: 'duplicate',
+									title: computed(() => this.Resources.DUPLICAR09748),
+									icon: {
+										icon: 'duplicate'
+									},
+									isInReadOnly: false,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'MOVIM',
+										mode: 'DUPLICATE',
+										isControlled: true
+									}
+								},
+								{
+									id: 'delete',
+									name: 'delete',
+									title: computed(() => this.Resources.ELIMINAR21155),
+									icon: {
+										icon: 'delete'
+									},
+									isInReadOnly: false,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'MOVIM',
+										mode: 'DELETE',
+										isControlled: true
+									}
+								}
+							],
+							generalActions: [
+								{
+									id: 'insert',
+									name: 'insert',
+									title: computed(() => this.Resources.INSERIR43365),
+									icon: {
+										icon: 'add'
+									},
+									isInReadOnly: false,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'MOVIM',
+										mode: 'NEW',
+										repeatInsertion: false,
+										isControlled: true
+									}
+								},
+							],
+							generalCustomActions: [
+							],
+							groupActions: [
+							],
+							customActions: [
+							],
+							MCActions: [
+							],
+							rowClickAction: {
+								id: 'RCA__MOVIM',
+								name: '_MOVIM',
+								title: '',
+								isInReadOnly: true,
+								params: {
+									isRoute: true,
+									action: vm.openFormAction,
+									type: 'form',
+									formName: 'MOVIM',
+									mode: 'SHOW',
+									isControlled: true
+								}
+							},
+							formsDefinition: {
+								'MOVIM': {
+									fnKeySelector: (row) => row.Fields.ValCodmovim,
+									isPopup: false
+								},
+							},
+							defaultSearchColumnName: '',
+							defaultSearchColumnNameOriginal: '',
+							defaultColumnSorting: {
+								columnName: 'ValDhmudanc',
+								sortOrder: 'desc'
+							}
+						},
+						changeEvents: ['changed-EQUIP', 'changed-MOVIM', 'changed-ROOMS'],
+						uuid: 'Equip_ValMovimels',
+						allSelectedRows: 'false',
+						controlLimits: [
+							{
+								identifier: ['id', 'equip'],
+								dependencyEvents: ['fieldChange:equip.codequip'],
+								dependencyField: 'EQUIP.CODEQUIP',
+								fnValueSelector: (model) => model.ValCodequip.value
+							},
 						],
 					}, this),
 					EQUIP___PSEUDNOVOGR06: new fieldControlClass.GroupControl({
 						id: 'EQUIP___PSEUDNOVOGR06',
 						name: 'NOVOGR06',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTO32097),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-EQUIP___PSEUDNOVOGR06',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -2055,17 +2069,14 @@
 						id: 'EQUIP___EQUIPPHOTOGRA',
 						name: 'PHOTOGRA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTO51874),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR06',
 						container: 'EQUIP___PSEUDNOVOGR06',
 						height: 50,
-						width: 100,
-						mustBeFilled: false,
+						width: 30,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PHOTO51874)),
 						controlLimits: [
 						],
 					}, this),
@@ -2075,35 +2086,27 @@
 						id: 'EQUIP___EQUIPLASTPHO_',
 						name: 'LASTPHO',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTO51874),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR06',
 						container: 'EQUIP___PSEUDNOVOGR06',
 						isFormulaBlocked: true,
 						height: 50,
-						width: 100,
-						mustBeFilled: false,
+						width: 30,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PHOTO51874)),
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EQUIP___PSEUDNOVOGR05: new fieldControlClass.AccordionControl({
 						id: 'EQUIP___PSEUDNOVOGR05',
 						name: 'NOVOGR05',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACCORDION01950),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -2111,29 +2114,22 @@
 						id: 'EQUIP___PSEUDNOVOGR03',
 						name: 'NOVOGR03',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.INSTALACOES05030),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-EQUIP___PSEUDNOVOGR03',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					EQUIP___PSEUDINSTALAG: new fieldControlClass.TableListControl({
 						id: 'EQUIP___PSEUDINSTALAG',
 						name: 'INSTALAG',
-						size: 'block',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.FACILITIES_23844),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR03',
@@ -2150,7 +2146,7 @@
 								field: 'SINCE',
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -2159,7 +2155,7 @@
 								field: 'UNTIL',
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 3,
@@ -2204,7 +2200,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -2310,6 +2306,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'INSTA',
@@ -2323,18 +2320,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: INSTA
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
 						uuid: 'Equip_ValInstalag',
@@ -2352,29 +2343,22 @@
 						id: 'EQUIP___PSEUDNOVOGR04',
 						name: 'NOVOGR04',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.LOCALS50556),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-EQUIP___PSEUDNOVOGR04',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					EQUIP___PSEUDINSTALAC: new fieldControlClass.TableSpecialRenderingControl({
 						id: 'EQUIP___PSEUDINSTALAC',
 						name: 'INSTALAC',
-						size: 'block',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.FACILITIES_23844),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR04',
@@ -2391,7 +2375,7 @@
 								field: 'SINCE',
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -2400,7 +2384,7 @@
 								field: 'UNTIL',
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 3,
@@ -2441,6 +2425,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
+								searchable: false,
 							}),
 						],
 						config: {
@@ -2455,7 +2440,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -2474,17 +2459,12 @@
 							},
 							formsDefinition: {
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
 						uuid: 'Equip_ValInstalac',
@@ -2556,10 +2536,6 @@
 									},
 									centerCoord: {
 										rawValue: 'POINT(-8.5 39)',
-										isMapped: false
-									},
-									enableAddressSearch: {
-										rawValue: false,
 										isMapped: false
 									},
 									showSourcesInDescription: {
@@ -2638,6 +2614,10 @@
 										rawValue: 'OpenStreetMap',
 										isMapped: false
 									},
+									openPopupOnHover: {
+										rawValue: false,
+										isMapped: false
+									},
 								},
 								groups: {
 									externalLayer: [
@@ -2658,29 +2638,22 @@
 						id: 'EQUIP___PSEUDNOVOGR11',
 						name: 'NOVOGR11',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.REPAIRS42202),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-EQUIP___PSEUDNOVOGR11',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					EQUIP___PSEUDREPARACO: new fieldControlClass.TableListControl({
 						id: 'EQUIP___PSEUDREPARACO',
 						name: 'REPARACO',
-						size: 'block',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.EQUIPMENT_REPAIRS62266),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR11',
@@ -2707,13 +2680,13 @@
 								field: 'DTREPARA',
 								label: computed(() => this.Resources.FIXED_IN00179),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Cate1.ValCategoria',
 								area: 'CATE1',
-								field: 'CATEGORY',
+								field: 'CATEGORIA',
 								label: computed(() => this.Resources.SPECIALTY09304),
 								dataLength: 50,
 								scrollData: 30,
@@ -2747,6 +2720,18 @@
 								maxDigits: 10,
 								decimalPlaces: 0,
 							}),
+							new listColumnTypes.ArrayColumn({
+								order: 7,
+								name: 'ValTipoarea',
+								area: 'REPAR',
+								field: 'TIPOAREA',
+								label: computed(() => this.Resources.TECHNICAL_AREA50773),
+								dataLength: 1,
+								scrollData: 1,
+								array: qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements,
+								arrayType: qProjArrays.QArrayAreatecn.type,
+								arrayDisplayMode: 'D',
+							}),
 						],
 						config: {
 							name: 'ValReparaco',
@@ -2754,13 +2739,13 @@
 							pkColumn: 'ValCodrepar',
 							tableAlias: 'REPAR',
 							tableNamePlural: computed(() => this.Resources.REPAIRS18165),
-							viewManagement: 'N',
+							viewManagement: 'M',
 							showLimitsInfo: true,
 							tableTitle: computed(() => this.Resources.EQUIPMENT_REPAIRS62266),
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -2866,6 +2851,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'REPAR',
@@ -2879,19 +2865,41 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: REPAR
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValNrrepara',
+								sortOrder: 'asc'
+							}
 						},
+						groupFilters: [
+							{
+								id: 'filter_ValReparaco_STARTED',
+								isMultiple: true,
+								filters: [
+									{
+										id: 'filter_ValReparaco_STARTED_1',
+										key: '1',
+										value: computed(() => this.Resources.SPECIALTY09304),
+										selected: false
+									},
+									{
+										id: 'filter_ValReparaco_STARTED_2',
+										key: '2',
+										value: computed(() => this.Resources.DESCRIPTION07383),
+										selected: false
+									},
+									{
+										id: 'filter_ValReparaco_STARTED_3',
+										key: '3',
+										value: computed(() => this.Resources.SPENT_ON_HOURS19285),
+										selected: false
+									},
+								],
+								value: '',
+								defaultValue: ''
+							},
+						],
 						changeEvents: ['changed-EQUIP', 'changed-PESSO', 'changed-REPAR', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
 						uuid: 'Equip_ValReparaco',
 						allSelectedRows: 'false',
@@ -2904,30 +2912,70 @@
 							},
 						],
 					}, this),
+					EQUIP___DECOMDECOMNR_: new fieldControlClass.LookupControl({
+						modelField: 'TableDecomDecomnr',
+						valueChangeEvent: 'fieldChange:decom.decomnr',
+						id: 'EQUIP___DECOMDECOMNR_',
+						name: 'DECOMNR',
+						size: 'small',
+						label: computed(() => this.Resources.DECOMISSION_NO_16646),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR11',
+						container: 'EQUIP___PSEUDNOVOGR11',
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCoddeco',
+							dependencyEvent: 'fieldChange:equip.coddeco'
+						},
+						dependentFields: () => ({
+							set 'decom.coddeco'(value) { vm.model.ValCoddeco.updateValue(value) },
+							set 'decom.decomnr'(value) { vm.model.TableDecomDecomnr.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'ABATE',
+						controlLimits: [
+						],
+					}, this),
+					EQUIP___EQUIPIFABATIF: new fieldControlClass.BooleanControl({
+						modelField: 'ValIfabatif',
+						valueChangeEvent: 'fieldChange:equip.ifabatif',
+						id: 'EQUIP___EQUIPIFABATIF',
+						name: 'IFABATIF',
+						size: 'medium',
+						label: computed(() => this.Resources.DOWNED_EQUIPMENT43331),
+						placeholder: '',
+						labelPosition: computed(() => this.layoutConfig.CheckboxLabelAlignment),
+						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR11',
+						container: 'EQUIP___PSEUDNOVOGR11',
+						isFormulaBlocked: true,
+						controlLimits: [
+						],
+					}, this),
 					EQUIP___PSEUDNOVOGR08: new fieldControlClass.GroupControl({
 						id: 'EQUIP___PSEUDNOVOGR08',
 						name: 'NOVOGR08',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTOS_42586),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
-						anchored: false,
-						mustBeFilled: false,
+						anchored: true,
 						controlLimits: [
 						],
 					}, this),
 					EQUIP___PSEUDFOTOEQUI: new fieldControlClass.TableListControl({
 						id: 'EQUIP___PSEUDFOTOEQUI',
 						name: 'FOTOEQUI',
-						size: 'large',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.PHOTOS39221),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR08',
@@ -2951,8 +2999,10 @@
 								area: 'PHOTO',
 								field: 'PHOTOGRA',
 								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 						],
 						config: {
@@ -2967,7 +3017,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -3073,6 +3123,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'FOTOS',
@@ -3086,18 +3137,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: FOTOS
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValTitle',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-EQUIP', 'changed-PHOTO'],
 						uuid: 'Equip_ValFotoequi',
@@ -3115,26 +3160,19 @@
 						id: 'EQUIP___PSEUDNOVOGR07',
 						name: 'NOVOGR07',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.INSPECTION_VISITS19524),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
-						anchored: false,
-						mustBeFilled: false,
+						anchored: true,
 						controlLimits: [
 						],
 					}, this),
 					EQUIP___PSEUDVISEQUIP: new fieldControlClass.TableSpecialRenderingControl({
 						id: 'EQUIP___PSEUDVISEQUIP',
 						name: 'VISEQUIP',
-						size: 'block',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.VISITS_63312),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR07',
@@ -3159,7 +3197,7 @@
 								field: 'STARTDT',
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 3,
@@ -3168,7 +3206,7 @@
 								field: 'DTFIM',
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -3216,7 +3254,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -3322,6 +3360,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'VISIT',
@@ -3335,18 +3374,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: VISIT
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValTitle',
 							defaultSearchColumnNameOriginal: 'ValTitle',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValTitle',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-VISIT', 'changed-EQUIP'],
 						uuid: 'Equip_ValVisequip',
@@ -3549,6 +3582,7 @@
 								}
 							},
 						],
+						exportOptions: 'dayGridMonth,timeGridWeek,timeGridDay',
 						controlLimits: [
 							{
 								identifier: ['id', 'equip'],
@@ -3557,90 +3591,24 @@
 								fnValueSelector: (model) => model.ValCodequip.value
 							},
 						],
-						exportOptions: 'dayGridMonth,timeGridWeek,timeGridDay'
-					}, this),
-					EQUIP___DECOMDECOMNR_: new fieldControlClass.LookupControl({
-						modelField: 'TableDecomDecomnr',
-						valueChangeEvent: 'fieldChange:decom.decomnr',
-						id: 'EQUIP___DECOMDECOMNR_',
-						name: 'DECOMNR',
-						size: 'small',
-						hasLabel: true,
-						label: computed(() => this.Resources.DECOMISSION_NO_16646),
-						userHelp: '',
-						description: '',
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR11',
-						container: 'EQUIP___PSEUDNOVOGR11',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCoddeco',
-							dependencyEvent: 'fieldChange:equip.coddeco'
-						},
-						dependentFields: () => {
-							return {
-								set 'decom.coddeco'(value) { vm.model.ValCoddeco.updateValue(value) },
-								set 'decom.decomnr'(value) { vm.model.TableDecomDecomnr.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'ABATE',
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
-					}, this),
-					EQUIP___EQUIPIFABATIF: new fieldControlClass.BooleanControl({
-						modelField: 'ValIfabatif',
-						valueChangeEvent: 'fieldChange:equip.ifabatif',
-						id: 'EQUIP___EQUIPIFABATIF',
-						name: 'IFABATIF',
-						size: 'medium',
-						hasLabel: true,
-						label: computed(() => this.Resources.DOWNED_EQUIPMENT43331),
-						userHelp: '',
-						description: '',
-						placeholder: '',
-						labelPosition: '',
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR11',
-						container: 'EQUIP___PSEUDNOVOGR11',
-						isFormulaBlocked: true,
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						isFixed: true,
 					}, this),
 					EQUIP___PSEUDNOVOGR12: new fieldControlClass.GroupControl({
 						id: 'EQUIP___PSEUDNOVOGR12',
 						name: 'NOVOGR12',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DIGITAL_ATTACHMENTS64891),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
-						anchored: false,
-						mustBeFilled: false,
+						anchored: true,
 						controlLimits: [
 						],
 					}, this),
 					EQUIP___PSEUDANEXOS__: new fieldControlClass.TableListControl({
 						id: 'EQUIP___PSEUDANEXOS__',
 						name: 'ANEXOS',
-						size: 'block',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.DIGITAL_ATTACHMENTS64891),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR12',
@@ -3656,7 +3624,7 @@
 								field: 'DTHRANEX',
 								label: computed(() => this.Resources.ATTACHED26247),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -3676,7 +3644,7 @@
 								dataLength: 260,
 								scrollData: 30,
 								sortable: false,
-								viewType: qEnums.documentViewTypeMode.Print,
+								viewType: qEnums.documentViewTypeMode.print,
 							}),
 						],
 						config: {
@@ -3691,7 +3659,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -3797,6 +3765,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'ANEXD',
@@ -3810,18 +3779,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: ANEXD
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-EQUIP', 'changed-ANEXD', 'changed-LANGU'],
 						uuid: 'Equip_ValAnexos',
@@ -3839,227 +3802,12 @@
 						id: 'EQUIP___PSEUDTLEQUIPA',
 						name: 'TLEQUIPA',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.TIMELINE45857),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'EQUIP',
 						action: 'Equip_ValTlequipa',
-						mustBeFilled: false,
 						controlLimits: [
-						],
-					}, this),
-					EQUIP___PSEUDMOVIMELS: new fieldControlClass.TableListControl({
-						id: 'EQUIP___PSEUDMOVIMELS',
-						name: 'MOVIMELS',
-						size: 'block',
-						hasLabel: true,
-						label: computed(() => this.Resources.EQUIPMENT_MOVEMENT_H06876),
-						userHelp: '',
-						description: '',
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR10',
-						container: 'EQUIP___PSEUDNOVOGR10',
-						controller: 'EQUIP',
-						action: 'Equip_ValMovimels',
-						hasDependencies: true,
-						isInCollapsible: true,
-						columnsOriginal: [
-							new listColumnTypes.DateColumn({
-								order: 1,
-								name: 'ValDhmudanc',
-								area: 'MOVIM',
-								field: 'DHMUDANC',
-								label: computed(() => this.Resources.CHANGE36355),
-								scrollData: 16,
-								dateTimeType: 'DateTime',
-							}),
-							new listColumnTypes.TextColumn({
-								order: 2,
-								name: 'Rooms.ValRoomnr',
-								area: 'ROOMS',
-								field: 'ROOMNR',
-								label: computed(() => this.Resources.N_R__ROOM43805),
-								dataLength: 10,
-								scrollData: 10,
-								pkColumn: 'ValCodrooms',
-							}),
-							new listColumnTypes.TextColumn({
-								order: 3,
-								name: 'Rooms.ValDesignat',
-								area: 'ROOMS',
-								field: 'DESIGNAT',
-								label: computed(() => this.Resources.ROOM_DESIGNATION37895),
-								dataLength: 50,
-								scrollData: 30,
-								pkColumn: 'ValCodrooms',
-							}),
-							new listColumnTypes.TextColumn({
-								order: 4,
-								name: 'ValObservat',
-								area: 'MOVIM',
-								field: 'OBSERVAT',
-								label: computed(() => this.Resources.OBSERVATION37880),
-								scrollData: 30,
-							}),
-						],
-						config: {
-							name: 'ValMovimels',
-							serverMode: true,
-							pkColumn: 'ValCodmovim',
-							tableAlias: 'MOVIM',
-							tableNamePlural: computed(() => this.Resources.DRIVES34119),
-							viewManagement: '',
-							showLimitsInfo: true,
-							tableTitle: computed(() => this.Resources.EQUIPMENT_MOVEMENT_H06876),
-							showAlternatePagination: true,
-							permissions: {
-							},
-							globalSearch: {
-								visibility: false,
-								searchOnPressEnter: true
-							},
-							filtersVisible: false,
-							allowColumnFilters: false,
-							allowColumnSort: true,
-							crudActions: [
-								{
-									id: 'show',
-									name: 'show',
-									title: computed(() => this.Resources.CONSULTAR57388),
-									icon: {
-										icon: 'view'
-									},
-									isInReadOnly: true,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'MOVIM',
-										mode: 'SHOW',
-										isControlled: true
-									}
-								},
-								{
-									id: 'edit',
-									name: 'edit',
-									title: computed(() => this.Resources.EDITAR11616),
-									icon: {
-										icon: 'pencil'
-									},
-									isInReadOnly: false,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'MOVIM',
-										mode: 'EDIT',
-										isControlled: true
-									}
-								},
-								{
-									id: 'duplicate',
-									name: 'duplicate',
-									title: computed(() => this.Resources.DUPLICAR09748),
-									icon: {
-										icon: 'duplicate'
-									},
-									isInReadOnly: false,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'MOVIM',
-										mode: 'DUPLICATE',
-										isControlled: true
-									}
-								},
-								{
-									id: 'delete',
-									name: 'delete',
-									title: computed(() => this.Resources.ELIMINAR21155),
-									icon: {
-										icon: 'delete'
-									},
-									isInReadOnly: false,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'MOVIM',
-										mode: 'DELETE',
-										isControlled: true
-									}
-								}
-							],
-							generalActions: [
-								{
-									id: 'insert',
-									name: 'insert',
-									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
-									isInReadOnly: false,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'MOVIM',
-										mode: 'NEW',
-										repeatInsertion: false,
-										isControlled: true
-									}
-								},
-							],
-							generalCustomActions: [
-							],
-							groupActions: [
-							],
-							customActions: [
-							],
-							MCActions: [
-							],
-							rowClickAction: {
-								id: 'RCA__MOVIM',
-								name: '_MOVIM',
-								title: '',
-								isInReadOnly: true,
-								params: {
-									action: vm.openFormAction,
-									type: 'form',
-									formName: 'MOVIM',
-									mode: 'SHOW',
-									isControlled: true
-								}
-							},
-							formsDefinition: {
-								'MOVIM': {
-									fnKeySelector: (row) => row.Fields.ValCodmovim,
-									isPopup: false
-								},
-							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: MOVIM
-							crudConditions: {
-							},
-							defaultSearchColumnName: '',
-							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
-						},
-						changeEvents: ['changed-EQUIP', 'changed-MOVIM', 'changed-ROOMS'],
-						uuid: 'Equip_ValMovimels',
-						allSelectedRows: 'false',
-						controlLimits: [
-							{
-								identifier: ['id', 'equip'],
-								dependencyEvents: ['fieldChange:equip.codequip'],
-								dependencyField: 'EQUIP.CODEQUIP',
-								fnValueSelector: (model) => model.ValCodequip.value
-							},
 						],
 					}, this),
 				},
@@ -4088,13 +3836,13 @@
 
 				tableFields: readonly([
 					'EQUIP___PSEUDMOVIMEVV',
+					'EQUIP___PSEUDMOVIMELS',
 					'EQUIP___PSEUDINSTALAG',
 					'EQUIP___PSEUDINSTALAC',
 					'EQUIP___PSEUDREPARACO',
 					'EQUIP___PSEUDFOTOEQUI',
 					'EQUIP___PSEUDVISEQUIP',
 					'EQUIP___PSEUDANEXOS__',
-					'EQUIP___PSEUDMOVIMELS',
 				]),
 
 				timelineFields: readonly([
@@ -4207,7 +3955,7 @@
 						/** The foreign key to the ROOM1 table */
 						get room1() { return vm.model.ValCodrooms },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -4303,6 +4051,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -4342,6 +4098,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -4468,6 +4232,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR EQUIP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -4483,13 +4263,18 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS EQUIP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {
 			'controls.EQUIP___PSEUDMOVIMEVV.rowsSelected': {
 				handler()
 				{
-					this.model.List_Movimevv_SelectedIds.value = this.rowKeyHashTableToArray(this.controls.EQUIP___PSEUDMOVIMEVV.rowsSelected)
+					const value = this.rowKeyHashTableToArray(this.controls.EQUIP___PSEUDMOVIMEVV.rowsSelected)
+					this.model.List_Movimevv_SelectedIds.updateValue(value)
 				},
 				deep: true
 			},

@@ -21,6 +21,8 @@ namespace GenioMVC.ViewModels.Wareh
 
 		public string ValCodwareh { get; set; }
 
+		public string Uuid { get => "Tmline_ValTmdsaid"; }
+		
 		public Tmline_ValTmdsaid_ViewModel(UserContext userContext) : base(userContext) { }
 
 		public void Load(int numberListItems, bool ajaxRequest = false)
@@ -34,8 +36,24 @@ namespace GenioMVC.ViewModels.Wareh
 			CriteriaSet conditions = null;
 			Load(numberListItems, requestValues, ajaxRequest, false, ref listing, ref conditions);
 		}
-
+		
 		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref List<Models.TimelineItem> Qlisting, ref CriteriaSet conditions)
+		{
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
+			
+			tableConfig.RowsPerPage = numberListItems;
+
+			Load(tableConfig, requestValues, ajaxRequest, isToExport, ref Qlisting, ref conditions);
+		}
+		
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
+		{
+			List<Models.TimelineItem> listing = null;
+			CriteriaSet conditions = null;
+			Load(tableConfig, requestValues, ajaxRequest, false, ref listing, ref conditions);
+		}
+
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref List<Models.TimelineItem> Qlisting, ref CriteriaSet conditions)
 		{
 			if (ajaxRequest)
 				this.Navigation.SetValue("requestValues" + "Tmline_ValTmdsaid", requestValues);
@@ -43,8 +61,9 @@ namespace GenioMVC.ViewModels.Wareh
 				requestValues = this.Navigation.GetValue<NameValueCollection>("requestValues" + "Tmline_ValTmdsaid");
 
 			Menu = new TablePartial<Models.TimelineItem>();
+			this.ValCodwareh = this.Navigation.GetValue("wareh").ToString();
 			List<Models.TimelineItem> datalist = new List<Models.TimelineItem>();
-			int totalrecords = numberListItems;
+			int totalrecords = tableConfig.RowsPerPage;
 
 			// DEXITTM
 			CriteriaSet filterDEXITTM = conditions ?? CriteriaSet.And();
@@ -109,7 +128,7 @@ namespace GenioMVC.ViewModels.Wareh
 					var fieldType = FieldType.TEXTO;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Item", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 1, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-				
+
 				}
 
 				if (Qfield.FullName.Equals("item.itemcod"))
@@ -117,7 +136,7 @@ namespace GenioMVC.ViewModels.Wareh
 					var fieldType = FieldType.TEXTO;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Code", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 2, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-				
+
 				}
 
 				if (Qfield.FullName.Equals("item.date"))
@@ -125,7 +144,7 @@ namespace GenioMVC.ViewModels.Wareh
 					var fieldType = FieldType.DATA;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Date", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 3, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-				
+
 				}
 			}
 

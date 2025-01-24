@@ -19,6 +19,7 @@ export default {
 		]),
 
 		...mapState(useUserDataStore, [
+			'userIsLoggedIn',
 			'valuesOfPHEs'
 		])
 	},
@@ -30,28 +31,33 @@ export default {
 
 		fetchAlerts()
 		{
+			if (!this.userIsLoggedIn)
+				return Promise.resolve(true)
+
 			return netAPI.postData(
 				'Alerts',
 				'Index',
 				null,
 				(data) => {
-					if (data)
+					if (data && Array.isArray(data))
 					{
 						const alerts = []
 
 						data.forEach((alertData) => {
-							const alert = hydrateAlert(alertData)
+							const alert = hydrateAlert(alertData, true)
 
-							if (alert) alerts.push(alert)
+							if (alert)
+								alerts.push(alert)
 						})
 
 						this.setNotifications(alerts)
 					}
+					else
+						this.setNotifications([])
 				},
 				undefined,
 				undefined,
-				this.navigationId
-			)
+				this.navigationId)
 		},
 
 		onAlertClick(target)

@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.LNHPD___PEDIDNRPEDIDO.handlers"
 							:loading="controls.LNHPD___PEDIDNRPEDIDO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.LNHPD___PEDIDNRPEDIDO.isVisible"
 								v-bind="controls.LNHPD___PEDIDNRPEDIDO.props"
-								:model-value="model.ValCodpedid.value"
-								v-on="controls.LNHPD___PEDIDNRPEDIDO.handlers"
-								@update:model-value="model.ValCodpedid.fnUpdateValue" />
+								v-on="controls.LNHPD___PEDIDNRPEDIDO.handlers" />
 							<q-see-more-lnhpd-pedidnrpedido
 								v-if="controls.LNHPD___PEDIDNRPEDIDO.seeMoreIsVisible"
 								v-bind="controls.LNHPD___PEDIDNRPEDIDO.seeMoreParams"
@@ -131,12 +128,10 @@
 							v-on="controls.LNHPD___LNHPDLINE____.handlers"
 							:loading="controls.LNHPD___LNHPDLINE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.LNHPD___LNHPDLINE____.isVisible"
-								v-bind="controls.LNHPD___LNHPDLINE____"
-								:model-value="model.ValLine.value"
+								v-bind="controls.LNHPD___LNHPDLINE____.props"
 								@update:model-value="model.ValLine.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -149,14 +144,11 @@
 							v-on="controls.LNHPD___TPEQUTIPOEQUI.handlers"
 							:loading="controls.LNHPD___TPEQUTIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.LNHPD___TPEQUTIPOEQUI.isVisible"
 								v-bind="controls.LNHPD___TPEQUTIPOEQUI.props"
-								:model-value="model.ValCodtpequ.value"
-								v-on="controls.LNHPD___TPEQUTIPOEQUI.handlers"
-								@update:model-value="model.ValCodtpequ.fnUpdateValue" />
+								v-on="controls.LNHPD___TPEQUTIPOEQUI.handlers" />
 							<q-see-more-lnhpd-tpequtipoequi
 								v-if="controls.LNHPD___TPEQUTIPOEQUI.seeMoreIsVisible"
 								v-bind="controls.LNHPD___TPEQUTIPOEQUI.seeMoreParams"
@@ -168,8 +160,7 @@
 							v-on="controls.LNHPD___PSEUDDESCONJU.handlers"
 							:loading="controls.LNHPD___PSEUDDESCONJU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-button
 								v-if="controls.LNHPD___PSEUDDESCONJU.isVisible"
 								id="LNHPD___PSEUDDESCONJU"
@@ -191,13 +182,29 @@
 							v-on="controls.LNHPD___LNHPDQUANTIDA.handlers"
 							:loading="controls.LNHPD___LNHPDQUANTIDA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.LNHPD___LNHPDQUANTIDA.isVisible"
-								v-bind="controls.LNHPD___LNHPDQUANTIDA"
-								:model-value="model.ValQuantida.value"
+								v-bind="controls.LNHPD___LNHPDQUANTIDA.props"
 								@update:model-value="model.ValQuantida.fnUpdateValue" />
+						</base-input-structure>
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.LNHPD___LNHPDQUANTDEC.isVisible">
+					<q-control-wrapper
+						v-show="controls.LNHPD___LNHPDQUANTDEC.isVisible"
+						class="control-join-group">
+						<base-input-structure
+							class="i-text"
+							v-bind="controls.LNHPD___LNHPDQUANTDEC"
+							v-on="controls.LNHPD___LNHPDQUANTDEC.handlers"
+							:loading="controls.LNHPD___LNHPDQUANTDEC.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<q-numeric-input
+								v-if="controls.LNHPD___LNHPDQUANTDEC.isVisible"
+								v-bind="controls.LNHPD___LNHPDQUANTDEC.props"
+								@update:model-value="model.ValQuantdec.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -208,8 +215,7 @@
 						<q-table
 							v-show="controls.LNHPD___PSEUDDESAGREG.isVisible"
 							v-bind="controls.LNHPD___PSEUDDESAGREG"
-							v-on="controls.LNHPD___PSEUDDESAGREG.handlers">
-						</q-table>
+							v-on="controls.LNHPD___PSEUDDESAGREG.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.LNHPD___PSEUDDESAGREG"
 							v-on="controls.LNHPD___PSEUDDESAGREG.handlers" />
@@ -298,15 +304,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'LNHPD',
-						location: 'form-LNHPD',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'LNHPD',
+					location: 'form-LNHPD',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -353,23 +357,9 @@
 					mode: ''
 				},
 
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
+
 				formButtons: {
-					desconju: {
-						id: 'desconju-btn',
-						text: computed(() => this.Resources.BREAKS_DOWN15669),
-						icon: {
-							icon: computed(() => `${this.system.resourcesPath}ok.ico`),
-							type: 'img',
-						},
-						type: 'custom',
-						style: 'secondary',
-						showInHeader: false,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.authData.isAllowed && vm.controls.LNHPD___PSEUDDESCONJU.checkFieldIsVisible()),
-						disabled: computed(() => vm.controls.LNHPD___PSEUDDESCONJU.isBlocked),
-						action: (e) => vm.controls.LNHPD___PSEUDDESCONJU.action(e)
-					},
 					changeToShow: {
 						id: 'change-to-show-btn',
 						icon: {
@@ -440,8 +430,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -523,7 +514,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -577,21 +568,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -602,25 +578,9 @@
 						id: 'LNHPD___PEDIDNRPEDIDO',
 						name: 'NRPEDIDO',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.ORDER_NO_15510),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodpedid',
-							dependencyEvent: 'fieldChange:lnhpd.codpedid'
-						},
-						dependentFields: () => {
-							return {
-								set 'pedid.codpedid'(value) { vm.model.ValCodpedid.updateValue(value) },
-								set 'pedid.nrpedido'(value) { vm.model.TablePedidNrpedido.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -629,22 +589,29 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodpedid',
+							dependencyEvent: 'fieldChange:lnhpd.codpedid'
+						},
+						dependentFields: () => ({
+							set 'pedid.codpedid'(value) { vm.model.ValCodpedid.updateValue(value) },
+							set 'pedid.nrpedido'(value) { vm.model.TablePedidNrpedido.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					LNHPD___LNHPDLINE____: new fieldControlClass.NumberControl({
 						modelField: 'ValLine',
 						valueChangeEvent: 'fieldChange:lnhpd.line',
-						maxIntegers: 3,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'LNHPD___LNHPDLINE____',
 						name: 'LINE',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.LINE27983),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 3,
+						maxDecimals: 0,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -655,25 +622,9 @@
 						id: 'LNHPD___TPEQUTIPOEQUI',
 						name: 'TIPOEQUI',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodtpequ',
-							dependencyEvent: 'fieldChange:lnhpd.codtpequ'
-						},
-						dependentFields: () => {
-							return {
-								set 'tpequ.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
-								set 'tpequ.tipoequi'(value) { vm.model.TableTpequTipoequi.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -682,6 +633,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodtpequ',
+							dependencyEvent: 'fieldChange:lnhpd.codtpequ'
+						},
+						dependentFields: () => ({
+							set 'tpequ.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
+							set 'tpequ.tipoequi'(value) { vm.model.TableTpequTipoequi.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					LNHPD___PSEUDDESCONJU: new fieldControlClass.ButtonControl({
 						id: 'LNHPD___PSEUDDESCONJU',
@@ -689,64 +650,77 @@
 						size: 'small',
 						hasLabel: false,
 						label: computed(() => this.Resources.BREAKS_DOWN15669),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
 							icon: computed(() => `${this.system.resourcesPath}ok.ico`),
 							type: 'img',
+							role: 'presentation',
 						},
 						// eslint-disable-next-line
 						action: (event) => {
 							let btnAction = () => {
 								if (!vm.isEditable)
-									return
+									return Promise.resolve(true)
 
 								const action = 'GetCarga_CONJUNTO'
 								const params = { idsrc: vm.model.ValCodtpequ.value, iddst: vm.primaryKeyValue }
-								return netAPI.postData(vm.formInfo.area, action, params, (data) => {
-									if (data.Success)
-									{
-										genericFunctions.displayMessage(data.data, 'success')
-										vm.fetchFormFields(true)
-									}
-									else
-										genericFunctions.displayMessage(data.data, 'error')
-								}, undefined, undefined, vm.navigationId)
+
+								return netAPI.postData(
+									vm.formInfo.area,
+									action,
+									params,
+									(data) => {
+										if (data.Success)
+										{
+											genericFunctions.displayMessage(data.data, 'success')
+											vm.fetchFormFields(true)
+										}
+										else
+											genericFunctions.displayMessage(data.data, 'error')
+									},
+									undefined,
+									undefined,
+									vm.navigationId)
 							}
 							btnAction()
 						},
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					LNHPD___LNHPDQUANTIDA: new fieldControlClass.NumberControl({
 						modelField: 'ValQuantida',
 						valueChangeEvent: 'fieldChange:lnhpd.quantida',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'LNHPD___LNHPDQUANTIDA',
 						name: 'QUANTIDA',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.QUANTITY06415),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
+						controlLimits: [
+						],
+					}, this),
+					LNHPD___LNHPDQUANTDEC: new fieldControlClass.NumberControl({
+						modelField: 'ValQuantdec',
+						valueChangeEvent: 'fieldChange:lnhpd.quantdec',
+						id: 'LNHPD___LNHPDQUANTDEC',
+						name: 'QUANTDEC',
+						size: 'small',
+						label: computed(() => this.Resources.AMOUNT46885),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
 					LNHPD___PSEUDDESAGREG: new fieldControlClass.TableListControl({
 						id: 'LNHPD___PSEUDDESAGREG',
 						name: 'DESAGREG',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.BREAKDOWN_60448),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'LNHPD',
@@ -823,7 +797,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -929,6 +903,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'LNHDE',
@@ -942,18 +917,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: LNHDE
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValOrdem',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-LNHDE', 'changed-TPEQ1', 'changed-LNHPD', 'changed-PEDID', 'changed-LNHAG'],
 						uuid: 'Lnhpd_ValDesagreg',
@@ -997,6 +966,8 @@
 						set ValCodtpequ(value) { vm.model.ValCodtpequ.updateValue(value) },
 						get ValLine() { return vm.model.ValLine.value },
 						set ValLine(value) { vm.model.ValLine.updateValue(value) },
+						get ValQuantdec() { return vm.model.ValQuantdec.value },
+						set ValQuantdec(value) { vm.model.ValQuantdec.updateValue(value) },
 						get ValQuantida() { return vm.model.ValQuantida.value },
 						set ValQuantida(value) { vm.model.ValQuantida.updateValue(value) },
 					},
@@ -1016,7 +987,7 @@
 						/** The foreign key to the TPEQU table */
 						get tpequ() { return vm.model.ValCodtpequ },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1112,6 +1083,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1151,6 +1130,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1277,6 +1264,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR LNHPD]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1292,21 +1295,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
-			// eslint-disable-next-line
-			Lnhpd_BC_CONJUNTO(id)
-			{
-				this.$eventTracker.addTrace({
-					origin: 'Routine CONJUNTO',
-					message: 'Start of execution of the manual routine'
-				})
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT VIEW_MANUAL_ROUTINE CONJUNTO]/
+// USE /[MANUAL GQT FUNCTIONS_JS LNHPD]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
-
-			},
 		},
 
 		watch: {

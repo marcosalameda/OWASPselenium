@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Recei;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_RECEI_CANCEL = new NavigationLocation("RECEIPT_OF_GOOD16561", "Recei_Cancel", "Recei") { vueRouteName = "form-RECEI", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_RECEI_SHOW = new NavigationLocation("RECEIPT_OF_GOOD16561", "Recei_Show", "Recei") { vueRouteName = "form-RECEI", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_RECEI_NEW = new NavigationLocation("RECEIPT_OF_GOOD16561", "Recei_New", "Recei") { vueRouteName = "form-RECEI", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_RECEI_EDIT = new NavigationLocation("RECEIPT_OF_GOOD16561", "Recei_Edit", "Recei") { vueRouteName = "form-RECEI", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_RECEI_DUPLICATE = new NavigationLocation("RECEIPT_OF_GOOD16561", "Recei_Duplicate", "Recei") { vueRouteName = "form-RECEI", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_RECEI_DELETE = new NavigationLocation("RECEIPT_OF_GOOD16561", "Recei_Delete", "Recei") { vueRouteName = "form-RECEI", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_RECEI_CANCEL = new("RECEIPT_OF_GOOD16561", "Recei_Cancel", "Recei") { vueRouteName = "form-RECEI", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_RECEI_SHOW = new("RECEIPT_OF_GOOD16561", "Recei_Show", "Recei") { vueRouteName = "form-RECEI", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_RECEI_NEW = new("RECEIPT_OF_GOOD16561", "Recei_New", "Recei") { vueRouteName = "form-RECEI", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_RECEI_EDIT = new("RECEIPT_OF_GOOD16561", "Recei_Edit", "Recei") { vueRouteName = "form-RECEI", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_RECEI_DUPLICATE = new("RECEIPT_OF_GOOD16561", "Recei_Duplicate", "Recei") { vueRouteName = "form-RECEI", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_RECEI_DELETE = new("RECEIPT_OF_GOOD16561", "Recei_Delete", "Recei") { vueRouteName = "form-RECEI", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Recei_ModalDBEdit()
-		{
-			Recei_ViewModel model = new Recei_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Recei_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Recei Multiform actions
-
-		//
-		// GET /Recei/MFRecei_New
-		[HttpGet]
-		[ActionName("MFRecei_New")]
-		public ActionResult MFRecei_New()
-		{
-			var model = new Recei_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_RECEI_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("recei", model.ValCodrecei);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFRecei_New_GET()
-		{
-			return MFRecei_New();
-		}
-
-		//
-		// GET /Recei/MFRecei_Edit
-		[HttpGet]
-		[ActionName("MFRecei_Edit")]
-		public ActionResult MFRecei_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("RECEI", "EDIT", new { id = id, partialView = "MFRecei", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFRecei_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFRecei_Edit(requestModel);
-		}
-
-		//
-		// GET /Recei/MFRecei_Cancel
-		[ActionName("MFRecei_Cancel")]
-		public ActionResult MFRecei_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Recei(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Recei/MFRecei_Save
-		[HttpPost]
-		[ActionName("MFRecei_Save")]
-		public JsonResult MFRecei_Save(Recei_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRecei_Save",
-				ViewName = "MFRecei",
-				AreaName = "recei"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Recei/MFRecei_Delete
-		[HttpPost]
-		[ActionName("MFRecei_Delete")]
-		public JsonResult MFRecei_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRecei_Delete",
-				ViewName = "MFRecei",
-				AreaName = "recei",
-				Location = ACTION_RECEI_EDIT
-			};
-
-			var model = new Recei_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Recei/Recei_EntitValName
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_entit")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,9 +422,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Recei_EntitValName_ViewModel model = new Recei_EntitValName_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodrecei = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -590,6 +464,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_relin")))
@@ -603,33 +478,45 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
 			Recei_ValReceiptl_ViewModel model = new Recei_ValReceiptl_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodrecei = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Recei/Recei_SaveEdit
 		[HttpPost]

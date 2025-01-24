@@ -50,7 +50,13 @@ namespace GenioMVC.ViewModels.Dashboard
             }
 
             foreach (var widget in IndependentWidgetInstances)
-                Widgets.Add(widget);
+            {
+                if (!widget.ShowWidget)
+                    continue;
+
+                if(widget.UserHasAccess(m_userContext))
+                    Widgets.Add(widget);
+            }
         }
 
         /// <summary>
@@ -67,9 +73,9 @@ namespace GenioMVC.ViewModels.Dashboard
             // Retrieve the user configuration of the dashboard
             // If there is a user configuration, the original definition is ignored
             // and the position and visibility information of the user configuration is used
-            List<CSGenioAusrwid> userWidgets = UserUiSettings
+            List<CSGenioAusrwid> userWidgets = DashboardUiSettingsDbRec
                 .Load(sp, uiConfig.ValDescric, user)
-                .userWidgets;
+                .UserWidgets;
 
             // Apply user config if it exists
             if (userWidgets != null && userWidgets.Count > 0)
@@ -108,7 +114,7 @@ namespace GenioMVC.ViewModels.Dashboard
                 }
 
                 if (changes)
-                    UserUiSettings.Invalidate(uiConfig.ValDescric, user);
+                    DashboardUiSettingsDbRec.Invalidate(uiConfig.ValDescric, user);
             }
         }
 
@@ -122,9 +128,9 @@ namespace GenioMVC.ViewModels.Dashboard
             CSGenioAlstusr lstusr = GetConfig();
 
             // Gets the current list of user widgets for this viewmodel
-            List<CSGenioAusrwid> userWidgets = UserUiSettings
+            List<CSGenioAusrwid> userWidgets = DashboardUiSettingsDbRec
                 .Load(sp, lstusr.ValDescric, user)
-                .userWidgets;
+                .UserWidgets;
 
             foreach (CSGenioAusrwid userWidget in userWidgets)
             {
@@ -175,7 +181,7 @@ namespace GenioMVC.ViewModels.Dashboard
                 sp.closeConnection();
             }
 
-            UserUiSettings.Invalidate(lstusr.ValDescric, user);
+            DashboardUiSettingsDbRec.Invalidate(lstusr.ValDescric, user);
         }
 
         /// <summary>

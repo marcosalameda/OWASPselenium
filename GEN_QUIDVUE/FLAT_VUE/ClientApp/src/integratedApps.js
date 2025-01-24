@@ -1,22 +1,22 @@
 ﻿
 /**
- * All External apps
+ * All external apps.
  */
-const allExternalApp = [
+const allExternalApps = [
 ]
 
-const allParentRoute = [
+const allParentRoutes = [
 ]
 
 export function setExternalAppsPlugin(appContext, router)
 {
-	for (const app of allExternalApp)
+	for (const app of allExternalApps)
 	{
 		if (app.hasInternalRouter)
 		{
 			let params = app.parameters
 			params['router'] = router
-			params['parent'] = allParentRoute
+			params['parent'] = allParentRoutes
 			appContext.use(app.appPackage, params)
 		}
 		else

@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuWMS_611ViewModel.js'
+
 	const requiredTextResources = ['QMenuWMS_611', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '611',
 					isMenuList: true,
+					designation: computed(() => this.Resources.MESSAGES59316),
 					acronym: 'WMS_611',
 					name: 'MESSA',
 					route: 'menu-WMS_611',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'WMS_Menu_611',
 						controller: 'MESSA',
 						action: 'WMS_Menu_611',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -209,7 +219,7 @@
 								field: 'CREATDAT',
 								label: computed(() => this.Resources.CREATED_ON00051),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 10,
@@ -254,7 +264,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -358,6 +368,7 @@
 								id: 'RCA_WMS_6111',
 								name: 'form-MESSA',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -374,23 +385,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: MESSA
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValIdnotif',
 							defaultSearchColumnNameOriginal: 'ValIdnotif',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValIdnotif',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-ENTIT', 'changed-MESSA', 'changed-PERSO'],
 						uuid: 'c907abb5-c7f3-4623-8cf5-4701f233e6cb',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -419,6 +424,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS WMS_611]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_611]/
 // eslint-disable-next-line

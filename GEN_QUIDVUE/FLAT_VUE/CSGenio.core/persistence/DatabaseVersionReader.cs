@@ -42,10 +42,10 @@ namespace CSGenio.core.persistence
         /// <summary>
         /// Returns the current database version for this database
         /// </summary>
-        public double GetDbVersion()
+        public int GetDbVersion()
         {
             var value = GetValueFromCfg("versao");
-            double versionDb = DBConversion.ToNumeric(value);
+            var versionDb = DBConversion.ToInteger(value);
             return versionDb;
         }
 
@@ -62,10 +62,10 @@ namespace CSGenio.core.persistence
         /// <summary>
         /// Returns the current version of the indexes in this database
         /// </summary>
-        public double GetDbIndexVersion()
+        public int GetDbIndexVersion()
         {
             var value = GetValueFromCfg("versindx");
-            double versionDb = DBConversion.ToNumeric(value);
+            var versionDb = DBConversion.ToInteger(value);
             return versionDb;
         }
 
@@ -73,7 +73,7 @@ namespace CSGenio.core.persistence
         /// Returns the current version of the indexes in this database or 0 if there is an error.
         /// This method never throws an exception.
         /// </summary>
-        public double GetDbVersionOrZero()
+        public int GetDbVersionOrZero()
         {
             try
             {
@@ -84,6 +84,46 @@ namespace CSGenio.core.persistence
                 return 0;
             }
 
+        }
+		
+		/// <summary>
+		/// Returns the current version of the user settings in this database
+		/// </summary>
+		public int GetDbUserSettingsVersion()
+		{
+			try
+			{
+				var value = GetValueFromCfg("usrsetv");
+				return DBConversion.ToInteger(value);
+			}
+			catch
+			{
+				return 0;
+			}
+		}
+
+        /// <summary>
+        /// Checks if the database is up to date
+        /// </summary>
+        /// <param name="user">The current user</param>
+        /// <returns>true or false</returns>
+        public static bool IsDatabaseUpToDate(User user)
+        {
+            if (user == null) return false;
+
+            bool isValidVersion = Configuration.GetDbVersion(user.Year) == Configuration.VersionDbGen;
+            bool isValidIndex = Configuration.GetDbUpgrIndx(user.Year) >= Configuration.VersionUpgrIndxGen;
+
+            return isValidVersion && isValidIndex;
+        }
+
+        /// <summary>
+        /// Checks if the configuration is up to date
+        /// </summary>
+        /// <returns>true or false</returns>
+        public static bool IsConfigurationUpToDate()
+        {
+            return Configuration.ConfigVersion == GenioServer.framework.ConfigXMLMigration.CurConfigurationVerion.ToString();
         }
 
     }

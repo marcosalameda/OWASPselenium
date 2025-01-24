@@ -123,6 +123,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
+			isFixed: true,
 		}).cloneFrom(values?.EquipValDesignat))
 		watch(() => this.EquipValDesignat.value, (newValue, oldValue) => this.onUpdate('equip.designat', this.EquipValDesignat, newValue, oldValue))
 
@@ -132,9 +133,10 @@ export default class ViewModel extends ViewModelBase
 			area: 'EQUIP',
 			field: 'FREQUENC',
 			arrayOptions: qProjArrays.QArrayFreqempr.setResources(vm.$getResource).elements,
-			maxDigits: 1,
+			maxDigits: 2,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.LOAN_FREQUENCY00701),
+			isFixed: true,
 		}).cloneFrom(values?.EquipValFrequenc))
 		watch(() => this.EquipValFrequenc.value, (newValue, oldValue) => this.onUpdate('equip.frequenc', this.EquipValFrequenc, newValue, oldValue))
 
@@ -164,18 +166,17 @@ export default class ViewModel extends ViewModelBase
 			area: 'LENDI',
 			field: 'WARNDT',
 			description: computed(() => this.Resources.WARNING52043),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: SomaDias([LENDI->START],[EQUIP->FREQUENC])
-					// eslint-disable-next-line eqeqeq
 					return qApi.SomaDias(this.ValStart.value,this.EquipValFrequenc.value)
 				},
 				dependencyEvents: ['fieldChange:lendi.start', 'fieldChange:equip.frequenc'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyD,
 			},
 		}).cloneFrom(values?.ValWarndt))
@@ -187,24 +188,23 @@ export default class ViewModel extends ViewModelBase
 			area: 'LENDI',
 			field: 'END',
 			description: computed(() => this.Resources.END47577),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: SomaDias([LENDI->WARNDT],1)
-					// eslint-disable-next-line eqeqeq
 					return qApi.SomaDias(this.ValWarndt.value,1)
 				},
 				dependencyEvents: ['fieldChange:lendi.warndt'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyD,
 			},
 		}).cloneFrom(values?.ValEnd))
 		watch(() => this.ValEnd.value, (newValue, oldValue) => this.onUpdate('lendi.end', this.ValEnd, newValue, oldValue))
 
-		this.ValObservat = reactive(new modelFieldType.String({
+		this.ValObservat = reactive(new modelFieldType.MultiLineString({
 			id: 'ValObservat',
 			originId: 'ValObservat',
 			area: 'LENDI',
@@ -228,18 +228,17 @@ export default class ViewModel extends ViewModelBase
 			area: 'LENDI',
 			field: 'RETURNED',
 			description: computed(() => this.Resources.RETURNED01606),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(emptyD([LENDI->RETURNDT])==1,0,1)
-					// eslint-disable-next-line eqeqeq
-					return qApi.iif(qApi.emptyD(this.ValReturndt.value)==1,0,1)
+					return qApi.iif(qApi.emptyD(this.ValReturndt.value)===1,0,1)
 				},
 				dependencyEvents: ['fieldChange:lendi.returndt'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyL,
 			},
 		}).cloneFrom(values?.ValReturned))
@@ -258,5 +257,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodlendi'
 
 	get QPrimaryKey() { return this.ValCodlendi.value }
-	set QPrimaryKey(value) { this.ValCodlendi.value = value }
+	set QPrimaryKey(value) { this.ValCodlendi.updateValue(value) }
 }

@@ -59,6 +59,8 @@
 	import QPasswordInput from '@/components/inputs/PasswordInput.vue'
 
 	export default {
+		name: 'QPasswordContainer',
+
 		docsfile: './docs/inputs/PasswordInput.md',
 
 		components: {
@@ -67,6 +69,8 @@
 		},
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		methods: {
 			handleChange(value)

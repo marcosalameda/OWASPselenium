@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuSTY_HWIZARDViewModel.js'
+
 	const requiredTextResources = ['QMenuSTY_HWIZARD', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: 'HWIZARD',
 					isMenuList: true,
+					designation: computed(() => this.Resources.VENDAS00012),
 					acronym: 'STY_HWIZARD',
 					name: 'VENDA',
 					route: 'menu-STY_HWIZARD',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'STY_Menu_HWIZARD',
 						controller: 'SALE',
 						action: 'STY_Menu_HWIZARD',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.NumericColumn({
 								order: 1,
@@ -149,7 +159,7 @@
 								field: 'STARTDT',
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -208,7 +218,7 @@
 								field: 'DTQUALIF',
 								label: computed(() => this.Resources.QUALIFICACAO07026),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.BooleanColumn({
 								order: 10,
@@ -225,7 +235,7 @@
 								field: 'PREABORD',
 								label: computed(() => this.Resources.PRE_ABORDAGEM30870),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.BooleanColumn({
 								order: 12,
@@ -242,7 +252,7 @@
 								field: 'DTABORDA',
 								label: computed(() => this.Resources.ABORDAGEM05839),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.BooleanColumn({
 								order: 14,
@@ -267,7 +277,7 @@
 								field: 'DTAPRESE',
 								label: computed(() => this.Resources.APRESENTACAO_EFECTUA37455),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 17,
@@ -276,7 +286,7 @@
 								field: 'DTSUPERA',
 								label: computed(() => this.Resources.SUPERAR_OBJECOES02243),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 18,
@@ -285,7 +295,7 @@
 								field: 'TENTFECH',
 								label: computed(() => this.Resources.TENTATIVAS_DE_FECHO20342),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 19,
@@ -294,7 +304,7 @@
 								field: 'DTVENDA',
 								label: computed(() => this.Resources.FECHO_DA_VENDA48081),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 20,
@@ -303,7 +313,7 @@
 								field: 'DTACOMPA',
 								label: computed(() => this.Resources.ACOMPANHAMENTO53507),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 						],
 						config: {
@@ -318,7 +328,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -422,6 +432,7 @@
 								id: 'RCA_STY_421111',
 								name: 'form-VENDAW',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -438,23 +449,21 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: VENDAW
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValIdentifi',
 							defaultSearchColumnNameOriginal: 'ValIdentifi',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValStartdt',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-ORGAN', 'changed-SALE'],
 						uuid: 'a370304d-2d03-4a9e-8e32-41d68cf57714',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
+						/** Menu limits */
+						controlLimits: [
+							/** SC */
+						]
 					}, this)
 				}
 			}
@@ -483,6 +492,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS STY_HWIZARD]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS STY_MENU_HWIZARD]/
 // eslint-disable-next-line

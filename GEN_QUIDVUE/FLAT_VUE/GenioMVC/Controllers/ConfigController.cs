@@ -48,6 +48,13 @@ namespace GenioMVC.Controllers
 			if (currentModule == null || !availableModules.ContainsKey(currentModule))
 				currentModule = defaultModule;
 
+			// Number format
+			var numberFormat = new
+			{
+				DecimalSeparator = Configuration.NumberFormat.DecimalSeparator,
+				GroupSeparator = Configuration.NumberFormat.GroupSeparator
+			};
+
 			// DateTime format's
 			var dateFormat = new
 			{
@@ -80,6 +87,7 @@ namespace GenioMVC.Controllers
 				currentSystem = user.Year,
 				defaultListRows = Configuration.NrRegDBedit,
 				userName = user.Name ?? "guest",
+				numberFormat,
 				dateFormat,
 				schedulerLicense,
 				homePages = homePages.GetAvaibleHomePages(availableModules.Keys.ToList()),

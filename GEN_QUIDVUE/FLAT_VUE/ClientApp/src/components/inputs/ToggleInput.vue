@@ -7,7 +7,8 @@
 				type="checkbox"
 				v-model="curValue"
 				:name="controlId"
-				:disabled="disabled || readonly" />
+				:disabled="disabled || readonly"
+				v-bind="$attrs" />
 
 			<span
 				data-testid="switch"

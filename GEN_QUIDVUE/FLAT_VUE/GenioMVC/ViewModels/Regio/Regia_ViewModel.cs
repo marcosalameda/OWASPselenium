@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Regio
 {
-	public class Regia_ViewModel : FormViewModel<Models.Regio>
+	public class Regia_ViewModel : FormViewModel<Models.Regio>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,11 +29,23 @@ namespace GenioMVC.ViewModels.Regio
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Country" | Type: "CE"
+		/// </summary>
+		public string ValCodcntry { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodpais1 { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Country" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Cntry> TableCntryCountry { get; set; }
-
 		/// <summary>
 		/// Title: "Region" | Type: "C"
 		/// </summary>
@@ -46,20 +58,6 @@ namespace GenioMVC.ViewModels.Regio
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Country" | Type: "CE"
-		/// </summary>
-		public string ValCodcntry { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodpais1 { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -75,9 +73,10 @@ namespace GenioMVC.ViewModels.Regio
 
 		public string ValCodregia { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Regia_ViewModel() : base(null!) { }
@@ -113,6 +112,15 @@ namespace GenioMVC.ViewModels.Regio
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Regio model = new Models.Regio(userContext) { Identifier = "FREGIA" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FREGIA");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -173,9 +181,9 @@ namespace GenioMVC.ViewModels.Regio
 
 			try
 			{
-				ValRegiao = ViewModelConversion.ToString(m.ValRegiao);
 				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
 				ValCodpais1 = ViewModelConversion.ToString(m.ValCodpais1);
+				ValRegiao = ViewModelConversion.ToString(m.ValRegiao);
 				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
 			}
 			catch (Exception)
@@ -185,6 +193,20 @@ namespace GenioMVC.ViewModels.Regio
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Regio m)
 		{
 			if (m == null)
@@ -195,20 +217,75 @@ namespace GenioMVC.ViewModels.Regio
 
 			try
 			{
-				m.ValRegiao = ViewModelConversion.ToString(ValRegiao);
 				m.ValCodcntry = ViewModelConversion.ToString(ValCodcntry);
-				m.ValCodpais1 = ViewModelConversion.ToString(ValCodpais1);
+				m.ValRegiao = ViewModelConversion.ToString(ValRegiao);
 				m.ValCodregia = ViewModelConversion.ToString(ValCodregia);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValCodpais1 = ViewModelConversion.ToString(ValCodpais1);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Regia) to Model (Regio) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Regia) to Model (Regio) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "regio.codcntry":
+						this.ValCodcntry = ViewModelConversion.ToString(_value);
+						break;
+					case "regio.regiao":
+						this.ValRegiao = ViewModelConversion.ToString(_value);
+						break;
+					case "regio.codregia":
+						this.ValCodregia = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Regia) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Regia)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Regio.Find(id ?? Navigation.GetStrValue("regio"), m_userContext, "FREGIA"); }
+			finally { Model ??= new Models.Regio(m_userContext) { Identifier = "FREGIA" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -222,20 +299,13 @@ namespace GenioMVC.ViewModels.Regio
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FREGIA";
@@ -245,6 +315,7 @@ namespace GenioMVC.ViewModels.Regio
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -302,31 +373,25 @@ namespace GenioMVC.ViewModels.Regio
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValRegiao", Resources.Resources.REGION12723, ValRegiao, 50);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE REGIA]/
 		public override void Save()
 		{
 
-			try { Model = Models.Regio.Find(Navigation.GetStrValue("regio"), m_userContext, "FREGIA"); }
-			finally { if (Model == null) Model = new Models.Regio(m_userContext) { Identifier = "FREGIA" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY REGIA]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Regio.Find(Navigation.GetStrValue("regio"), m_userContext, "FREGIA"); }
-			finally { if (Model == null) Model = new Models.Regio(m_userContext) { Identifier = "FREGIA" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE REGIA]/
 
@@ -359,8 +424,8 @@ namespace GenioMVC.ViewModels.Regio
 				object hValue = Navigation.GetValue("cntry", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					regia___cntrycountry_Conds.Equal(CSGenioAcntry.FldCodcntry, Navigation.GetValue("cntry"));
-					this.ValCodcntry = Navigation.GetStrValue("cntry");
+					regia___cntrycountry_Conds.Equal(CSGenioAcntry.FldCodcntry, hValue);
+					this.ValCodcntry = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -377,8 +442,6 @@ namespace GenioMVC.ViewModels.Regio
 					Navigation.CurrentLevel.SetEntry("RETURN_cntry", null);
 				}
 				FillDependant_RegiaTableCntryCountry(lazyLoad);
-				//Check if foreignkey comes from history
-				TableCntryCountry.FilledByHistory = Navigation.CheckFilledByHistory("cntry");
 				return;
 			}
 
@@ -446,9 +509,6 @@ namespace GenioMVC.ViewModels.Regio
 
 				TableCntryCountry.List = new SelectList(TableCntryCountry.Elements.ToSelectList(x => x.ValCountry, x => x.ValCodcntry,  x => x.ValCodcntry == this.ValCodcntry), "Value", "Text", this.ValCodcntry);
 				FillDependant_RegiaTableCntryCountry();
-
-				//Check if foreignkey comes from history
-				TableCntryCountry.FilledByHistory = Navigation.CheckFilledByHistory("cntry");
 			}
 		}
 
@@ -545,15 +605,17 @@ namespace GenioMVC.ViewModels.Regio
 		{
 			return identifier switch
 			{
-				"regio.regiao" => ViewModelConversion.ToString(modelValue),
 				"regio.codcntry" => ViewModelConversion.ToString(modelValue),
 				"regio.codpais1" => ViewModelConversion.ToString(modelValue),
+				"regio.regiao" => ViewModelConversion.ToString(modelValue),
 				"regio.codregia" => ViewModelConversion.ToString(modelValue),
 				"cntry.codcntry" => ViewModelConversion.ToString(modelValue),
 				"cntry.country" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

@@ -14,23 +14,25 @@ export function getAppAlert(id)
 
 	const appAlert = systemDataStore.appAlerts.find((alert) => alert.id === id)
 
-	if (isEmpty(appAlert.module) || appAlert.module === systemDataStore.system.currentModule)
-		return appAlert
+	if (isEmpty(appAlert.module))
+		return undefined
 
-	return undefined
+	return appAlert
 }
 
 /**
  * Hydrates alert data based on provided information.
  *
  * @param {Object} data - The data object containing information about the alert.
+ * @param {Boolean} useThreshold - Set to true if the alert should not be displayed if it doesn't hit the threshold
  * @returns {Object|undefined} - The hydrated alert object or undefined if the alert is not valid.
  */
-export function hydrateAlert(data)
+export function hydrateAlert(data, useThreshold)
 {
 	const appAlert = getAppAlert(data.Idalert)
 
-	if (appAlert && data.Count > appAlert.disableIfLowerThan)
+	//This ensures the alert still shows properly in the dashboard when configured to not show in the alerts.
+	if (appAlert && (!useThreshold || data.Count > appAlert.disableIfLowerThan))
 	{
 		const alert = { ...appAlert }
 

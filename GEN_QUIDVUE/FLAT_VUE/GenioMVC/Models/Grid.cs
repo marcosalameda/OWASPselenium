@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Ftgri _ftgri;
 		[DisplayName("Ftgri")]
 		[ShouldSerialize("Ftgri")]
-		public virtual Ftgri Ftgri { 
-			get { 
+		public virtual Ftgri Ftgri {
+			get {
 				if (!this.isEmptyModel && (_ftgri == null || (!string.IsNullOrEmpty(ValCodftgri) && (_ftgri.isEmptyModel || _ftgri.klass.QPrimaryKey != ValCodftgri))))
 					_ftgri = Models.Ftgri.Find(ValCodftgri, m_userContext, Identifier, _fieldsToSerialize);
 				if (_ftgri == null)
 					_ftgri = new Models.Ftgri(m_userContext, true, _fieldsToSerialize);
 				return _ftgri;
 			}
-			set { _ftgri = value; } 
+			set { _ftgri = value; }
 		}
-		
+
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Pesso _pesso;
 		[DisplayName("Pesso")]
 		[ShouldSerialize("Pesso")]
-		public virtual Pesso Pesso { 
-			get { 
+		public virtual Pesso Pesso {
+			get {
 				if (!this.isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
 					_pesso = Models.Pesso.Find(ValCodpesso, m_userContext, Identifier, _fieldsToSerialize);
 				if (_pesso == null)
 					_pesso = new Models.Pesso(m_userContext, true, _fieldsToSerialize);
 				return _pesso;
 			}
-			set { _pesso = value; } 
+			set { _pesso = value; }
 		}
-		
+
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Grid.ValZzstate")]
@@ -80,19 +80,19 @@ namespace GenioMVC.Models
 		public Grid(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAgrid(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Grid(UserContext userContext, CSGenioAgrid val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAgrid csgenioa)
@@ -119,7 +119,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

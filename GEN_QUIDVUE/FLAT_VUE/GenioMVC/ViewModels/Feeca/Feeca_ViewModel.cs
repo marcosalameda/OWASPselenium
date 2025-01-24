@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Feeca
 {
-	public class Feeca_ViewModel : FormViewModel<Models.Feeca>
+	public class Feeca_ViewModel : FormViewModel<Models.Feeca>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,20 +29,27 @@ namespace GenioMVC.ViewModels.Feeca
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Description" | Type: "CE"
+		/// </summary>
+		public string ValCodflds { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Description" | Type: "MO"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Flds> TableFldsDescrip { get; set; }
-
 		/// <summary>
 		/// Title: "Feedback" | Type: "C"
 		/// </summary>
 		public string ValFeedback { get; set; }
-
 		/// <summary>
 		/// Title: "Attachments" | Type: "IB"
 		/// </summary>
-		[Document("FldsValAttach", false, true, false, false, DocumentViewTypeMode.Preview)]
+		[Document("FldsValAttach", true, false, false, DocumentViewTypeMode.Preview)]
+		[ValidateSetAccess]
 		public string FldsValAttach 
 		{
 			get
@@ -56,20 +63,18 @@ namespace GenioMVC.ViewModels.Feeca
 		public Func<string> funcFldsValAttach { get; set; }
 
 		private string _auxFldsValAttach { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public string FldsValAttachfk { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public DocumsProperties_ViewModel FldsValAttachPropertiesVM { get; set; }
-
 		/// <summary>
 		/// Title: "Passenger capacity on the plane" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? FldsValNpassage 
 		{
 			get
@@ -93,15 +98,6 @@ namespace GenioMVC.ViewModels.Feeca
 
 		#endregion
 
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Description" | Type: "CE"
-		/// </summary>
-		public string ValCodflds { get; set; }
-		#endregion
-
 		#region Extra database fields
 
 
@@ -115,9 +111,10 @@ namespace GenioMVC.ViewModels.Feeca
 
 		public string ValCodfeeca { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Feeca_ViewModel() : base(null!) { }
@@ -153,6 +150,15 @@ namespace GenioMVC.ViewModels.Feeca
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Feeca model = new Models.Feeca(userContext) { Identifier = "FFEECA" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FFEECA");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -213,11 +219,11 @@ namespace GenioMVC.ViewModels.Feeca
 
 			try
 			{
+				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
 				ValFeedback = ViewModelConversion.ToString(m.ValFeedback);
 				funcFldsValAttach = () => ViewModelConversion.ToString(m.Flds.ValAttach);
 				FldsValAttachfk = ViewModelConversion.ToString(m.Flds.ValAttachfk);
 				funcFldsValNpassage = () => ViewModelConversion.ToNumeric(m.Flds.ValNpassage);
-				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
 				ValCodfeeca = ViewModelConversion.ToString(m.ValCodfeeca);
 			}
 			catch (Exception)
@@ -227,6 +233,20 @@ namespace GenioMVC.ViewModels.Feeca
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Feeca m)
 		{
 			if (m == null)
@@ -237,19 +257,74 @@ namespace GenioMVC.ViewModels.Feeca
 
 			try
 			{
-				m.ValFeedback = ViewModelConversion.ToString(ValFeedback);
 				m.ValCodflds = ViewModelConversion.ToString(ValCodflds);
+				m.ValFeedback = ViewModelConversion.ToString(ValFeedback);
 				m.ValCodfeeca = ViewModelConversion.ToString(ValCodfeeca);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Feeca) to Model (Feeca) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Feeca) to Model (Feeca) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "feeca.codflds":
+						this.ValCodflds = ViewModelConversion.ToString(_value);
+						break;
+					case "feeca.feedback":
+						this.ValFeedback = ViewModelConversion.ToString(_value);
+						break;
+					case "feeca.codfeeca":
+						this.ValCodfeeca = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Feeca) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Feeca)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Feeca.Find(id ?? Navigation.GetStrValue("feeca"), m_userContext, "FFEECA"); }
+			finally { Model ??= new Models.Feeca(m_userContext) { Identifier = "FFEECA" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -263,20 +338,13 @@ namespace GenioMVC.ViewModels.Feeca
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FFEECA";
@@ -286,6 +354,7 @@ namespace GenioMVC.ViewModels.Feeca
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -351,31 +420,25 @@ namespace GenioMVC.ViewModels.Feeca
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValFeedback", Resources.Resources.FEEDBACK52855, ValFeedback, 50);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE FEECA]/
 		public override void Save()
 		{
 
-			try { Model = Models.Feeca.Find(Navigation.GetStrValue("feeca"), m_userContext, "FFEECA"); }
-			finally { if (Model == null) Model = new Models.Feeca(m_userContext) { Identifier = "FFEECA" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY FEECA]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Feeca.Find(Navigation.GetStrValue("feeca"), m_userContext, "FFEECA"); }
-			finally { if (Model == null) Model = new Models.Feeca(m_userContext) { Identifier = "FFEECA" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE FEECA]/
 
@@ -408,8 +471,8 @@ namespace GenioMVC.ViewModels.Feeca
 				object hValue = Navigation.GetValue("flds", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					feeca___flds_descrip_Conds.Equal(CSGenioAflds.FldCodflds, Navigation.GetValue("flds"));
-					this.ValCodflds = Navigation.GetStrValue("flds");
+					feeca___flds_descrip_Conds.Equal(CSGenioAflds.FldCodflds, hValue);
+					this.ValCodflds = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -426,8 +489,6 @@ namespace GenioMVC.ViewModels.Feeca
 					Navigation.CurrentLevel.SetEntry("RETURN_flds", null);
 				}
 				FillDependant_FeecaTableFldsDescrip(lazyLoad);
-				//Check if foreignkey comes from history
-				TableFldsDescrip.FilledByHistory = Navigation.CheckFilledByHistory("flds");
 				return;
 			}
 
@@ -494,9 +555,6 @@ namespace GenioMVC.ViewModels.Feeca
 
 				TableFldsDescrip.List = new SelectList(TableFldsDescrip.Elements.ToSelectList(x => x.ValDescrip, x => x.ValCodflds,  x => x.ValCodflds == this.ValCodflds), "Value", "Text", this.ValCodflds);
 				FillDependant_FeecaTableFldsDescrip();
-
-				//Check if foreignkey comes from history
-				TableFldsDescrip.FilledByHistory = Navigation.CheckFilledByHistory("flds");
 			}
 		}
 
@@ -595,16 +653,18 @@ namespace GenioMVC.ViewModels.Feeca
 		{
 			return identifier switch
 			{
+				"feeca.codflds" => ViewModelConversion.ToString(modelValue),
 				"feeca.feedback" => ViewModelConversion.ToString(modelValue),
 				"flds.attach" => ViewModelConversion.ToString(modelValue),
 				"flds.npassage" => ViewModelConversion.ToNumeric(modelValue),
-				"feeca.codflds" => ViewModelConversion.ToString(modelValue),
 				"feeca.codfeeca" => ViewModelConversion.ToString(modelValue),
 				"flds.codflds" => ViewModelConversion.ToString(modelValue),
 				"flds.descrip" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

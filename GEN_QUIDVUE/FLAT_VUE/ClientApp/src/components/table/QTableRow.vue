@@ -1,187 +1,226 @@
 ﻿<template>
-	<transition name="c-table-transition">
-		<tr
-			ref="vbt_row"
-			:id="rowId"
-			:index="rowIndex"
-			:class="rowClasses"
-			:style="rowStyles"
-			:title="getRowTitle(row)"
-			data-testid="table-row"
-			@click="rowClickAction">
-			<!-- BEGIN: cell -->
-			<template v-for="(column, key, index) in columns">
-				<td
-					v-if="canShowColumn(column)"
-					:key="index"
-					:class="cellClasses(column)"
-					:style="getCellStyles(column)"
-					:title="getCellTitle(column)">
-					<slot :name="'vbt-' + getCellSlotName(column)"> </slot>
-					<!-- BEGIN: Row drag and drop column -->
-					<template v-if="isDragAndDropColumn(column)">
-						<slot
-							:name="getCellSlotName(column)"
-							:row-key="row.rowKey"
-							:column="column">
-							<div class="c-table__dnd">
-								<span
-									class="c-table__drag"
-									tabindex="0"
-									@keydown="allowRowOrderKeys = true"
-									@keyup="reorderRowUpDown">
-									<q-icon
-										icon="row-draggable"
-										:key="row.Rownum" />
-								</span>
-								<q-button-group>
-									<q-button
-										b-style="tertiary"
-										@click="reorderRow(-1)">
-										<q-icon
-											icon="circle-arrow-top"
-											:key="row.Rownum" />
-									</q-button>
-									<q-button
-										b-style="tertiary"
-										@click="reorderRow(1)">
-										<q-icon
-											icon="circle-arrow-down"
-											:key="row.Rownum" />
-									</q-button>
-									<q-button
-										v-if="addAction"
-										b-style="tertiary"
-										@click="addRowAfter">
-										<q-icon
-											icon="add"
-											:key="row.Rownum" />
-									</q-button>
-								</q-button-group>
-							</div>
-						</slot>
-					</template>
-					<!-- END: Row drag and drop column -->
-					<!-- BEGIN: Row action column -->
-					<template v-else-if="isActionsColumn(column)">
-						<slot
-							:name="getCellSlotName(column)"
-							:row-key="row.rowKey"
-							:column="column">
-							<q-table-record-actions-menu
-								:btn-permission="row.btnPermission"
-								:crud-actions="crudActions"
-								:custom-actions="customActions"
-								:general-actions="generalActionsPlacement === 'left' || generalActionsPlacement === 'right' ? generalActions : null"
-								:general-custom-actions="
-									generalActionsPlacement === 'left' || generalActionsPlacement === 'right' ? generalCustomActions : null
-								"
-								:actions-placement="actionsPlacement"
-								:readonly="readonly"
-								:display="rowActionDisplay"
-								:show-row-action-icon="showRowActionIcon"
-								:show-general-action-icon="showGeneralActionIcon"
-								:show-row-action-text="showRowActionText"
-								:show-general-action-text="showGeneralActionText"
-								:texts="texts"
-								@row-action="(emitAction) => emitRowAction(emitAction)" />
-						</slot>
-					</template>
-					<!-- END: Row action column -->
-					<!-- BEGIN: Row checklist column -->
-					<template v-else-if="isChecklistColumn(column)">
-						<slot
-							:name="getCellSlotName(column)"
-							:row-key="row.rowKey"
-							:column="column">
-							<q-table-checklist-checkbox
-								:value="isRowSelected(row)"
-								:table-name="tableName"
-								:readonly="readonly"
-								:row-key="row.rowKey"
-								:disabled="disableCheckbox"
-								@toggle-row-selected="$emit('toggle-row-selected', row.rowKey)" />
-						</slot>
-					</template>
-					<!-- END: Row checklist column -->
-					<!-- BEGIN: Extended row action column -->
-					<template v-else-if="isExtendedActionsColumn(column)">
-						<slot
-							:name="getCellSlotName(column)"
-							:row="row"
-							:column="column">
+	<tr
+		ref="rowElem"
+		v-bind="$attrs"
+		:id="rowId"
+		:index="rowIndex"
+		:class="rowClasses"
+		:style="rowStyles"
+		:title="getRowTitle(row)"
+		:aria-expanded="ariaExpandedValue"
+		data-testid="table-row"
+		data-table-action-selected="false"
+		tabindex="-1"
+		@click="rowClickAction"
+		@keydown="rowOnKeydown"
+		@keyup="rowOnKeyup">
+		<!-- BEGIN: cell -->
+		<template v-for="(column, key, index) in columns">
+			<td
+				v-if="canShowColumn(column)"
+				:key="index"
+				:class="cellClasses(column)"
+				:style="getCellStyles(column)"
+				:title="getCellTitle(column)">
+				<slot :name="'vbt-' + getCellSlotName(column)"> </slot>
+				<!-- BEGIN: Row drag and drop column -->
+				<template v-if="isDragAndDropColumn(column)">
+					<slot
+						:name="getCellSlotName(column)"
+						:row-key="row.rowKey"
+						:column="column">
+						<div class="c-table__dnd">
 							<span
-								v-if="hasExtendedAction('remove')"
-								:key="column.name">
-								<a
-									:title="texts.removeText"
-									@click.stop="$emit('remove-row')">
-									<q-icon icon="delete" />
-								</a>
-							</span>
-						</slot>
-					</template>
-					<!-- END: Extended row action column -->
-					<!-- BEGIN: Normal data columns -->
-					<template v-else>
-						<slot
-							:name="getCellSlotName(column)"
-							:row="row"
-							:column="column"
-							:cell-value="getValueFromRow(row, column)">
-							<!-- If column has tree expand / collapse action, add wrapper element, if not, use v-fragment which adds content but does not add wrapper element -->
-							<span
-								v-if="hasTreeAction(column)"
-								:style="{ 'margin-left': level * 24 + 'px' }">
-							</span>
-
-							<a
-								v-if="hasTreeAction(column)"
-								@click.stop="toggleShowChildRows"
-								data-testid="tree-action">
+								class="c-table__drag"
+								:title="texts.rowDragDropReorder"
+								@keydown="allowRowOrderKeys = true"
+								@keyup="reorderRowUpDown">
 								<q-icon
-									:icon="showChildren ? collapseIcon : expandIcon"
-									:class="['action-item', 'tree-action-item']" />
+									icon="row-draggable"
+									:key="row.Rownum" />
+							</span>
+							<q-button-group>
+								<q-button
+									:id="rowId + '-reorder-up'"
+									:aria-label="texts.MoveUp"
+									b-style="tertiary"
+									data-table-action-selected="false"
+									tabindex="-1"
+									@click="reorderRow(-1)">
+									<q-icon
+										icon="circle-arrow-top"
+										:key="row.Rownum" />
+								</q-button>
+								<q-button
+									:id="rowId + '-reorder-down'"
+									:aria-label="texts.MoveDown"
+									b-style="tertiary"
+									data-table-action-selected="false"
+									tabindex="-1"
+									@click="reorderRow(1)">
+									<q-icon
+										icon="circle-arrow-down"
+										:key="row.Rownum" />
+								</q-button>
+								<q-button
+									v-if="addAction"
+									:aria-label="texts.rowAddNewAfter"
+									b-style="tertiary"
+									data-table-action-selected="false"
+									tabindex="-1"
+									@click="addRowAfter">
+									<q-icon
+										icon="add"
+										:key="row.Rownum" />
+								</q-button>
+							</q-button-group>
+						</div>
+					</slot>
+				</template>
+				<!-- END: Row drag and drop column -->
+				<!-- BEGIN: Row action column -->
+				<template v-else-if="isActionsColumn(column)">
+					<slot
+						:name="getCellSlotName(column)"
+						:row-key="row.rowKey"
+						:column="column">
+						<q-table-record-actions-menu
+							:btn-permission="row.btnPermission"
+							:action-visibility="row.actionVisibility"
+							:crud-actions="crudActions"
+							:custom-actions="customActions"
+							:general-actions="generalActionsPlacement === 'left' || generalActionsPlacement === 'right' ? generalActions : null"
+							:general-custom-actions="
+								generalActionsPlacement === 'left' || generalActionsPlacement === 'right' ? generalCustomActions : null
+							"
+							:actions-placement="actionsPlacement"
+							:readonly="readonly"
+							:display="rowActionDisplay"
+							:show-row-action-icon="showRowActionIcon"
+							:show-general-action-icon="showGeneralActionIcon"
+							:show-row-action-text="showRowActionText"
+							:show-general-action-text="showGeneralActionText"
+							:texts="texts"
+							data-table-action-selected="false"
+							tabindex="-1"
+							@row-action="(emitAction) => emitRowAction(emitAction)" />
+					</slot>
+				</template>
+				<!-- END: Row action column -->
+				<!-- BEGIN: Row checklist column -->
+				<template v-else-if="isChecklistColumn(column)">
+					<slot
+						:name="getCellSlotName(column)"
+						:row-key="row.rowKey"
+						:column="column">
+						<q-table-checklist-checkbox
+							:value="isRowSelected(row)"
+							:table-name="tableName"
+							:readonly="readonly"
+							:row-key="row.rowKey"
+							:disabled="disableCheckbox"
+							:title="texts.select"
+							@click="onSelect"
+							@toggle-row-selected="$emit('toggle-row-selected', row.rowKey)" />
+					</slot>
+				</template>
+				<!-- END: Row checklist column -->
+				<!-- BEGIN: Extended row action column -->
+				<template v-else-if="isExtendedActionsColumn(column)">
+					<slot
+						:name="getCellSlotName(column)"
+						:row="row"
+						:column="column">
+						<span
+							v-if="hasExtendedAction('remove')"
+							:key="column.name">
+							<a
+								:title="texts.removeText"
+								data-table-action-selected="false"
+								tabindex="-1"
+								@click.stop="$emit('remove-row')">
+								<q-icon icon="delete" />
 							</a>
-							<span
-								v-if="hasTreeAction(column) && !hasDataAction(column)"
-								style="margin-left: 0.3rem" />
+						</span>
+					</slot>
+				</template>
+				<!-- END: Extended row action column -->
+				<!-- BEGIN: Totalizer title column -->
+				<template v-else-if="isTotalizerColumn(column)">
+					<slot
+						:name="getCellSlotName(column)"
+						:row="row"
+						:column="column">
+					</slot>
+				</template>
+				<!-- END: Totalizer title column -->
+				<!-- BEGIN: Normal data columns -->
+				<template v-else>
+					<slot
+						:name="getCellSlotName(column)"
+						:row="row"
+						:column="column"
+						:cell-value="getValueFromRow(row, column)">
+						<!-- If column has tree expand / collapse action, add wrapper element, if not, use v-fragment which adds content but does not add wrapper element -->
+						<span
+							v-if="hasTreeAction(column)"
+							:style="{ 'margin-left': level * 24 + 'px' }">
+						</span>
 
-							<!-- If column has action, add wrapper element for adding emit, if not, use v-fragment which adds content but does not add wrapper element -->
-							<component
-								:is="hasDataAction(column) && getCellDataDisplay(row, column) !== '' ? 'a' : 'v-fragment'"
-								href="javascript:void(0)"
-								class="column-data-link"
-								@click.stop.prevent="$emit('cell-action', row, column)">
-								<q-render-data
-									:component="column.component"
-									:value="
-										getCellDataDisplay(row, column, {
-											useScroll: true,
-											outputObject: true
-										})
-									"
-									:background-color="getBackgroundColor(row, column)"
-									:raw-value="getValueFromRow(row, column)"
-									:table-name="tableName"
-									:row-index="rowIndex"
-									:column-name="column.name"
-									:options="column.componentOptions || column"
-									:row="row"
-									:key="row.rowKey"
-									:resources-path="resourcesPath"
-									@update="$emit('update', row, column, $event)"
-									@update-external="$emit('update-external', row, column, $event)"
-									@execute-action="(...args) => $emit('execute-action', ...args)" />
-							</component>
-						</slot>
-					</template>
-					<!-- END: Normal data columns -->
-				</td>
-			</template>
-			<!-- END: cell -->
-		</tr>
-	</transition>
+						<q-button
+							v-if="hasTreeAction(column)"
+							class="tree-expand-btn"
+							:title="showChildren ? texts.rowCollapse : texts.rowExpand"
+							data-table-action-selected="false"
+							tabindex="-1"
+							@click="toggleShowSubRows"
+							data-testid="tree-action">
+							<q-icon
+								:icon="showChildren ? collapseIcon : expandIcon"
+								:class="['action-item', 'tree-action-item']" />
+						</q-button>
+						<span
+							v-if="hasTreeAction(column) && !hasDataAction(column)"
+							style="margin-left: 0.3rem" />
+
+						<!-- If column has action, add wrapper element for adding emit, if not, use v-fragment which adds content but does not add wrapper element -->
+						<component
+							:is="hasDataAction(column) && getCellDataDisplay(row, column) !== '' ? 'a' : 'v-fragment'"
+							class="column-data-link"
+							:title="column.dataTitle"
+							data-table-action-selected="false"
+							tabindex="-1"
+							@click.stop.prevent="$emit('cell-action', row, column)"
+							@keydown.enter="$emit('cell-action', row, column)">
+							<q-render-data
+								:component="column.component"
+								:value="
+									getCellDataDisplay(row, column, {
+										useScroll: true,
+										outputObject: true
+									})
+								"
+								:background-color="getBackgroundColor(row, column)"
+								:raw-value="getValueFromRow(row, column)"
+								:table-name="tableName"
+								:row-index="rowIndex"
+								:column-name="column.name"
+								:options="column.componentOptions || column"
+								:row="row"
+								:key="row.rowKey"
+								:resources-path="resourcesPath"
+								:texts="texts"
+								@update="$emit('update', row, column, $event)"
+								@update-external="$emit('update-external', row, column, $event)"
+								@execute-action="(...args) => $emit('execute-action', ...args)" />
+						</component>
+					</slot>
+				</template>
+				<!-- END: Normal data columns -->
+			</td>
+		</template>
+		<!-- END: cell -->
+	</tr>
 </template>
 
 <script>
@@ -196,9 +235,6 @@
 	import QRenderDocument from '@/components/rendering/QRenderDocument.vue'
 	import QRenderHyperlink from '@/components/rendering/QRenderHyperlink.vue'
 	import QRenderImage from '@/components/rendering/QRenderImage.vue'
-	import QEditText from '@/components/rendering/QEditText.vue'
-	import QEditNumeric from '@/components/rendering/QEditNumeric.vue'
-	import QEditBoolean from '@/components/rendering/QEditBoolean.vue'
 
 	import listFunctions from '@/mixins/listFunctions.js'
 
@@ -206,7 +242,9 @@
 		name: 'QTableRow',
 
 		emits: [
+			'loaded',
 			'go-to-row',
+			'navigate-row',
 			'remove-row',
 			'toggle-row-selected',
 			'execute-action',
@@ -221,17 +259,13 @@
 		],
 
 		components: {
-			VFragment: defineAsyncComponent(() => import('@/components/VFragment.vue')),
 			QTableRecordActionsMenu: defineAsyncComponent(() => import('@/components/table/QTableRecordActionsMenu.vue')),
 			QTableChecklistCheckbox: defineAsyncComponent(() => import('@/components/table/QTableChecklistCheckbox.vue')),
 			QRenderBoolean,
 			QRenderData,
 			QRenderDocument,
 			QRenderHyperlink,
-			QRenderImage,
-			QEditText,
-			QEditNumeric,
-			QEditBoolean
+			QRenderImage
 		},
 
 		inheritAttrs: false,
@@ -440,14 +474,6 @@
 			},
 
 			/**
-			 * Flag indicating if additional base classes should be applied to action buttons.
-			 */
-			enableActionButtonBaseClasses: {
-				type: Boolean,
-				default: true
-			},
-
-			/**
 			 * The name of the table; used in various operations like reactivity and slot naming.
 			 */
 			tableName: {
@@ -549,10 +575,19 @@
 			resourcesPath: {
 				type: String,
 				required: true
+			},
+
+			/**
+			 * Specifies the index of the row that is navigated to.
+			 * Can be a mulit-index which is the indexes for each level (in tree tables) separated by underscores.
+			 */
+			navigatedRowKeyPath: {
+				type: Array,
+				default: () => []
 			}
 		},
 
-		expose: [],
+		expose: ['setSubRowsVisibility', 'toggleShowSubRows'],
 
 		data() {
 			return {
@@ -571,6 +606,7 @@
 			'isExtendedActionsColumn',
 			'isChecklistColumn',
 			'isDragAndDropColumn',
+			'isTotalizerColumn',
 			'getRowClasses',
 			'getRowTitle',
 			'rowIsValid',
@@ -583,25 +619,20 @@
 		],
 
 		mounted() {
+			//Signal that the component is loaded
+			this.$emit('loaded')
+
 			this.showChildren = this.showChildRows
 
-			//FOR: tree table select row on return
-			//If this row is the last row in the row key path to select, select it
-			if (Array.isArray(this.rowKeyToScroll)) {
-				if (this.row.rowKey === this.rowKeyToScroll[this.level]) {
-					if (this.level === this.rowKeyToScroll.length - 1) this.$emit('go-to-row', this.rowKeyToScroll, this.rowId)
-					else this.showChildren = true
-				}
-			}
-			else if (this.row.rowKey === this.rowKeyToScroll) {
+			//FOR: select row on return
+			this.expandFromRowKeyPath(this.rowKeyToScroll)
+			if(this.isLastInRowKeyPath(this.rowKeyToScroll))
 				this.$emit('go-to-row', this.rowKeyToScroll, this.rowId)
-			}
 
-			if (this.showChildren) this.$emit('toggle-show-children', { row: this.row, show: this.showChildren })
-		},
-
-		beforeUnmount() {
-			this.$refs.vbt_row.remove()
+			//FOR: navigate to row on return
+			this.expandFromRowKeyPath(this.navigatedRowKeyPath)
+			if(this.isLastInRowKeyPath(this.navigatedRowKeyPath))
+				this.$emit('navigate-row', this.rowIndex)
 		},
 
 		computed: {
@@ -618,6 +649,8 @@
 				classes.push(this.userRowClasses)
 
 				if (this.row.isHighlighted) classes.push('c-table__row--highlight')
+
+				if (this.row.isNavigated === true) classes.push('c-table__row--navigated')
 
 				return classes
 			},
@@ -691,6 +724,21 @@
 				return this.row.hasChildren === true
 			},
 
+			/**
+			 * Determine the value, if any, for the aria-expanded attribute.
+			 * For rows without sub-rows (normal tables) it should be null so the property is not added.
+			 * For tree tables, it should be true or false depending on whether the sub rows are being shown.
+			 * @returns Boolean, null
+			 */
+			ariaExpandedValue() {
+				// For rows without sub rows (normal tables)
+				if (!this.isRowHasChild)
+					return null
+				
+				// For rows with sub rows
+				return this.showChildren
+			},
+
 			addAction() {
 				return _find(this.generalActions, (act) => act.id === 'insert')
 			}
@@ -748,7 +796,7 @@
 				const cellTitle = this.cellTitles[column.name]
 
 				if (!cellTitle) return null
-				else if (this.isDragAndDropColumn(column) || (column.scrollData !== undefined && cellTitle.length > column.scrollData))
+				else if (column.scrollData !== undefined && cellTitle.length > column.scrollData)
 					return cellTitle
 				return null
 			},
@@ -783,9 +831,49 @@
 			 * @returns
 			 */
 			rowClickAction() {
-				// Prevent rowClickAction when clicking on other elements
-				// within the row and it's cells.
 				this.$emit('row-click', this.row)
+			},
+
+			/**
+			 * Row keydown handler
+			 * @param event {object} Event object
+			 */
+			rowOnKeydown(event) {
+				const key = event?.key
+
+				switch(key)
+				{
+					case "Insert":
+						// Insert new record
+						this.$emit('row-action', { id: 'insert', rowKeyPath: this.rowKeyPath ?? [this.rowKey] })
+						event.preventDefault()
+						break
+					case "Delete":
+						// Prevent if not focused on the row element
+						if(event.target.tagName !== 'TR')
+							break
+						// Delete record
+						this.$emit('row-action', { id: 'delete', rowKeyPath: this.rowKeyPath ?? [this.rowKey] })
+						event.preventDefault()
+						break
+				}
+			},
+
+			/**
+			 * Row keyup handler
+			 * @param event {object} Event object
+			 */
+			rowOnKeyup(event) {
+				const key = event?.key
+
+				switch(key)
+				{
+					case 'Enter':
+						// Trigger only from the row and cell elements.
+						if(event?.target.tagName === 'TR' || event?.target.tagName === 'TD')
+							this.$emit('row-click', this.row)
+						break
+				}
 			},
 
 			/**
@@ -801,12 +889,57 @@
 			},
 
 			/**
+			 * Set sub rows' visibility
+			 * @param visibility {Boolean}
+			 * @returns String
+			 */
+			setSubRowsVisibility(visibility) {
+				if(typeof visibility !== 'boolean')
+					return
+
+				this.showChildren = visibility
+				this.$emit('toggle-show-children', { show: this.showChildren, row: this.row })
+			},
+
+			/**
 			 * Toggle showing child rows
 			 * @returns String
 			 */
-			toggleShowChildRows() {
-				this.showChildren = !this.showChildren
-				this.$emit('toggle-show-children', { show: this.showChildren, row: this.row })
+			toggleShowSubRows() {
+				this.setSubRowsVisibility(!this.showChildren)
+			},
+
+			/**
+			 * FOR: select row on return
+			 * Show sub-rows if this row is in a row key path to expand
+			 * @param rowKeyPath {Array}
+			 * @returns
+			 */
+			isLastInRowKeyPath(rowKeyPath) {
+				// If this row is the last row in the row key path
+				if (Array.isArray(rowKeyPath)) {
+					if (this.row.rowKey === rowKeyPath[this.level] && this.level === rowKeyPath.length - 1)
+						return true
+				}
+				// If the row key path is one row key as a string
+				else if (this.row.rowKey === rowKeyPath)
+					return true
+			},
+
+			/**
+			 * FOR: navigate to row on return
+			 * Show sub-rows if this row is in a row key path to expand
+			 * @param rowKeyPath {Array}
+			 * @returns
+			 */
+			expandFromRowKeyPath(rowKeyPath) {
+				// If this row is not the last row in the row key path, expand it
+				if (Array.isArray(rowKeyPath)) {
+					if (this.row.rowKey === rowKeyPath[this.level] && this.level < rowKeyPath.length - 1) {
+						this.showChildren = true
+						this.$emit('toggle-show-children', { row: this.row, show: this.showChildren })
+					}
+				}
 			},
 
 			/**
@@ -888,10 +1021,17 @@
 			addRowAfter() {
 				var addNewAction = cloneDeep(this.addAction)
 				if (!addNewAction) return
+
+				const sortColumnName = `${this.sortOrderColumn.area.toLowerCase()}.${this.sortOrderColumn.field.toLowerCase()}`
 				addNewAction.params.prefillValues = {}
-				addNewAction.params.prefillValues[this.sortOrderColumn.name] =
+				addNewAction.params.prefillValues[sortColumnName] =
 					parseInt(listFunctions.getCellValue(this.row, this.sortOrderColumn)) + 1
 				this.emitRowAction({ action: addNewAction })
+			},
+
+			onSelect(event)
+			{
+				event.stopPropagation()
 			}
 		},
 

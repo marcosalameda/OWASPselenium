@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.ASSMA___ASSETNAME____.handlers"
 							:loading="controls.ASSMA___ASSETNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.ASSMA___ASSETNAME____.isVisible"
 								v-bind="controls.ASSMA___ASSETNAME____.props"
-								:model-value="model.ValCodasset.value"
-								v-on="controls.ASSMA___ASSETNAME____.handlers"
-								@update:model-value="model.ValCodasset.fnUpdateValue" />
+								v-on="controls.ASSMA___ASSETNAME____.handlers" />
 							<q-see-more-assma-assetname
 								v-if="controls.ASSMA___ASSETNAME____.seeMoreIsVisible"
 								v-bind="controls.ASSMA___ASSETNAME____.seeMoreParams"
@@ -131,12 +128,12 @@
 							v-on="controls.ASSMA___ASSMANAME____.handlers"
 							:loading="controls.ASSMA___ASSMANAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ASSMA___ASSMANAME____.props"
 								:model-value="model.ValName.value"
-								@update:model-value="model.ValName.fnUpdateValue" />
+								@blur="onBlur(controls.ASSMA___ASSMANAME____, model.ValName.value)"
+								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -150,41 +147,11 @@
 							v-on="controls.ASSMA___ASSMADIGDOCUM.handlers"
 							:loading="controls.ASSMA___ASSMADIGDOCUM.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-document
 								v-if="controls.ASSMA___ASSMADIGDOCUM.isVisible"
-								id="ASSMA___ASSMADIGDOCUM"
-								size="xxlarge"
-								:model-value="model.ValDigdocum.value"
-								versioning-is-on
-								:readonly="controls.ASSMA___ASSMADIGDOCUM.readonly"
-								:is-in-checkout="controls.ASSMA___ASSMADIGDOCUM.isInCheckout"
-								:current-version="controls.ASSMA___ASSMADIGDOCUM.currentVersion"
-								:extensions="controls.ASSMA___ASSMADIGDOCUM.extensions"
-								:max-file-size="controls.ASSMA___ASSMADIGDOCUM.maxFileSize"
-								:versions="controls.ASSMA___ASSMADIGDOCUM.documentVersions"
-								:versions-info="controls.ASSMA___ASSMADIGDOCUM.versionsInfo"
-								:file-properties="controls.ASSMA___ASSMADIGDOCUM.fileProperties"
-								:texts="controls.ASSMA___ASSMADIGDOCUM.texts"
-								:popup-is-visible="controls.ASSMA___ASSMADIGDOCUM.popupIsVisible"
-								:disallow-removal="controls.ASSMA___ASSMADIGDOCUM.isRequired"
-								:resources-path="controls.ASSMA___ASSMADIGDOCUM.resourcesPath"
-								:uses-templates="controls.ASSMA___ASSMADIGDOCUM.usesTemplates"
-								@file-error="controls.ASSMA___ASSMADIGDOCUM.HandleFileError($event)"
-								@submit-file="controls.ASSMA___ASSMADIGDOCUM.SetFile($event)"
-								@edit-file="controls.ASSMA___ASSMADIGDOCUM.SetCheckoutState()"
-								@get-properties="controls.ASSMA___ASSMADIGDOCUM.GetFileProperties()"
-								@get-version-history="controls.ASSMA___ASSMADIGDOCUM.GetVersionsInfo()"
-								@get-file="controls.ASSMA___ASSMADIGDOCUM.GetFile()"
-								@download-file="controls.ASSMA___ASSMADIGDOCUM.DownloadFile()"
-								@get-file-version="controls.ASSMA___ASSMADIGDOCUM.GetFileVersion($event)"
-								@delete-last="controls.ASSMA___ASSMADIGDOCUM.DeleteFile(0)"
-								@delete-history="controls.ASSMA___ASSMADIGDOCUM.DeleteFile(1)"
-								@delete-file="controls.ASSMA___ASSMADIGDOCUM.DeleteFile(2)"
-								@show-popup="controls.ASSMA___ASSMADIGDOCUM.SetModal($event)"
-								@hide-popup="controls.ASSMA___ASSMADIGDOCUM.RemoveModal($event)"
-								@show-templates-popup="controls.ASSMA___ASSMADIGDOCUM.handleDocumentTemplates($event)" />
+								v-bind="controls.ASSMA___ASSMADIGDOCUM.props"
+								v-on="controls.ASSMA___ASSMADIGDOCUM.handlers" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -198,18 +165,14 @@
 							v-on="controls.ASSMA___ASSMANOTES___.handlers"
 							:loading="controls.ASSMA___ASSMANOTES___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.ASSMA___ASSMANOTES___.isVisible"
+								v-bind="controls.ASSMA___ASSMANOTES___.props"
 								id="ASSMA___ASSMANOTES___"
-								size="xxlarge"
 								:model-value="model.ValNotes.value"
 								:rows="5"
 								:cols="65"
-								:is-required="controls.ASSMA___ASSMANOTES___.isRequired"
-								:readonly="controls.ASSMA___ASSMANOTES___.readonly"
-								:placeholder="controls.ASSMA___ASSMANOTES___.placeholder"
 								@update:model-value="model.ValNotes.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -296,15 +259,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'ASSMA',
-						location: 'form-ASSMA',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'ASSMA',
+					location: 'form-ASSMA',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -350,6 +311,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -422,8 +385,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -505,7 +469,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -559,21 +523,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -584,25 +533,9 @@
 						id: 'ASSMA___ASSETNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.IDENTIFICATION_NAME16317),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodasset',
-							dependencyEvent: 'fieldChange:assma.codasset'
-						},
-						dependentFields: () => {
-							return {
-								set 'asset.codasset'(value) { vm.model.ValCodasset.updateValue(value) },
-								set 'asset.name'(value) { vm.model.TableAssetName.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -611,6 +544,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodasset',
+							dependencyEvent: 'fieldChange:assma.codasset'
+						},
+						dependentFields: () => ({
+							set 'asset.codasset'(value) { vm.model.ValCodasset.updateValue(value) },
+							set 'asset.name'(value) { vm.model.TableAssetName.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					ASSMA___ASSMANAME____: new fieldControlClass.StringControl({
 						modelField: 'ValName',
@@ -618,15 +561,11 @@
 						id: 'ASSMA___ASSMANAME____',
 						name: 'NAME',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.MANUAL_NAME60077),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_ASSMA___ASSMANAME____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -636,21 +575,12 @@
 						id: 'ASSMA___ASSMADIGDOCUM',
 						name: 'DIGDOCUM',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DIGITAL_DOCUMENT59580),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						documentProperties: computed(() => vm.model.ValDigdocumPropertiesVM),
-						documentFK: computed(() => vm.model.ValDigdocumfk),
-						documentVersions: computed(() => vm.model.ValDigdocumPropertiesVM.value ? vm.model.ValDigdocumPropertiesVM.value.Versions : {}),
-						isInCheckout: computed(() => vm.model.ValDigdocumPropertiesVM.value ? vm.model.ValDigdocumPropertiesVM.value.IsCheckout : false),
-						currentVersion: computed(() => vm.model.ValDigdocumPropertiesVM.value ? vm.model.ValDigdocumPropertiesVM.value.Version : '1'),
-						usesTemplates: false,
+						versioningIsOn: true,
+						viewType: qEnums.documentViewTypeMode.print,
 						extensions: [],
-						viewType: qEnums.documentViewTypeMode.Print,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -660,15 +590,9 @@
 						id: 'ASSMA___ASSMANOTES___',
 						name: 'NOTES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.NOTES05274),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 65,
-						labelId: 'label_ASSMA___ASSMANOTES___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -714,7 +638,7 @@
 						/** The foreign key to the ASSET table */
 						get asset() { return vm.model.ValCodasset },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -810,6 +734,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -849,6 +781,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -975,6 +915,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR ASSMA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -990,6 +946,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS ASSMA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

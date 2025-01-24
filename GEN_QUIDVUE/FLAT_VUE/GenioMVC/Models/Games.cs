@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -48,17 +48,17 @@ namespace GenioMVC.Models
 		private Teamp _teamp;
 		[DisplayName("Teamp")]
 		[ShouldSerialize("Teamp")]
-		public virtual Teamp Teamp { 
-			get { 
+		public virtual Teamp Teamp {
+			get {
 				if (!this.isEmptyModel && (_teamp == null || (!string.IsNullOrEmpty(ValCodeqjgc) && (_teamp.isEmptyModel || _teamp.klass.QPrimaryKey != ValCodeqjgc))))
 					_teamp = Models.Teamp.Find(ValCodeqjgc, m_userContext, Identifier, _fieldsToSerialize);
 				if (_teamp == null)
 					_teamp = new Models.Teamp(m_userContext, true, _fieldsToSerialize);
 				return _teamp;
 			}
-			set { _teamp = value; } 
+			set { _teamp = value; }
 		}
-		
+
 
 		[DisplayName(">TEAM PLAYING AWAY")]
 		/// <summary>Field : ">TEAM PLAYING AWAY" Tipo: "CE" Formula:  ""</summary>
@@ -67,17 +67,17 @@ namespace GenioMVC.Models
 		private Team1 _team1;
 		[DisplayName("Team1")]
 		[ShouldSerialize("Team1")]
-		public virtual Team1 Team1 { 
-			get { 
+		public virtual Team1 Team1 {
+			get {
 				if (!this.isEmptyModel && (_team1 == null || (!string.IsNullOrEmpty(ValCodeqjgf) && (_team1.isEmptyModel || _team1.klass.QPrimaryKey != ValCodeqjgf))))
 					_team1 = Models.Team1.Find(ValCodeqjgf, m_userContext, Identifier, _fieldsToSerialize);
 				if (_team1 == null)
 					_team1 = new Models.Team1(m_userContext, true, _fieldsToSerialize);
 				return _team1;
 			}
-			set { _team1 = value; } 
+			set { _team1 = value; }
 		}
-		
+
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Games.ValZzstate")]
@@ -87,19 +87,19 @@ namespace GenioMVC.Models
 		public Games(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAgames(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Games(UserContext userContext, CSGenioAgames val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAgames csgenioa)
@@ -126,7 +126,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

@@ -5,7 +5,11 @@
 			:model-value="value"
 			:disabled="disabled"
 			:readonly="readonly"
-			@update:model-value="rowKey !== undefined ? $emit('toggle-row-selected') : $emit('toggle-all-rows-selected')" />
+			:title="title"
+			data-table-action-selected="false"
+			tabindex="-1"
+			@mousedown="onMousedown"
+			@click="onSelect" />
 	</div>
 </template>
 
@@ -52,9 +56,39 @@
 			disabled: {
 				type: Boolean,
 				default: false
-			}
+			},
+
+			/**
+			 * Text for the title attribute.
+			 */
+			title: {
+				type: String,
+				default: 'Select'
+			},
 		},
 
-		expose: []
+		expose: [],
+
+		methods: {
+			/**
+			 * Handler for selecting the checkbox
+			 */
+			onSelect(event)
+			{
+				event.stopPropagation()
+
+				const emitName = this.rowKey !== undefined ? 'toggle-row-selected' : 'toggle-all-rows-selected'
+				this.$emit(emitName)
+			},
+
+			/**
+			 * Mousedown handler
+			 */
+			onMousedown(event)
+			{
+				event.stopPropagation()
+				event.preventDefault()
+			}
+		}
 	}
 </script>

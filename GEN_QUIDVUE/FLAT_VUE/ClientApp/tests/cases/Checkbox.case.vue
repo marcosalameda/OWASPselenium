@@ -86,9 +86,13 @@
 
 <script>
 	export default {
+		name: 'QCheckboxContainer',
+
 		docsfile: './docs/inputs/CheckBoxInput.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{
@@ -104,11 +108,13 @@
 			updateValue(field, value)
 			{
 				this[field] = value
+				// eslint-disable-next-line no-console
 				console.log(value)
 			},
 
 			fieldClicked(field)
 			{
+				// eslint-disable-next-line no-console
 				console.log(`Field ${field} was clicked!`)
 			}
 		}

@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_281ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_281', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '281',
 					isMenuList: true,
+					designation: computed(() => this.Resources.EQUIPMENT_REQUESTS07243),
 					acronym: 'GQT_281',
 					name: 'PEDID',
 					route: 'menu-GQT_281',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'GQT_Menu_281',
 						controller: 'PEDID',
 						action: 'GQT_Menu_281',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.DateColumn({
 								order: 1,
@@ -139,7 +149,7 @@
 								field: 'DTPEDIDO',
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -172,7 +182,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -276,6 +286,7 @@
 								id: 'RCA_GQT_2811',
 								name: 'form-PEDID',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -292,23 +303,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: PEDID
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValNrpedido',
 							defaultSearchColumnNameOriginal: 'ValNrpedido',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValDtpedido',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-PEDID'],
 						uuid: 'e172238c-5c3e-42f9-9f7b-ccff6d20ea76',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -337,6 +342,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS GQT_281]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_281]/
 // eslint-disable-next-line

@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.DENTR___CNTRYCOUNTRY_.handlers"
 							:loading="controls.DENTR___CNTRYCOUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.DENTR___CNTRYCOUNTRY_.isVisible"
 								v-bind="controls.DENTR___CNTRYCOUNTRY_.props"
-								:model-value="model.ValCodcntry.value"
-								v-on="controls.DENTR___CNTRYCOUNTRY_.handlers"
-								@update:model-value="model.ValCodcntry.fnUpdateValue" />
+								v-on="controls.DENTR___CNTRYCOUNTRY_.handlers" />
 							<q-see-more-dentr-cntrycountry
 								v-if="controls.DENTR___CNTRYCOUNTRY_.seeMoreIsVisible"
 								v-bind="controls.DENTR___CNTRYCOUNTRY_.seeMoreParams"
@@ -131,14 +128,11 @@
 							v-on="controls.DENTR___CMPNYDESIGNAT.handlers"
 							:loading="controls.DENTR___CMPNYDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.DENTR___CMPNYDESIGNAT.isVisible"
 								v-bind="controls.DENTR___CMPNYDESIGNAT.props"
-								:model-value="model.ValCodempre.value"
-								v-on="controls.DENTR___CMPNYDESIGNAT.handlers"
-								@update:model-value="model.ValCodempre.fnUpdateValue" />
+								v-on="controls.DENTR___CMPNYDESIGNAT.handlers" />
 							<q-see-more-dentr-cmpnydesignat
 								v-if="controls.DENTR___CMPNYDESIGNAT.seeMoreIsVisible"
 								v-bind="controls.DENTR___CMPNYDESIGNAT.seeMoreParams"
@@ -156,14 +150,11 @@
 							v-on="controls.DENTR___PESSONAME____.handlers"
 							:loading="controls.DENTR___PESSONAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.DENTR___PESSONAME____.isVisible"
 								v-bind="controls.DENTR___PESSONAME____.props"
-								:model-value="model.ValCodpesso.value"
-								v-on="controls.DENTR___PESSONAME____.handlers"
-								@update:model-value="model.ValCodpesso.fnUpdateValue" />
+								v-on="controls.DENTR___PESSONAME____.handlers" />
 							<q-see-more-dentr-pessoname
 								v-if="controls.DENTR___PESSONAME____.seeMoreIsVisible"
 								v-bind="controls.DENTR___PESSONAME____.seeMoreParams"
@@ -181,14 +172,11 @@
 							v-on="controls.DENTR___WARE1WAREHDES.handlers"
 							:loading="controls.DENTR___WARE1WAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.DENTR___WARE1WAREHDES.isVisible"
 								v-bind="controls.DENTR___WARE1WAREHDES.props"
-								:model-value="model.ValCodwareh.value"
-								v-on="controls.DENTR___WARE1WAREHDES.handlers"
-								@update:model-value="model.ValCodwareh.fnUpdateValue" />
+								v-on="controls.DENTR___WARE1WAREHDES.handlers" />
 							<q-see-more-dentr-ware1warehdes
 								v-if="controls.DENTR___WARE1WAREHDES.seeMoreIsVisible"
 								v-bind="controls.DENTR___WARE1WAREHDES.seeMoreParams"
@@ -206,14 +194,13 @@
 							v-on="controls.DENTR___INDOCDATE____.handlers"
 							:loading="controls.DENTR___INDOCDATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.DENTR___INDOCDATE____.isVisible"
-								v-bind="controls.DENTR___INDOCDATE____"
-								format="DateTime"
+								v-bind="controls.DENTR___INDOCDATE____.props"
 								:model-value="model.ValDate.value"
-								@update:model-value="model.ValDate.fnUpdateValue" />
+								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
+								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -227,12 +214,10 @@
 							v-on="controls.DENTR___INDOCDOCUMENR.handlers"
 							:loading="controls.DENTR___INDOCDOCUMENR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.DENTR___INDOCDOCUMENR.isVisible"
-								v-bind="controls.DENTR___INDOCDOCUMENR"
-								:model-value="model.ValDocumenr.value"
+								v-bind="controls.DENTR___INDOCDOCUMENR.props"
 								@update:model-value="model.ValDocumenr.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -247,14 +232,13 @@
 							v-on="controls.DENTR___INDOCDHDOCUME.handlers"
 							:loading="controls.DENTR___INDOCDHDOCUME.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.DENTR___INDOCDHDOCUME.isVisible"
-								v-bind="controls.DENTR___INDOCDHDOCUME"
-								format="DateTime"
+								v-bind="controls.DENTR___INDOCDHDOCUME.props"
 								:model-value="model.ValDhdocume.value"
-								@update:model-value="model.ValDhdocume.fnUpdateValue" />
+								@reset-icon-click="model.ValDhdocume.fnUpdateValue(model.ValDhdocume.originalValue ?? new Date())"
+								@update:model-value="model.ValDhdocume.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -265,8 +249,7 @@
 						<q-table
 							v-show="controls.DENTR___PSEUDENTRADAS.isVisible"
 							v-bind="controls.DENTR___PSEUDENTRADAS"
-							v-on="controls.DENTR___PSEUDENTRADAS.handlers">
-						</q-table>
+							v-on="controls.DENTR___PSEUDENTRADAS.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.DENTR___PSEUDENTRADAS"
 							v-on="controls.DENTR___PSEUDENTRADAS.handlers" />
@@ -357,15 +340,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'DENTR',
-						location: 'form-DENTR',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'DENTR',
+					location: 'form-DENTR',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -411,6 +392,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -483,8 +466,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -566,7 +550,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -620,21 +604,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -645,25 +614,9 @@
 						id: 'DENTR___CNTRYCOUNTRY_',
 						name: 'COUNTRY',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.COUNTRY64133),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodcntry',
-							dependencyEvent: 'fieldChange:indoc.codcntry'
-						},
-						dependentFields: () => {
-							return {
-								set 'cntry.codcntry'(value) { vm.model.ValCodcntry.updateValue(value) },
-								set 'cntry.country'(value) { vm.model.TableCntryCountry.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -672,6 +625,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodcntry',
+							dependencyEvent: 'fieldChange:indoc.codcntry'
+						},
+						dependentFields: () => ({
+							set 'cntry.codcntry'(value) { vm.model.ValCodcntry.updateValue(value) },
+							set 'cntry.country'(value) { vm.model.TableCntryCountry.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					DENTR___CMPNYDESIGNAT: new fieldControlClass.LookupControl({
 						modelField: 'TableCmpnyDesignat',
@@ -679,13 +642,25 @@
 						id: 'DENTR___CMPNYDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY52963),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodempre',
+							dependencyEvent: 'fieldChange:indoc.codempre'
+						},
+						dependentFields: () => ({
+							set 'cmpny.codempre'(value) { vm.model.ValCodempre.updateValue(value) },
+							set 'cmpny.designat'(value) { vm.model.TableCmpnyDesignat.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: ['cntry', 'indoc.codcntry'],
@@ -694,16 +669,16 @@
 								fnValueSelector: (model) => model.ValCodcntry.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodempre',
-							dependencyEvent: 'fieldChange:indoc.codempre'
-						},
-						dependentFields: () => {
-							return {
-								set 'cmpny.codempre'(value) { vm.model.ValCodempre.updateValue(value) },
-								set 'cmpny.designat'(value) { vm.model.TableCmpnyDesignat.updateValue(value) },
-							}
-						},
+					}, this),
+					DENTR___PESSONAME____: new fieldControlClass.LookupControl({
+						modelField: 'TablePessoName',
+						valueChangeEvent: 'fieldChange:pesso.name',
+						id: 'DENTR___PESSONAME____',
+						name: 'NAME',
+						size: 'xxlarge',
+						label: computed(() => this.Resources.PERSON10446),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -712,20 +687,14 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
-					}, this),
-					DENTR___PESSONAME____: new fieldControlClass.LookupControl({
-						modelField: 'TablePessoName',
-						valueChangeEvent: 'fieldChange:pesso.name',
-						id: 'DENTR___PESSONAME____',
-						name: 'NAME',
-						size: 'xxlarge',
-						hasLabel: true,
-						label: computed(() => this.Resources.PERSON10446),
-						userHelp: '',
-						description: '',
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						lookupKeyModelField: {
+							name: 'ValCodpesso',
+							dependencyEvent: 'fieldChange:indoc.codpesso'
+						},
+						dependentFields: () => ({
+							set 'pesso.codpesso'(value) { vm.model.ValCodpesso.updateValue(value) },
+							set 'pesso.name'(value) { vm.model.TablePessoName.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: ['cntry', 'indoc.codcntry'],
@@ -740,24 +709,6 @@
 								fnValueSelector: (model) => model.ValCodempre.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodpesso',
-							dependencyEvent: 'fieldChange:indoc.codpesso'
-						},
-						dependentFields: () => {
-							return {
-								set 'pesso.codpesso'(value) { vm.model.ValCodpesso.updateValue(value) },
-								set 'pesso.name'(value) { vm.model.TablePessoName.updateValue(value) },
-							}
-						},
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					DENTR___WARE1WAREHDES: new fieldControlClass.LookupControl({
 						modelField: 'TableWare1Warehdes',
@@ -765,25 +716,9 @@
 						id: 'DENTR___WARE1WAREHDES',
 						name: 'WAREHDES',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.WAREHOUSE51864),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodwareh',
-							dependencyEvent: 'fieldChange:indoc.codwareh'
-						},
-						dependentFields: () => {
-							return {
-								set 'ware1.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
-								set 'ware1.warehdes'(value) { vm.model.TableWare1Warehdes.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -792,6 +727,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodwareh',
+							dependencyEvent: 'fieldChange:indoc.codwareh'
+						},
+						dependentFields: () => ({
+							set 'ware1.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
+							set 'ware1.warehdes'(value) { vm.model.TableWare1Warehdes.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					DENTR___INDOCDATE____: new fieldControlClass.DateControl({
 						modelField: 'ValDate',
@@ -799,33 +744,26 @@
 						id: 'DENTR___INDOCDATE____',
 						name: 'DATE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE18475),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					DENTR___INDOCDOCUMENR: new fieldControlClass.NumberControl({
 						modelField: 'ValDocumenr',
 						valueChangeEvent: 'fieldChange:indoc.documenr',
-						maxIntegers: 10,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'DENTR___INDOCDOCUMENR',
 						name: 'DOCUMENR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.NO_14817),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 10,
+						maxDecimals: 0,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -836,24 +774,18 @@
 						id: 'DENTR___INDOCDHDOCUME',
 						name: 'DHDOCUME',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE18475),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
 					DENTR___PSEUDENTRADAS: new fieldControlClass.TableListControl({
 						id: 'DENTR___PSEUDENTRADAS',
 						name: 'ENTRADAS',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.ENTRIES32319),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'INDOC',
@@ -909,7 +841,7 @@
 								field: 'DHENTRA',
 								label: computed(() => this.Resources.INSTANT_ENTRANCE27379),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 						],
 						config: {
@@ -928,9 +860,10 @@
 							showAlternatePagination: true,
 							rowClickActionInternal: 'selectMultiple',
 							showRowsSelectedCount: true,
+							showRowsSelectedTotalizer: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -1032,11 +965,12 @@
 									name: 'NORMAL',
 									title: computed(() => this.Resources.NORMAL_FORM03650),
 									isInReadOnly: true,
-									isVisible: computed(() => vm.controls.DENTR___PSEUDNORMAL__.checkFieldIsVisible()),
+									isVisible: computed(() => vm.controls.DENTR___PSEUDNORMAL__.isVisible),
 									disabled: computed(() => vm.controls.DENTR___PSEUDNORMAL__.isBlocked),
 									params: {
 										action: (c, o, d) => vm.controls.DENTR___PSEUDNORMAL__.action(d || c),
-										isControlled: true
+										isControlled: true,
+										isRoute: true
 									}
 								},
 							],
@@ -1048,6 +982,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'LDENT',
@@ -1065,19 +1000,13 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
 							allowFileExport: true,
-							// The list support form: LDENT
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValLine',
 							defaultSearchColumnNameOriginal: 'ValLine',
-							initialSortColumnName: 'ValLine',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValLine',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-WAREH', 'changed-LDENT', 'changed-ITEM', 'changed-INDOC'],
 						uuid: 'Dentr_ValEntradas',
@@ -1097,21 +1026,20 @@
 						size: 'small',
 						hasLabel: false,
 						label: computed(() => this.Resources.NORMAL_FORM03650),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						// eslint-disable-next-line
 						action: (event) => {
 							let btnAction = () => {
 								const params = {
 									id: event?.rowKey,
-									modes: vm.navigation.currentLevel.params.modes,
+									mode: vm.formInfo.mode,
+									modes: 'vedai',
 									isControlled: true,
 									extraData: JSON.stringify(event)
 								}
 
-								vm.navigateToForm('LDENTNOR', 'EDIT', event?.rowKey, params)
+								vm.navigateToForm('LDENTNOR', params.mode, event?.rowKey, params)
 							}
 							let options = {
 								form: 'DENTR',
@@ -1119,7 +1047,6 @@
 							}
 							vm.$eventHub.emit('form-apply', options)
 						},
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1190,7 +1117,7 @@
 						/** The foreign key to the WARE1 table */
 						get ware1() { return vm.model.ValCodwareh },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1286,6 +1213,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1325,6 +1260,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1451,6 +1394,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR DENTR]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1466,6 +1425,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS DENTR]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

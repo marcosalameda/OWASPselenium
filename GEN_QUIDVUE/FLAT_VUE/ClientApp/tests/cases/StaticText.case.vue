@@ -46,9 +46,13 @@
 	import fakeData from './StaticText.mock'
 
 	export default {
+		name: 'QStaticTextContainer',
+
 		docsfile: './docs/QStaticText.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{

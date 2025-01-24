@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Lnhag;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_LNHAG_CANCEL = new NavigationLocation("EQUIPMENT_GROUPING44771", "Lnhag_Cancel", "Lnhag") { vueRouteName = "form-LNHAG", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_LNHAG_SHOW = new NavigationLocation("EQUIPMENT_GROUPING44771", "Lnhag_Show", "Lnhag") { vueRouteName = "form-LNHAG", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_LNHAG_NEW = new NavigationLocation("EQUIPMENT_GROUPING44771", "Lnhag_New", "Lnhag") { vueRouteName = "form-LNHAG", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_LNHAG_EDIT = new NavigationLocation("EQUIPMENT_GROUPING44771", "Lnhag_Edit", "Lnhag") { vueRouteName = "form-LNHAG", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_LNHAG_DUPLICATE = new NavigationLocation("EQUIPMENT_GROUPING44771", "Lnhag_Duplicate", "Lnhag") { vueRouteName = "form-LNHAG", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_LNHAG_DELETE = new NavigationLocation("EQUIPMENT_GROUPING44771", "Lnhag_Delete", "Lnhag") { vueRouteName = "form-LNHAG", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_LNHAG_CANCEL = new("EQUIPMENT_GROUPING44771", "Lnhag_Cancel", "Lnhag") { vueRouteName = "form-LNHAG", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_LNHAG_SHOW = new("EQUIPMENT_GROUPING44771", "Lnhag_Show", "Lnhag") { vueRouteName = "form-LNHAG", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_LNHAG_NEW = new("EQUIPMENT_GROUPING44771", "Lnhag_New", "Lnhag") { vueRouteName = "form-LNHAG", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_LNHAG_EDIT = new("EQUIPMENT_GROUPING44771", "Lnhag_Edit", "Lnhag") { vueRouteName = "form-LNHAG", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_LNHAG_DUPLICATE = new("EQUIPMENT_GROUPING44771", "Lnhag_Duplicate", "Lnhag") { vueRouteName = "form-LNHAG", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_LNHAG_DELETE = new("EQUIPMENT_GROUPING44771", "Lnhag_Delete", "Lnhag") { vueRouteName = "form-LNHAG", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Lnhag_ModalDBEdit()
-		{
-			Lnhag_ViewModel model = new Lnhag_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Lnhag_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Lnhag Multiform actions
-
-		//
-		// GET /Lnhag/MFLnhag_New
-		[HttpGet]
-		[ActionName("MFLnhag_New")]
-		public ActionResult MFLnhag_New()
-		{
-			var model = new Lnhag_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_LNHAG_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("lnhag", model.ValCodlnhag);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFLnhag_New_GET()
-		{
-			return MFLnhag_New();
-		}
-
-		//
-		// GET /Lnhag/MFLnhag_Edit
-		[HttpGet]
-		[ActionName("MFLnhag_Edit")]
-		public ActionResult MFLnhag_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("LNHAG", "EDIT", new { id = id, partialView = "MFLnhag", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFLnhag_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFLnhag_Edit(requestModel);
-		}
-
-		//
-		// GET /Lnhag/MFLnhag_Cancel
-		[ActionName("MFLnhag_Cancel")]
-		public ActionResult MFLnhag_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Lnhag(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Lnhag/MFLnhag_Save
-		[HttpPost]
-		[ActionName("MFLnhag_Save")]
-		public JsonResult MFLnhag_Save(Lnhag_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFLnhag_Save",
-				ViewName = "MFLnhag",
-				AreaName = "lnhag"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Lnhag/MFLnhag_Delete
-		[HttpPost]
-		[ActionName("MFLnhag_Delete")]
-		public JsonResult MFLnhag_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFLnhag_Delete",
-				ViewName = "MFLnhag",
-				AreaName = "lnhag",
-				Location = ACTION_LNHAG_EDIT
-			};
-
-			var model = new Lnhag_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Lnhag/Lnhag_PedidValNrpedido
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_pedid")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,9 +422,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Lnhag_PedidValNrpedido_ViewModel model = new Lnhag_PedidValNrpedido_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodlnhag = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -590,6 +464,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_tpeq1")))
@@ -603,21 +478,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -625,12 +485,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Lnhag_Tpeq1ValTipoequi_ViewModel model = new Lnhag_Tpeq1ValTipoequi_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodlnhag = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Lnhag/Lnhag_SaveEdit
 		[HttpPost]

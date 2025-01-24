@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Flds;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_LISTACAM_CANCEL = new NavigationLocation("FIELD_LIST48027", "Listacam_Cancel", "Flds") { vueRouteName = "form-LISTACAM", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_LISTACAM_SHOW = new NavigationLocation("FIELD_LIST48027", "Listacam_Show", "Flds") { vueRouteName = "form-LISTACAM", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_LISTACAM_NEW = new NavigationLocation("FIELD_LIST48027", "Listacam_New", "Flds") { vueRouteName = "form-LISTACAM", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_LISTACAM_EDIT = new NavigationLocation("FIELD_LIST48027", "Listacam_Edit", "Flds") { vueRouteName = "form-LISTACAM", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_LISTACAM_DUPLICATE = new NavigationLocation("FIELD_LIST48027", "Listacam_Duplicate", "Flds") { vueRouteName = "form-LISTACAM", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_LISTACAM_DELETE = new NavigationLocation("FIELD_LIST48027", "Listacam_Delete", "Flds") { vueRouteName = "form-LISTACAM", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_LISTACAM_CANCEL = new("FIELD_LIST48027", "Listacam_Cancel", "Flds") { vueRouteName = "form-LISTACAM", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_LISTACAM_SHOW = new("FIELD_LIST48027", "Listacam_Show", "Flds") { vueRouteName = "form-LISTACAM", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_LISTACAM_NEW = new("FIELD_LIST48027", "Listacam_New", "Flds") { vueRouteName = "form-LISTACAM", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_LISTACAM_EDIT = new("FIELD_LIST48027", "Listacam_Edit", "Flds") { vueRouteName = "form-LISTACAM", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_LISTACAM_DUPLICATE = new("FIELD_LIST48027", "Listacam_Duplicate", "Flds") { vueRouteName = "form-LISTACAM", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_LISTACAM_DELETE = new("FIELD_LIST48027", "Listacam_Delete", "Flds") { vueRouteName = "form-LISTACAM", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Listacam_ModalDBEdit()
-		{
-			Listacam_ViewModel model = new Listacam_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Listacam_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Listacam Multiform actions
 
-		//
-		// GET /Flds/MFListacam_New
-		[HttpGet]
-		[ActionName("MFListacam_New")]
-		public ActionResult MFListacam_New()
-		{
-			var model = new Listacam_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_LISTACAM_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("flds", model.ValCodflds);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFListacam_New_GET()
-		{
-			return MFListacam_New();
-		}
-
-		//
-		// GET /Flds/MFListacam_Edit
-		[HttpGet]
-		[ActionName("MFListacam_Edit")]
-		public ActionResult MFListacam_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("LISTACAM", "EDIT", new { id = id, partialView = "MFListacam", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFListacam_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFListacam_Edit(requestModel);
-		}
-
-		//
-		// GET /Flds/MFListacam_Cancel
-		[ActionName("MFListacam_Cancel")]
-		public ActionResult MFListacam_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Flds(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Flds/MFListacam_Save
-		[HttpPost]
-		[ActionName("MFListacam_Save")]
-		public JsonResult MFListacam_Save(Listacam_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFListacam_Save",
-				ViewName = "MFListacam",
-				AreaName = "flds"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Flds/MFListacam_Delete
-		[HttpPost]
-		[ActionName("MFListacam_Delete")]
-		public JsonResult MFListacam_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFListacam_Delete",
-				ViewName = "MFListacam",
-				AreaName = "flds",
-				Location = ACTION_LISTACAM_EDIT
-			};
-
-			var model = new Listacam_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Flds/Listacam_SaveEdit
 		[HttpPost]

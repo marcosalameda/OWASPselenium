@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.PESS1___CMPNYDESIGNAT.handlers"
 							:loading="controls.PESS1___CMPNYDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.PESS1___CMPNYDESIGNAT.isVisible"
 								v-bind="controls.PESS1___CMPNYDESIGNAT.props"
-								:model-value="model.ValCodempre.value"
-								v-on="controls.PESS1___CMPNYDESIGNAT.handlers"
-								@update:model-value="model.ValCodempre.fnUpdateValue" />
+								v-on="controls.PESS1___CMPNYDESIGNAT.handlers" />
 							<q-see-more-pess1-cmpnydesignat
 								v-if="controls.PESS1___CMPNYDESIGNAT.seeMoreIsVisible"
 								v-bind="controls.PESS1___CMPNYDESIGNAT.seeMoreParams"
@@ -131,14 +128,11 @@
 							v-on="controls.PESS1___STAKEDESIGNAT.handlers"
 							:loading="controls.PESS1___STAKEDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.PESS1___STAKEDESIGNAT.isVisible"
 								v-bind="controls.PESS1___STAKEDESIGNAT.props"
-								:model-value="model.ValCodparte.value"
-								v-on="controls.PESS1___STAKEDESIGNAT.handlers"
-								@update:model-value="model.ValCodparte.fnUpdateValue" />
+								v-on="controls.PESS1___STAKEDESIGNAT.handlers" />
 							<q-see-more-pess1-stakedesignat
 								v-if="controls.PESS1___STAKEDESIGNAT.seeMoreIsVisible"
 								v-bind="controls.PESS1___STAKEDESIGNAT.seeMoreParams"
@@ -156,12 +150,12 @@
 							v-on="controls.PESS1___PESS1NAME____.handlers"
 							:loading="controls.PESS1___PESS1NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESS1___PESS1NAME____.props"
 								:model-value="model.ValName.value"
-								@update:model-value="model.ValName.fnUpdateValue" />
+								@blur="onBlur(controls.PESS1___PESS1NAME____, model.ValName.value)"
+								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -175,8 +169,7 @@
 							v-on="controls.PESS1___PESS1GENDER__.handlers"
 							:loading="controls.PESS1___PESS1GENDER__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.PESS1___PESS1GENDER__.isVisible"
 								v-bind="controls.PESS1___PESS1GENDER__.props"
@@ -195,14 +188,13 @@
 							v-on="controls.PESS1___PESS1DTNASCIM.handlers"
 							:loading="controls.PESS1___PESS1DTNASCIM.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.PESS1___PESS1DTNASCIM.isVisible"
-								v-bind="controls.PESS1___PESS1DTNASCIM"
-								format="Date"
+								v-bind="controls.PESS1___PESS1DTNASCIM.props"
 								:model-value="model.ValDtnascim.value"
-								@update:model-value="model.ValDtnascim.fnUpdateValue" />
+								@reset-icon-click="model.ValDtnascim.fnUpdateValue(model.ValDtnascim.originalValue ?? new Date())"
+								@update:model-value="model.ValDtnascim.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 						<base-input-structure
 							class="i-text"
@@ -210,12 +202,10 @@
 							v-on="controls.PESS1___PESS1IDFUNCIO.handlers"
 							:loading="controls.PESS1___PESS1IDFUNCIO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.PESS1___PESS1IDFUNCIO.isVisible"
-								v-bind="controls.PESS1___PESS1IDFUNCIO"
-								:model-value="model.ValIdfuncio.value"
+								v-bind="controls.PESS1___PESS1IDFUNCIO.props"
 								@update:model-value="model.ValIdfuncio.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
@@ -224,12 +214,12 @@
 							v-on="controls.PESS1___PESS1TELEPHON.handlers"
 							:loading="controls.PESS1___PESS1TELEPHON.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESS1___PESS1TELEPHON.props"
 								:model-value="model.ValTelephon.value"
-								@update:model-value="model.ValTelephon.fnUpdateValue" />
+								@blur="onBlur(controls.PESS1___PESS1TELEPHON, model.ValTelephon.value)"
+								@change="model.ValTelephon.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -243,12 +233,12 @@
 							v-on="controls.PESS1___PESS1EMAIL___.handlers"
 							:loading="controls.PESS1___PESS1EMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESS1___PESS1EMAIL___.props"
 								:model-value="model.ValEmail.value"
-								@update:model-value="model.ValEmail.fnUpdateValue" />
+								@blur="onBlur(controls.PESS1___PESS1EMAIL___, model.ValEmail.value)"
+								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -262,12 +252,12 @@
 							v-on="controls.PESS1___PESS1EMAIL2__.handlers"
 							:loading="controls.PESS1___PESS1EMAIL2__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESS1___PESS1EMAIL2__.props"
 								:model-value="model.ValEmail2.value"
-								@update:model-value="model.ValEmail2.fnUpdateValue" />
+								@blur="onBlur(controls.PESS1___PESS1EMAIL2__, model.ValEmail2.value)"
+								@change="model.ValEmail2.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -281,8 +271,7 @@
 							v-on="controls.PESS1___PESS1PHOTOGRA.handlers"
 							:loading="controls.PESS1___PESS1PHOTOGRA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-image
 								v-if="controls.PESS1___PESS1PHOTOGRA.isVisible"
 								v-bind="controls.PESS1___PESS1PHOTOGRA.props"
@@ -300,14 +289,13 @@
 							v-on="controls.PESS1___PESS1DTULTCAT.handlers"
 							:loading="controls.PESS1___PESS1DTULTCAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.PESS1___PESS1DTULTCAT.isVisible"
-								v-bind="controls.PESS1___PESS1DTULTCAT"
-								format="Date"
+								v-bind="controls.PESS1___PESS1DTULTCAT.props"
 								:model-value="model.ValDtultcat.value"
-								@update:model-value="model.ValDtultcat.fnUpdateValue" />
+								@reset-icon-click="model.ValDtultcat.fnUpdateValue(model.ValDtultcat.originalValue ?? new Date())"
+								@update:model-value="model.ValDtultcat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 						<base-input-structure
 							class="i-checkbox"
@@ -315,15 +303,11 @@
 							v-on="controls.PESS1___PESS1EXTERNA_.handlers"
 							:loading="controls.PESS1___PESS1EXTERNA_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.PESS1___PESS1EXTERNA_.isVisible"
-									id="PESS1___PESS1EXTERNA_"
-									size="small"
-									:model-value="model.ValExterna.value"
-									:readonly="controls.PESS1___PESS1EXTERNA_.readonly"
+									v-bind="controls.PESS1___PESS1EXTERNA_.props"
 									@update:model-value="model.ValExterna.fnUpdateValue" />
 							</template>
 						</base-input-structure>
@@ -333,15 +317,11 @@
 							v-on="controls.PESS1___PESS1INTERNA_.handlers"
 							:loading="controls.PESS1___PESS1INTERNA_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.PESS1___PESS1INTERNA_.isVisible"
-									id="PESS1___PESS1INTERNA_"
-									size="mini"
-									:model-value="model.ValInterna.value"
-									:readonly="controls.PESS1___PESS1INTERNA_.readonly"
+									v-bind="controls.PESS1___PESS1INTERNA_.props"
 									@update:model-value="model.ValInterna.fnUpdateValue" />
 							</template>
 						</base-input-structure>
@@ -355,12 +335,10 @@
 							v-on="controls.PESS1___PESS1IDADE___.handlers"
 							:loading="controls.PESS1___PESS1IDADE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.PESS1___PESS1IDADE___.isVisible"
-								v-bind="controls.PESS1___PESS1IDADE___"
-								:model-value="model.ValIdade.value"
+								v-bind="controls.PESS1___PESS1IDADE___.props"
 								@update:model-value="model.ValIdade.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -448,15 +426,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'PESS1',
-						location: 'form-PESS1',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'PESS1',
+					location: 'form-PESS1',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -502,6 +478,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -574,8 +552,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -657,7 +636,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -711,21 +690,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -736,27 +700,9 @@
 						id: 'PESS1___CMPNYDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY_22615),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodempre',
-							dependencyEvent: 'fieldChange:pess1.codempre'
-						},
-						dependentFields: () => {
-							return {
-								set 'cmpny.codempre'(value) { vm.model.ValCodempre.updateValue(value) },
-								set 'cmpny.designat'(value) { vm.model.TableCmpnyDesignat.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'EMPRE',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -765,6 +711,18 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodempre',
+							dependencyEvent: 'fieldChange:pess1.codempre'
+						},
+						dependentFields: () => ({
+							set 'cmpny.codempre'(value) { vm.model.ValCodempre.updateValue(value) },
+							set 'cmpny.designat'(value) { vm.model.TableCmpnyDesignat.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'EMPRE',
+						controlLimits: [
+						],
 					}, this),
 					PESS1___STAKEDESIGNAT: new fieldControlClass.LookupControl({
 						modelField: 'TableStakeDesignat',
@@ -772,25 +730,9 @@
 						id: 'PESS1___STAKEDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.INTERESTED34576),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodparte',
-							dependencyEvent: 'fieldChange:pess1.codparte'
-						},
-						dependentFields: () => {
-							return {
-								set 'stake.codparte'(value) { vm.model.ValCodparte.updateValue(value) },
-								set 'stake.designat'(value) { vm.model.TableStakeDesignat.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -799,6 +741,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodparte',
+							dependencyEvent: 'fieldChange:pess1.codparte'
+						},
+						dependentFields: () => ({
+							set 'stake.codparte'(value) { vm.model.ValCodparte.updateValue(value) },
+							set 'stake.designat'(value) { vm.model.TableStakeDesignat.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					PESS1___PESS1NAME____: new fieldControlClass.StringControl({
 						modelField: 'ValName',
@@ -806,10 +758,7 @@
 						id: 'PESS1___PESS1NAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.NAME31974),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
@@ -824,52 +773,42 @@
 						id: 'PESS1___PESS1GENDER__',
 						name: 'GENDER',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.GENDER44172),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						labelId: 'label_PESS1___PESS1GENDER__',
 						arrayName: 'Genero',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
 					PESS1___PESS1DTNASCIM: new fieldControlClass.DateControl({
 						modelField: 'ValDtnascim',
 						valueChangeEvent: 'fieldChange:pess1.dtnascim',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'PESS1___PESS1DTNASCIM',
 						name: 'DTNASCIM',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.BIRTH21799),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
 					PESS1___PESS1IDFUNCIO: new fieldControlClass.NumberControl({
 						modelField: 'ValIdfuncio',
 						valueChangeEvent: 'fieldChange:pess1.idfuncio',
-						maxIntegers: 6,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'PESS1___PESS1IDFUNCIO',
 						name: 'IDFUNCIO',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.EMPLOYEE_NO_01176),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 6,
+						maxDecimals: 0,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -880,15 +819,11 @@
 						id: 'PESS1___PESS1TELEPHON',
 						name: 'TELEPHON',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.TELEPHONE28697),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
 						labelId: 'label_PESS1___PESS1TELEPHON',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -898,15 +833,11 @@
 						id: 'PESS1___PESS1EMAIL___',
 						name: 'EMAIL',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.EMAIL25170),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 254,
 						labelId: 'label_PESS1___PESS1EMAIL___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -916,15 +847,11 @@
 						id: 'PESS1___PESS1EMAIL2__',
 						name: 'EMAIL2',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.EMAIL__CONFIRM_56391),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 254,
 						labelId: 'label_PESS1___PESS1EMAIL2__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -934,33 +861,25 @@
 						id: 'PESS1___PESS1PHOTOGRA',
 						name: 'PHOTOGRA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTO51874),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						height: 50,
 						width: 100,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PHOTO51874)),
 						controlLimits: [
 						],
 					}, this),
 					PESS1___PESS1DTULTCAT: new fieldControlClass.DateControl({
 						modelField: 'ValDtultcat',
 						valueChangeEvent: 'fieldChange:pess1.dtultcat',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'PESS1___PESS1DTULTCAT',
 						name: 'DTULTCAT',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.SINCE47259),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -970,13 +889,9 @@
 						id: 'PESS1___PESS1EXTERNA_',
 						name: 'EXTERNA',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.EXTERNAL13375),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
@@ -986,31 +901,23 @@
 						id: 'PESS1___PESS1INTERNA_',
 						name: 'INTERNA',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.INTERN65375),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
 					PESS1___PESS1IDADE___: new fieldControlClass.NumberControl({
 						modelField: 'ValIdade',
 						valueChangeEvent: 'fieldChange:pess1.idade',
-						maxIntegers: 5,
-						maxDecimals: 0,
 						id: 'PESS1___PESS1IDADE___',
 						name: 'IDADE',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.AGE28663),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 5,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -1086,7 +993,7 @@
 						/** The foreign key to the CATE2 table */
 						get cate2() { return vm.model.ValCodcateg },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1182,6 +1089,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1221,6 +1136,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1347,6 +1270,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR PESS1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1362,6 +1301,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PESS1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

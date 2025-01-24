@@ -187,7 +187,7 @@ namespace GenioMVC.Models.Navigation
 			string id = "", mode = "";
 			if (m_routedValues != null)
 			{
-				if (m_routedValues.ContainsKey("id"))
+				if (m_routedValues.ContainsKey("id") && m_routedValues["id"] != null)
 					id = " id:" + m_routedValues["id"].ToString() + ";";
 				if (m_routedValues.ContainsKey("mode"))
 					mode = m_routedValues["mode"].ToString();

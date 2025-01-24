@@ -42,9 +42,7 @@ export class FormControl
 	constructor(_vueContext)
 	{
 		this.vueContext = _vueContext
-		/**
-		 * The form UI components visibility
-		 */
+		// The form UI components visibility.
 		this.uiComponents = {
 			header: true,
 			headerButtons: true,
@@ -53,111 +51,122 @@ export class FormControl
 		this.initialized = false
 	}
 
-	Init(initTabs, isEditable)
+	async init(initTabs, isEditable)
 	{
 		if (typeof initTabs !== 'boolean')
 			initTabs = true
 
 		this.isEditable = typeof isEditable === 'boolean' ? isEditable : true
 
-		this.InitModel()
-		this.InitControls(initTabs)
-		this.InitBtns()
-		this.InitTriggers()
+		this.initModel()
+		await this.initControls(initTabs)
+		this.initBtns()
+		this.initTriggers()
 
 		this.initialized = true
+
+		if (this.vueContext.isNested && this.vueContext.formInfo.mode === 'NEW')
+			this.vueContext.$eventHub.emit('new-extended-record', this.vueContext.primaryKeyValue)
 
 		if (typeof this.vueContext.afterLoad === 'function')
 			this.vueContext.afterLoad()
 	}
 
-	InitModel()
+	initModel()
 	{
 		if (this.vueContext.model instanceof FormViewModelBase)
 			this.vueContext.model.initFieldsValueFormula()
 	}
 
-	InitControls(initTabs)
+	async initControls(initTabs)
 	{
 		if (!this.vueContext.controls)
 			return
+
+		const promises = []
 
 		_forEach(this.vueContext.controls, (ctrl) => {
 			if (initTabs || ctrl.type !== 'Tabs')
-				ctrl.Init(this.isEditable)
+				promises.push(ctrl.init(this.isEditable))
 		})
+
+		await Promise.all(promises)
 	}
 
-	InitTabs()
+	async initTabs()
 	{
 		if (!this.vueContext.controls)
 			return
 
+		const promises = []
+
 		_forEach(this.vueContext.controls, (ctrl) => {
 			if (ctrl.type === 'Tabs')
-				ctrl.Init(this.isEditable)
+				promises.push(ctrl.init(this.isEditable))
 		})
+
+		await Promise.all(promises)
 	}
 
-	CalcFieldsFormulas()
+	calcFieldsFormulas()
 	{
 		if (this.vueContext.model instanceof FormViewModelBase)
 			this.vueContext.model.calcFieldsFormulas()
 	}
 
-	CalcShowWhenFormulas()
+	calcShowWhenFormulas()
 	{
 		this.vueContext.internalEvents.emit('CALC_SHOW_WHEN_FORMULAS')
 	}
 
-	CalcBlockWhenFormulas()
+	calcBlockWhenFormulas()
 	{
 		this.vueContext.internalEvents.emit('CALC_BLOCK_WHEN_FORMULAS')
 	}
 
-	CalcFillWhenFormulas()
+	calcFillWhenFormulas()
 	{
 		if (this.vueContext.model instanceof FormViewModelBase)
 			this.vueContext.model.calcFillWhenFormulas()
 	}
 
-	CalcAllInterfaceFormulas()
+	calcAllInterfaceFormulas()
 	{
-		this.CalcShowWhenFormulas()
-		this.CalcBlockWhenFormulas()
-		this.CalcFillWhenFormulas()
+		this.calcShowWhenFormulas()
+		this.calcBlockWhenFormulas()
+		this.calcFillWhenFormulas()
 	}
 
-	CalcAllFormulas()
+	calcAllFormulas()
 	{
-		this.CalcFieldsFormulas()
-		this.CalcAllInterfaceFormulas()
+		this.calcFieldsFormulas()
+		this.calcAllInterfaceFormulas()
 	}
 
-	SetupBtns()
+	setupBtns()
 	{
 		// Nested forms will not change the buttons available on the side bar.
 		if (this.vueContext.isNested)
 			return
 		else if (this.vueContext.isHomePage)
 		{
-			this.ClearBtns()
+			this.clearBtns()
 			return
 		}
 
 		eventBus.emit('changed-form-buttons', this.vueContext.formButtonSections)
 	}
 
-	InitBtns()
+	initBtns()
 	{
 		if (!this.vueContext.formButtons)
 			return
 
-		this.SetupBtns()
-		this.vueContext.internalEvents.on('form-buttons-change', () => this.SetupBtns())
+		this.setupBtns()
+		this.vueContext.internalEvents.on('form-buttons-change', () => this.setupBtns())
 	}
 
-	InitTriggers()
+	initTriggers()
 	{
 		if (typeof this.vueContext.getTriggers !== 'function')
 			return
@@ -174,7 +183,7 @@ export class FormControl
 		})
 	}
 
-	ClearBtns()
+	clearBtns()
 	{
 		// Nested forms will not change the buttons available on the side bar.
 		if (this.vueContext.isNested)
@@ -204,8 +213,7 @@ export class FormControl
 		if (this.vueContext.controls)
 		{
 			_forEach(this.vueContext.controls, (ctrl) => {
-				if (ctrl.setFormModeBlockAndVisibility)
-					ctrl.setFormModeBlockAndVisibility(this.isEditable)
+				ctrl.setFormModeBlockAndVisibility?.(this.isEditable)
 			})
 		}
 	}
@@ -249,9 +257,9 @@ export class FormControl
 		}
 	}
 
-	Destroy()
+	destroy()
 	{
-		this.ClearBtns()
+		this.clearBtns()
 
 		this.removeListOnDBChangeEvent()
 
@@ -263,10 +271,10 @@ export class FormControl
 				ctrl.destroy()
 		})
 
-		this.DestroyTriggers()
+		this.destroyTriggers()
 	}
 
-	DestroyTriggers()
+	destroyTriggers()
 	{
 		if (_isEmpty(this.triggerIntervalIds))
 			return

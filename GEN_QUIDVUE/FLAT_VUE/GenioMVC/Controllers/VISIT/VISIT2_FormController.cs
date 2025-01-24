@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Visit;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_VISIT2_CANCEL = new NavigationLocation("FULL_CALENDAR_EVENTS04140", "Visit2_Cancel", "Visit") { vueRouteName = "form-VISIT2", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_VISIT2_SHOW = new NavigationLocation("FULL_CALENDAR_EVENTS04140", "Visit2_Show", "Visit") { vueRouteName = "form-VISIT2", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_VISIT2_NEW = new NavigationLocation("FULL_CALENDAR_EVENTS04140", "Visit2_New", "Visit") { vueRouteName = "form-VISIT2", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_VISIT2_EDIT = new NavigationLocation("FULL_CALENDAR_EVENTS04140", "Visit2_Edit", "Visit") { vueRouteName = "form-VISIT2", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_VISIT2_DUPLICATE = new NavigationLocation("FULL_CALENDAR_EVENTS04140", "Visit2_Duplicate", "Visit") { vueRouteName = "form-VISIT2", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_VISIT2_DELETE = new NavigationLocation("FULL_CALENDAR_EVENTS04140", "Visit2_Delete", "Visit") { vueRouteName = "form-VISIT2", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_VISIT2_CANCEL = new("FULL_CALENDAR_EVENTS04140", "Visit2_Cancel", "Visit") { vueRouteName = "form-VISIT2", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_VISIT2_SHOW = new("FULL_CALENDAR_EVENTS04140", "Visit2_Show", "Visit") { vueRouteName = "form-VISIT2", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_VISIT2_NEW = new("FULL_CALENDAR_EVENTS04140", "Visit2_New", "Visit") { vueRouteName = "form-VISIT2", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_VISIT2_EDIT = new("FULL_CALENDAR_EVENTS04140", "Visit2_Edit", "Visit") { vueRouteName = "form-VISIT2", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_VISIT2_DUPLICATE = new("FULL_CALENDAR_EVENTS04140", "Visit2_Duplicate", "Visit") { vueRouteName = "form-VISIT2", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_VISIT2_DELETE = new("FULL_CALENDAR_EVENTS04140", "Visit2_Delete", "Visit") { vueRouteName = "form-VISIT2", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Visit2_ModalDBEdit()
-		{
-			Visit2_ViewModel model = new Visit2_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Visit2_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Visit2 Multiform actions
-
-		//
-		// GET /Visit/MFVisit2_New
-		[HttpGet]
-		[ActionName("MFVisit2_New")]
-		public ActionResult MFVisit2_New()
-		{
-			var model = new Visit2_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_VISIT2_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("visit", model.ValCodvisit);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFVisit2_New_GET()
-		{
-			return MFVisit2_New();
-		}
-
-		//
-		// GET /Visit/MFVisit2_Edit
-		[HttpGet]
-		[ActionName("MFVisit2_Edit")]
-		public ActionResult MFVisit2_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("VISIT2", "EDIT", new { id = id, partialView = "MFVisit2", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFVisit2_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFVisit2_Edit(requestModel);
-		}
-
-		//
-		// GET /Visit/MFVisit2_Cancel
-		[ActionName("MFVisit2_Cancel")]
-		public ActionResult MFVisit2_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Visit(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Visit/MFVisit2_Save
-		[HttpPost]
-		[ActionName("MFVisit2_Save")]
-		public JsonResult MFVisit2_Save(Visit2_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFVisit2_Save",
-				ViewName = "MFVisit2",
-				AreaName = "visit"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Visit/MFVisit2_Delete
-		[HttpPost]
-		[ActionName("MFVisit2_Delete")]
-		public JsonResult MFVisit2_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFVisit2_Delete",
-				ViewName = "MFVisit2",
-				AreaName = "visit",
-				Location = ACTION_VISIT2_EDIT
-			};
-
-			var model = new Visit2_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Visit/Visit2_EquipValRegistnr
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,12 +422,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Visit2_EquipValRegistnr_ViewModel model = new Visit2_EquipValRegistnr_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodvisit = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Visit/Visit2_SaveEdit
 		[HttpPost]

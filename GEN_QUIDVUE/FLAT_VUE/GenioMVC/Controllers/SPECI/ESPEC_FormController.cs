@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Speci;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ESPEC_CANCEL = new NavigationLocation("SPECIALTY09304", "Espec_Cancel", "Speci") { vueRouteName = "form-ESPEC", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ESPEC_SHOW = new NavigationLocation("SPECIALTY09304", "Espec_Show", "Speci") { vueRouteName = "form-ESPEC", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ESPEC_NEW = new NavigationLocation("SPECIALTY09304", "Espec_New", "Speci") { vueRouteName = "form-ESPEC", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ESPEC_EDIT = new NavigationLocation("SPECIALTY09304", "Espec_Edit", "Speci") { vueRouteName = "form-ESPEC", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ESPEC_DUPLICATE = new NavigationLocation("SPECIALTY09304", "Espec_Duplicate", "Speci") { vueRouteName = "form-ESPEC", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ESPEC_DELETE = new NavigationLocation("SPECIALTY09304", "Espec_Delete", "Speci") { vueRouteName = "form-ESPEC", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ESPEC_CANCEL = new("SPECIALTY09304", "Espec_Cancel", "Speci") { vueRouteName = "form-ESPEC", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ESPEC_SHOW = new("SPECIALTY09304", "Espec_Show", "Speci") { vueRouteName = "form-ESPEC", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ESPEC_NEW = new("SPECIALTY09304", "Espec_New", "Speci") { vueRouteName = "form-ESPEC", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ESPEC_EDIT = new("SPECIALTY09304", "Espec_Edit", "Speci") { vueRouteName = "form-ESPEC", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ESPEC_DUPLICATE = new("SPECIALTY09304", "Espec_Duplicate", "Speci") { vueRouteName = "form-ESPEC", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ESPEC_DELETE = new("SPECIALTY09304", "Espec_Delete", "Speci") { vueRouteName = "form-ESPEC", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Espec_ModalDBEdit()
-		{
-			Espec_ViewModel model = new Espec_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Espec_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Espec Multiform actions
 
-		//
-		// GET /Speci/MFEspec_New
-		[HttpGet]
-		[ActionName("MFEspec_New")]
-		public ActionResult MFEspec_New()
-		{
-			var model = new Espec_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_ESPEC_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("speci", model.ValCodespec);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFEspec_New_GET()
-		{
-			return MFEspec_New();
-		}
-
-		//
-		// GET /Speci/MFEspec_Edit
-		[HttpGet]
-		[ActionName("MFEspec_Edit")]
-		public ActionResult MFEspec_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("ESPEC", "EDIT", new { id = id, partialView = "MFEspec", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFEspec_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFEspec_Edit(requestModel);
-		}
-
-		//
-		// GET /Speci/MFEspec_Cancel
-		[ActionName("MFEspec_Cancel")]
-		public ActionResult MFEspec_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Speci(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Speci/MFEspec_Save
-		[HttpPost]
-		[ActionName("MFEspec_Save")]
-		public JsonResult MFEspec_Save(Espec_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFEspec_Save",
-				ViewName = "MFEspec",
-				AreaName = "speci"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Speci/MFEspec_Delete
-		[HttpPost]
-		[ActionName("MFEspec_Delete")]
-		public JsonResult MFEspec_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFEspec_Delete",
-				ViewName = "MFEspec",
-				AreaName = "speci",
-				Location = ACTION_ESPEC_EDIT
-			};
-
-			var model = new Espec_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Speci/Espec_SaveEdit
 		[HttpPost]

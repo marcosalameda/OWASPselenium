@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_2B1ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_2B1', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '2B1',
 					isMenuList: true,
+					designation: computed(() => this.Resources.KIT_COMPONENTS50945),
 					acronym: 'GQT_2B1',
 					name: 'CMPKI',
 					route: 'menu-GQT_2B1',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'GQT_Menu_2B1',
 						controller: 'CMPKI',
 						action: 'GQT_Menu_2B1',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -151,7 +161,6 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
-								isOrderingColumn: true,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -186,7 +195,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -290,6 +299,7 @@
 								id: 'RCA_GQT_2B11',
 								name: 'form-CMPKI',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -306,23 +316,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: CMPKI
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValOrder',
 							defaultSearchColumnNameOriginal: 'ValOrder',
-							initialSortColumnName: 'ValOrder',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValOrder',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-TPEQ1', 'changed-CMPKI', 'changed-TPEQU'],
 						uuid: '92c5f22f-04ae-44dd-9688-bdfafa2721ba',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -351,6 +355,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS GQT_2B1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_2B1]/
 // eslint-disable-next-line

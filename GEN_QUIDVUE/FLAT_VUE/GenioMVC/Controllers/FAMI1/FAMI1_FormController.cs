@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Fami1;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_FAMI1_CANCEL = new NavigationLocation("FAMILIA_DE_EQUIPAMEN28756", "Fami1_Cancel", "Fami1") { vueRouteName = "form-FAMI1", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_FAMI1_SHOW = new NavigationLocation("FAMILIA_DE_EQUIPAMEN28756", "Fami1_Show", "Fami1") { vueRouteName = "form-FAMI1", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_FAMI1_NEW = new NavigationLocation("FAMILIA_DE_EQUIPAMEN28756", "Fami1_New", "Fami1") { vueRouteName = "form-FAMI1", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_FAMI1_EDIT = new NavigationLocation("FAMILIA_DE_EQUIPAMEN28756", "Fami1_Edit", "Fami1") { vueRouteName = "form-FAMI1", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_FAMI1_DUPLICATE = new NavigationLocation("FAMILIA_DE_EQUIPAMEN28756", "Fami1_Duplicate", "Fami1") { vueRouteName = "form-FAMI1", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_FAMI1_DELETE = new NavigationLocation("FAMILIA_DE_EQUIPAMEN28756", "Fami1_Delete", "Fami1") { vueRouteName = "form-FAMI1", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_FAMI1_CANCEL = new("FAMILIA_DE_EQUIPAMEN28756", "Fami1_Cancel", "Fami1") { vueRouteName = "form-FAMI1", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_FAMI1_SHOW = new("FAMILIA_DE_EQUIPAMEN28756", "Fami1_Show", "Fami1") { vueRouteName = "form-FAMI1", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_FAMI1_NEW = new("FAMILIA_DE_EQUIPAMEN28756", "Fami1_New", "Fami1") { vueRouteName = "form-FAMI1", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_FAMI1_EDIT = new("FAMILIA_DE_EQUIPAMEN28756", "Fami1_Edit", "Fami1") { vueRouteName = "form-FAMI1", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_FAMI1_DUPLICATE = new("FAMILIA_DE_EQUIPAMEN28756", "Fami1_Duplicate", "Fami1") { vueRouteName = "form-FAMI1", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_FAMI1_DELETE = new("FAMILIA_DE_EQUIPAMEN28756", "Fami1_Delete", "Fami1") { vueRouteName = "form-FAMI1", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Fami1_ModalDBEdit()
-		{
-			Fami1_ViewModel model = new Fami1_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Fami1_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Fami1 Multiform actions
-
-		//
-		// GET /Fami1/MFFami1_New
-		[HttpGet]
-		[ActionName("MFFami1_New")]
-		public ActionResult MFFami1_New()
-		{
-			var model = new Fami1_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_FAMI1_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("fami1", model.ValCodfamil);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFFami1_New_GET()
-		{
-			return MFFami1_New();
-		}
-
-		//
-		// GET /Fami1/MFFami1_Edit
-		[HttpGet]
-		[ActionName("MFFami1_Edit")]
-		public ActionResult MFFami1_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("FAMI1", "EDIT", new { id = id, partialView = "MFFami1", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFFami1_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFFami1_Edit(requestModel);
-		}
-
-		//
-		// GET /Fami1/MFFami1_Cancel
-		[ActionName("MFFami1_Cancel")]
-		public ActionResult MFFami1_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Fami1(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Fami1/MFFami1_Save
-		[HttpPost]
-		[ActionName("MFFami1_Save")]
-		public JsonResult MFFami1_Save(Fami1_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFFami1_Save",
-				ViewName = "MFFami1",
-				AreaName = "fami1"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Fami1/MFFami1_Delete
-		[HttpPost]
-		[ActionName("MFFami1_Delete")]
-		public JsonResult MFFami1_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFFami1_Delete",
-				ViewName = "MFFami1",
-				AreaName = "fami1",
-				Location = ACTION_FAMI1_EDIT
-			};
-
-			var model = new Fami1_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Fami1/Fami1_ValTiposequ
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_tpeq1")))
@@ -552,30 +415,41 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
 			Fami1_ValTiposequ_ViewModel model = new Fami1_ValTiposequ_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodfamil = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -597,6 +471,7 @@ namespace GenioMVC.Controllers
 			model.Load(requestValues);
 			return JsonOK(model);
 		}
+
 
 		// POST: /Fami1/Fami1_SaveEdit
 		[HttpPost]

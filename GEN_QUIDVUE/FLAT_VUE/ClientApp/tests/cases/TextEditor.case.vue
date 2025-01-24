@@ -16,7 +16,11 @@
 
 <script>
 	export default {
+		name: 'QTextEditorContainer',
+
 		docsfile: './docs/inputs/TextEditor.md',
+
+		expose: [],
 
 		data()
 		{

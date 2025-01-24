@@ -7,21 +7,24 @@
 		<template v-if="activeComponent">
 			<component
 				:is="activeComponent"
+				ref="formRef"
 				:key="formProps.id"
 				:buttons-override="rowComponentProps.formButtonsOverride"
 				:parent-form-mode="rowComponentProps.parentFormMode"
 				:parent-table-permissions="rowComponentProps.permissions"
 				:actions-placement="rowComponentProps.actionsPlacement"
 				v-bind="formProps"
-				@close="(...args) => $emit('close', ...args)"
-				@update:nested-model="handleModelUpdateEvent"
+				@close="(...args) => formClose(...args)"
 				@edit="(...args) => $emit('edit', ...args)"
 				@deselect="(...args) => $emit('deselect', ...args)"
 				@insert-form="(...args) => $emit('insert-form', ...args)"
+				@update-model-id="(...args) => $emit('update-model-id', ...args)"
 				@after-save-form="(...args) => $emit('after-save-form', ...args)"
 				@cancel-insert="(...args) => $emit('cancel-insert', ...args)"
 				@is-form-dirty="handleIsFormDirty"
 				@update-form-mode="handleUpdateFormMode"
+				@update:nested-model="handleModelUpdateEvent"
+				@update:model-value="updateModelValue"
 				@custom-event="handleCustomEvent" />
 		</template>
 		<div
@@ -32,6 +35,17 @@
 			<span>
 				{{ texts.chooseElement }}
 			</span>
+
+			<template v-if="allowFormActions.insert">
+				{{ texts.or }}
+				<q-button
+					id="ext-insert-new"
+					b-style="primary"
+					:label="texts.insert"
+					@click="() => $emit('insert-record')">
+					<q-icon v-bind="insertIcon" />
+				</q-button>
+			</template>
 		</div>
 	</div>
 </template>
@@ -45,7 +59,9 @@
 
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {
-		chooseElement: 'Choose an element from the list.'
+		chooseElement: 'Choose an element from the list.',
+		or: 'or',
+		insert: 'Insert'
 	}
 
 	export default {
@@ -61,13 +77,21 @@
 			'deselect',
 			'edit',
 			'insert-form',
+			'insert-record',
 			'is-form-dirty',
-			'update:nestedModel'
+			'update:nested-model',
+			'update:model-value',
+			'update-model-id'
 		],
 
 		inheritAttrs: false,
 
 		props: {
+			/**
+			 * Model value.
+			 */
+			modelValue: [String, Number, Object],
+
 			/**
 			 * Unique identifier for the control.
 			 */
@@ -99,7 +123,7 @@
 				default: () => ({}),
 				validator: (val) =>
 					!_isEmpty(val) &&
-					val.id &&
+					(val.id || val.mode === formModes.new) &&
 					val.historyBranchId &&
 					typeof val.component === 'string' &&
 					Object.values(formModes).includes(val.mode)
@@ -136,10 +160,20 @@
 				type: Object,
 				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
 				default: () => DEFAULT_TEXTS
+			},
+
+			/**
+			 * The list of the allowed form actions
+			 */
+			allowFormActions: {
+				type: Object,
+				default: () => ({
+					insert: false
+				})
 			}
 		},
 
-		expose: [],
+		expose: ['handleLeaveForm'],
 
 		data()
 		{
@@ -147,6 +181,10 @@
 				activeComponent: null,
 				formProps: {
 					isNested: true
+				},
+				insertIcon: {
+					icon: 'add',
+					type: 'svg'
 				}
 			}
 		},
@@ -154,12 +192,25 @@
 		mounted()
 		{
 			this.updateFormData(this.formData)
+
+			this.$eventHub.on('new-extended-record', (val) => this.$emit('update:model-value', val))
+
+			let eventData = {
+				supportFormId: this.id,
+				rowKey: this.modelValue ?? undefined,
+				formMode: this.formProps.mode
+			}
+			this.handleModelUpdateEvent(eventData)
 		},
 
 		methods: {
+			/**
+			 * Used to updated the form props each time the form data is updated.
+			 * @param {object} newFormData The new data of the form
+			 */
 			updateFormData(newFormData)
 			{
-				let result = {
+				const result = {
 					component: null,
 					props: {}
 				}
@@ -174,7 +225,8 @@
 						modes: '',
 						historyBranchId: newFormData.historyBranchId,
 						nestedModel: newFormData.nestedModel,
-						nestedFormConfig: this.nestedFormConfig
+						nestedFormConfig: this.nestedFormConfig,
+						prefillValues: newFormData.prefillValues
 					}
 				}
 
@@ -183,36 +235,81 @@
 				this.activeComponent = result.component
 			},
 
-			formClose()
+			/**
+			 * Clears the form props when the form is closed.
+			 * @param {any} args Arguments to emit
+			 */
+			formClose(args)
 			{
 				this.activeComponent = null
 				this.formProps = {
 					isNested: true
 				}
+
+				if (args)
+					this.$emit('close', args)
 			},
 
+			/**
+			 * Emits the changes in the form model to update the dirty state.
+			 * @param {object} newModelValue The new model data
+			 */
 			handleModelUpdateEvent(newModelValue)
 			{
-				this.$emit('update:nestedModel', newModelValue)
+				this.$emit('update:nested-model', newModelValue)
 			},
 
+			/**
+			 * Emits a custom event defined in the form .vue file.
+			 * @param {any} args Arguments to emit
+			 */
 			handleCustomEvent(args)
 			{
 				this.$emit('custom-event', args)
 			},
 
 			/**
-			 * Emits the dirty state of the form container to the parent forms. 
-			 * afterFormSave refers to what situation the event was emitted in: after a form modification (false) or after saving the form (true)
+			 * Emits the dirty state of the form container to the parent forms.
+			 * "afterFormSave" refers to what situation the event was emitted in: after a form modification (false) or after saving the form (true).
+			 * @param {object} eventData The event data
 			 */
 			handleIsFormDirty(eventData)
 			{
-				this.$emit('is-form-dirty', { id: this.formData.id, isDirty: eventData.isDirty, afterFormSave: eventData.afterFormSave })
+				if (this.formData)
+				{
+					const data = {
+						id: this.formData.id,
+						isDirty: eventData.isDirty,
+						afterFormSave: eventData.afterFormSave
+					}
+
+					this.$emit('is-form-dirty', data)
+				}
 			},
 
+			/**
+			 * Emits the new form mode to update in the form data properties.
+			 * @param {string} mode The new form mode
+			 */
 			handleUpdateFormMode(mode)
 			{
 				this.$emit('change-form-mode', mode)
+			},
+
+			updateModelValue(value) {
+				this.$emit("update:model-value", value);
+			},
+
+			/**
+			 *  Handles the leaving of the current open form
+			 * @param {function} next Function to be executed after leaving the form
+			 */
+			handleLeaveForm(next)
+			{
+				if (this.$refs.formRef)
+					this.$refs.formRef.cancel(next)
+				else
+					next()
 			}
 		},
 

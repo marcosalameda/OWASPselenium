@@ -51,6 +51,18 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValCodfacil))
 		watch(() => this.ValCodfacil.value, (newValue, oldValue) => this.onUpdate('facil.codfacil', this.ValCodfacil, newValue, oldValue))
 
+		/** The hidden foreign keys. */
+		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodcntry',
+			originId: 'ValCodcntry',
+			area: 'FACIL',
+			field: 'CODCNTRY',
+			relatedArea: 'CNTRY',
+			description: computed(() => this.Resources.___COUNTRY10061),
+			isFixed: true,
+		}).cloneFrom(values?.ValCodcntry))
+		watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('facil.codcntry', this.ValCodcntry, newValue, oldValue))
+
 		/** The used foreign keys. */
 		this.ValCodentit = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodentit',
@@ -76,12 +88,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [GLOB->CODFACTY]
-					// eslint-disable-next-line eqeqeq
-					return this.tGlob.ValCodfacty.value
+					return vm.model?.tGlob.ValCodfacty?.value
 				},
 				dependencyEvents: ['fieldChange:glob.codfacty'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyG,
 			},
 		}).cloneFrom(values?.ValCodfacty))
@@ -140,7 +150,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.TableFactyType))
 		watch(() => this.TableFactyType.value, (newValue, oldValue) => this.onUpdate('facty.type', this.TableFactyType, newValue, oldValue))
 
-		this.ValAddress = reactive(new modelFieldType.String({
+		this.ValAddress = reactive(new modelFieldType.MultiLineString({
 			id: 'ValAddress',
 			originId: 'ValAddress',
 			area: 'FACIL',
@@ -191,12 +201,11 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValLongitud))
 		watch(() => this.ValLongitud.value, (newValue, oldValue) => this.onUpdate('facil.longitud', this.ValLongitud, newValue, oldValue))
 
-		this.ValGeocoori = reactive(new modelFieldType.String({
+		this.ValGeocoori = reactive(new modelFieldType.Coordinate({
 			id: 'ValGeocoori',
 			originId: 'ValGeocoori',
 			area: 'FACIL',
 			field: 'GEOCOORI',
-			maxLength: 50,
 			description: computed(() => this.Resources.GEOGRAPHICAL_COORDIN45869),
 		}).cloneFrom(values?.ValGeocoori))
 		watch(() => this.ValGeocoori.value, (newValue, oldValue) => this.onUpdate('facil.geocoori', this.ValGeocoori, newValue, oldValue))
@@ -214,5 +223,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodfacil'
 
 	get QPrimaryKey() { return this.ValCodfacil.value }
-	set QPrimaryKey(value) { this.ValCodfacil.value = value }
+	set QPrimaryKey(value) { this.ValCodfacil.updateValue(value) }
 }

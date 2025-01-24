@@ -1,51 +1,29 @@
-namespace quidgest.uitests.pages;
+﻿using quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
 
 [System.CodeDom.Compiler.GeneratedCode("Genio", "")]
-public class PwcomForm: PageObject {
-
-	private By formLocator = By.CssSelector("#form-container");
-	private IWebElement form => driver.FindElement(formLocator);
-
+public class PwcomForm : Form
+{
 	/// <summary>
 	/// Login Name
 	/// </summary>
-	public LookupControl PswNome => new LookupControl(driver, formLocator, "container-PWCOM___PSW__NOME____");
-	public SeeMorePage PswNomeSeeMorePage => new SeeMorePage(driver, "PWCOM", "PSW.NOME");
+	public LookupControl PswNome => new LookupControl(driver, ContainerLocator, "container-PWCOM___PSW__NOME____");
+	public SeeMorePage PswNomeSeeMorePage => new SeeMorePage(driver, "PWCOM", "PWCOM___PSW__NOME____");
+
 	/// <summary>
 	/// Lending:
 	/// </summary>
-	public LookupControl Pess1Name => new LookupControl(driver, formLocator, "container-PWCOM___PESS1NAME____");
-	public SeeMorePage Pess1NameSeeMorePage => new SeeMorePage(driver, "PWCOM", "PESS1.NAME");
+	public LookupControl Pess1Name => new LookupControl(driver, ContainerLocator, "container-PWCOM___PESS1NAME____");
+	public SeeMorePage Pess1NameSeeMorePage => new SeeMorePage(driver, "PWCOM", "PWCOM___PESS1NAME____");
+
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl PwcomFoto => new BaseInputControl(driver, formLocator, "#PWCOM___PWCOMFOTO____");
+	public BaseInputControl PwcomFoto => new BaseInputControl(driver, ContainerLocator, "#PWCOM___PWCOMFOTO____");
 
-	private IWebElement saveBtn => form.FindElement(By.CssSelector("#bottom-save-btn"));
-	private IWebElement cancelBtn => form.FindElement(By.CssSelector("#bottom-cancel-btn"));
-	public FORM_MODE mode {get; private set;}
-
-	public PwcomForm(IWebDriver driver, FORM_MODE mode, By subformLocator=null): base(driver) {
-		this.mode = mode;
-		formLocator = subformLocator ?? formLocator;
-
-		wait.Until(c => form);
-		WaitForLoading();
-	}
-
-	public void WaitForLoading()
-	{
-        wait.Until(c => form.FindElement(ByData.Key("PWCOM")).GetAttribute("data-loading") != "true");
-    }
-
-	public void Save() {
-		WaitForLoading();
-		saveBtn.Click();
-	}
-
-	public void Cancel() {
-		WaitForLoading();
-		cancelBtn.Click();
-	}
-
+	public PwcomForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "PWCOM", containerLocator: containerLocator) { }
 }

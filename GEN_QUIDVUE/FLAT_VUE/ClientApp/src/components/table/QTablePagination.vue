@@ -1,117 +1,75 @@
 ﻿<template>
-	<div class="flex-align-center">
-		<nav aria-label="Page navigation">
-			<ul class="e-pagination">
-				<!-- BEGIN: Page navigation buttons -->
-				<!-- BEGIN: First page button -->
-				<li
-					v-if="beginButtonVisible"
-					:class="['e-pagination__item', { disabled: disabled }]"
-					@click.stop.prevent="pageHandler(1)">
-					<a
-						class="e-pagination__link"
-						href=""
-						aria-label="First">
-						<span aria-hidden="true">
-							<slot name="vbt-pagination-begin-button"> &lt;&lt; </slot>
-						</span>
-					</a>
-				</li>
-				<!-- END: First page button -->
-				<!-- BEGIN: Previous page button -->
-				<li
-					v-if="prevButtonVisible"
-					:class="['e-pagination__item', { disabled: disabled }]"
-					@click.stop.prevent="pageHandler(page - 1)">
-					<a
-						class="e-pagination__link"
-						href=""
-						aria-label="Previous">
-						<span aria-hidden="true">
-							<slot name="vbt-pagination-previous-button"> &lt; </slot>
-						</span>
-					</a>
-				</li>
-				<!-- END: Previous page button -->
-				<!-- BEGIN: Visible page number buttons -->
-				<template v-if="totalPages > 1">
-					<li
-						v-for="index in range"
-						:key="index"
-						:class="['e-pagination__item', { active: index === page, disabled: disabled }]"
-						@click.stop.prevent="pageHandler(index)">
-						<a
-							class="e-pagination__link"
-							href="">
-							{{ index }}
-						</a>
-					</li>
-				</template>
-				<!-- END: Visible page number buttons -->
-				<!-- BEGIN: Next page button -->
-				<li
-					v-if="nextButtonVisible"
-					:class="['e-pagination__item', { disabled: disabled }]"
-					@click.stop.prevent="pageHandler(page + 1)">
-					<a
-						class="e-pagination__link"
-						href=""
-						aria-label="Next">
-						<span aria-hidden="true">
-							<slot name="vbt-pagination-next-button"> &gt; </slot>
-						</span>
-					</a>
-				</li>
-				<!-- END: Next page button -->
-				<!-- BEGIN: Last page button -->
-				<li
-					v-if="endButtonVisible"
-					:class="['e-pagination__item', { disabled: disabled }]"
-					@click.stop.prevent="pageHandler(totalPages)">
-					<a
-						class="e-pagination__link"
-						href=""
-						aria-label="Last">
-						<span aria-hidden="true">
-							<slot name="vbt-pagination-end-button"> &gt;&gt; </slot>
-						</span>
-					</a>
-				</li>
-				<!-- END: Last page button -->
-				<!-- END: Page navigation buttons -->
-			</ul>
-		</nav>
-		<!-- BEGIN: Number of rows per page -->
-		<template v-if="showPerPageMenu">
-			<span class="i-text__label">{{ texts.rowsPerPage + ':' }}</span>
-			<q-dropdown-menu
-				:texts="{ title: perPageLabel, label: perPageLabel }"
-				:options="perPageOptionsObj"
-				class="pagination-dropdown"
-				:button-classes="['dropdown-toggle']"
-				:button-options="{ borderless: true }"
-				:single-option-button="false"
-				:disabled="disabled"
-				@selected="perPageHandler($event)">
-			</q-dropdown-menu>
-			<!-- END: Number of rows per page -->
-			<!-- BEGIN: Go-to-page box (unused) -->
-			<div
-				v-if="showGoToPage"
-				class="input-group col-sm-2">
-				<input
-					type="number"
-					class="form-control"
-					min="1"
-					step="1"
-					:max="totalPages"
-					:placeholder="texts.gotToPage"
-					@keyup.enter="onGotoPage"
-					v-model.number="goToPage" />
-			</div>
-			<!-- END: Go-to-page box (unused) -->
-		</template>
+	<nav
+		v-if="hasMultiplePages"
+		aria-label="Page navigation">
+		<q-button-group>
+			<!-- BEGIN: Page navigation buttons -->
+			<!-- BEGIN: First page button -->
+			<q-button
+				:aria-label="texts.first"
+				:disabled="!prevButtonEnabled"
+				@click="pageHandler(1)">
+				<q-icon icon="page-first" />
+			</q-button>
+			<!-- END: First page button -->
+			<!-- BEGIN: Previous page button -->
+			<q-button
+				:aria-label="texts.previous"
+				:disabled="!prevButtonEnabled"
+				@click="pageHandler(page - 1)">
+				<q-icon icon="page-previous" />
+			</q-button>
+			<!-- END: Previous page button -->
+			<!-- BEGIN: Visible page number buttons -->
+			<template v-if="totalPages > 1">
+				<q-button
+					v-for="index in range"
+					:key="index"
+					:label="index"
+					:active="index === page"
+					:disabled="disabled"
+					:class="pageButtonClass(index, page)"
+					@click="pageHandler(index)">
+				</q-button>
+			</template>
+			<!-- END: Visible page number buttons -->
+			<!-- BEGIN: Next page button -->
+			<q-button
+				:aria-label="texts.next"
+				:disabled="!nextButtonEnabled"
+				@click="pageHandler(page + 1)">
+				<q-icon icon="page-next" />
+			</q-button>
+			<!-- END: Next page button -->
+			<!-- BEGIN: Last page button -->
+			<q-button
+				:aria-label="texts.last"
+				:disabled="!nextButtonEnabled"
+				@click="pageHandler(totalPages)">
+				<q-icon icon="page-last" />
+			</q-button>
+			<!-- END: Last page button -->
+			<!-- END: Page navigation buttons -->
+		</q-button-group>
+	</nav>
+	<!-- BEGIN: Number of rows per page -->
+	<div
+		v-if="showPerPageMenu && total > 0"
+		class="rows-per-page-menu">
+		<span class="i-text__label">{{ texts.rowsPerPage + ':' }}</span>
+		<q-dropdown-menu
+			:id="tableId + '-rowspp-menu'"
+			:texts="{ title: perPageLabel, label: perPageLabel }"
+			:options="perPageOptionsObj"
+			class="pagination-dropdown"
+			:button-classes="['dropdown-toggle']"
+			:button-options="{ borderless: true }"
+			:single-option-button="false"
+			:disabled="disabled"
+			@selected="perPageHandler($event)">
+		</q-dropdown-menu>
 	</div>
+	<!-- END: Number of rows per page -->
 </template>
 
 <script>
@@ -159,7 +117,7 @@
 			 */
 			numVisibilePaginationButtons: {
 				type: [String, Number],
-				default: 5
+				default: 3
 			},
 
 			/**
@@ -208,6 +166,14 @@
 			disabled: {
 				type: Boolean,
 				default: false
+			},
+
+			/**
+			 * The table ID.
+			 */
+			tableId: {
+				type: String,
+				default: ''
 			}
 		},
 
@@ -229,6 +195,10 @@
 			totalPages() {
 				return Math.ceil(this.total / this.perPage)
 			},
+			
+			hasMultiplePages() {
+				return this.totalPages > 1
+			},
 
 			range() {
 				return range(this.start, this.end + 1)
@@ -238,32 +208,12 @@
 				return this.total === 0
 			},
 
-			prevButtonVisible() {
-				if (this.totalPages < 2 || this.page === 1) {
-					return false
-				}
-				return true
+			prevButtonEnabled() {
+				return this.totalPages > 1 && this.page !== 1 && !this.disabled
 			},
 
-			nextButtonVisible() {
-				if (this.totalPages < 2 || this.page === this.totalPages) {
-					return false
-				}
-				return true
-			},
-
-			beginButtonVisible() {
-				if (this.totalPages < 2 || this.page < 3) {
-					return false
-				}
-				return true
-			},
-
-			endButtonVisible() {
-				if (this.totalPages < 2 || this.totalPages - this.page < 2) {
-					return false
-				}
-				return true
+			nextButtonEnabled() {
+				return this.totalPages > 1 && this.page < this.totalPages && !this.disabled
 			},
 
 			perPageOptionsObj() {
@@ -332,6 +282,26 @@
 			 */
 			isPositiveInteger(str) {
 				return /^\+?(0|[1-9]\d*)$/.test(str)
+			},
+
+			/**
+			 * Get the class for the paging button
+			 * @param index {Number} Index of the button
+			 * @param page {Number} Active page number
+			 * @returns String
+			 */
+			pageButtonClass(index, page) {
+				// Difference between the index and active page number
+				const diff = Math.abs(index - page)
+
+				// Index is the active page
+				if(diff === 0)
+					return null
+				// Index is next to the active page
+				else if(diff === 1)
+					return 'btn-page-adjacent'
+				// Index is farther from the active page
+				return 'btn-page-other'
 			}
 		},
 

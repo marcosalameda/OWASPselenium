@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -58,7 +58,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "NºFuncionário" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Wpess.ValNfunc")]
 		[NumericAttribute(0)]
-		public decimal? ValNfunc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNfunc, 0)); } set { klass.ValNfunc = Convert.ToDouble(value); } }
+		public decimal? ValNfunc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNfunc, 0)); } set { klass.ValNfunc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Address")]
 		/// <summary>Field : "Address" Tipo: "C" Formula:  ""</summary>
@@ -84,7 +84,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "NºTelefone" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Wpess.ValCellphon")]
 		[NumericAttribute(0)]
-		public decimal? ValCellphon { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCellphon, 0)); } set { klass.ValCellphon = Convert.ToDouble(value); } }
+		public decimal? ValCellphon { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCellphon, 0)); } set { klass.ValCellphon = Convert.ToDecimal(value); } }
 
 		[DisplayName("Naturalness")]
 		/// <summary>Field : "Naturalness" Tipo: "C" Formula:  ""</summary>
@@ -100,7 +100,9 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Profile picture" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Wpess.ValPfoto")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValPfoto { get { return klass.ValPfoto; } set { klass.ValPfoto = value; } }
+		public ImageModel ValPfoto { get { return new ImageModel(klass.ValPfoto) { Ticket = ValPfotoQTicket }; } set { klass.ValPfoto = value; } }
+		[JsonIgnore]
+		public string ValPfotoQTicket = null;
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -109,35 +111,41 @@ namespace GenioMVC.Models
 		private Wareh _wareh;
 		[DisplayName("Wareh")]
 		[ShouldSerialize("Wareh")]
-		public virtual Wareh Wareh { 
-			get { 
+		public virtual Wareh Wareh {
+			get {
 				if (!this.isEmptyModel && (_wareh == null || (!string.IsNullOrEmpty(ValCodwareh) && (_wareh.isEmptyModel || _wareh.klass.QPrimaryKey != ValCodwareh))))
 					_wareh = Models.Wareh.Find(ValCodwareh, m_userContext, Identifier, _fieldsToSerialize);
 				if (_wareh == null)
 					_wareh = new Models.Wareh(m_userContext, true, _fieldsToSerialize);
 				return _wareh;
 			}
-			set { _wareh = value; } 
+			set { _wareh = value; }
 		}
-		
+
 
 		[DisplayName("Image Top")]
 		/// <summary>Field : "Image Top" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Wpess.ValFtimgtop")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValFtimgtop { get { return klass.ValFtimgtop; } set { klass.ValFtimgtop = value; } }
+		public ImageModel ValFtimgtop { get { return new ImageModel(klass.ValFtimgtop) { Ticket = ValFtimgtopQTicket }; } set { klass.ValFtimgtop = value; } }
+		[JsonIgnore]
+		public string ValFtimgtopQTicket = null;
 
 		[DisplayName("Image thumbnail")]
 		/// <summary>Field : "Image thumbnail" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Wpess.ValFtthumb")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValFtthumb { get { return klass.ValFtthumb; } set { klass.ValFtthumb = value; } }
+		public ImageModel ValFtthumb { get { return new ImageModel(klass.ValFtthumb) { Ticket = ValFtthumbQTicket }; } set { klass.ValFtthumb = value; } }
+		[JsonIgnore]
+		public string ValFtthumbQTicket = null;
 
 		[DisplayName("Image Background")]
 		/// <summary>Field : "Image Background" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Wpess.ValFtbackgr")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValFtbackgr { get { return klass.ValFtbackgr; } set { klass.ValFtbackgr = value; } }
+		public ImageModel ValFtbackgr { get { return new ImageModel(klass.ValFtbackgr) { Ticket = ValFtbackgrQTicket }; } set { klass.ValFtbackgr = value; } }
+		[JsonIgnore]
+		public string ValFtbackgrQTicket = null;
 
 		[DisplayName("Show Record")]
 		/// <summary>Field : "Show Record" Tipo: "L" Formula:  ""</summary>
@@ -152,19 +160,19 @@ namespace GenioMVC.Models
 		public Wpess(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAwpess(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Wpess(UserContext userContext, CSGenioAwpess val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAwpess csgenioa)
@@ -186,7 +194,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

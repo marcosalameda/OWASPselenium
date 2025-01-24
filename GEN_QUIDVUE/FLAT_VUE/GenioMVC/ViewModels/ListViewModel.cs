@@ -36,68 +36,36 @@ namespace GenioMVC.ViewModels
 		PersistMany
 	}
 
-	public abstract class ListViewModel : ViewModelBase, IConditionalSerializer
+	public abstract class ListViewModel : ViewModelBase
 	{
-		private Models.Glob _globTable;
-		private readonly UserUiSettings _userUiSettings;
-
 		protected List<CSGenioAlstcol> userColumns;
-
-		/// <summary>
-		/// Gets a reference to the GLOB table
-		/// to provide access to the necessary fields
-		/// to client and server-side formulas.
-		/// </summary>
-		[ShouldSerialize("Glob")]
-		public override Models.Glob TGlob
-		{
-			get
-			{
-				if (_globTable == null)
-					_globTable = Models.Glob.GetGlob(m_userContext, false, this?.FieldsToSerialize);
-
-				return _globTable;
-			}
-		}
-
-
 
 		/// <summary>
 		/// Gets the alias of the table.
 		/// </summary>
-		abstract public string TableAlias { get; }
+		public abstract string TableAlias { get; }
 
 		/// <summary>
 		/// Gets the unique user interface descriptor.
 		/// </summary>
-		abstract public string Uuid { get; }
-
-		public bool ShouldSerialize(string tag)
-		{
-			return FieldsToSerialize?.Contains(tag) ?? false;
-		}
-
-		/// <summary>
-		/// Gets the list of fields to serialize.
-		/// </summary>
-		abstract protected string[] FieldsToSerialize { get; }
+		public abstract string Uuid { get; }
 
 		/// <summary>
 		/// Gets the searchable columns.
 		/// </summary>
-		abstract protected List<TableSearchColumn> SearchableColumns { get; }
+		protected abstract List<TableSearchColumn> SearchableColumns { get; }
 
 		/// <summary>
 		/// Gets the list base conditions.
 		/// For row reordering.
 		/// </summary>
-		abstract public CriteriaSet baseConditions { get; }
+		public abstract CriteriaSet baseConditions { get; }
 
 		/// <summary>
 		/// Gets the list of relations.
 		/// For row reordering.
 		/// </summary>
-		abstract public List<Relation> relations { get; }
+		public abstract List<Relation> relations { get; }
 
 		/// <summary>
 		/// Gets the user column configuration.
@@ -128,51 +96,42 @@ namespace GenioMVC.ViewModels
 		}
 
 		/// <summary>
-		/// Gets the selected user table configuration.
-		/// </summary>
-		public string UserTableConfig => _userUiSettings?.userTableConfigSelected;
-
-		/// <summary>
-		/// Gets the primary key of the selected user table configuration.
-		/// </summary>
-		public string UserTableConfigPK => _userUiSettings?.userTableConfigSelectedPk;
-
-		/// <summary>
-		/// Gets the name of the selected user table configuration.
-		/// </summary>
-		public string UserTableConfigName => _userUiSettings?.userTableConfigSelectedName;
-
-		/// <summary>
 		/// Gets the names of the user table configurations.
 		/// </summary>
-		public List<string> UserTableConfigNames => _userUiSettings?.userTableConfigNames;
+		public List<string> UserTableConfigNames { get; set; }
 
 		/// <summary>
 		/// Gets the name of the default user table configuration.
 		/// </summary>
-		public string UserTableConfigNameDefault => _userUiSettings?.userTableConfigDefaultName;
+		public string UserTableConfigNameDefault { get; set; }
 
 		/// <summary>
-		/// Gets the current table configuration. The current state which is not saved.
+		/// The current table configuration.
 		/// </summary>
-		public string CurrentTableConfig;
+		public CSGenio.framework.TableConfiguration.TableConfiguration CurrentTableConfig { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ListViewModel" /> class.
 		/// </summary>
 		/// <param name="userContext">The current user request context</param>
-		public ListViewModel(UserContext userContext) : base(userContext)
+		public ListViewModel(UserContext userContext) : base(userContext) {}
+		
+		/// <summary>
+		/// Gets the user table configuration names from the loaded data and sets the corresponding properties.
+		/// </summary>
+		public void LoadUserTableConfigNameProperties()
 		{
 			if (ViewsManagementMode == TableViewsManagementMode.PersistOne ||
 				ViewsManagementMode == TableViewsManagementMode.PersistMany)
 			{
-				_userUiSettings = UserUiSettings.Load(
-					userContext.PersistentSupport,
+				TableUiSettings _tableUiSettings = TableUiSettings.Load(
+					m_userContext.PersistentSupport,
 					Uuid,
-					userContext.User,
-					Navigation.GetStrValue("UserTableConfigName"),
-					Convert.ToBoolean(Navigation.GetValue("LoadBaseTable"))
+					m_userContext.User
 				);
+
+				UserTableConfigNames = _tableUiSettings?.UserTableConfigNames;
+				UserTableConfigNameDefault = _tableUiSettings?.DefaultTableConfiguration?.Name;
 			}
 		}
 
@@ -446,186 +405,112 @@ namespace GenioMVC.ViewModels
 		}
 
 		/// <summary>
-		/// Gets the available search columns,
-		/// with respect to the user column configuration.
+		/// Gets the available search columns, accounting for the user column configuration.
 		/// </summary>
 		/// <param name="includeInvisibleFields">Whether to include invisible fields.</param>
 		public List<TableSearchColumn> GetSearchColumns(bool includeInvisibleFields = false)
+		{
+			return GetSearchColumns(null, includeInvisibleFields);
+		}
+
+		/// <summary>
+		/// Gets the available search columns, accounting for the user column configuration.
+		/// </summary>
+		/// <param name="columnConfig">Column configuration specified by the user.</param>
+		/// <param name="includeInvisibleFields">Whether to include invisible fields.</param>
+		public List<TableSearchColumn> GetSearchColumns(List<CSGenio.framework.TableConfiguration.ColumnConfiguration> columnConfig, bool includeInvisibleFields = false)
 		{
 			// If the user has some hidden columns we should not search in them
 			if (includeInvisibleFields)
 				return SearchableColumns;
 
 			//JGF 2021.09.01 Moved this line nearer the usage, it was going to the server a lot needlessly
-			var userColumns = UserUiSettings
-				.Load(m_userContext.PersistentSupport, Uuid, m_userContext.User)
-				.userColumns;
-
-			return SearchableColumns.Where(tsc => IsColumnVisible(tsc, userColumns)).ToList();
-		}
-
-		/// <summary>
-		/// Loads the user table configuration.
-		/// </summary>
-		/// <param name="requestValues">The request values.</param>
-		/// <param name="allSortOrders">All sort orders.</param>
-		/// <param name="requestPrefix">The request prefix.</param>
-		/// <param name="numberListItems">The number of rows per page to load.</param>
-		public void LoadUserTableConfig(
-			NameValueCollection requestValues,
-			Dictionary<string, OrderedDictionary> allSortOrders,
-			string requestPrefix,
-			ref int numberListItems
-		)
-		{
-			string configDataStr;
-
-			CurrentTableConfig = (string)Navigation.CurrentLevel.Location.RoutedValues["CurrentTableConfig_" + requestPrefix];
-
-			if (!string.IsNullOrEmpty(CurrentTableConfig))
-				configDataStr = CurrentTableConfig;
-			else if (!string.IsNullOrEmpty(UserTableConfig))
-				configDataStr = UserTableConfig;
-			else
-				return;
-
-			// Deserialize configuration data into sub-configurations.
-			var configData = JsonConvert.DeserializeObject<Dictionary<string, string>>(configDataStr);
-
-			if (configData == null)
-				return;
-
-			// Get unsaved advanced filters and column filters
-			string currentSearchFiltersDataStr = requestValues.Get("SearchFilters") ?? "";
-			SearchFilter[] currentSearchFiltersData;
-			try
-			{
-				currentSearchFiltersData = JsonConvert.DeserializeObject<SearchFilter[]>(currentSearchFiltersDataStr);
-			}
-			catch(Exception ex)
-			{
-				currentSearchFiltersData = new SearchFilter[0];
-				Log.Error(ex.Message);
-			}
-
-			// Load filters if they are not loaded already.
-			if (currentSearchFiltersData == null)
-			{
-				// Get filters sub-configurations.
-				List<object> searchFiltersData = new List<object>();
-
-				// Get and merge advanced filters sub-configuration (array).
-				if (configData.ContainsKey("advancedFilters"))
-				{
-					List<object> advancedFiltersData = JsonConvert.DeserializeObject<List<object>>(
-						configData["advancedFilters"]
-					);
-
-					foreach (var filter in advancedFiltersData)
-						searchFiltersData.Add(filter);
-				}
-
-				// Get and merge column filters sub-configuration (hashtable).
-				if (configData.ContainsKey("columnFilters"))
-				{
-					Dictionary<string, object> columnFiltersData = JsonConvert.DeserializeObject<
-						Dictionary<string, object>
-					>(configData["columnFilters"]);
-
-					foreach (var filter in columnFiltersData)
-						searchFiltersData.Add(filter.Value);
-				}
-
-				// Convert to string and set as query parameter.
-				string searchFiltersStr = JsonConvert.SerializeObject(searchFiltersData);
-				requestValues.Set("SearchFilters", searchFiltersStr);
-			}
-
-			// Get static filters
-			if (configData.ContainsKey("groupFilterValues"))
-			{
-				Dictionary<string, string> groupFilterValuesData = JsonConvert.DeserializeObject<
-						Dictionary<string, string>
-				>(configData["groupFilterValues"]);
-
-				foreach (var filter in groupFilterValuesData)
-				{
-					// If no filter value was set by the user, use the value from the saved configuration
-					if (requestValues.Get(filter.Key) == null)
-						requestValues.Set(filter.Key, filter.Value);
-				}
-			}
-
-			// Load custom initial sort column and sort order.
-			if (
-				configData.ContainsKey("initialSortColumn")
-				&& (
-					string.IsNullOrEmpty(requestValues.Get($"s{requestPrefix}"))
-					|| string.IsNullOrEmpty(requestValues.Get($"d{requestPrefix}"))
-				)
-			)
-			{
-				// Get initial sort sub-configuration.
-				var configDataInitialSortColumn = JsonConvert.DeserializeObject<Dictionary<string, string>>(configData["initialSortColumn"]);
-
-				if (
-					configDataInitialSortColumn.ContainsKey("columnName")
-					&& configDataInitialSortColumn.ContainsKey("sortOrder")
-				)
-				{
-					string initialSortColumnName = configDataInitialSortColumn["columnName"];
-					string initialSortColumnOrder = configDataInitialSortColumn["sortOrder"];
-
-					if (
-						!string.IsNullOrEmpty(initialSortColumnName)
-						&& !string.IsNullOrEmpty(initialSortColumnOrder)
-					)
-					{
-						string columnName = initialSortColumnName
-							.Substring(initialSortColumnName.IndexOf("Val") + 3)
-							.ToUpper();
-
-						if (columnName.IndexOf(".") < 0)
-							columnName = TableAlias.ToUpper() + "." + columnName;
-
-						string sortOrder = initialSortColumnOrder.ToUpper().Substring(0, 1);
-
-						if (sortOrder != "D")
-							sortOrder = "A";
-
-						allSortOrders.Clear();
-						allSortOrders.Add(columnName, new OrderedDictionary());
-						allSortOrders[columnName].Add(columnName, sortOrder);
-
-						requestValues.Add($"s{requestPrefix}", initialSortColumnName);
-						requestValues.Add($"d{requestPrefix}", sortOrder);
-					}
-				}
-			}
-
-			// Load number of records per page.
-			if (configData.ContainsKey("perPage") && string.IsNullOrEmpty(requestValues.Get("perPage")))
-			{
-				int perPage = 0;
-				bool isNumber = int.TryParse(configData["perPage"], out perPage);
-
-				if (isNumber)
-					numberListItems = perPage;
-			}
+			return SearchableColumns.Where(tsc => IsColumnVisible(tsc, columnConfig)).ToList();
 		}
 
 		/// <summary>
 		/// Gets the list of columns to export.
 		/// </summary>
 		/// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
-		abstract public List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false);
+		public abstract List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false);
+
+		/// <summary>
+		/// Builds the list CriteriaSet with all the limits, filters and conditions
+		/// </summary>
+		/// <param name="requestValues">Parameters from the request</param>
+		/// <param name="tableReload">[Quick fix] Indicates whether the data list should be loaded. If set to false within the method, it signals that the data list should not display rows due to unmet mandatory limits.</param>
+		/// <param name="crs">Pass a CriteriaSet by reference to be modified</param>
+		/// <param name="isToExport">If the  table is to be exported</param>
+		public abstract CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false);
+
+		/// <summary>
+		/// Builds the list CriteriaSet with all the limits, filters and conditions
+		/// </summary>
+		/// <param name="tableConfig">Table configuration object</param>
+		/// <param name="requestValues">Parameters from the request</param>
+		/// <param name="tableReload">[Quick fix] Indicates whether the data list should be loaded. If set to false within the method, it signals that the data list should not display rows due to unmet mandatory limits.</param>
+		/// <param name="crs">Pass a CriteriaSet by reference to be modified</param>
+		/// <param name="isToExport">If the  table is to be exported</param>
+		/// <inheritdoc/>
+		public abstract CriteriaSet BuildCriteriaSet(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false);
+
+		/// <summary>
+		/// Gets the list of columns to export, accounting for the column configuration.
+		/// </summary>
+		/// <param name="ColumnConfiguration">Column order and visibility</param>
+		public List<Exports.QColumn> GetExportColumns(List<CSGenio.framework.TableConfiguration.ColumnConfiguration> ColumnConfiguration)
+		{
+			List<Exports.QColumn> defaultColumns = this.GetColumnsToExport(false);
+			List<Exports.QColumn> configuredColumns = new List<Exports.QColumn>();
+
+			// If configuration is defined, get visible columns from the default configuration
+			if (ColumnConfiguration == null)
+				return defaultColumns.Where((col) => col.Visible == true).ToList();
+
+			// Get column data with the order and visibility set in the column configuration
+			foreach (CSGenio.framework.TableConfiguration.ColumnConfiguration currentConfiguredColumn in ColumnConfiguration)
+			{
+				if (currentConfiguredColumn == null || currentConfiguredColumn.Name == null)
+					continue;
+
+				// Get the full column name (table.column)
+				string currentColumnName;
+				string currentTableName;
+				int sepIdx = currentConfiguredColumn.Name.IndexOf(".");
+
+				// If the name only has the column name, set the table name as the name of this table
+				if (sepIdx == -1)
+					currentTableName = this.TableAlias.ToLower();
+				// If the name has the table and column names, use the part before the '.' as the table name
+				else
+					currentTableName = currentConfiguredColumn.Name.Substring(0, sepIdx).ToLower();
+
+				// Use the part of the name after the '.' as the column name
+				currentColumnName = currentConfiguredColumn.Name.Substring(sepIdx + 4).ToLower();
+
+				// Get the column that has the matching name
+				Exports.QColumn currentColumn = defaultColumns.Find((col) => col.Name.Equals(currentTableName + '.' + currentColumnName));
+
+				if (currentColumn == null)
+					continue;
+
+				// Set the visibility to match the configuration of this column
+				currentColumn.Visible = currentConfiguredColumn.Visibility == 1;
+
+				// If the column is visible and exportable, add it to the list of columns to export
+				if (currentColumn.Visible && currentConfiguredColumn.Exportability == 1)
+					configuredColumns.Add(currentColumn);
+			}
+
+			return configuredColumns;
+		}
 
 		/// <summary>
 		/// Counts the total number of records in the data underlying this list
 		/// </summary>
 		/// <param name="user"></param>
 		/// <returns></returns>
-		abstract public int GetCount(User user);
+		public abstract int GetCount(User user);
 
 		/// <summary>
 		/// Instantiates a new ListViewModel given its name

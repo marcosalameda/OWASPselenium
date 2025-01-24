@@ -109,18 +109,17 @@ export default class ViewModel extends ViewModelBase
 			area: 'RECEI',
 			field: 'TOCHECK',
 			description: computed(() => this.Resources.TO_CHECK57511),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(!isEmptyD([RECEI->DTRECEIP]) && isEmptyD([RECEI->DTCHECK]),1,0)
-					// eslint-disable-next-line eqeqeq
-					return qApi.iif(!(this.ValDtreceip.value == '')&&(this.ValDtcheck.value == ''),1,0)
+					return qApi.iif(!(this.ValDtreceip.value === '')&&(this.ValDtcheck.value === ''),1,0)
 				},
 				dependencyEvents: ['fieldChange:recei.dtreceip', 'fieldChange:recei.dtcheck'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyL,
 			},
 		}).cloneFrom(values?.ValTocheck))
@@ -132,18 +131,17 @@ export default class ViewModel extends ViewModelBase
 			area: 'RECEI',
 			field: 'CHECKED',
 			description: computed(() => this.Resources.CHECKED31708),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(isEmptyD([RECEI->DTCHECK]),0,1)
-					// eslint-disable-next-line eqeqeq
-					return qApi.iif((this.ValDtcheck.value == ''),0,1)
+					return qApi.iif((this.ValDtcheck.value === ''),0,1)
 				},
 				dependencyEvents: ['fieldChange:recei.dtcheck'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyL,
 			},
 		}).cloneFrom(values?.ValChecked))
@@ -180,5 +178,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodrecei'
 
 	get QPrimaryKey() { return this.ValCodrecei.value }
-	set QPrimaryKey(value) { this.ValCodrecei.value = value }
+	set QPrimaryKey(value) { this.ValCodrecei.updateValue(value) }
 }

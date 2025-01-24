@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuTBS_151ViewModel.js'
+
 	const requiredTextResources = ['QMenuTBS_151', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '151',
 					isMenuList: true,
+					designation: computed(() => this.Resources.CONTACT_TYPES56696),
 					acronym: 'TBS_151',
 					name: 'TPCON',
 					route: 'menu-TBS_151',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'TBS_Menu_151',
 						controller: 'TPCON',
 						action: 'TBS_Menu_151',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.ArrayColumn({
 								order: 1,
@@ -165,7 +175,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -269,6 +279,7 @@
 								id: 'RCA_TBS_1511',
 								name: 'form-TPCON',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -285,23 +296,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: TPCON
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValTipocont',
 							defaultSearchColumnNameOriginal: 'ValTipocont',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValTipocont',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-TPCON', 'changed-GENRE'],
 						uuid: 'e32f8ddf-048b-48dc-b978-3a536ed248ad',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -330,6 +335,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS TBS_151]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS TBS_MENU_151]/
 // eslint-disable-next-line

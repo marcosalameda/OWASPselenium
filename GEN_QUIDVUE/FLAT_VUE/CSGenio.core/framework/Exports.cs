@@ -1,9 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Data;
-using System.Reflection;
 using System.Xml;
 
 using CSGenio.business;
@@ -11,12 +10,12 @@ using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
 using Quidgest.Persistence;
 
-using MigraDoc.DocumentObjectModel;
-using MigraDoc.DocumentObjectModel.Tables;
-using MigraDoc.Rendering;
+using MigraDocCore.DocumentObjectModel;
+using MigraDocCore.DocumentObjectModel.Tables;
+using MigraDocCore.Rendering;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using Ionic.Zip;
+using PdfSharpCore.Drawing;
 
 namespace CSGenio.framework
 {
@@ -239,7 +238,7 @@ namespace CSGenio.framework
             public string Description { get; private set; }
             public int Size { get; private set; }
             public int Decimals { get; private set; }
-            public bool Visible { get; private set; }
+            public bool Visible { get; set; }
 
 
             public QColumn(FieldRef Qfield, FieldType fieldType, string descricao, int size, int decimais, bool visivel)
@@ -332,14 +331,15 @@ namespace CSGenio.framework
 
         private class ExportToPDF
         {
-            readonly static double TableMaxWidth = PdfSharp.PageSizeConverter.ToSize(PdfSharp.PageSize.A4).Height - Unit.FromCentimeter(2.2).Point;
+            readonly static double TableMaxWidth = PdfSharpCore.PageSizeConverter.ToSize(PdfSharpCore.PageSize.A4).Height - Unit.FromCentimeter(2.2).Point;
             readonly static double WidthScaleFactorMin = 0.5; // do not reduce column width by more than half
-            readonly static MigraDoc.DocumentObjectModel.Color TableBorder = new MigraDoc.DocumentObjectModel.Color(0, 0, 0);
-            readonly static MigraDoc.DocumentObjectModel.Color TableBlue = new MigraDoc.DocumentObjectModel.Color(235, 240, 249);
-            readonly static MigraDoc.DocumentObjectModel.Color TableGray = new MigraDoc.DocumentObjectModel.Color(242, 242, 242);
-            readonly static MigraDoc.DocumentObjectModel.Font HeaderFont = new Font("Arial", 12);
-            readonly static MigraDoc.DocumentObjectModel.Font TableFont = new Font("Arial", 10);
-            readonly static MigraDoc.DocumentObjectModel.Unit TableBorderWidth = new Unit(1);
+            readonly static Color TableBorder = new Color(0, 0, 0);
+            readonly static Color TableBlue = new Color(235, 240, 249);
+            readonly static Color TableGray = new Color(242, 242, 242);
+            readonly static Font HeaderFont = new Font("Arial", 12);
+            readonly static Font TableFont = new Font("Arial", 10);
+            readonly static Unit TableBorderWidth = new Unit(1);
+            readonly static XGraphics DefaultGraphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
 
 
             private Document document;
@@ -413,7 +413,7 @@ namespace CSGenio.framework
                 // Create a new style called Table based on style Normal
                 style = this.document.Styles.AddStyle("Table", "Normal");
                 style.Font = TableFont.Clone();
-                style.Font.Color = MigraDoc.DocumentObjectModel.Colors.Black;
+                style.Font.Color = Colors.Black;
 
                 // Create a new style called Reference based on style Normal
                 style = this.document.Styles.AddStyle("Reference", "Normal");
@@ -429,10 +429,10 @@ namespace CSGenio.framework
             public static bool ValidatePage(List<QColumn> columns, DataMatrix values, User user = null)
             {
                 // Measure strings for column width estimation
-                MigraDoc.DocumentObjectModel.Font tableHeaderFont = HeaderFont.Clone();
+                Font tableHeaderFont = HeaderFont.Clone();
                 tableHeaderFont.Bold = true;
-                TextMeasurement tmHeader = new TextMeasurement(tableHeaderFont);
-                TextMeasurement tmBody = new TextMeasurement(TableFont);
+                TextMeasurement tmHeader = new TextMeasurement(DefaultGraphics, tableHeaderFont);
+                TextMeasurement tmBody = new TextMeasurement(DefaultGraphics, TableFont);
                 double totalColWidth = 0;
 
                 for (int i = 0; i < columns.Count; i++)
@@ -491,7 +491,7 @@ namespace CSGenio.framework
                 to.Format.Font = HeaderFont.Clone();
                 to.Format.Font.Bold = true;
                 //to.Format.Font.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
-                to.Format.Font.Color = MigraDoc.DocumentObjectModel.Colors.Black;
+                to.Format.Font.Color = Colors.Black;
                 to.AddText(namebdedit);
                 section.Headers.Primary.Add(to);
                 section.AddParagraph();
@@ -515,10 +515,10 @@ namespace CSGenio.framework
                 this.table.Rows.LeftIndent = 0;
 
                 // Measure strings for column width estimation
-                MigraDoc.DocumentObjectModel.Font tableHeaderFont = HeaderFont.Clone();
+                Font tableHeaderFont = HeaderFont.Clone();
                 tableHeaderFont.Bold = true;
-                TextMeasurement tmHeader = new TextMeasurement(tableHeaderFont);
-                TextMeasurement tmBody = new TextMeasurement(this.document.Styles["Table"].Font.Clone());
+                TextMeasurement tmHeader = new TextMeasurement(DefaultGraphics, tableHeaderFont);
+                TextMeasurement tmBody = new TextMeasurement(DefaultGraphics, this.document.Styles["Table"].Font.Clone());
                 double totalColWidth = 0;
 
                 for (int i = 0; i < columns.Count; i++)
@@ -574,7 +574,7 @@ namespace CSGenio.framework
                 row.Shading.Color = Colors.DodgerBlue;
                 row.Format.Font.Color = Colors.White;
 
-                this.table.SetEdge(0, 0, columns.Count, 1, Edge.Box, BorderStyle.Single, 0.75, MigraDoc.DocumentObjectModel.Color.Empty);
+                this.table.SetEdge(0, 0, columns.Count, 1, Edge.Box, BorderStyle.Single, 0.75, Color.Empty);
 
                 for (int c = 0; c < columns.Count; c++)
                 {
@@ -601,7 +601,7 @@ namespace CSGenio.framework
 
                     if (rowPDF.Index % 2 == 0)
                     {
-                        rowPDF.Shading.Color = MigraDoc.DocumentObjectModel.Colors.LightGray;
+                        rowPDF.Shading.Color = Colors.LightGray;
                     }
 
                     this.table.SetEdge(0, this.table.Rows.Count - 1, columns.Count, 1, Edge.Box, BorderStyle.Single, 0.75);
@@ -658,7 +658,7 @@ namespace CSGenio.framework
             /// </summary>
             private bool TooWide(string word, Unit width)
             {
-                TextMeasurement tm = new TextMeasurement(this.document.Styles["Table"].Font.Clone());
+                TextMeasurement tm = new TextMeasurement(DefaultGraphics, this.document.Styles["Table"].Font.Clone());
                 double f = tm.MeasureString(word, UnitType.Point).Width;
                 return f > width.Point;
             }
@@ -818,435 +818,6 @@ namespace CSGenio.framework
             }
         }
 
-        private class ExportToODS
-        {
-            // Namespaces. We need this to initialize XmlNamespaceManager so that we can search XmlDocument.
-            private static string[,] namespaces = new string[,]
-            {
-                {"table", "urn:oasis:names:tc:opendocument:xmlns:table:1.0"},
-                {"office", "urn:oasis:names:tc:opendocument:xmlns:office:1.0"},
-                {"style", "urn:oasis:names:tc:opendocument:xmlns:style:1.0"},
-                {"text", "urn:oasis:names:tc:opendocument:xmlns:text:1.0"},
-                {"draw", "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0"},
-                {"fo", "urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"},
-                {"dc", "http://purl.org/dc/elements/1.1/"},
-                {"meta", "urn:oasis:names:tc:opendocument:xmlns:meta:1.0"},
-                {"number", "urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0"},
-                {"presentation", "urn:oasis:names:tc:opendocument:xmlns:presentation:1.0"},
-                {"svg", "urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0"},
-                {"chart", "urn:oasis:names:tc:opendocument:xmlns:chart:1.0"},
-                {"dr3d", "urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0"},
-                {"math", "http://www.w3.org/1998/Math/MathML"},
-                {"form", "urn:oasis:names:tc:opendocument:xmlns:form:1.0"},
-                {"script", "urn:oasis:names:tc:opendocument:xmlns:script:1.0"},
-                {"ooo", "http://openoffice.org/2004/office"},
-                {"ooow", "http://openoffice.org/2004/writer"},
-                {"oooc", "http://openoffice.org/2004/calc"},
-                {"dom", "http://www.w3.org/2001/xml-events"},
-                {"xforms", "http://www.w3.org/2002/xforms"},
-                {"xsd", "http://www.w3.org/2001/XMLSchema"},
-                {"xsi", "http://www.w3.org/2001/XMLSchema-instance"},
-                {"rpt", "http://openoffice.org/2005/report"},
-                {"of", "urn:oasis:names:tc:opendocument:xmlns:of:1.2"},
-                {"rdfa", "http://docs.oasis-open.org/opendocument/meta/rdfa#"},
-                {"config", "urn:oasis:names:tc:opendocument:xmlns:config:1.0"}
-            };
-
-            // Read zip stream (.ods file is zip file).
-            private ZipFile GetZipFile(Stream stream)
-            {
-                return ZipFile.Read(stream);
-            }
-
-            // Read zip file (.ods file is zip file).
-            private ZipFile GetZipFile(string inputFilePath)
-            {
-                return ZipFile.Read(inputFilePath);
-            }
-
-            private XmlDocument GetContentXmlFile(ZipFile zipFile)
-            {
-                // Get file(in zip archive) that contains data ("content.xml").
-                ZipEntry contentZipEntry = zipFile["content.xml"];
-
-                // Extract that file to MemoryStream.
-                Stream contentStream = new MemoryStream();
-                contentZipEntry.Extract(contentStream);
-                contentStream.Seek(0, SeekOrigin.Begin);
-
-                // Create XmlDocument from MemoryStream (MemoryStream contains content.xml).
-                XmlDocument contentXml = new XmlDocument();
-                contentXml.Load(contentStream);
-
-                return contentXml;
-            }
-
-            private XmlNamespaceManager InitializeXmlNamespaceManager(XmlDocument xmlDocument)
-            {
-                XmlNamespaceManager nmsManager = new XmlNamespaceManager(xmlDocument.NameTable);
-
-                for (int i = 0; i < namespaces.GetLength(0); i++)
-                    nmsManager.AddNamespace(namespaces[i, 0], namespaces[i, 1]);
-
-                return nmsManager;
-            }
-
-            // In ODF sheet is stored in table:table node
-            private XmlNodeList GetTableNodes(XmlDocument contentXmlDocument, XmlNamespaceManager nmsManager)
-            {
-                return contentXmlDocument.SelectNodes("/office:document-content/office:body/office:spreadsheet/table:table", nmsManager);
-            }
-
-            /// <summary>
-            /// Generate OpenDocument SpreadSheet file with table content.
-            /// </summary>
-            public byte[] GetOds(DataMatrix values, List<QColumn> columns, User user = null)
-            {
-                ZipFile templateFile = this.GetZipFile(Assembly.GetExecutingAssembly().GetManifestResourceStream("CSGenio.core.resources.Exports.template.ods"));
-
-                XmlDocument contentXml = this.GetContentXmlFile(templateFile);
-
-                XmlNamespaceManager nmsManager = this.InitializeXmlNamespaceManager(contentXml);
-
-                XmlNode automaticStylesNode = this.GetAutomaticStylesNode(contentXml, nmsManager);
-
-                this.CreateColumnsStyles(automaticStylesNode, columns.Count);
-                this.CreateRowsStyles(automaticStylesNode);
-
-                XmlNode sheetsRootNode = this.GetSheetsRootNodeAndRemoveChildrens(contentXml, nmsManager);
-
-                this.SaveSheet(values, sheetsRootNode, columns, user);
-
-                this.SaveContentXml(templateFile, contentXml);
-
-                byte[] buffer;
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    templateFile.Save(ms);
-                    buffer = new byte[ms.Length];
-                    ms.Seek(0, SeekOrigin.Begin);
-                    ms.Flush();
-                    ms.Read(buffer, 0, (int)ms.Length);
-                }
-
-                return buffer;
-            }
-
-            private XmlNode GetAutomaticStylesNode(XmlDocument contentXml, XmlNamespaceManager nmsManager)
-            {
-                return contentXml.SelectNodes("/office:document-content/office:automatic-styles", nmsManager).Item(0);
-            }
-
-            private void CreateColumnsStyles(XmlNode automaticStylesNode, int numColumns)
-            {
-                XmlDocument ownerDocument = automaticStylesNode.OwnerDocument;
-
-                for (int i = 0; i < numColumns; i++)
-                {
-                    XmlElement style = ownerDocument.CreateElement("style:style", this.GetNamespaceUri("style"));
-
-                    XmlAttribute styleName = ownerDocument.CreateAttribute("style:name", this.GetNamespaceUri("style"));
-                    styleName.Value = "co" + (i + 2).ToString();
-                    style.Attributes.Append(styleName);
-
-                    XmlAttribute styleFamily = ownerDocument.CreateAttribute("style:family", this.GetNamespaceUri("style"));
-                    styleFamily.Value = "table-column";
-                    style.Attributes.Append(styleFamily);
-
-                    XmlElement tableColumnProperties = ownerDocument.CreateElement("style:table-column-properties", this.GetNamespaceUri("style"));
-
-                    XmlAttribute foBreakBefore = ownerDocument.CreateAttribute("fo:break-before", this.GetNamespaceUri("fo"));
-                    foBreakBefore.Value = "auto";
-                    tableColumnProperties.Attributes.Append(foBreakBefore);
-
-                    //XmlAttribute styleColumnWidth = ownerDocument.CreateAttribute("style:column-width", this.GetNamespaceUri("style"));
-                    //double tableWidth = 27.5; //Vamos assumir a largura de uma pagina A4 menos 2,2cm de margens. Ou seja 29.7 - 2.2 = 27.5cm
-                    //double colPercent = (col.Size * tableWidth) / QColumn.Sum(columns);
-                    //styleColumnWidth.Value = Math.Round(colPercent, 2).ToString().Replace(",", ".") + "cm";
-                    //styleColumnWidth.Value = "auto";
-                    //tableColumnProperties.Attributes.Append(styleColumnWidth);
-
-                    XmlAttribute styleAutoWidth = ownerDocument.CreateAttribute("style:use-optimal-column-width", this.GetNamespaceUri("style"));
-                    styleAutoWidth.Value = "true";
-                    tableColumnProperties.Attributes.Append(styleAutoWidth);
-
-                    style.AppendChild(tableColumnProperties);
-
-                    automaticStylesNode.AppendChild(style);
-                }
-            }
-
-            private void CreateRowsStyles(XmlNode automaticStylesNode)
-            {
-                XmlDocument ownerDocument = automaticStylesNode.OwnerDocument;
-
-                #region Style Cell Header
-                XmlElement styleHeader = ownerDocument.CreateElement("style:style", this.GetNamespaceUri("style"));
-                XmlAttribute styleName = ownerDocument.CreateAttribute("style:name", this.GetNamespaceUri("style"));
-                styleName.Value = "ce1";
-                styleHeader.Attributes.Append(styleName);
-                XmlAttribute styleFamily = ownerDocument.CreateAttribute("style:family", this.GetNamespaceUri("style"));
-                styleFamily.Value = "table-cell";
-                styleHeader.Attributes.Append(styleFamily);
-                XmlAttribute parentStyleName = ownerDocument.CreateAttribute("style:parent-style-name", this.GetNamespaceUri("style"));
-                parentStyleName.Value = "Default";
-                styleHeader.Attributes.Append(parentStyleName);
-
-                XmlElement tableCellProperties = ownerDocument.CreateElement("style:table-cell-properties", this.GetNamespaceUri("style"));
-                XmlAttribute foBackColor = ownerDocument.CreateAttribute("fo:background-color", this.GetNamespaceUri("fo"));
-                foBackColor.Value = "#008DD2";
-                tableCellProperties.Attributes.Append(foBackColor);
-                XmlAttribute textAlignSource = ownerDocument.CreateAttribute("style:text-align-source", this.GetNamespaceUri("style"));
-                textAlignSource.Value = "fix";
-                tableCellProperties.Attributes.Append(textAlignSource);
-                XmlAttribute repeatContent = ownerDocument.CreateAttribute("style:repeat-content", this.GetNamespaceUri("style"));
-                repeatContent.Value = "false";
-                tableCellProperties.Attributes.Append(repeatContent);
-                XmlAttribute foBorder = ownerDocument.CreateAttribute("fo:border", this.GetNamespaceUri("fo"));
-                //foBorder.Value = "0.002cm solid #000000";
-                tableCellProperties.Attributes.Append(foBorder);
-
-                XmlElement paragraphProperties = ownerDocument.CreateElement("style:paragraph-properties", this.GetNamespaceUri("style"));
-                XmlAttribute textAlign = ownerDocument.CreateAttribute("fo:text-align", this.GetNamespaceUri("fo"));
-                textAlign.Value = "center";
-                paragraphProperties.Attributes.Append(textAlign);
-                XmlAttribute marginLeft = ownerDocument.CreateAttribute("fo:margin-left", this.GetNamespaceUri("fo"));
-                marginLeft.Value = "0cm";
-                paragraphProperties.Attributes.Append(marginLeft);
-
-                XmlElement textProperties = ownerDocument.CreateElement("style:text-properties", this.GetNamespaceUri("style"));
-                XmlAttribute color = ownerDocument.CreateAttribute("fo:color", this.GetNamespaceUri("fo"));
-                color.Value = "#FFFFFF";
-                textProperties.Attributes.Append(color);
-                #endregion
-
-                styleHeader.AppendChild(tableCellProperties);
-                styleHeader.AppendChild(paragraphProperties);
-                styleHeader.AppendChild(textProperties);
-                automaticStylesNode.AppendChild(styleHeader);
-
-                #region Style Cell Body
-                XmlElement styleBody = ownerDocument.CreateElement("style:style", this.GetNamespaceUri("style"));
-                XmlAttribute styleBodyName = ownerDocument.CreateAttribute("style:name", this.GetNamespaceUri("style"));
-                styleBodyName.Value = "ce2";
-                styleBody.Attributes.Append(styleBodyName);
-                XmlAttribute styleBodyFamily = ownerDocument.CreateAttribute("style:family", this.GetNamespaceUri("style"));
-                styleBodyFamily.Value = "table-cell";
-                styleBody.Attributes.Append(styleBodyFamily);
-                XmlAttribute styleBodyParentStyleName = ownerDocument.CreateAttribute("style:parent-style-name", this.GetNamespaceUri("style"));
-                styleBodyParentStyleName.Value = "Default";
-                styleBody.Attributes.Append(styleBodyParentStyleName);
-
-                XmlElement styleBodyTableCellProperties = ownerDocument.CreateElement("style:table-cell-properties", this.GetNamespaceUri("style"));
-                XmlAttribute styleBodyTextAlignSource = ownerDocument.CreateAttribute("style:text-align-source", this.GetNamespaceUri("style"));
-                styleBodyTextAlignSource.Value = "fix";
-                styleBodyTableCellProperties.Attributes.Append(styleBodyTextAlignSource);
-                XmlAttribute styleBodyRepeatContent = ownerDocument.CreateAttribute("style:repeat-content", this.GetNamespaceUri("style"));
-                styleBodyRepeatContent.Value = "false";
-                styleBodyTableCellProperties.Attributes.Append(styleBodyRepeatContent);
-                XmlAttribute styleBodyFoBorder = ownerDocument.CreateAttribute("fo:border", this.GetNamespaceUri("fo"));
-                //styleBodyFoBorder.Value = "0.002cm solid #000000";
-                styleBodyTableCellProperties.Attributes.Append(styleBodyFoBorder);
-
-                XmlElement styleBodyParagraphProperties = ownerDocument.CreateElement("style:paragraph-properties", this.GetNamespaceUri("style"));
-                XmlAttribute styleBodyTextAlign = ownerDocument.CreateAttribute("fo:text-align", this.GetNamespaceUri("fo"));
-                styleBodyTextAlign.Value = "start";
-                styleBodyParagraphProperties.Attributes.Append(styleBodyTextAlign);
-                XmlAttribute styleBodyMarginLeft = ownerDocument.CreateAttribute("fo:margin-left", this.GetNamespaceUri("fo"));
-                styleBodyMarginLeft.Value = "0cm";
-                styleBodyParagraphProperties.Attributes.Append(styleBodyMarginLeft);
-                #endregion
-
-                styleBody.AppendChild(styleBodyTableCellProperties);
-                styleBody.AppendChild(styleBodyParagraphProperties);
-                automaticStylesNode.AppendChild(styleBody);
-
-                #region Style Alternative Cell Body
-                XmlElement altstyleBody = ownerDocument.CreateElement("style:style", this.GetNamespaceUri("style"));
-                XmlAttribute altstyleBodyName = ownerDocument.CreateAttribute("style:name", this.GetNamespaceUri("style"));
-                altstyleBodyName.Value = "ce3";
-                altstyleBody.Attributes.Append(altstyleBodyName);
-                XmlAttribute altstyleBodyFamily = ownerDocument.CreateAttribute("style:family", this.GetNamespaceUri("style"));
-                altstyleBodyFamily.Value = "table-cell";
-                altstyleBody.Attributes.Append(styleBodyFamily);
-                XmlAttribute altstyleBodyParentStyleName = ownerDocument.CreateAttribute("style:parent-style-name", this.GetNamespaceUri("style"));
-                altstyleBodyParentStyleName.Value = "Default";
-                altstyleBody.Attributes.Append(altstyleBodyParentStyleName);
-
-                XmlElement altstyleBodyTableCellProperties = ownerDocument.CreateElement("style:table-cell-properties", this.GetNamespaceUri("style"));
-                XmlAttribute altfoBackColor = ownerDocument.CreateAttribute("fo:background-color", this.GetNamespaceUri("fo"));
-                altfoBackColor.Value = "#d3d3d3";
-                altstyleBodyTableCellProperties.Attributes.Append(altfoBackColor);
-                XmlAttribute altstyleBodyTextAlignSource = ownerDocument.CreateAttribute("style:text-align-source", this.GetNamespaceUri("style"));
-                altstyleBodyTextAlignSource.Value = "fix";
-                altstyleBodyTableCellProperties.Attributes.Append(altstyleBodyTextAlignSource);
-                XmlAttribute altstyleBodyRepeatContent = ownerDocument.CreateAttribute("style:repeat-content", this.GetNamespaceUri("style"));
-                altstyleBodyRepeatContent.Value = "false";
-                altstyleBodyTableCellProperties.Attributes.Append(altstyleBodyRepeatContent);
-                XmlAttribute altstyleBodyFoBorder = ownerDocument.CreateAttribute("fo:border", this.GetNamespaceUri("fo"));
-                //altstyleBodyFoBorder.Value = "0.002cm solid #000000";
-                altstyleBodyTableCellProperties.Attributes.Append(altstyleBodyFoBorder);
-
-                XmlElement altstyleBodyParagraphProperties = ownerDocument.CreateElement("style:paragraph-properties", this.GetNamespaceUri("style"));
-                XmlAttribute altstyleBodyTextAlign = ownerDocument.CreateAttribute("fo:text-align", this.GetNamespaceUri("fo"));
-                altstyleBodyTextAlign.Value = "start";
-                altstyleBodyParagraphProperties.Attributes.Append(altstyleBodyTextAlign);
-                XmlAttribute altstyleBodyMarginLeft = ownerDocument.CreateAttribute("fo:margin-left", this.GetNamespaceUri("fo"));
-                altstyleBodyMarginLeft.Value = "0cm";
-                altstyleBodyParagraphProperties.Attributes.Append(altstyleBodyMarginLeft);
-                #endregion
-
-                altstyleBody.AppendChild(altstyleBodyTableCellProperties);
-                altstyleBody.AppendChild(altstyleBodyParagraphProperties);
-                automaticStylesNode.AppendChild(altstyleBody);
-            }
-
-            private XmlNode GetSheetsRootNodeAndRemoveChildrens(XmlDocument contentXml, XmlNamespaceManager nmsManager)
-            {
-                XmlNodeList tableNodes = this.GetTableNodes(contentXml, nmsManager);
-
-                XmlNode sheetsRootNode = tableNodes.Item(0).ParentNode;
-                // remove sheets from template file
-                foreach (XmlNode tableNode in tableNodes)
-                    sheetsRootNode.RemoveChild(tableNode);
-
-                return sheetsRootNode;
-            }
-
-            private void SaveSheet(DataMatrix values, XmlNode sheetsRootNode, List<QColumn> columns, User user = null)
-            {
-                XmlDocument ownerDocument = sheetsRootNode.OwnerDocument;
-                XmlNode sheetNode = ownerDocument.CreateElement("table:table", this.GetNamespaceUri("table"));
-
-                XmlAttribute sheetName = ownerDocument.CreateAttribute("table:name", this.GetNamespaceUri("table"));
-                sheetName.Value = "Folha";
-                sheetNode.Attributes.Append(sheetName);
-
-                XmlAttribute styleName = ownerDocument.CreateAttribute("table:style-name", this.GetNamespaceUri("table"));
-                styleName.Value = "ta1";
-                sheetNode.Attributes.Append(styleName);
-
-                XmlAttribute print = ownerDocument.CreateAttribute("table:print", this.GetNamespaceUri("table"));
-                print.Value = "false";
-                sheetNode.Attributes.Append(print);
-
-                this.SaveColumnDefinition(columns.Count, sheetNode, ownerDocument);
-
-                this.CreateTableHeaders(sheetNode, ownerDocument, columns);
-
-                this.SaveRows(values, columns, sheetNode, ownerDocument, user);
-
-                sheetsRootNode.AppendChild(sheetNode);
-            }
-
-            private void SaveColumnDefinition(int numColumns, XmlNode sheetNode, XmlDocument ownerDocument)
-            {
-                for (int i = 0; i < numColumns; i++)
-                {
-                    XmlNode columnDefinition = ownerDocument.CreateElement("table:table-column", this.GetNamespaceUri("table"));
-
-                    XmlAttribute styleCell = ownerDocument.CreateAttribute("table:style-name", this.GetNamespaceUri("table"));
-                    styleCell.Value = "co" + (i + 2).ToString();
-                    columnDefinition.Attributes.Append(styleCell);
-
-                    XmlAttribute defaultStyleCell = ownerDocument.CreateAttribute("table:default-cell-style-name", this.GetNamespaceUri("table"));
-                    defaultStyleCell.Value = "ce2";
-                    columnDefinition.Attributes.Append(defaultStyleCell);
-
-                    sheetNode.AppendChild(columnDefinition);
-                }
-            }
-
-            private void CreateTableHeaders(XmlNode sheetNode, XmlDocument ownerDocument, List<QColumn> columns)
-            {
-                XmlNode rowNode = ownerDocument.CreateElement("table:table-row", this.GetNamespaceUri("table"));
-                XmlAttribute style = ownerDocument.CreateAttribute("table:style-name", this.GetNamespaceUri("table"));
-                style.Value = "ro1";
-                rowNode.Attributes.Append(style);
-
-                foreach (var col in columns)
-                {
-                    XmlElement cellNode = ownerDocument.CreateElement("table:table-cell", this.GetNamespaceUri("table"));
-
-                    XmlAttribute styleCell = ownerDocument.CreateAttribute("table:style-name", this.GetNamespaceUri("table"));
-                    styleCell.Value = "ce1";
-                    cellNode.Attributes.Append(styleCell);
-
-                    XmlAttribute valueType = ownerDocument.CreateAttribute("office:value-type", this.GetNamespaceUri("office"));
-                    valueType.Value = "string";
-                    cellNode.Attributes.Append(valueType);
-
-                    XmlElement cellValue = ownerDocument.CreateElement("text:p", this.GetNamespaceUri("text"));
-                    cellValue.InnerText = col.Description;
-                    cellNode.AppendChild(cellValue);
-
-                    rowNode.AppendChild(cellNode);
-                }
-
-                sheetNode.AppendChild(rowNode);
-            }
-
-            private void SaveRows(DataMatrix values, List<QColumn> columns, XmlNode sheetNode, XmlDocument ownerDocument, User user = null)
-            {
-                for (int i = 0; i < values.NumRows; i++)
-                {
-                    XmlNode rowNode = ownerDocument.CreateElement("table:table-row", this.GetNamespaceUri("table"));
-                    XmlAttribute style = ownerDocument.CreateAttribute("table:style-name", this.GetNamespaceUri("table"));
-                    style.Value = "ro1";
-                    rowNode.Attributes.Append(style);
-
-                    for (int c = 0; c < columns.Count; c++)
-                    {
-                        this.SaveCell(values.GetDirect(i, columns[c].Name), columns[c], rowNode, ownerDocument, i, user);
-                    }
-
-                    sheetNode.AppendChild(rowNode);
-                }
-            }
-
-            private void SaveCell(object value, QColumn column, XmlNode rowNode, XmlDocument ownerDocument, int rowIndex, User user = null)
-            {
-                XmlElement cellNode = ownerDocument.CreateElement("table:table-cell", this.GetNamespaceUri("table"));
-
-                XmlAttribute styleCell = ownerDocument.CreateAttribute("table:style-name", this.GetNamespaceUri("table"));
-                styleCell.Value = (rowIndex % 2 == 0 ? "ce2" : "ce3");
-                cellNode.Attributes.Append(styleCell);
-
-                // We save values as text (string)
-                XmlAttribute valueType = ownerDocument.CreateAttribute("office:value-type", this.GetNamespaceUri("office"));
-                valueType.Value = "string";
-                cellNode.Attributes.Append(valueType);
-
-                XmlElement cellValue = ownerDocument.CreateElement("text:p", this.GetNamespaceUri("text"));
-                cellValue.InnerText = getTextFromData(value, column, user);
-                cellNode.AppendChild(cellValue);
-
-                rowNode.AppendChild(cellNode);
-            }
-
-            private void SaveContentXml(ZipFile templateFile, XmlDocument contentXml)
-            {
-                templateFile.RemoveEntry("content.xml");
-
-                MemoryStream memStream = new MemoryStream();
-                contentXml.Save(memStream);
-                memStream.Seek(0, SeekOrigin.Begin);
-
-                templateFile.AddEntry("content.xml", memStream);
-            }
-
-            private string GetNamespaceUri(string prefix)
-            {
-                for (int i = 0; i < namespaces.GetLength(0); i++)
-                {
-                    if (namespaces[i, 0] == prefix)
-                        return namespaces[i, 1];
-                }
-
-                throw new InvalidOperationException("Can't find that namespace URI");
-            }
-        }
-
         private class ExportToCSV
         {
             /// <summary>
@@ -1371,7 +942,7 @@ namespace CSGenio.framework
 
         }
 
-        private static string getTextFromData(object data, QColumn column, User user = null)
+        internal static string getTextFromData(object data, QColumn column, User user = null)
         {
 			string lang = "";
 			if(user != null)
@@ -1556,6 +1127,139 @@ namespace CSGenio.framework
             return value;
         }
 
+		/// <summary>
+		/// Convert the Excel datetime format string to a standard format string
+		/// </summary>
+		/// <param name="format">Excel-specific format string</param>
+		/// <returns>Standard datetime format string</returns>
+		private string GetNormalizedExcelDateTimeFormatString(string format)
+		{
+			if (string.IsNullOrEmpty(format))
+				return "";
+
+			// Remove non-standard format info (specific to Excel)
+			// Replace with standard format info
+			// Start string after any prefix characters and brackets (ex: [$f-800])
+			return format.Substring(format.IndexOf(']') + 1)
+				// Remove suffix characters
+				.Replace(";@", "")
+				// Remove extra backslashes
+				.Replace("\\", "")
+				// Change AM/PM to standard tt
+				.Replace("AM/PM", "tt")
+				// Excel uses lower case m for both months and minutes
+				// Change the minute characters to i so the other 
+				// lowercase m characters that are for months can be changed to uppercase
+				// and then the i characters can be changed back to m
+				.Replace(":mm", ":ii")
+				.Replace("mm:", "ii:")
+				.Replace("m", "M")
+				.Replace("i", "m")
+				// Replace tenths of a second with standard f
+				.Replace(".0", ".f")
+				// Always replace / with - since Excel is inconsistent in using these characters 
+				// for format strings and formatted date text
+				.Replace("/", "-");
+		}
+
+		/// <summary>
+		/// Get the parsed Excel cell value using the cell's formatting 
+		/// or the default formatting if the cell does not have specific formatting
+		/// </summary>
+		/// <param name="cell">Cell object</param>
+		/// <param name="defaultFormatting">Default format string, used for cells that don't have specific formatting</param>
+		/// <returns>Datetime object</returns>
+		private DateTime GetParsedExcelCellDateTimeValue(ExcelRange cell, string defaultFormatting)
+		{
+			if (cell.Value is double)
+			{
+				// Some date formatting options cause the cells to have the date stored as a number
+				// which is the number of days since 1900-01-01 or 1904-01-01
+				// depending on whether the 1904 date system option is set
+				// --------------------------------------------------------------------------------
+				// When using the 1900 date system, (default for Excel for Windows, Excel 2011 & 2016 for Mac),
+				// this number is always at least 1 more than the actual number of days since 1900-01-01 and
+				// in most cases this number will be 2 more than the actual number of days since 1900-01-01
+				// because Excel allows the date 1900-02-29 which doesn't exist
+
+				// Get starting year for numeric date values
+				int startYear = cell.Worksheet.Workbook.Date1904 ? 1904 : 1900;
+
+				// Get number of days since date system starting date (1900-01-01 or 1904-01-01)
+				double daysSinceStart = (double)cell.Value;
+
+				// If using 1900 date system (default)
+				if (startYear == 1900)
+				{
+					// Account for 1900-01-01 being counted as 1
+					daysSinceStart--;
+
+					// If the date is 1900-2-29, it's invalid
+					if (daysSinceStart == 59)
+						throw new System.FormatException();
+					// For dates after 1900-02-29 subtract 1
+					// so this invalid date is not counted in the number of days since 1900-01-01
+					else if (daysSinceStart > 59)
+						daysSinceStart--;
+				}
+
+				// Return the date that is the elapsed time since the system starting date
+				// (1900-01-01 or 1904-01-01)
+				return new DateTime(startYear, 1, 1).AddDays(daysSinceStart);
+			}
+			else if (cell.Value is string)
+			{
+				string formatting;
+
+				// If the cell has specific formatting, use it, otherwise use the default formatting.
+				// There isn't really a way to just check if the formatting given is a datetime type format
+				// and the cells don't have data types either.
+				if (cell.Style.Numberformat.NumFmtID > 0)
+					formatting = GetNormalizedExcelDateTimeFormatString(cell.Style.Numberformat.Format);
+				else
+					formatting = defaultFormatting;
+
+				DateTimeFieldFormatter formatter = new DateTimeFieldFormatter(formatting);
+
+				// Always replace / with - since Excel is inconsistent in using these characters 
+				// for format strings and formatted date text
+				string cellValue = cell.Value == null ? "" : cell.Value.ToString().Replace("/", "-");
+
+				// Try to parse using the cell's formatted text and format string
+				return formatter.parseStringValue(cellValue);
+			}
+
+			return DateTime.MinValue;
+		}
+
+		/// <summary>
+		/// Get the parsed Excel cell value, accounting for the field type
+		/// </summary>
+		/// <param name="column">Table column object</param>
+		/// <param name="cell">Cell object</param>
+		/// <returns>Cell value, parsed if necessary</returns>
+		private object GetParsedExcelCellValue(QColumn column, ExcelRange cell)
+		{
+			switch (column.Formatting)
+			{
+				case FieldFormatting.DATA:
+					return GetParsedExcelCellDateTimeValue(cell, Configuration.DateFormat.Date);
+				case FieldFormatting.DATAHORA:
+					return GetParsedExcelCellDateTimeValue(cell, Configuration.DateFormat.DateTime);
+				case FieldFormatting.DATASEGUNDO:
+					return GetParsedExcelCellDateTimeValue(cell, Configuration.DateFormat.DateTimeSeconds);
+				default:
+					return cell.Value;
+			}
+		}
+
+		/// <summary>
+		/// Import Excel sheet data
+		/// </summary>
+		/// <param name="columns">Table column objects</param>
+		/// <param name="file">Raw file data</param>
+		/// <param name="rowCount">Output number of rows</param>
+		/// <returns>Rows with object values for each cell</returns>
         private List<object[]> ImportExcel(List<Exports.QColumn> columns, byte[] file, ref int rowCount)
         {
             int columnCount = columns.Count;
@@ -1574,8 +1278,17 @@ namespace CSGenio.framework
                 {
                     object[] row = new object[columnCount];
                     for(int colIterator = 0; colIterator < columnCount; colIterator++){
-                        //TODO: Parse by Type
-                        row[colIterator] = currentSheet.Cells[rowIterator + 1, colIterator + 1].Value;
+                        // Current cell object
+						var cell = currentSheet.Cells[rowIterator + 1, colIterator + 1];
+
+						// Corresponding table column object
+						QColumn column = columns[colIterator];
+
+						// For the first row (header row) use the raw value (column title).
+						// For data rows, get the value and parse if necessary,
+						// accounting for the formatting defined in the Excel cell
+						// and the application configuration.
+						row[colIterator] = (rowIterator == 0) ? cell.Value : GetParsedExcelCellValue(column, cell);
                     }
                     results.Add(row);
                 }

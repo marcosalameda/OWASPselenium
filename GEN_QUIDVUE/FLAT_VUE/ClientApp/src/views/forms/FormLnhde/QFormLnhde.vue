@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -96,7 +96,7 @@
 			:data-loading="!formInitialDataLoaded"
 			:key="domVersionKey">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.LNHDE___PEDIDNRPEDIDO.isVisible || controls.LNHDE___LNHPDLINE____.isVisible || controls.LNHDE___LNHDEORDEM___.isVisible || controls.LNHDE___TPEQ1TIPOEQUI.isVisible || controls.LNHDE___LNHDEQUANTIDA.isVisible || controls.LNHDE___LNHDECODE____.isVisible">
+				<q-row-container v-show="controls.LNHDE___PEDIDNRPEDIDO.isVisible || controls.LNHDE___LNHPDLINE____.isVisible || controls.LNHDE___LNHDEORDEM___.isVisible || controls.LNHDE___TPEQ1TIPOEQUI.isVisible || controls.LNHDE___LNHDEQUANTIDA.isVisible || controls.LNHDE___LNHDEQUANTDEC.isVisible">
 					<q-control-wrapper
 						v-show="controls.LNHDE___PEDIDNRPEDIDO.isVisible || controls.LNHDE___LNHPDLINE____.isVisible"
 						class="control-join-group">
@@ -106,14 +106,11 @@
 							v-on="controls.LNHDE___PEDIDNRPEDIDO.handlers"
 							:loading="controls.LNHDE___PEDIDNRPEDIDO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.LNHDE___PEDIDNRPEDIDO.isVisible"
 								v-bind="controls.LNHDE___PEDIDNRPEDIDO.props"
-								:model-value="model.ValCodpedid.value"
-								v-on="controls.LNHDE___PEDIDNRPEDIDO.handlers"
-								@update:model-value="model.ValCodpedid.fnUpdateValue" />
+								v-on="controls.LNHDE___PEDIDNRPEDIDO.handlers" />
 							<q-see-more-lnhde-pedidnrpedido
 								v-if="controls.LNHDE___PEDIDNRPEDIDO.seeMoreIsVisible"
 								v-bind="controls.LNHDE___PEDIDNRPEDIDO.seeMoreParams"
@@ -125,14 +122,11 @@
 							v-on="controls.LNHDE___LNHPDLINE____.handlers"
 							:loading="controls.LNHDE___LNHPDLINE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.LNHDE___LNHPDLINE____.isVisible"
 								v-bind="controls.LNHDE___LNHPDLINE____.props"
-								:model-value="model.ValCodlnhpd.value"
-								v-on="controls.LNHDE___LNHPDLINE____.handlers"
-								@update:model-value="model.ValCodlnhpd.fnUpdateValue" />
+								v-on="controls.LNHDE___LNHPDLINE____.handlers" />
 							<q-see-more-lnhde-lnhpdline
 								v-if="controls.LNHDE___LNHPDLINE____.seeMoreIsVisible"
 								v-bind="controls.LNHDE___LNHPDLINE____.seeMoreParams"
@@ -140,7 +134,7 @@
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
-						v-show="controls.LNHDE___LNHDEORDEM___.isVisible || controls.LNHDE___TPEQ1TIPOEQUI.isVisible || controls.LNHDE___LNHDEQUANTIDA.isVisible"
+						v-show="controls.LNHDE___LNHDEORDEM___.isVisible || controls.LNHDE___TPEQ1TIPOEQUI.isVisible || controls.LNHDE___LNHDEQUANTIDA.isVisible || controls.LNHDE___LNHDEQUANTDEC.isVisible"
 						class="control-join-group">
 						<base-input-structure
 							class="i-text"
@@ -148,12 +142,10 @@
 							v-on="controls.LNHDE___LNHDEORDEM___.handlers"
 							:loading="controls.LNHDE___LNHDEORDEM___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.LNHDE___LNHDEORDEM___.isVisible"
-								v-bind="controls.LNHDE___LNHDEORDEM___"
-								:model-value="model.ValOrdem.value"
+								v-bind="controls.LNHDE___LNHDEORDEM___.props"
 								@update:model-value="model.ValOrdem.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
@@ -162,14 +154,11 @@
 							v-on="controls.LNHDE___TPEQ1TIPOEQUI.handlers"
 							:loading="controls.LNHDE___TPEQ1TIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.LNHDE___TPEQ1TIPOEQUI.isVisible"
 								v-bind="controls.LNHDE___TPEQ1TIPOEQUI.props"
-								:model-value="model.ValCodtpequ.value"
-								v-on="controls.LNHDE___TPEQ1TIPOEQUI.handlers"
-								@update:model-value="model.ValCodtpequ.fnUpdateValue" />
+								v-on="controls.LNHDE___TPEQ1TIPOEQUI.handlers" />
 							<q-see-more-lnhde-tpeq1tipoequi
 								v-if="controls.LNHDE___TPEQ1TIPOEQUI.seeMoreIsVisible"
 								v-bind="controls.LNHDE___TPEQ1TIPOEQUI.seeMoreParams"
@@ -181,15 +170,27 @@
 							v-on="controls.LNHDE___LNHDEQUANTIDA.handlers"
 							:loading="controls.LNHDE___LNHDEQUANTIDA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.LNHDE___LNHDEQUANTIDA.isVisible"
-								v-bind="controls.LNHDE___LNHDEQUANTIDA"
-								:model-value="model.ValQuantida.value"
+								v-bind="controls.LNHDE___LNHDEQUANTIDA.props"
 								@update:model-value="model.ValQuantida.fnUpdateValue" />
 						</base-input-structure>
+						<base-input-structure
+							class="i-text"
+							v-bind="controls.LNHDE___LNHDEQUANTDEC"
+							v-on="controls.LNHDE___LNHDEQUANTDEC.handlers"
+							:loading="controls.LNHDE___LNHDEQUANTDEC.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<q-numeric-input
+								v-if="controls.LNHDE___LNHDEQUANTDEC.isVisible"
+								v-bind="controls.LNHDE___LNHDEQUANTDEC.props"
+								@update:model-value="model.ValQuantdec.fnUpdateValue" />
+						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.LNHDE___LNHDECODE____.isVisible">
 					<q-control-wrapper
 						v-show="controls.LNHDE___LNHDECODE____.isVisible"
 						class="control-join-group">
@@ -199,12 +200,12 @@
 							v-on="controls.LNHDE___LNHDECODE____.handlers"
 							:loading="controls.LNHDE___LNHDECODE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.LNHDE___LNHDECODE____.props"
 								:model-value="model.ValCode.value"
-								@update:model-value="model.ValCode.fnUpdateValue" />
+								@blur="onBlur(controls.LNHDE___LNHDECODE____, model.ValCode.value)"
+								@change="model.ValCode.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -218,18 +219,14 @@
 							v-on="controls.LNHDE___LNHDEDESCRIPT.handlers"
 							:loading="controls.LNHDE___LNHDEDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.LNHDE___LNHDEDESCRIPT.isVisible"
+								v-bind="controls.LNHDE___LNHDEDESCRIPT.props"
 								id="LNHDE___LNHDEDESCRIPT"
-								size="xxlarge"
 								:model-value="model.ValDescript.value"
 								:rows="2"
 								:cols="85"
-								:is-required="controls.LNHDE___LNHDEDESCRIPT.isRequired"
-								:readonly="controls.LNHDE___LNHDEDESCRIPT.readonly"
-								:placeholder="controls.LNHDE___LNHDEDESCRIPT.placeholder"
 								@update:model-value="model.ValDescript.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -244,13 +241,26 @@
 							v-on="controls.LNHDE___LNHDEURL_____.handlers"
 							:loading="controls.LNHDE___LNHDEURL_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.LNHDE___LNHDEURL_____.props"
 								:model-value="model.ValUrl.value"
-								@update:model-value="model.ValUrl.fnUpdateValue" />
+								@blur="onBlur(controls.LNHDE___LNHDEURL_____, model.ValUrl.value)"
+								@change="model.ValUrl.fnUpdateValueOnChange" />
 						</base-input-structure>
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.LNHDE___PSEUDLNPROPS_.isVisible">
+					<q-control-wrapper
+						v-show="controls.LNHDE___PSEUDLNPROPS_.isVisible"
+						class="control-join-group">
+						<q-table
+							v-show="controls.LNHDE___PSEUDLNPROPS_.isVisible"
+							v-bind="controls.LNHDE___PSEUDLNPROPS_"
+							v-on="controls.LNHDE___PSEUDLNPROPS_.handlers" />
+						<q-table-extra-extension
+							:list-ctrl="controls.LNHDE___PSEUDLNPROPS_"
+							v-on="controls.LNHDE___PSEUDLNPROPS_.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
 			</template>
@@ -337,15 +347,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'LNHDE',
-						location: 'form-LNHDE',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'LNHDE',
+					location: 'form-LNHDE',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -391,6 +399,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -463,8 +473,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -546,7 +557,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -600,21 +611,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -625,28 +621,10 @@
 						id: 'LNHDE___PEDIDNRPEDIDO',
 						name: 'NRPEDIDO',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.ORDER_NO_15510),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodpedid',
-							dependencyEvent: 'fieldChange:lnhde.codpedid'
-						},
-						dependentFields: () => {
-							return {
-								set 'pedid.codpedid'(value) { vm.model.ValCodpedid.updateValue(value) },
-								set 'pedid.nrpedido'(value) { vm.model.TablePedidNrpedido.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'PEDID',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -655,6 +633,18 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodpedid',
+							dependencyEvent: 'fieldChange:lnhde.codpedid'
+						},
+						dependentFields: () => ({
+							set 'pedid.codpedid'(value) { vm.model.ValCodpedid.updateValue(value) },
+							set 'pedid.nrpedido'(value) { vm.model.TablePedidNrpedido.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'PEDID',
+						controlLimits: [
+						],
 					}, this),
 					LNHDE___LNHPDLINE____: new fieldControlClass.LookupControl({
 						modelField: 'TableLnhpdLine',
@@ -662,13 +652,28 @@
 						id: 'LNHDE___LNHPDLINE____',
 						name: 'LINE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ORDER_LINE_13692),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodlnhpd',
+							dependencyEvent: 'fieldChange:lnhde.codlnhpd'
+						},
+						dependentFields: () => ({
+							set 'lnhpd.codlnhpd'(value) { vm.model.ValCodlnhpd.updateValue(value) },
+							set 'lnhpd.line'(value) { vm.model.TableLnhpdLine.updateValue(value) },
+							set 'lnhpd.quantdec'(value) { vm.model.LnhpdValQuantdec.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'LNHPD',
 						controlLimits: [
 							{
 								identifier: ['pedid', 'lnhde.codpedid'],
@@ -677,42 +682,19 @@
 								fnValueSelector: (model) => model.ValCodpedid.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodlnhpd',
-							dependencyEvent: 'fieldChange:lnhde.codlnhpd'
-						},
-						dependentFields: () => {
-							return {
-								set 'lnhpd.codlnhpd'(value) { vm.model.ValCodlnhpd.updateValue(value) },
-								set 'lnhpd.line'(value) { vm.model.TableLnhpdLine.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'LNHPD',
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					LNHDE___LNHDEORDEM___: new fieldControlClass.NumberControl({
 						modelField: 'ValOrdem',
 						valueChangeEvent: 'fieldChange:lnhde.ordem',
-						maxIntegers: 3,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'LNHDE___LNHDEORDEM___',
 						name: 'ORDEM',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ORDER39632),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 3,
+						maxDecimals: 0,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -723,25 +705,9 @@
 						id: 'LNHDE___TPEQ1TIPOEQUI',
 						name: 'TIPOEQUI',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodtpequ',
-							dependencyEvent: 'fieldChange:lnhde.codtpequ'
-						},
-						dependentFields: () => {
-							return {
-								set 'tpeq1.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
-								set 'tpeq1.tipoequi'(value) { vm.model.TableTpeq1Tipoequi.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -750,22 +716,42 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodtpequ',
+							dependencyEvent: 'fieldChange:lnhde.codtpequ'
+						},
+						dependentFields: () => ({
+							set 'tpeq1.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
+							set 'tpeq1.tipoequi'(value) { vm.model.TableTpeq1Tipoequi.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					LNHDE___LNHDEQUANTIDA: new fieldControlClass.NumberControl({
 						modelField: 'ValQuantida',
 						valueChangeEvent: 'fieldChange:lnhde.quantida',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'LNHDE___LNHDEQUANTIDA',
 						name: 'QUANTIDA',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.QUANTITY_08002),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
+						controlLimits: [
+						],
+					}, this),
+					LNHDE___LNHDEQUANTDEC: new fieldControlClass.NumberControl({
+						modelField: 'ValQuantdec',
+						valueChangeEvent: 'fieldChange:lnhde.quantdec',
+						id: 'LNHDE___LNHDEQUANTDEC',
+						name: 'QUANTDEC',
+						size: 'small',
+						label: computed(() => this.Resources.AMOUNT46885),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
@@ -775,15 +761,11 @@
 						id: 'LNHDE___LNHDECODE____',
 						name: 'CODE',
 						size: 'small',
-						hasLabel: true,
-						label: computed(() => this.Resources.CODE49225),
-						userHelp: '',
-						description: '',
+						label: computed(() => this.Resources.CODIGO20695),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 10,
 						labelId: 'label_LNHDE___LNHDECODE____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -793,15 +775,9 @@
 						id: 'LNHDE___LNHDEDESCRIPT',
 						name: 'DESCRIPT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESCRIPTION07383),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
-						labelId: 'label_LNHDE___LNHDEDESCRIPT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -811,16 +787,185 @@
 						id: 'LNHDE___LNHDEURL_____',
 						name: 'URL',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.SITE06486),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 250,
 						labelId: 'label_LNHDE___LNHDEURL_____',
-						mustBeFilled: false,
 						controlLimits: [
+						],
+					}, this),
+					LNHDE___PSEUDLNPROPS_: new fieldControlClass.TableListControl({
+						id: 'LNHDE___PSEUDLNPROPS_',
+						name: 'LNPROPS',
+						size: '',
+						label: computed(() => this.Resources.EQUIPMENT_GROUPINGS20350),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						controller: 'LNHDE',
+						action: 'Lnhde_ValLnprops',
+						hasDependencies: false,
+						isInCollapsible: false,
+						columnsOriginal: [
+							new listColumnTypes.TextColumn({
+								order: 1,
+								name: 'ValName',
+								area: 'LNHDF',
+								field: 'NAME',
+								label: computed(() => this.Resources.NAME31974),
+								dataLength: 50,
+								scrollData: 30,
+							}),
+						],
+						config: {
+							name: 'ValLnprops',
+							serverMode: true,
+							pkColumn: 'ValCodlnhdf',
+							tableAlias: 'LNHDF',
+							tableNamePlural: computed(() => this.Resources.DISAGGREGATION_LINES45819),
+							viewManagement: '',
+							showLimitsInfo: true,
+							tableTitle: computed(() => this.Resources.EQUIPMENT_GROUPINGS20350),
+							showAlternatePagination: true,
+							permissions: {
+							},
+							searchBarConfig: {
+								visibility: false,
+								searchOnPressEnter: true
+							},
+							filtersVisible: false,
+							allowColumnFilters: false,
+							allowColumnSort: true,
+							crudActions: [
+								{
+									id: 'show',
+									name: 'show',
+									title: computed(() => this.Resources.CONSULTAR57388),
+									icon: {
+										icon: 'view'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'LNHDF',
+										mode: 'SHOW',
+										isControlled: true
+									}
+								},
+								{
+									id: 'edit',
+									name: 'edit',
+									title: computed(() => this.Resources.EDITAR11616),
+									icon: {
+										icon: 'pencil'
+									},
+									isInReadOnly: false,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'LNHDF',
+										mode: 'EDIT',
+										isControlled: true
+									}
+								},
+								{
+									id: 'duplicate',
+									name: 'duplicate',
+									title: computed(() => this.Resources.DUPLICAR09748),
+									icon: {
+										icon: 'duplicate'
+									},
+									isInReadOnly: false,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'LNHDF',
+										mode: 'DUPLICATE',
+										isControlled: true
+									}
+								},
+								{
+									id: 'delete',
+									name: 'delete',
+									title: computed(() => this.Resources.ELIMINAR21155),
+									icon: {
+										icon: 'delete'
+									},
+									isInReadOnly: false,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'LNHDF',
+										mode: 'DELETE',
+										isControlled: true
+									}
+								}
+							],
+							generalActions: [
+								{
+									id: 'insert',
+									name: 'insert',
+									title: computed(() => this.Resources.INSERIR43365),
+									icon: {
+										icon: 'add'
+									},
+									isInReadOnly: false,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'LNHDF',
+										mode: 'NEW',
+										repeatInsertion: false,
+										isControlled: true
+									}
+								},
+							],
+							generalCustomActions: [
+							],
+							groupActions: [
+							],
+							customActions: [
+							],
+							MCActions: [
+							],
+							rowClickAction: {
+								id: 'RCA__LNHDF',
+								name: '_LNHDF',
+								title: '',
+								isInReadOnly: true,
+								params: {
+									isRoute: true,
+									action: vm.openFormAction,
+									type: 'form',
+									formName: 'LNHDF',
+									mode: 'SHOW',
+									isControlled: true
+								}
+							},
+							formsDefinition: {
+								'LNHDF': {
+									fnKeySelector: (row) => row.Fields.ValCodlnhdf,
+									isPopup: true
+								},
+							},
+							defaultSearchColumnName: 'ValName',
+							defaultSearchColumnNameOriginal: 'ValName',
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
+						},
+						changeEvents: ['changed-LNHDE', 'changed-LNHDF'],
+						uuid: 'Lnhde_ValLnprops',
+						allSelectedRows: 'false',
+						controlLimits: [
+							{
+								identifier: ['id', 'lnhde'],
+								dependencyEvents: ['fieldChange:lnhde.codlnhde'],
+								dependencyField: 'LNHDE.CODLNHDE',
+								fnValueSelector: (model) => model.ValCodlnhde.value
+							},
 						],
 					}, this),
 				},
@@ -836,6 +981,7 @@
 				]),
 
 				tableFields: readonly([
+					'LNHDE___PSEUDLNPROPS_',
 				]),
 
 				timelineFields: readonly([
@@ -860,6 +1006,8 @@
 						set ValDescript(value) { vm.model.ValDescript.updateValue(value) },
 						get ValOrdem() { return vm.model.ValOrdem.value },
 						set ValOrdem(value) { vm.model.ValOrdem.updateValue(value) },
+						get ValQuantdec() { return vm.model.ValQuantdec.value },
+						set ValQuantdec(value) { vm.model.ValQuantdec.updateValue(value) },
 						get ValQuantida() { return vm.model.ValQuantida.value },
 						set ValQuantida(value) { vm.model.ValQuantida.updateValue(value) },
 						get ValUrl() { return vm.model.ValUrl.value },
@@ -868,6 +1016,8 @@
 					Lnhpd: {
 						get ValLine() { return vm.model.TableLnhpdLine.value },
 						set ValLine(value) { vm.model.TableLnhpdLine.updateValue(value) },
+						get ValQuantdec() { return vm.model.LnhpdValQuantdec.value },
+						set ValQuantdec(value) { vm.model.LnhpdValQuantdec.updateValue(value) },
 					},
 					Pedid: {
 						get ValNrpedido() { return vm.model.TablePedidNrpedido.value },
@@ -889,7 +1039,7 @@
 						/** The foreign key to the LNHAG table */
 						get lnhag() { return vm.model.ValCodlnhag },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -985,6 +1135,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1024,6 +1182,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1150,6 +1316,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR LNHDE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1165,6 +1347,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS LNHDE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

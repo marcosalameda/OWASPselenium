@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Output document
 	/// </summary>
-	public class CSGenioAoutpt : DbArea	{
+	public class CSGenioAoutpt : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -63,6 +64,7 @@ namespace CSGenio.business
 
             Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
+            Qfield.SufNDup = "documenr";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -70,6 +72,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "No.";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "NO_14817";
 
             Qfield.NotNull = true;
@@ -268,7 +271,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodoutpt, value); }
 		}
 
-
 		/// <summary>Field : "BY OMISSION" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodwareh { get { return m_fldCodwareh; } }
 		private static FieldRef m_fldCodwareh = new FieldRef("outpt", "codwareh");
@@ -280,18 +282,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodwareh, value); }
 		}
 
-
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldDocumenr { get { return m_fldDocumenr; } }
 		private static FieldRef m_fldDocumenr = new FieldRef("outpt", "documenr");
 
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
-		public double ValDocumenr
+		public decimal ValDocumenr
 		{
-			get { return (double)returnValueField(FldDocumenr); }
+			get { return (decimal)returnValueField(FldDocumenr); }
 			set { insertNameValueField(FldDocumenr, value); }
 		}
-
 
 		/// <summary>Field : "Date" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDhdocume { get { return m_fldDhdocume; } }
@@ -303,7 +303,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDhdocume); }
 			set { insertNameValueField(FldDhdocume, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -346,23 +345,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAoutpt> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAoutpt> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAoutpt>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -411,7 +393,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX OUTPT]/

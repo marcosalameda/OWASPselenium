@@ -128,12 +128,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [GITEM->ITEMGCOD]
-					// eslint-disable-next-line eqeqeq
 					return this.GitemValItemgcod.value
 				},
-				dependencyEvents: ['fieldChange:gitem.itemgcod'],
+				dependencyEvents: ['fieldChange:gitem.itemgcod', 'fieldChange:item.codgitem'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValItemcod))
@@ -152,12 +150,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [GITEM->ITEMDES]
-					// eslint-disable-next-line eqeqeq
 					return this.TableGitemItemdes.value
 				},
-				dependencyEvents: ['fieldChange:gitem.itemdes'],
+				dependencyEvents: ['fieldChange:gitem.itemdes', 'fieldChange:item.codgitem'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValItemdes))
@@ -180,6 +176,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'ITEMGCOD',
 			maxLength: 15,
 			description: computed(() => this.Resources.CODE49225),
+			isFixed: true,
 		}).cloneFrom(values?.GitemValItemgcod))
 		watch(() => this.GitemValItemgcod.value, (newValue, oldValue) => this.onUpdate('gitem.itemgcod', this.GitemValItemgcod, newValue, oldValue))
 	}
@@ -196,5 +193,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCoditem'
 
 	get QPrimaryKey() { return this.ValCoditem.value }
-	set QPrimaryKey(value) { this.ValCoditem.value = value }
+	set QPrimaryKey(value) { this.ValCoditem.updateValue(value) }
 }

@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Equip
 {
-	public class Accordi_ViewModel : FormViewModel<Models.Equip>
+	public class Accordi_ViewModel : FormViewModel<Models.Equip>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,26 +29,61 @@ namespace GenioMVC.ViewModels.Equip
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Company:" | Type: "CE"
+		/// </summary>
+		public string ValCodempre { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCoddeco { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCoditem { get; set; }
+		/// <summary>
+		/// Title: "Person" | Type: "CE"
+		/// </summary>
+		public string ValCodpess1 { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodrooms { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodtpequ { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodwareh { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Company:" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Cmpny> TableCmpnyDesignat { get; set; }
-
 		/// <summary>
 		/// Title: "Person" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Pess1> TablePess1Name { get; set; }
-
 		/// <summary>
 		/// Title: "Sequential no." | Type: "N"
 		/// </summary>
 		public decimal? ValSequennr { get; set; }
-
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
 		[ImageThumbnailJsonConverter(100, 50)]
-		public GenioMVC.ViewModels.ImageModel ValPhotogra { get; set; }
+		public GenioMVC.Models.ImageModel ValPhotogra { get; set; }
 
 		#region Navigations
 		#endregion
@@ -57,45 +92,6 @@ namespace GenioMVC.ViewModels.Equip
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Company:" | Type: "CE"
-		/// </summary>
-		public string ValCodempre { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCoddeco { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCoditem { get; set; }
-
-		/// <summary>
-		/// Title: "Person" | Type: "CE"
-		/// </summary>
-		public string ValCodpess1 { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodtpequ { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodwareh { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodrooms { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -108,15 +104,17 @@ namespace GenioMVC.ViewModels.Equip
 
 		// Field for formula
 		/// <summary>Field: "No. register" Tipo: "C"</summary>
+		[ValidateSetAccess]
 		public string ValRegistnr { get; set; }
 
 		#endregion
 
 		public string ValCodequip { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Accordi_ViewModel() : base(null!) { }
@@ -152,6 +150,15 @@ namespace GenioMVC.ViewModels.Equip
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Equip model = new Models.Equip(userContext) { Identifier = "FACCORDI" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FACCORDI");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -212,15 +219,15 @@ namespace GenioMVC.ViewModels.Equip
 
 			try
 			{
-				ValSequennr = ViewModelConversion.ToNumeric(m.ValSequennr);
-				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
 				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
 				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
+				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
-				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
+				ValSequennr = ViewModelConversion.ToNumeric(m.ValSequennr);
+				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
 				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
@@ -231,6 +238,20 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Equip m)
 		{
 			if (m == null)
@@ -241,27 +262,89 @@ namespace GenioMVC.ViewModels.Equip
 
 			try
 			{
-				m.ValSequennr = ViewModelConversion.ToNumeric(ValSequennr);
-				m.ValPhotogra = ViewModelConversion.ToImage(ValPhotogra);
 				m.ValCodempre = ViewModelConversion.ToString(ValCodempre);
+				m.ValCodpess1 = ViewModelConversion.ToString(ValCodpess1);
+				m.ValSequennr = ViewModelConversion.ToNumeric(ValSequennr);
+				if (ValPhotogra == null || !ValPhotogra.IsThumbnail)
+					m.ValPhotogra = ViewModelConversion.ToImage(ValPhotogra);
+				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
 				m.ValCoddeco = ViewModelConversion.ToString(ValCoddeco);
 				m.ValCoditem = ViewModelConversion.ToString(ValCoditem);
-				m.ValCodpess1 = ViewModelConversion.ToString(ValCodpess1);
+				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
 				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
 				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
-				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
 				m.ValRegistnr = ViewModelConversion.ToString(ValRegistnr);
-				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Accordi) to Model (Equip) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Accordi) to Model (Equip) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "equip.codempre":
+						this.ValCodempre = ViewModelConversion.ToString(_value);
+						break;
+					case "equip.codpess1":
+						this.ValCodpess1 = ViewModelConversion.ToString(_value);
+						break;
+					case "equip.sequennr":
+						this.ValSequennr = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "equip.photogra":
+						this.ValPhotogra = ViewModelConversion.ToImage(_value);
+						break;
+					case "equip.codequip":
+						this.ValCodequip = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Accordi) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Accordi)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Equip.Find(id ?? Navigation.GetStrValue("equip"), m_userContext, "FACCORDI"); }
+			finally { Model ??= new Models.Equip(m_userContext) { Identifier = "FACCORDI" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -275,20 +358,13 @@ namespace GenioMVC.ViewModels.Equip
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FACCORDI";
@@ -298,6 +374,7 @@ namespace GenioMVC.ViewModels.Equip
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -361,25 +438,19 @@ namespace GenioMVC.ViewModels.Equip
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE ACCORDI]/
 		public override void Save()
 		{
 
-			try { Model = Models.Equip.Find(Navigation.GetStrValue("equip"), m_userContext, "FACCORDI"); }
-			finally { if (Model == null) Model = new Models.Equip(m_userContext) { Identifier = "FACCORDI" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY ACCORDI]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Equip.Find(Navigation.GetStrValue("equip"), m_userContext, "FACCORDI"); }
-			finally { if (Model == null) Model = new Models.Equip(m_userContext) { Identifier = "FACCORDI" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE ACCORDI]/
 
@@ -412,8 +483,8 @@ namespace GenioMVC.ViewModels.Equip
 				object hValue = Navigation.GetValue("cmpny", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					accordi_cmpnydesignatConds.Equal(CSGenioAcmpny.FldCodempre, Navigation.GetValue("cmpny"));
-					this.ValCodempre = Navigation.GetStrValue("cmpny");
+					accordi_cmpnydesignatConds.Equal(CSGenioAcmpny.FldCodempre, hValue);
+					this.ValCodempre = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -430,8 +501,6 @@ namespace GenioMVC.ViewModels.Equip
 					Navigation.CurrentLevel.SetEntry("RETURN_cmpny", null);
 				}
 				FillDependant_AccordiTableCmpnyDesignat(lazyLoad);
-				//Check if foreignkey comes from history
-				TableCmpnyDesignat.FilledByHistory = Navigation.CheckFilledByHistory("cmpny");
 				return;
 			}
 
@@ -499,9 +568,6 @@ namespace GenioMVC.ViewModels.Equip
 
 				TableCmpnyDesignat.List = new SelectList(TableCmpnyDesignat.Elements.ToSelectList(x => x.ValDesignat, x => x.ValCodempre,  x => x.ValCodempre == this.ValCodempre), "Value", "Text", this.ValCodempre);
 				FillDependant_AccordiTableCmpnyDesignat();
-
-				//Check if foreignkey comes from history
-				TableCmpnyDesignat.FilledByHistory = Navigation.CheckFilledByHistory("cmpny");
 			}
 		}
 
@@ -607,14 +673,14 @@ namespace GenioMVC.ViewModels.Equip
 				object hValue = Navigation.GetValue("pess1", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					accordi_pess1name____Conds.Equal(CSGenioApess1.FldCodpesso, Navigation.GetValue("pess1"));
-					this.ValCodpess1 = Navigation.GetStrValue("pess1");
+					accordi_pess1name____Conds.Equal(CSGenioApess1.FldCodpesso, hValue);
+					this.ValCodpess1 = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
 
 			// Area limit
-			accordi_pess1name____DoLoad &= AddCriteriaAreaLimit(accordi_pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, false);
+			accordi_pess1name____DoLoad &= AddCriteriaAreaLimit(accordi_pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
 			TablePess1Name = new TableDBEdit<Models.Pess1>
 			{
@@ -629,8 +695,6 @@ namespace GenioMVC.ViewModels.Equip
 					Navigation.CurrentLevel.SetEntry("RETURN_pess1", null);
 				}
 				FillDependant_AccordiTablePess1Name(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePess1Name.FilledByHistory = Navigation.CheckFilledByHistory("pess1");
 				return;
 			}
 
@@ -673,21 +737,21 @@ namespace GenioMVC.ViewModels.Equip
 					weakFilters.Equal(CSGenioApess1.FldCodpesso, selectedValue);
 
 				CriteriaSet subfilters = CriteriaSet.And();
-				if (Navigation.CheckKey("filter_ValCodpess1__1") && (bool)Navigation.GetValue("filter_ValCodpess1__1") == true)
+				if (Navigation.CheckKey("filter_ValCodpess1_FILTER1_1") && (bool)Navigation.GetValue("filter_ValCodpess1_FILTER1_1") == true)
 				{
 						subfilters.Equal(CSGenioApess1.FldGender, "F");
 
 				}
 				else
-					Navigation.SetValue("filter_ValCodpess1__1", false);
+					Navigation.SetValue("filter_ValCodpess1_FILTER1_1", false);
 
-				if (Navigation.CheckKey("filter_ValCodpess1__2") && (bool)Navigation.GetValue("filter_ValCodpess1__2") == true)
+				if (Navigation.CheckKey("filter_ValCodpess1_FILTER2_1") && (bool)Navigation.GetValue("filter_ValCodpess1_FILTER2_1") == true)
 				{
 						subfilters.Equal(CSGenioApess1.FldGender, "M");
 
 				}
 				else
-					Navigation.SetValue("filter_ValCodpess1__2", false);
+					Navigation.SetValue("filter_ValCodpess1_FILTER2_1", false);
 
 				weakFilters.SubSets.Add(subfilters);
 				accordi_pess1name____Conds.SubSets.Add(weakFilters);
@@ -736,9 +800,6 @@ namespace GenioMVC.ViewModels.Equip
 					Navigation.SetValue("pess1", this.ValCodpess1);
 				}
 				FillDependant_AccordiTablePess1Name();
-
-				//Check if foreignkey comes from history
-				TablePess1Name.FilledByHistory = Navigation.CheckFilledByHistory("pess1");
 			}
 		}
 
@@ -857,13 +918,13 @@ namespace GenioMVC.ViewModels.Equip
 
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_Accordi_Pess1ValName__1 = false;
-				if (requestValues["filter_Accordi_Pess1ValName_"] != null)
-					filter_Accordi_Pess1ValName__1 = requestValues["filter_Accordi_Pess1ValName_"].Contains("1");
-				else if (Navigation.CheckKey("filter_Accordi_Pess1ValName__1"))
-					filter_Accordi_Pess1ValName__1 = (bool)Navigation.GetValue("filter_Accordi_Pess1ValName__1");
-				Navigation.SetValue("filter_Accordi_Pess1ValName__1", filter_Accordi_Pess1ValName__1);
-				if (filter_Accordi_Pess1ValName__1)
+				bool filter_Accordi_Pess1ValName_FILTER1_1 = false;
+				if (requestValues["filter_Accordi_Pess1ValName_FILTER1"] != null)
+					filter_Accordi_Pess1ValName_FILTER1_1 = requestValues["filter_Accordi_Pess1ValName_FILTER1"].Contains("1");
+				else if (Navigation.CheckKey("filter_Accordi_Pess1ValName_FILTER1_1"))
+					filter_Accordi_Pess1ValName_FILTER1_1 = (bool)Navigation.GetValue("filter_Accordi_Pess1ValName_FILTER1_1");
+				Navigation.SetValue("filter_Accordi_Pess1ValName_FILTER1_1", filter_Accordi_Pess1ValName_FILTER1_1);
+				if (filter_Accordi_Pess1ValName_FILTER1_1)
 				{
 					groupFilters.Equal(CSGenioApess1.FldGender, "F");
 
@@ -873,13 +934,13 @@ namespace GenioMVC.ViewModels.Equip
 			}
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_Accordi_Pess1ValName__2 = false;
-				if (requestValues["filter_Accordi_Pess1ValName_"] != null)
-					filter_Accordi_Pess1ValName__2 = requestValues["filter_Accordi_Pess1ValName_"].Contains("2");
-				else if (Navigation.CheckKey("filter_Accordi_Pess1ValName__2"))
-					filter_Accordi_Pess1ValName__2 = (bool)Navigation.GetValue("filter_Accordi_Pess1ValName__2");
-				Navigation.SetValue("filter_Accordi_Pess1ValName__2", filter_Accordi_Pess1ValName__2);
-				if (filter_Accordi_Pess1ValName__2)
+				bool filter_Accordi_Pess1ValName_FILTER2_1 = false;
+				if (requestValues["filter_Accordi_Pess1ValName_FILTER2"] != null)
+					filter_Accordi_Pess1ValName_FILTER2_1 = requestValues["filter_Accordi_Pess1ValName_FILTER2"].Contains("1");
+				else if (Navigation.CheckKey("filter_Accordi_Pess1ValName_FILTER2_1"))
+					filter_Accordi_Pess1ValName_FILTER2_1 = (bool)Navigation.GetValue("filter_Accordi_Pess1ValName_FILTER2_1");
+				Navigation.SetValue("filter_Accordi_Pess1ValName_FILTER2_1", filter_Accordi_Pess1ValName_FILTER2_1);
+				if (filter_Accordi_Pess1ValName_FILTER2_1)
 				{
 					groupFilters.Equal(CSGenioApess1.FldGender, "M");
 
@@ -901,7 +962,7 @@ namespace GenioMVC.ViewModels.Equip
 						// Limits Generation
 
 						// Area limit
-						accordi_pess1name____DoLoad &= AddCriteriaAreaLimit(accordi_pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, false);
+						accordi_pess1name____DoLoad &= AddCriteriaAreaLimit(accordi_pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
 						if (!accordi_pess1name____DoLoad)
 							return;
@@ -931,23 +992,31 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			return identifier switch
 			{
-				"equip.sequennr" => ViewModelConversion.ToNumeric(modelValue),
-				"equip.photogra" => ViewModelConversion.ToImage(modelValue),
 				"equip.codempre" => ViewModelConversion.ToString(modelValue),
 				"equip.coddeco" => ViewModelConversion.ToString(modelValue),
 				"equip.coditem" => ViewModelConversion.ToString(modelValue),
 				"equip.codpess1" => ViewModelConversion.ToString(modelValue),
+				"equip.codrooms" => ViewModelConversion.ToString(modelValue),
 				"equip.codtpequ" => ViewModelConversion.ToString(modelValue),
 				"equip.codwareh" => ViewModelConversion.ToString(modelValue),
-				"equip.codrooms" => ViewModelConversion.ToString(modelValue),
+				"equip.sequennr" => ViewModelConversion.ToNumeric(modelValue),
+				"equip.photogra" => ViewModelConversion.ToImage(modelValue),
 				"equip.registnr" => ViewModelConversion.ToString(modelValue),
 				"equip.codequip" => ViewModelConversion.ToString(modelValue),
 				"cmpny.codempre" => ViewModelConversion.ToString(modelValue),
 				"cmpny.designat" => ViewModelConversion.ToString(modelValue),
 				"pess1.codpesso" => ViewModelConversion.ToString(modelValue),
 				"pess1.name" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
+		}
+
+
+		/// <inheritdoc/>
+		protected override void SetTicketToImageFields()
+		{
+			if (ValPhotogra != null)
+				ValPhotogra.Ticket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaEQUIP, CSGenioAequip.FldPhotogra.Field, null, ValCodequip);
 		}
 
 		#region Charts

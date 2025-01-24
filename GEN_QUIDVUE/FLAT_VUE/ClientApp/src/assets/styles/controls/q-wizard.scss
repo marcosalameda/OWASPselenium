@@ -168,7 +168,7 @@ div.q-form-wizard-container {
 	/* wizard step content */
 
 	.wizard-content {
-		padding: 1rem;
+		padding: 0.25rem 1rem 1rem 1rem;
 	}
 
 	.q-wizard__content {
@@ -387,7 +387,6 @@ div.q-form-wizard-container {
 			}
 		}
 	}
-
 
 	@if $wizard-steps == 'rectangle' {
 		/***************************************************************************

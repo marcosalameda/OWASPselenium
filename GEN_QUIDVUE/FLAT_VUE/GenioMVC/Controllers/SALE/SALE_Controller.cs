@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Sale;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER SALE]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Sale row = null;
 
-			try
-			{
-				row = Models.Sale.Find(Navigation.GetStrValue("sale"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model sale");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Sale(UserContext.Current);
+				row = new Models.Sale(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("sale");
 			}
 
@@ -82,8 +75,8 @@ namespace GenioMVC.Controllers
 				{
 					case "VENDA___ORGANORGANIZA":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Venda_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Venda_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Venda___organorganiza(qs);
 							result = model.TableOrganOrganiza;
@@ -91,14 +84,15 @@ namespace GenioMVC.Controllers
 						break;
 					case "VENDAW01ORGANORGANIZA":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Vendaw01_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Vendaw01_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Vendaw01organorganiza(qs);
 							result = model.TableOrganOrganiza;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -147,11 +141,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -160,134 +155,131 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Venda" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Venda([FromBody]Venda_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Venda([FromBody]Venda_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "sale",
+			return GenericRecalculateFormulas(formData, "sale",
 				(primaryKey) => Models.Sale.Find(primaryKey, UserContext.Current, "FVENDA"),
-				(model) => form_data.MapToModel(model as Models.Sale)
+				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw01" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Vendaw01([FromBody]Vendaw01_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Vendaw01([FromBody]Vendaw01_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "sale",
+			return GenericRecalculateFormulas(formData, "sale",
 				(primaryKey) => Models.Sale.Find(primaryKey, UserContext.Current, "FVENDAW01"),
-				(model) => form_data.MapToModel(model as Models.Sale)
+				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw02" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Vendaw02([FromBody]Vendaw02_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Vendaw02([FromBody]Vendaw02_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "sale",
+			return GenericRecalculateFormulas(formData, "sale",
 				(primaryKey) => Models.Sale.Find(primaryKey, UserContext.Current, "FVENDAW02"),
-				(model) => form_data.MapToModel(model as Models.Sale)
+				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw03" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Vendaw03([FromBody]Vendaw03_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Vendaw03([FromBody]Vendaw03_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "sale",
+			return GenericRecalculateFormulas(formData, "sale",
 				(primaryKey) => Models.Sale.Find(primaryKey, UserContext.Current, "FVENDAW03"),
-				(model) => form_data.MapToModel(model as Models.Sale)
+				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw04" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Vendaw04([FromBody]Vendaw04_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Vendaw04([FromBody]Vendaw04_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "sale",
+			return GenericRecalculateFormulas(formData, "sale",
 				(primaryKey) => Models.Sale.Find(primaryKey, UserContext.Current, "FVENDAW04"),
-				(model) => form_data.MapToModel(model as Models.Sale)
+				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw05" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Vendaw05([FromBody]Vendaw05_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Vendaw05([FromBody]Vendaw05_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "sale",
+			return GenericRecalculateFormulas(formData, "sale",
 				(primaryKey) => Models.Sale.Find(primaryKey, UserContext.Current, "FVENDAW05"),
-				(model) => form_data.MapToModel(model as Models.Sale)
+				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw06" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Vendaw06([FromBody]Vendaw06_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Vendaw06([FromBody]Vendaw06_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "sale",
+			return GenericRecalculateFormulas(formData, "sale",
 				(primaryKey) => Models.Sale.Find(primaryKey, UserContext.Current, "FVENDAW06"),
-				(model) => form_data.MapToModel(model as Models.Sale)
+				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw07" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Vendaw07([FromBody]Vendaw07_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Vendaw07([FromBody]Vendaw07_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "sale",
+			return GenericRecalculateFormulas(formData, "sale",
 				(primaryKey) => Models.Sale.Find(primaryKey, UserContext.Current, "FVENDAW07"),
-				(model) => form_data.MapToModel(model as Models.Sale)
+				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw08" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Vendaw08([FromBody]Vendaw08_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Vendaw08([FromBody]Vendaw08_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "sale",
+			return GenericRecalculateFormulas(formData, "sale",
 				(primaryKey) => Models.Sale.Find(primaryKey, UserContext.Current, "FVENDAW08"),
-				(model) => form_data.MapToModel(model as Models.Sale)
+				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -295,7 +287,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

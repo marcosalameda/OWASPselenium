@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,12 +106,12 @@
 							v-on="controls.ARMAZ___WAREHWAREHCOD.handlers"
 							:loading="controls.ARMAZ___WAREHWAREHCOD.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAZ___WAREHWAREHCOD.props"
 								:model-value="model.ValWarehcod.value"
-								@update:model-value="model.ValWarehcod.fnUpdateValue" />
+								@blur="onBlur(controls.ARMAZ___WAREHWAREHCOD, model.ValWarehcod.value)"
+								@change="model.ValWarehcod.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -123,12 +123,12 @@
 							v-on="controls.ARMAZ___WAREHWAREHDES.handlers"
 							:loading="controls.ARMAZ___WAREHWAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAZ___WAREHWAREHDES.props"
 								:model-value="model.ValWarehdes.value"
-								@update:model-value="model.ValWarehdes.fnUpdateValue" />
+								@blur="onBlur(controls.ARMAZ___WAREHWAREHDES, model.ValWarehdes.value)"
+								@change="model.ValWarehdes.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -137,13 +137,12 @@
 						v-show="controls.ARMAZ___WAREHACTIVITY.isVisible"
 						class="control-join-group">
 						<base-input-structure
-							class="i-checkbox"
+							class="i-text"
 							v-bind="controls.ARMAZ___WAREHACTIVITY"
 							v-on="controls.ARMAZ___WAREHACTIVITY.handlers"
 							:loading="controls.ARMAZ___WAREHACTIVITY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-toggle-input
 								v-if="controls.ARMAZ___WAREHACTIVITY.isVisible"
 								id="ARMAZ___WAREHACTIVITY"
@@ -163,15 +162,11 @@
 							v-on="controls.ARMAZ___WAREHSHOWRECO.handlers"
 							:loading="controls.ARMAZ___WAREHSHOWRECO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.ARMAZ___WAREHSHOWRECO.isVisible"
-									id="ARMAZ___WAREHSHOWRECO"
-									size="medium"
-									:model-value="model.ValShowreco.value"
-									:readonly="controls.ARMAZ___WAREHSHOWRECO.readonly"
+									v-bind="controls.ARMAZ___WAREHSHOWRECO.props"
 									@update:model-value="model.ValShowreco.fnUpdateValue" />
 							</template>
 						</base-input-structure>
@@ -184,8 +179,7 @@
 						<q-table
 							v-show="controls.ARMAZ___PSEUDPESSARMA.isVisible"
 							v-bind="controls.ARMAZ___PSEUDPESSARMA"
-							v-on="controls.ARMAZ___PSEUDPESSARMA.handlers">
-						</q-table>
+							v-on="controls.ARMAZ___PSEUDPESSARMA.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.ARMAZ___PSEUDPESSARMA"
 							v-on="controls.ARMAZ___PSEUDPESSARMA.handlers" />
@@ -272,15 +266,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'ARMAZ',
-						location: 'form-ARMAZ',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'ARMAZ',
+					location: 'form-ARMAZ',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -326,6 +318,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -398,8 +392,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -481,7 +476,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -535,21 +530,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -560,15 +540,11 @@
 						id: 'ARMAZ___WAREHWAREHCOD',
 						name: 'WAREHCOD',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACRONYM00872),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 10,
 						labelId: 'label_ARMAZ___WAREHWAREHCOD',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -578,15 +554,11 @@
 						id: 'ARMAZ___WAREHWAREHDES',
 						name: 'WAREHDES',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.WAREHOUSE51864),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
 						labelId: 'label_ARMAZ___WAREHWAREHDES',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -596,16 +568,14 @@
 						id: 'ARMAZ___WAREHACTIVITY',
 						name: 'ACTIVITY',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACTIVITY02681),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 1,
+						maxDecimals: 0,
 						arrayName: 'activida',
 						trueLabel: computed(() => this.Resources.ACTIVE03270),
 						falseLabel: computed(() => this.Resources.INACTIVO19228),
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -615,24 +585,17 @@
 						id: 'ARMAZ___WAREHSHOWRECO',
 						name: 'SHOWRECO',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.SHOW_RECORD11620),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
 					ARMAZ___PSEUDPESSARMA: new fieldControlClass.TableListControl({
 						id: 'ARMAZ___PSEUDPESSARMA',
 						name: 'PESSARMA',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.EMPLOYEE55452),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'WAREH',
@@ -683,7 +646,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -786,14 +749,15 @@
 									title: computed(() => this.Resources.OPEN_FORM63276),
 									icon: {
 										icon: 'LIST',
-										type: 'font'
+										type: 'font',
 									},
 									isInReadOnly: true,
-									isVisible: computed(() => vm.controls.ARMAZ___PSEUDEXPOSETB.checkFieldIsVisible()),
+									isVisible: computed(() => vm.controls.ARMAZ___PSEUDEXPOSETB.isVisible),
 									disabled: computed(() => vm.controls.ARMAZ___PSEUDEXPOSETB.isBlocked),
 									params: {
 										action: (c, o, d) => vm.controls.ARMAZ___PSEUDEXPOSETB.action(d || c),
-										isControlled: true
+										isControlled: true,
+										isRoute: true
 									}
 								},
 							],
@@ -805,6 +769,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'PESSPOP',
@@ -818,18 +783,12 @@
 									isPopup: true
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: PESSPOP
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValName',
 							defaultSearchColumnNameOriginal: 'ValName',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-WAREH', 'changed-WPESS'],
 						uuid: 'Armaz_ValPessarma',
@@ -849,25 +808,25 @@
 						size: 'small',
 						hasLabel: false,
 						label: computed(() => this.Resources.OPEN_FORM63276),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
 							icon: 'LIST',
-							type: 'font'
+							type: 'font',
+							role: 'presentation',
 						},
 						// eslint-disable-next-line
 						action: (event) => {
 							let btnAction = () => {
 								const params = {
 									id: event?.rowKey,
-									modes: vm.navigation.currentLevel.params.modes,
+									mode: vm.formInfo.mode,
+									modes: 'vedai',
 									isControlled: true,
 									extraData: JSON.stringify(event)
 								}
 
-								vm.navigateToForm('PESSPOP', 'EDIT', event?.rowKey, params)
+								vm.navigateToForm('PESSPOP', params.mode, event?.rowKey, params)
 							}
 							let options = {
 								form: 'ARMAZ',
@@ -875,7 +834,6 @@
 							}
 							vm.$eventHub.emit('form-apply', options)
 						},
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -918,7 +876,7 @@
 						/** The primary key of the WAREH table */
 						get wareh() { return vm.model.ValCodwareh },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1014,6 +972,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1053,6 +1019,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1179,6 +1153,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR ARMAZ]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1194,6 +1184,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS ARMAZ]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -46,17 +46,17 @@ namespace GenioMVC.Models
 		private Lang1 _lang1;
 		[DisplayName("Lang1")]
 		[ShouldSerialize("Lang1")]
-		public virtual Lang1 Lang1 { 
-			get { 
+		public virtual Lang1 Lang1 {
+			get {
 				if (!this.isEmptyModel && (_lang1 == null || (!string.IsNullOrEmpty(ValCodidio1) && (_lang1.isEmptyModel || _lang1.klass.QPrimaryKey != ValCodidio1))))
 					_lang1 = Models.Lang1.Find(ValCodidio1, m_userContext, Identifier, _fieldsToSerialize);
 				if (_lang1 == null)
 					_lang1 = new Models.Lang1(m_userContext, true, _fieldsToSerialize);
 				return _lang1;
 			}
-			set { _lang1 = value; } 
+			set { _lang1 = value; }
 		}
-		
+
 
 		[DisplayName("To review")]
 		/// <summary>Field : "To review" Tipo: "C" Formula:  ""</summary>
@@ -70,17 +70,17 @@ namespace GenioMVC.Models
 		private Lang2 _lang2;
 		[DisplayName("Lang2")]
 		[ShouldSerialize("Lang2")]
-		public virtual Lang2 Lang2 { 
-			get { 
+		public virtual Lang2 Lang2 {
+			get {
 				if (!this.isEmptyModel && (_lang2 == null || (!string.IsNullOrEmpty(ValCodidio2) && (_lang2.isEmptyModel || _lang2.klass.QPrimaryKey != ValCodidio2))))
 					_lang2 = Models.Lang2.Find(ValCodidio2, m_userContext, Identifier, _fieldsToSerialize);
 				if (_lang2 == null)
 					_lang2 = new Models.Lang2(m_userContext, true, _fieldsToSerialize);
 				return _lang2;
 			}
-			set { _lang2 = value; } 
+			set { _lang2 = value; }
 		}
-		
+
 
 		[DisplayName("Translated")]
 		/// <summary>Field : "Translated" Tipo: "C" Formula:  ""</summary>
@@ -95,19 +95,19 @@ namespace GenioMVC.Models
 		public Tradu(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAtradu(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Tradu(UserContext userContext, CSGenioAtradu val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAtradu csgenioa)
@@ -134,7 +134,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

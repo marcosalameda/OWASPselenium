@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,12 +106,12 @@
 							v-on="controls.ANO_____YEAR_YEAR____.handlers"
 							:loading="controls.ANO_____YEAR_YEAR____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ANO_____YEAR_YEAR____.props"
 								:model-value="model.ValYear.value"
-								@update:model-value="model.ValYear.fnUpdateValue" />
+								@blur="onBlur(controls.ANO_____YEAR_YEAR____, model.ValYear.value)"
+								@change="model.ValYear.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -123,12 +123,10 @@
 							v-on="controls.ANO_____YEAR_YEARNUM_.handlers"
 							:loading="controls.ANO_____YEAR_YEARNUM_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.ANO_____YEAR_YEARNUM_.isVisible"
-								v-bind="controls.ANO_____YEAR_YEARNUM_"
-								:model-value="model.ValYearnum.value"
+								v-bind="controls.ANO_____YEAR_YEARNUM_.props"
 								@update:model-value="model.ValYearnum.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -140,8 +138,7 @@
 						<q-table
 							v-show="controls.ANO_____PSEUDTODASDES.isVisible"
 							v-bind="controls.ANO_____PSEUDTODASDES"
-							v-on="controls.ANO_____PSEUDTODASDES.handlers">
-						</q-table>
+							v-on="controls.ANO_____PSEUDTODASDES.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.ANO_____PSEUDTODASDES"
 							v-on="controls.ANO_____PSEUDTODASDES.handlers" />
@@ -152,8 +149,7 @@
 						<q-table
 							v-show="controls.ANO_____PSEUDAGREGADO.isVisible"
 							v-bind="controls.ANO_____PSEUDAGREGADO"
-							v-on="controls.ANO_____PSEUDAGREGADO.handlers">
-						</q-table>
+							v-on="controls.ANO_____PSEUDAGREGADO.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.ANO_____PSEUDAGREGADO"
 							v-on="controls.ANO_____PSEUDAGREGADO.handlers" />
@@ -169,12 +165,10 @@
 							v-on="controls.ANO_____YEAR_VALUE___.handlers"
 							:loading="controls.ANO_____YEAR_VALUE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.ANO_____YEAR_VALUE___.isVisible"
-								v-bind="controls.ANO_____YEAR_VALUE___"
-								:model-value="model.ValValue.value"
+								v-bind="controls.ANO_____YEAR_VALUE___.props"
 								@update:model-value="model.ValValue.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -260,15 +254,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'ANO',
-						location: 'form-ANO',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'ANO',
+					location: 'form-ANO',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -314,6 +306,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -386,8 +380,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -469,7 +464,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -523,21 +518,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -548,44 +528,33 @@
 						id: 'ANO_____YEAR_YEAR____',
 						name: 'YEAR',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.YEAR61794),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 4,
 						labelId: 'label_ANO_____YEAR_YEAR____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					ANO_____YEAR_YEARNUM_: new fieldControlClass.NumberControl({
 						modelField: 'ValYearnum',
 						valueChangeEvent: 'fieldChange:year.yearnum',
-						maxIntegers: 4,
-						maxDecimals: 0,
 						id: 'ANO_____YEAR_YEARNUM_',
 						name: 'YEARNUM',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.YEAR__NUMBERS_29394),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 4,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					ANO_____PSEUDTODASDES: new fieldControlClass.TableListControl({
 						id: 'ANO_____PSEUDTODASDES',
 						name: 'TODASDES',
-						size: 'xlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.ALL_THE_EXPENSES38264),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'YEAR',
@@ -625,7 +594,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -731,6 +700,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'DESPE',
@@ -744,18 +714,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: DESPE
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-YEAR', 'changed-PROJE', 'changed-AGREG', 'changed-EXPEN'],
 						uuid: 'Ano_ValTodasdes',
@@ -772,11 +736,8 @@
 					ANO_____PSEUDAGREGADO: new fieldControlClass.TableListControl({
 						id: 'ANO_____PSEUDAGREGADO',
 						name: 'AGREGADO',
-						size: 'small',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.AGGREGATED_PER_YEAR01261),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'YEAR',
@@ -807,7 +768,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -913,6 +874,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'AGREG',
@@ -926,18 +888,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: AGREG
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-PROJE', 'changed-YEAR', 'changed-AGREG'],
 						uuid: 'Ano_ValAgregado',
@@ -954,22 +910,17 @@
 					ANO_____YEAR_VALUE___: new fieldControlClass.CurrencyControl({
 						modelField: 'ValValue',
 						valueChangeEvent: 'fieldChange:year.value',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'ANO_____YEAR_VALUE___',
 						name: 'VALUE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.VALUE10285),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 				},
 
@@ -1007,7 +958,7 @@
 						/** The primary key of the YEAR table */
 						get year() { return vm.model.ValCodyear },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1103,6 +1054,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1142,6 +1101,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1268,6 +1235,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR ANO]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1283,6 +1266,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS ANO]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

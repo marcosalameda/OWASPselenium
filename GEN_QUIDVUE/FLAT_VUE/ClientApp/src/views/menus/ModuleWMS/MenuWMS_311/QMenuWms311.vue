@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuWMS_311ViewModel.js'
+
 	const requiredTextResources = ['QMenuWMS_311', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '311',
 					isMenuList: true,
+					designation: computed(() => this.Resources.PRODUCTS34689),
 					acronym: 'WMS_311',
 					name: 'PRODU',
 					route: 'menu-WMS_311',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'WMS_Menu_311',
 						controller: 'PRODU',
 						action: 'WMS_Menu_311',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -266,8 +276,10 @@
 								area: 'PRODU',
 								field: 'IMAGE',
 								label: computed(() => this.Resources.IMAGE65174),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.IMAGE65174)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 						],
 						config: {
@@ -282,7 +294,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -386,6 +398,7 @@
 								id: 'RCA_WMS_3111',
 								name: 'form-PRODU',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -402,24 +415,18 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
 							allowFileExport: true,
-							// The list support form: PRODU
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValProduct',
 							defaultSearchColumnNameOriginal: 'ValProduct',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValProduct',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-LCEXT', 'changed-PRODU', 'changed-LOCAT'],
 						uuid: '92697297-35db-4e66-a7dc-b3b9b29febb5',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -448,6 +455,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS WMS_311]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_311]/
 // eslint-disable-next-line

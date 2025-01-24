@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Tpequ _tpequ;
 		[DisplayName("Tpequ")]
 		[ShouldSerialize("Tpequ")]
-		public virtual Tpequ Tpequ { 
-			get { 
+		public virtual Tpequ Tpequ {
+			get {
 				if (!this.isEmptyModel && (_tpequ == null || (!string.IsNullOrEmpty(ValCodtpequ) && (_tpequ.isEmptyModel || _tpequ.klass.QPrimaryKey != ValCodtpequ))))
 					_tpequ = Models.Tpequ.Find(ValCodtpequ, m_userContext, Identifier, _fieldsToSerialize);
 				if (_tpequ == null)
 					_tpequ = new Models.Tpequ(m_userContext, true, _fieldsToSerialize);
 				return _tpequ;
 			}
-			set { _tpequ = value; } 
+			set { _tpequ = value; }
 		}
-		
+
 
 		[DisplayName(">EQUIPMENT")]
 		/// <summary>Field : ">EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Equip _equip;
 		[DisplayName("Equip")]
 		[ShouldSerialize("Equip")]
-		public virtual Equip Equip { 
-			get { 
+		public virtual Equip Equip {
+			get {
 				if (!this.isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
 					_equip = Models.Equip.Find(ValCodequip, m_userContext, Identifier, _fieldsToSerialize);
 				if (_equip == null)
 					_equip = new Models.Equip(m_userContext, true, _fieldsToSerialize);
 				return _equip;
 			}
-			set { _equip = value; } 
+			set { _equip = value; }
 		}
-		
+
 
 		[DisplayName("Scheduling")]
 		/// <summary>Field : "Scheduling" Tipo: "C" Formula:  ""</summary>
@@ -120,19 +120,19 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Qtd hours" Tipo: "N" Formula: + "iif(emptyD([INSTA->SINCE])==1 || emptyD([INSTA->UNTIL])==1,0,Diferenca_entre_Datas([INSTA->SINCE],[INSTA->UNTIL],"H"))"</summary>
 		[ShouldSerialize("Insta.ValHours")]
 		[NumericAttribute(2)]
-		public decimal? ValHours { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValHours, 2)); } set { klass.ValHours = Convert.ToDouble(value); } }
+		public decimal? ValHours { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValHours, 2)); } set { klass.ValHours = Convert.ToDecimal(value); } }
 
 		[DisplayName("Hourly price")]
 		/// <summary>Field : "Hourly price" Tipo: "$D" Formula: CT "TABPR[INSTA->SINCE][TABPR->SINCE][TABPR->PRECOHOR][INSTA->CODTPEQU][TABPR->CODTPEQ1](DESC)"</summary>
 		[ShouldSerialize("Insta.ValPrecohor")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecohor { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecohor, 2)); } set { klass.ValPrecohor = Convert.ToDouble(value); } }
+		public decimal? ValPrecohor { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecohor, 2)); } set { klass.ValPrecohor = Convert.ToDecimal(value); } }
 
 		[DisplayName("Value")]
 		/// <summary>Field : "Value" Tipo: "$D" Formula: + "[INSTA->HOURS]*[INSTA->PRECOHOR]"</summary>
 		[ShouldSerialize("Insta.ValValue")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDouble(value); } }
+		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
 
 		[DisplayName("Geographic coordinate")]
 		/// <summary>Field : "Geographic coordinate" Tipo: "GG" Formula:  ""</summary>
@@ -148,19 +148,19 @@ namespace GenioMVC.Models
 		public Insta(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAinsta(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Insta(UserContext userContext, CSGenioAinsta val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAinsta csgenioa)
@@ -187,7 +187,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

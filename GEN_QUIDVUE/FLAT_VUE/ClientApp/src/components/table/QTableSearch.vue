@@ -1,8 +1,8 @@
 ﻿<template>
 	<div
-		class="q-table-search col-auto pr-0"
+		class="q-table-search col"
 		v-click-outside="hideDropdown">
-		<q-input-group>
+		<q-input-group size="block">
 			<!-- TODO: remove and provide slot  -->
 			<q-select
 				v-if="searchableColumns.length > 0 && displayFiltersInList"
@@ -51,6 +51,7 @@
 					ref="searchField"
 					class="dropdown-item"
 					role="menuitem"
+					:data-search-field="column.field"
 					@keydown.stop="searchDropKeyPress"
 					@click.stop.prevent="searchByColumn(column, searchValue)">
 					{{ texts.searchText }} <em>{{ column.label }}</em> {{ texts.forText }}:
@@ -107,10 +108,10 @@
 			</template>
 		</q-input-group>
 		<div
-			v-if="searchError"
+			v-if="message"
 			class="btn-popover">
 			<q-icon icon="exclamation-sign" />
-			{{ emptyTextMessage }}
+			{{ message }}
 		</div>
 	</div>
 </template>
@@ -120,6 +121,7 @@
 		name: 'QTableSearch',
 
 		emits: [
+			'set-message',
 			'emit-search',
 			'reset-query',
 			'search-by-column',
@@ -211,6 +213,13 @@
 			},
 
 			/**
+			 * The message to display under the search bar.
+			 */
+			message: {
+				type: String
+			},
+
+			/**
 			 * Determines whether the column filters should be displayed within the list dropdown.
 			 */
 			displayFiltersInList: {
@@ -276,8 +285,7 @@
 				selectedFilter: '',
 				dropdownValueAux: '',
 				focusableDropdownElements: [],
-				focusedDropdownElementIndex: 0,
-				searchError: false
+				focusedDropdownElementIndex: 0
 			}
 		},
 
@@ -318,6 +326,13 @@
 
 		methods: {
 			/**
+			 * Sets the message to display under the search bar.
+			 */
+			setMessage(value) {
+				this.$emit('set-message', value)
+			},
+
+			/**
 			 * Search by a column for a value
 			 * @param column {Object}
 			 * @param value {String}
@@ -327,12 +342,13 @@
 
 				// Prevent creation of empty filters
 				if (value === '') {
-					this.searchError = true
+					this.setMessage(this.emptyTextMessage)
 					return
 				}
-				this.searchError = false
+				this.setMessage(null)
 
-				if (this.clearOnSearch) this.searchValue = ''
+				// Clear search bar value since a filter is being added
+				this.searchValue = ''
 
 				this.$emit('search-by-column', column, value)
 			},
@@ -346,10 +362,10 @@
 
 				// Prevent creation of empty filters
 				if (value === '') {
-					this.searchError = true
+					this.setMessage(this.emptyTextMessage)
 					return
 				}
-				this.searchError = false
+				this.setMessage(null)
 
 				this.$emit('search-by-all-columns', value)
 			},
@@ -363,10 +379,10 @@
 
 				// Prevent creation of empty filters
 				if (value === '' || this.disabled) {
-					this.searchError = true
+					this.setMessage(this.emptyTextMessage)
 					return
 				}
-				this.searchError = false
+				this.setMessage(null)
 
 				if (!this.showSearchAllColumns) {
 					// Only show dropdown
@@ -463,6 +479,13 @@
 			},
 
 			/**
+			 * Focused on the searchbar element
+			 */
+			focusSearchbar() {
+				this.$refs.globalSearch.$refs.inputRef.focus()
+			},
+
+			/**
 			 * Get focused element index
 			 * @param value {number}
 			 */
@@ -489,15 +512,17 @@
 						break
 					case 'ArrowUp':
 						event.preventDefault()
-					case 'ArrowLeft':
 						this.focusedDropdownElementIndex--
 						this.setFocusedDropdownElement(this.focusedDropdownElementIndex)
 						break
 					case 'ArrowDown':
 						event.preventDefault()
-					case 'ArrowRight':
 						this.focusedDropdownElementIndex++
 						this.setFocusedDropdownElement(this.focusedDropdownElementIndex)
+						break
+					case 'ArrowLeft':
+					case 'ArrowRight':
+						this.focusSearchbar()
 						break
 					case 'Enter':
 						if (this.focusedDropdownElementIndex === 0) this.emitSearch(this.searchValue)
@@ -521,11 +546,6 @@
 						switch (key) {
 							case 'resetQuery':
 								if (newValue.resetQuery) this.resetQuery()
-								break
-							default:
-								if (['searchError'].includes(key)) {
-									this[key] = newValue[key]
-								}
 								break
 						}
 					}

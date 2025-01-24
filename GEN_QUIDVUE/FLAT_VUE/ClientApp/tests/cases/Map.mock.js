@@ -51,10 +51,6 @@ export default {
 					value: false,
 					isMapped: false
 				},
-				enableAddressSearch: {
-					value: true,
-					isMapped: false
-				},
 				fitZoom: {
 					value: false,
 					isMapped: false
@@ -423,8 +419,7 @@ export default {
 										'fieldChange:insta.horas',
 										'fieldChange:insta.precohor'
 									],
-									isServerRecalc: false,
-									isServerFormula: false
+									isServerRecalc: false
 								},
 								isRequired: false,
 								value: 1704,
@@ -538,10 +533,6 @@ export default {
 					isMapped: false
 				},
 				disableSearch: {
-					value: false,
-					isMapped: false
-				},
-				enableAddressSearch: {
 					value: false,
 					isMapped: false
 				},
@@ -2188,17 +2179,13 @@ export default {
 					isPopup: false
 				}
 			},
-			rowValidation: {
-				message: 'Warning: This record is pending, you must edit or delete it.',
-				class: 'c-table__row--pending'
-			},
 			defaultSearchColumnName: '',
 			defaultSearchColumnNameOriginal: '',
 			initialSortColumnName: '',
 			initialSortColumnOrder: '',
-			UserTableConfig: {},
+			userTableConfig: {},
 			columnSizes: null,
-			UserTableConfigNames: [],
+			userTableConfigNames: [],
 			page: 1
 		}
 	}, {

@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Articles
 	/// </summary>
-	public class CSGenioAitem : DbArea	{
+	public class CSGenioAitem : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -125,6 +126,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Entries";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "ENTRIES32319";
 
 			Qfield.Dupmsg = "";
@@ -135,6 +137,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Outputs";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "OUTPUTS47833";
 
 			Qfield.Dupmsg = "";
@@ -145,6 +148,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Stocks";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "STOCKS47349";
 
 			Qfield.Dupmsg = "";
@@ -194,7 +198,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"existenc","existenc"}, new int[] {0,1}, "item", "coditem"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((((double)args[0])>0)?("A"):(((((double)args[1])<=0)?("O"):("D"))));
+				return ((((decimal)args[0])>0)?("A"):(((((decimal)args[1])<=0)?("O"):("D"))));
 			});
             Qfield.ArrayName = "dbo.GetValArrayCdsiponib";
             Qfield.ArrayClassName = "Dsiponib";
@@ -247,12 +251,13 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
-			info.ChildTable = new ChildRelation[5];
+			info.ChildTable = new ChildRelation[6];
 			info.ChildTable[0]= new ChildRelation("ccorr", new String[] {"coditem"}, DeleteProc.NA);
 			info.ChildTable[1]= new ChildRelation("ldent", new String[] {"coditem"}, DeleteProc.NA);
-			info.ChildTable[2]= new ChildRelation("outpu", new String[] {"coditem"}, DeleteProc.NA);
-			info.ChildTable[3]= new ChildRelation("itemc", new String[] {"coditem"}, DeleteProc.NA);
-			info.ChildTable[4]= new ChildRelation("equip", new String[] {"coditem"}, DeleteProc.NA);
+			info.ChildTable[2]= new ChildRelation("itemp", new String[] {"coditem"}, DeleteProc.NA);
+			info.ChildTable[3]= new ChildRelation("outpu", new String[] {"coditem"}, DeleteProc.NA);
+			info.ChildTable[4]= new ChildRelation("itemc", new String[] {"coditem"}, DeleteProc.NA);
+			info.ChildTable[5]= new ChildRelation("equip", new String[] {"coditem"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------
@@ -422,7 +427,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoditem, value); }
 		}
 
-
 		/// <summary>Field : ">GLOBAL ARTICLE" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodgitem { get { return m_fldCodgitem; } }
 		private static FieldRef m_fldCodgitem = new FieldRef("item", "codgitem");
@@ -433,7 +437,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodgitem); }
 			set { insertNameValueField(FldCodgitem, value); }
 		}
-
 
 		/// <summary>Field : ">WAREHOUSE" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodwareh { get { return m_fldCodwareh; } }
@@ -446,7 +449,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodwareh, value); }
 		}
 
-
 		/// <summary>Field : "Type" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldItemtype { get { return m_fldItemtype; } }
 		private static FieldRef m_fldItemtype = new FieldRef("item", "itemtype");
@@ -457,7 +459,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldItemtype); }
 			set { insertNameValueField(FldItemtype, value); }
 		}
-
 
 		/// <summary>Field : "Article" Tipo: "C" Formula: DF "[GITEM->ITEMDES]"</summary>
 		public static FieldRef FldItemdes { get { return m_fldItemdes; } }
@@ -470,7 +471,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldItemdes, value); }
 		}
 
-
 		/// <summary>Field : "Code" Tipo: "C" Formula: DF "[GITEM->ITEMGCOD]"</summary>
 		public static FieldRef FldItemcod { get { return m_fldItemcod; } }
 		private static FieldRef m_fldItemcod = new FieldRef("item", "itemcod");
@@ -482,42 +482,38 @@ namespace CSGenio.business
 			set { insertNameValueField(FldItemcod, value); }
 		}
 
-
 		/// <summary>Field : "Entries" Tipo: "N" Formula: SR "[LDENT->QTDENTRA]"</summary>
 		public static FieldRef FldEntries { get { return m_fldEntries; } }
 		private static FieldRef m_fldEntries = new FieldRef("item", "entries");
 
 		/// <summary>Field : "Entries" Tipo: "N" Formula: SR "[LDENT->QTDENTRA]"</summary>
-		public double ValEntries
+		public decimal ValEntries
 		{
-			get { return (double)returnValueField(FldEntries); }
+			get { return (decimal)returnValueField(FldEntries); }
 			set { insertNameValueField(FldEntries, value); }
 		}
-
 
 		/// <summary>Field : "Outputs" Tipo: "N" Formula: SR "[OUTPU->EXITQNTY]"</summary>
 		public static FieldRef FldExits { get { return m_fldExits; } }
 		private static FieldRef m_fldExits = new FieldRef("item", "exits");
 
 		/// <summary>Field : "Outputs" Tipo: "N" Formula: SR "[OUTPU->EXITQNTY]"</summary>
-		public double ValExits
+		public decimal ValExits
 		{
-			get { return (double)returnValueField(FldExits); }
+			get { return (decimal)returnValueField(FldExits); }
 			set { insertNameValueField(FldExits, value); }
 		}
-
 
 		/// <summary>Field : "Stocks" Tipo: "N" Formula: SR "[LDENT->QTDENTRA]-[OUTPU->EXITQNTY]"</summary>
 		public static FieldRef FldExistenc { get { return m_fldExistenc; } }
 		private static FieldRef m_fldExistenc = new FieldRef("item", "existenc");
 
 		/// <summary>Field : "Stocks" Tipo: "N" Formula: SR "[LDENT->QTDENTRA]-[OUTPU->EXITQNTY]"</summary>
-		public double ValExistenc
+		public decimal ValExistenc
 		{
-			get { return (double)returnValueField(FldExistenc); }
+			get { return (decimal)returnValueField(FldExistenc); }
 			set { insertNameValueField(FldExistenc, value); }
 		}
-
 
 		/// <summary>Field : "Image" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldImage { get { return m_fldImage; } }
@@ -530,7 +526,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldImage, value); }
 		}
 
-
 		/// <summary>Field : "Categorization" Tipo: "MO" Formula: CL "ITEMC[ITEMC->TPCATEG][ITEMC->TPCATEG](; )"</summary>
 		public static FieldRef FldCategory { get { return m_fldCategory; } }
 		private static FieldRef m_fldCategory = new FieldRef("item", "category");
@@ -541,7 +536,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCategory); }
 			set { insertNameValueField(FldCategory, value); }
 		}
-
 
 		/// <summary>Field : "In use" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldValid { get { return m_fldValid; } }
@@ -554,7 +548,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldValid, value); }
 		}
 
-
 		/// <summary>Field : "Availability" Tipo: "AC" Formula: + "iif([ITEM->EXISTENC]>0,"A",iif([ITEM->EXISTENC]<=0,"O","D"))"</summary>
 		public static FieldRef FldDisponib { get { return m_fldDisponib; } }
 		private static FieldRef m_fldDisponib = new FieldRef("item", "disponib");
@@ -566,7 +559,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDisponib, value); }
 		}
 
-
 		/// <summary>Field : "Date" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldDate { get { return m_fldDate; } }
 		private static FieldRef m_fldDate = new FieldRef("item", "date");
@@ -577,7 +569,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDate); }
 			set { insertNameValueField(FldDate, value); }
 		}
-
 
 		/// <summary>Field : "Specifications" Tipo: "IB" Formula:  ""</summary>
 		public static FieldRef FldTechspec { get { return m_fldTechspec; } }
@@ -644,23 +635,6 @@ namespace CSGenio.business
 		}
 
 
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAitem> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAitem> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAitem>(where, user, fields);
-        }
-
-
         /// <summary>
         /// Search for all records of this area that comply with a condition
         /// </summary>
@@ -707,7 +681,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX ITEM]/

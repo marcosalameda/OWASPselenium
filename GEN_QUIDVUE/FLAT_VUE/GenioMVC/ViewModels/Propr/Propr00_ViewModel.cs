@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Propr
 {
-	public class Propr00_ViewModel : FormViewModel<Models.Propr>
+	public class Propr00_ViewModel : FormViewModel<Models.Propr>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,92 +29,103 @@ namespace GenioMVC.ViewModels.Propr
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Country" | Type: "CE"
+		/// </summary>
+		public string ValCodcntry { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodpais1 { get; set; }
+		/// <summary>
+		/// Title: "Seller" | Type: "CE"
+		/// </summary>
+		public string ValCodpesso { get; set; }
+		/// <summary>
+		/// Title: "Region" | Type: "CE"
+		/// </summary>
+		public string ValCodregia { get; set; }
+		/// <summary>
+		/// Title: "Property Type" | Type: "CE"
+		/// </summary>
+		public string ValCodtppro { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Real estate" | Type: "C"
 		/// </summary>
 		public string ValName { get; set; }
-
 		/// <summary>
 		/// Title: "Estimated price" | Type: "$D"
 		/// </summary>
 		public decimal? ValPrecoest { get; set; }
-
 		/// <summary>
 		/// Title: "Property Type" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Tppro> TableTpproTppropri { get; set; }
-
 		/// <summary>
 		/// Title: "Furnished" | Type: "L"
 		/// </summary>
 		public bool ValMobilada { get; set; }
-
 		/// <summary>
 		/// Title: "Seller" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Pesso> TablePessoName { get; set; }
-
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
 		[ImageThumbnailJsonConverter(100, 50)]
-		public GenioMVC.ViewModels.ImageModel ValPhotogra { get; set; }
-
+		public GenioMVC.Models.ImageModel ValPhotogra { get; set; }
 		/// <summary>
 		/// Title: "Bathroom" | Type: "N"
 		/// </summary>
 		public decimal? ValQtd_wc { get; set; }
-
 		/// <summary>
 		/// Title: "Quartos" | Type: "N"
 		/// </summary>
 		public decimal? ValQtdquart { get; set; }
-
 		/// <summary>
 		/// Title: "Square meters" | Type: "N"
 		/// </summary>
 		public decimal? ValM2 { get; set; }
-
 		/// <summary>
 		/// Title: "Available from" | Type: "D"
 		/// </summary>
 		public DateTime? ValDtdispon { get; set; }
-
 		/// <summary>
 		/// Title: "Address" | Type: "MO"
 		/// </summary>
 		public string ValEndereco { get; set; }
-
 		/// <summary>
 		/// Title: "Localization" | Type: "C"
 		/// </summary>
 		public string ValLocalida { get; set; }
-
 		/// <summary>
 		/// Title: "Zipcode" | Type: "C"
 		/// </summary>
 		public string ValPostalco { get; set; }
-
 		/// <summary>
 		/// Title: "Zipcode" | Type: "C"
 		/// </summary>
 		public string ValPostallo { get; set; }
-
 		/// <summary>
 		/// Title: "Country" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Cntry> TableCntryCountry { get; set; }
-
 		/// <summary>
 		/// Title: "Region" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Regio> TableRegioRegiao { get; set; }
-
 		/// <summary>
 		/// Title: "Geographic Coordinates" | Type: "GG"
 		/// </summary>
 		public string ValCoordgeo { get; set; }
-
 		/// <summary>
 		/// Title: "Description" | Type: "MO"
 		/// </summary>
@@ -127,35 +138,6 @@ namespace GenioMVC.ViewModels.Propr
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Country" | Type: "CE"
-		/// </summary>
-		public string ValCodcntry { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodpais1 { get; set; }
-
-		/// <summary>
-		/// Title: "Seller" | Type: "CE"
-		/// </summary>
-		public string ValCodpesso { get; set; }
-
-		/// <summary>
-		/// Title: "Region" | Type: "CE"
-		/// </summary>
-		public string ValCodregia { get; set; }
-
-		/// <summary>
-		/// Title: "Property Type" | Type: "CE"
-		/// </summary>
-		public string ValCodtppro { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -171,9 +153,10 @@ namespace GenioMVC.ViewModels.Propr
 
 		public string ValCodpropr { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Propr00_ViewModel() : base(null!) { }
@@ -209,6 +192,15 @@ namespace GenioMVC.ViewModels.Propr
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Propr model = new Models.Propr(userContext) { Identifier = "FPROPR00" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FPROPR00");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -269,6 +261,11 @@ namespace GenioMVC.ViewModels.Propr
 
 			try
 			{
+				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
+				ValCodpais1 = ViewModelConversion.ToString(m.ValCodpais1);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
+				ValCodtppro = ViewModelConversion.ToString(m.ValCodtppro);
 				ValName = ViewModelConversion.ToString(m.ValName);
 				ValPrecoest = ViewModelConversion.ToNumeric(m.ValPrecoest);
 				ValMobilada = ViewModelConversion.ToLogic(m.ValMobilada);
@@ -283,11 +280,6 @@ namespace GenioMVC.ViewModels.Propr
 				ValPostallo = ViewModelConversion.ToString(m.ValPostallo);
 				ValCoordgeo = ViewModelConversion.ToString(m.ValCoordgeo);
 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
-				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
-				ValCodpais1 = ViewModelConversion.ToString(m.ValCodpais1);
-				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
-				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
-				ValCodtppro = ViewModelConversion.ToString(m.ValCodtppro);
 				ValCodpropr = ViewModelConversion.ToString(m.ValCodpropr);
 			}
 			catch (Exception)
@@ -297,6 +289,20 @@ namespace GenioMVC.ViewModels.Propr
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Propr m)
 		{
 			if (m == null)
@@ -307,10 +313,15 @@ namespace GenioMVC.ViewModels.Propr
 
 			try
 			{
+				m.ValCodcntry = ViewModelConversion.ToString(ValCodcntry);
+				m.ValCodpesso = ViewModelConversion.ToString(ValCodpesso);
+				m.ValCodregia = ViewModelConversion.ToString(ValCodregia);
+				m.ValCodtppro = ViewModelConversion.ToString(ValCodtppro);
 				m.ValName = ViewModelConversion.ToString(ValName);
 				m.ValPrecoest = ViewModelConversion.ToNumeric(ValPrecoest);
 				m.ValMobilada = ViewModelConversion.ToLogic(ValMobilada);
-				m.ValPhotogra = ViewModelConversion.ToImage(ValPhotogra);
+				if (ValPhotogra == null || !ValPhotogra.IsThumbnail)
+					m.ValPhotogra = ViewModelConversion.ToImage(ValPhotogra);
 				m.ValQtd_wc = ViewModelConversion.ToNumeric(ValQtd_wc);
 				m.ValQtdquart = ViewModelConversion.ToNumeric(ValQtdquart);
 				m.ValM2 = ViewModelConversion.ToNumeric(ValM2);
@@ -321,22 +332,121 @@ namespace GenioMVC.ViewModels.Propr
 				m.ValPostallo = ViewModelConversion.ToString(ValPostallo);
 				m.ValCoordgeo = ViewModelConversion.ToString(ValCoordgeo);
 				m.ValDescript = ViewModelConversion.ToString(ValDescript);
-				m.ValCodcntry = ViewModelConversion.ToString(ValCodcntry);
-				m.ValCodpais1 = ViewModelConversion.ToString(ValCodpais1);
-				m.ValCodpesso = ViewModelConversion.ToString(ValCodpesso);
-				m.ValCodregia = ViewModelConversion.ToString(ValCodregia);
-				m.ValCodtppro = ViewModelConversion.ToString(ValCodtppro);
 				m.ValCodpropr = ViewModelConversion.ToString(ValCodpropr);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValCodpais1 = ViewModelConversion.ToString(ValCodpais1);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Propr00) to Model (Propr) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Propr00) to Model (Propr) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "propr.codcntry":
+						this.ValCodcntry = ViewModelConversion.ToString(_value);
+						break;
+					case "propr.codpesso":
+						this.ValCodpesso = ViewModelConversion.ToString(_value);
+						break;
+					case "propr.codregia":
+						this.ValCodregia = ViewModelConversion.ToString(_value);
+						break;
+					case "propr.codtppro":
+						this.ValCodtppro = ViewModelConversion.ToString(_value);
+						break;
+					case "propr.name":
+						this.ValName = ViewModelConversion.ToString(_value);
+						break;
+					case "propr.precoest":
+						this.ValPrecoest = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "propr.mobilada":
+						this.ValMobilada = ViewModelConversion.ToLogic(_value);
+						break;
+					case "propr.photogra":
+						this.ValPhotogra = ViewModelConversion.ToImage(_value);
+						break;
+					case "propr.qtd_wc":
+						this.ValQtd_wc = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "propr.qtdquart":
+						this.ValQtdquart = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "propr.m2":
+						this.ValM2 = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "propr.dtdispon":
+						this.ValDtdispon = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "propr.endereco":
+						this.ValEndereco = ViewModelConversion.ToString(_value);
+						break;
+					case "propr.localida":
+						this.ValLocalida = ViewModelConversion.ToString(_value);
+						break;
+					case "propr.postalco":
+						this.ValPostalco = ViewModelConversion.ToString(_value);
+						break;
+					case "propr.postallo":
+						this.ValPostallo = ViewModelConversion.ToString(_value);
+						break;
+					case "propr.coordgeo":
+						this.ValCoordgeo = ViewModelConversion.ToString(_value);
+						break;
+					case "propr.descript":
+						this.ValDescript = ViewModelConversion.ToString(_value);
+						break;
+					case "propr.codpropr":
+						this.ValCodpropr = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Propr00) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Propr00)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Propr.Find(id ?? Navigation.GetStrValue("propr"), m_userContext, "FPROPR00"); }
+			finally { Model ??= new Models.Propr(m_userContext) { Identifier = "FPROPR00" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -350,20 +460,13 @@ namespace GenioMVC.ViewModels.Propr
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FPROPR00";
@@ -373,6 +476,7 @@ namespace GenioMVC.ViewModels.Propr
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -433,34 +537,28 @@ namespace GenioMVC.ViewModels.Propr
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValName", Resources.Resources.REAL_ESTATE24996, ValName, 85);
 			validator.StringLength("ValLocalida", Resources.Resources.LOCALIZATION34148, ValLocalida, 50);
 			validator.StringLength("ValPostalco", Resources.Resources.ZIPCODE21021, ValPostalco, 20);
 			validator.StringLength("ValPostallo", Resources.Resources.ZIPCODE21021, ValPostallo, 50);
 
+
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE PROPR00]/
 		public override void Save()
 		{
 
-			try { Model = Models.Propr.Find(Navigation.GetStrValue("propr"), m_userContext, "FPROPR00"); }
-			finally { if (Model == null) Model = new Models.Propr(m_userContext) { Identifier = "FPROPR00" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY PROPR00]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Propr.Find(Navigation.GetStrValue("propr"), m_userContext, "FPROPR00"); }
-			finally { if (Model == null) Model = new Models.Propr(m_userContext) { Identifier = "FPROPR00" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE PROPR00]/
 
@@ -493,8 +591,8 @@ namespace GenioMVC.ViewModels.Propr
 				object hValue = Navigation.GetValue("tppro", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					propr00_tpprotppropriConds.Equal(CSGenioAtppro.FldCodtppro, Navigation.GetValue("tppro"));
-					this.ValCodtppro = Navigation.GetStrValue("tppro");
+					propr00_tpprotppropriConds.Equal(CSGenioAtppro.FldCodtppro, hValue);
+					this.ValCodtppro = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -511,8 +609,6 @@ namespace GenioMVC.ViewModels.Propr
 					Navigation.CurrentLevel.SetEntry("RETURN_tppro", null);
 				}
 				FillDependant_Propr00TableTpproTppropri(lazyLoad);
-				//Check if foreignkey comes from history
-				TableTpproTppropri.FilledByHistory = Navigation.CheckFilledByHistory("tppro");
 				return;
 			}
 
@@ -580,9 +676,6 @@ namespace GenioMVC.ViewModels.Propr
 
 				TableTpproTppropri.List = new SelectList(TableTpproTppropri.Elements.ToSelectList(x => x.ValTppropri, x => x.ValCodtppro,  x => x.ValCodtppro == this.ValCodtppro), "Value", "Text", this.ValCodtppro);
 				FillDependant_Propr00TableTpproTppropri();
-
-				//Check if foreignkey comes from history
-				TableTpproTppropri.FilledByHistory = Navigation.CheckFilledByHistory("tppro");
 			}
 		}
 
@@ -688,8 +781,8 @@ namespace GenioMVC.ViewModels.Propr
 				object hValue = Navigation.GetValue("pesso", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					propr00_pessoname____Conds.Equal(CSGenioApesso.FldCodpesso, Navigation.GetValue("pesso"));
-					this.ValCodpesso = Navigation.GetStrValue("pesso");
+					propr00_pessoname____Conds.Equal(CSGenioApesso.FldCodpesso, hValue);
+					this.ValCodpesso = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -706,8 +799,6 @@ namespace GenioMVC.ViewModels.Propr
 					Navigation.CurrentLevel.SetEntry("RETURN_pesso", null);
 				}
 				FillDependant_Propr00TablePessoName(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
 				return;
 			}
 
@@ -775,9 +866,6 @@ namespace GenioMVC.ViewModels.Propr
 
 				TablePessoName.List = new SelectList(TablePessoName.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpesso), "Value", "Text", this.ValCodpesso);
 				FillDependant_Propr00TablePessoName();
-
-				//Check if foreignkey comes from history
-				TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
 			}
 		}
 
@@ -884,8 +972,8 @@ namespace GenioMVC.ViewModels.Propr
 				object hValue = Navigation.GetValue("cntry", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					propr01_cntrycountry_Conds.Equal(CSGenioAcntry.FldCodcntry, Navigation.GetValue("cntry"));
-					this.ValCodcntry = Navigation.GetStrValue("cntry");
+					propr01_cntrycountry_Conds.Equal(CSGenioAcntry.FldCodcntry, hValue);
+					this.ValCodcntry = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -902,8 +990,6 @@ namespace GenioMVC.ViewModels.Propr
 					Navigation.CurrentLevel.SetEntry("RETURN_cntry", null);
 				}
 				FillDependant_Propr01TableCntryCountry(lazyLoad);
-				//Check if foreignkey comes from history
-				TableCntryCountry.FilledByHistory = Navigation.CheckFilledByHistory("cntry");
 				return;
 			}
 
@@ -971,9 +1057,6 @@ namespace GenioMVC.ViewModels.Propr
 
 				TableCntryCountry.List = new SelectList(TableCntryCountry.Elements.ToSelectList(x => x.ValCountry, x => x.ValCodcntry,  x => x.ValCodcntry == this.ValCodcntry), "Value", "Text", this.ValCodcntry);
 				FillDependant_Propr01TableCntryCountry();
-
-				//Check if foreignkey comes from history
-				TableCntryCountry.FilledByHistory = Navigation.CheckFilledByHistory("cntry");
 			}
 		}
 
@@ -1079,14 +1162,14 @@ namespace GenioMVC.ViewModels.Propr
 				object hValue = Navigation.GetValue("regio", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					propr01_regioregiao__Conds.Equal(CSGenioAregio.FldCodregia, Navigation.GetValue("regio"));
-					this.ValCodregia = Navigation.GetStrValue("regio");
+					propr01_regioregiao__Conds.Equal(CSGenioAregio.FldCodregia, hValue);
+					this.ValCodregia = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
 
 			// Area limit
-			propr01_regioregiao__DoLoad &= AddCriteriaAreaLimit(propr01_regioregiao__Conds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, false);
+			propr01_regioregiao__DoLoad &= AddCriteriaAreaLimit(propr01_regioregiao__Conds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, true);
 
 			TableRegioRegiao = new TableDBEdit<Models.Regio>
 			{
@@ -1101,8 +1184,6 @@ namespace GenioMVC.ViewModels.Propr
 					Navigation.CurrentLevel.SetEntry("RETURN_regio", null);
 				}
 				FillDependant_Propr01TableRegioRegiao(lazyLoad);
-				//Check if foreignkey comes from history
-				TableRegioRegiao.FilledByHistory = Navigation.CheckFilledByHistory("regio");
 				return;
 			}
 
@@ -1173,9 +1254,6 @@ namespace GenioMVC.ViewModels.Propr
 
 				TableRegioRegiao.List = new SelectList(TableRegioRegiao.Elements.ToSelectList(x => x.ValRegiao, x => x.ValCodregia,  x => x.ValCodregia == this.ValCodregia), "Value", "Text", this.ValCodregia);
 				FillDependant_Propr01TableRegioRegiao();
-
-				//Check if foreignkey comes from history
-				TableRegioRegiao.FilledByHistory = Navigation.CheckFilledByHistory("regio");
 			}
 		}
 
@@ -1281,6 +1359,11 @@ namespace GenioMVC.ViewModels.Propr
 		{
 			return identifier switch
 			{
+				"propr.codcntry" => ViewModelConversion.ToString(modelValue),
+				"propr.codpais1" => ViewModelConversion.ToString(modelValue),
+				"propr.codpesso" => ViewModelConversion.ToString(modelValue),
+				"propr.codregia" => ViewModelConversion.ToString(modelValue),
+				"propr.codtppro" => ViewModelConversion.ToString(modelValue),
 				"propr.name" => ViewModelConversion.ToString(modelValue),
 				"propr.precoest" => ViewModelConversion.ToNumeric(modelValue),
 				"propr.mobilada" => ViewModelConversion.ToLogic(modelValue),
@@ -1295,11 +1378,6 @@ namespace GenioMVC.ViewModels.Propr
 				"propr.postallo" => ViewModelConversion.ToString(modelValue),
 				"propr.coordgeo" => ViewModelConversion.ToString(modelValue),
 				"propr.descript" => ViewModelConversion.ToString(modelValue),
-				"propr.codcntry" => ViewModelConversion.ToString(modelValue),
-				"propr.codpais1" => ViewModelConversion.ToString(modelValue),
-				"propr.codpesso" => ViewModelConversion.ToString(modelValue),
-				"propr.codregia" => ViewModelConversion.ToString(modelValue),
-				"propr.codtppro" => ViewModelConversion.ToString(modelValue),
 				"propr.codpropr" => ViewModelConversion.ToString(modelValue),
 				"tppro.codtppro" => ViewModelConversion.ToString(modelValue),
 				"tppro.tppropri" => ViewModelConversion.ToString(modelValue),
@@ -1309,8 +1387,22 @@ namespace GenioMVC.ViewModels.Propr
 				"cntry.country" => ViewModelConversion.ToString(modelValue),
 				"regio.codregia" => ViewModelConversion.ToString(modelValue),
 				"regio.regiao" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
+		}
+
+
+		/// <inheritdoc/>
+		protected override void SanitizeHTMLFields()
+		{
+			ValDescript = Helpers.HtmlSanitizerHelper.SanitizeHTML(ValDescript, true);
+		}
+
+		/// <inheritdoc/>
+		protected override void SetTicketToImageFields()
+		{
+			if (ValPhotogra != null)
+				ValPhotogra.Ticket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaPROPR, CSGenioApropr.FldPhotogra.Field, null, ValCodpropr);
 		}
 
 		#region Charts

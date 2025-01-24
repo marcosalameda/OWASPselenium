@@ -23,15 +23,13 @@ export default class Bookmarks
 	 */
 	fetchData()
 	{
-		postData('Home', 'Bookmarks', null, (data) => {
-			this._updateContent(data)
-		})
+		postData('Home', 'Bookmarks', null, (data) => this._updateContent(data))
 	}
 
 	/**
 	 * Activate menu capture to be added in bookmarks tables
 	 */
-	ActivateSelectionMode()
+	activateSelectionMode()
 	{
 		this.isActivated = true
 	}
@@ -51,7 +49,7 @@ export default class Bookmarks
 	 * @param module {string} Module ID
 	 * @param menuId {string} menu ID
 	 */
-	AddBookmark(module, menuId)
+	addBookmark(module, menuId)
 	{
 		if (this.isActivated)
 		{
@@ -69,7 +67,7 @@ export default class Bookmarks
 	 * Remove bookmark
 	 * @param bookmarkId {string} Primary key column of bookmark table
 	 */
-	RemoveBookmark(bookmarkId)
+	removeBookmark(bookmarkId)
 	{
 		if (!_isEmpty(bookmarkId))
 		{

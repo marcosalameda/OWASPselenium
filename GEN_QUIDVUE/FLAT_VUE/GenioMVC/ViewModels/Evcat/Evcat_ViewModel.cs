@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Evcat
 {
-	public class Evcat_ViewModel : FormViewModel<Models.Evcat>
+	public class Evcat_ViewModel : FormViewModel<Models.Evcat>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,36 +29,45 @@ namespace GenioMVC.ViewModels.Evcat
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Category" | Type: "CE"
+		/// </summary>
+		public string ValCodcateg { get; set; }
+		/// <summary>
+		/// Title: "Name" | Type: "CE"
+		/// </summary>
+		public string ValCodpesso { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Name" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Pesso> TablePessoName { get; set; }
-
 		/// <summary>
 		/// Title: "Category" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Cate1> TableCate1Category { get; set; }
-
 		/// <summary>
 		/// Title: "Since:" | Type: "D"
 		/// </summary>
 		public DateTime? ValSince { get; set; }
-
 		/// <summary>
 		/// Title: "Until" | Type: "D"
 		/// </summary>
+		[ValidateSetAccess]
 		public DateTime? ValUntil { get; set; }
-
 		/// <summary>
 		/// Title: "End" | Type: "D"
 		/// </summary>
 		public DateTime? ValUntilman { get; set; }
-
 		/// <summary>
 		/// Title: "End of period" | Type: "D"
 		/// </summary>
+		[ValidateSetAccess]
 		public DateTime? ValFimperio { get; set; }
-
 		/// <summary>
 		/// Title: "Observation" | Type: "MO"
 		/// </summary>
@@ -71,20 +80,6 @@ namespace GenioMVC.ViewModels.Evcat
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Category" | Type: "CE"
-		/// </summary>
-		public string ValCodcateg { get; set; }
-
-		/// <summary>
-		/// Title: "Name" | Type: "CE"
-		/// </summary>
-		public string ValCodpesso { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -100,9 +95,10 @@ namespace GenioMVC.ViewModels.Evcat
 
 		public string ValCodprogr { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Evcat_ViewModel() : base(null!) { }
@@ -138,6 +134,15 @@ namespace GenioMVC.ViewModels.Evcat
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Evcat model = new Models.Evcat(userContext) { Identifier = "FEVCAT" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FEVCAT");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -198,13 +203,13 @@ namespace GenioMVC.ViewModels.Evcat
 
 			try
 			{
+				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 				ValSince = ViewModelConversion.ToDateTime(m.ValSince);
 				ValUntil = ViewModelConversion.ToDateTime(m.ValUntil);
 				ValUntilman = ViewModelConversion.ToDateTime(m.ValUntilman);
 				ValFimperio = ViewModelConversion.ToDateTime(m.ValFimperio);
 				ValObservat = ViewModelConversion.ToString(m.ValObservat);
-				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
-				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 				ValCodprogr = ViewModelConversion.ToString(m.ValCodprogr);
 			}
 			catch (Exception)
@@ -214,6 +219,20 @@ namespace GenioMVC.ViewModels.Evcat
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Evcat m)
 		{
 			if (m == null)
@@ -224,24 +243,88 @@ namespace GenioMVC.ViewModels.Evcat
 
 			try
 			{
-				m.ValSince = ViewModelConversion.ToDateTime(ValSince);
-				m.ValUntil = ViewModelConversion.ToDateTime(ValUntil);
-				m.ValUntilman = ViewModelConversion.ToDateTime(ValUntilman);
-				m.ValFimperio = ViewModelConversion.ToDateTime(ValFimperio);
-				m.ValObservat = ViewModelConversion.ToString(ValObservat);
 				m.ValCodcateg = ViewModelConversion.ToString(ValCodcateg);
 				m.ValCodpesso = ViewModelConversion.ToString(ValCodpesso);
+				m.ValSince = ViewModelConversion.ToDateTime(ValSince);
+				m.ValUntilman = ViewModelConversion.ToDateTime(ValUntilman);
+				m.ValObservat = ViewModelConversion.ToString(ValObservat);
 				m.ValCodprogr = ViewModelConversion.ToString(ValCodprogr);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValUntil = ViewModelConversion.ToDateTime(ValUntil);
+				m.ValFimperio = ViewModelConversion.ToDateTime(ValFimperio);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Evcat) to Model (Evcat) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Evcat) to Model (Evcat) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "evcat.codcateg":
+						this.ValCodcateg = ViewModelConversion.ToString(_value);
+						break;
+					case "evcat.codpesso":
+						this.ValCodpesso = ViewModelConversion.ToString(_value);
+						break;
+					case "evcat.since":
+						this.ValSince = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "evcat.untilman":
+						this.ValUntilman = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "evcat.observat":
+						this.ValObservat = ViewModelConversion.ToString(_value);
+						break;
+					case "evcat.codprogr":
+						this.ValCodprogr = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Evcat) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Evcat)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Evcat.Find(id ?? Navigation.GetStrValue("evcat"), m_userContext, "FEVCAT"); }
+			finally { Model ??= new Models.Evcat(m_userContext) { Identifier = "FEVCAT" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -255,20 +338,13 @@ namespace GenioMVC.ViewModels.Evcat
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FEVCAT";
@@ -278,6 +354,7 @@ namespace GenioMVC.ViewModels.Evcat
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -341,25 +418,19 @@ namespace GenioMVC.ViewModels.Evcat
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE EVCAT]/
 		public override void Save()
 		{
 
-			try { Model = Models.Evcat.Find(Navigation.GetStrValue("evcat"), m_userContext, "FEVCAT"); }
-			finally { if (Model == null) Model = new Models.Evcat(m_userContext) { Identifier = "FEVCAT" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY EVCAT]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Evcat.Find(Navigation.GetStrValue("evcat"), m_userContext, "FEVCAT"); }
-			finally { if (Model == null) Model = new Models.Evcat(m_userContext) { Identifier = "FEVCAT" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE EVCAT]/
 
@@ -392,8 +463,8 @@ namespace GenioMVC.ViewModels.Evcat
 				object hValue = Navigation.GetValue("pesso", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					evcat___pessoname____Conds.Equal(CSGenioApesso.FldCodpesso, Navigation.GetValue("pesso"));
-					this.ValCodpesso = Navigation.GetStrValue("pesso");
+					evcat___pessoname____Conds.Equal(CSGenioApesso.FldCodpesso, hValue);
+					this.ValCodpesso = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -410,8 +481,6 @@ namespace GenioMVC.ViewModels.Evcat
 					Navigation.CurrentLevel.SetEntry("RETURN_pesso", null);
 				}
 				FillDependant_EvcatTablePessoName(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
 				return;
 			}
 
@@ -479,9 +548,6 @@ namespace GenioMVC.ViewModels.Evcat
 
 				TablePessoName.List = new SelectList(TablePessoName.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpesso), "Value", "Text", this.ValCodpesso);
 				FillDependant_EvcatTablePessoName();
-
-				//Check if foreignkey comes from history
-				TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
 			}
 		}
 
@@ -587,8 +653,8 @@ namespace GenioMVC.ViewModels.Evcat
 				object hValue = Navigation.GetValue("cate1", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					evcat___cate1categoryConds.Equal(CSGenioAcate1.FldCodcateg, Navigation.GetValue("cate1"));
-					this.ValCodcateg = Navigation.GetStrValue("cate1");
+					evcat___cate1categoryConds.Equal(CSGenioAcate1.FldCodcateg, hValue);
+					this.ValCodcateg = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -605,8 +671,6 @@ namespace GenioMVC.ViewModels.Evcat
 					Navigation.CurrentLevel.SetEntry("RETURN_cate1", null);
 				}
 				FillDependant_EvcatTableCate1Category(lazyLoad);
-				//Check if foreignkey comes from history
-				TableCate1Category.FilledByHistory = Navigation.CheckFilledByHistory("cate1");
 				return;
 			}
 
@@ -674,9 +738,6 @@ namespace GenioMVC.ViewModels.Evcat
 
 				TableCate1Category.List = new SelectList(TableCate1Category.Elements.ToSelectList(x => x.ValCategoria, x => x.ValCodcateg,  x => x.ValCodcateg == this.ValCodcateg), "Value", "Text", this.ValCodcateg);
 				FillDependant_EvcatTableCate1Category();
-
-				//Check if foreignkey comes from history
-				TableCate1Category.FilledByHistory = Navigation.CheckFilledByHistory("cate1");
 			}
 		}
 
@@ -773,21 +834,23 @@ namespace GenioMVC.ViewModels.Evcat
 		{
 			return identifier switch
 			{
+				"evcat.codcateg" => ViewModelConversion.ToString(modelValue),
+				"evcat.codpesso" => ViewModelConversion.ToString(modelValue),
 				"evcat.since" => ViewModelConversion.ToDateTime(modelValue),
 				"evcat.until" => ViewModelConversion.ToDateTime(modelValue),
 				"evcat.untilman" => ViewModelConversion.ToDateTime(modelValue),
 				"evcat.fimperio" => ViewModelConversion.ToDateTime(modelValue),
 				"evcat.observat" => ViewModelConversion.ToString(modelValue),
-				"evcat.codcateg" => ViewModelConversion.ToString(modelValue),
-				"evcat.codpesso" => ViewModelConversion.ToString(modelValue),
 				"evcat.codprogr" => ViewModelConversion.ToString(modelValue),
 				"pesso.codpesso" => ViewModelConversion.ToString(modelValue),
 				"pesso.name" => ViewModelConversion.ToString(modelValue),
 				"cate1.codcateg" => ViewModelConversion.ToString(modelValue),
 				"cate1.categoria" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

@@ -3,49 +3,57 @@ using CSGenio.framework;
 using GenioMVC.Models.Navigation;
 using GenioServer.security;
 using System.ComponentModel.DataAnnotations;
+using GenioMVC.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GenioMVC.Models
 {
-
-	public class BasicUserModel
+	public interface IValidatable
 	{
-		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
-		[Display(Name = "UTILIZADOR52387", ResourceType = typeof(Resources.Resources))]
-		public string UserName { get; set; }
-
-		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
-		[DataType(DataType.Password)]
-		[Display(Name = "PALAVRA_CHAVE39832", ResourceType = typeof(Resources.Resources))]
-		public string Password { get; set; }
+		CrudViewModelValidationResult Validate(UserContext userContext);
 	}
 
-	public class AChangePasswordModel
+	public abstract class BasicUserModel: IValidatable
 	{
-		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
-		[DataType(DataType.Password)]
-		[Display(Name = "NOVA_PALAVRA_CHAVE09647", ResourceType = typeof(Resources.Resources))]
+		public string UserName { get; set; }
+
+		public string Password { get; set; }
+		
+		/// <summary>
+		/// Validates form fields
+		/// </summary>
+		/// <returns></returns>
+		public abstract CrudViewModelValidationResult Validate(UserContext userContext);
+	}
+
+	public abstract class AChangePasswordModel: IValidatable
+	{
 		public string NewPassword { get; set; }
 
-		[DataType(DataType.Password)]
-		[Display(Name = "CONFIRMAR_NOVA_PALAV02846", ResourceType = typeof(Resources.Resources))]
 		public string ConfirmPassword { get; set; }
+
+		public abstract CrudViewModelValidationResult Validate(UserContext userContext);
 	}
 
 	public class PasswordRecoverChangeModel : AChangePasswordModel
 	{
-		[Display(Name = "UTILIZADOR52387", ResourceType = typeof(Resources.Resources))]
 		public string UserId { get; set; }
+
+		public override CrudViewModelValidationResult Validate(UserContext userContext)
+		{
+			CrudViewModelFieldValidator validator = new(userContext.User.Language);
+
+			validator.Required("NewPassword", Resources.Resources.NOVA_PALAVRA_CHAVE09647, NewPassword);
+			validator.Password("ConfirmPassword", NewPassword, ConfirmPassword);
+			
+			return validator.GetResult();
+		}
 	}
 
-	public class ChangePasswordModel : AChangePasswordModel
+	public abstract class ChangePasswordModel : AChangePasswordModel
 	{
-		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
-		[DataType(DataType.Password)]
-		[Display(Name = "PALAVRA_CHAVE_ACTUAL29965", ResourceType = typeof(Resources.Resources))]
 		public string OldPassword { get; set; }
 
-		[DataType(DataType.Password)]
-		[Display(Name = "PALAVRA_CHAVE39832", ResourceType = typeof(Resources.Resources))]
 		public string Password { get; set; }
 
 		public bool Enable2FAOptions { get; set; }
@@ -53,20 +61,27 @@ namespace GenioMVC.Models
 
 	public class ProfileModel : ChangePasswordModel
 	{
-		public List<string> OpenIdConnAuthMethods { get; set; }
+		/// <summary>
+		/// Authentication models that need authentication
+		/// </summary>
+		public List<AuthRedirectMethodModel> AuthRedirectMethods { get; set; } = [];
 
 		public string ValCodpsw { get; set; }
 
-		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
-		[Display(Name = "UTILIZADOR52387", ResourceType = typeof(Resources.Resources))]
 		public string ValNome { get; set; }
 
-		public ProfileModel()
-		{
-			if (OpenIdConnAuthMethods == null)
-				OpenIdConnAuthMethods = new List<string>();
-		}
 
+		public override CrudViewModelValidationResult Validate(UserContext userContext)
+		{
+			CrudViewModelFieldValidator validator = new(userContext.User.Language);
+
+			validator.Required("ValNome", Resources.Resources.UTILIZADOR52387, ValNome);
+			validator.Required("OldPassword", Resources.Resources.PALAVRA_CHAVE_ACTUAL29965, OldPassword);
+			validator.Required("NewPassword", Resources.Resources.NOVA_PALAVRA_CHAVE09647, NewPassword);
+			validator.Password("NewPassword", NewPassword, ConfirmPassword);
+
+			return validator.GetResult();
+		}
 
 		public void Save(UserContext userContext)
 		{
@@ -109,25 +124,52 @@ namespace GenioMVC.Models
 		}
 	}
 
+
+	public class AuthRedirectMethodModel
+	{
+		/// <summary>
+		/// Unique identifier for this provider instance
+		/// </summary>
+		public string Id { get; set; }
+		/// <summary>
+		/// A human readable title for this provider instance
+		/// </summary>
+		public string Description { get; set; }
+		/// <summary>
+		/// The external uri to redirect the user during login with this provider
+		/// </summary>
+		public string Redirect { get; set; }
+
+		//public string AuthMode {get; set;} [UserPass, Redirect, Certificate]
+
+		//public static string BaseUrl { get; set; } = "";
+
+		public static string MapRedirectEndpoint(IIdentityProvider provider, IUrlHelper url, HttpRequest request, string operation = "Login")
+		{
+			string actionname = "OpenIdConnect";
+			if (provider is CASIdentityProvider)
+				actionname = "CAS";
+            else if (provider is CMDIdentityProvider)
+                actionname = "CMD";
+            else if (provider is OpenIdConnectIdentityProvider)
+                actionname = "OpenIdConnect";
+			actionname += operation;
+            //return url.Action(actionname, "Account", new { providerId = provider.Id }, request.Scheme);
+
+            string relative = url.RouteUrl("authRedirectRoute", new { 
+				providerId = provider.Id, 
+				action = actionname 
+			});
+			return AbsoluteUrlUtils.RelativeToAbsolute(request, relative);
+        }
+	}
+
 	public class LogOnModel : BasicUserModel
 	{
-		public List<string> OpenIdConnAuthMethods { get; set; }
-
-		public List<string> CASAuthMethods { get; set; }
-
-		public List<string> CMDAuthMethods { get; set; }
-
-		public void Load()
-		{
-			if (OpenIdConnAuthMethods == null)
-				OpenIdConnAuthMethods = new List<string>();
-
-			if (CASAuthMethods == null)
-				CASAuthMethods = new List<string>();
-
-			if (CMDAuthMethods == null)
-				CMDAuthMethods = new List<string>();
-		}
+		/// <summary>
+		/// Authentication models that need authentication
+		/// </summary>
+		public List<AuthRedirectMethodModel> AuthRedirectMethods { get; set; } = [];
 
 		/// <summary>
 		/// Checks if the application is setup to allow password recovery
@@ -139,29 +181,53 @@ namespace GenioMVC.Models
 		}
 
 		/// <summary>
-        /// Determines whether username and password authentication is enabled.
-        /// </summary>
-        /// <remarks>
-        /// This property returns true if either QuidgestIdentityProvider or LdapIdentityProvider is present in the list of identity providers.
-        /// This is used to determine if username and password authentication is enabled, assuming that either QuidgestIdentityProvider
-        /// or LdapIdentityProvider supports this method of authentication.
-        /// </remarks>
-        public bool HasUsernameAuth
-        {
+		/// Determines whether username and password authentication is enabled.
+		/// </summary>
+		/// <remarks>
+		/// This property returns true if either QuidgestIdentityProvider or LdapIdentityProvider is present in the list of identity providers.
+		/// This is used to determine if username and password authentication is enabled, assuming that either QuidgestIdentityProvider
+		/// or LdapIdentityProvider supports this method of authentication.
+		/// </remarks>
+		public bool HasUsernameAuth
+		{
 			get { return SecurityFactory.HasUsernameAuth(); }
+		}
+
+		public override CrudViewModelValidationResult Validate(UserContext userContext)
+		{
+			CrudViewModelFieldValidator validator = new(userContext.User.Language);
+
+			validator.Required("UserName", Resources.Resources.UTILIZADOR52387, UserName);
+			validator.Required("Password", Resources.Resources.PALAVRA_CHAVE39832, Password);
+
+			return validator.GetResult();
 		}
 	}
 
-	public class RegisterModel : BasicUserModel
+	public class VueCaptchaModel
 	{
-		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
-		[DataType(DataType.EmailAddress)]
-		[Display(Name = "EMAIL25170", ResourceType = typeof(Resources.Resources))]
+		public string CaptchaId { get; set; }
+
+		public string UserEnteredCaptchaCode { get; set; }
+	}
+
+	public class PasswordRecoverViewModel: IValidatable
+	{
 		public string Email { get; set; }
 
-		[DataType(DataType.Password)]
-		[Display(Name = "CONFIRMAR09808", ResourceType = typeof(Resources.Resources))]
-		public string ConfirmPassword { get; set; }
+		public bool IsEmailSent { get; set; }
+
+		public VueCaptchaModel CaptchaData { get; set; }
+
+		public CrudViewModelValidationResult Validate(UserContext userContext)
+		{
+			CrudViewModelFieldValidator validator = new(userContext.User.Language);
+			
+			validator.Required("Email", Resources.Resources.EMAIL25170, Email);
+			validator.Email("Email", Email);
+					
+			return validator.GetResult();
+		}
 	}
 
 }

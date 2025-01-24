@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Regio;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER REGIO]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Regio row = null;
 
-			try
-			{
-				row = Models.Regio.Find(Navigation.GetStrValue("regio"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model regio");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Regio(UserContext.Current);
+				row = new Models.Regio(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("regio");
 			}
 
@@ -82,8 +75,8 @@ namespace GenioMVC.Controllers
 				{
 					case "REGIA___CNTRYCOUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Regia_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Regia_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Regia___cntrycountry_(qs);
 							result = model.TableCntryCountry;
@@ -91,8 +84,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "REGIA_MLCNTRYCOUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Regia_ml_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Regia_ml_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Regia_mlcntrycountry_(qs);
 							result = model.TableCntryCountry;
@@ -100,8 +93,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "REGIA_MLPAIS1COUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Regia_ml_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Regia_ml_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Regia_mlpais1country_(qs);
 							result = model.TablePais1Country;
@@ -109,8 +102,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "REGIA_ONCNTRYCOUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Regia_on_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Regia_on_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Regia_oncntrycountry_(qs);
 							result = model.TableCntryCountry;
@@ -118,8 +111,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "REGIA_ONPAIS1COUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Regia_on_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Regia_on_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Regia_onpais1country_(qs);
 							result = model.TablePais1Country;
@@ -127,8 +120,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "REGIAPROCNTRYCOUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Regiapro_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Regiapro_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Regiaprocntrycountry_(qs);
 							result = model.TableCntryCountry;
@@ -136,14 +129,15 @@ namespace GenioMVC.Controllers
 						break;
 					case "REGIAPROPAIS1COUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Regiapro_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Regiapro_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Regiapropais1country_(qs);
 							result = model.TablePais1Country;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -207,11 +201,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -220,64 +215,61 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Regia" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Regia([FromBody]Regia_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Regia([FromBody]Regia_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "regio",
+			return GenericRecalculateFormulas(formData, "regio",
 				(primaryKey) => Models.Regio.Find(primaryKey, UserContext.Current, "FREGIA"),
-				(model) => form_data.MapToModel(model as Models.Regio)
+				(model) => formData.MapToModel(model as Models.Regio)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Regia_ml" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Regia_ml([FromBody]Regia_ml_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Regia_ml([FromBody]Regia_ml_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "regio",
+			return GenericRecalculateFormulas(formData, "regio",
 				(primaryKey) => Models.Regio.Find(primaryKey, UserContext.Current, "FREGIA_ML"),
-				(model) => form_data.MapToModel(model as Models.Regio)
+				(model) => formData.MapToModel(model as Models.Regio)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Regia_on" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Regia_on([FromBody]Regia_on_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Regia_on([FromBody]Regia_on_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "regio",
+			return GenericRecalculateFormulas(formData, "regio",
 				(primaryKey) => Models.Regio.Find(primaryKey, UserContext.Current, "FREGIA_ON"),
-				(model) => form_data.MapToModel(model as Models.Regio)
+				(model) => formData.MapToModel(model as Models.Regio)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Regiapro" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Regiapro([FromBody]Regiapro_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Regiapro([FromBody]Regiapro_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "regio",
+			return GenericRecalculateFormulas(formData, "regio",
 				(primaryKey) => Models.Regio.Find(primaryKey, UserContext.Current, "FREGIAPRO"),
-				(model) => form_data.MapToModel(model as Models.Regio)
+				(model) => formData.MapToModel(model as Models.Regio)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -285,7 +277,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

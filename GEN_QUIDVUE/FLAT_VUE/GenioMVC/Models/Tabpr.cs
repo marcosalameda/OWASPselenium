@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Tpequ _tpequ;
 		[DisplayName("Tpequ")]
 		[ShouldSerialize("Tpequ")]
-		public virtual Tpequ Tpequ { 
-			get { 
+		public virtual Tpequ Tpequ {
+			get {
 				if (!this.isEmptyModel && (_tpequ == null || (!string.IsNullOrEmpty(ValCodtpeq1) && (_tpequ.isEmptyModel || _tpequ.klass.QPrimaryKey != ValCodtpeq1))))
 					_tpequ = Models.Tpequ.Find(ValCodtpeq1, m_userContext, Identifier, _fieldsToSerialize);
 				if (_tpequ == null)
 					_tpequ = new Models.Tpequ(m_userContext, true, _fieldsToSerialize);
 				return _tpequ;
 			}
-			set { _tpequ = value; } 
+			set { _tpequ = value; }
 		}
-		
+
 
 		[DisplayName("Since")]
 		/// <summary>Field : "Since" Tipo: "DT" Formula:  ""</summary>
@@ -64,7 +64,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Price-by-hour" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Tabpr.ValPrecohor")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecohor { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecohor, 2)); } set { klass.ValPrecohor = Convert.ToDouble(value); } }
+		public decimal? ValPrecohor { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecohor, 2)); } set { klass.ValPrecohor = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Tabpr.ValZzstate")]
@@ -74,19 +74,19 @@ namespace GenioMVC.Models
 		public Tabpr(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAtabpr(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Tabpr(UserContext userContext, CSGenioAtabpr val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAtabpr csgenioa)
@@ -108,7 +108,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

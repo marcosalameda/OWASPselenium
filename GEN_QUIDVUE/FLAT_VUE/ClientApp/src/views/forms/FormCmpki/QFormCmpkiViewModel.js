@@ -75,12 +75,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [CMPKI->CODTPEQU]
-					// eslint-disable-next-line eqeqeq
 					return this.ValCodtpequ.value
 				},
 				dependencyEvents: ['fieldChange:cmpki.codtpequ'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyG,
 			},
 		}).cloneFrom(values?.ValCodtpeq1))
@@ -141,7 +139,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValCode))
 		watch(() => this.ValCode.value, (newValue, oldValue) => this.onUpdate('cmpki.code', this.ValCode, newValue, oldValue))
 
-		this.ValDescript = reactive(new modelFieldType.String({
+		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
 			originId: 'ValDescript',
 			area: 'CMPKI',
@@ -173,5 +171,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodcmpki'
 
 	get QPrimaryKey() { return this.ValCodcmpki.value }
-	set QPrimaryKey(value) { this.ValCodcmpki.value = value }
+	set QPrimaryKey(value) { this.ValCodcmpki.updateValue(value) }
 }

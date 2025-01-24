@@ -9,7 +9,7 @@
 				:tabs-list="controls.tabGroup.tabsList"
 				:selected-tab="controls.tabGroup.selectedTab"
 				:is-visible="controls.tabGroup.isVisible"
-				@tab-changed="controls.tabGroup.SelectTab($event)">
+				@tab-changed="controls.tabGroup.selectTab($event)">
 				<template #tab-panel>
 					<section v-show="controls.tabGroup.selectedTab === 'firstTab'">
 						<q-row-container is-large>
@@ -41,8 +41,7 @@
 						<q-row-container is-large>
 							<q-control-wrapper class="row-line-group">
 								<q-button
-									b-style="secondary"
-									:class="['float-left']"
+									b-style="secondary"									
 									:label="Resources.APLICAR33981"
 									:title="Resources.APLICAR33981"
 									@click="applyChanges">
@@ -92,6 +91,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_231ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_231', 'hardcoded', 'messages']
 
 	export default {
@@ -139,9 +140,7 @@
 					order: '231'
 				},
 
-				model: {
-					selectedRows: {}
-				},
+				model: new MenuViewModel(this),
 
 				controls: {
 					firstTab: new controlClass.BaseControl({
@@ -170,6 +169,7 @@
 					}, this),
 
 					firstTable: new controlClass.TableListControl({
+						id: 'GQT_Menu_231',
 						controller: 'EQUIP',
 						action: 'GQT_Menu_231',
 						hasDependencies: false,
@@ -199,8 +199,10 @@
 								area: 'EQUIP',
 								field: 'PHOTOGRA',
 								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -258,7 +260,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -366,18 +368,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: EQUIP
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValRegistnr',
 							defaultSearchColumnNameOriginal: 'ValRegistnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValRegistnr',
+								sortOrder: 'asc'
+							}
 						},
 						groupFilters: [
 							{
@@ -397,13 +393,13 @@
 										selected: false
 									},
 								],
-								value: '1'
+								value: '1',
+								defaultValue: '1'
 							},
 						],
 						changeEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
 						uuid: '1ef47b5e-55ef-4a74-adc4-a282edf007b4',
 						allSelectedRows: 'false',
-						id: 'GQT_Menu_231',
 						headerLevel: 1,
 						handlers: {
 							// Handles the row click.
@@ -424,6 +420,7 @@
 					}, this),
 
 					secondTable: new controlClass.TableListControl({
+						id: 'GQT_Menu_2311',
 						controller: 'ROOMS',
 						action: 'GQT_Menu_2311',
 						hasDependencies: false,
@@ -460,7 +457,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -568,23 +565,16 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: SALAS
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValRoomnr',
 							defaultSearchColumnNameOriginal: 'ValRoomnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValRoomnr',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-ROOMS'],
 						uuid: '7d91f319-b775-4c60-a166-3454014b284c',
 						allSelectedRows: 'false',
-						id: 'GQT_Menu_2311',
 						headerLevel: 1,
 						handlers: {
 							selectRow: (eventData) => {
@@ -626,17 +616,12 @@
 							},
 							formsDefinition: {
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: [],
 						uuid: '',

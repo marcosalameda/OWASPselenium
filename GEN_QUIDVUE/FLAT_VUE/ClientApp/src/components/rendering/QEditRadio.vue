@@ -19,6 +19,9 @@
 				:classes="classes"
 				:readonly="options.readonly"
 				:checked="row.Value === options.checkedValue"
+				data-table-action-selected="false"
+				tabindex="-1"
+				:aria-label="options?.label"
 				@change="updateExternal($event)" />
 			<span class="i-radio__field"></span>
 		</label>

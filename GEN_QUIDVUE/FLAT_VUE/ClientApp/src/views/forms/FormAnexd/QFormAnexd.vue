@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.ANEXD___EQUIPREGISTNR.handlers"
 							:loading="controls.ANEXD___EQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.ANEXD___EQUIPREGISTNR.isVisible"
 								v-bind="controls.ANEXD___EQUIPREGISTNR.props"
-								:model-value="model.ValCodequip.value"
-								v-on="controls.ANEXD___EQUIPREGISTNR.handlers"
-								@update:model-value="model.ValCodequip.fnUpdateValue" />
+								v-on="controls.ANEXD___EQUIPREGISTNR.handlers" />
 							<q-see-more-anexd-equipregistnr
 								v-if="controls.ANEXD___EQUIPREGISTNR.seeMoreIsVisible"
 								v-bind="controls.ANEXD___EQUIPREGISTNR.seeMoreParams"
@@ -131,14 +128,13 @@
 							v-on="controls.ANEXD___ANEXDDTHRANEX.handlers"
 							:loading="controls.ANEXD___ANEXDDTHRANEX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.ANEXD___ANEXDDTHRANEX.isVisible"
-								v-bind="controls.ANEXD___ANEXDDTHRANEX"
-								format="DateTime"
+								v-bind="controls.ANEXD___ANEXDDTHRANEX.props"
 								:model-value="model.ValDthranex.value"
-								@update:model-value="model.ValDthranex.fnUpdateValue" />
+								@reset-icon-click="model.ValDthranex.fnUpdateValue(model.ValDthranex.originalValue ?? new Date())"
+								@update:model-value="model.ValDthranex.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -150,12 +146,12 @@
 							v-on="controls.ANEXD___ANEXDREFERENC.handlers"
 							:loading="controls.ANEXD___ANEXDREFERENC.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ANEXD___ANEXDREFERENC.props"
 								:model-value="model.ValReferenc.value"
-								@update:model-value="model.ValReferenc.fnUpdateValue" />
+								@blur="onBlur(controls.ANEXD___ANEXDREFERENC, model.ValReferenc.value)"
+								@change="model.ValReferenc.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -169,12 +165,12 @@
 							v-on="controls.ANEXD___ANEXDTITLE___.handlers"
 							:loading="controls.ANEXD___ANEXDTITLE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ANEXD___ANEXDTITLE___.props"
 								:model-value="model.ValTitle.value"
-								@update:model-value="model.ValTitle.fnUpdateValue" />
+								@blur="onBlur(controls.ANEXD___ANEXDTITLE___, model.ValTitle.value)"
+								@change="model.ValTitle.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -188,14 +184,11 @@
 							v-on="controls.ANEXD___LANGULANGUA__.handlers"
 							:loading="controls.ANEXD___LANGULANGUA__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.ANEXD___LANGULANGUA__.isVisible"
 								v-bind="controls.ANEXD___LANGULANGUA__.props"
-								:model-value="model.ValCodlang.value"
-								v-on="controls.ANEXD___LANGULANGUA__.handlers"
-								@update:model-value="model.ValCodlang.fnUpdateValue" />
+								v-on="controls.ANEXD___LANGULANGUA__.handlers" />
 							<q-see-more-anexd-langulangua
 								v-if="controls.ANEXD___LANGULANGUA__.seeMoreIsVisible"
 								v-bind="controls.ANEXD___LANGULANGUA__.seeMoreParams"
@@ -213,8 +206,7 @@
 							v-on="controls.ANEXD___ANEXDTITTRADU.handlers"
 							:loading="controls.ANEXD___ANEXDTITTRADU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ANEXD___ANEXDTITTRADU.props"
 								:model-value="model.ValTittradu.value" />
@@ -231,41 +223,11 @@
 							v-on="controls.ANEXD___ANEXDDOCUMENT.handlers"
 							:loading="controls.ANEXD___ANEXDDOCUMENT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-document
 								v-if="controls.ANEXD___ANEXDDOCUMENT.isVisible"
-								id="ANEXD___ANEXDDOCUMENT"
-								size="xxlarge"
-								:model-value="model.ValDocument.value"
-								versioning-is-on
-								:readonly="controls.ANEXD___ANEXDDOCUMENT.readonly"
-								:is-in-checkout="controls.ANEXD___ANEXDDOCUMENT.isInCheckout"
-								:current-version="controls.ANEXD___ANEXDDOCUMENT.currentVersion"
-								:extensions="controls.ANEXD___ANEXDDOCUMENT.extensions"
-								:max-file-size="controls.ANEXD___ANEXDDOCUMENT.maxFileSize"
-								:versions="controls.ANEXD___ANEXDDOCUMENT.documentVersions"
-								:versions-info="controls.ANEXD___ANEXDDOCUMENT.versionsInfo"
-								:file-properties="controls.ANEXD___ANEXDDOCUMENT.fileProperties"
-								:texts="controls.ANEXD___ANEXDDOCUMENT.texts"
-								:popup-is-visible="controls.ANEXD___ANEXDDOCUMENT.popupIsVisible"
-								:disallow-removal="controls.ANEXD___ANEXDDOCUMENT.isRequired"
-								:resources-path="controls.ANEXD___ANEXDDOCUMENT.resourcesPath"
-								:uses-templates="controls.ANEXD___ANEXDDOCUMENT.usesTemplates"
-								@file-error="controls.ANEXD___ANEXDDOCUMENT.HandleFileError($event)"
-								@submit-file="controls.ANEXD___ANEXDDOCUMENT.SetFile($event)"
-								@edit-file="controls.ANEXD___ANEXDDOCUMENT.SetCheckoutState()"
-								@get-properties="controls.ANEXD___ANEXDDOCUMENT.GetFileProperties()"
-								@get-version-history="controls.ANEXD___ANEXDDOCUMENT.GetVersionsInfo()"
-								@get-file="controls.ANEXD___ANEXDDOCUMENT.GetFile()"
-								@download-file="controls.ANEXD___ANEXDDOCUMENT.DownloadFile()"
-								@get-file-version="controls.ANEXD___ANEXDDOCUMENT.GetFileVersion($event)"
-								@delete-last="controls.ANEXD___ANEXDDOCUMENT.DeleteFile(0)"
-								@delete-history="controls.ANEXD___ANEXDDOCUMENT.DeleteFile(1)"
-								@delete-file="controls.ANEXD___ANEXDDOCUMENT.DeleteFile(2)"
-								@show-popup="controls.ANEXD___ANEXDDOCUMENT.SetModal($event)"
-								@hide-popup="controls.ANEXD___ANEXDDOCUMENT.RemoveModal($event)"
-								@show-templates-popup="controls.ANEXD___ANEXDDOCUMENT.handleDocumentTemplates($event)" />
+								v-bind="controls.ANEXD___ANEXDDOCUMENT.props"
+								v-on="controls.ANEXD___ANEXDDOCUMENT.handlers" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -352,15 +314,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'ANEXD',
-						location: 'form-ANEXD',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'ANEXD',
+					location: 'form-ANEXD',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -406,6 +366,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -478,8 +440,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -561,7 +524,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -615,21 +578,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -640,25 +588,9 @@
 						id: 'ANEXD___EQUIPREGISTNR',
 						name: 'REGISTNR',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.NO__REGISTER04207),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodequip',
-							dependencyEvent: 'fieldChange:anexd.codequip'
-						},
-						dependentFields: () => {
-							return {
-								set 'equip.codequip'(value) { vm.model.ValCodequip.updateValue(value) },
-								set 'equip.registnr'(value) { vm.model.TableEquipRegistnr.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -667,6 +599,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodequip',
+							dependencyEvent: 'fieldChange:anexd.codequip'
+						},
+						dependentFields: () => ({
+							set 'equip.codequip'(value) { vm.model.ValCodequip.updateValue(value) },
+							set 'equip.registnr'(value) { vm.model.TableEquipRegistnr.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					ANEXD___ANEXDDTHRANEX: new fieldControlClass.DateControl({
 						modelField: 'ValDthranex',
@@ -674,13 +616,10 @@
 						id: 'ANEXD___ANEXDDTHRANEX',
 						name: 'DTHRANEX',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.ATTACHED26247),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -690,15 +629,11 @@
 						id: 'ANEXD___ANEXDREFERENC',
 						name: 'REFERENC',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.REFERENCE28402),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_ANEXD___ANEXDREFERENC',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -708,15 +643,11 @@
 						id: 'ANEXD___ANEXDTITLE___',
 						name: 'TITLE',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TITLE21885),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
 						labelId: 'label_ANEXD___ANEXDTITLE___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -726,25 +657,9 @@
 						id: 'ANEXD___LANGULANGUA__',
 						name: 'LANGUA',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.LANGUAGE16872),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodlang',
-							dependencyEvent: 'fieldChange:anexd.codlang'
-						},
-						dependentFields: () => {
-							return {
-								set 'langu.codlang'(value) { vm.model.ValCodlang.updateValue(value) },
-								set 'langu.langua'(value) { vm.model.TableLanguLangua.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -753,6 +668,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodlang',
+							dependencyEvent: 'fieldChange:anexd.codlang'
+						},
+						dependentFields: () => ({
+							set 'langu.codlang'(value) { vm.model.ValCodlang.updateValue(value) },
+							set 'langu.langua'(value) { vm.model.TableLanguLangua.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					ANEXD___ANEXDTITTRADU: new fieldControlClass.StringControl({
 						modelField: 'ValTittradu',
@@ -760,19 +685,14 @@
 						id: 'ANEXD___ANEXDTITTRADU',
 						name: 'TITTRADU',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TRANSLATED_TITLE04469),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
 						maxLength: 85,
 						labelId: 'label_ANEXD___ANEXDTITTRADU',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					ANEXD___ANEXDDOCUMENT: new fieldControlClass.DocumentControl({
 						modelField: 'ValDocument',
@@ -780,21 +700,17 @@
 						id: 'ANEXD___ANEXDDOCUMENT',
 						name: 'DOCUMENT',
 						size: 'xxlarge',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___1637441),
+							},
+						},
 						label: computed(() => this.Resources.DOCUMENT00695),
-						userHelp: computed(() => this.Resources.___1637441),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						documentProperties: computed(() => vm.model.ValDocumentPropertiesVM),
-						documentFK: computed(() => vm.model.ValDocumentfk),
-						documentVersions: computed(() => vm.model.ValDocumentPropertiesVM.value ? vm.model.ValDocumentPropertiesVM.value.Versions : {}),
-						isInCheckout: computed(() => vm.model.ValDocumentPropertiesVM.value ? vm.model.ValDocumentPropertiesVM.value.IsCheckout : false),
-						currentVersion: computed(() => vm.model.ValDocumentPropertiesVM.value ? vm.model.ValDocumentPropertiesVM.value.Version : '1'),
-						usesTemplates: false,
+						versioningIsOn: true,
 						extensions: [],
-						viewType: qEnums.documentViewTypeMode.Preview,
-						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -852,7 +768,7 @@
 						/** The foreign key to the LANGU table */
 						get langu() { return vm.model.ValCodlang },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -948,6 +864,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -987,6 +911,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1113,6 +1045,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR ANEXD]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1128,6 +1076,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS ANEXD]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

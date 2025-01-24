@@ -251,10 +251,10 @@ namespace CSGenio.framework
             //no treatment for datetime because of minvalue. We let the row return null in this case
             //only fields that have a default value need a specific treatment
 
-            if (t == typeof(short) || t == typeof(int) || t == typeof(long) || t == typeof(ushort) || t == typeof(uint) || t == typeof(ulong))
-                return data.GetInteger(row, col);
-            if (t == typeof(float) || t == typeof(decimal) || t == typeof(double))
-                return data.GetNumeric(row, col);
+            if (t == typeof(short) || t == typeof(int)  || t == typeof(ushort) || t == typeof(uint))
+				return data.GetInteger(row, col);
+			if (t == typeof(float) || t == typeof(decimal) || t == typeof(double) || t == typeof(long) || t == typeof(ulong))
+				return data.GetNumeric(row, col);
 
             return data.GetDirect(row, col);
         }

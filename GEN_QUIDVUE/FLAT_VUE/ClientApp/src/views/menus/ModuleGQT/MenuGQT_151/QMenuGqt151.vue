@@ -1,18 +1,20 @@
 ﻿<template>
 	<teleport to="#q-modal-menu-GQT_151-body">
-		<div>
+		<div v-if="model">
 			<q-row-container>
 				<q-control-wrapper class="control-join-group">
+					<!-- SE1A HJ -->
 					<base-input-structure
 						id="start-limit"
 						:class="['i-text']"
 						:label="Resources.INICIO15853"
 						:label-attrs="{ class: 'i-text__label' }">
-						<q-datetime-input
+						<q-date-time-picker
 							id="start-limit-field"
-							format="DateTime"
+							format="dateTime"
+							:locale="locale"
 							:model-value="model.ValMinvalue.value"
-							:date-format="{ Date: 'DD-MM-YYYY HH:mm' }"
+							@reset-icon-click="model.ValMinvalue.fnUpdateValue(model.ValMinvalue.originalValue ?? new Date())"
 							@update:model-value="model.ValMinvalue.fnUpdateValue" />
 					</base-input-structure>
 				</q-control-wrapper>
@@ -23,11 +25,12 @@
 						:class="['i-text']"
 						:label="Resources.FIM04424"
 						:label-attrs="{ class: 'i-text__label' }">
-						<q-datetime-input
+						<q-date-time-picker
 							id="end-limit-field"
-							format="DateTime"
+							format="dateTime"
+							:locale="locale"
 							:model-value="model.ValMaxvalue.value"
-							:date-format="{ Date: 'DD-MM-YYYY HH:mm' }"
+							@reset-icon-click="model.ValMaxvalue.fnUpdateValue(model.ValMaxvalue.originalValue ?? new Date())"
 							@update:model-value="model.ValMaxvalue.fnUpdateValue" />
 					</base-input-structure>
 				</q-control-wrapper>
@@ -72,6 +75,7 @@
 	import formFunctions from '@/mixins/formFunctions.js'
 	import modelFieldType from '@/mixins/formModelFieldTypes.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
+	import { useSystemDataStore } from '@/stores/systemData.js'
 
 	import netAPI from '@/api/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
@@ -128,16 +132,9 @@
 					isPopup: true
 				},
 
-				model: {
-					ValMinvalue: new modelFieldType.Date({
-						id: 'ValMinvalue',
-						area: 'LENDI'
-					}),
-					ValMaxvalue: new modelFieldType.Date({
-						id: 'ValMaxvalue',
-						area: 'LENDI'
-					})
-				}
+				model: null,
+
+				locale: useSystemDataStore().system.currentLang
 			}
 		},
 
@@ -155,12 +152,27 @@
 		created()
 		{
 			// Load resources (translations)
-			this.componentOnLoadProc.AddBusy(loadResources(this, requiredTextResources), this.Resources[hardcodedTexts.genericLoad], 300)
+			this.componentOnLoadProc.addBusy(loadResources(this, requiredTextResources), this.Resources[hardcodedTexts.genericLoad], 300)
+			// Load default limit values 
+			let vm = this;
+			this.componentOnLoadProc.addBusy(netAPI.postData("LENDI", 'GQT_MenuSE_151', null, (data) => {
+				vm.model = {
+					ValMinvalue: new modelFieldType.DateTime({
+						id: 'ValMinvalue',
+						area: 'LENDI',
+						value: data.ValMinvalue,
+						originalValue: data.ValMinvalue
+					}),
+					ValMaxvalue: new modelFieldType.DateTime({
+						id: 'ValMaxvalue',
+						area: 'LENDI',
+						value: data.ValMaxvalue,
+						originalValue: data.ValMaxvalue
+					})
+				}
+			}, undefined, undefined, undefined))
 			// Only after the data is loaded from the server, init all controls
-			this.componentOnLoadProc.Once(() => {
-				// Init form
-				this.formControl.Init()
-			}, this)
+			this.componentOnLoadProc.once(() => this.formControl.init(), this)
 		},
 
 		mounted()
@@ -177,9 +189,7 @@
 			}
 
 			// Show modal after necessary resources are loaded (e.g., header title)
-			this.componentOnLoadProc.Once(() => {
-				this.setModalProperties(modalProps)
-			}, this)
+			this.componentOnLoadProc.once(() => this.setModalProperties(modalProps), this)
 		},
 
 		beforeUnmount()
@@ -191,13 +201,18 @@
 		methods: {
 			followUp()
 			{
-				const limits = { minLimit: this.model.ValMinvalue.value, maxLimit: this.model.ValMaxvalue.value, ValMinvalue: this.model.ValMinvalue.value, ValMaxvalue: this.model.ValMaxvalue.value }
+				const limits = { minLendiValStart: this.model.ValMinvalue.value, maxLendiValStart: this.model.ValMaxvalue.value }
 				_foreach(limits, (limitValue, limitIdentifier) => {
-					this.setEntryValue({ navigationId: this.navigationId, key: limitIdentifier, value: limitValue })
+					this.setEntryValue({
+						navigationId: this.navigationId,
+						key: limitIdentifier,
+						value: limitValue
+					})
 				})
+
 				const preview = true
 				this.navigateToReport('Lendi', 'GQT_Report_1511', undefined, preview)
-			}
+			},
 		}
 	}
 </script>

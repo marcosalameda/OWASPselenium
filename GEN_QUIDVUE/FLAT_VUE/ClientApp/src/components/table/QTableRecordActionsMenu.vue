@@ -4,6 +4,7 @@
 		<!-- BEGIN: CRUD action links -->
 		<q-table-actions
 			v-if="numArrayVisibleActions(allowedCrudActions, readonly) >= 1 && (display === 'inline' || display === 'inlineAll')"
+			v-bind="$attrs"
 			b-style="tertiary"
 			:actions="allowedCrudActions"
 			:enable-actions="enableRowActions"
@@ -16,11 +17,12 @@
 		<!-- BEGIN: Custom action links -->
 		<q-table-actions
 			v-if="
-				numArrayVisibleActions(customActions, readonly) >= 1 &&
+				numArrayVisibleActions(visibleCustomActions, readonly) >= 1 &&
 					(display === 'inline' || display === 'inlineAll' || display === 'mixed')
 			"
+			v-bind="$attrs"
 			b-style="tertiary"
-			:actions="customActions"
+			:actions="visibleCustomActions"
 			:enable-actions="enableRowActions"
 			:readonly="readonly"
 			:show-action-text="false"
@@ -31,6 +33,7 @@
 		<!-- BEGIN: General action links -->
 		<q-table-actions
 			v-if="numArrayVisibleActions(allowedGeneralActions, readonly) >= 1 && (display === 'inline' || display === 'inlineAll')"
+			v-bind="$attrs"
 			b-style="secondary"
 			:actions="allowedGeneralActions"
 			:enable-actions="enableGeneralActions"
@@ -46,6 +49,7 @@
 				numArrayVisibleActions(generalCustomActions, readonly) >= 1 &&
 					(display === 'inline' || display === 'inlineAll' || display === 'mixed')
 			"
+			v-bind="$attrs"
 			b-style="secondary"
 			:actions="generalCustomActions"
 			:enable-actions="enableGeneralActions"
@@ -63,6 +67,7 @@
 		:class="[classDropDown]">
 		<q-toggle-dropdown
 			ref="optionsButton"
+			v-bind="$attrs"
 			data-testid="options-btn"
 			data-boundary="window"
 			aria-expanded="false"
@@ -78,10 +83,10 @@
 			<template v-if="isDropdownClicked">
 				<!-- BEGIN: Custom action links -->
 				<q-table-actions
-					v-if="numArrayVisibleActions(customActions, readonly) >= 1 && display === 'dropdown'"
+					v-if="numArrayVisibleActions(visibleCustomActions, readonly) >= 1 && display === 'dropdown'"
 					borderless
 					show-action-text
-					:actions="customActions"
+					:actions="visibleCustomActions"
 					:enable-actions="enableRowActions"
 					:readonly="readonly"
 					:separator-class="separatorClass"
@@ -90,7 +95,7 @@
 
 				<hr
 					v-if="
-						numArrayVisibleActions(customActions, readonly) >= 1 &&
+						numArrayVisibleActions(visibleCustomActions, readonly) >= 1 &&
 							numArrayVisibleActions(allowedCrudActions, readonly) >= 1 &&
 							display === 'dropdown'
 					"
@@ -110,10 +115,10 @@
 
 				<!-- BEGIN: General custom action links -->
 				<q-table-actions
-					v-if="numArrayVisibleActions(generalCustomActions, readonly) >= 1 && display === 'dropdown'"
+					v-if="numArrayVisibleActions(visibleGeneralCustomActions, readonly) >= 1 && display === 'dropdown'"
 					borderless
 					show-action-text
-					:actions="generalCustomActions"
+					:actions="visibleGeneralCustomActions"
 					:enable-actions="enableGeneralActions"
 					:readonly="readonly"
 					:separator-class="separatorClass"
@@ -137,6 +142,7 @@
 	<template v-else-if="display === 'dropdown'">
 		<q-table-actions
 			v-if="numVisibleActions === 1"
+			v-bind="$attrs"
 			borderless
 			:actions="[singleVisibleAction]"
 			:enable-actions="singleVisibleAction.isInReadOnly"
@@ -161,6 +167,8 @@
 
 		emits: ['row-action'],
 
+		inheritAttrs: false,
+
 		components: {
 			QTableActions,
 			QToggleDropdown
@@ -176,8 +184,17 @@
 					editBtnDisabled: false,
 					viewBtnDisabled: false,
 					deleteBtnDisabled: false,
-					insertBtnDisabled: false
+					insertBtnDisabled: false,
+					duplicateBtnDisabled: false
 				})
+			},
+
+			/**
+			 * An object containing the visibility state (shown/hidden) of all row specific custom actions.
+			 */
+			actionVisibility: {
+				type: Object,
+				default: () => ({})
 			},
 
 			/**
@@ -346,6 +363,24 @@
 				})
 			},
 
+			visibleCustomActions() {
+				return _map(this.customActions, (action) => {
+					return {
+						...action,
+						isVisible: this.actionVisibility ? this.actionVisibility[action.id] : action.isVisible
+					}
+				})
+			},
+
+			visibleGeneralCustomActions() {
+				return _map(this.generalCustomActions, (action) => {
+					return {
+						...action,
+						isVisible: action.visibleCondition ? action.visibleCondition() : action.isVisible
+					}
+				})
+			},
+
 			/**
 			 * Determine total number of actions that are visible
 			 * (also accounting for read-only mode)
@@ -354,9 +389,9 @@
 				if (typeof this.numArrayVisibleActions !== 'function') return 0
 				return (
 					this.numArrayVisibleActions(this.allowedCrudActions, this.readonly) +
-					this.numArrayVisibleActions(this.customActions, this.readonly) +
+					this.numArrayVisibleActions(this.visibleCustomActions, this.readonly) +
 					this.numArrayVisibleActions(this.allowedGeneralActions, this.readonly) +
-					this.numArrayVisibleActions(this.generalCustomActions, this.readonly)
+					this.numArrayVisibleActions(this.visibleGeneralCustomActions, this.readonly)
 				)
 			},
 
@@ -376,9 +411,9 @@
 			arrayWithSingleVisibleAction() {
 				if (this.numVisibleActions === 1) {
 					if (this.numArrayVisibleActions(this.allowedCrudActions, this.readonly) === 1) return this.allowedCrudActions
-					if (this.numArrayVisibleActions(this.customActions, this.readonly) === 1) return this.customActions
+					if (this.numArrayVisibleActions(this.visibleCustomActions, this.readonly) === 1) return this.visibleCustomActions
 					if (this.numArrayVisibleActions(this.allowedGeneralActions, this.readonly) === 1) return this.allowedGeneralActions
-					if (this.numArrayVisibleActions(this.generalCustomActions, this.readonly) === 1) return this.generalCustomActions
+					if (this.numArrayVisibleActions(this.visibleGeneralCustomActions, this.readonly) === 1) return this.generalCustomActions
 				}
 				return null
 			},
@@ -388,7 +423,7 @@
 			 */
 			singleVisibleAction() {
 				if (this.arrayWithSingleVisibleAction === null) return null
-				return this.arrayWithSingleVisibleAction[this.firstArrayVisibleActionIndex(this.arrayWithSingleVisibleAction)]
+				return this.firstVisibleAction(this.arrayWithSingleVisibleAction)
 			},
 
 			/**
@@ -396,7 +431,7 @@
 			 */
 			displaySingleVisibleActionText() {
 				if (this.singleVisibleAction === null) return false
-				return this.singleVisibleAction.icon === null
+				return this.singleVisibleAction.icon === null || this.singleVisibleAction.icon === undefined
 			},
 
 			/**
@@ -438,24 +473,21 @@
 			},
 
 			/**
-			 * Get index of first visible action (also accounting for read-only mode)
+			 * Get the first visible action in the action array (also accounting for read-only mode)
 			 * @param actionArray {Array}
 			 */
-			firstArrayVisibleActionIndex(actionArray) {
+			firstVisibleAction(actionArray) {
 				//Has no actions
-				if (this.numArrayVisibleActions(actionArray, this.readonly) === 0) return -1
+				if (this.numArrayVisibleActions(actionArray, this.readonly) === 0) return null
 
 				//Has actions
 
 				//If not in read-only mode
-				if (this.readonly === false) return 0
+				if (this.readonly === false)
+					return actionArray.find((e) => e.isVisible !== false)
 
 				//Iterate actions and check if available in read-only mode
-				for (let idx = 0; idx < actionArray.length; idx++) {
-					if (actionArray[idx].isInReadOnly !== false) return idx
-				}
-				//No actions visible in read-only mode
-				return -1
+				return actionArray.find((e) => e.isInReadOnly !== false)
 			},
 
 			/**
@@ -481,6 +513,7 @@
 					viewBtnDisabled: false,
 					deleteBtnDisabled: false,
 					insertBtnDisabled: false,
+					duplicateBtnDisabled: false,
 					...this.btnPermission
 				}
 
@@ -492,7 +525,7 @@
 					} else if (action.params.mode === 'DELETE') {
 						return permissions.deleteBtnDisabled
 					} else if (action.params.mode === 'DUPLICATE') {
-						if (permissions.viewBtnDisabled || permissions.insertBtnDisabled) return true
+						return permissions.duplicateBtnDisabled
 					} else if (action.params.mode === 'NEW') {
 						return permissions.insertBtnDisabled
 					}

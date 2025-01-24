@@ -223,17 +223,13 @@ export default {
 						isPopup: false
 					}
 				},
-				rowValidation: {
-					message: 'Warning: This record is pending, you must edit or delete it.',
-					class: 'c-table__row--pending'
-				},
 				defaultSearchColumnName: '',
 				defaultSearchColumnNameOriginal: '',
 				initialSortColumnName: '',
 				initialSortColumnOrder: '',
-				UserTableConfig: {},
+				userTableConfig: {},
 				columnSizes: null,
-				UserTableConfigNames: [],
+				userTableConfigNames: [],
 				page: 1
 			},
 
@@ -466,7 +462,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							}
 						},
@@ -541,7 +537,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							}
 						},
@@ -616,7 +612,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							}
 						},
@@ -691,7 +687,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							}
 						},
@@ -766,7 +762,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							}
 						},
@@ -841,7 +837,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							}
 						}
@@ -1047,7 +1043,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -1122,7 +1118,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -1197,7 +1193,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -1272,7 +1268,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -1347,7 +1343,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -1422,7 +1418,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -1664,7 +1660,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -1739,7 +1735,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -1814,7 +1810,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -1889,7 +1885,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -1964,7 +1960,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -2039,7 +2035,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -2281,7 +2277,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -2356,7 +2352,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -2431,7 +2427,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -2506,7 +2502,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -2581,7 +2577,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -2656,7 +2652,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -4521,7 +4517,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -4598,7 +4594,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -4675,7 +4671,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -4752,7 +4748,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -4829,7 +4825,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -4906,7 +4902,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -5150,7 +5146,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -5225,7 +5221,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -5300,7 +5296,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -5375,7 +5371,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -5450,7 +5446,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [
@@ -5525,7 +5521,7 @@ export default {
 									initialSortOrder: '',
 									isDefaultSearch: false,
 									pkColumn: null,
-									dateTimeType: 'DateTimeSeconds'
+									dateTimeType: 'dateTimeSeconds'
 								}
 							},
 							yaxis: [

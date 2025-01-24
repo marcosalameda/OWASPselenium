@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_2A1ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_2A1', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '2A1',
 					isMenuList: true,
+					designation: computed(() => this.Resources.TYPES_OF_EQUIPMENT61264),
 					acronym: 'GQT_2A1',
 					name: 'TPEQU',
 					route: 'menu-GQT_2A1',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'GQT_Menu_2A1',
 						controller: 'TPEQU',
 						action: 'GQT_Menu_2A1',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -140,10 +150,10 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 20,
 								scrollData: 20,
-								// eslint-disable-next-line no-unused-vars, eqeqeq
-								textColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValCorletra)==1,qApi.RGB(0,0,0),row.Fields.ValCorletra),
-								// eslint-disable-next-line no-unused-vars, eqeqeq
-								bgColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValBackcolo)==1,qApi.RGB(255,255,255),row.Fields.ValBackcolo),
+								// eslint-disable-next-line no-unused-vars
+								textColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValCorletra)===1,qApi.RGB(0,0,0),row.Fields.ValCorletra),
+								// eslint-disable-next-line no-unused-vars
+								bgColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValBackcolo)===1,qApi.RGB(255,255,255),row.Fields.ValBackcolo),
 							}),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -228,7 +238,7 @@
 							showRecordCount: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -332,6 +342,7 @@
 								id: 'RCA_GQT_2A11',
 								name: 'menu-GQT_2A11',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'tpequ',
@@ -347,23 +358,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: TPEQU
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValTipoequi',
 							defaultSearchColumnNameOriginal: 'ValTipoequi',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValTpequcod',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-FAMIL', 'changed-TPEQU'],
 						uuid: 'b0d536d8-bb60-4309-a860-eff17d0e5d21',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -392,6 +397,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS GQT_2A1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_2A1]/
 // eslint-disable-next-line

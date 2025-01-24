@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Pess1;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_PESS1_CANCEL = new NavigationLocation("COMODANTE63029", "Pess1_Cancel", "Pess1") { vueRouteName = "form-PESS1", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_PESS1_SHOW = new NavigationLocation("COMODANTE63029", "Pess1_Show", "Pess1") { vueRouteName = "form-PESS1", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_PESS1_NEW = new NavigationLocation("COMODANTE63029", "Pess1_New", "Pess1") { vueRouteName = "form-PESS1", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_PESS1_EDIT = new NavigationLocation("COMODANTE63029", "Pess1_Edit", "Pess1") { vueRouteName = "form-PESS1", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_PESS1_DUPLICATE = new NavigationLocation("COMODANTE63029", "Pess1_Duplicate", "Pess1") { vueRouteName = "form-PESS1", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_PESS1_DELETE = new NavigationLocation("COMODANTE63029", "Pess1_Delete", "Pess1") { vueRouteName = "form-PESS1", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_PESS1_CANCEL = new("COMODANTE63029", "Pess1_Cancel", "Pess1") { vueRouteName = "form-PESS1", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_PESS1_SHOW = new("COMODANTE63029", "Pess1_Show", "Pess1") { vueRouteName = "form-PESS1", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_PESS1_NEW = new("COMODANTE63029", "Pess1_New", "Pess1") { vueRouteName = "form-PESS1", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_PESS1_EDIT = new("COMODANTE63029", "Pess1_Edit", "Pess1") { vueRouteName = "form-PESS1", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_PESS1_DUPLICATE = new("COMODANTE63029", "Pess1_Duplicate", "Pess1") { vueRouteName = "form-PESS1", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_PESS1_DELETE = new("COMODANTE63029", "Pess1_Delete", "Pess1") { vueRouteName = "form-PESS1", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Pess1_ModalDBEdit()
-		{
-			Pess1_ViewModel model = new Pess1_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Pess1_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Pess1 Multiform actions
-
-		//
-		// GET /Pess1/MFPess1_New
-		[HttpGet]
-		[ActionName("MFPess1_New")]
-		public ActionResult MFPess1_New()
-		{
-			var model = new Pess1_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_PESS1_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("pess1", model.ValCodpesso);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFPess1_New_GET()
-		{
-			return MFPess1_New();
-		}
-
-		//
-		// GET /Pess1/MFPess1_Edit
-		[HttpGet]
-		[ActionName("MFPess1_Edit")]
-		public ActionResult MFPess1_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("PESS1", "EDIT", new { id = id, partialView = "MFPess1", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFPess1_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFPess1_Edit(requestModel);
-		}
-
-		//
-		// GET /Pess1/MFPess1_Cancel
-		[ActionName("MFPess1_Cancel")]
-		public ActionResult MFPess1_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Pess1(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Pess1/MFPess1_Save
-		[HttpPost]
-		[ActionName("MFPess1_Save")]
-		public JsonResult MFPess1_Save(Pess1_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFPess1_Save",
-				ViewName = "MFPess1",
-				AreaName = "pess1"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Pess1/MFPess1_Delete
-		[HttpPost]
-		[ActionName("MFPess1_Delete")]
-		public JsonResult MFPess1_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFPess1_Delete",
-				ViewName = "MFPess1",
-				AreaName = "pess1",
-				Location = ACTION_PESS1_EDIT
-			};
-
-			var model = new Pess1_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Pess1/Pess1_CmpnyValDesignat
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_cmpny")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,9 +422,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Pess1_CmpnyValDesignat_ViewModel model = new Pess1_CmpnyValDesignat_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodpesso = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -590,6 +464,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_stake")))
@@ -603,21 +478,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -625,12 +485,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Pess1_StakeValDesignat_ViewModel model = new Pess1_StakeValDesignat_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodpesso = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Pess1/Pess1_SaveEdit
 		[HttpPost]

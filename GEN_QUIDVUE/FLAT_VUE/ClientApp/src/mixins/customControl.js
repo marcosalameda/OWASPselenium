@@ -1,16 +1,15 @@
 ﻿import { computed, reactive, watch } from 'vue'
 import cloneDeep from 'lodash-es/cloneDeep'
 import _assignInWith from 'lodash-es/assignInWith'
-import _capitalize from 'lodash-es/capitalize'
 import _debounce from 'lodash-es/debounce'
 import _isEmpty from 'lodash-es/isEmpty'
 import _isUndefined from 'lodash-es/isUndefined'
+import _isArray from 'lodash-es/isArray'
 import _merge from 'lodash-es/merge'
 import _mergeWith from 'lodash-es/mergeWith'
 
 import { useSystemDataStore } from '@/stores/systemData.js'
 
-import eventBus from '@/api/global/eventBus.js'
 import getCustomControl from './custom-controls/customControlImport.js'
 import listFunctions from './listFunctions.js'
 import genericFunctions from './genericFunctions.js'
@@ -95,7 +94,7 @@ const customControlMixin = {
 	{
 		const control = this.customControls[viewMode.type]
 
-		viewMode.mappedValues = []
+		viewMode.mappedValues = reactive([])
 
 		// The readonly flag is used to make a specific view mode not editable, instead of the whole control
 		// Necessary, for example, so the user can't move the markers of maps someplace where the coordinates can't be edited
@@ -104,10 +103,6 @@ const customControlMixin = {
 			viewMode.readonly = readonly
 		else
 			viewMode.readonly = computed(() => this.readonly)
-
-		// There are controls (FullCalendar) that are poorly represented if the initial rendering was when that control was invisible.
-		// The 'isVisible' flag is needed to know that the control needs to be re-rendered.
-		viewMode.isVisible = computed(() => this.isVisible)
 
 		const componentName = `q-${viewMode.type}`
 		viewMode.componentName = componentName
@@ -250,7 +245,7 @@ const customControlMixin = {
 
 		if (areaName === 'GLOB')
 		{
-			const tGlob = this.vueContext.tGlob
+			const tGlob = this.vueContext.model.tGlob
 			if (typeof tGlob !== 'object')
 				return undefined
 
@@ -300,6 +295,8 @@ const customControlMixin = {
 
 		if (!_isEmpty(control))
 		{
+			viewMode.props = control.getProps(viewMode)
+
 			control.setGenericCustomProps(viewMode)
 			if (typeof control.setCustomProperties === 'function')
 				control.setCustomProperties(viewMode)
@@ -327,15 +324,12 @@ const customControlMixin = {
 	},
 
 	/**
-	 * Handles the get request of the full sized image from the server.
+	 * Sets the default properties for the image value.
 	 * @param {object} mappedVal The mapped value object
 	 * @param {object} image The image object
-	 * @param {string} baseArea The base area
-	 * @param {string} fieldName The name of the field
-	 * @param {string} id The id of the record
-	 * @param {boolean} usesPreview Whether the control needs the full sized image
+	 * @param {object} usesFullSizeImg Whether the control needs to use the full sized version of the image
 	 */
-	getMappedImage(mappedVal, image, baseArea, fieldName, id, usesPreview = false)
+	async setMappedImage(mappedVal, image, usesFullSizeImg = false)
 	{
 		const systemDataStore = useSystemDataStore()
 
@@ -346,33 +340,13 @@ const customControlMixin = {
 		}
 		else
 		{
-			const base64Img = genericFunctions.imageObjToSrc(image)
+			const isMultipleValue = _isArray(image)
+			const base64Img = isMultipleValue ? image.map(img => genericFunctions.imageObjToSrc(img)) : genericFunctions.imageObjToSrc(image)
 			mappedVal.value = base64Img
 
-			if (usesPreview)
-			{
-				// Compute dominant color from preview image
-				genericFunctions.computeColorPlaceholder(
-					base64Img,
-					(data) => (reactive(mappedVal).dominantColor = data))
-				mappedVal.previewData = null
-
-				const params = {
-					id,
-					modelname: _capitalize(baseArea.toLowerCase()),
-					fldname: fieldName,
-					formIdentifier: null,
-					nocache: Math.floor(Math.random() * 100000)
-				}
-
-				const imageData = {
-					baseArea,
-					params,
-					callback: (data) => (reactive(mappedVal).previewData = genericFunctions.imageObjToSrc(data))
-				}
-
-				eventBus.emit('image-request', imageData)
-			}
+			// Compute dominant color from preview image only if necessary
+			if (usesFullSizeImg && !isMultipleValue)
+				mappedVal.dominantColor = await genericFunctions.computeColorPlaceholder(base64Img)
 		}
 	}
 }
@@ -409,13 +383,16 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 		 * Initializes the necessary properties
 		 * @param {boolean} isEditable Whether or not the control is editable
 		 */
-		Init(isEditable)
+		async init(isEditable)
 		{
-			super.Init(isEditable)
+			await super.init(isEditable)
 
 			const viewModes = this.viewModes ?? []
 			if (Array.isArray(viewModes) && !_isEmpty(viewModes))
 				this.viewModes = cloneDeep(viewModes)
+
+			for (let viewMode of this.viewModes)
+				this.initViewMode(viewMode, false)
 
 			if (typeof this.onDependencyChange !== 'function')
 			{
@@ -471,10 +448,10 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 				const implicitVar = viewMode.implicitVariable
 				const currentField = this.modelFieldRef
 
-				this.initViewMode(viewMode)
+				viewMode.mappedValues.length = 0
 
 				// Initializes the mapped values object
-				let mappedValues = reactive({})
+				const mappedValues = reactive({})
 
 				// Maps the implicit variable to the current field
 				const modelValue = this.getModelValue(`${currentField.area}.${currentField.field}`)
@@ -541,34 +518,35 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 	 */
 	class TableSpecialRenderingControl extends TableListControl
 	{
-		constructor(options, vueContext)
+		constructor(options, vueContext, store)
 		{
 			super({
 				type: 'TableSpecialRendering',
-				activeViewModeId: ''
-			}, vueContext)
+				// TODO: Create a "view mode manager" to encapsulate this logic
+				activeViewModeId: Array.isArray(options.viewModes) && options.viewModes.length > 0 ? options.activeViewMode ? options.activeViewMode : options.viewModes[0].id : ''
+			}, vueContext, store)
 
 			_mergeWith(this, options ?? {}, genericFunctions.mergeOptions)
 			_merge(this, customControlMixin)
 
 			this.setCustomControls()
 			this.addCustomTexts()
-
-			// TODO: Create a "view mode manager" to encapsulate this logic
-			this.activeViewModeId = Array.isArray(this.viewModes) && this.viewModes.length > 0 ? this.viewModes[0].id : ''
 		}
 
 		/**
 		 * Initializes the necessary properties
 		 * @param {boolean} isEditable Whether or not the control is editable
 		 */
-		Init(isEditable)
+		async init(isEditable)
 		{
-			super.Init(isEditable)
+			await super.init(isEditable)
 
 			const viewModes = !_isEmpty(this.viewModes) ? this.viewModes : []
 			if (Array.isArray(viewModes) && !_isEmpty(viewModes))
 				this.viewModes = cloneDeep(viewModes)
+
+			for (let viewMode of this.viewModes)
+				this.initViewMode(viewMode, true)
 
 			if (typeof this.onDependencyChange !== 'function')
 			{
@@ -590,9 +568,6 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 				// Watches for changes in the view mode (ex: changing from list view to alternative view)
 				watch(() => this.viewModes, (viewModes) => this.onViewModeChange(viewModes), { deep: true })
 
-				// Watches for changes in the rows and columns (ex: changing page or hiding a column)
-				watch([() => this.rows, () => this.columns], this.onDependencyChange, { deep: true })
-
 				if (!_isEmpty(this.vueContext.internalEvents))
 				{
 					const dependencyEvents = this.getStyleVariableDependencyEvents()
@@ -602,7 +577,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 					this.vueContext.internalEvents.onMany(dependencyEvents, this.onStyleDependencyChange)
 				}
 
-				this.initCustomHandlers()
+				this.setSpecificHandlers()
 			}
 
 			this.onViewModeChange(this.viewModes)
@@ -610,17 +585,22 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 		}
 
 		/**
-		 * Initializes the custom handlers
+		 * Performs additional init operations after the table data is ready.
 		 */
-		initCustomHandlers()
+		initData()
 		{
-			const handlers = {
-				rowAction: (...args) => this.handlers.rowAction(...args)
-			}
+			// Performs additional init operations including checking for insert conditions
+			super.initData()
 
-			_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
+			// Remove previous watcher, if it exists
+			this.unwatchData?.()
 
-			this.setSpecificHandlers()
+			// Watches for changes in the rows and columns (ex: changing page or hiding a column)
+			this.unwatchData = watch(
+				[() => this.rows, () => this.columns],
+				this.onDependencyChange,
+				{ deep: true, immediate: true }
+			)
 		}
 
 		/**
@@ -632,14 +612,17 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 
 			for (let viewMode of viewModes)
 			{
-				const result = []
+				// Nothing to do for the list
+				if (viewMode.id === 'LIST')
+					continue
 
-				this.initViewMode(viewMode, true)
+				viewMode.mappedValues.length = 0
 
 				this.rows.forEach((row) => {
 					const mappedValues = reactive({
 						rowKey: row.rowKey,
-						btnPermission: row.btnPermission ?? {}
+						btnPermission: row.btnPermission ?? {},
+						actionVisibility: row.actionVisibility ?? {}
 					})
 
 					this.columns.forEach((column) => {
@@ -656,31 +639,25 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 						}, [])
 
 						mappedVariables.forEach((variable) => {
+							const control = this.customControls[viewMode.type]
 							const value = listFunctions.getCellValueDisplay(undefined, row, column)
-							const mappedVal = {
+							const mappedVal = reactive({
 								value,
 								rawData: listFunctions.getCellValue(row, column),
 								bgColor: column.bgColor ? column.bgColor(row) : null,
 								textColor: column.textColor ? column.textColor(row) : null,
-								source: column
-							}
+								source: column,
+								previewData: null
+							})
 
 							if (column.dataType === 'Image')
-							{
-								const control = this.customControls[viewMode.type]
-								const fieldName = column.name.split('.').pop()
-
-								let id = row.rowKey
-								if (column.name.includes('.'))
-									id = row.Fields[column.pkColumn]
-
-								this.getMappedImage(mappedVal, value, column.area, fieldName, id, control.usesFullSizeImages)
-							}
+								this.setMappedImage(mappedVal, value, control.usesFullSizeImg)
 
 							if (viewMode.mappingVariables[variable].allowsMultiple)
 							{
 								if (!mappedValues[variable])
 									mappedValues[variable] = []
+
 								mappedValues[variable].push(mappedVal)
 							}
 							else
@@ -688,10 +665,9 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 						})
 					})
 
-					result.push(mappedValues)
+					viewMode.mappedValues.push(mappedValues)
 				})
 
-				viewMode.mappedValues = result
 				this.setExtraProperties(viewMode)
 			}
 		}

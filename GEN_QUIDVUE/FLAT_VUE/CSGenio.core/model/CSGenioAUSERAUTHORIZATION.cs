@@ -204,12 +204,12 @@ namespace CSGenio.business
         /// Returns the level that was saved.
         /// For unknown reasons, levels were sometimes 0 while the role was marked correctly, hence this indirection
         /// </summary>
-        public double ValNivel
+        public decimal ValNivel
         {
             get {
-                double level = (double)returnValueField(FldNivel);
-                double role;
-                if (level == 0 && double.TryParse(ValRole, out role))
+                decimal level = (decimal)returnValueField(FldNivel);
+                decimal role;
+                if (level == 0 && decimal.TryParse(ValRole, out role))
                 {
                     return role;
                 }

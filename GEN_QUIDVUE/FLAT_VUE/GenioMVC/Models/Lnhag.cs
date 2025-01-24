@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Pedid _pedid;
 		[DisplayName("Pedid")]
 		[ShouldSerialize("Pedid")]
-		public virtual Pedid Pedid { 
-			get { 
+		public virtual Pedid Pedid {
+			get {
 				if (!this.isEmptyModel && (_pedid == null || (!string.IsNullOrEmpty(ValCodpedid) && (_pedid.isEmptyModel || _pedid.klass.QPrimaryKey != ValCodpedid))))
 					_pedid = Models.Pedid.Find(ValCodpedid, m_userContext, Identifier, _fieldsToSerialize);
 				if (_pedid == null)
 					_pedid = new Models.Pedid(m_userContext, true, _fieldsToSerialize);
 				return _pedid;
 			}
-			set { _pedid = value; } 
+			set { _pedid = value; }
 		}
-		
+
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula: ST "[LNHDE->CODTPEQU]"</summary>
@@ -60,23 +60,23 @@ namespace GenioMVC.Models
 		private Tpeq1 _tpeq1;
 		[DisplayName("Tpeq1")]
 		[ShouldSerialize("Tpeq1")]
-		public virtual Tpeq1 Tpeq1 { 
-			get { 
+		public virtual Tpeq1 Tpeq1 {
+			get {
 				if (!this.isEmptyModel && (_tpeq1 == null || (!string.IsNullOrEmpty(ValCodtpequ) && (_tpeq1.isEmptyModel || _tpeq1.klass.QPrimaryKey != ValCodtpequ))))
 					_tpeq1 = Models.Tpeq1.Find(ValCodtpequ, m_userContext, Identifier, _fieldsToSerialize);
 				if (_tpeq1 == null)
 					_tpeq1 = new Models.Tpeq1(m_userContext, true, _fieldsToSerialize);
 				return _tpeq1;
 			}
-			set { _tpeq1 = value; } 
+			set { _tpeq1 = value; }
 		}
-		
+
 
 		[DisplayName("Amount")]
 		/// <summary>Field : "Amount" Tipo: "N" Formula: SR "[LNHDE->QUANTIDA]"</summary>
 		[ShouldSerialize("Lnhag.ValQtdtpequ")]
 		[NumericAttribute(0)]
-		public decimal? ValQtdtpequ { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdtpequ, 0)); } set { klass.ValQtdtpequ = Convert.ToDouble(value); } }
+		public decimal? ValQtdtpequ { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdtpequ, 0)); } set { klass.ValQtdtpequ = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Lnhag.ValZzstate")]
@@ -86,19 +86,19 @@ namespace GenioMVC.Models
 		public Lnhag(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAlnhag(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Lnhag(UserContext userContext, CSGenioAlnhag val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAlnhag csgenioa)
@@ -125,7 +125,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

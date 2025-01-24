@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Entit
 {
-	public class Entix_ViewModel : FormViewModel<Models.Entit>
+	public class Entix_ViewModel : FormViewModel<Models.Entit>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,144 +29,132 @@ namespace GenioMVC.ViewModels.Entit
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Facility name" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValFirstfacilitie { get; set; }
+		/// <summary>
+		/// Title: "Facility name" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValLastfacilitie { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Legal name" | Type: "C"
 		/// </summary>
 		public string ValName { get; set; }
-
 		/// <summary>
 		/// Title: "Founded in" | Type: "D"
 		/// </summary>
 		public DateTime? ValFounded { get; set; }
-
 		/// <summary>
 		/// Title: "Company initials" | Type: "C"
 		/// </summary>
 		public string ValInitials { get; set; }
-
 		/// <summary>
 		/// Title: "Legal registration" | Type: "C"
 		/// </summary>
 		public string ValRegistra { get; set; }
-
 		/// <summary>
 		/// Title: "VAT Number" | Type: "C"
 		/// </summary>
 		public string ValTaxnumbe { get; set; }
-
 		/// <summary>
 		/// Title: "IBAN (International Bank Account Number)" | Type: "C"
 		/// </summary>
 		public string ValIban { get; set; }
-
 		/// <summary>
 		/// Title: "Phone number" | Type: "C"
 		/// </summary>
 		public string ValPhonenum { get; set; }
-
 		/// <summary>
-		/// Title: "Owner" | Type: "L"
+		/// Title: "Owner" | Type: "C"
 		/// </summary>
-		public bool ValOwner { get; set; }
-
+		public string ValOwner { get; set; }
 		/// <summary>
 		/// Title: "Carrier" | Type: "L"
 		/// </summary>
 		public bool ValCarrier { get; set; }
-
 		/// <summary>
 		/// Title: "Supplier" | Type: "L"
 		/// </summary>
 		public bool ValSupplier { get; set; }
-
 		/// <summary>
 		/// Title: "Manufacturer" | Type: "L"
 		/// </summary>
 		public bool ValManufact { get; set; }
-
 		/// <summary>
 		/// Title: "Telephone" | Type: "C"
 		/// </summary>
 		public string ValTelephon { get; set; }
-
 		/// <summary>
 		/// Title: "Fax" | Type: "C"
 		/// </summary>
 		public string ValFax { get; set; }
-
 		/// <summary>
 		/// Title: "Email" | Type: "C"
 		/// </summary>
 		public string ValEmail { get; set; }
-
 		/// <summary>
 		/// Title: "Web site" | Type: "C"
 		/// </summary>
 		public string ValWebsite { get; set; }
-
 		/// <summary>
 		/// Title: "Person/Department to contact" | Type: "C"
 		/// </summary>
 		public string ValPerson { get; set; }
-
 		/// <summary>
 		/// Title: "Contact telephone number" | Type: "C"
 		/// </summary>
 		public string ValContact { get; set; }
-
 		/// <summary>
 		/// Title: "Language" | Type: "C"
 		/// </summary>
 		public string ValLanguage { get; set; }
-
 		/// <summary>
 		/// Title: "Currency" | Type: "C"
 		/// </summary>
 		public string ValCurrency { get; set; }
-
 		/// <summary>
 		/// Title: "Building/house number" | Type: "C"
 		/// </summary>
 		public string ValBuilding { get; set; }
-
 		/// <summary>
 		/// Title: "Street" | Type: "C"
 		/// </summary>
 		public string ValStreet { get; set; }
-
 		/// <summary>
 		/// Title: "Town/City" | Type: "C"
 		/// </summary>
 		public string ValTown { get; set; }
-
 		/// <summary>
 		/// Title: "County/Province" | Type: "C"
 		/// </summary>
 		public string ValCounty { get; set; }
-
 		/// <summary>
 		/// Title: "State/Province" | Type: "C"
 		/// </summary>
 		public string ValState { get; set; }
-
 		/// <summary>
 		/// Title: "ZIP/Postal code" | Type: "C"
 		/// </summary>
 		public string ValPostalco { get; set; }
-
 		/// <summary>
 		/// Title: "Post office box" | Type: "C"
 		/// </summary>
 		public string ValPobox { get; set; }
-
 		/// <summary>
 		/// Title: "Facility name" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Faci1> TableFaci1Name { get; set; }
-
 		/// <summary>
 		/// Title: "Facility name" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Faci2> TableFaci2Name { get; set; }
 
 		#region Navigations
@@ -176,20 +164,6 @@ namespace GenioMVC.ViewModels.Entit
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Facility name" | Type: "CE"
-		/// </summary>
-		public string ValFirstfacilitie { get; set; }
-
-		/// <summary>
-		/// Title: "Facility name" | Type: "CE"
-		/// </summary>
-		public string ValLastfacilitie { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -205,9 +179,10 @@ namespace GenioMVC.ViewModels.Entit
 
 		public string ValCodentit { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Entix_ViewModel() : base(null!) { }
@@ -243,6 +218,15 @@ namespace GenioMVC.ViewModels.Entit
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Entit model = new Models.Entit(userContext) { Identifier = "FENTIX" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FENTIX");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -303,6 +287,8 @@ namespace GenioMVC.ViewModels.Entit
 
 			try
 			{
+				ValFirstfacilitie = ViewModelConversion.ToString(m.ValFirstfacilitie);
+				ValLastfacilitie = ViewModelConversion.ToString(m.ValLastfacilitie);
 				ValName = ViewModelConversion.ToString(m.ValName);
 				ValFounded = ViewModelConversion.ToDateTime(m.ValFounded);
 				ValInitials = ViewModelConversion.ToString(m.ValInitials);
@@ -310,7 +296,7 @@ namespace GenioMVC.ViewModels.Entit
 				ValTaxnumbe = ViewModelConversion.ToString(m.ValTaxnumbe);
 				ValIban = ViewModelConversion.ToString(m.ValIban);
 				ValPhonenum = ViewModelConversion.ToString(m.ValPhonenum);
-				ValOwner = ViewModelConversion.ToLogic(m.ValOwner);
+				ValOwner = ViewModelConversion.ToString(m.ValOwner);
 				ValCarrier = ViewModelConversion.ToLogic(m.ValCarrier);
 				ValSupplier = ViewModelConversion.ToLogic(m.ValSupplier);
 				ValManufact = ViewModelConversion.ToLogic(m.ValManufact);
@@ -329,8 +315,6 @@ namespace GenioMVC.ViewModels.Entit
 				ValState = ViewModelConversion.ToString(m.ValState);
 				ValPostalco = ViewModelConversion.ToString(m.ValPostalco);
 				ValPobox = ViewModelConversion.ToString(m.ValPobox);
-				ValFirstfacilitie = ViewModelConversion.ToString(m.ValFirstfacilitie);
-				ValLastfacilitie = ViewModelConversion.ToString(m.ValLastfacilitie);
 				ValCodentit = ViewModelConversion.ToString(m.ValCodentit);
 			}
 			catch (Exception)
@@ -340,6 +324,20 @@ namespace GenioMVC.ViewModels.Entit
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Entit m)
 		{
 			if (m == null)
@@ -357,7 +355,7 @@ namespace GenioMVC.ViewModels.Entit
 				m.ValTaxnumbe = ViewModelConversion.ToString(ValTaxnumbe);
 				m.ValIban = ViewModelConversion.ToString(ValIban);
 				m.ValPhonenum = ViewModelConversion.ToString(ValPhonenum);
-				m.ValOwner = ViewModelConversion.ToLogic(ValOwner);
+				m.ValOwner = ViewModelConversion.ToString(ValOwner);
 				m.ValCarrier = ViewModelConversion.ToLogic(ValCarrier);
 				m.ValSupplier = ViewModelConversion.ToLogic(ValSupplier);
 				m.ValManufact = ViewModelConversion.ToLogic(ValManufact);
@@ -376,19 +374,146 @@ namespace GenioMVC.ViewModels.Entit
 				m.ValState = ViewModelConversion.ToString(ValState);
 				m.ValPostalco = ViewModelConversion.ToString(ValPostalco);
 				m.ValPobox = ViewModelConversion.ToString(ValPobox);
+				m.ValCodentit = ViewModelConversion.ToString(ValCodentit);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
 				m.ValFirstfacilitie = ViewModelConversion.ToString(ValFirstfacilitie);
 				m.ValLastfacilitie = ViewModelConversion.ToString(ValLastfacilitie);
-				m.ValCodentit = ViewModelConversion.ToString(ValCodentit);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Entix) to Model (Entit) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Entix) to Model (Entit) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "entit.name":
+						this.ValName = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.founded":
+						this.ValFounded = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "entit.initials":
+						this.ValInitials = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.registra":
+						this.ValRegistra = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.taxnumbe":
+						this.ValTaxnumbe = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.iban":
+						this.ValIban = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.phonenum":
+						this.ValPhonenum = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.owner":
+						this.ValOwner = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.carrier":
+						this.ValCarrier = ViewModelConversion.ToLogic(_value);
+						break;
+					case "entit.supplier":
+						this.ValSupplier = ViewModelConversion.ToLogic(_value);
+						break;
+					case "entit.manufact":
+						this.ValManufact = ViewModelConversion.ToLogic(_value);
+						break;
+					case "entit.telephon":
+						this.ValTelephon = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.fax":
+						this.ValFax = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.email":
+						this.ValEmail = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.website":
+						this.ValWebsite = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.person":
+						this.ValPerson = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.contact":
+						this.ValContact = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.language":
+						this.ValLanguage = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.currency":
+						this.ValCurrency = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.building":
+						this.ValBuilding = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.street":
+						this.ValStreet = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.town":
+						this.ValTown = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.county":
+						this.ValCounty = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.state":
+						this.ValState = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.postalco":
+						this.ValPostalco = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.pobox":
+						this.ValPobox = ViewModelConversion.ToString(_value);
+						break;
+					case "entit.codentit":
+						this.ValCodentit = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Entix) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Entix)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Entit.Find(id ?? Navigation.GetStrValue("entit"), m_userContext, "FENTIX"); }
+			finally { Model ??= new Models.Entit(m_userContext) { Identifier = "FENTIX" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -402,20 +527,13 @@ namespace GenioMVC.ViewModels.Entit
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FENTIX";
@@ -425,6 +543,7 @@ namespace GenioMVC.ViewModels.Entit
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -483,53 +602,49 @@ namespace GenioMVC.ViewModels.Entit
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValName", Resources.Resources.LEGAL_NAME42902, ValName, 85);
-			validator.Required("ValName", Resources.Resources.LEGAL_NAME42902, ValName);
+
+			validator.Required("ValName", Resources.Resources.LEGAL_NAME42902, ViewModelConversion.ToString(ValName), FieldType.TEXTO.Formatting);
 			validator.StringLength("ValInitials", Resources.Resources.COMPANY_INITIALS56204, ValInitials, 10);
-			validator.StringLength("ValRegistra", Resources.Resources.LEGAL_REGISTRATION04413, ValRegistra, 20);
-			validator.StringLength("ValTaxnumbe", Resources.Resources.VAT_NUMBER24236, ValTaxnumbe, 20);
-			validator.StringLength("ValIban", Resources.Resources.IBAN__INTERNATIONAL_45066, ValIban, 25);
+			validator.StringLength("ValRegistra", Resources.Resources.LEGAL_REGISTRATION04413, ValRegistra, 30);
+			validator.StringLength("ValTaxnumbe", Resources.Resources.VAT_NUMBER24236, ValTaxnumbe, 30);
+			validator.StringLength("ValIban", Resources.Resources.IBAN__INTERNATIONAL_45066, ValIban, 33);
 			validator.StringLength("ValPhonenum", Resources.Resources.PHONE_NUMBER20774, ValPhonenum, 20);
+			validator.StringLength("ValOwner", Resources.Resources.OWNER09558, ValOwner, 50);
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 20);
 			validator.StringLength("ValFax", Resources.Resources.FAX08532, ValFax, 20);
 			validator.StringLength("ValEmail", Resources.Resources.EMAIL25170, ValEmail, 254);
 			validator.StringLength("ValWebsite", Resources.Resources.WEB_SITE06263, ValWebsite, 254);
 			validator.Hyperlink(Resources.Resources.WEB_SITE06263, ValWebsite);
 			validator.StringLength("ValPerson", Resources.Resources.PERSON_DEPARTMENT_TO28777, ValPerson, 85);
-			validator.StringLength("ValContact", Resources.Resources.CONTACT_TELEPHONE_NU12694, ValContact, 20);
+			validator.StringLength("ValContact", Resources.Resources.CONTACT_TELEPHONE_NU12694, ValContact, 30);
 			validator.StringLength("ValLanguage", Resources.Resources.LANGUAGE16872, ValLanguage, 2);
 			validator.StringLength("ValCurrency", Resources.Resources.CURRENCY13881, ValCurrency, 3);
-			validator.StringLength("ValBuilding", Resources.Resources.BUILDING_HOUSE_NUMBE20738, ValBuilding, 10);
-			validator.StringLength("ValStreet", Resources.Resources.STREET44324, ValStreet, 85);
-			validator.StringLength("ValTown", Resources.Resources.TOWN_CITY16259, ValTown, 85);
-			validator.StringLength("ValCounty", Resources.Resources.COUNTY_PROVINCE34285, ValCounty, 85);
-			validator.StringLength("ValState", Resources.Resources.STATE_PROVINCE28516, ValState, 85);
-			validator.StringLength("ValPostalco", Resources.Resources.ZIP_POSTAL_CODE55613, ValPostalco, 50);
+			validator.StringLength("ValBuilding", Resources.Resources.BUILDING_HOUSE_NUMBE20738, ValBuilding, 25);
+			validator.StringLength("ValStreet", Resources.Resources.STREET44324, ValStreet, 50);
+			validator.StringLength("ValTown", Resources.Resources.TOWN_CITY16259, ValTown, 50);
+			validator.StringLength("ValCounty", Resources.Resources.COUNTY_PROVINCE34285, ValCounty, 50);
+			validator.StringLength("ValState", Resources.Resources.STATE_PROVINCE28516, ValState, 50);
+			validator.StringLength("ValPostalco", Resources.Resources.ZIP_POSTAL_CODE55613, ValPostalco, 10);
 			validator.StringLength("ValPobox", Resources.Resources.POST_OFFICE_BOX06223, ValPobox, 5);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE ENTIX]/
 		public override void Save()
 		{
 
-			try { Model = Models.Entit.Find(Navigation.GetStrValue("entit"), m_userContext, "FENTIX"); }
-			finally { if (Model == null) Model = new Models.Entit(m_userContext) { Identifier = "FENTIX" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY ENTIX]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Entit.Find(Navigation.GetStrValue("entit"), m_userContext, "FENTIX"); }
-			finally { if (Model == null) Model = new Models.Entit(m_userContext) { Identifier = "FENTIX" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE ENTIX]/
 
@@ -562,8 +677,8 @@ namespace GenioMVC.ViewModels.Entit
 				object hValue = Navigation.GetValue("faci1", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					entix___faci1name____Conds.Equal(CSGenioAfaci1.FldCodfacil, Navigation.GetValue("faci1"));
-					this.ValFirstfacilitie = Navigation.GetStrValue("faci1");
+					entix___faci1name____Conds.Equal(CSGenioAfaci1.FldCodfacil, hValue);
+					this.ValFirstfacilitie = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -580,8 +695,6 @@ namespace GenioMVC.ViewModels.Entit
 					Navigation.CurrentLevel.SetEntry("RETURN_faci1", null);
 				}
 				FillDependant_EntixTableFaci1Name(lazyLoad);
-				//Check if foreignkey comes from history
-				TableFaci1Name.FilledByHistory = Navigation.CheckFilledByHistory("faci1");
 				return;
 			}
 
@@ -648,9 +761,6 @@ namespace GenioMVC.ViewModels.Entit
 
 				TableFaci1Name.List = new SelectList(TableFaci1Name.Elements.ToSelectList(x => x.ValName, x => x.ValCodfacil,  x => x.ValCodfacil == this.ValFirstfacilitie), "Value", "Text", this.ValFirstfacilitie);
 				FillDependant_EntixTableFaci1Name();
-
-				//Check if foreignkey comes from history
-				TableFaci1Name.FilledByHistory = Navigation.CheckFilledByHistory("faci1");
 			}
 		}
 
@@ -756,8 +866,8 @@ namespace GenioMVC.ViewModels.Entit
 				object hValue = Navigation.GetValue("faci2", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					entix___faci2name____Conds.Equal(CSGenioAfaci2.FldCodfacil, Navigation.GetValue("faci2"));
-					this.ValLastfacilitie = Navigation.GetStrValue("faci2");
+					entix___faci2name____Conds.Equal(CSGenioAfaci2.FldCodfacil, hValue);
+					this.ValLastfacilitie = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -774,8 +884,6 @@ namespace GenioMVC.ViewModels.Entit
 					Navigation.CurrentLevel.SetEntry("RETURN_faci2", null);
 				}
 				FillDependant_EntixTableFaci2Name(lazyLoad);
-				//Check if foreignkey comes from history
-				TableFaci2Name.FilledByHistory = Navigation.CheckFilledByHistory("faci2");
 				return;
 			}
 
@@ -842,9 +950,6 @@ namespace GenioMVC.ViewModels.Entit
 
 				TableFaci2Name.List = new SelectList(TableFaci2Name.Elements.ToSelectList(x => x.ValName, x => x.ValCodfacil,  x => x.ValCodfacil == this.ValLastfacilitie), "Value", "Text", this.ValLastfacilitie);
 				FillDependant_EntixTableFaci2Name();
-
-				//Check if foreignkey comes from history
-				TableFaci2Name.FilledByHistory = Navigation.CheckFilledByHistory("faci2");
 			}
 		}
 
@@ -941,6 +1046,8 @@ namespace GenioMVC.ViewModels.Entit
 		{
 			return identifier switch
 			{
+				"entit.firstfacilitie" => ViewModelConversion.ToString(modelValue),
+				"entit.lastfacilitie" => ViewModelConversion.ToString(modelValue),
 				"entit.name" => ViewModelConversion.ToString(modelValue),
 				"entit.founded" => ViewModelConversion.ToDateTime(modelValue),
 				"entit.initials" => ViewModelConversion.ToString(modelValue),
@@ -948,7 +1055,7 @@ namespace GenioMVC.ViewModels.Entit
 				"entit.taxnumbe" => ViewModelConversion.ToString(modelValue),
 				"entit.iban" => ViewModelConversion.ToString(modelValue),
 				"entit.phonenum" => ViewModelConversion.ToString(modelValue),
-				"entit.owner" => ViewModelConversion.ToLogic(modelValue),
+				"entit.owner" => ViewModelConversion.ToString(modelValue),
 				"entit.carrier" => ViewModelConversion.ToLogic(modelValue),
 				"entit.supplier" => ViewModelConversion.ToLogic(modelValue),
 				"entit.manufact" => ViewModelConversion.ToLogic(modelValue),
@@ -967,16 +1074,16 @@ namespace GenioMVC.ViewModels.Entit
 				"entit.state" => ViewModelConversion.ToString(modelValue),
 				"entit.postalco" => ViewModelConversion.ToString(modelValue),
 				"entit.pobox" => ViewModelConversion.ToString(modelValue),
-				"entit.firstfacilitie" => ViewModelConversion.ToString(modelValue),
-				"entit.lastfacilitie" => ViewModelConversion.ToString(modelValue),
 				"entit.codentit" => ViewModelConversion.ToString(modelValue),
 				"faci1.codfacil" => ViewModelConversion.ToString(modelValue),
 				"faci1.name" => ViewModelConversion.ToString(modelValue),
 				"faci2.codfacil" => ViewModelConversion.ToString(modelValue),
 				"faci2.name" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

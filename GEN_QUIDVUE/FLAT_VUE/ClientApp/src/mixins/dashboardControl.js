@@ -3,6 +3,8 @@ import _isUndefined from 'lodash-es/isUndefined'
 import _merge from 'lodash-es/merge'
 import { computed } from 'vue'
 
+import { useSystemDataStore } from '@/stores/systemData.js'
+
 import controlsResources from './controlsResources.js'
 
 /**
@@ -15,9 +17,13 @@ export class DashboardControl
 		this.vueContext = vueContext
 		Object.defineProperty(this, 'vueContext', { enumerable: false })
 
+		const systemDataStore = useSystemDataStore()
+
 		this.handlers = {}
 		this.resourcesPath = computed(() => vueContext.system?.resourcesPath || '')
 		this.texts = new controlsResources.DashboardResources(vueContext.$getResource)
+		// In maintenance mode, set to readonly mode
+		this.readonly = computed(() => systemDataStore.maintenance.isActive)
 
 		_merge(this, options || {})
 	}
@@ -25,7 +31,7 @@ export class DashboardControl
 	/**
 	 * Initializes the necessary properties.
 	 */
-	Init()
+	init()
 	{
 		this.initHandlers()
 	}

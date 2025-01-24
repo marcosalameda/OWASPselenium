@@ -63,8 +63,7 @@ namespace CSGenio.framework
                 }
                 catch (Exception e) {
                     sp.closeConnection();
-                    Log.SetContext("Maintenance", "GetMaintenanceStatus");
-                    Log.Debug("Error Getting maintenace scheduling: " +e.Message );
+                    Log.Debug("[GetMaintenanceStatus] Error getting maintenance scheduling: " + e.Message );
                 }
                 s_lock.ExitWriteLock();
             }
@@ -87,8 +86,7 @@ namespace CSGenio.framework
             {
                 sp.closeConnection();
                 result = false;
-                Log.SetContext("Maintenance", "DisableMaintenance");
-                Log.Debug("Error Setting maintenace scheduling: " + e.Message);
+                Log.Debug("[DisableMaintenance] Error setting maintenance scheduling: " + e.Message);
             }
             s_lock.ExitWriteLock();
 
@@ -113,8 +111,7 @@ namespace CSGenio.framework
             {
                 sp.closeConnection();
                 result = false;
-                Log.SetContext("Maintenance", "ScheduleMaintenance");
-                Log.Debug("Error Setting maintenace scheduling: " + Schedule.ToString() + " - "+ e.Message);
+                Log.Debug("[ScheduleMaintenance] Error setting maintenance scheduling: " + Schedule.ToString() + " - "+ e.Message);
             }
             s_lock.ExitWriteLock();
 

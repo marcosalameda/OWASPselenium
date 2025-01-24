@@ -34,7 +34,11 @@ namespace GenioMVC.ViewModels.Dashboard
 
 		public delegate CriteriaSet GetWidgetConditions();
 
+		public delegate Logical IsInstanceVisible(UserContext userContext, T row);
+
 		public GetRowsDelegate<T> RowsSelector;
+
+		public IsInstanceVisible InstanceVisible { get; set; } = (userContext, row) => true ;
 
 		public GetWidgetConditions Limits;
 
@@ -81,10 +85,14 @@ namespace GenioMVC.ViewModels.Dashboard
 			if (RowsSelector != null)
 				rows = RowsSelector(userContext, args).Rows;
 
+			List<T> visibleRows = null;
+			if(rows != null)
+				visibleRows = rows.Where(row => InstanceVisible(userContext, row)).ToList();
+
 			// Has base area, one instance per row
-			if (rows != null && UsesSplitMethod)
+			if (visibleRows != null && UsesSplitMethod)
 			{
-				foreach (var row in rows)
+				foreach (var row in visibleRows)
 				{
 					// Support dynamic titles
 					string title = Title;
@@ -107,8 +115,8 @@ namespace GenioMVC.ViewModels.Dashboard
 							Height = Height,
 							Required = Required,
 							Visible = Visible,
-							ColoredLeftBorder = ColoredLeftBorder,
 							Role = Role,
+							Module = Module,
 							Title = title,
 							RefreshMode = RefreshMode,
 							RefreshRate = RefreshRate,
@@ -123,9 +131,9 @@ namespace GenioMVC.ViewModels.Dashboard
 			}
 
 			// Has base area, paginated
-			if (rows != null && UsesAggregateMethod)
+			if (visibleRows != null && UsesAggregateMethod)
 			{
-				List<string> keys = rows.Select(row => row.QPrimaryKey).ToList();
+				List<string> keys = visibleRows.Select(row => row.QPrimaryKey).ToList();
 
 				m_instances.Add(
 					new CustomPaginatedWidget()
@@ -137,8 +145,10 @@ namespace GenioMVC.ViewModels.Dashboard
 						Height = Height,
 						Required = Required,
 						Visible = Visible,
-						ColoredLeftBorder = ColoredLeftBorder,
+						Style = Style,
+						BorderStyle = BorderStyle,
 						Role = Role,
+						Module = Module,
 						Title = Title,
 						RefreshMode = RefreshMode,
 						RefreshRate = RefreshRate,
@@ -151,8 +161,9 @@ namespace GenioMVC.ViewModels.Dashboard
 				);
 			}
 
-			// "Empty form"
-			if (rows == null)
+			// "Empty form" 
+			// Empty forms don't have rows soo we can check ShowWidget directly
+			if (visibleRows == null && this.ShowWidget)
 			{
 				m_instances.Add(
 					new CustomWidget()
@@ -163,8 +174,10 @@ namespace GenioMVC.ViewModels.Dashboard
 						Height = Height,
 						Required = Required,
 						Visible = Visible,
-						ColoredLeftBorder = ColoredLeftBorder,
+						Style = Style,
+						BorderStyle = BorderStyle,	
 						Role = Role,
+						Module = Module,
 						Title = Title,
 						RefreshMode = RefreshMode,
 						RefreshRate = RefreshRate,
@@ -216,8 +229,9 @@ namespace GenioMVC.ViewModels.Dashboard
 							Width = Width,
 							Height = Height,
 							Required = Required,
+							Style = Style,	
+							BorderStyle = BorderStyle,						
 							Visible = Visible,
-							ColoredLeftBorder = ColoredLeftBorder,
 							Title = GenioMVC.Helpers.Helpers.GetTextFromResources(bookmark.MenuEntryObj.Title),
 							Group = "BOOKMARKS",
 							ButtonText = ButtonText

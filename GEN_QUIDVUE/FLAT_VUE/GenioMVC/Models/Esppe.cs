@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Pesso _pesso;
 		[DisplayName("Pesso")]
 		[ShouldSerialize("Pesso")]
-		public virtual Pesso Pesso { 
-			get { 
+		public virtual Pesso Pesso {
+			get {
 				if (!this.isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
 					_pesso = Models.Pesso.Find(ValCodpesso, m_userContext, Identifier, _fieldsToSerialize);
 				if (_pesso == null)
 					_pesso = new Models.Pesso(m_userContext, true, _fieldsToSerialize);
 				return _pesso;
 			}
-			set { _pesso = value; } 
+			set { _pesso = value; }
 		}
-		
+
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Speci _speci;
 		[DisplayName("Speci")]
 		[ShouldSerialize("Speci")]
-		public virtual Speci Speci { 
-			get { 
+		public virtual Speci Speci {
+			get {
 				if (!this.isEmptyModel && (_speci == null || (!string.IsNullOrEmpty(ValCodespec) && (_speci.isEmptyModel || _speci.klass.QPrimaryKey != ValCodespec))))
 					_speci = Models.Speci.Find(ValCodespec, m_userContext, Identifier, _fieldsToSerialize);
 				if (_speci == null)
 					_speci = new Models.Speci(m_userContext, true, _fieldsToSerialize);
 				return _speci;
 			}
-			set { _speci = value; } 
+			set { _speci = value; }
 		}
-		
+
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Esppe.ValZzstate")]
@@ -80,19 +80,19 @@ namespace GenioMVC.Models
 		public Esppe(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAesppe(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Esppe(UserContext userContext, CSGenioAesppe val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAesppe csgenioa)
@@ -119,7 +119,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

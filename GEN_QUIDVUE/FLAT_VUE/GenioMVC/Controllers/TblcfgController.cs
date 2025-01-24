@@ -29,7 +29,11 @@ namespace GenioMVC.Controllers.Tblcfg
 		[HttpPost]
 		public ActionResult SaveConfig([FromBody]RequestConfigModel requestModel)
 		{
-			var uuid = requestModel.Uuid;
+			// Don't allow changes in maintenance mode
+			if(Maintenance.Current.IsActive)
+                return Json(new { Success = false, Message = Resources.Resources.O_SISTEMA_ENCONTRA_S37912 });
+
+            var uuid = requestModel.Uuid;
 			var configName = requestModel.ConfigName;
 			var isSelected = requestModel.IsSelected;
 			var data = requestModel.Data;
@@ -38,41 +42,42 @@ namespace GenioMVC.Controllers.Tblcfg
 			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
 
 			//Get saved configuration
-			CSGenioAtblcfg userTableConfigSelected = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
+			CSGenioAtblcfg userTableConfig = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
 				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
 				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldName, configName)
-				.Equal(CSGenioAtblcfg.FldZzstate, 0))
+				.Equal(CSGenioAtblcfg.FldName, configName))
 				.FirstOrDefault();
 
 			//If record doesn't exist, create new record
-			if (userTableConfigSelected == null)
+			if (userTableConfig == null)
 			{
-				userTableConfigSelected = new CSGenioAtblcfg(user);
+                userTableConfig = new CSGenioAtblcfg(user);
 				sp.openConnection();
-				userTableConfigSelected.insert(sp);
+                userTableConfig.insert(sp);
 				sp.closeConnection();
 
-				userTableConfigSelected.ValCodpsw = user.Codpsw;
-				userTableConfigSelected.ValUuid = uuid;
-				userTableConfigSelected.ValName = configName;
-				userTableConfigSelected.ValConfig = "";
+                userTableConfig.ValCodpsw = user.Codpsw;
+                userTableConfig.ValUuid = uuid;
+                userTableConfig.ValName = configName;
+                userTableConfig.ValConfig = "";
 			}
 
-			//Store configuration data
-			userTableConfigSelected.ValConfig = data;
+            //Store configuration data
+            userTableConfig.ValConfig = data;
+
+			//Set to current version
+			userTableConfig.ValUsrsetv = Configuration.UserSettingsVersion;
 
 			try
 			{
 				//Save record
 				sp.openTransaction();
-				userTableConfigSelected.change(sp, (CriteriaSet)null);
+                userTableConfig.change(sp, (CriteriaSet)null);
 				sp.closeTransaction();
 
 				CSGenioAtblcfgsel userTableConfigSelectedInfo = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
 					.Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
-					.Equal(CSGenioAtblcfgsel.FldUuid, uuid)
-					.Equal(CSGenioAtblcfgsel.FldZzstate, 0))
+					.Equal(CSGenioAtblcfgsel.FldUuid, uuid))
 					.FirstOrDefault();
 
 				//If record doesn't exist, create it
@@ -85,7 +90,7 @@ namespace GenioMVC.Controllers.Tblcfg
 
 					userTableConfigSelectedInfo.ValCodpsw = user.Codpsw;
 					userTableConfigSelectedInfo.ValUuid = uuid;
-					userTableConfigSelectedInfo.ValCodtblcfg = userTableConfigSelected.ValCodtblcfg;
+					userTableConfigSelectedInfo.ValCodtblcfg = userTableConfig.ValCodtblcfg;
 
 					//Save record
 					sp.openTransaction();
@@ -94,7 +99,7 @@ namespace GenioMVC.Controllers.Tblcfg
 				}
 				else if (isSelected)
 				{
-					userTableConfigSelectedInfo.ValCodtblcfg = userTableConfigSelected.ValCodtblcfg;
+					userTableConfigSelectedInfo.ValCodtblcfg = userTableConfig.ValCodtblcfg;
 
 					//Save record
 					sp.openTransaction();
@@ -103,7 +108,7 @@ namespace GenioMVC.Controllers.Tblcfg
 				}
 
 				//Clear cache
-				UserUiSettings.Invalidate(uuid, user);
+				TableUiSettings.Invalidate(uuid, user);
 
 				return Json(new { Success = true });
 			}
@@ -119,6 +124,10 @@ namespace GenioMVC.Controllers.Tblcfg
 		[HttpPost]
         public ActionResult SelectConfig([FromBody] RequestConfigModel requestModel)
 		{
+            // Don't allow changes in maintenance mode
+            if (Maintenance.Current.IsActive)
+                return Json(new { Success = false, Message = Resources.Resources.O_SISTEMA_ENCONTRA_S37912 });
+
             var uuid = requestModel.Uuid;
             var configName = requestModel.ConfigName;
 
@@ -131,8 +140,7 @@ namespace GenioMVC.Controllers.Tblcfg
 				//Get record of what view is set as default
 				CSGenioAtblcfgsel userTableConfigSelectedInfo = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
 					.Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
-					.Equal(CSGenioAtblcfgsel.FldUuid, uuid)
-					.Equal(CSGenioAtblcfgsel.FldZzstate, 0))
+					.Equal(CSGenioAtblcfgsel.FldUuid, uuid))
 					.FirstOrDefault();
 
 				//If record exists, delete it
@@ -143,22 +151,21 @@ namespace GenioMVC.Controllers.Tblcfg
 					sp.closeConnection();
 
 					//Clear cache
-					UserUiSettings.Invalidate(uuid, user);
+					TableUiSettings.Invalidate(uuid, user);
 				}
 
 				return JsonOK();
 			}
 
 			//Get saved configuration
-			CSGenioAtblcfg userTableConfigSelected = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
+			CSGenioAtblcfg userTableConfig = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
 				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
 				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldName, configName)
-				.Equal(CSGenioAtblcfg.FldZzstate, 0))
+				.Equal(CSGenioAtblcfg.FldName, configName))
 				.FirstOrDefault();
 
 			//If record doesn't exist
-			if (userTableConfigSelected == null)
+			if (userTableConfig == null)
 				return Json(new { Success = false });
 
 			try
@@ -166,8 +173,7 @@ namespace GenioMVC.Controllers.Tblcfg
 				//Get record of what view is selected
 				CSGenioAtblcfgsel userTableConfigSelectedInfo = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
 					.Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
-					.Equal(CSGenioAtblcfgsel.FldUuid, uuid)
-					.Equal(CSGenioAtblcfgsel.FldZzstate, 0))
+					.Equal(CSGenioAtblcfgsel.FldUuid, uuid))
 					.FirstOrDefault();
 
 				//If record doesn't exist, create it
@@ -182,7 +188,7 @@ namespace GenioMVC.Controllers.Tblcfg
 					userTableConfigSelectedInfo.ValUuid = uuid;
 				}
 
-				userTableConfigSelectedInfo.ValCodtblcfg = userTableConfigSelected.ValCodtblcfg;
+				userTableConfigSelectedInfo.ValCodtblcfg = userTableConfig.ValCodtblcfg;
 
 				//Save record
 				sp.openTransaction();
@@ -190,7 +196,7 @@ namespace GenioMVC.Controllers.Tblcfg
 				sp.closeTransaction();
 
 				//Clear cache
-				UserUiSettings.Invalidate(uuid, user);
+				TableUiSettings.Invalidate(uuid, user);
 
 				return Json(new { Success = true });
 			}
@@ -213,24 +219,20 @@ namespace GenioMVC.Controllers.Tblcfg
 			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
 
 			//Get saved configuration
-			CSGenioAtblcfg userTableConfigSelected = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
+			CSGenioAtblcfg userTableConfig = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
 				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
 				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldName, configName)
-				.Equal(CSGenioAtblcfg.FldZzstate, 0))
+				.Equal(CSGenioAtblcfg.FldName, configName))
 				.FirstOrDefault();
 
 			//If record doesn't exist
-			if (userTableConfigSelected == null)
+			if (userTableConfig == null)
 				return Json(new { Success = false });
-
-			//Clear cache
-			UserUiSettings.Invalidate(uuid, user);
 
 			return Json(new
 			{
 				Success = true,
-				Config = userTableConfigSelected.ValConfig,
+				Config = userTableConfig.ValConfig,
 				ConfigName = configName
 			});
 		}
@@ -238,6 +240,10 @@ namespace GenioMVC.Controllers.Tblcfg
 		[HttpPost]
 		public ActionResult DeleteConfig([FromBody] RequestConfigModel requestModel)
 		{
+            // Don't allow changes in maintenance mode
+            if (Maintenance.Current.IsActive)
+                return Json(new { Success = false, Message = Resources.Resources.O_SISTEMA_ENCONTRA_S37912 });
+
             var uuid = requestModel.Uuid;
             var configName = requestModel.ConfigName;
 
@@ -247,34 +253,32 @@ namespace GenioMVC.Controllers.Tblcfg
 			bool deletedDefaultView = false;
 
 			//Get saved configuration
-			CSGenioAtblcfg userTableConfigSelected = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
+			CSGenioAtblcfg userTableConfig = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
 				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
 				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldName, configName)
-				.Equal(CSGenioAtblcfg.FldZzstate, 0))
+				.Equal(CSGenioAtblcfg.FldName, configName))
 				.FirstOrDefault();
 
 			//If record doesn't exist
-			if (userTableConfigSelected == null)
+			if (userTableConfig == null)
 				return Json(new { Success = false });
 
 			try
 			{
 				CSGenioAtblcfgsel userTableConfigSelectedInfo = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
 					.Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
-					.Equal(CSGenioAtblcfgsel.FldUuid, uuid)
-					.Equal(CSGenioAtblcfgsel.FldZzstate, 0))
+					.Equal(CSGenioAtblcfgsel.FldUuid, uuid))
 					.FirstOrDefault();
 
 				//If record exists
 				if (userTableConfigSelectedInfo != null)
 				{
 					//If view is selected as default
-					if (userTableConfigSelectedInfo.ValCodtblcfg.Equals(userTableConfigSelected.ValCodtblcfg))
+					if (userTableConfigSelectedInfo.ValCodtblcfg.Equals(userTableConfig.ValCodtblcfg))
 					{
 						sp.openTransaction();
 						userTableConfigSelectedInfo.delete(sp);
-						userTableConfigSelected.delete(sp);
+                        userTableConfig.delete(sp);
 						sp.closeTransaction();
 						deletedDefaultView = true;
 					}
@@ -282,7 +286,7 @@ namespace GenioMVC.Controllers.Tblcfg
 					else
 					{
 						sp.openTransaction();
-						userTableConfigSelected.delete(sp);
+                        userTableConfig.delete(sp);
 						sp.closeTransaction();
 					}
 				}
@@ -290,12 +294,12 @@ namespace GenioMVC.Controllers.Tblcfg
 				else
 				{
 					sp.openTransaction();
-					userTableConfigSelected.delete(sp);
+                    userTableConfig.delete(sp);
 					sp.closeTransaction();
 				}
 
 				//Clear cache
-				UserUiSettings.Invalidate(uuid, user);
+				TableUiSettings.Invalidate(uuid, user);
 
 				return Json(new
 				{
@@ -315,6 +319,10 @@ namespace GenioMVC.Controllers.Tblcfg
 		[HttpPost]
 		public ActionResult CopyConfig([FromBody] RequestConfigModel requestModel)
 		{
+            // Don't allow changes in maintenance mode
+            if (Maintenance.Current.IsActive)
+                return Json(new { Success = false, Message = Resources.Resources.O_SISTEMA_ENCONTRA_S37912 });
+
             var uuid = requestModel.Uuid;
             var configName = requestModel.ConfigName;
             var isSelected = requestModel.IsSelected;
@@ -327,8 +335,7 @@ namespace GenioMVC.Controllers.Tblcfg
 			CSGenioAtblcfg userTableConfigToCopy = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
 				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
 				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldName, copyFromName)
-				.Equal(CSGenioAtblcfg.FldZzstate, 0))
+				.Equal(CSGenioAtblcfg.FldName, copyFromName))
 				.FirstOrDefault();
 
 			//If record to copy doesn't exist
@@ -343,15 +350,14 @@ namespace GenioMVC.Controllers.Tblcfg
 			}
 
 			//Check for saved configuration
-			CSGenioAtblcfg userTableConfigSelected = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
+			CSGenioAtblcfg userTableConfig = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
 				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
 				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldName, configName)
-				.Equal(CSGenioAtblcfg.FldZzstate, 0))
+				.Equal(CSGenioAtblcfg.FldName, configName))
 				.FirstOrDefault();
 
 			//If record already exists
-			if (userTableConfigSelected != null)
+			if (userTableConfig != null)
 			{
 				return Json(new
 				{
@@ -361,28 +367,27 @@ namespace GenioMVC.Controllers.Tblcfg
 				});
 			}
 
-			//Create new record
-			userTableConfigSelected = new CSGenioAtblcfg(user);
+            //Create new record
+            userTableConfig = new CSGenioAtblcfg(user);
 			sp.openConnection();
-			userTableConfigSelected.insert(sp);
+            userTableConfig.insert(sp);
 			sp.closeConnection();
 
-			userTableConfigSelected.ValCodpsw = user.Codpsw;
-			userTableConfigSelected.ValUuid = uuid;
-			userTableConfigSelected.ValName = configName;
-			userTableConfigSelected.ValConfig = userTableConfigToCopy.ValConfig;
+            userTableConfig.ValCodpsw = user.Codpsw;
+            userTableConfig.ValUuid = uuid;
+            userTableConfig.ValName = configName;
+            userTableConfig.ValConfig = userTableConfigToCopy.ValConfig;
 
 			try
 			{
 				//Save record
 				sp.openTransaction();
-				userTableConfigSelected.change(sp, (CriteriaSet)null);
+                userTableConfig.change(sp, (CriteriaSet)null);
 				sp.closeTransaction();
 
 				CSGenioAtblcfgsel userTableConfigSelectedInfo = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
 					.Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
-					.Equal(CSGenioAtblcfgsel.FldUuid, uuid)
-					.Equal(CSGenioAtblcfgsel.FldZzstate, 0))
+					.Equal(CSGenioAtblcfgsel.FldUuid, uuid))
 					.FirstOrDefault();
 
 				if (isSelected)
@@ -397,7 +402,7 @@ namespace GenioMVC.Controllers.Tblcfg
 
 						userTableConfigSelectedInfo.ValCodpsw = user.Codpsw;
 						userTableConfigSelectedInfo.ValUuid = uuid;
-						userTableConfigSelectedInfo.ValCodtblcfg = userTableConfigSelected.ValCodtblcfg;
+						userTableConfigSelectedInfo.ValCodtblcfg = userTableConfig.ValCodtblcfg;
 
 						//Save record
 						sp.openTransaction();
@@ -405,7 +410,7 @@ namespace GenioMVC.Controllers.Tblcfg
 						sp.closeTransaction();
 					}
 
-					userTableConfigSelectedInfo.ValCodtblcfg = userTableConfigSelected.ValCodtblcfg;
+					userTableConfigSelectedInfo.ValCodtblcfg = userTableConfig.ValCodtblcfg;
 
 					//Save record
 					sp.openTransaction();
@@ -414,7 +419,7 @@ namespace GenioMVC.Controllers.Tblcfg
 				}
 
 				//Clear cache
-				UserUiSettings.Invalidate(uuid, user);
+				TableUiSettings.Invalidate(uuid, user);
 
 				return Json(new
 				{

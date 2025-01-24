@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Entit _entit;
 		[DisplayName("Entit")]
 		[ShouldSerialize("Entit")]
-		public virtual Entit Entit { 
-			get { 
+		public virtual Entit Entit {
+			get {
 				if (!this.isEmptyModel && (_entit == null || (!string.IsNullOrEmpty(ValCodentit) && (_entit.isEmptyModel || _entit.klass.QPrimaryKey != ValCodentit))))
 					_entit = Models.Entit.Find(ValCodentit, m_userContext, Identifier, _fieldsToSerialize);
 				if (_entit == null)
 					_entit = new Models.Entit(m_userContext, true, _fieldsToSerialize);
 				return _entit;
 			}
-			set { _entit = value; } 
+			set { _entit = value; }
 		}
-		
+
 
 		[DisplayName("Incorporation")]
 		/// <summary>Field : "Incorporation" Tipo: "D" Formula:  ""</summary>
@@ -86,23 +86,25 @@ namespace GenioMVC.Models
 		private Facty _facty;
 		[DisplayName("Facty")]
 		[ShouldSerialize("Facty")]
-		public virtual Facty Facty { 
-			get { 
+		public virtual Facty Facty {
+			get {
 				if (!this.isEmptyModel && (_facty == null || (!string.IsNullOrEmpty(ValCodfacty) && (_facty.isEmptyModel || _facty.klass.QPrimaryKey != ValCodfacty))))
 					_facty = Models.Facty.Find(ValCodfacty, m_userContext, Identifier, _fieldsToSerialize);
 				if (_facty == null)
 					_facty = new Models.Facty(m_userContext, true, _fieldsToSerialize);
 				return _facty;
 			}
-			set { _facty = value; } 
+			set { _facty = value; }
 		}
-		
+
 
 		[DisplayName("Image")]
 		/// <summary>Field : "Image" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Facil.ValImage")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValImage { get { return klass.ValImage; } set { klass.ValImage = value; } }
+		public ImageModel ValImage { get { return new ImageModel(klass.ValImage) { Ticket = ValImageQTicket }; } set { klass.ValImage = value; } }
+		[JsonIgnore]
+		public string ValImageQTicket = null;
 
 		[DisplayName("GPS input")]
 		/// <summary>Field : "GPS input" Tipo: "AC" Formula:  ""</summary>
@@ -116,13 +118,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Latitude" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Facil.ValLatitude")]
 		[NumericAttribute(6)]
-		public decimal? ValLatitude { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLatitude, 6)); } set { klass.ValLatitude = Convert.ToDouble(value); } }
+		public decimal? ValLatitude { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLatitude, 6)); } set { klass.ValLatitude = Convert.ToDecimal(value); } }
 
 		[DisplayName("Longitude")]
 		/// <summary>Field : "Longitude" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Facil.ValLongitud")]
 		[NumericAttribute(6)]
-		public decimal? ValLongitud { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLongitud, 6)); } set { klass.ValLongitud = Convert.ToDouble(value); } }
+		public decimal? ValLongitud { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLongitud, 6)); } set { klass.ValLongitud = Convert.ToDecimal(value); } }
 
 		[DisplayName("Geographical coordinate")]
 		/// <summary>Field : "Geographical coordinate" Tipo: "GG" Formula:  ""</summary>
@@ -136,6 +138,25 @@ namespace GenioMVC.Models
 		[GeographicAttribute("GG")]
 		public string ValGeocoord { get { return klass.ValGeocoord; } set { klass.ValGeocoord = value; } }
 
+		[DisplayName(">> Country")]
+		/// <summary>Field : ">> Country" Tipo: "CE" Formula:  ""</summary>
+		[ShouldSerialize("Facil.ValCodcntry")]
+		public string ValCodcntry { get { return klass.ValCodcntry; } set { klass.ValCodcntry = value; } }
+		private Cntry _cntry;
+		[DisplayName("Cntry")]
+		[ShouldSerialize("Cntry")]
+		public virtual Cntry Cntry {
+			get {
+				if (!this.isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodcntry) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodcntry))))
+					_cntry = Models.Cntry.Find(ValCodcntry, m_userContext, Identifier, _fieldsToSerialize);
+				if (_cntry == null)
+					_cntry = new Models.Cntry(m_userContext, true, _fieldsToSerialize);
+				return _cntry;
+			}
+			set { _cntry = value; }
+		}
+
+
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Facil.ValZzstate")]
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
@@ -144,19 +165,19 @@ namespace GenioMVC.Models
 		public Facil(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAfacil(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Facil(UserContext userContext, CSGenioAfacil val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAfacil csgenioa)
@@ -178,12 +199,16 @@ namespace GenioMVC.Models
 							_facty = new Facty(m_userContext, true, _fieldsToSerialize);
 						_facty.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
+					case "cntry":
+						if (_cntry == null)
+							_cntry = new Cntry(m_userContext, true, _fieldsToSerialize);
+						_cntry.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
+						break;
 					default:
 						break;
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_261ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_261', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '261',
 					isMenuList: true,
+					designation: computed(() => this.Resources.FACILITIES08876),
 					acronym: 'GQT_261',
 					name: 'INSTA',
 					route: 'menu-GQT_261',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'GQT_Menu_261',
 						controller: 'INSTA',
 						action: 'GQT_Menu_261',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.DateColumn({
 								order: 1,
@@ -139,7 +149,7 @@
 								field: 'SINCE',
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -148,7 +158,7 @@
 								field: 'UNTIL',
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -219,6 +229,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
+								searchable: false,
 							}),
 						],
 						config: {
@@ -233,7 +244,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -337,6 +348,7 @@
 								id: 'RCA_GQT_2611',
 								name: 'form-INSTA',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -353,23 +365,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: INSTA
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValSince',
 							defaultSearchColumnNameOriginal: 'ValSince',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValSince',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
 						uuid: '0655f0e5-8a64-4786-911e-9b4ece9f7ac0',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -398,6 +404,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS GQT_261]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_261]/
 // eslint-disable-next-line

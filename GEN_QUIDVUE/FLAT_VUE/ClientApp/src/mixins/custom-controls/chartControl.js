@@ -11,11 +11,17 @@ export default class ChartControl extends CustomControl
 	}
 
 	/**
-	 * Sets any additional properties that might be needed for the chart
-	 * @param {object} viewMode The current view mode
+	 * Get the properties for configuring the chart component.
+	 * @param {object} viewMode - The current view mode of the chart.
+	 * @returns {object} - An object containing chart properties.
 	 */
-	setCustomProperties(viewMode)
+	getProps(viewMode)
 	{
-		viewMode.config = {}
+		return {
+			containerId: viewMode.containerId,
+			mappedValues: viewMode.mappedValues,
+			styleVariables: viewMode.styleVariables,
+			config: {}
+		}
 	}
 }

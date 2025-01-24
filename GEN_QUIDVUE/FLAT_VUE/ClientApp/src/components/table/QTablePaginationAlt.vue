@@ -1,86 +1,65 @@
 ﻿<template>
-	<div class="flex-align-center">
-		<nav aria-label="Page navigation">
-			<ul class="e-pagination">
-				<!-- BEGIN: Page navigation buttons -->
-				<!-- BEGIN: First page button -->
-				<li
-					v-if="hasMultiplePages"
-					:class="[{ disabled: !beginButtonActive || disabled }, 'page-item']"
-					@click.stop.prevent="beginButtonActive ? pageHandler(1) : null">
-					<a
-						class="page-link"
-						href=""
-						aria-label="First">
-						<span aria-hidden="true">
-							<slot name="vbt-pagination-begin-button"> &lt;&lt; </slot>
-						</span>
-					</a>
-				</li>
-				<!-- END: First page button -->
-				<!-- BEGIN: Previous page button -->
-				<li
-					v-if="hasMultiplePages"
-					:class="[{ disabled: !prevButtonActive || disabled }, 'page-item']"
-					@click.stop.prevent="prevButtonActive ? pageHandler(page - 1) : null">
-					<a
-						class="page-link"
-						href=""
-						aria-label="Previous">
-						<span aria-hidden="true">
-							<slot name="vbt-pagination-previous-button">&lt;</slot>
-						</span>
-					</a>
-				</li>
-				<!-- END: Previous page button -->
-				<!-- BEGIN: Visible page number buttons -->
-				<template v-if="hasMorePages || page > 1">
-					<li :class="['e-pagination__item', { disabled: disabled }]">
-						<span
-							class="e-pagination__info"
-							style="white-space: nowrap">
-							<span>{{ page }} / </span>
-							<span v-if="hasMorePages">...</span>
-							<span v-else>{{ page }}</span>
-						</span>
-					</li>
-				</template>
-				<!-- END: Visible page number buttons -->
-				<!-- BEGIN: Next page button -->
-				<li
-					v-if="hasMultiplePages"
-					:class="[{ disabled: !nextButtonActive || disabled }, 'page-item']"
-					@click.stop.prevent="nextButtonActive ? pageHandler(page + 1) : null">
-					<a
-						class="page-link"
-						href=""
-						aria-label="Next">
-						<span aria-hidden="true">
-							<slot name="vbt-pagination-next-button"> &gt; </slot>
-						</span>
-					</a>
-				</li>
-				<!-- END: Next page button -->
-				<!-- END: Page navigation buttons -->
-			</ul>
-		</nav>
-		<!-- BEGIN: Number of rows per page -->
-		<template v-if="showPerPageMenu">
-			<span class="i-text__label">{{ texts.rowsPerPage + ':' }}</span>
-			<q-dropdown-menu
-				v-if="showPerPageMenu"
-				:texts="{ title: perPageLabel, label: perPageLabel }"
-				:options="perPageOptionsObj"
-				class="pagination-dropdown'"
-				:button-classes="['dropdown-toggle']"
-				:button-options="{ borderless: true }"
-				:single-option-button="false"
-				:disabled="disabled"
-				@selected="perPageHandler($event)">
-			</q-dropdown-menu>
-			<!-- END: Number of rows per page -->
-		</template>
+	<nav
+		v-if="hasMultiplePages"
+		aria-label="Page navigation">
+		<q-button-group>
+			<!-- BEGIN: Page navigation buttons -->
+			<!-- BEGIN: First page button -->
+			<q-button
+				:aria-label="texts.first"
+				:disabled="!beginButtonActive"
+				@click="beginButtonAction">
+				<q-icon icon="page-first" />
+			</q-button>
+			<!-- END: First page button -->
+			<!-- BEGIN: Previous page button -->
+			<q-button
+				:aria-label="texts.previous"
+				:disabled="!prevButtonActive"
+				@click="prevButtonAction">
+				<q-icon icon="page-previous" />
+			</q-button>
+			<!-- END: Previous page button -->
+			<!-- BEGIN: Visible page number buttons -->
+			<template v-if="hasMorePages || page > 1">
+				<span
+					class="e-pagination__info"
+					style="white-space: nowrap">
+					<span>{{ page }} / </span>
+					<span v-if="hasMorePages">...</span>
+					<span v-else>{{ page }}</span>
+				</span>
+			</template>
+			<!-- END: Visible page number buttons -->
+			<!-- BEGIN: Next page button -->
+			<q-button
+				:aria-label="texts.next"
+				:disabled="!nextButtonActive"
+				@click="nextButtonAction">
+				<q-icon icon="page-next" />
+			</q-button>
+			<!-- END: Next page button -->
+			<!-- END: Page navigation buttons -->
+		</q-button-group>
+	</nav>
+	<!-- BEGIN: Number of rows per page -->
+	<div
+		v-if="showPerPageMenu && hasMultiplePages"
+		class="rows-per-page-menu">
+		<span class="i-text__label">{{ texts.rowsPerPage + ':' }}</span>
+		<q-dropdown-menu
+			:id="tableId + '-rowspp-menu'"
+			:texts="{ title: perPageLabel, label: perPageLabel }"
+			:options="perPageOptionsObj"
+			class="pagination-dropdown'"
+			:button-classes="['dropdown-toggle']"
+			:button-options="{ borderless: true }"
+			:single-option-button="false"
+			:disabled="disabled"
+			@selected="perPageHandler($event)">
+		</q-dropdown-menu>
 	</div>
+	<!-- END: Number of rows per page -->
 </template>
 
 <script>
@@ -168,6 +147,14 @@
 			disabled: {
 				type: Boolean,
 				default: false
+			},
+
+			/**
+			 * The table ID.
+			 */
+			tableId: {
+				type: String,
+				default: ''
 			}
 		},
 
@@ -224,6 +211,30 @@
 			perPageHandler(option) {
 				if (!this.disabled)
 					this.$emit('update:perPage', option)
+			},
+
+			/**
+			 * Action for button to previous page
+			 */
+			prevButtonAction() {
+				if(this.prevButtonActive)
+					this.pageHandler(this.page - 1)
+			},
+
+			/**
+			 * Action for button to next page
+			 */
+			nextButtonAction() {
+				if(this.nextButtonActive)
+					this.pageHandler(this.page + 1)
+			},
+
+			/**
+			 * Action for button to first page
+			 */
+			beginButtonAction() {
+				if(this.beginButtonActive)
+					this.pageHandler(1)
 			},
 
 			/**

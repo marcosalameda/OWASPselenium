@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Current account
 	/// </summary>
-	public class CSGenioAccorr : DbArea	{
+	public class CSGenioAccorr : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -59,6 +60,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Order";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 6;
 			Qfield.CavDesignation = "ORDER39632";
 
 			Qfield.Dupmsg = "";
@@ -109,6 +111,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Amount";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "AMOUNT46885";
 
 			Qfield.Dupmsg = "";
@@ -119,6 +122,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Balance";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "BALANCE13297";
 
 			Qfield.Dupmsg = "";
@@ -164,7 +168,7 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(10);
+			info.Pathways = new Dictionary<string, string>(11);
 			info.Pathways.Add("item","item");
 			info.Pathways.Add("indoc","indoc");
 			info.Pathways.Add("wareh","item");
@@ -173,6 +177,7 @@ namespace CSGenio.business
 			info.Pathways.Add("ware1","indoc");
 			info.Pathways.Add("cmpny","indoc");
 			info.Pathways.Add("pesso","indoc");
+			info.Pathways.Add("categ","indoc");
 			info.Pathways.Add("pais1","indoc");
 			info.Pathways.Add("regi1","indoc");
 		}
@@ -307,18 +312,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodccorr, value); }
 		}
 
-
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldNorder { get { return m_fldNorder; } }
 		private static FieldRef m_fldNorder = new FieldRef("ccorr", "norder");
 
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
-		public double ValNorder
+		public decimal ValNorder
 		{
-			get { return (double)returnValueField(FldNorder); }
+			get { return (decimal)returnValueField(FldNorder); }
 			set { insertNameValueField(FldNorder, value); }
 		}
-
 
 		/// <summary>Field : "Instant" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDate { get { return m_fldDate; } }
@@ -331,7 +334,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDate, value); }
 		}
 
-
 		/// <summary>Field : "Type" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldType { get { return m_fldType; } }
 		private static FieldRef m_fldType = new FieldRef("ccorr", "type");
@@ -342,7 +344,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldType); }
 			set { insertNameValueField(FldType, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCoditem { get { return m_fldCoditem; } }
@@ -355,7 +356,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoditem, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCoddentr { get { return m_fldCoddentr; } }
 		private static FieldRef m_fldCoddentr = new FieldRef("ccorr", "coddentr");
@@ -367,30 +367,27 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddentr, value); }
 		}
 
-
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldQnty { get { return m_fldQnty; } }
 		private static FieldRef m_fldQnty = new FieldRef("ccorr", "qnty");
 
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
-		public double ValQnty
+		public decimal ValQnty
 		{
-			get { return (double)returnValueField(FldQnty); }
+			get { return (decimal)returnValueField(FldQnty); }
 			set { insertNameValueField(FldQnty, value); }
 		}
-
 
 		/// <summary>Field : "Balance" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldBalance { get { return m_fldBalance; } }
 		private static FieldRef m_fldBalance = new FieldRef("ccorr", "balance");
 
 		/// <summary>Field : "Balance" Tipo: "N" Formula:  ""</summary>
-		public double ValBalance
+		public decimal ValBalance
 		{
-			get { return (double)returnValueField(FldBalance); }
+			get { return (decimal)returnValueField(FldBalance); }
 			set { insertNameValueField(FldBalance, value); }
 		}
-
 
 		/// <summary>Field : "Ref" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldReferenc { get { return m_fldReferenc; } }
@@ -402,7 +399,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldReferenc); }
 			set { insertNameValueField(FldReferenc, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -445,23 +441,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAccorr> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAccorr> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAccorr>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -510,7 +489,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX CCORR]/

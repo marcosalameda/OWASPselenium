@@ -1,12 +1,10 @@
 ﻿<template>
 	<teleport :to="`#q-modal-file-versions-${controlId}-body`">
-		<div class="content">
-			<q-table
-				:rows="tableRows"
-				:columns="tableColumns"
-				:config="tableConfig"
-				@row-action="findVersionToDownload($event)" />
-		</div>
+		<q-table
+			:rows="tableRows"
+			:columns="tableColumns"
+			:config="tableConfig"
+			@row-action="findVersionToDownload($event)" />
 	</teleport>
 
 	<teleport
@@ -36,11 +34,11 @@
 	export default {
 		name: 'QDocumentVersions',
 
-		emits: [
-			'get-file-version',
-			'delete-last',
-			'delete-history'
-		],
+		emits: {
+			'delete-history': () => true,
+			'delete-last': () => true,
+			'get-file': (payload) => typeof payload === 'string'
+		},
 
 		components: {
 			QTable
@@ -95,10 +93,6 @@
 			}
 		},
 
-		inject: [
-			'downloadVersion'
-		],
-
 		expose: [],
 
 		computed: {
@@ -107,7 +101,7 @@
 			 */
 			tableRows()
 			{
-				var rows = []
+				const rows = []
 
 				if (this.versionsInfo && this.versionsInfo.length > 0)
 				{
@@ -132,7 +126,6 @@
 			tableConfig()
 			{
 				return {
-					showFooter: false,
 					customActions: [
 						{
 							id: 'download',
@@ -148,9 +141,9 @@
 					globalSearch: {
 						visibility: false
 					},
-					config: {
-						allowFileExport: false,
-						allowFileImport: false
+					rowValidation: {
+						fnValidate: (row) => row.rowKey?.length > 0,
+						message: this.texts.pendingDocumentVersion
 					},
 					resourcesPath: this.resourcesPath
 				}
@@ -208,14 +201,14 @@
 			 */
 			findVersionToDownload(rowData)
 			{
-				if (typeof rowData !== 'object' || typeof rowData.rowKey !== 'string')
+				if (typeof rowData?.rowKey !== 'string')
 					return
 
 				for (let i in this.versions)
 				{
 					if (this.versions[i] === rowData.rowKey)
 					{
-						this.downloadVersion(i)
+						this.$emit('get-file', i)
 						return
 					}
 				}

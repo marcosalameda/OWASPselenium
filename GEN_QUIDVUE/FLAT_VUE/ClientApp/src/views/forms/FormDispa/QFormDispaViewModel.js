@@ -101,18 +101,17 @@ export default class ViewModel extends ViewModelBase
 			arrayOptions: qProjArrays.QArrayDispstat.setResources(vm.$getResource).elements,
 			maxLength: 1,
 			description: computed(() => this.Resources.STATUS62033),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(emptyD([DISPA->DISPADT])==0,"D",iif(emptyD([DISPA->PREPARED])==0,"P","I"))
-					// eslint-disable-next-line eqeqeq
-					return qApi.iif(qApi.emptyD(this.ValDispadt.value)==0,"D",qApi.iif(qApi.emptyD(this.ValPrepared.value)==0,"P","I"))
+					return qApi.iif(qApi.emptyD(this.ValDispadt.value)===0,"D",qApi.iif(qApi.emptyD(this.ValPrepared.value)===0,"P","I"))
 				},
 				dependencyEvents: ['fieldChange:dispa.dispadt', 'fieldChange:dispa.prepared'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValStatus))
@@ -150,12 +149,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: iif(emptyL([DISPA->ISPREPAR])==1,[ZEROD],[Today])
-					// eslint-disable-next-line eqeqeq
-					return qApi.iif(qApi.emptyL((this.ValIsprepar.value ? 1 : 0))==1,'',qApi.Hoje())
+					return qApi.iif(qApi.emptyL((this.ValIsprepar.value ? 1 : 0))===1,'',qApi.Hoje())
 				},
 				dependencyEvents: ['fieldChange:dispa.isprepar'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyD,
 			},
 		}).cloneFrom(values?.ValPrepared))
@@ -185,5 +182,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCoddispa'
 
 	get QPrimaryKey() { return this.ValCoddispa.value }
-	set QPrimaryKey(value) { this.ValCoddispa.value = value }
+	set QPrimaryKey(value) { this.ValCoddispa.updateValue(value) }
 }

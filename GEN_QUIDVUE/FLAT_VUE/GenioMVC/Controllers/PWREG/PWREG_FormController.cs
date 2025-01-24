@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Pwreg;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_PWREG_CANCEL = new NavigationLocation("ACESSO_REGIAO41894", "Pwreg_Cancel", "Pwreg") { vueRouteName = "form-PWREG", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_PWREG_SHOW = new NavigationLocation("ACESSO_REGIAO41894", "Pwreg_Show", "Pwreg") { vueRouteName = "form-PWREG", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_PWREG_NEW = new NavigationLocation("ACESSO_REGIAO41894", "Pwreg_New", "Pwreg") { vueRouteName = "form-PWREG", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_PWREG_EDIT = new NavigationLocation("ACESSO_REGIAO41894", "Pwreg_Edit", "Pwreg") { vueRouteName = "form-PWREG", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_PWREG_DUPLICATE = new NavigationLocation("ACESSO_REGIAO41894", "Pwreg_Duplicate", "Pwreg") { vueRouteName = "form-PWREG", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_PWREG_DELETE = new NavigationLocation("ACESSO_REGIAO41894", "Pwreg_Delete", "Pwreg") { vueRouteName = "form-PWREG", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_PWREG_CANCEL = new("ACESSO_REGIAO41894", "Pwreg_Cancel", "Pwreg") { vueRouteName = "form-PWREG", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_PWREG_SHOW = new("ACESSO_REGIAO41894", "Pwreg_Show", "Pwreg") { vueRouteName = "form-PWREG", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_PWREG_NEW = new("ACESSO_REGIAO41894", "Pwreg_New", "Pwreg") { vueRouteName = "form-PWREG", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_PWREG_EDIT = new("ACESSO_REGIAO41894", "Pwreg_Edit", "Pwreg") { vueRouteName = "form-PWREG", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_PWREG_DUPLICATE = new("ACESSO_REGIAO41894", "Pwreg_Duplicate", "Pwreg") { vueRouteName = "form-PWREG", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_PWREG_DELETE = new("ACESSO_REGIAO41894", "Pwreg_Delete", "Pwreg") { vueRouteName = "form-PWREG", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Pwreg_ModalDBEdit()
-		{
-			Pwreg_ViewModel model = new Pwreg_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Pwreg_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Pwreg Multiform actions
-
-		//
-		// GET /Pwreg/MFPwreg_New
-		[HttpGet]
-		[ActionName("MFPwreg_New")]
-		public ActionResult MFPwreg_New()
-		{
-			var model = new Pwreg_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_PWREG_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("pwreg", model.ValCodpwreg);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFPwreg_New_GET()
-		{
-			return MFPwreg_New();
-		}
-
-		//
-		// GET /Pwreg/MFPwreg_Edit
-		[HttpGet]
-		[ActionName("MFPwreg_Edit")]
-		public ActionResult MFPwreg_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("PWREG", "EDIT", new { id = id, partialView = "MFPwreg", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFPwreg_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFPwreg_Edit(requestModel);
-		}
-
-		//
-		// GET /Pwreg/MFPwreg_Cancel
-		[ActionName("MFPwreg_Cancel")]
-		public ActionResult MFPwreg_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Pwreg(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Pwreg/MFPwreg_Save
-		[HttpPost]
-		[ActionName("MFPwreg_Save")]
-		public JsonResult MFPwreg_Save(Pwreg_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFPwreg_Save",
-				ViewName = "MFPwreg",
-				AreaName = "pwreg"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Pwreg/MFPwreg_Delete
-		[HttpPost]
-		[ActionName("MFPwreg_Delete")]
-		public JsonResult MFPwreg_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFPwreg_Delete",
-				ViewName = "MFPwreg",
-				AreaName = "pwreg",
-				Location = ACTION_PWREG_EDIT
-			};
-
-			var model = new Pwreg_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Pwreg/Pwreg_PswValNome
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_psw")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,9 +422,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Pwreg_PswValNome_ViewModel model = new Pwreg_PswValNome_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodpwreg = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -590,6 +464,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_regio")))
@@ -603,21 +478,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -625,12 +485,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Pwreg_RegioValRegiao_ViewModel model = new Pwreg_RegioValRegiao_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodpwreg = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Pwreg/Pwreg_SaveEdit
 		[HttpPost]

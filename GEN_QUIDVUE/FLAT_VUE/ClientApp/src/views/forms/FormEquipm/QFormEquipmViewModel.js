@@ -58,7 +58,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'ASSET',
 			field: 'CODMANUF',
 			relatedArea: 'MANUF',
-			description: computed(() => this.Resources.__MANUFACTURER02870),
+			description: '',
 		}).cloneFrom(values?.ValCodmanuf))
 		watch(() => this.ValCodmanuf.value, (newValue, oldValue) => this.onUpdate('asset.codmanuf', this.ValCodmanuf, newValue, oldValue))
 
@@ -128,12 +128,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [ASSET->IDENTTYP]=="R"
-					// eslint-disable-next-line eqeqeq
-					return this.ValIdenttyp.value=="R"
+					return this.ValIdenttyp.value==="R"
 				},
 				dependencyEvents: ['fieldChange:asset.identtyp'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 			showWhen: {
@@ -141,12 +139,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [ASSET->IDENTTYP]=="R"
-					// eslint-disable-next-line eqeqeq
-					return this.ValIdenttyp.value=="R"
+					return this.ValIdenttyp.value==="R"
 				},
 				dependencyEvents: ['fieldChange:asset.identtyp'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValGrai))
@@ -164,12 +160,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [ASSET->IDENTTYP]=="I"
-					// eslint-disable-next-line eqeqeq
-					return this.ValIdenttyp.value=="I"
+					return this.ValIdenttyp.value==="I"
 				},
 				dependencyEvents: ['fieldChange:asset.identtyp'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 			showWhen: {
@@ -177,12 +171,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [ASSET->IDENTTYP]=="I"
-					// eslint-disable-next-line eqeqeq
-					return this.ValIdenttyp.value=="I"
+					return this.ValIdenttyp.value==="I"
 				},
 				dependencyEvents: ['fieldChange:asset.identtyp'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValGiai))
@@ -232,5 +224,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodasset'
 
 	get QPrimaryKey() { return this.ValCodasset.value }
-	set QPrimaryKey(value) { this.ValCodasset.value = value }
+	set QPrimaryKey(value) { this.ValCodasset.updateValue(value) }
 }

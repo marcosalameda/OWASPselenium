@@ -1,4 +1,4 @@
-using CSGenio.framework;
+﻿using CSGenio.framework;
 using CSGenio.persistence;
 using GenioServer.security;
 using Microsoft.AspNetCore.Mvc;
@@ -8,22 +8,22 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using log4net;
 using log4net.Config;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
+using System.Diagnostics.Metrics;
+using OpenTelemetry.Metrics;
+using CSGenio.core.logger;
+using CSGenio.core.di;
+using GenioMVC.Metrics;
+using CSGenio.core.framework.ChatbotApi;
+using GenioMVC.Helpers;
 
 //---------------------------------
 // Setup the GenioServer services
 //---------------------------------
-PersistenceFactoryExtension.Use();
-PersistentSupport.SetControlQueries(
-    GenioServer.persistence.PersistentSupportExtra.ControlQueries,
-    GenioServer.persistence.PersistentSupportExtra.ControlQueriesOverride);
-GenioServer.framework.OverrideQueryDeclaring.Use();
-UserFactory.BusinessManager = new UserBusinessService();
-
-//---------------------------------
-// Setup 3rd party services
-//---------------------------------
-var logRepository = LogManager.GetRepository(System.Reflection.Assembly.GetEntryAssembly());
-XmlConfigurator.Configure(logRepository, new FileInfo("web.config"));
+CSGenio.GenioDIDefault.Use();
+CSGenio.business.ElasticsearchQueriesExtra.Use();
 
 //---------------------------------
 // Setup the WebServer services
@@ -40,6 +40,13 @@ builder.Services.AddSingleton<IObjectModelValidator>( s =>
     var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
     return new OnDemandObjectValidator(metadataProvider, options.ModelValidatorProviders, options);
 });
+
+//---------------------------------
+// Telemetry Services
+//---------------------------------
+var telemetryConfig = builder.Configuration.GetSection("TelemetryConfig").Get<TelemetryConfiguration>();
+builder.Services.ConfigureTelemetry(telemetryConfig, builder.Logging);
+
 
 // Add services to the container.
 builder.Services.AddControllers(options => 
@@ -65,6 +72,10 @@ builder.Services.AddControllers(options =>
 //builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 
+// Add Http Client and Service for ChatbotAPI
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<IChatbotService, ChatbotService>();
+
 // Any controller that needs User information it can add UserContextService to its constructor
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
@@ -85,6 +96,7 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.Strict;
     builder.Configuration.GetSection("SessionOptions").Bind(options);
 });
 
@@ -106,6 +118,12 @@ builder.WebHost.ConfigureKestrel(options =>
     options.AddServerHeader = false;
 });
 
+//Background services (messaging, scheduling, ...)
+builder.WebHost.UseShutdownTimeout(TimeSpan.FromSeconds(60));
+builder.Services.AddHostedService<MessagingServiceHost>();
+
+// USE /[MANUAL GQT APP_INIT]/
+
 var app = builder.Build();
 
 // Log unhandled exceptions and detail the error details in http 500 responses
@@ -113,6 +131,10 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 app.UseResponseCompression();
+
+// Use Open Telemetry Logging
+if (telemetryConfig != null && telemetryConfig.LoggerType == TelemetryConfiguration.LoggerConfigType.OTLP)
+    GenioDI.Log = new OpenTelemetryImpl(app.Services.GetRequiredService<ILoggerFactory>());
 
 // Redirection needs to come before any routing in the pipeline
 // Default will be redirecting to https.
@@ -123,6 +145,10 @@ if (https_redirect == null || https_redirect == "redirect")
     app.UseHttpsRedirection();
 if (https_redirect == "hsts")
     app.UseHsts();
+
+// Callback paths calculations need to take into account reverse Proxys
+//TODO: Get a utility class or service
+AbsoluteUrlUtils.ProxyUrl = app.Configuration["ProxyUrl"] ?? "";
 
 if (app.Environment.IsDevelopment())
 {
@@ -145,13 +171,34 @@ app.UseSession();
 //This is only needed when using the [ApiController] attributes
 //app.MapControllers();
 
+//External authentication endpoints
+app.MapControllerRoute(
+    name: "authRedirectRoute",
+    pattern: "auth/{action}/{providerId}",
+    defaults: new {
+        culture = "en_US",
+        system = Configuration.DefaultYear,
+        module = "Public",
+        controller = "Account"
+    });
 
-//Used for user authentication with OpenId Connect. This method require one url for callback after login are made. This will permit to use schema + domain + "/OpenIdLogin" to be use on Call back.
-app.MapControllerRoute("OIdAuth", "OpenIdLogin", new { culture = "en-US", system = Configuration.DefaultYear, controller = "Account", action = "OpenIdLogin", module = "Public" });
-//Used for user regist your OpenId Connect Account. This method require one url for callback after login are made. This will permit to use schema + domain + "/OpenIdRegister" to be use on Call back.
-app.MapControllerRoute("OIdRegist", "OpenIdRegister", new { culture = "en-US", system = Configuration.DefaultYear, controller = "Home", action = "OpenIdRegister", module = "Public" });
-//Used for user authentication with CAS. This method require one url for callback after login are made. This will permit to use schema + domain + "/CASLogin" to be use on Call back.
-app.MapControllerRoute("CASAuth", "CASLogin", new { culture = "en-US", system = Configuration.DefaultYear, controller = "Account", action = "CASLogin", module = "Public" });
+
+//Chatbot API proxy endpoints
+app.MapControllerRoute(
+    name: "chatbotapi",
+    pattern: "chatbotapi/prompt/message",
+    defaults: new { controller = "ChatbotApi", action = "ChatbotApiStreamProxy" });
+
+app.MapControllerRoute(
+    name: "chatbotapi",
+    pattern: "chatbotapi/{**values}",
+    defaults: new { controller = "ChatbotApi", action = "ChatbotApiProxy" });
+
+app.MapControllerRoute(
+    name: "chatbotapi",
+    pattern: "chatbotapi/login",
+    defaults: new { controller = "ChatbotApi", action = "ChatbotApiAuth" });
+    
 
 //Configuration and Antiforgery token
 app.MapControllerRoute("config",

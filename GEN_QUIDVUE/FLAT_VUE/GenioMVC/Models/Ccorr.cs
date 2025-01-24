@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Ccorr.ValNorder")]
 		[NumericAttribute(0)]
-		public decimal? ValNorder { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNorder, 0)); } set { klass.ValNorder = Convert.ToDouble(value); } }
+		public decimal? ValNorder { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNorder, 0)); } set { klass.ValNorder = Convert.ToDecimal(value); } }
 
 		[DisplayName("Instant")]
 		/// <summary>Field : "Instant" Tipo: "DT" Formula:  ""</summary>
@@ -59,17 +59,17 @@ namespace GenioMVC.Models
 		private Item _item;
 		[DisplayName("Item")]
 		[ShouldSerialize("Item")]
-		public virtual Item Item { 
-			get { 
+		public virtual Item Item {
+			get {
 				if (!this.isEmptyModel && (_item == null || (!string.IsNullOrEmpty(ValCoditem) && (_item.isEmptyModel || _item.klass.QPrimaryKey != ValCoditem))))
 					_item = Models.Item.Find(ValCoditem, m_userContext, Identifier, _fieldsToSerialize);
 				if (_item == null)
 					_item = new Models.Item(m_userContext, true, _fieldsToSerialize);
 				return _item;
 			}
-			set { _item = value; } 
+			set { _item = value; }
 		}
-		
+
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -78,29 +78,29 @@ namespace GenioMVC.Models
 		private Indoc _indoc;
 		[DisplayName("Indoc")]
 		[ShouldSerialize("Indoc")]
-		public virtual Indoc Indoc { 
-			get { 
+		public virtual Indoc Indoc {
+			get {
 				if (!this.isEmptyModel && (_indoc == null || (!string.IsNullOrEmpty(ValCoddentr) && (_indoc.isEmptyModel || _indoc.klass.QPrimaryKey != ValCoddentr))))
 					_indoc = Models.Indoc.Find(ValCoddentr, m_userContext, Identifier, _fieldsToSerialize);
 				if (_indoc == null)
 					_indoc = new Models.Indoc(m_userContext, true, _fieldsToSerialize);
 				return _indoc;
 			}
-			set { _indoc = value; } 
+			set { _indoc = value; }
 		}
-		
+
 
 		[DisplayName("Amount")]
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Ccorr.ValQnty")]
 		[NumericAttribute(0)]
-		public decimal? ValQnty { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQnty, 0)); } set { klass.ValQnty = Convert.ToDouble(value); } }
+		public decimal? ValQnty { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQnty, 0)); } set { klass.ValQnty = Convert.ToDecimal(value); } }
 
 		[DisplayName("Balance")]
 		/// <summary>Field : "Balance" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Ccorr.ValBalance")]
 		[NumericAttribute(0)]
-		public decimal? ValBalance { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBalance, 0)); } set { klass.ValBalance = Convert.ToDouble(value); } }
+		public decimal? ValBalance { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBalance, 0)); } set { klass.ValBalance = Convert.ToDecimal(value); } }
 
 		[DisplayName("Ref")]
 		/// <summary>Field : "Ref" Tipo: "C" Formula:  ""</summary>
@@ -115,19 +115,19 @@ namespace GenioMVC.Models
 		public Ccorr(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAccorr(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Ccorr(UserContext userContext, CSGenioAccorr val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAccorr csgenioa)
@@ -154,7 +154,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

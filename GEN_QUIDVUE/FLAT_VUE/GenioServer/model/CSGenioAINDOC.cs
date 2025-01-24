@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Input document
 	/// </summary>
-	public class CSGenioAindoc : DbArea	{
+	public class CSGenioAindoc : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -92,6 +93,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "BY_OMISSION13050";
 
 			Qfield.Dupmsg = "";
+            Qfield.SufNDup = "documenr";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -99,6 +101,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "No.";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "NO_14817";
 
             Qfield.NotNull = true;
@@ -172,11 +175,12 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(6);
+			info.Pathways = new Dictionary<string, string>(7);
 			info.Pathways.Add("cntry","cntry");
 			info.Pathways.Add("ware1","ware1");
 			info.Pathways.Add("cmpny","cmpny");
 			info.Pathways.Add("pesso","pesso");
+			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("pais1","pesso");
 			info.Pathways.Add("regi1","pesso");
 		}
@@ -325,7 +329,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddentr, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodcntry { get { return m_fldCodcntry; } }
 		private static FieldRef m_fldCodcntry = new FieldRef("indoc", "codcntry");
@@ -336,7 +339,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodcntry); }
 			set { insertNameValueField(FldCodcntry, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodempre { get { return m_fldCodempre; } }
@@ -349,7 +351,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodempre, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodpesso { get { return m_fldCodpesso; } }
 		private static FieldRef m_fldCodpesso = new FieldRef("indoc", "codpesso");
@@ -360,7 +361,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodpesso); }
 			set { insertNameValueField(FldCodpesso, value); }
 		}
-
 
 		/// <summary>Field : "BY OMISSION" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodwareh { get { return m_fldCodwareh; } }
@@ -373,18 +373,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodwareh, value); }
 		}
 
-
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldDocumenr { get { return m_fldDocumenr; } }
 		private static FieldRef m_fldDocumenr = new FieldRef("indoc", "documenr");
 
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
-		public double ValDocumenr
+		public decimal ValDocumenr
 		{
-			get { return (double)returnValueField(FldDocumenr); }
+			get { return (decimal)returnValueField(FldDocumenr); }
 			set { insertNameValueField(FldDocumenr, value); }
 		}
-
 
 		/// <summary>Field : "Date" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDhdocume { get { return m_fldDhdocume; } }
@@ -397,7 +395,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDhdocume, value); }
 		}
 
-
 		/// <summary>Field : "Date" Tipo: "DT" Formula: + "iif(emptyG([INDOC->CODWAREH])==1,[ZEROD],[INDOC->DHDOCUME])"</summary>
 		public static FieldRef FldDate { get { return m_fldDate; } }
 		private static FieldRef m_fldDate = new FieldRef("indoc", "date");
@@ -408,7 +405,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDate); }
 			set { insertNameValueField(FldDate, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -451,23 +447,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAindoc> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAindoc> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAindoc>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -516,7 +495,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX INDOC]/

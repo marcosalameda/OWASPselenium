@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import "@testing-library/jest-dom";
 import ListBoxInput from "@/components/inputs/ListBoxInput.vue";
 import { fireEvent, render, screen } from "@testing-library/vue";

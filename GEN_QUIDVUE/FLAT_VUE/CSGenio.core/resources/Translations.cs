@@ -9,7 +9,8 @@ namespace CSGenio.framework
     public abstract class Translations
     {
         public const int LANG_ENUS = 0;
-        public const int NUM_LANGS = 1;
+        public const int LANG_PTPT = 1;
+        public const int NUM_LANGS = 2;
 		public const string BASE_LANG = "ENUS";
 		public const string DEFAULT_BASE_LANG = "PTPT";
 

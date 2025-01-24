@@ -19,6 +19,7 @@
 			<q-toggle-input
 				:model-value="hasTextWrap"
 				:true-label="hasTextWrap ? texts.yesLabel : texts.noLabel"
+				:aria-label="texts.lineBreak"
 				@update:model-value="toggleTextWrap" />
 		</div>
 
@@ -30,11 +31,22 @@
 			:header-level="1"
 			:texts="texts"
 			@update-external="(...args) => updateExternal(...args)"
+			@set-row-index-property="(...args) => setRowIndexProperty(tableConf, ...args)"
 			@row-reorder="onTableListRowReorder">
 		</q-table>
 
 		<div class="visible-columns-counter">
-			{{ texts.visibleColumnsText }}: {{ visibleColumns }} {{ texts.ofText.toLowerCase() }} {{ columns.length }}
+			{{ texts.visibleColumnsText }}: {{ visibleColumns }} {{ texts.ofText.toLowerCase() }} {{ tableConf.rows.length }}
+			<q-button
+				id="popover_invisibleColumnHelpButton"
+				:title="texts?.showHelp"
+				class="btn-popover"
+				b-style="plain">
+				<q-icon icon="help" />
+			</q-button>
+			<q-popover
+				anchor="#popover_invisibleColumnHelpButton"
+				:text="texts.invisibleColumnsHelpText" />
 		</div>
 	</teleport>
 
@@ -53,6 +65,7 @@
 			</q-button>
 
 			<q-button
+				id="apply-column-config-btn"
 				b-style="primary"
 				data-modal-close="true"
 				data-modal-form="true"
@@ -63,6 +76,7 @@
 			</q-button>
 
 			<q-button
+				id="cancel-column-config-btn"
 				b-style="secondary"
 				data-dismiss="modal"
 				:label="texts.cancelText"
@@ -94,6 +108,7 @@
 			'apply-column-config',
 			'reset-column-config',
 			'reset-column-sizes',
+			'reset-column-ordering',
 			'toggle-text-wrap'
 		],
 
@@ -189,11 +204,11 @@
 							dataOnChange: listFunctions.reCalcCellOrder,
 							isOrderingColumn: true,
 							columnClasses: 'c-table__cell-numeric row-numeric thead-order',
-							columnHeaderClasses: 'c-table__head-numeric',
+							columnHeaderClasses: 'c-table__head-numeric thead-order',
 							component: 'q-edit-numeric',
 							componentOptions: {
+								label: this.texts.orderText,
 								maxDigits: 3,
-								isCurrency: false,
 								isDecimal: false,
 								readonly: false,
 								size: inputSize.mini
@@ -216,7 +231,8 @@
 							label: this.texts.visibleText,
 							name: 'visibility',
 							dataDisplay: listFunctions.booleanDisplayCell,
-							component: 'q-edit-boolean'
+							component: 'q-edit-boolean',
+							rerenderRowsOnNextChange: false
 						}
 					],
 					totalRows: 0,
@@ -258,6 +274,8 @@
 		},
 
 		methods: {
+			setRowIndexProperty: listFunctions.setRowIndexProperty,
+
 			//Show popup
 			fnShowPopup() {
 				this.$emit('show-popup', this.modalId)
@@ -285,6 +303,10 @@
 				var colOrder = 1
 				for (let idx in this.columns) {
 					column = this.columns[idx]
+
+					// If the column show-when condition is not verified, the column shouldn't be visible to the user
+					if (!column.fnVisibility()) continue
+					
 					let columnCfg = {
 						Rownum: 0,
 						Fields: {}
@@ -315,8 +337,8 @@
 					columnCfg.Fields.alias = column.alias || columnCfg.Fields.name
 					columnCfg.Fields.formField = column.formField || column.name
 
-					//Rownum
-					columnCfg.Rownum = thisIdx++
+					//RowKey and Rownum
+					columnCfg.rowKey = columnCfg.Rownum = thisIdx++
 
 					rows.push(columnCfg)
 				}
@@ -354,11 +376,14 @@
 				//Emit data to script which calls reset function
 				this.$emit('reset-column-sizes')
 
+				//Reset column ordering to default
+				this.$emit('reset-column-ordering')
+
 				//Hide popup
 				this.fnHidePopup()
 
 				//Clear column size object in table configuration object
-				this.$emit('set-property', 'config', 'columnSizes', {})
+				this.$emit('set-property', ['config', 'columnSizes'], {})
 
 				this.$emit('update-config')
 			},
@@ -374,7 +399,7 @@
 				this.fnHidePopup()
 
 				//Clear column size object in table configuration object
-				this.$emit('set-property', 'config', 'columnSizes', {})
+				this.$emit('set-property', ['config', 'columnSizes'], {})
 
 				this.$emit('update-config')
 			},
@@ -410,7 +435,7 @@
 			},
 
 			onTableListRowReorder(eObj) {
-				var row = _find(this.tableConf.rows, (r) => r.rowKey === eObj.rowKey),
+				var row = listFunctions.getRowByKeyPath(this.tableConf.rows, eObj?.rowKey),
 					orderingColumn = _find(this.tableConf.columnsCfgCols, (col) => col.isOrderingColumn === true)
 
 				listFunctions.setTableCellValue(this.tableConf, row, orderingColumn, eObj.index + 1)

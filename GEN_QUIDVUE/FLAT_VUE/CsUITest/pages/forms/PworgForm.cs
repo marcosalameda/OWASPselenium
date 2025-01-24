@@ -1,47 +1,24 @@
-namespace quidgest.uitests.pages;
+﻿using quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
 
 [System.CodeDom.Compiler.GeneratedCode("Genio", "")]
-public class PworgForm: PageObject {
-
-	private By formLocator = By.CssSelector("#form-container");
-	private IWebElement form => driver.FindElement(formLocator);
-
+public class PworgForm : Form
+{
 	/// <summary>
 	/// Name
 	/// </summary>
-	public LookupControl PswNome => new LookupControl(driver, formLocator, "container-PWORG___PSW__NOME____");
-	public SeeMorePage PswNomeSeeMorePage => new SeeMorePage(driver, "PWORG", "PSW.NOME");
+	public LookupControl PswNome => new LookupControl(driver, ContainerLocator, "container-PWORG___PSW__NOME____");
+	public SeeMorePage PswNomeSeeMorePage => new SeeMorePage(driver, "PWORG", "PWORG___PSW__NOME____");
+
 	/// <summary>
 	/// Organization
 	/// </summary>
-	public LookupControl OrganOrganiza => new LookupControl(driver, formLocator, "container-PWORG___ORGANORGANIZA");
-	public SeeMorePage OrganOrganizaSeeMorePage => new SeeMorePage(driver, "PWORG", "ORGAN.ORGANIZA");
+	public LookupControl OrganOrganiza => new LookupControl(driver, ContainerLocator, "container-PWORG___ORGANORGANIZA");
+	public SeeMorePage OrganOrganizaSeeMorePage => new SeeMorePage(driver, "PWORG", "PWORG___ORGANORGANIZA");
 
-	private IWebElement saveBtn => form.FindElement(By.CssSelector("#bottom-save-btn"));
-	private IWebElement cancelBtn => form.FindElement(By.CssSelector("#bottom-cancel-btn"));
-	public FORM_MODE mode {get; private set;}
-
-	public PworgForm(IWebDriver driver, FORM_MODE mode, By subformLocator=null): base(driver) {
-		this.mode = mode;
-		formLocator = subformLocator ?? formLocator;
-
-		wait.Until(c => form);
-		WaitForLoading();
-	}
-
-	public void WaitForLoading()
-	{
-        wait.Until(c => form.FindElement(ByData.Key("PWORG")).GetAttribute("data-loading") != "true");
-    }
-
-	public void Save() {
-		WaitForLoading();
-		saveBtn.Click();
-	}
-
-	public void Cancel() {
-		WaitForLoading();
-		cancelBtn.Click();
-	}
-
+	public PworgForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "PWORG", containerLocator: containerLocator) { }
 }

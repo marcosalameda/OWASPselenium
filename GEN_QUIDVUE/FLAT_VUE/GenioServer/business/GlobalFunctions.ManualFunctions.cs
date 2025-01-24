@@ -68,7 +68,7 @@ namespace CSGenio.business
 		/// </summary>
 		/// <param name="dDtNasc">Data de nascimento</param>
 		/// <param name="dData">Data a calcular a idade</param>
-		public double Idade(DateTime? dDtNasc, DateTime? dData)
+		public decimal Idade(DateTime? dDtNasc, DateTime? dData)
 		{
 //BEGIN_FUNCTION:453ea83f-9d2e-4569-b7d4-d75f1203cdda
         // se alguma das datas não é válida, retorna 0
@@ -81,7 +81,7 @@ namespace CSGenio.business
 
             int d, m, a;
 	d = _dData.Day; m = _dData.Month; a = _dData.Year;
-	double idade = a - _dDtNasc.Year;
+	decimal idade = a - _dDtNasc.Year;
 	if (m < _dDtNasc.Month || m == _dDtNasc.Month && d < _dDtNasc.Day) idade--;
 	return idade;
 //END_FUNCTION
@@ -99,16 +99,16 @@ namespace CSGenio.business
 		/// -1 - Invalid
 		/// </summary>
 		/// <param name="dt">Date to know the day of the week</param>
-		public double DayOfWeek(DateTime? dt)
+		public decimal DayOfWeek(DateTime? dt)
 		{
 //BEGIN_FUNCTION:6ccc609d-6af4-44df-bab1-0156e1268a7f
 if ( emptyD(dt)==0 )
 {
-     return Convert.ToDouble(dt.GetValueOrDefault().DayOfWeek);
+     return Convert.ToDecimal(dt.GetValueOrDefault().DayOfWeek);
 }
 else
 {
-     return Convert.ToDouble(-1);
+     return Convert.ToDecimal(-1);
 }
 //END_FUNCTION
 		}
@@ -128,7 +128,7 @@ return DateTime.Now.ToString("HH:mm");
 		/// </summary>
 		/// <param name="lat">Latitudes range from -90 to 90.</param>
 		/// <param name="lng">Longitudes range from -180 to 180.</param>
-		public string GetGeoFromLatLng(double lat, double lng)
+		public string GetGeoFromLatLng(decimal lat, decimal lng)
 		{
 			try
 			{
@@ -151,14 +151,14 @@ return DateTime.Now.ToString("HH:mm");
 
 //Platform: CS | Type: FUNCCS | Module: GQT | Parameter: IDADE_X | File:  | Order: 0
 //BEGIN_MANUALCODE_CODMANUA:4024b219-1607-4a2c-b41e-14b3cf4c96b3
-public double Idade_X(DateTime dDtNasc, DateTime dData)
+public decimal Idade_X(DateTime dDtNasc, DateTime dData)
 {
 	// se alguma das datas não é válida, retorna 0
 	if (emptyD(dDtNasc) == 0) return 0;
 	if (emptyD(dData) == 0) return 0;
 	int d, m, a;
 	d = dData.Day; m = dData.Month; a = dData.Year;
-	double idade = a - dDtNasc.Year;
+	decimal idade = a - dDtNasc.Year;
 	if (m < dDtNasc.Month || m == dDtNasc.Month && d < dDtNasc.Day) idade--;
 	return idade;
 }

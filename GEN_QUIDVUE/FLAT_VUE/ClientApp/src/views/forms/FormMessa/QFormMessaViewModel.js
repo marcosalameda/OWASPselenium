@@ -165,7 +165,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValEmail))
 		watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('messa.email', this.ValEmail, newValue, oldValue))
 
-		this.ValMessage = reactive(new modelFieldType.String({
+		this.ValMessage = reactive(new modelFieldType.MultiLineString({
 			id: 'ValMessage',
 			originId: 'ValMessage',
 			area: 'MESSA',
@@ -181,6 +181,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CREATOPE',
 			maxLength: 128,
 			description: computed(() => this.Resources.CREATED_BY12292),
+			isFixed: true,
 		}).cloneFrom(values?.ValCreatope))
 		watch(() => this.ValCreatope.value, (newValue, oldValue) => this.onUpdate('messa.creatope', this.ValCreatope, newValue, oldValue))
 
@@ -190,6 +191,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'MESSA',
 			field: 'CREATDAT',
 			description: computed(() => this.Resources.CREATED_ON00051),
+			isFixed: true,
 		}).cloneFrom(values?.ValCreatdat))
 		watch(() => this.ValCreatdat.value, (newValue, oldValue) => this.onUpdate('messa.creatdat', this.ValCreatdat, newValue, oldValue))
 	}
@@ -206,5 +208,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodmessa'
 
 	get QPrimaryKey() { return this.ValCodmessa.value }
-	set QPrimaryKey(value) { this.ValCodmessa.value = value }
+	set QPrimaryKey(value) { this.ValCodmessa.updateValue(value) }
 }

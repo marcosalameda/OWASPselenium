@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Inpgr
 {
-	public class Ingroups_ViewModel : FormViewModel<Models.Inpgr>
+	public class Ingroups_ViewModel : FormViewModel<Models.Inpgr>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,84 +29,72 @@ namespace GenioMVC.ViewModels.Inpgr
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+
+		#endregion
 		/// <summary>
 		/// Title: "VAT Number" | Type: "N"
 		/// </summary>
 		public decimal? ValNumbgro { get; set; }
-
 		/// <summary>
 		/// Title: "First name" | Type: "C"
 		/// </summary>
 		public string ValName { get; set; }
-
 		/// <summary>
 		/// Title: "Last name" | Type: "C"
 		/// </summary>
 		public string ValLastname { get; set; }
-
 		/// <summary>
 		/// Title: "Prefix" | Type: "AC"
 		/// </summary>
 		public string ValPrefix { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValPrefix { get; set; }
-
 		/// <summary>
 		/// Title: "Phone number" | Type: "N"
 		/// </summary>
 		public decimal? ValPhone { get; set; }
-
 		/// <summary>
 		/// Title: "Address type" | Type: "AC"
 		/// </summary>
 		public string ValAdress { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValAdress { get; set; }
-
 		/// <summary>
 		/// Title: "E-mail" | Type: "C"
 		/// </summary>
 		public string ValEmail { get; set; }
-
 		/// <summary>
 		/// Title: "Web" | Type: "C"
 		/// </summary>
 		public string ValWeb { get; set; }
-
 		/// <summary>
 		/// Title: "Entity" | Type: "AC"
 		/// </summary>
 		public string ValBankcomp { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValBankcomp { get; set; }
-
 		/// <summary>
 		/// Title: "IBAN" | Type: "C"
 		/// </summary>
 		public string ValIban { get; set; }
-
 		/// <summary>
 		/// Title: "Text Field" | Type: "C"
 		/// </summary>
 		public string ValTextgro { get; set; }
-
 		/// <summary>
 		/// Title: "Banking Account Number" | Type: "C"
 		/// </summary>
 		public string ValBankacco { get; set; }
-
 		/// <summary>
 		/// Title: "Adress" | Type: "C"
 		/// </summary>
@@ -121,10 +109,6 @@ namespace GenioMVC.ViewModels.Inpgr
 
 		#endregion
 
-		#region Additional foreign keys
-
-		#endregion
-
 		#region Extra database fields
 
 
@@ -135,15 +119,17 @@ namespace GenioMVC.ViewModels.Inpgr
 
 		// Field for formula
 		/// <summary>Field: "Icon" Tipo: "C"</summary>
+		[ValidateSetAccess]
 		public string ValIcongro { get; set; }
 
 		#endregion
 
 		public string ValCodinpgr { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Ingroups_ViewModel() : base(null!) { }
@@ -179,6 +165,15 @@ namespace GenioMVC.ViewModels.Inpgr
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Inpgr model = new Models.Inpgr(userContext) { Identifier = "FINGROUPS" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FINGROUPS");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -262,6 +257,20 @@ namespace GenioMVC.ViewModels.Inpgr
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Inpgr m)
 		{
 			if (m == null)
@@ -285,18 +294,106 @@ namespace GenioMVC.ViewModels.Inpgr
 				m.ValTextgro = ViewModelConversion.ToString(ValTextgro);
 				m.ValBankacco = ViewModelConversion.ToString(ValBankacco);
 				m.ValDirectio = ViewModelConversion.ToString(ValDirectio);
-				m.ValIcongro = ViewModelConversion.ToString(ValIcongro);
 				m.ValCodinpgr = ViewModelConversion.ToString(ValCodinpgr);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValIcongro = ViewModelConversion.ToString(ValIcongro);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Ingroups) to Model (Inpgr) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Ingroups) to Model (Inpgr) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "inpgr.numbgro":
+						this.ValNumbgro = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "inpgr.name":
+						this.ValName = ViewModelConversion.ToString(_value);
+						break;
+					case "inpgr.lastname":
+						this.ValLastname = ViewModelConversion.ToString(_value);
+						break;
+					case "inpgr.prefix":
+						this.ValPrefix = ViewModelConversion.ToString(_value);
+						break;
+					case "inpgr.phone":
+						this.ValPhone = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "inpgr.adress":
+						this.ValAdress = ViewModelConversion.ToString(_value);
+						break;
+					case "inpgr.email":
+						this.ValEmail = ViewModelConversion.ToString(_value);
+						break;
+					case "inpgr.web":
+						this.ValWeb = ViewModelConversion.ToString(_value);
+						break;
+					case "inpgr.bankcomp":
+						this.ValBankcomp = ViewModelConversion.ToString(_value);
+						break;
+					case "inpgr.iban":
+						this.ValIban = ViewModelConversion.ToString(_value);
+						break;
+					case "inpgr.textgro":
+						this.ValTextgro = ViewModelConversion.ToString(_value);
+						break;
+					case "inpgr.bankacco":
+						this.ValBankacco = ViewModelConversion.ToString(_value);
+						break;
+					case "inpgr.directio":
+						this.ValDirectio = ViewModelConversion.ToString(_value);
+						break;
+					case "inpgr.codinpgr":
+						this.ValCodinpgr = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Ingroups) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Ingroups)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Inpgr.Find(id ?? Navigation.GetStrValue("inpgr"), m_userContext, "FINGROUPS"); }
+			finally { Model ??= new Models.Inpgr(m_userContext) { Identifier = "FINGROUPS" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -310,20 +407,13 @@ namespace GenioMVC.ViewModels.Inpgr
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FINGROUPS";
@@ -333,6 +423,7 @@ namespace GenioMVC.ViewModels.Inpgr
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -389,7 +480,6 @@ namespace GenioMVC.ViewModels.Inpgr
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValName", Resources.Resources.FIRST_NAME51967, ValName, 50);
 			validator.StringLength("ValLastname", Resources.Resources.LAST_NAME63426, ValLastname, 50);
 			validator.StringLength("ValEmail", Resources.Resources.E_MAIL42251, ValEmail, 50);
@@ -399,28 +489,23 @@ namespace GenioMVC.ViewModels.Inpgr
 			validator.StringLength("ValBankacco", Resources.Resources.BANKING_ACCOUNT_NUMB62548, ValBankacco, 24);
 			validator.StringLength("ValDirectio", Resources.Resources.ADRESS39816, ValDirectio, 50);
 
+
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE INGROUPS]/
 		public override void Save()
 		{
 
-			try { Model = Models.Inpgr.Find(Navigation.GetStrValue("inpgr"), m_userContext, "FINGROUPS"); }
-			finally { if (Model == null) Model = new Models.Inpgr(m_userContext) { Identifier = "FINGROUPS" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY INGROUPS]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Inpgr.Find(Navigation.GetStrValue("inpgr"), m_userContext, "FINGROUPS"); }
-			finally { if (Model == null) Model = new Models.Inpgr(m_userContext) { Identifier = "FINGROUPS" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE INGROUPS]/
 
@@ -459,9 +544,11 @@ namespace GenioMVC.ViewModels.Inpgr
 				"inpgr.directio" => ViewModelConversion.ToString(modelValue),
 				"inpgr.icongro" => ViewModelConversion.ToString(modelValue),
 				"inpgr.codinpgr" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

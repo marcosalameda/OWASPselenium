@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Expen
 {
-	public class Despe_ViewModel : FormViewModel<Models.Expen>
+	public class Despe_ViewModel : FormViewModel<Models.Expen>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,39 +29,53 @@ namespace GenioMVC.ViewModels.Expen
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Value" | Type: "CE"
+		/// </summary>
+		public string ValCodaggre { get; set; }
+		/// <summary>
+		/// Title: "Project" | Type: "CE"
+		/// </summary>
+		public string ValCodproje { get; set; }
+		/// <summary>
+		/// Title: "Year" | Type: "CE"
+		/// </summary>
+		public string ValCodyear { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Project" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Proje> TableProjeProjecto { get; set; }
-
 		/// <summary>
 		/// Title: "Year" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Year> TableYearYear { get; set; }
-
 		/// <summary>
 		/// Title: "Value" | Type: "$D"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Agreg> TableAgregValue { get; set; }
-
 		/// <summary>
 		/// Title: "Description" | Type: "C"
 		/// </summary>
 		public string ValDescript { get; set; }
-
 		/// <summary>
 		/// Title: "Value" | Type: "$D"
 		/// </summary>
 		public decimal? ValValue { get; set; }
-
 		/// <summary>
 		/// Title: "Previous Value" | Type: "$D"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValPrevval { get; set; }
-
 		/// <summary>
 		/// Title: "Previous Year" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValYearprev { get; set; }
 
 		#region Navigations
@@ -71,25 +85,6 @@ namespace GenioMVC.ViewModels.Expen
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Value" | Type: "CE"
-		/// </summary>
-		public string ValCodaggre { get; set; }
-
-		/// <summary>
-		/// Title: "Project" | Type: "CE"
-		/// </summary>
-		public string ValCodproje { get; set; }
-
-		/// <summary>
-		/// Title: "Year" | Type: "CE"
-		/// </summary>
-		public string ValCodyear { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -103,18 +98,21 @@ namespace GenioMVC.ViewModels.Expen
 		// Field for formula
 		/// <summary>Used only for lazy loading of the YearValYearnum field</summary>
 		[JsonIgnore]
+		[ValidateSetAccess]
 		public Func<decimal?> funcYearValYearnum { get; set; }
 		private decimal? _auxYearValYearnum { get; set; }
 		/// <summary>Field: "Year (numbers)" Tipo: "N"</summary>
-		public decimal? YearValYearnum { get { return funcYearValYearnum != null ? funcYearValYearnum() : _auxYearValYearnum; } set { funcYearValYearnum = () => value; } }
+		[ValidateSetAccess]
+		public decimal? YearValYearnum { get { return funcYearValYearnum != null ? funcYearValYearnum() : _auxYearValYearnum; } private set { funcYearValYearnum = () => value; } }
 
 		#endregion
 
 		public string ValCoddespe { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Despe_ViewModel() : base(null!) { }
@@ -150,6 +148,15 @@ namespace GenioMVC.ViewModels.Expen
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Expen model = new Models.Expen(userContext) { Identifier = "FDESPE" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FDESPE");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -210,13 +217,13 @@ namespace GenioMVC.ViewModels.Expen
 
 			try
 			{
+				ValCodaggre = ViewModelConversion.ToString(m.ValCodaggre);
+				ValCodproje = ViewModelConversion.ToString(m.ValCodproje);
+				ValCodyear = ViewModelConversion.ToString(m.ValCodyear);
 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
 				ValValue = ViewModelConversion.ToNumeric(m.ValValue);
 				ValPrevval = ViewModelConversion.ToNumeric(m.ValPrevval);
 				ValYearprev = ViewModelConversion.ToNumeric(m.ValYearprev);
-				ValCodaggre = ViewModelConversion.ToString(m.ValCodaggre);
-				ValCodproje = ViewModelConversion.ToString(m.ValCodproje);
-				ValCodyear = ViewModelConversion.ToString(m.ValCodyear);
 				funcYearValYearnum = () => ViewModelConversion.ToNumeric(m.Year.ValYearnum);
 				ValCoddespe = ViewModelConversion.ToString(m.ValCoddespe);
 			}
@@ -227,6 +234,20 @@ namespace GenioMVC.ViewModels.Expen
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Expen m)
 		{
 			if (m == null)
@@ -237,24 +258,88 @@ namespace GenioMVC.ViewModels.Expen
 
 			try
 			{
-				m.ValDescript = ViewModelConversion.ToString(ValDescript);
-				m.ValValue = ViewModelConversion.ToNumeric(ValValue);
-				m.ValPrevval = ViewModelConversion.ToNumeric(ValPrevval);
-				m.ValYearprev = ViewModelConversion.ToNumeric(ValYearprev);
 				m.ValCodaggre = ViewModelConversion.ToString(ValCodaggre);
 				m.ValCodproje = ViewModelConversion.ToString(ValCodproje);
 				m.ValCodyear = ViewModelConversion.ToString(ValCodyear);
+				m.ValDescript = ViewModelConversion.ToString(ValDescript);
+				m.ValValue = ViewModelConversion.ToNumeric(ValValue);
 				m.ValCoddespe = ViewModelConversion.ToString(ValCoddespe);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValPrevval = ViewModelConversion.ToNumeric(ValPrevval);
+				m.ValYearprev = ViewModelConversion.ToNumeric(ValYearprev);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Despe) to Model (Expen) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Despe) to Model (Expen) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "expen.codaggre":
+						this.ValCodaggre = ViewModelConversion.ToString(_value);
+						break;
+					case "expen.codproje":
+						this.ValCodproje = ViewModelConversion.ToString(_value);
+						break;
+					case "expen.codyear":
+						this.ValCodyear = ViewModelConversion.ToString(_value);
+						break;
+					case "expen.descript":
+						this.ValDescript = ViewModelConversion.ToString(_value);
+						break;
+					case "expen.value":
+						this.ValValue = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "expen.coddespe":
+						this.ValCoddespe = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Despe) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Despe)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Expen.Find(id ?? Navigation.GetStrValue("expen"), m_userContext, "FDESPE"); }
+			finally { Model ??= new Models.Expen(m_userContext) { Identifier = "FDESPE" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -268,20 +353,13 @@ namespace GenioMVC.ViewModels.Expen
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FDESPE";
@@ -291,6 +369,7 @@ namespace GenioMVC.ViewModels.Expen
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -350,31 +429,25 @@ namespace GenioMVC.ViewModels.Expen
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValDescript", Resources.Resources.DESCRIPTION07383, ValDescript, 85);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE DESPE]/
 		public override void Save()
 		{
 
-			try { Model = Models.Expen.Find(Navigation.GetStrValue("expen"), m_userContext, "FDESPE"); }
-			finally { if (Model == null) Model = new Models.Expen(m_userContext) { Identifier = "FDESPE" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY DESPE]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Expen.Find(Navigation.GetStrValue("expen"), m_userContext, "FDESPE"); }
-			finally { if (Model == null) Model = new Models.Expen(m_userContext) { Identifier = "FDESPE" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE DESPE]/
 
@@ -407,8 +480,8 @@ namespace GenioMVC.ViewModels.Expen
 				object hValue = Navigation.GetValue("proje", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					despe___projeprojectoConds.Equal(CSGenioAproje.FldCodproje, Navigation.GetValue("proje"));
-					this.ValCodproje = Navigation.GetStrValue("proje");
+					despe___projeprojectoConds.Equal(CSGenioAproje.FldCodproje, hValue);
+					this.ValCodproje = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -425,8 +498,6 @@ namespace GenioMVC.ViewModels.Expen
 					Navigation.CurrentLevel.SetEntry("RETURN_proje", null);
 				}
 				FillDependant_DespeTableProjeProjecto(lazyLoad);
-				//Check if foreignkey comes from history
-				TableProjeProjecto.FilledByHistory = Navigation.CheckFilledByHistory("proje");
 				return;
 			}
 
@@ -494,9 +565,6 @@ namespace GenioMVC.ViewModels.Expen
 
 				TableProjeProjecto.List = new SelectList(TableProjeProjecto.Elements.ToSelectList(x => x.ValProjecto, x => x.ValCodproje,  x => x.ValCodproje == this.ValCodproje), "Value", "Text", this.ValCodproje);
 				FillDependant_DespeTableProjeProjecto();
-
-				//Check if foreignkey comes from history
-				TableProjeProjecto.FilledByHistory = Navigation.CheckFilledByHistory("proje");
 			}
 		}
 
@@ -602,8 +670,8 @@ namespace GenioMVC.ViewModels.Expen
 				object hValue = Navigation.GetValue("year", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					despe___year_year____Conds.Equal(CSGenioAyear.FldCodyear, Navigation.GetValue("year"));
-					this.ValCodyear = Navigation.GetStrValue("year");
+					despe___year_year____Conds.Equal(CSGenioAyear.FldCodyear, hValue);
+					this.ValCodyear = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -620,8 +688,6 @@ namespace GenioMVC.ViewModels.Expen
 					Navigation.CurrentLevel.SetEntry("RETURN_year", null);
 				}
 				FillDependant_DespeTableYearYear(lazyLoad);
-				//Check if foreignkey comes from history
-				TableYearYear.FilledByHistory = Navigation.CheckFilledByHistory("year");
 				return;
 			}
 
@@ -689,9 +755,6 @@ namespace GenioMVC.ViewModels.Expen
 
 				TableYearYear.List = new SelectList(TableYearYear.Elements.ToSelectList(x => x.ValYear, x => x.ValCodyear,  x => x.ValCodyear == this.ValCodyear), "Value", "Text", this.ValCodyear);
 				FillDependant_DespeTableYearYear();
-
-				//Check if foreignkey comes from history
-				TableYearYear.FilledByHistory = Navigation.CheckFilledByHistory("year");
 			}
 		}
 
@@ -798,17 +861,17 @@ namespace GenioMVC.ViewModels.Expen
 				object hValue = Navigation.GetValue("agreg", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					despe___agregvalue___Conds.Equal(CSGenioAagreg.FldCodaggre, Navigation.GetValue("agreg"));
-					this.ValCodaggre = Navigation.GetStrValue("agreg");
+					despe___agregvalue___Conds.Equal(CSGenioAagreg.FldCodaggre, hValue);
+					this.ValCodaggre = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
 
 			// Area limit
-			despe___agregvalue___DoLoad &= AddCriteriaAreaLimit(despe___agregvalue___Conds, CSGenio.business.CSGenioAyear.FldCodyear, "year", this.ValCodyear, false);
+			despe___agregvalue___DoLoad &= AddCriteriaAreaLimit(despe___agregvalue___Conds, CSGenio.business.CSGenioAyear.FldCodyear, "year", this.ValCodyear, true);
 
 			// Area limit
-			despe___agregvalue___DoLoad &= AddCriteriaAreaLimit(despe___agregvalue___Conds, CSGenio.business.CSGenioAproje.FldCodproje, "proje", this.ValCodproje, false);
+			despe___agregvalue___DoLoad &= AddCriteriaAreaLimit(despe___agregvalue___Conds, CSGenio.business.CSGenioAproje.FldCodproje, "proje", this.ValCodproje, true);
 
 			TableAgregValue = new TableDBEdit<Models.Agreg>
 			{
@@ -823,8 +886,6 @@ namespace GenioMVC.ViewModels.Expen
 					Navigation.CurrentLevel.SetEntry("RETURN_agreg", null);
 				}
 				FillDependant_DespeTableAgregValue(lazyLoad);
-				//Check if foreignkey comes from history
-				TableAgregValue.FilledByHistory = Navigation.CheckFilledByHistory("agreg");
 				return;
 			}
 
@@ -897,9 +958,6 @@ namespace GenioMVC.ViewModels.Expen
 
 				TableAgregValue.List = new SelectList(TableAgregValue.Elements.ToSelectList(x => x.ValValue, x => x.ValCodaggre,  x => x.ValCodaggre == this.ValCodaggre), "Value", "Text", this.ValCodaggre);
 				FillDependant_DespeTableAgregValue();
-
-				//Check if foreignkey comes from history
-				TableAgregValue.FilledByHistory = Navigation.CheckFilledByHistory("agreg");
 			}
 		}
 
@@ -983,7 +1041,7 @@ namespace GenioMVC.ViewModels.Expen
 				if (GlobalFunctions.emptyG(this.ValCodaggre) == 1)
 				{
 					this.ValCodaggre = "";
-					TableAgregValue.Value = 0;
+					TableAgregValue.Value = 0m;
 					Navigation.ClearValue("agreg");
 				}
 				else if (lazyLoad)
@@ -1014,13 +1072,13 @@ namespace GenioMVC.ViewModels.Expen
 		{
 			return identifier switch
 			{
+				"expen.codaggre" => ViewModelConversion.ToString(modelValue),
+				"expen.codproje" => ViewModelConversion.ToString(modelValue),
+				"expen.codyear" => ViewModelConversion.ToString(modelValue),
 				"expen.descript" => ViewModelConversion.ToString(modelValue),
 				"expen.value" => ViewModelConversion.ToNumeric(modelValue),
 				"expen.prevval" => ViewModelConversion.ToNumeric(modelValue),
 				"expen.yearprev" => ViewModelConversion.ToNumeric(modelValue),
-				"expen.codaggre" => ViewModelConversion.ToString(modelValue),
-				"expen.codproje" => ViewModelConversion.ToString(modelValue),
-				"expen.codyear" => ViewModelConversion.ToString(modelValue),
 				"year.yearnum" => ViewModelConversion.ToNumeric(modelValue),
 				"expen.coddespe" => ViewModelConversion.ToString(modelValue),
 				"proje.codproje" => ViewModelConversion.ToString(modelValue),
@@ -1029,9 +1087,11 @@ namespace GenioMVC.ViewModels.Expen
 				"year.year" => ViewModelConversion.ToString(modelValue),
 				"agreg.codaggre" => ViewModelConversion.ToString(modelValue),
 				"agreg.value" => ViewModelConversion.ToNumeric(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

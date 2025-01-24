@@ -138,5 +138,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodtradu'
 
 	get QPrimaryKey() { return this.ValCodtradu.value }
-	set QPrimaryKey(value) { this.ValCodtradu.value = value }
+	set QPrimaryKey(value) { this.ValCodtradu.updateValue(value) }
 }

@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Tblk
 {
-	public class Tblk_ViewModel : FormViewModel<Models.Tblk>
+	public class Tblk_ViewModel : FormViewModel<Models.Tblk>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,19 +29,30 @@ namespace GenioMVC.ViewModels.Tblk
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Name" | Type: "CE"
+		/// </summary>
+		public string ValFkey1 { get; set; }
+		/// <summary>
+		/// Title: "Name" | Type: "CE"
+		/// </summary>
+		public string ValFkey2 { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Name" | Type: "C"
 		/// </summary>
 		public string ValName { get; set; }
-
 		/// <summary>
 		/// Title: "Name" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Grpb> TableGrpbName { get; set; }
-
 		/// <summary>
 		/// Title: "Name" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Trsb> TableTrsbName { get; set; }
 
 		#region Navigations
@@ -51,20 +62,6 @@ namespace GenioMVC.ViewModels.Tblk
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Name" | Type: "CE"
-		/// </summary>
-		public string ValFkey1 { get; set; }
-
-		/// <summary>
-		/// Title: "Name" | Type: "CE"
-		/// </summary>
-		public string ValFkey2 { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -80,9 +77,10 @@ namespace GenioMVC.ViewModels.Tblk
 
 		public string ValCodtblk { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Tblk_ViewModel() : base(null!) { }
@@ -118,6 +116,15 @@ namespace GenioMVC.ViewModels.Tblk
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Tblk model = new Models.Tblk(userContext) { Identifier = "FTBLK" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FTBLK");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -178,9 +185,9 @@ namespace GenioMVC.ViewModels.Tblk
 
 			try
 			{
-				ValName = ViewModelConversion.ToString(m.ValName);
 				ValFkey1 = ViewModelConversion.ToString(m.ValFkey1);
 				ValFkey2 = ViewModelConversion.ToString(m.ValFkey2);
+				ValName = ViewModelConversion.ToString(m.ValName);
 				ValCodtblk = ViewModelConversion.ToString(m.ValCodtblk);
 			}
 			catch (Exception)
@@ -190,6 +197,20 @@ namespace GenioMVC.ViewModels.Tblk
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Tblk m)
 		{
 			if (m == null)
@@ -200,20 +221,70 @@ namespace GenioMVC.ViewModels.Tblk
 
 			try
 			{
-				m.ValName = ViewModelConversion.ToString(ValName);
 				m.ValFkey1 = ViewModelConversion.ToString(ValFkey1);
 				m.ValFkey2 = ViewModelConversion.ToString(ValFkey2);
+				m.ValName = ViewModelConversion.ToString(ValName);
 				m.ValCodtblk = ViewModelConversion.ToString(ValCodtblk);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Tblk) to Model (Tblk) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Tblk) to Model (Tblk) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "tblk.fkey1":
+						this.ValFkey1 = ViewModelConversion.ToString(_value);
+						break;
+					case "tblk.fkey2":
+						this.ValFkey2 = ViewModelConversion.ToString(_value);
+						break;
+					case "tblk.name":
+						this.ValName = ViewModelConversion.ToString(_value);
+						break;
+					case "tblk.codtblk":
+						this.ValCodtblk = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Tblk) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Tblk)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Tblk.Find(id ?? Navigation.GetStrValue("tblk"), m_userContext, "FTBLK"); }
+			finally { Model ??= new Models.Tblk(m_userContext) { Identifier = "FTBLK" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -227,20 +298,13 @@ namespace GenioMVC.ViewModels.Tblk
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FTBLK";
@@ -250,6 +314,7 @@ namespace GenioMVC.ViewModels.Tblk
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -308,31 +373,25 @@ namespace GenioMVC.ViewModels.Tblk
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValName", Resources.Resources.NAME31974, ValName, 50);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE TBLK]/
 		public override void Save()
 		{
 
-			try { Model = Models.Tblk.Find(Navigation.GetStrValue("tblk"), m_userContext, "FTBLK"); }
-			finally { if (Model == null) Model = new Models.Tblk(m_userContext) { Identifier = "FTBLK" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY TBLK]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Tblk.Find(Navigation.GetStrValue("tblk"), m_userContext, "FTBLK"); }
-			finally { if (Model == null) Model = new Models.Tblk(m_userContext) { Identifier = "FTBLK" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE TBLK]/
 
@@ -365,8 +424,8 @@ namespace GenioMVC.ViewModels.Tblk
 				object hValue = Navigation.GetValue("grpb", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					tblk____grpb_name____Conds.Equal(CSGenioAgrpb.FldCodgrpb, Navigation.GetValue("grpb"));
-					this.ValFkey1 = Navigation.GetStrValue("grpb");
+					tblk____grpb_name____Conds.Equal(CSGenioAgrpb.FldCodgrpb, hValue);
+					this.ValFkey1 = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -383,8 +442,6 @@ namespace GenioMVC.ViewModels.Tblk
 					Navigation.CurrentLevel.SetEntry("RETURN_grpb", null);
 				}
 				FillDependant_TblkTableGrpbName(lazyLoad);
-				//Check if foreignkey comes from history
-				TableGrpbName.FilledByHistory = Navigation.CheckFilledByHistory("grpb");
 				return;
 			}
 
@@ -452,9 +509,6 @@ namespace GenioMVC.ViewModels.Tblk
 
 				TableGrpbName.List = new SelectList(TableGrpbName.Elements.ToSelectList(x => x.ValName, x => x.ValCodgrpb,  x => x.ValCodgrpb == this.ValFkey1), "Value", "Text", this.ValFkey1);
 				FillDependant_TblkTableGrpbName();
-
-				//Check if foreignkey comes from history
-				TableGrpbName.FilledByHistory = Navigation.CheckFilledByHistory("grpb");
 			}
 		}
 
@@ -560,8 +614,8 @@ namespace GenioMVC.ViewModels.Tblk
 				object hValue = Navigation.GetValue("trsb", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					tblk____trsb_name____Conds.Equal(CSGenioAtrsb.FldCodtrsb, Navigation.GetValue("trsb"));
-					this.ValFkey2 = Navigation.GetStrValue("trsb");
+					tblk____trsb_name____Conds.Equal(CSGenioAtrsb.FldCodtrsb, hValue);
+					this.ValFkey2 = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -578,8 +632,6 @@ namespace GenioMVC.ViewModels.Tblk
 					Navigation.CurrentLevel.SetEntry("RETURN_trsb", null);
 				}
 				FillDependant_TblkTableTrsbName(lazyLoad);
-				//Check if foreignkey comes from history
-				TableTrsbName.FilledByHistory = Navigation.CheckFilledByHistory("trsb");
 				return;
 			}
 
@@ -647,9 +699,6 @@ namespace GenioMVC.ViewModels.Tblk
 
 				TableTrsbName.List = new SelectList(TableTrsbName.Elements.ToSelectList(x => x.ValName, x => x.ValCodtrsb,  x => x.ValCodtrsb == this.ValFkey2), "Value", "Text", this.ValFkey2);
 				FillDependant_TblkTableTrsbName();
-
-				//Check if foreignkey comes from history
-				TableTrsbName.FilledByHistory = Navigation.CheckFilledByHistory("trsb");
 			}
 		}
 
@@ -746,17 +795,19 @@ namespace GenioMVC.ViewModels.Tblk
 		{
 			return identifier switch
 			{
-				"tblk.name" => ViewModelConversion.ToString(modelValue),
 				"tblk.fkey1" => ViewModelConversion.ToString(modelValue),
 				"tblk.fkey2" => ViewModelConversion.ToString(modelValue),
+				"tblk.name" => ViewModelConversion.ToString(modelValue),
 				"tblk.codtblk" => ViewModelConversion.ToString(modelValue),
 				"grpb.codgrpb" => ViewModelConversion.ToString(modelValue),
 				"grpb.name" => ViewModelConversion.ToString(modelValue),
 				"trsb.codtrsb" => ViewModelConversion.ToString(modelValue),
 				"trsb.name" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

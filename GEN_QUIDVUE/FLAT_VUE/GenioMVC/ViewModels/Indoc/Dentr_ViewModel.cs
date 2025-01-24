@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Indoc
 {
-	public class Dentr_ViewModel : FormViewModel<Models.Indoc>
+	public class Dentr_ViewModel : FormViewModel<Models.Indoc>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,36 +29,54 @@ namespace GenioMVC.ViewModels.Indoc
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Company" | Type: "CE"
+		/// </summary>
+		public string ValCodempre { get; set; }
+		/// <summary>
+		/// Title: "Country" | Type: "CE"
+		/// </summary>
+		public string ValCodcntry { get; set; }
+		/// <summary>
+		/// Title: "Person" | Type: "CE"
+		/// </summary>
+		public string ValCodpesso { get; set; }
+		/// <summary>
+		/// Title: "Warehouse" | Type: "CE"
+		/// </summary>
+		public string ValCodwareh { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Country" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Cntry> TableCntryCountry { get; set; }
-
 		/// <summary>
 		/// Title: "Company" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Cmpny> TableCmpnyDesignat { get; set; }
-
 		/// <summary>
 		/// Title: "Person" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Pesso> TablePessoName { get; set; }
-
 		/// <summary>
 		/// Title: "Warehouse" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Ware1> TableWare1Warehdes { get; set; }
-
 		/// <summary>
 		/// Title: "Date" | Type: "DT"
 		/// </summary>
+		[ValidateSetAccess]
 		public DateTime? ValDate { get; set; }
-
 		/// <summary>
 		/// Title: "No." | Type: "N"
 		/// </summary>
 		public decimal? ValDocumenr { get; set; }
-
 		/// <summary>
 		/// Title: "Date" | Type: "DT"
 		/// </summary>
@@ -71,30 +89,6 @@ namespace GenioMVC.ViewModels.Indoc
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Company" | Type: "CE"
-		/// </summary>
-		public string ValCodempre { get; set; }
-
-		/// <summary>
-		/// Title: "Country" | Type: "CE"
-		/// </summary>
-		public string ValCodcntry { get; set; }
-
-		/// <summary>
-		/// Title: "Person" | Type: "CE"
-		/// </summary>
-		public string ValCodpesso { get; set; }
-
-		/// <summary>
-		/// Title: "Warehouse" | Type: "CE"
-		/// </summary>
-		public string ValCodwareh { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -110,9 +104,10 @@ namespace GenioMVC.ViewModels.Indoc
 
 		public string ValCoddentr { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Dentr_ViewModel() : base(null!) { }
@@ -148,6 +143,15 @@ namespace GenioMVC.ViewModels.Indoc
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Indoc model = new Models.Indoc(userContext) { Identifier = "FDENTR" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FDENTR");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -208,13 +212,13 @@ namespace GenioMVC.ViewModels.Indoc
 
 			try
 			{
-				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
-				ValDocumenr = ViewModelConversion.ToNumeric(m.ValDocumenr);
-				ValDhdocume = ViewModelConversion.ToDateTime(m.ValDhdocume);
 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
 				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
+				ValDocumenr = ViewModelConversion.ToNumeric(m.ValDocumenr);
+				ValDhdocume = ViewModelConversion.ToDateTime(m.ValDhdocume);
 				ValCoddentr = ViewModelConversion.ToString(m.ValCoddentr);
 			}
 			catch (Exception)
@@ -224,6 +228,20 @@ namespace GenioMVC.ViewModels.Indoc
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Indoc m)
 		{
 			if (m == null)
@@ -234,24 +252,91 @@ namespace GenioMVC.ViewModels.Indoc
 
 			try
 			{
-				m.ValDate = ViewModelConversion.ToDateTime(ValDate);
-				m.ValDocumenr = ViewModelConversion.ToNumeric(ValDocumenr);
-				m.ValDhdocume = ViewModelConversion.ToDateTime(ValDhdocume);
 				m.ValCodempre = ViewModelConversion.ToString(ValCodempre);
 				m.ValCodcntry = ViewModelConversion.ToString(ValCodcntry);
 				m.ValCodpesso = ViewModelConversion.ToString(ValCodpesso);
 				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
+				m.ValDocumenr = ViewModelConversion.ToNumeric(ValDocumenr);
+				m.ValDhdocume = ViewModelConversion.ToDateTime(ValDhdocume);
 				m.ValCoddentr = ViewModelConversion.ToString(ValCoddentr);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValDate = ViewModelConversion.ToDateTime(ValDate);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Dentr) to Model (Indoc) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Dentr) to Model (Indoc) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "indoc.codempre":
+						this.ValCodempre = ViewModelConversion.ToString(_value);
+						break;
+					case "indoc.codcntry":
+						this.ValCodcntry = ViewModelConversion.ToString(_value);
+						break;
+					case "indoc.codpesso":
+						this.ValCodpesso = ViewModelConversion.ToString(_value);
+						break;
+					case "indoc.codwareh":
+						this.ValCodwareh = ViewModelConversion.ToString(_value);
+						break;
+					case "indoc.documenr":
+						this.ValDocumenr = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "indoc.dhdocume":
+						this.ValDhdocume = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "indoc.coddentr":
+						this.ValCoddentr = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Dentr) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Dentr)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Indoc.Find(id ?? Navigation.GetStrValue("indoc"), m_userContext, "FDENTR"); }
+			finally { Model ??= new Models.Indoc(m_userContext) { Identifier = "FDENTR" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -265,20 +350,13 @@ namespace GenioMVC.ViewModels.Indoc
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FDENTR";
@@ -288,6 +366,7 @@ namespace GenioMVC.ViewModels.Indoc
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -353,25 +432,19 @@ namespace GenioMVC.ViewModels.Indoc
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE DENTR]/
 		public override void Save()
 		{
 
-			try { Model = Models.Indoc.Find(Navigation.GetStrValue("indoc"), m_userContext, "FDENTR"); }
-			finally { if (Model == null) Model = new Models.Indoc(m_userContext) { Identifier = "FDENTR" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY DENTR]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Indoc.Find(Navigation.GetStrValue("indoc"), m_userContext, "FDENTR"); }
-			finally { if (Model == null) Model = new Models.Indoc(m_userContext) { Identifier = "FDENTR" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE DENTR]/
 
@@ -404,8 +477,8 @@ namespace GenioMVC.ViewModels.Indoc
 				object hValue = Navigation.GetValue("cntry", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					dentr___cntrycountry_Conds.Equal(CSGenioAcntry.FldCodcntry, Navigation.GetValue("cntry"));
-					this.ValCodcntry = Navigation.GetStrValue("cntry");
+					dentr___cntrycountry_Conds.Equal(CSGenioAcntry.FldCodcntry, hValue);
+					this.ValCodcntry = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -422,8 +495,6 @@ namespace GenioMVC.ViewModels.Indoc
 					Navigation.CurrentLevel.SetEntry("RETURN_cntry", null);
 				}
 				FillDependant_DentrTableCntryCountry(lazyLoad);
-				//Check if foreignkey comes from history
-				TableCntryCountry.FilledByHistory = Navigation.CheckFilledByHistory("cntry");
 				return;
 			}
 
@@ -491,9 +562,6 @@ namespace GenioMVC.ViewModels.Indoc
 
 				TableCntryCountry.List = new SelectList(TableCntryCountry.Elements.ToSelectList(x => x.ValCountry, x => x.ValCodcntry,  x => x.ValCodcntry == this.ValCodcntry), "Value", "Text", this.ValCodcntry);
 				FillDependant_DentrTableCntryCountry();
-
-				//Check if foreignkey comes from history
-				TableCntryCountry.FilledByHistory = Navigation.CheckFilledByHistory("cntry");
 			}
 		}
 
@@ -599,14 +667,14 @@ namespace GenioMVC.ViewModels.Indoc
 				object hValue = Navigation.GetValue("cmpny", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					dentr___cmpnydesignatConds.Equal(CSGenioAcmpny.FldCodempre, Navigation.GetValue("cmpny"));
-					this.ValCodempre = Navigation.GetStrValue("cmpny");
+					dentr___cmpnydesignatConds.Equal(CSGenioAcmpny.FldCodempre, hValue);
+					this.ValCodempre = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
 
 			// Area limit
-			dentr___cmpnydesignatDoLoad &= AddCriteriaAreaLimit(dentr___cmpnydesignatConds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, false);
+			dentr___cmpnydesignatDoLoad &= AddCriteriaAreaLimit(dentr___cmpnydesignatConds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, true);
 
 			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>
 			{
@@ -621,8 +689,6 @@ namespace GenioMVC.ViewModels.Indoc
 					Navigation.CurrentLevel.SetEntry("RETURN_cmpny", null);
 				}
 				FillDependant_DentrTableCmpnyDesignat(lazyLoad);
-				//Check if foreignkey comes from history
-				TableCmpnyDesignat.FilledByHistory = Navigation.CheckFilledByHistory("cmpny");
 				return;
 			}
 
@@ -693,9 +759,6 @@ namespace GenioMVC.ViewModels.Indoc
 
 				TableCmpnyDesignat.List = new SelectList(TableCmpnyDesignat.Elements.ToSelectList(x => x.ValDesignat, x => x.ValCodempre,  x => x.ValCodempre == this.ValCodempre), "Value", "Text", this.ValCodempre);
 				FillDependant_DentrTableCmpnyDesignat();
-
-				//Check if foreignkey comes from history
-				TableCmpnyDesignat.FilledByHistory = Navigation.CheckFilledByHistory("cmpny");
 			}
 		}
 
@@ -810,17 +873,17 @@ namespace GenioMVC.ViewModels.Indoc
 				object hValue = Navigation.GetValue("pesso", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					dentr___pessoname____Conds.Equal(CSGenioApesso.FldCodpesso, Navigation.GetValue("pesso"));
-					this.ValCodpesso = Navigation.GetStrValue("pesso");
+					dentr___pessoname____Conds.Equal(CSGenioApesso.FldCodpesso, hValue);
+					this.ValCodpesso = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
 
 			// Area limit
-			dentr___pessoname____DoLoad &= AddCriteriaAreaLimit(dentr___pessoname____Conds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, false);
+			dentr___pessoname____DoLoad &= AddCriteriaAreaLimit(dentr___pessoname____Conds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, true);
 
 			// Area limit
-			dentr___pessoname____DoLoad &= AddCriteriaAreaLimit(dentr___pessoname____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, false);
+			dentr___pessoname____DoLoad &= AddCriteriaAreaLimit(dentr___pessoname____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
 			TablePessoName = new TableDBEdit<Models.Pesso>
 			{
@@ -835,8 +898,6 @@ namespace GenioMVC.ViewModels.Indoc
 					Navigation.CurrentLevel.SetEntry("RETURN_pesso", null);
 				}
 				FillDependant_DentrTablePessoName(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
 				return;
 			}
 
@@ -909,9 +970,6 @@ namespace GenioMVC.ViewModels.Indoc
 
 				TablePessoName.List = new SelectList(TablePessoName.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpesso), "Value", "Text", this.ValCodpesso);
 				FillDependant_DentrTablePessoName();
-
-				//Check if foreignkey comes from history
-				TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
 			}
 		}
 
@@ -1035,8 +1093,8 @@ namespace GenioMVC.ViewModels.Indoc
 				object hValue = Navigation.GetValue("ware1", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					dentr___ware1warehdesConds.Equal(CSGenioAware1.FldCodwareh, Navigation.GetValue("ware1"));
-					this.ValCodwareh = Navigation.GetStrValue("ware1");
+					dentr___ware1warehdesConds.Equal(CSGenioAware1.FldCodwareh, hValue);
+					this.ValCodwareh = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -1053,8 +1111,6 @@ namespace GenioMVC.ViewModels.Indoc
 					Navigation.CurrentLevel.SetEntry("RETURN_ware1", null);
 				}
 				FillDependant_DentrTableWare1Warehdes(lazyLoad);
-				//Check if foreignkey comes from history
-				TableWare1Warehdes.FilledByHistory = Navigation.CheckFilledByHistory("ware1");
 				return;
 			}
 
@@ -1122,9 +1178,6 @@ namespace GenioMVC.ViewModels.Indoc
 
 				TableWare1Warehdes.List = new SelectList(TableWare1Warehdes.Elements.ToSelectList(x => x.ValWarehdes, x => x.ValCodwareh,  x => x.ValCodwareh == this.ValCodwareh), "Value", "Text", this.ValCodwareh);
 				FillDependant_DentrTableWare1Warehdes();
-
-				//Check if foreignkey comes from history
-				TableWare1Warehdes.FilledByHistory = Navigation.CheckFilledByHistory("ware1");
 			}
 		}
 
@@ -1221,13 +1274,13 @@ namespace GenioMVC.ViewModels.Indoc
 		{
 			return identifier switch
 			{
-				"indoc.date" => ViewModelConversion.ToDateTime(modelValue),
-				"indoc.documenr" => ViewModelConversion.ToNumeric(modelValue),
-				"indoc.dhdocume" => ViewModelConversion.ToDateTime(modelValue),
 				"indoc.codempre" => ViewModelConversion.ToString(modelValue),
 				"indoc.codcntry" => ViewModelConversion.ToString(modelValue),
 				"indoc.codpesso" => ViewModelConversion.ToString(modelValue),
 				"indoc.codwareh" => ViewModelConversion.ToString(modelValue),
+				"indoc.date" => ViewModelConversion.ToDateTime(modelValue),
+				"indoc.documenr" => ViewModelConversion.ToNumeric(modelValue),
+				"indoc.dhdocume" => ViewModelConversion.ToDateTime(modelValue),
 				"indoc.coddentr" => ViewModelConversion.ToString(modelValue),
 				"cntry.codcntry" => ViewModelConversion.ToString(modelValue),
 				"cntry.country" => ViewModelConversion.ToString(modelValue),
@@ -1237,9 +1290,11 @@ namespace GenioMVC.ViewModels.Indoc
 				"pesso.name" => ViewModelConversion.ToString(modelValue),
 				"ware1.codwareh" => ViewModelConversion.ToString(modelValue),
 				"ware1.warehdes" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

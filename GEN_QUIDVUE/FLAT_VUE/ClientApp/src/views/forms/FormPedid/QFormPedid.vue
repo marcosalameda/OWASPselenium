@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,13 @@
 							v-on="controls.PEDID___PEDIDDTPEDIDO.handlers"
 							:loading="controls.PEDID___PEDIDDTPEDIDO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.PEDID___PEDIDDTPEDIDO.isVisible"
-								v-bind="controls.PEDID___PEDIDDTPEDIDO"
-								format="Date"
+								v-bind="controls.PEDID___PEDIDDTPEDIDO.props"
 								:model-value="model.ValDtpedido.value"
-								@update:model-value="model.ValDtpedido.fnUpdateValue" />
+								@reset-icon-click="model.ValDtpedido.fnUpdateValue(model.ValDtpedido.originalValue ?? new Date())"
+								@update:model-value="model.ValDtpedido.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 						<base-input-structure
 							class="i-text"
@@ -121,12 +120,10 @@
 							v-on="controls.PEDID___PEDIDNRPEDIDO.handlers"
 							:loading="controls.PEDID___PEDIDNRPEDIDO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.PEDID___PEDIDNRPEDIDO.isVisible"
-								v-bind="controls.PEDID___PEDIDNRPEDIDO"
-								:model-value="model.ValNrpedido.value"
+								v-bind="controls.PEDID___PEDIDNRPEDIDO.props"
 								@update:model-value="model.ValNrpedido.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -141,18 +138,14 @@
 							v-on="controls.PEDID___PEDIDMOTIVO__.handlers"
 							:loading="controls.PEDID___PEDIDMOTIVO__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.PEDID___PEDIDMOTIVO__.isVisible"
+								v-bind="controls.PEDID___PEDIDMOTIVO__.props"
 								id="PEDID___PEDIDMOTIVO__"
-								size="xxlarge"
 								:model-value="model.ValMotivo.value"
 								:rows="3"
 								:cols="85"
-								:is-required="controls.PEDID___PEDIDMOTIVO__.isRequired"
-								:readonly="controls.PEDID___PEDIDMOTIVO__.readonly"
-								:placeholder="controls.PEDID___PEDIDMOTIVO__.placeholder"
 								@update:model-value="model.ValMotivo.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -164,8 +157,7 @@
 						<q-table
 							v-show="controls.PEDID___PSEUDLINHAS__.isVisible"
 							v-bind="controls.PEDID___PSEUDLINHAS__"
-							v-on="controls.PEDID___PSEUDLINHAS__.handlers">
-						</q-table>
+							v-on="controls.PEDID___PSEUDLINHAS__.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PEDID___PSEUDLINHAS__"
 							v-on="controls.PEDID___PSEUDLINHAS__.handlers" />
@@ -178,8 +170,7 @@
 						<q-table
 							v-show="controls.PEDID___PSEUDDESAGREG.isVisible"
 							v-bind="controls.PEDID___PSEUDDESAGREG"
-							v-on="controls.PEDID___PSEUDDESAGREG.handlers">
-						</q-table>
+							v-on="controls.PEDID___PSEUDDESAGREG.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PEDID___PSEUDDESAGREG"
 							v-on="controls.PEDID___PSEUDDESAGREG.handlers" />
@@ -192,8 +183,7 @@
 						<q-table
 							v-show="controls.PEDID___PSEUDAGRUPAME.isVisible"
 							v-bind="controls.PEDID___PSEUDAGRUPAME"
-							v-on="controls.PEDID___PSEUDAGRUPAME.handlers">
-						</q-table>
+							v-on="controls.PEDID___PSEUDAGRUPAME.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PEDID___PSEUDAGRUPAME"
 							v-on="controls.PEDID___PSEUDAGRUPAME.handlers" />
@@ -280,15 +270,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'PEDID',
-						location: 'form-PEDID',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'PEDID',
+					location: 'form-PEDID',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -334,6 +322,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -406,8 +396,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -489,7 +480,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -543,21 +534,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -565,36 +541,28 @@
 					PEDID___PEDIDDTPEDIDO: new fieldControlClass.DateControl({
 						modelField: 'ValDtpedido',
 						valueChangeEvent: 'fieldChange:pedid.dtpedido',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'PEDID___PEDIDDTPEDIDO',
 						name: 'DTPEDIDO',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE_55218),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
 					PEDID___PEDIDNRPEDIDO: new fieldControlClass.NumberControl({
 						modelField: 'ValNrpedido',
 						valueChangeEvent: 'fieldChange:pedid.nrpedido',
-						maxIntegers: 6,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'PEDID___PEDIDNRPEDIDO',
 						name: 'NRPEDIDO',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMBER35625),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 6,
+						maxDecimals: 0,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -605,26 +573,17 @@
 						id: 'PEDID___PEDIDMOTIVO__',
 						name: 'MOTIVO',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.MOTIVE_64781),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
-						labelId: 'label_PEDID___PEDIDMOTIVO__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					PEDID___PSEUDLINHAS__: new fieldControlClass.TableListControl({
 						id: 'PEDID___PSEUDLINHAS__',
 						name: 'LINHAS',
-						size: 'small',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.LINES35526),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'PEDID',
@@ -641,7 +600,6 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-								isOrderingColumn: true,
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -666,7 +624,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -772,6 +730,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'LNHPD',
@@ -785,18 +744,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: LNHPD
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: 'ValLine',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValLine',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-LNHPD', 'changed-PEDID', 'changed-TPEQU'],
 						uuid: 'Pedid_ValLinhas',
@@ -813,11 +766,18 @@
 					PEDID___PSEUDDESAGREG: new fieldControlClass.TableListControl({
 						id: 'PEDID___PSEUDDESAGREG',
 						name: 'DESAGREG',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
+						helpControl: {
+							shortHelp: {
+								type: '',
+								text: computed(() => this.Resources._110050187),
+							},
+							detailedHelp: {
+								type: '',
+								text: computed(() => this.Resources._1100_VERBOSE38633),
+							}
+						},
 						label: computed(() => this.Resources.BREAKDOWN_60448),
-						userHelp: computed(() => this.Resources._110050187),
-						description: computed(() => this.Resources._1100_VERBOSE38633),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'PEDID',
@@ -868,7 +828,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -974,6 +934,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'LNHDE',
@@ -987,18 +948,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: LNHDE
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValOrdem',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-LNHDE', 'changed-TPEQ1', 'changed-LNHPD', 'changed-PEDID', 'changed-LNHAG'],
 						uuid: 'Pedid_ValDesagreg',
@@ -1015,11 +970,8 @@
 					PEDID___PSEUDAGRUPAME: new fieldControlClass.TableListControl({
 						id: 'PEDID___PSEUDAGRUPAME',
 						name: 'AGRUPAME',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.GROUPING_OF_EQUIPMEN34190),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'PEDID',
@@ -1060,7 +1012,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -1166,6 +1118,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'LNHAG',
@@ -1179,18 +1132,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: LNHAG
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'Tpeq1.ValTipoequi',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-PEDID', 'changed-TPEQ1', 'changed-LNHAG'],
 						uuid: 'Pedid_ValAgrupame',
@@ -1241,7 +1188,7 @@
 						/** The primary key of the PEDID table */
 						get pedid() { return vm.model.ValCodpedid },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1337,6 +1284,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1376,6 +1331,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1502,6 +1465,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR PEDID]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1517,6 +1496,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PEDID]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.REPAR___EQUIPREGISTNR.handlers"
 							:loading="controls.REPAR___EQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.REPAR___EQUIPREGISTNR.isVisible"
 								v-bind="controls.REPAR___EQUIPREGISTNR.props"
-								:model-value="model.ValCodequip.value"
-								v-on="controls.REPAR___EQUIPREGISTNR.handlers"
-								@update:model-value="model.ValCodequip.fnUpdateValue" />
+								v-on="controls.REPAR___EQUIPREGISTNR.handlers" />
 							<q-see-more-repar-equipregistnr
 								v-if="controls.REPAR___EQUIPREGISTNR.seeMoreIsVisible"
 								v-bind="controls.REPAR___EQUIPREGISTNR.seeMoreParams"
@@ -129,8 +126,7 @@
 							v-on="controls.REPAR___EQUIPDESIGNAT.handlers"
 							:loading="controls.REPAR___EQUIPDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.REPAR___EQUIPDESIGNAT.props"
 								:model-value="model.EquipValDesignat.value" />
@@ -145,8 +141,7 @@
 							v-on="controls.REPAR___EQUIPPHOTOGRA.handlers"
 							:loading="controls.REPAR___EQUIPPHOTOGRA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-image
 								v-if="controls.REPAR___EQUIPPHOTOGRA.isVisible"
 								v-bind="controls.REPAR___EQUIPPHOTOGRA.props"
@@ -162,14 +157,13 @@
 							v-on="controls.REPAR___REPARDTREPARA.handlers"
 							:loading="controls.REPAR___REPARDTREPARA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.REPAR___REPARDTREPARA.isVisible"
-								v-bind="controls.REPAR___REPARDTREPARA"
-								format="DateTime"
+								v-bind="controls.REPAR___REPARDTREPARA.props"
 								:model-value="model.ValDtrepara.value"
-								@update:model-value="model.ValDtrepara.fnUpdateValue" />
+								@reset-icon-click="model.ValDtrepara.fnUpdateValue(model.ValDtrepara.originalValue ?? new Date())"
+								@update:model-value="model.ValDtrepara.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -181,12 +175,10 @@
 							v-on="controls.REPAR___REPARNRREPARA.handlers"
 							:loading="controls.REPAR___REPARNRREPARA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.REPAR___REPARNRREPARA.isVisible"
-								v-bind="controls.REPAR___REPARNRREPARA"
-								:model-value="model.ValNrrepara.value"
+								v-bind="controls.REPAR___REPARNRREPARA.props"
 								@update:model-value="model.ValNrrepara.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -202,9 +194,8 @@
 							:label-position="labelAlignment.topleft"
 							:loading="controls.REPAR___REPARTIPOAREA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-radio-button-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-radio-group
 								v-if="controls.REPAR___REPARTIPOAREA.isVisible"
 								id="REPAR___REPARTIPOAREA"
 								:model-value="model.ValTipoarea.value"
@@ -228,14 +219,11 @@
 							v-on="controls.REPAR___SPECIESPECIAL.handlers"
 							:loading="controls.REPAR___SPECIESPECIAL.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.REPAR___SPECIESPECIAL.isVisible"
 								v-bind="controls.REPAR___SPECIESPECIAL.props"
-								:model-value="model.ValCodespec.value"
-								v-on="controls.REPAR___SPECIESPECIAL.handlers"
-								@update:model-value="model.ValCodespec.fnUpdateValue" />
+								v-on="controls.REPAR___SPECIESPECIAL.handlers" />
 							<q-see-more-repar-speciespecial
 								v-if="controls.REPAR___SPECIESPECIAL.seeMoreIsVisible"
 								v-bind="controls.REPAR___SPECIESPECIAL.seeMoreParams"
@@ -251,14 +239,11 @@
 							v-on="controls.REPAR___PESSONAME____.handlers"
 							:loading="controls.REPAR___PESSONAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.REPAR___PESSONAME____.isVisible"
 								v-bind="controls.REPAR___PESSONAME____.props"
-								:model-value="model.ValCodpesso.value"
-								v-on="controls.REPAR___PESSONAME____.handlers"
-								@update:model-value="model.ValCodpesso.fnUpdateValue" />
+								v-on="controls.REPAR___PESSONAME____.handlers" />
 							<q-see-more-repar-pessoname
 								v-if="controls.REPAR___PESSONAME____.seeMoreIsVisible"
 								v-bind="controls.REPAR___PESSONAME____.seeMoreParams"
@@ -276,18 +261,14 @@
 							v-on="controls.REPAR___REPARDESCRIPT.handlers"
 							:loading="controls.REPAR___REPARDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.REPAR___REPARDESCRIPT.isVisible"
+								v-bind="controls.REPAR___REPARDESCRIPT.props"
 								id="REPAR___REPARDESCRIPT"
-								size="xxlarge"
 								:model-value="model.ValDescript.value"
 								:rows="3"
 								:cols="85"
-								:is-required="controls.REPAR___REPARDESCRIPT.isRequired"
-								:readonly="controls.REPAR___REPARDESCRIPT.readonly"
-								:placeholder="controls.REPAR___REPARDESCRIPT.placeholder"
 								@update:model-value="model.ValDescript.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -300,12 +281,10 @@
 							v-on="controls.REPAR___REPARHOURS___.handlers"
 							:loading="controls.REPAR___REPARHOURS___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.REPAR___REPARHOURS___.isVisible"
-								v-bind="controls.REPAR___REPARHOURS___"
-								:model-value="model.ValHours.value"
+								v-bind="controls.REPAR___REPARHOURS___.props"
 								@update:model-value="model.ValHours.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -394,15 +373,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'REPAR',
-						location: 'form-REPAR',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'REPAR',
+					location: 'form-REPAR',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -448,6 +425,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -520,8 +499,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -603,7 +583,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -657,21 +637,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -682,29 +647,9 @@
 						id: 'REPAR___EQUIPREGISTNR',
 						name: 'REGISTNR',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.REGISTRATION_NO_06209),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodequip',
-							dependencyEvent: 'fieldChange:repar.codequip'
-						},
-						dependentFields: () => {
-							return {
-								set 'equip.codequip'(value) { vm.model.ValCodequip.updateValue(value) },
-								set 'equip.registnr'(value) { vm.model.TableEquipRegistnr.updateValue(value) },
-								set 'equip.designat'(value) { vm.model.EquipValDesignat.updateValue(value) },
-								set 'equip.photogra'(value) { vm.model.EquipValPhotogra.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'EQUIP',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -713,6 +658,20 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodequip',
+							dependencyEvent: 'fieldChange:repar.codequip'
+						},
+						dependentFields: () => ({
+							set 'equip.codequip'(value) { vm.model.ValCodequip.updateValue(value) },
+							set 'equip.registnr'(value) { vm.model.TableEquipRegistnr.updateValue(value) },
+							set 'equip.designat'(value) { vm.model.EquipValDesignat.updateValue(value) },
+							set 'equip.photogra'(value) { vm.model.EquipValPhotogra.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'EQUIP',
+						controlLimits: [
+						],
 					}, this),
 					REPAR___EQUIPDESIGNAT: new fieldControlClass.StringControl({
 						modelField: 'EquipValDesignat',
@@ -722,18 +681,13 @@
 						id: 'REPAR___EQUIPDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESIGNATION35876),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
 						labelId: 'label_REPAR___EQUIPDESIGNAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					REPAR___EQUIPPHOTOGRA: new fieldControlClass.ImageControl({
 						modelField: 'EquipValPhotogra',
@@ -743,18 +697,14 @@
 						id: 'REPAR___EQUIPPHOTOGRA',
 						name: 'PHOTOGRA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTO51874),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						height: 50,
 						width: 100,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PHOTO51874)),
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					REPAR___REPARDTREPARA: new fieldControlClass.DateControl({
 						modelField: 'ValDtrepara',
@@ -762,31 +712,25 @@
 						id: 'REPAR___REPARDTREPARA',
 						name: 'DTREPARA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.REPAIRED_ON23617),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
 					REPAR___REPARNRREPARA: new fieldControlClass.NumberControl({
 						modelField: 'ValNrrepara',
 						valueChangeEvent: 'fieldChange:repar.nrrepara',
-						maxIntegers: 10,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'REPAR___REPARNRREPARA',
 						name: 'NRREPARA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY_REPAIR_NUMBE12157),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 10,
+						maxDecimals: 0,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -797,17 +741,13 @@
 						id: 'REPAR___REPARTIPOAREA',
 						name: 'TIPOAREA',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.TECHNICAL_AREA50773),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						labelId: 'label_REPAR___REPARTIPOAREA',
 						arrayName: 'AreaTecn',
 						columnNumber: 1,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -817,13 +757,26 @@
 						id: 'REPAR___SPECIESPECIAL',
 						name: 'ESPECIAL',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.SPECIALTY09304),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodespec',
+							dependencyEvent: 'fieldChange:repar.codespec'
+						},
+						dependentFields: () => ({
+							set 'speci.codespec'(value) { vm.model.ValCodespec.updateValue(value) },
+							set 'speci.especial'(value) { vm.model.TableSpeciEspecial.updateValue(value) },
+							set 'speci.areatecn'(value) { vm.model.SpeciValAreatecn.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: 'repar.tipoarea',
@@ -832,16 +785,16 @@
 								fnValueSelector: (model) => model.ValTipoarea.value,
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodespec',
-							dependencyEvent: 'fieldChange:repar.codespec'
-						},
-						dependentFields: () => {
-							return {
-								set 'speci.codespec'(value) { vm.model.ValCodespec.updateValue(value) },
-								set 'speci.especial'(value) { vm.model.TableSpeciEspecial.updateValue(value) },
-							}
-						},
+					}, this),
+					REPAR___PESSONAME____: new fieldControlClass.LookupControl({
+						modelField: 'TablePessoName',
+						valueChangeEvent: 'fieldChange:pesso.name',
+						id: 'REPAR___PESSONAME____',
+						name: 'NAME',
+						size: 'xxlarge',
+						label: computed(() => this.Resources.TECHNICIAN44001),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -850,20 +803,14 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
-					}, this),
-					REPAR___PESSONAME____: new fieldControlClass.LookupControl({
-						modelField: 'TablePessoName',
-						valueChangeEvent: 'fieldChange:pesso.name',
-						id: 'REPAR___PESSONAME____',
-						name: 'NAME',
-						size: 'xxlarge',
-						hasLabel: true,
-						label: computed(() => this.Resources.TECHNICIAN44001),
-						userHelp: '',
-						description: '',
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						lookupKeyModelField: {
+							name: 'ValCodpesso',
+							dependencyEvent: 'fieldChange:repar.codpesso'
+						},
+						dependentFields: () => ({
+							set 'pesso.codpesso'(value) { vm.model.ValCodpesso.updateValue(value) },
+							set 'pesso.name'(value) { vm.model.TablePessoName.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: ['speci', 'repar.codespec'],
@@ -872,24 +819,6 @@
 								fnValueSelector: (model) => model.ValCodespec.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodpesso',
-							dependencyEvent: 'fieldChange:repar.codpesso'
-						},
-						dependentFields: () => {
-							return {
-								set 'pesso.codpesso'(value) { vm.model.ValCodpesso.updateValue(value) },
-								set 'pesso.name'(value) { vm.model.TablePessoName.updateValue(value) },
-							}
-						},
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					REPAR___REPARDESCRIPT: new fieldControlClass.StringControl({
 						modelField: 'ValDescript',
@@ -897,33 +826,23 @@
 						id: 'REPAR___REPARDESCRIPT',
 						name: 'DESCRIPT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.REPAIR_DESCRIPTION35914),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
-						labelId: 'label_REPAR___REPARDESCRIPT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					REPAR___REPARHOURS___: new fieldControlClass.NumberControl({
 						modelField: 'ValHours',
 						valueChangeEvent: 'fieldChange:repar.hours',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'REPAR___REPARHOURS___',
 						name: 'HOURS',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.SPENT_IN_HOURS19366),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -984,6 +903,8 @@
 						set ValTipoarea(value) { vm.model.ValTipoarea.updateValue(value) },
 					},
 					Speci: {
+						get ValAreatecn() { return vm.model.SpeciValAreatecn.value },
+						set ValAreatecn(value) { vm.model.SpeciValAreatecn.updateValue(value) },
 						get ValEspecial() { return vm.model.TableSpeciEspecial.value },
 						set ValEspecial(value) { vm.model.TableSpeciEspecial.updateValue(value) },
 					},
@@ -1001,7 +922,7 @@
 						/** The foreign key to the PESSO table */
 						get pesso() { return vm.model.ValCodpesso },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1097,6 +1018,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1136,6 +1065,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1262,6 +1199,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR REPAR]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1277,6 +1230,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS REPAR]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

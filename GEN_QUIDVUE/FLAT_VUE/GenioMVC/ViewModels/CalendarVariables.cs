@@ -1,34 +1,35 @@
 ﻿using System;
-
 using CSGenio.business;
 
 namespace GenioMVC.ViewModels
 {
 	public class CalendarVariables
 	{
-		public string startDateField;
-		public string endDateField;
-		public string minTime;
-		public string maxTime;
-		public string allDayField;
-		public string startTimeField;
-		public string endTimeField;
-		public string selectedDateField;
-		public string validDateStart;
-		public string validDateEnd;
+        public CalendarVariables() { }
 
-		public bool isScheduler;
-		public bool allDay;
-		public bool noDates;
-		public bool newEdit;
-		public bool hasNewResource;
-		public bool hasChildren;
+        public string startDateField { get; set; }
+		public string endDateField { get; set; }
+        public string minTime { get; set; }
+        public string maxTime { get; set; }
+        public string allDayField { get; set; }
+        public string startTimeField { get; set; }
+        public string endTimeField { get; set; }
+        public string selectedDateField { get; set; }
+        public string validDateStart { get; set; }
+        public string validDateEnd { get; set; }
 
-		public string resourceId;
-		public string dateTimeINI;
-		public DateTime? selectedDate;
+        public bool isScheduler { get; set; }
+        public bool allDay { get; set; }
+        public bool noDates { get; set; }
+        public bool newEdit { get; set; }
+        public bool hasNewResource { get; set; }
+        public bool hasChildren { get; set; }
 
-		public bool HasCalendarFields
+        public string resourceId { get; set; }
+        public string dateTimeINI { get; set; }
+        public DateTime? selectedDate { get; set; }
+
+        public bool HasCalendarFields
 		{
 			get
 			{

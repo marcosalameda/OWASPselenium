@@ -49,7 +49,8 @@ namespace CSGenio.business
                     else //é outra área
                     {
 						//Aqui já só tenho de ler o que foi preenchido pelo FormulaDbContext, se estiver vazia usamos os Qvalues nulos to as sources das formulas
-						area = fdc.GetArea(argumentosPorArea.AliasName, sp, areaField.User);
+                        var fk = fdc.GetForeignKeyValue(argumentosPorArea.AliasName, argumentosPorArea.KeyName, sp);
+						area = fdc.ReadRecord(argumentosPorArea.AliasName, fk, sp);
                         for (int i = 0; i < argumentosPorArea.FieldNames.Length; i++)
                             fieldsValue[argumentosPorArea.FieldsPosition[i]] = area.returnValueField(area.Alias + "." + argumentosPorArea.FieldNames[i]);
                     }
@@ -154,12 +155,12 @@ namespace CSGenio.business
                         //AV(2010/06/04) Os fields que eram apagados nos forms estavam a ser sobrepostos com o Qvalue na db por isso temos que testar se o Qfield está em memória
                         if (areaField.Fields[areaField.Alias + "." + argumentosPorArea.KeyName] == null)//se o Qvalue não está em memória ir ler à BD
                         {
-                            string codIntValue = (string)areaField.returnValueField(areaField.Alias + "." + areaField.PrimaryKeyName, FieldFormatting.CARACTERES);
+                            string codIntValue = areaField.QPrimaryKey;
                             valorChaveEst = DBConversion.ToKey(sp.returnField(areaField, argumentosPorArea.KeyName, codIntValue));
                             areaField.insertNameValueField(areaField.Alias + "." + argumentosPorArea.KeyName, valorChaveEst);
                         }
                         else
-                            valorChaveEst = (string)areaField.returnValueField(areaField.Alias + "." + argumentosPorArea.KeyName, FieldFormatting.CARACTERES);
+                            valorChaveEst = (string)areaField.returnValueField(areaField.Alias + "." + argumentosPorArea.KeyName);
                         if (valorChaveEst != "")//se a key estrangeira está em memória ou na BD (já está em memória)
                         {
                             //query to ir buscar os Qvalues dos fields

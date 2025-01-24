@@ -2,8 +2,11 @@
 	<q-input-group
 		:id="props.id"
 		:class="props.class"
-		:size="size">
+		:size="size"
+		data-testid="debounce-container"
+		:data-debouncing="debouncing">
 		<q-combobox
+			v-bind="$attrs"
 			:model-value="value"
 			:items="items"
 			:clearable="props.clearable"
@@ -36,6 +39,7 @@
 			#append>
 			<q-button
 				v-if="showSeeMore"
+				:id="`${id}_see-more_button`"
 				:disabled="props.disabled"
 				:title="texts.viewMoreOptions"
 				@click="emit('see-more')">
@@ -44,6 +48,7 @@
 
 			<q-button
 				v-if="showViewDetails"
+				:id="`${id}_show-details_button`"
 				:disabled="props.disabled || isEmpty"
 				:title="texts.viewDetails"
 				@click="emit('view-details', value)">
@@ -213,6 +218,14 @@
 			type: Boolean,
 			default: false
 		},
+
+		/**
+		 * Whether the control is currently debouncing.
+		 */
+		debouncing: {
+			type: Boolean,
+			default: false
+		}
 	})
 
 	// Proxy model

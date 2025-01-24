@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Ldent
 {
-	public class Ldent_ViewModel : FormViewModel<Models.Ldent>
+	public class Ldent_ViewModel : FormViewModel<Models.Ldent>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,39 +29,52 @@ namespace GenioMVC.ViewModels.Ldent
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		public string ValCoddentr { get; set; }
+		/// <summary>
+		/// Title: "Item" | Type: "CE"
+		/// </summary>
+		public string ValCoditem { get; set; }
+		/// <summary>
+		/// Title: "Warehouse" | Type: "CE"
+		/// </summary>
+		public string ValCodwareh { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Indoc> TableIndocDocumenr { get; set; }
-
 		/// <summary>
 		/// Title: "Warehouse" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Wareh> TableWarehWarehdes { get; set; }
-
 		/// <summary>
 		/// Title: "Line" | Type: "N"
 		/// </summary>
 		public decimal? ValLine { get; set; }
-
 		/// <summary>
 		/// Title: "Items in use" | Type: "L"
 		/// </summary>
 		public bool ValEmuso { get; set; }
-
 		/// <summary>
 		/// Title: "Item" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Item> TableItemItemdes { get; set; }
-
 		/// <summary>
 		/// Title: "Input Quantity" | Type: "N"
 		/// </summary>
 		public decimal? ValQtdentra { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "CE"
 		/// </summary>
+		[ValidateSetAccess]
 		public string IndocValCodwareh 
 		{
 			get
@@ -85,25 +98,6 @@ namespace GenioMVC.ViewModels.Ldent
 
 		#endregion
 
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCoddentr { get; set; }
-
-		/// <summary>
-		/// Title: "Item" | Type: "CE"
-		/// </summary>
-		public string ValCoditem { get; set; }
-
-		/// <summary>
-		/// Title: "Warehouse" | Type: "CE"
-		/// </summary>
-		public string ValCodwareh { get; set; }
-		#endregion
-
 		#region Extra database fields
 
 
@@ -117,9 +111,10 @@ namespace GenioMVC.ViewModels.Ldent
 
 		public string ValCodldent { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Ldent_ViewModel() : base(null!) { }
@@ -155,6 +150,15 @@ namespace GenioMVC.ViewModels.Ldent
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Ldent model = new Models.Ldent(userContext) { Identifier = "FLDENT" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FLDENT");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -215,13 +219,13 @@ namespace GenioMVC.ViewModels.Ldent
 
 			try
 			{
+				ValCoddentr = ViewModelConversion.ToString(m.ValCoddentr);
+				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
 				ValLine = ViewModelConversion.ToNumeric(m.ValLine);
 				ValEmuso = ViewModelConversion.ToLogic(m.ValEmuso);
 				ValQtdentra = ViewModelConversion.ToNumeric(m.ValQtdentra);
 				funcIndocValCodwareh = () => ViewModelConversion.ToString(m.Indoc.ValCodwareh);
-				ValCoddentr = ViewModelConversion.ToString(m.ValCoddentr);
-				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
-				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
 				ValCodldent = ViewModelConversion.ToString(m.ValCodldent);
 			}
 			catch (Exception)
@@ -231,6 +235,20 @@ namespace GenioMVC.ViewModels.Ldent
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Ldent m)
 		{
 			if (m == null)
@@ -241,23 +259,90 @@ namespace GenioMVC.ViewModels.Ldent
 
 			try
 			{
-				m.ValLine = ViewModelConversion.ToNumeric(ValLine);
-				m.ValEmuso = ViewModelConversion.ToLogic(ValEmuso);
-				m.ValQtdentra = ViewModelConversion.ToNumeric(ValQtdentra);
 				m.ValCoddentr = ViewModelConversion.ToString(ValCoddentr);
 				m.ValCoditem = ViewModelConversion.ToString(ValCoditem);
 				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
+				m.ValLine = ViewModelConversion.ToNumeric(ValLine);
+				m.ValEmuso = ViewModelConversion.ToLogic(ValEmuso);
+				m.ValQtdentra = ViewModelConversion.ToNumeric(ValQtdentra);
 				m.ValCodldent = ViewModelConversion.ToString(ValCodldent);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Ldent) to Model (Ldent) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Ldent) to Model (Ldent) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "ldent.coddentr":
+						this.ValCoddentr = ViewModelConversion.ToString(_value);
+						break;
+					case "ldent.coditem":
+						this.ValCoditem = ViewModelConversion.ToString(_value);
+						break;
+					case "ldent.codwareh":
+						this.ValCodwareh = ViewModelConversion.ToString(_value);
+						break;
+					case "ldent.line":
+						this.ValLine = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "ldent.emuso":
+						this.ValEmuso = ViewModelConversion.ToLogic(_value);
+						break;
+					case "ldent.qtdentra":
+						this.ValQtdentra = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "ldent.codldent":
+						this.ValCodldent = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Ldent) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Ldent)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Ldent.Find(id ?? Navigation.GetStrValue("ldent"), m_userContext, "FLDENT"); }
+			finally { Model ??= new Models.Ldent(m_userContext) { Identifier = "FLDENT" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -271,20 +356,13 @@ namespace GenioMVC.ViewModels.Ldent
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FLDENT";
@@ -294,6 +372,7 @@ namespace GenioMVC.ViewModels.Ldent
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -358,25 +437,19 @@ namespace GenioMVC.ViewModels.Ldent
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE LDENT]/
 		public override void Save()
 		{
 
-			try { Model = Models.Ldent.Find(Navigation.GetStrValue("ldent"), m_userContext, "FLDENT"); }
-			finally { if (Model == null) Model = new Models.Ldent(m_userContext) { Identifier = "FLDENT" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY LDENT]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Ldent.Find(Navigation.GetStrValue("ldent"), m_userContext, "FLDENT"); }
-			finally { if (Model == null) Model = new Models.Ldent(m_userContext) { Identifier = "FLDENT" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE LDENT]/
 
@@ -409,8 +482,8 @@ namespace GenioMVC.ViewModels.Ldent
 				object hValue = Navigation.GetValue("indoc", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					ldent___indocdocumenrConds.Equal(CSGenioAindoc.FldCoddentr, Navigation.GetValue("indoc"));
-					this.ValCoddentr = Navigation.GetStrValue("indoc");
+					ldent___indocdocumenrConds.Equal(CSGenioAindoc.FldCoddentr, hValue);
+					this.ValCoddentr = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -427,8 +500,6 @@ namespace GenioMVC.ViewModels.Ldent
 					Navigation.CurrentLevel.SetEntry("RETURN_indoc", null);
 				}
 				FillDependant_LdentTableIndocDocumenr(lazyLoad);
-				//Check if foreignkey comes from history
-				TableIndocDocumenr.FilledByHistory = Navigation.CheckFilledByHistory("indoc");
 				return;
 			}
 
@@ -496,9 +567,6 @@ namespace GenioMVC.ViewModels.Ldent
 
 				TableIndocDocumenr.List = new SelectList(TableIndocDocumenr.Elements.ToSelectList(x => x.ValDocumenr, x => x.ValCoddentr,  x => x.ValCoddentr == this.ValCoddentr), "Value", "Text", this.ValCoddentr);
 				FillDependant_LdentTableIndocDocumenr();
-
-				//Check if foreignkey comes from history
-				TableIndocDocumenr.FilledByHistory = Navigation.CheckFilledByHistory("indoc");
 			}
 		}
 
@@ -565,7 +633,7 @@ namespace GenioMVC.ViewModels.Ldent
 				if (GlobalFunctions.emptyG(this.ValCoddentr) == 1)
 				{
 					this.ValCoddentr = "";
-					TableIndocDocumenr.Value = 0;
+					TableIndocDocumenr.Value = 0m;
 					Navigation.ClearValue("indoc");
 				}
 				else if (lazyLoad)
@@ -605,8 +673,8 @@ namespace GenioMVC.ViewModels.Ldent
 				object hValue = Navigation.GetValue("wareh", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					ldent___warehwarehdesConds.Equal(CSGenioAwareh.FldCodwareh, Navigation.GetValue("wareh"));
-					this.ValCodwareh = Navigation.GetStrValue("wareh");
+					ldent___warehwarehdesConds.Equal(CSGenioAwareh.FldCodwareh, hValue);
+					this.ValCodwareh = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -623,8 +691,6 @@ namespace GenioMVC.ViewModels.Ldent
 					Navigation.CurrentLevel.SetEntry("RETURN_wareh", null);
 				}
 				FillDependant_LdentTableWarehWarehdes(lazyLoad);
-				//Check if foreignkey comes from history
-				TableWarehWarehdes.FilledByHistory = Navigation.CheckFilledByHistory("wareh");
 				return;
 			}
 
@@ -692,9 +758,6 @@ namespace GenioMVC.ViewModels.Ldent
 
 				TableWarehWarehdes.List = new SelectList(TableWarehWarehdes.Elements.ToSelectList(x => x.ValWarehdes, x => x.ValCodwareh,  x => x.ValCodwareh == this.ValCodwareh), "Value", "Text", this.ValCodwareh);
 				FillDependant_LdentTableWarehWarehdes();
-
-				//Check if foreignkey comes from history
-				TableWarehWarehdes.FilledByHistory = Navigation.CheckFilledByHistory("wareh");
 			}
 		}
 
@@ -800,14 +863,14 @@ namespace GenioMVC.ViewModels.Ldent
 				object hValue = Navigation.GetValue("item", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					ldent___item_itemdes_Conds.Equal(CSGenioAitem.FldCoditem, Navigation.GetValue("item"));
-					this.ValCoditem = Navigation.GetStrValue("item");
+					ldent___item_itemdes_Conds.Equal(CSGenioAitem.FldCoditem, hValue);
+					this.ValCoditem = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
 
 			// Area limit
-			ldent___item_itemdes_DoLoad &= AddCriteriaAreaLimit(ldent___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, false);
+			ldent___item_itemdes_DoLoad &= AddCriteriaAreaLimit(ldent___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, true);
 
 			TableItemItemdes = new TableDBEdit<Models.Item>
 			{
@@ -822,8 +885,6 @@ namespace GenioMVC.ViewModels.Ldent
 					Navigation.CurrentLevel.SetEntry("RETURN_item", null);
 				}
 				FillDependant_LdentTableItemItemdes(lazyLoad);
-				//Check if foreignkey comes from history
-				TableItemItemdes.FilledByHistory = Navigation.CheckFilledByHistory("item");
 				return;
 			}
 
@@ -894,9 +955,6 @@ namespace GenioMVC.ViewModels.Ldent
 
 				TableItemItemdes.List = new SelectList(TableItemItemdes.Elements.ToSelectList(x => x.ValItemdes, x => x.ValCoditem,  x => x.ValCoditem == this.ValCoditem), "Value", "Text", this.ValCoditem);
 				FillDependant_LdentTableItemItemdes();
-
-				//Check if foreignkey comes from history
-				TableItemItemdes.FilledByHistory = Navigation.CheckFilledByHistory("item");
 			}
 		}
 
@@ -1002,13 +1060,13 @@ namespace GenioMVC.ViewModels.Ldent
 		{
 			return identifier switch
 			{
+				"ldent.coddentr" => ViewModelConversion.ToString(modelValue),
+				"ldent.coditem" => ViewModelConversion.ToString(modelValue),
+				"ldent.codwareh" => ViewModelConversion.ToString(modelValue),
 				"ldent.line" => ViewModelConversion.ToNumeric(modelValue),
 				"ldent.emuso" => ViewModelConversion.ToLogic(modelValue),
 				"ldent.qtdentra" => ViewModelConversion.ToNumeric(modelValue),
 				"indoc.codwareh" => ViewModelConversion.ToString(modelValue),
-				"ldent.coddentr" => ViewModelConversion.ToString(modelValue),
-				"ldent.coditem" => ViewModelConversion.ToString(modelValue),
-				"ldent.codwareh" => ViewModelConversion.ToString(modelValue),
 				"ldent.codldent" => ViewModelConversion.ToString(modelValue),
 				"indoc.coddentr" => ViewModelConversion.ToString(modelValue),
 				"indoc.documenr" => ViewModelConversion.ToNumeric(modelValue),
@@ -1016,9 +1074,11 @@ namespace GenioMVC.ViewModels.Ldent
 				"wareh.warehdes" => ViewModelConversion.ToString(modelValue),
 				"item.coditem" => ViewModelConversion.ToString(modelValue),
 				"item.itemdes" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

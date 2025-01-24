@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Evolution in the category
 	/// </summary>
-	public class CSGenioAevcat : DbArea	{
+	public class CSGenioAevcat : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -171,9 +172,10 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(6);
+			info.Pathways = new Dictionary<string, string>(7);
 			info.Pathways.Add("cate1","cate1");
 			info.Pathways.Add("pesso","pesso");
+			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("cntry","pesso");
 			info.Pathways.Add("cmpny","pesso");
 			info.Pathways.Add("pais1","pesso");
@@ -329,7 +331,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodprogr, value); }
 		}
 
-
 		/// <summary>Field : ">PERSON" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodpesso { get { return m_fldCodpesso; } }
 		private static FieldRef m_fldCodpesso = new FieldRef("evcat", "codpesso");
@@ -340,7 +341,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodpesso); }
 			set { insertNameValueField(FldCodpesso, value); }
 		}
-
 
 		/// <summary>Field : ">CATEGORy" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodcateg { get { return m_fldCodcateg; } }
@@ -353,7 +353,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodcateg, value); }
 		}
 
-
 		/// <summary>Field : "Since" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldSince { get { return m_fldSince; } }
 		private static FieldRef m_fldSince = new FieldRef("evcat", "since");
@@ -364,7 +363,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldSince); }
 			set { insertNameValueField(FldSince, value); }
 		}
-
 
 		/// <summary>Field : "Up manual" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldUntilman { get { return m_fldUntilman; } }
@@ -377,7 +375,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldUntilman, value); }
 		}
 
-
 		/// <summary>Field : "Until" Tipo: "D" Formula: FP "[EVCAT->SINCE][EVCAT->CODPESSO]"</summary>
 		public static FieldRef FldUntil { get { return m_fldUntil; } }
 		private static FieldRef m_fldUntil = new FieldRef("evcat", "until");
@@ -388,7 +385,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldUntil); }
 			set { insertNameValueField(FldUntil, value); }
 		}
-
 
 		/// <summary>Field : "Observation" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldObservat { get { return m_fldObservat; } }
@@ -401,7 +397,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldObservat, value); }
 		}
 
-
 		/// <summary>Field : "End-of-period" Tipo: "D" Formula: + "iif(emptyD([EVCAT->UNTILMAN])==0,[EVCAT->UNTILMAN],[EVCAT->UNTIL])"</summary>
 		public static FieldRef FldFimperio { get { return m_fldFimperio; } }
 		private static FieldRef m_fldFimperio = new FieldRef("evcat", "fimperio");
@@ -412,7 +407,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldFimperio); }
 			set { insertNameValueField(FldFimperio, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -455,23 +449,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAevcat> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAevcat> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAevcat>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -520,7 +497,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX EVCAT]/

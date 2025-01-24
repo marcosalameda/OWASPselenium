@@ -12,7 +12,7 @@ public abstract class BaseGridControl : ControlObject
     protected IList<IWebElement> rows => m_control.FindElements(By.CssSelector("tbody tr"));
     protected IWebElement currentRow => m_control.FindElement(ByData.Key(currentRowPk));
     protected IWebElement delButton => currentRow.FindElement(By.CssSelector(".grid-table-row__action button[data-testid=delete]"));
-    protected IWebElement undoButton => currentRow.FindElement(By.CssSelector(".grid-table-row__action button[data-testid=undo]")); 
+    protected IWebElement undoButton => currentRow.FindElement(By.CssSelector(".grid-table-row__action button[data-testid=undo]"));
 
 
     protected BaseGridControl(IWebDriver driver, By containerLocator, By controlLocator)

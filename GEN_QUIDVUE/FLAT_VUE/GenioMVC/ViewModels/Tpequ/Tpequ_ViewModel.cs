@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Tpequ
 {
-	public class Tpequ_ViewModel : FormViewModel<Models.Tpequ>
+	public class Tpequ_ViewModel : FormViewModel<Models.Tpequ>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,64 +29,65 @@ namespace GenioMVC.ViewModels.Tpequ
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Equipment family" | Type: "CE"
+		/// </summary>
+		public string ValCodfamil { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Equipment family" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Famil> TableFamilFamily { get; set; }
-
 		/// <summary>
 		/// Title: "Type of equipment" | Type: "C"
 		/// </summary>
 		public string ValTipoequi { get; set; }
-
 		/// <summary>
 		/// Title: "Code" | Type: "TF"
 		/// </summary>
 		public string ValTpequcod { get; set; }
-
 		/// <summary>
 		/// Title: "Level:" | Type: "TN"
 		/// </summary>
-		public double ValNivel { get; set; }
-
+		public decimal ValNivel { get; set; }
 		/// <summary>
 		/// Title: "Kit" | Type: "L"
 		/// </summary>
 		public bool ValKit { get; set; }
-
 		/// <summary>
 		/// Title: "Maximum Price" | Type: "$D"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValPrecomax { get; set; }
-
 		/// <summary>
 		/// Title: "Background Color" | Type: "C"
 		/// </summary>
 		public string ValBackcolo { get; set; }
-
 		/// <summary>
 		/// Title: "Letter Color" | Type: "C"
 		/// </summary>
 		public string ValCorletra { get; set; }
-
 		/// <summary>
 		/// Title: "Dependence on" | Type: "TP"
 		/// </summary>
 		public string ValTpequpai { get; set; }
-
 		/// <summary>
 		/// Title: "Last Price" | Type: "$D"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValPrecoult { get; set; }
-
 		/// <summary>
 		/// Title: "Since" | Type: "DT"
 		/// </summary>
+		[ValidateSetAccess]
 		public DateTime? ValSince { get; set; }
-
 		/// <summary>
 		/// Title: "Quantity of equipment:" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValQtdequip { get; set; }
 
 		#region Navigations
@@ -96,15 +97,6 @@ namespace GenioMVC.ViewModels.Tpequ
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Equipment family" | Type: "CE"
-		/// </summary>
-		public string ValCodfamil { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -120,9 +112,10 @@ namespace GenioMVC.ViewModels.Tpequ
 
 		public string ValCodtpequ { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Tpequ_ViewModel() : base(null!) { }
@@ -158,6 +151,15 @@ namespace GenioMVC.ViewModels.Tpequ
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Tpequ model = new Models.Tpequ(userContext) { Identifier = "FTPEQU" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FTPEQU");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -218,9 +220,10 @@ namespace GenioMVC.ViewModels.Tpequ
 
 			try
 			{
+				ValCodfamil = ViewModelConversion.ToString(m.ValCodfamil);
 				ValTipoequi = ViewModelConversion.ToString(m.ValTipoequi);
 				ValTpequcod = ViewModelConversion.ToString(m.ValTpequcod);
-				ValNivel = ViewModelConversion.ToDouble(m.ValNivel);
+				ValNivel = ViewModelConversion.ToNumeric(m.ValNivel);
 				ValKit = ViewModelConversion.ToLogic(m.ValKit);
 				ValPrecomax = ViewModelConversion.ToNumeric(m.ValPrecomax);
 				ValBackcolo = ViewModelConversion.ToString(m.ValBackcolo);
@@ -229,7 +232,6 @@ namespace GenioMVC.ViewModels.Tpequ
 				ValPrecoult = ViewModelConversion.ToNumeric(m.ValPrecoult);
 				ValSince = ViewModelConversion.ToDateTime(m.ValSince);
 				ValQtdequip = ViewModelConversion.ToNumeric(m.ValQtdequip);
-				ValCodfamil = ViewModelConversion.ToString(m.ValCodfamil);
 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
 			}
 			catch (Exception)
@@ -239,6 +241,20 @@ namespace GenioMVC.ViewModels.Tpequ
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Tpequ m)
 		{
 			if (m == null)
@@ -249,29 +265,102 @@ namespace GenioMVC.ViewModels.Tpequ
 
 			try
 			{
+				m.ValCodfamil = ViewModelConversion.ToString(ValCodfamil);
 				m.ValTipoequi = ViewModelConversion.ToString(ValTipoequi);
 				m.ValTpequcod = ViewModelConversion.ToString(ValTpequcod);
-				m.ValNivel = ViewModelConversion.ToDouble(ValNivel);
+				m.ValNivel = ViewModelConversion.ToNumeric(ValNivel);
 				m.ValKit = ViewModelConversion.ToLogic(ValKit);
-				m.ValPrecomax = ViewModelConversion.ToNumeric(ValPrecomax);
 				m.ValBackcolo = ViewModelConversion.ToString(ValBackcolo);
 				m.ValCorletra = ViewModelConversion.ToString(ValCorletra);
 				m.ValTpequpai = ViewModelConversion.ToString(ValTpequpai);
+				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValPrecomax = ViewModelConversion.ToNumeric(ValPrecomax);
 				m.ValPrecoult = ViewModelConversion.ToNumeric(ValPrecoult);
 				m.ValSince = ViewModelConversion.ToDateTime(ValSince);
 				m.ValQtdequip = ViewModelConversion.ToNumeric(ValQtdequip);
-				m.ValCodfamil = ViewModelConversion.ToString(ValCodfamil);
-				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Tpequ) to Model (Tpequ) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Tpequ) to Model (Tpequ) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "tpequ.codfamil":
+						this.ValCodfamil = ViewModelConversion.ToString(_value);
+						break;
+					case "tpequ.tipoequi":
+						this.ValTipoequi = ViewModelConversion.ToString(_value);
+						break;
+					case "tpequ.tpequcod":
+						this.ValTpequcod = ViewModelConversion.ToString(_value);
+						break;
+					case "tpequ.nivel":
+						this.ValNivel = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "tpequ.kit":
+						this.ValKit = ViewModelConversion.ToLogic(_value);
+						break;
+					case "tpequ.backcolo":
+						this.ValBackcolo = ViewModelConversion.ToString(_value);
+						break;
+					case "tpequ.corletra":
+						this.ValCorletra = ViewModelConversion.ToString(_value);
+						break;
+					case "tpequ.tpequpai":
+						this.ValTpequpai = ViewModelConversion.ToString(_value);
+						break;
+					case "tpequ.codtpequ":
+						this.ValCodtpequ = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Tpequ) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Tpequ)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Tpequ.Find(id ?? Navigation.GetStrValue("tpequ"), m_userContext, "FTPEQU"); }
+			finally { Model ??= new Models.Tpequ(m_userContext) { Identifier = "FTPEQU" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -285,20 +374,13 @@ namespace GenioMVC.ViewModels.Tpequ
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FTPEQU";
@@ -308,6 +390,7 @@ namespace GenioMVC.ViewModels.Tpequ
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -365,36 +448,31 @@ namespace GenioMVC.ViewModels.Tpequ
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValTipoequi", Resources.Resources.TYPE_OF_EQUIPMENT64921, ValTipoequi, 50);
 			validator.StringLength("ValTpequcod", Resources.Resources.CODE49225, ValTpequcod, 20);
-			validator.Required("ValTpequcod", Resources.Resources.CODE49225, ValTpequcod);
+
+			validator.Required("ValTpequcod", Resources.Resources.CODE49225, ViewModelConversion.ToString(ValTpequcod), FieldType.TEXTO.Formatting);
 			validator.StringLength("ValBackcolo", Resources.Resources.BACKGROUND_COLOR07511, ValBackcolo, 50);
 			validator.StringLength("ValCorletra", Resources.Resources.LETTER_COLOR63305, ValCorletra, 50);
 			validator.StringLength("ValTpequpai", Resources.Resources.DEPENDENCE_ON13941, ValTpequpai, 20);
 
+
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE TPEQU]/
 		public override void Save()
 		{
 
-			try { Model = Models.Tpequ.Find(Navigation.GetStrValue("tpequ"), m_userContext, "FTPEQU"); }
-			finally { if (Model == null) Model = new Models.Tpequ(m_userContext) { Identifier = "FTPEQU" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY TPEQU]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Tpequ.Find(Navigation.GetStrValue("tpequ"), m_userContext, "FTPEQU"); }
-			finally { if (Model == null) Model = new Models.Tpequ(m_userContext) { Identifier = "FTPEQU" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE TPEQU]/
 
@@ -427,8 +505,8 @@ namespace GenioMVC.ViewModels.Tpequ
 				object hValue = Navigation.GetValue("famil", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					tpequ___familfamily__Conds.Equal(CSGenioAfamil.FldCodfamil, Navigation.GetValue("famil"));
-					this.ValCodfamil = Navigation.GetStrValue("famil");
+					tpequ___familfamily__Conds.Equal(CSGenioAfamil.FldCodfamil, hValue);
+					this.ValCodfamil = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -445,8 +523,6 @@ namespace GenioMVC.ViewModels.Tpequ
 					Navigation.CurrentLevel.SetEntry("RETURN_famil", null);
 				}
 				FillDependant_TpequTableFamilFamily(lazyLoad);
-				//Check if foreignkey comes from history
-				TableFamilFamily.FilledByHistory = Navigation.CheckFilledByHistory("famil");
 				return;
 			}
 
@@ -514,9 +590,6 @@ namespace GenioMVC.ViewModels.Tpequ
 
 				TableFamilFamily.List = new SelectList(TableFamilFamily.Elements.ToSelectList(x => x.ValFamily, x => x.ValCodfamil,  x => x.ValCodfamil == this.ValCodfamil), "Value", "Text", this.ValCodfamil);
 				FillDependant_TpequTableFamilFamily();
-
-				//Check if foreignkey comes from history
-				TableFamilFamily.FilledByHistory = Navigation.CheckFilledByHistory("famil");
 			}
 		}
 
@@ -613,9 +686,10 @@ namespace GenioMVC.ViewModels.Tpequ
 		{
 			return identifier switch
 			{
+				"tpequ.codfamil" => ViewModelConversion.ToString(modelValue),
 				"tpequ.tipoequi" => ViewModelConversion.ToString(modelValue),
 				"tpequ.tpequcod" => ViewModelConversion.ToString(modelValue),
-				"tpequ.nivel" => ViewModelConversion.ToDouble(modelValue),
+				"tpequ.nivel" => ViewModelConversion.ToNumeric(modelValue),
 				"tpequ.kit" => ViewModelConversion.ToLogic(modelValue),
 				"tpequ.precomax" => ViewModelConversion.ToNumeric(modelValue),
 				"tpequ.backcolo" => ViewModelConversion.ToString(modelValue),
@@ -624,13 +698,14 @@ namespace GenioMVC.ViewModels.Tpequ
 				"tpequ.precoult" => ViewModelConversion.ToNumeric(modelValue),
 				"tpequ.since" => ViewModelConversion.ToDateTime(modelValue),
 				"tpequ.qtdequip" => ViewModelConversion.ToNumeric(modelValue),
-				"tpequ.codfamil" => ViewModelConversion.ToString(modelValue),
 				"tpequ.codtpequ" => ViewModelConversion.ToString(modelValue),
 				"famil.codfamil" => ViewModelConversion.ToString(modelValue),
 				"famil.family" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

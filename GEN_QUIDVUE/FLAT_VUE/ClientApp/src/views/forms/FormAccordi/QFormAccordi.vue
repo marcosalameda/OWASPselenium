@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -101,6 +101,7 @@
 						v-show="controls.ACCORDI_PSEUDNOVOGR02.isVisible"
 						class="control-join-group">
 						<q-group-collapsible
+							id="ACCORDI_PSEUDNOVOGR02"
 							v-bind="controls.ACCORDI_PSEUDNOVOGR02"
 							v-on="controls.ACCORDI_PSEUDNOVOGR02.handlers">
 							<!-- Start ACCORDI_PSEUDNOVOGR02 -->
@@ -114,14 +115,11 @@
 										v-on="controls.ACCORDI_CMPNYDESIGNAT.handlers"
 										:loading="controls.ACCORDI_CMPNYDESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.ACCORDI_CMPNYDESIGNAT.isVisible"
 											v-bind="controls.ACCORDI_CMPNYDESIGNAT.props"
-											:model-value="model.ValCodempre.value"
-											v-on="controls.ACCORDI_CMPNYDESIGNAT.handlers"
-											@update:model-value="model.ValCodempre.fnUpdateValue" />
+											v-on="controls.ACCORDI_CMPNYDESIGNAT.handlers" />
 										<q-see-more-accordi-cmpnydesignat
 											v-if="controls.ACCORDI_CMPNYDESIGNAT.seeMoreIsVisible"
 											v-bind="controls.ACCORDI_CMPNYDESIGNAT.seeMoreParams"
@@ -139,14 +137,11 @@
 										v-on="controls.ACCORDI_PESS1NAME____.handlers"
 										:loading="controls.ACCORDI_PESS1NAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.ACCORDI_PESS1NAME____.isVisible"
 											v-bind="controls.ACCORDI_PESS1NAME____.props"
-											:model-value="model.ValCodpess1.value"
-											v-on="controls.ACCORDI_PESS1NAME____.handlers"
-											@update:model-value="model.ValCodpess1.fnUpdateValue" />
+											v-on="controls.ACCORDI_PESS1NAME____.handlers" />
 										<q-see-more-accordi-pess1name
 											v-if="controls.ACCORDI_PESS1NAME____.seeMoreIsVisible"
 											v-bind="controls.ACCORDI_PESS1NAME____.seeMoreParams"
@@ -162,12 +157,10 @@
 										v-on="controls.ACCORDI_EQUIPSEQUENNR.handlers"
 										:loading="controls.ACCORDI_EQUIPSEQUENNR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.ACCORDI_EQUIPSEQUENNR.isVisible"
-											v-bind="controls.ACCORDI_EQUIPSEQUENNR"
-											:model-value="model.ValSequennr.value"
+											v-bind="controls.ACCORDI_EQUIPSEQUENNR.props"
 											@update:model-value="model.ValSequennr.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -181,6 +174,7 @@
 						v-show="controls.ACCORDI_PSEUDNOVOGR06.isVisible"
 						class="control-join-group">
 						<q-group-collapsible
+							id="ACCORDI_PSEUDNOVOGR06"
 							v-bind="controls.ACCORDI_PSEUDNOVOGR06"
 							v-on="controls.ACCORDI_PSEUDNOVOGR06.handlers">
 							<!-- Start ACCORDI_PSEUDNOVOGR06 -->
@@ -194,8 +188,7 @@
 										v-on="controls.ACCORDI_EQUIPPHOTOGRA.handlers"
 										:loading="controls.ACCORDI_EQUIPPHOTOGRA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-image
 											v-if="controls.ACCORDI_EQUIPPHOTOGRA.isVisible"
 											v-bind="controls.ACCORDI_EQUIPPHOTOGRA.props"
@@ -218,6 +211,7 @@
 							v-slot="{ onStateChanged }">
 							<!-- Start ACCORDI_PSEUDNOVOGR05 -->
 							<q-group-collapsible
+								id="ACCORDI_PSEUDNOVOGR03"
 								v-bind="controls.ACCORDI_PSEUDNOVOGR03"
 								v-on="controls.ACCORDI_PSEUDNOVOGR03.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -229,8 +223,7 @@
 										<q-table
 											v-show="controls.ACCORDI_PSEUDINSTALAG.isVisible"
 											v-bind="controls.ACCORDI_PSEUDINSTALAG"
-											v-on="controls.ACCORDI_PSEUDINSTALAG.handlers">
-										</q-table>
+											v-on="controls.ACCORDI_PSEUDINSTALAG.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.ACCORDI_PSEUDINSTALAG"
 											v-on="controls.ACCORDI_PSEUDINSTALAG.handlers" />
@@ -239,6 +232,7 @@
 								<!-- End ACCORDI_PSEUDNOVOGR03 -->
 							</q-group-collapsible>
 							<q-group-collapsible
+								id="ACCORDI_PSEUDNOVOGR04"
 								v-bind="controls.ACCORDI_PSEUDNOVOGR04"
 								v-on="controls.ACCORDI_PSEUDNOVOGR04.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -250,8 +244,7 @@
 										<q-table
 											v-show="controls.ACCORDI_PSEUDINSTALAC.isVisible"
 											v-bind="controls.ACCORDI_PSEUDINSTALAC"
-											v-on="controls.ACCORDI_PSEUDINSTALAC.handlers">
-										</q-table>
+											v-on="controls.ACCORDI_PSEUDINSTALAC.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.ACCORDI_PSEUDINSTALAC"
 											v-on="controls.ACCORDI_PSEUDINSTALAC.handlers" />
@@ -260,6 +253,7 @@
 								<!-- End ACCORDI_PSEUDNOVOGR04 -->
 							</q-group-collapsible>
 							<q-group-collapsible
+								id="ACCORDI_PSEUDNOVOGR11"
 								v-bind="controls.ACCORDI_PSEUDNOVOGR11"
 								v-on="controls.ACCORDI_PSEUDNOVOGR11.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -271,8 +265,7 @@
 										<q-table
 											v-show="controls.ACCORDI_PSEUDREPARACO.isVisible"
 											v-bind="controls.ACCORDI_PSEUDREPARACO"
-											v-on="controls.ACCORDI_PSEUDREPARACO.handlers">
-										</q-table>
+											v-on="controls.ACCORDI_PSEUDREPARACO.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.ACCORDI_PSEUDREPARACO"
 											v-on="controls.ACCORDI_PSEUDREPARACO.handlers" />
@@ -367,15 +360,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'ACCORDI',
-						location: 'form-ACCORDI',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'ACCORDI',
+					location: 'form-ACCORDI',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -421,6 +412,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -493,8 +486,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -576,7 +570,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -630,21 +624,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -653,16 +632,12 @@
 						id: 'ACCORDI_PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY20759),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-ACCORDI_PSEUDNOVOGR02',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -672,29 +647,11 @@
 						id: 'ACCORDI_CMPNYDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY_22615),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR02',
 						container: 'ACCORDI_PSEUDNOVOGR02',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodempre',
-							dependencyEvent: 'fieldChange:equip.codempre'
-						},
-						dependentFields: () => {
-							return {
-								set 'cmpny.codempre'(value) { vm.model.ValCodempre.updateValue(value) },
-								set 'cmpny.designat'(value) { vm.model.TableCmpnyDesignat.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'EMPRE',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -703,6 +660,18 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodempre',
+							dependencyEvent: 'fieldChange:equip.codempre'
+						},
+						dependentFields: () => ({
+							set 'cmpny.codempre'(value) { vm.model.ValCodempre.updateValue(value) },
+							set 'cmpny.designat'(value) { vm.model.TableCmpnyDesignat.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'EMPRE',
+						controlLimits: [
+						],
 					}, this),
 					ACCORDI_PESS1NAME____: new fieldControlClass.LookupControl({
 						modelField: 'TablePess1Name',
@@ -710,15 +679,29 @@
 						id: 'ACCORDI_PESS1NAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PERSON10446),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR02',
 						container: 'ACCORDI_PSEUDNOVOGR02',
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodpess1',
+							dependencyEvent: 'fieldChange:equip.codpess1'
+						},
+						dependentFields: () => ({
+							set 'pess1.codpesso'(value) { vm.model.ValCodpess1.updateValue(value) },
+							set 'pess1.name'(value) { vm.model.TablePess1Name.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'PESS1',
 						controlLimits: [
 							{
 								identifier: ['cmpny', 'equip.codempre'],
@@ -727,43 +710,21 @@
 								fnValueSelector: (model) => model.ValCodempre.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodpess1',
-							dependencyEvent: 'fieldChange:equip.codpess1'
-						},
-						dependentFields: () => {
-							return {
-								set 'pess1.codpesso'(value) { vm.model.ValCodpess1.updateValue(value) },
-								set 'pess1.name'(value) { vm.model.TablePess1Name.updateValue(value) },
-							}
-						},
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					ACCORDI_EQUIPSEQUENNR: new fieldControlClass.NumberControl({
 						modelField: 'ValSequennr',
 						valueChangeEvent: 'fieldChange:equip.sequennr',
-						maxIntegers: 6,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'ACCORDI_EQUIPSEQUENNR',
 						name: 'SEQUENNR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.SEQUENTIAL_NO_38590),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR02',
 						container: 'ACCORDI_PSEUDNOVOGR02',
-						mustBeFilled: false,
+						maxIntegers: 6,
+						maxDecimals: 0,
+						isSequencial: true,
 						controlLimits: [
 						],
 					}, this),
@@ -771,16 +732,12 @@
 						id: 'ACCORDI_PSEUDNOVOGR06',
 						name: 'NOVOGR06',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTO32097),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-ACCORDI_PSEUDNOVOGR06',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -790,17 +747,14 @@
 						id: 'ACCORDI_EQUIPPHOTOGRA',
 						name: 'PHOTOGRA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTO51874),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR06',
 						container: 'ACCORDI_PSEUDNOVOGR06',
 						height: 50,
 						width: 100,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PHOTO51874)),
 						controlLimits: [
 						],
 					}, this),
@@ -808,15 +762,11 @@
 						id: 'ACCORDI_PSEUDNOVOGR05',
 						name: 'NOVOGR05',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACCORDION32434),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -824,29 +774,22 @@
 						id: 'ACCORDI_PSEUDNOVOGR03',
 						name: 'NOVOGR03',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.FACILITIES08876),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ACCORDI_PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-ACCORDI_PSEUDNOVOGR03',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					ACCORDI_PSEUDINSTALAG: new fieldControlClass.TableListControl({
 						id: 'ACCORDI_PSEUDINSTALAG',
 						name: 'INSTALAG',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.FACILITIES_23844),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR03',
@@ -863,7 +806,7 @@
 								field: 'SINCE',
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -872,7 +815,7 @@
 								field: 'UNTIL',
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 3,
@@ -917,7 +860,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -1023,6 +966,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'INSTA',
@@ -1036,18 +980,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: INSTA
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
 						uuid: 'Accordi_ValInstalag',
@@ -1065,29 +1003,22 @@
 						id: 'ACCORDI_PSEUDNOVOGR04',
 						name: 'NOVOGR04',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PLACES43389),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ACCORDI_PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-ACCORDI_PSEUDNOVOGR04',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					ACCORDI_PSEUDINSTALAC: new fieldControlClass.TableListControl({
 						id: 'ACCORDI_PSEUDINSTALAC',
 						name: 'INSTALAC',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.FACILITIES08876),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR04',
@@ -1104,7 +1035,7 @@
 								field: 'SINCE',
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -1113,7 +1044,7 @@
 								field: 'UNTIL',
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 3,
@@ -1154,6 +1085,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
+								searchable: false,
 							}),
 						],
 						config: {
@@ -1168,7 +1100,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -1187,17 +1119,12 @@
 							},
 							formsDefinition: {
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
 						uuid: 'Accordi_ValInstalac',
@@ -1215,29 +1142,22 @@
 						id: 'ACCORDI_PSEUDNOVOGR11',
 						name: 'NOVOGR11',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.REPAIRS18165),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ACCORDI_PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-ACCORDI_PSEUDNOVOGR11',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					ACCORDI_PSEUDREPARACO: new fieldControlClass.TableListControl({
 						id: 'ACCORDI_PSEUDREPARACO',
 						name: 'REPARACO',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.EQUIPMENT_REPAIRS_35392),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR11',
@@ -1264,13 +1184,13 @@
 								field: 'DTREPARA',
 								label: computed(() => this.Resources.FIXED_IN00179),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Cate1.ValCategoria',
 								area: 'CATE1',
-								field: 'CATEGORY',
+								field: 'CATEGORIA',
 								label: computed(() => this.Resources.SPECIALTY09304),
 								dataLength: 50,
 								scrollData: 30,
@@ -1317,7 +1237,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -1423,6 +1343,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'REPAR',
@@ -1436,18 +1357,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: REPAR
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValNrrepara',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-EQUIP', 'changed-PESSO', 'changed-REPAR', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
 						uuid: 'Accordi_ValReparaco',
@@ -1540,7 +1455,7 @@
 						/** The foreign key to the ROOM1 table */
 						get room1() { return vm.model.ValCodrooms },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1636,6 +1551,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1675,6 +1598,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1801,6 +1732,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR ACCORDI]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1816,6 +1763,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS ACCORDI]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

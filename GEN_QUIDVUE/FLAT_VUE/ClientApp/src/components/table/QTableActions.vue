@@ -4,7 +4,9 @@
 		:key="action.id">
 		<q-button
 			v-if="actionIsAvailable(action)"
+			v-bind="$attrs"
 			data-testid="table-action"
+			:data-action-key="action.id"
 			:borderless="borderless"
 			:b-style="bStyle"
 			:class="customActionClasses"
@@ -28,6 +30,8 @@
 		name: 'QTableActions',
 
 		emits: ['action-click'],
+
+		inheritAttrs: false,
 
 		props: {
 			/**

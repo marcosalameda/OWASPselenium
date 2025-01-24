@@ -1,4 +1,5 @@
-﻿import _assignIn from 'lodash-es/assignIn'
+﻿import { computed } from 'vue'
+import _assignIn from 'lodash-es/assignIn'
 import _get from 'lodash-es/get'
 import _keyBy from 'lodash-es/keyBy'
 import _toString from 'lodash-es/toString'
@@ -8,6 +9,8 @@ import listFunctions from '@/mixins/listFunctions.js'
 
 export class BaseColumn
 {
+	#visibility = true
+
 	constructor(options)
 	{
 		this.order = 0
@@ -24,8 +27,9 @@ export class BaseColumn
 		this.supportFormIsPopup = false
 		this.params = null
 		this.cellAction = false
-		this.visibility = true
 		this.sortable = true
+		this.searchable = true
+		this.export = true
 		this.array = null
 		this.useDistinctValues = false
 		this.textColor = null
@@ -36,6 +40,13 @@ export class BaseColumn
 		this.isDefaultSearch = false
 		this.pkColumn = null
 		this.isHtmlField = false
+		this.multipleValues = false
+
+		this.fnVisibility = () => true
+		this.visibility = computed({
+			get: () => this.#visibility && this.fnVisibility(),
+			set: (val) => this.#visibility = val
+		})
 
 		// Add all properties to itself
 		_assignIn(this, options)
@@ -62,6 +73,8 @@ export class NumericColumn extends BaseColumn
 {
 	constructor(options)
 	{
+		const systemDataStore = useSystemDataStore()
+
 		super({
 			dataType: 'Numeric',
 			searchFieldType: 'num',
@@ -69,6 +82,10 @@ export class NumericColumn extends BaseColumn
 			dataDisplayText: listFunctions.numericDisplayCell,
 			maxDigits: 0,
 			decimalPlaces: 0,
+			numberFormat: {
+				decimalSeparator: systemDataStore.system.numberFormat.decimalSeparator,
+				groupSeparator: systemDataStore.system.numberFormat.thousandsSeparator,
+			},
 			showTotal: true,
 			columnClasses: 'c-table__cell-numeric row-numeric',
 			columnHeaderClasses: 'c-table__head-numeric'
@@ -101,7 +118,7 @@ export class CurrencyColumn extends NumericColumn
 		_assignIn(this, options)
 
 		// Currency fields get 2 more decimal places than what is defined
-		this.decimalPlaces = this.decimalPlaces + 2
+		this.decimalPlaces += 2
 	}
 }
 
@@ -109,10 +126,13 @@ export class DateColumn extends BaseColumn
 {
 	constructor(options)
 	{
+		const systemDataStore = useSystemDataStore()
+		
 		super({
 			dataType: 'Date',
 			searchFieldType: 'date',
-			dateTimeType: 'DateTime',
+			dateTimeType: 'dateTime',
+			dateFormats: systemDataStore.system.dateFormat,
 			dataDisplay: listFunctions.dateDisplayCell,
 			dataDisplayText: listFunctions.dateDisplayCell
 		})
@@ -163,7 +183,6 @@ export class DocumentColumn extends BaseColumn
 		super({
 			dataType: 'Document',
 			component: 'q-render-document',
-			cellAction: true,
 			dataDisplay: listFunctions.documentDisplayCell,
 			dataDisplayText: listFunctions.documentDisplayCell,
 			isSerialized: true
@@ -211,10 +230,16 @@ export class GeographicColumn extends BaseColumn
 {
 	constructor(options)
 	{
+		const systemDataStore = useSystemDataStore()
+
 		super({
 			dataType: 'Geographic',
 			dataDisplay: listFunctions.geographicDisplayCell,
-			dataDisplayText: listFunctions.geographicDisplayCell
+			dataDisplayText: listFunctions.geographicDisplayCell,
+			numberFormat: {
+				decimalSeparator: systemDataStore.system.numberFormat.decimalSeparator,
+				groupSeparator: systemDataStore.system.numberFormat.thousandsSeparator,
+			}
 		})
 
 		// Add all properties to itself
@@ -267,9 +292,9 @@ export class HyperLinkColumn extends BaseColumn
 	}
 }
 
-export class HtmlColumn extends TextColumn 
+export class HtmlColumn extends TextColumn
 {
-	constructor(options) 
+	constructor(options)
 	{
 		super({
 			component: 'q-render-html',

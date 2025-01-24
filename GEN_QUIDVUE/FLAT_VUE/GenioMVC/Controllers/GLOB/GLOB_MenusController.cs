@@ -11,6 +11,7 @@ using CSGenio.business;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
+using CSGenio.core.persistence;
 using GenioMVC.Helpers;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
@@ -38,29 +39,38 @@ namespace GenioMVC.Controllers
 		public ActionResult TBS_Menu_171([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
-			var allSelected = requestModel.AllSelected;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-
-			if (queryParams != null)
-			{
-				//Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				//Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-			}
+			string rowsPerPageOptionsString = "";
 
 			TBS_Menu_171_ViewModel model = new TBS_Menu_171_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "TBS_Menu_171");
@@ -96,7 +106,7 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL TBS MENU_GET 171]/
 
 
-			model.Load(perPage, querystring, Request.IsAjaxRequest());
+			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
 			if (model.CheckForZzstate())
 				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
@@ -113,9 +123,12 @@ namespace GenioMVC.Controllers
 				Navigation.OverrideSkipIfJustOne.Remove("GLOB");
 			// jumps if only one
 			var curRowsCount = model.Menu.Pagination.HasTotal ? model.Menu.Pagination.TotalRows : model.Menu.Elements.Count();
-			var isFirstDataLoad = querystring.AllKeys.Contains("isFirstLoad") && Boolean.Parse(querystring["isFirstLoad"]);
+			// only allow the jump if there are no filters
+			bool hasNoFilters = tableConfig.SearchFilters.Count == 0 && tableConfig.StaticFilters.Count == 0 && tableConfig.ActiveFilter == null;
+			bool isFirstDataLoad = (bool)requestModel?.IsFirstLoad;
+			bool isNoRedirect = (bool)requestModel?.noRedirect;
 
-			if (isFirstDataLoad && curRowsCount == 1 && model.Menu.Filters.FiltersValues.Count == 0 && model.Menu.Elements.First().ValZzstate == 0 && AllowSkipIfOnlyOne)
+			if (isFirstDataLoad && curRowsCount == 1 && hasNoFilters && model.Menu.Elements.First().ValZzstate == 0 && AllowSkipIfOnlyOne)
 			{
 				// needs the routevalue for the primary key, because a get request to a get form action expects so
 				var primaryKey = model.Menu.Elements.First().ValCodglob;
@@ -123,9 +136,9 @@ namespace GenioMVC.Controllers
 				Navigation.SetValue(navKey, primaryKey);
 				Navigation.SetValue("SkipIfJustOne", true);
 				var isPopup = querystring.Get("isPopup") ?? "false";
-				var noRedirect = querystring.Get("noRedirect") ?? "false";
+				var noRedirect = isNoRedirect;
 
-				return RedirectToFormAction("GLOB", "EDIT", new { id = primaryKey, nav = Navigation.NavigationId, isHomePage, isPopup, noRedirect, skipLastMenu = true }, model);
+				return RedirectToFormAction("GLOB", "EDIT", new { id = primaryKey, nav = Navigation.NavigationId, isHomePage, isPopup, noRedirect, skipLastMenu = true, glob = primaryKey }, model);
 			}
 
 			return JsonOK(model);
@@ -138,29 +151,38 @@ namespace GenioMVC.Controllers
 		public ActionResult WMS_Menu_4241([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
-			var allSelected = requestModel.AllSelected;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-
-			if (queryParams != null)
-			{
-				//Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				//Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-			}
+			string rowsPerPageOptionsString = "";
 
 			WMS_Menu_4241_ViewModel model = new WMS_Menu_4241_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "WMS_Menu_4241");
@@ -196,7 +218,7 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL WMS MENU_GET 4241]/
 
 
-			model.Load(perPage, querystring, Request.IsAjaxRequest());
+			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
 			if (model.CheckForZzstate())
 				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
@@ -213,9 +235,12 @@ namespace GenioMVC.Controllers
 				Navigation.OverrideSkipIfJustOne.Remove("GLOBFACT");
 			// jumps if only one
 			var curRowsCount = model.Menu.Pagination.HasTotal ? model.Menu.Pagination.TotalRows : model.Menu.Elements.Count();
-			var isFirstDataLoad = querystring.AllKeys.Contains("isFirstLoad") && Boolean.Parse(querystring["isFirstLoad"]);
+			// only allow the jump if there are no filters
+			bool hasNoFilters = tableConfig.SearchFilters.Count == 0 && tableConfig.StaticFilters.Count == 0 && tableConfig.ActiveFilter == null;
+			bool isFirstDataLoad = (bool)requestModel?.IsFirstLoad;
+			bool isNoRedirect = (bool)requestModel?.noRedirect;
 
-			if (isFirstDataLoad && curRowsCount == 1 && model.Menu.Filters.FiltersValues.Count == 0 && model.Menu.Elements.First().ValZzstate == 0 && AllowSkipIfOnlyOne)
+			if (isFirstDataLoad && curRowsCount == 1 && hasNoFilters && model.Menu.Elements.First().ValZzstate == 0 && AllowSkipIfOnlyOne)
 			{
 				// needs the routevalue for the primary key, because a get request to a get form action expects so
 				var primaryKey = model.Menu.Elements.First().ValCodglob;
@@ -223,9 +248,9 @@ namespace GenioMVC.Controllers
 				Navigation.SetValue(navKey, primaryKey);
 				Navigation.SetValue("SkipIfJustOne", true);
 				var isPopup = querystring.Get("isPopup") ?? "false";
-				var noRedirect = querystring.Get("noRedirect") ?? "false";
+				var noRedirect = isNoRedirect;
 
-				return RedirectToFormAction("GLOBFACT", "EDIT", new { id = primaryKey, nav = Navigation.NavigationId, isHomePage, isPopup, noRedirect, skipLastMenu = true }, model);
+				return RedirectToFormAction("GLOBFACT", "EDIT", new { id = primaryKey, nav = Navigation.NavigationId, isHomePage, isPopup, noRedirect, skipLastMenu = true, glob = primaryKey }, model);
 			}
 
 			return JsonOK(model);

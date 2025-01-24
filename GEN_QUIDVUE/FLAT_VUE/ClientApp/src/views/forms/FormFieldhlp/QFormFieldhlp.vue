@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -98,8 +98,8 @@
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.FIELDHLPPSEUDNOVOGR02.isVisible || controls.FIELDHLPPSEUDNOVOGR06.isVisible">
 					<q-control-wrapper
-						v-show="controls.FIELDHLPPSEUDNOVOGR02.isVisible || controls.FIELDHLPPSEUDNOVOGR06.isVisible"
-						class="control-join-group">
+						v-show="controls.FIELDHLPPSEUDNOVOGR02.isVisible"
+						class="control-join-group control-dynamic-group">
 						<q-group-box-container
 							id="FIELDHLPPSEUDNOVOGR02"
 							v-bind="controls.FIELDHLPPSEUDNOVOGR02"
@@ -115,12 +115,12 @@
 										v-on="controls.FIELDHLPFLDS_TXTFIELD.handlers"
 										:loading="controls.FIELDHLPFLDS_TXTFIELD.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.FIELDHLPFLDS_TXTFIELD.props"
 											:model-value="model.ValTxtfield.value"
-											@update:model-value="model.ValTxtfield.fnUpdateValue" />
+											@blur="onBlur(controls.FIELDHLPFLDS_TXTFIELD, model.ValTxtfield.value)"
+											@change="model.ValTxtfield.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -134,30 +134,30 @@
 										v-on="controls.FIELDHLPFLDS_DESCRIP_.handlers"
 										:loading="controls.FIELDHLPFLDS_DESCRIP_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-textarea-input
 											v-if="controls.FIELDHLPFLDS_DESCRIP_.isVisible"
+											v-bind="controls.FIELDHLPFLDS_DESCRIP_.props"
 											id="FIELDHLPFLDS_DESCRIP_"
-											size="large"
 											:model-value="model.ValDescrip.value"
 											:rows="1"
 											:cols="30"
-											:is-required="controls.FIELDHLPFLDS_DESCRIP_.isRequired"
-											:readonly="controls.FIELDHLPFLDS_DESCRIP_.readonly"
-											:placeholder="controls.FIELDHLPFLDS_DESCRIP_.placeholder"
 											@update:model-value="model.ValDescrip.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
 							<!-- End FIELDHLPPSEUDNOVOGR02 -->
 						</q-group-box-container>
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FIELDHLPPSEUDNOVOGR06.isVisible"
+						class="control-join-group control-dynamic-group">
 						<q-group-box-container
 							id="FIELDHLPPSEUDNOVOGR06"
 							v-bind="controls.FIELDHLPPSEUDNOVOGR06"
 							:is-visible="controls.FIELDHLPPSEUDNOVOGR06.isVisible">
 							<!-- Start FIELDHLPPSEUDNOVOGR06 -->
-							<q-row-container v-show="controls.FIELDHLPFLDS_PRIMVIAG.isVisible">
+							<q-row-container v-show="controls.FIELDHLPFLDS_PRIMVIAG.isVisible || controls.FIELDHLPFLDS_LOGICENU.isVisible">
 								<q-control-wrapper
 									v-show="controls.FIELDHLPFLDS_PRIMVIAG.isVisible"
 									class="control-join-group">
@@ -167,32 +167,25 @@
 										v-on="controls.FIELDHLPFLDS_PRIMVIAG.handlers"
 										:loading="controls.FIELDHLPFLDS_PRIMVIAG.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.FIELDHLPFLDS_PRIMVIAG.isVisible"
-												id="FIELDHLPFLDS_PRIMVIAG"
-												size="mini"
-												:model-value="model.ValPrimviag.value"
-												:readonly="controls.FIELDHLPFLDS_PRIMVIAG.readonly"
+												v-bind="controls.FIELDHLPFLDS_PRIMVIAG.props"
 												@update:model-value="model.ValPrimviag.fnUpdateValue" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.FIELDHLPFLDS_LOGICENU.isVisible">
 								<q-control-wrapper
 									v-show="controls.FIELDHLPFLDS_LOGICENU.isVisible"
 									class="control-join-group">
 									<base-input-structure
-										class="i-checkbox"
+										class="i-text"
 										v-bind="controls.FIELDHLPFLDS_LOGICENU"
 										v-on="controls.FIELDHLPFLDS_LOGICENU.handlers"
 										:loading="controls.FIELDHLPFLDS_LOGICENU.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-toggle-input
 											v-if="controls.FIELDHLPFLDS_LOGICENU.isVisible"
 											id="FIELDHLPFLDS_LOGICENU"
@@ -204,7 +197,24 @@
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
-							<q-row-container v-show="controls.FIELDHLPFLDS_RADIOB__.isVisible || controls.FIELDHLPFLDS_CLASSNUM.isVisible">
+							<q-row-container v-show="controls.FIELDHLPFLDS_CLASSNUM.isVisible || controls.FIELDHLPFLDS_RADIOB__.isVisible">
+								<q-control-wrapper
+									v-show="controls.FIELDHLPFLDS_CLASSNUM.isVisible"
+									class="control-join-group">
+									<base-input-structure
+										class="i-text"
+										v-bind="controls.FIELDHLPFLDS_CLASSNUM"
+										v-on="controls.FIELDHLPFLDS_CLASSNUM.handlers"
+										:loading="controls.FIELDHLPFLDS_CLASSNUM.props.loading"
+										:reporting-mode-on="reportingModeCAV"
+										:suggestion-mode-on="suggestionModeOn">
+										<q-select
+											v-if="controls.FIELDHLPFLDS_CLASSNUM.isVisible"
+											v-bind="controls.FIELDHLPFLDS_CLASSNUM.props"
+											:model-value="model.ValClassnum.value"
+											@update:model-value="model.ValClassnum.fnUpdateValue" />
+									</base-input-structure>
+								</q-control-wrapper>
 								<q-control-wrapper
 									v-show="controls.FIELDHLPFLDS_RADIOB__.isVisible"
 									class="control-join-group">
@@ -215,9 +225,8 @@
 										:label-position="labelAlignment.topleft"
 										:loading="controls.FIELDHLPFLDS_RADIOB__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-radio-button-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-radio-group
 											v-if="controls.FIELDHLPFLDS_RADIOB__.isVisible"
 											id="FIELDHLPFLDS_RADIOB__"
 											:model-value="model.ValRadiob.value"
@@ -230,22 +239,58 @@
 											@update:model-value="model.ValRadiob.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.FIELDHLPPSEUDFIELD002.isVisible || controls.FIELDHLPPSEUDFIELD003.isVisible">
 								<q-control-wrapper
-									v-show="controls.FIELDHLPFLDS_CLASSNUM.isVisible"
+									v-show="controls.FIELDHLPPSEUDFIELD002.isVisible"
+									class="control-join-group">
+									<base-input-structure
+										class="i-static-text"
+										v-bind="controls.FIELDHLPPSEUDFIELD002"
+										v-on="controls.FIELDHLPPSEUDFIELD002.handlers"
+										:loading="controls.FIELDHLPPSEUDFIELD002.props.loading"
+										:reporting-mode-on="reportingModeCAV"
+										:suggestion-mode-on="suggestionModeOn">
+										<q-static-text
+											v-if="controls.FIELDHLPPSEUDFIELD002.isVisible"
+											id="FIELDHLPPSEUDFIELD002"
+											:size="controls.FIELDHLPPSEUDFIELD002.size"
+											:text="controls.FIELDHLPPSEUDFIELD002.label" />
+									</base-input-structure>
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FIELDHLPPSEUDFIELD003.isVisible"
+									class="control-join-group">
+									<base-input-structure
+										class="q-image"
+										v-bind="controls.FIELDHLPPSEUDFIELD003"
+										v-on="controls.FIELDHLPPSEUDFIELD003.handlers"
+										:loading="controls.FIELDHLPPSEUDFIELD003.props.loading"
+										:reporting-mode-on="reportingModeCAV"
+										:suggestion-mode-on="suggestionModeOn">
+										<q-image
+											v-if="controls.FIELDHLPPSEUDFIELD003.isVisible"
+											v-bind="controls.FIELDHLPPSEUDFIELD003.props"
+											v-on="controls.FIELDHLPPSEUDFIELD003.handlers" />
+									</base-input-structure>
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.FIELDHLPPSEUDFIELD001.isVisible">
+								<q-control-wrapper
+									v-show="controls.FIELDHLPPSEUDFIELD001.isVisible"
 									class="control-join-group">
 									<base-input-structure
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_CLASSNUM"
-										v-on="controls.FIELDHLPFLDS_CLASSNUM.handlers"
-										:loading="controls.FIELDHLPFLDS_CLASSNUM.props.loading"
+										v-bind="controls.FIELDHLPPSEUDFIELD001"
+										v-on="controls.FIELDHLPPSEUDFIELD001.handlers"
+										:loading="controls.FIELDHLPPSEUDFIELD001.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-select
-											v-if="controls.FIELDHLPFLDS_CLASSNUM.isVisible"
-											v-bind="controls.FIELDHLPFLDS_CLASSNUM.props"
-											:model-value="model.ValClassnum.value"
-											@update:model-value="model.ValClassnum.fnUpdateValue" />
+										:suggestion-mode-on="suggestionModeOn">
+										<q-text-field
+											v-bind="controls.FIELDHLPPSEUDFIELD001.props"
+											:model-value="model.PseudValField001.value"
+											@blur="onBlur(controls.FIELDHLPPSEUDFIELD001, model.PseudValField001.value)"
+											@change="model.PseudValField001.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -256,7 +301,7 @@
 				<q-row-container v-show="controls.FIELDHLPPSEUDNOVOGR01.isVisible || controls.FIELDHLPPSEUDNOVOGR03.isVisible">
 					<q-control-wrapper
 						v-show="controls.FIELDHLPPSEUDNOVOGR01.isVisible || controls.FIELDHLPPSEUDNOVOGR03.isVisible"
-						class="control-join-group">
+						class="control-join-group control-dynamic-group">
 						<q-group-box-container
 							id="FIELDHLPPSEUDNOVOGR01"
 							v-bind="controls.FIELDHLPPSEUDNOVOGR01"
@@ -272,12 +317,10 @@
 										v-on="controls.FIELDHLPFLDS_YEAR____.handlers"
 										:loading="controls.FIELDHLPFLDS_YEAR____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.FIELDHLPFLDS_YEAR____.isVisible"
-											v-bind="controls.FIELDHLPFLDS_YEAR____"
-											:model-value="model.ValYear.value"
+											v-bind="controls.FIELDHLPFLDS_YEAR____.props"
 											@update:model-value="model.ValYear.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -290,14 +333,13 @@
 										v-on="controls.FIELDHLPFLDS_TIME____.handlers"
 										:loading="controls.FIELDHLPFLDS_TIME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.FIELDHLPFLDS_TIME____.isVisible"
-											v-bind="controls.FIELDHLPFLDS_TIME____"
-											format="Time"
+											v-bind="controls.FIELDHLPFLDS_TIME____.props"
 											:model-value="model.ValTime.value"
-											@update:model-value="model.ValTime.fnUpdateValue" />
+											@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
+											@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -309,14 +351,13 @@
 										v-on="controls.FIELDHLPFLDS_DATE____.handlers"
 										:loading="controls.FIELDHLPFLDS_DATE____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.FIELDHLPFLDS_DATE____.isVisible"
-											v-bind="controls.FIELDHLPFLDS_DATE____"
-											format="Date"
+											v-bind="controls.FIELDHLPFLDS_DATE____.props"
 											:model-value="model.ValDate.value"
-											@update:model-value="model.ValDate.fnUpdateValue" />
+											@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
+											@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -328,14 +369,13 @@
 										v-on="controls.FIELDHLPFLDS_DATETIME.handlers"
 										:loading="controls.FIELDHLPFLDS_DATETIME.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.FIELDHLPFLDS_DATETIME.isVisible"
-											v-bind="controls.FIELDHLPFLDS_DATETIME"
-											format="DateTime"
+											v-bind="controls.FIELDHLPFLDS_DATETIME.props"
 											:model-value="model.ValDatetime.value"
-											@update:model-value="model.ValDatetime.fnUpdateValue" />
+											@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
+											@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -347,14 +387,13 @@
 										v-on="controls.FIELDHLPFLDS_DATESECO.handlers"
 										:loading="controls.FIELDHLPFLDS_DATESECO.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.FIELDHLPFLDS_DATESECO.isVisible"
-											v-bind="controls.FIELDHLPFLDS_DATESECO"
-											format="DateTimeSeconds"
+											v-bind="controls.FIELDHLPFLDS_DATESECO.props"
 											:model-value="model.ValDateseco.value"
-											@update:model-value="model.ValDateseco.fnUpdateValue" />
+											@reset-icon-click="model.ValDateseco.fnUpdateValue(model.ValDateseco.originalValue ?? new Date())"
+											@update:model-value="model.ValDateseco.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -365,25 +404,7 @@
 							v-bind="controls.FIELDHLPPSEUDNOVOGR03"
 							:is-visible="controls.FIELDHLPPSEUDNOVOGR03.isVisible">
 							<!-- Start FIELDHLPPSEUDNOVOGR03 -->
-							<q-row-container v-show="controls.FIELDHLPFLDS_NPASSAGE.isVisible || controls.FIELDHLPFLDS_DURATION.isVisible || controls.FIELDHLPFLDS_PRECOBIL.isVisible || controls.FIELDHLPFLDS_PRICE___.isVisible">
-								<q-control-wrapper
-									v-show="controls.FIELDHLPFLDS_NPASSAGE.isVisible"
-									class="control-join-group">
-									<base-input-structure
-										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_NPASSAGE"
-										v-on="controls.FIELDHLPFLDS_NPASSAGE.handlers"
-										:loading="controls.FIELDHLPFLDS_NPASSAGE.props.loading"
-										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-numeric-input
-											v-if="controls.FIELDHLPFLDS_NPASSAGE.isVisible"
-											v-bind="controls.FIELDHLPFLDS_NPASSAGE"
-											:model-value="model.ValNpassage.value"
-											@update:model-value="model.ValNpassage.fnUpdateValue" />
-									</base-input-structure>
-								</q-control-wrapper>
+							<q-row-container v-show="controls.FIELDHLPFLDS_DURATION.isVisible || controls.FIELDHLPFLDS_NPASSAGE.isVisible || controls.FIELDHLPFLDS_PRECOBIL.isVisible || controls.FIELDHLPFLDS_PRICE___.isVisible">
 								<q-control-wrapper
 									v-show="controls.FIELDHLPFLDS_DURATION.isVisible"
 									class="control-join-group">
@@ -393,13 +414,27 @@
 										v-on="controls.FIELDHLPFLDS_DURATION.handlers"
 										:loading="controls.FIELDHLPFLDS_DURATION.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.FIELDHLPFLDS_DURATION.isVisible"
-											v-bind="controls.FIELDHLPFLDS_DURATION"
-											:model-value="model.ValDuration.value"
+											v-bind="controls.FIELDHLPFLDS_DURATION.props"
 											@update:model-value="model.ValDuration.fnUpdateValue" />
+									</base-input-structure>
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FIELDHLPFLDS_NPASSAGE.isVisible"
+									class="control-join-group">
+									<base-input-structure
+										class="i-text"
+										v-bind="controls.FIELDHLPFLDS_NPASSAGE"
+										v-on="controls.FIELDHLPFLDS_NPASSAGE.handlers"
+										:loading="controls.FIELDHLPFLDS_NPASSAGE.props.loading"
+										:reporting-mode-on="reportingModeCAV"
+										:suggestion-mode-on="suggestionModeOn">
+										<q-numeric-input
+											v-if="controls.FIELDHLPFLDS_NPASSAGE.isVisible"
+											v-bind="controls.FIELDHLPFLDS_NPASSAGE.props"
+											@update:model-value="model.ValNpassage.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -411,12 +446,10 @@
 										v-on="controls.FIELDHLPFLDS_PRECOBIL.handlers"
 										:loading="controls.FIELDHLPFLDS_PRECOBIL.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.FIELDHLPFLDS_PRECOBIL.isVisible"
-											v-bind="controls.FIELDHLPFLDS_PRECOBIL"
-											:model-value="model.ValPrecobil.value"
+											v-bind="controls.FIELDHLPFLDS_PRECOBIL.props"
 											@update:model-value="model.ValPrecobil.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -429,12 +462,10 @@
 										v-on="controls.FIELDHLPFLDS_PRICE___.handlers"
 										:loading="controls.FIELDHLPFLDS_PRICE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.FIELDHLPFLDS_PRICE___.isVisible"
-											v-bind="controls.FIELDHLPFLDS_PRICE___"
-											:model-value="model.ValPrice.value"
+											v-bind="controls.FIELDHLPFLDS_PRICE___.props"
 											@update:model-value="model.ValPrice.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -446,7 +477,7 @@
 				<q-row-container v-show="controls.FIELDHLPPSEUDNOVOGR04.isVisible">
 					<q-control-wrapper
 						v-show="controls.FIELDHLPPSEUDNOVOGR04.isVisible"
-						class="control-join-group">
+						class="control-join-group control-dynamic-group">
 						<q-group-box-container
 							id="FIELDHLPPSEUDNOVOGR04"
 							v-bind="controls.FIELDHLPPSEUDNOVOGR04"
@@ -462,8 +493,7 @@
 										v-on="controls.FIELDHLPFLDS_SSNUMBER.handlers"
 										:loading="controls.FIELDHLPFLDS_SSNUMBER.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_SSNUMBER.isVisible"
 											v-bind="controls.FIELDHLPFLDS_SSNUMBER"
@@ -480,8 +510,7 @@
 										v-on="controls.FIELDHLPFLDS_ZIPFIELD.handlers"
 										:loading="controls.FIELDHLPFLDS_ZIPFIELD.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_ZIPFIELD.isVisible"
 											v-bind="controls.FIELDHLPFLDS_ZIPFIELD"
@@ -498,8 +527,7 @@
 										v-on="controls.FIELDHLPFLDS_VATNUMBR.handlers"
 										:loading="controls.FIELDHLPFLDS_VATNUMBR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_VATNUMBR.isVisible"
 											v-bind="controls.FIELDHLPFLDS_VATNUMBR"
@@ -516,8 +544,7 @@
 										v-on="controls.FIELDHLPFLDS_LICPLATE.handlers"
 										:loading="controls.FIELDHLPFLDS_LICPLATE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_LICPLATE.isVisible"
 											v-bind="controls.FIELDHLPFLDS_LICPLATE"
@@ -534,8 +561,7 @@
 										v-on="controls.FIELDHLPFLDS_BANKNMBR.handlers"
 										:loading="controls.FIELDHLPFLDS_BANKNMBR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_BANKNMBR.isVisible"
 											v-bind="controls.FIELDHLPFLDS_BANKNMBR"
@@ -552,8 +578,7 @@
 										v-on="controls.FIELDHLPFLDS_EMAILFLD.handlers"
 										:loading="controls.FIELDHLPFLDS_EMAILFLD.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_EMAILFLD.isVisible"
 											v-bind="controls.FIELDHLPFLDS_EMAILFLD"
@@ -570,8 +595,7 @@
 										v-on="controls.FIELDHLPFLDS_IBANFIEL.handlers"
 										:loading="controls.FIELDHLPFLDS_IBANFIEL.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_IBANFIEL.isVisible"
 											v-bind="controls.FIELDHLPFLDS_IBANFIEL"
@@ -581,15 +605,14 @@
 								</q-control-wrapper>
 								<q-control-wrapper
 									v-show="controls.FIELDHLPFLDS_UPPRTEXT.isVisible"
-									class="control-join-group">
+									class="control-join-group control-dynamic-group">
 									<base-input-structure
 										class="i-text"
 										v-bind="controls.FIELDHLPFLDS_UPPRTEXT"
 										v-on="controls.FIELDHLPFLDS_UPPRTEXT.handlers"
 										:loading="controls.FIELDHLPFLDS_UPPRTEXT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_UPPRTEXT.isVisible"
 											v-bind="controls.FIELDHLPFLDS_UPPRTEXT"
@@ -602,16 +625,16 @@
 						</q-group-box-container>
 					</q-control-wrapper>
 				</q-row-container>
-				<q-row-container v-show="controls.FIELDHLPPSEUDNOVOGR05.isVisible">
+				<q-row-container v-show="controls.FIELDHLPPSEUDNOVOGR05.isVisible || controls.FIELDHLPPSEUDNOVOGR07.isVisible">
 					<q-control-wrapper
 						v-show="controls.FIELDHLPPSEUDNOVOGR05.isVisible"
-						class="control-join-group">
+						class="control-join-group control-dynamic-group">
 						<q-group-box-container
 							id="FIELDHLPPSEUDNOVOGR05"
 							v-bind="controls.FIELDHLPPSEUDNOVOGR05"
 							:is-visible="controls.FIELDHLPPSEUDNOVOGR05.isVisible">
 							<!-- Start FIELDHLPPSEUDNOVOGR05 -->
-							<q-row-container v-show="controls.FIELDHLPFLDS_PASSFLD_.isVisible || controls.FIELDHLPFLDS_CLRPICKE.isVisible">
+							<q-row-container v-show="controls.FIELDHLPFLDS_PASSFLD_.isVisible">
 								<q-control-wrapper
 									v-show="controls.FIELDHLPFLDS_PASSFLD_.isVisible"
 									class="control-join-group">
@@ -621,16 +644,16 @@
 										v-on="controls.FIELDHLPFLDS_PASSFLD_.handlers"
 										:loading="controls.FIELDHLPFLDS_PASSFLD_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-password-input
-											v-if="controls.FIELDHLPFLDS_PASSFLD_.isVisible"
-											v-bind="controls.FIELDHLPFLDS_PASSFLD_"
+										:suggestion-mode-on="suggestionModeOn">
+										<q-text-field
+											v-bind="controls.FIELDHLPFLDS_PASSFLD_.props"
 											:model-value="model.ValPassfld.value"
-											:label-text="controls.FIELDHLPFLDS_PASSFLD_.label"
-											@update:model-value="model.ValPassfld.fnUpdateValue" />
+											@blur="onBlur(controls.FIELDHLPFLDS_PASSFLD_, model.ValPassfld.value)"
+											@change="model.ValPassfld.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.FIELDHLPFLDS_CLRPICKE.isVisible">
 								<q-control-wrapper
 									v-show="controls.FIELDHLPFLDS_CLRPICKE.isVisible"
 									class="control-join-group">
@@ -640,36 +663,85 @@
 										v-on="controls.FIELDHLPFLDS_CLRPICKE.handlers"
 										:loading="controls.FIELDHLPFLDS_CLRPICKE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.FIELDHLPFLDS_CLRPICKE.props"
 											:model-value="model.ValClrpicke.value"
-											@update:model-value="model.ValClrpicke.fnUpdateValue" />
+											@blur="onBlur(controls.FIELDHLPFLDS_CLRPICKE, model.ValClrpicke.value)"
+											@change="model.ValClrpicke.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
 							<!-- End FIELDHLPPSEUDNOVOGR05 -->
 						</q-group-box-container>
 					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.FIELDHLPFLDS_CREATUSE.isVisible || controls.FIELDHLPFLDS_CREATDAT.isVisible || controls.FIELDHLPFLDS_CREATINS.isVisible || controls.FIELDHLPFLDS_CREATHOU.isVisible">
 					<q-control-wrapper
-						v-show="controls.FIELDHLPFLDS_CREATUSE.isVisible"
-						class="control-join-group">
-						<base-input-structure
-							class="i-text"
-							v-bind="controls.FIELDHLPFLDS_CREATUSE"
-							v-on="controls.FIELDHLPFLDS_CREATUSE.handlers"
-							:loading="controls.FIELDHLPFLDS_CREATUSE.props.loading"
-							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-text-field
-								v-bind="controls.FIELDHLPFLDS_CREATUSE.props"
-								:model-value="model.ValCreatuse.value" />
-						</base-input-structure>
+						v-show="controls.FIELDHLPPSEUDNOVOGR07.isVisible"
+						class="control-join-group control-dynamic-group">
+						<q-group-box-container
+							id="FIELDHLPPSEUDNOVOGR07"
+							v-bind="controls.FIELDHLPPSEUDNOVOGR07"
+							:is-visible="controls.FIELDHLPPSEUDNOVOGR07.isVisible">
+							<!-- Start FIELDHLPPSEUDNOVOGR07 -->
+							<q-row-container v-show="controls.FIELDHLPFLDS_LOGOEXTE.isVisible">
+								<q-control-wrapper
+									v-show="controls.FIELDHLPFLDS_LOGOEXTE.isVisible"
+									class="control-join-group">
+									<base-input-structure
+										class="q-image"
+										v-bind="controls.FIELDHLPFLDS_LOGOEXTE"
+										v-on="controls.FIELDHLPFLDS_LOGOEXTE.handlers"
+										:loading="controls.FIELDHLPFLDS_LOGOEXTE.props.loading"
+										:reporting-mode-on="reportingModeCAV"
+										:suggestion-mode-on="suggestionModeOn">
+										<q-image
+											v-if="controls.FIELDHLPFLDS_LOGOEXTE.isVisible"
+											v-bind="controls.FIELDHLPFLDS_LOGOEXTE.props"
+											v-on="controls.FIELDHLPFLDS_LOGOEXTE.handlers" />
+									</base-input-structure>
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.FIELDHLPFLDS_LOGO____.isVisible">
+								<q-control-wrapper
+									v-show="controls.FIELDHLPFLDS_LOGO____.isVisible"
+									class="control-join-group">
+									<base-input-structure
+										class="q-image"
+										v-bind="controls.FIELDHLPFLDS_LOGO____"
+										v-on="controls.FIELDHLPFLDS_LOGO____.handlers"
+										:loading="controls.FIELDHLPFLDS_LOGO____.props.loading"
+										:reporting-mode-on="reportingModeCAV"
+										:suggestion-mode-on="suggestionModeOn">
+										<q-image
+											v-if="controls.FIELDHLPFLDS_LOGO____.isVisible"
+											v-bind="controls.FIELDHLPFLDS_LOGO____.props"
+											v-on="controls.FIELDHLPFLDS_LOGO____.handlers" />
+									</base-input-structure>
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.FIELDHLPFLDS_ATTACH__.isVisible">
+								<q-control-wrapper
+									v-show="controls.FIELDHLPFLDS_ATTACH__.isVisible"
+									class="control-join-group">
+									<base-input-structure
+										class="i-text"
+										v-bind="controls.FIELDHLPFLDS_ATTACH__"
+										v-on="controls.FIELDHLPFLDS_ATTACH__.handlers"
+										:loading="controls.FIELDHLPFLDS_ATTACH__.props.loading"
+										:reporting-mode-on="reportingModeCAV"
+										:suggestion-mode-on="suggestionModeOn">
+										<q-document
+											v-if="controls.FIELDHLPFLDS_ATTACH__.isVisible"
+											v-bind="controls.FIELDHLPFLDS_ATTACH__.props"
+											v-on="controls.FIELDHLPFLDS_ATTACH__.handlers" />
+									</base-input-structure>
+								</q-control-wrapper>
+							</q-row-container>
+							<!-- End FIELDHLPPSEUDNOVOGR07 -->
+						</q-group-box-container>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.FIELDHLPFLDS_CREATDAT.isVisible || controls.FIELDHLPFLDS_CREATUSE.isVisible || controls.FIELDHLPFLDS_CREATINS.isVisible || controls.FIELDHLPFLDS_CREATHOU.isVisible">
 					<q-control-wrapper
 						v-show="controls.FIELDHLPFLDS_CREATDAT.isVisible"
 						class="control-join-group">
@@ -679,14 +751,28 @@
 							v-on="controls.FIELDHLPFLDS_CREATDAT.handlers"
 							:loading="controls.FIELDHLPFLDS_CREATDAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.FIELDHLPFLDS_CREATDAT.isVisible"
-								v-bind="controls.FIELDHLPFLDS_CREATDAT"
-								format="Date"
+								v-bind="controls.FIELDHLPFLDS_CREATDAT.props"
 								:model-value="model.ValCreatdat.value"
-								@update:model-value="model.ValCreatdat.fnUpdateValue" />
+								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
+								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
+						</base-input-structure>
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FIELDHLPFLDS_CREATUSE.isVisible"
+						class="control-join-group">
+						<base-input-structure
+							class="i-text"
+							v-bind="controls.FIELDHLPFLDS_CREATUSE"
+							v-on="controls.FIELDHLPFLDS_CREATUSE.handlers"
+							:loading="controls.FIELDHLPFLDS_CREATUSE.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<q-text-field
+								v-bind="controls.FIELDHLPFLDS_CREATUSE.props"
+								:model-value="model.ValCreatuse.value" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -698,14 +784,13 @@
 							v-on="controls.FIELDHLPFLDS_CREATINS.handlers"
 							:loading="controls.FIELDHLPFLDS_CREATINS.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.FIELDHLPFLDS_CREATINS.isVisible"
-								v-bind="controls.FIELDHLPFLDS_CREATINS"
-								format="DateTimeSeconds"
+								v-bind="controls.FIELDHLPFLDS_CREATINS.props"
 								:model-value="model.ValCreatins.value"
-								@update:model-value="model.ValCreatins.fnUpdateValue" />
+								@reset-icon-click="model.ValCreatins.fnUpdateValue(model.ValCreatins.originalValue ?? new Date())"
+								@update:model-value="model.ValCreatins.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -717,95 +802,14 @@
 							v-on="controls.FIELDHLPFLDS_CREATHOU.handlers"
 							:loading="controls.FIELDHLPFLDS_CREATHOU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.FIELDHLPFLDS_CREATHOU.isVisible"
-								v-bind="controls.FIELDHLPFLDS_CREATHOU"
-								format="Time"
+								v-bind="controls.FIELDHLPFLDS_CREATHOU.props"
 								:model-value="model.ValCreathou.value"
-								@update:model-value="model.ValCreathou.fnUpdateValue" />
+								@reset-icon-click="model.ValCreathou.fnUpdateValue(model.ValCreathou.originalValue ?? new Date())"
+								@update:model-value="model.ValCreathou.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.FIELDHLPPSEUDNOVOGR07.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.FIELDHLPPSEUDNOVOGR07.isVisible"
-						class="row-line-group">
-						<q-group-box-container
-							id="FIELDHLPPSEUDNOVOGR07"
-							v-bind="controls.FIELDHLPPSEUDNOVOGR07"
-							:is-visible="controls.FIELDHLPPSEUDNOVOGR07.isVisible">
-							<!-- Start FIELDHLPPSEUDNOVOGR07 -->
-							<q-row-container v-show="controls.FIELDHLPFLDS_LOGO____.isVisible || controls.FIELDHLPFLDS_ATTACH__.isVisible">
-								<q-control-wrapper
-									v-show="controls.FIELDHLPFLDS_LOGO____.isVisible"
-									class="control-join-group">
-									<base-input-structure
-										class="q-image"
-										v-bind="controls.FIELDHLPFLDS_LOGO____"
-										v-on="controls.FIELDHLPFLDS_LOGO____.handlers"
-										:loading="controls.FIELDHLPFLDS_LOGO____.props.loading"
-										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-image
-											v-if="controls.FIELDHLPFLDS_LOGO____.isVisible"
-											v-bind="controls.FIELDHLPFLDS_LOGO____.props"
-											v-on="controls.FIELDHLPFLDS_LOGO____.handlers" />
-									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FIELDHLPFLDS_ATTACH__.isVisible"
-									class="control-join-group">
-									<base-input-structure
-										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_ATTACH__"
-										v-on="controls.FIELDHLPFLDS_ATTACH__.handlers"
-										:loading="controls.FIELDHLPFLDS_ATTACH__.props.loading"
-										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-document
-											v-if="controls.FIELDHLPFLDS_ATTACH__.isVisible"
-											id="FIELDHLPFLDS_ATTACH__"
-											size="xxlarge"
-											:model-value="model.ValAttach.value"
-											versioning-is-on
-											:readonly="controls.FIELDHLPFLDS_ATTACH__.readonly"
-											:is-in-checkout="controls.FIELDHLPFLDS_ATTACH__.isInCheckout"
-											:current-version="controls.FIELDHLPFLDS_ATTACH__.currentVersion"
-											:extensions="controls.FIELDHLPFLDS_ATTACH__.extensions"
-											:max-file-size="controls.FIELDHLPFLDS_ATTACH__.maxFileSize"
-											:versions="controls.FIELDHLPFLDS_ATTACH__.documentVersions"
-											:versions-info="controls.FIELDHLPFLDS_ATTACH__.versionsInfo"
-											:file-properties="controls.FIELDHLPFLDS_ATTACH__.fileProperties"
-											:texts="controls.FIELDHLPFLDS_ATTACH__.texts"
-											:popup-is-visible="controls.FIELDHLPFLDS_ATTACH__.popupIsVisible"
-											:disallow-removal="controls.FIELDHLPFLDS_ATTACH__.isRequired"
-											:resources-path="controls.FIELDHLPFLDS_ATTACH__.resourcesPath"
-											:uses-templates="controls.FIELDHLPFLDS_ATTACH__.usesTemplates"
-											@file-error="controls.FIELDHLPFLDS_ATTACH__.HandleFileError($event)"
-											@submit-file="controls.FIELDHLPFLDS_ATTACH__.SetFile($event)"
-											@edit-file="controls.FIELDHLPFLDS_ATTACH__.SetCheckoutState()"
-											@get-properties="controls.FIELDHLPFLDS_ATTACH__.GetFileProperties()"
-											@get-version-history="controls.FIELDHLPFLDS_ATTACH__.GetVersionsInfo()"
-											@get-file="controls.FIELDHLPFLDS_ATTACH__.GetFile()"
-											@download-file="controls.FIELDHLPFLDS_ATTACH__.DownloadFile()"
-											@get-file-version="controls.FIELDHLPFLDS_ATTACH__.GetFileVersion($event)"
-											@delete-last="controls.FIELDHLPFLDS_ATTACH__.DeleteFile(0)"
-											@delete-history="controls.FIELDHLPFLDS_ATTACH__.DeleteFile(1)"
-											@delete-file="controls.FIELDHLPFLDS_ATTACH__.DeleteFile(2)"
-											@show-popup="controls.FIELDHLPFLDS_ATTACH__.SetModal($event)"
-											@hide-popup="controls.FIELDHLPFLDS_ATTACH__.RemoveModal($event)"
-											@show-templates-popup="controls.FIELDHLPFLDS_ATTACH__.handleDocumentTemplates($event)" />
-									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<!-- End FIELDHLPPSEUDNOVOGR07 -->
-						</q-group-box-container>
 					</q-control-wrapper>
 				</q-row-container>
 			</template>
@@ -889,15 +893,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'FIELDHLP',
-						location: 'form-FIELDHLP',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'FIELDHLP',
+					location: 'form-FIELDHLP',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -944,19 +946,9 @@
 					mode: ''
 				},
 
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
+
 				formButtons: {
-					btn_isap: {
-						id: 'btn_isap-btn',
-						text: computed(() => this.Resources.APPLY29100),
-						type: 'custom',
-						style: 'secondary',
-						showInHeader: false,
-						showInFooter: true,
-						isActive: true,
-						isVisible: computed(() => vm.authData.isAllowed && vm.controls.FIELDHLPPSEUDBTN_ISAP.checkFieldIsVisible()),
-						disabled: computed(() => vm.controls.FIELDHLPPSEUDBTN_ISAP.isBlocked),
-						action: (e) => vm.controls.FIELDHLPPSEUDBTN_ISAP.action(e)
-					},
 					changeToShow: {
 						id: 'change-to-show-btn',
 						icon: {
@@ -1027,8 +1019,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -1127,7 +1120,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -1181,21 +1174,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -1203,16 +1181,22 @@
 					FIELDHLPPSEUDNOVOGR02: new fieldControlClass.GroupControl({
 						id: 'FIELDHLPPSEUDNOVOGR02',
 						name: 'NOVOGR02',
-						size: 'large',
-						hasLabel: true,
+						size: 'block',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtitle',
+								text: computed(() => this.Resources._111418227),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1114_VERBOSE42095),
+							}
+						},
 						label: computed(() => this.Resources.TEXT_INPUTS37770),
-						userHelp: computed(() => this.Resources._111418227),
-						description: computed(() => this.Resources._1114_VERBOSE42095),
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1222,16 +1206,22 @@
 						id: 'FIELDHLPFLDS_TXTFIELD',
 						name: 'TXTFIELD',
 						size: 'large',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._111536184),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1115_VERBOSE27480),
+							}
+						},
 						label: computed(() => this.Resources.TEXT_FIELD41810),
-						userHelp: computed(() => this.Resources._111536184),
-						description: computed(() => this.Resources._1115_VERBOSE27480),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FIELDHLPPSEUDNOVOGR02',
 						maxLength: 50,
 						labelId: 'label_FIELDHLPFLDS_TXTFIELD',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1241,462 +1231,42 @@
 						id: 'FIELDHLPFLDS_DESCRIP_',
 						name: 'DESCRIP',
 						size: 'large',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._111636045),
+							},
+							detailedHelp: {
+								type: 'None',
+								text: computed(() => this.Resources._1116_VERBOSE64950),
+							}
+						},
 						label: computed(() => this.Resources.MULTINE_TEXT05310),
-						userHelp: computed(() => this.Resources._111636045),
-						description: computed(() => this.Resources._1116_VERBOSE64950),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FIELDHLPPSEUDNOVOGR02',
-						maxLength: 300,
-						labelId: 'label_FIELDHLPFLDS_DESCRIP_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					FIELDHLPPSEUDNOVOGR06: new fieldControlClass.GroupControl({
 						id: 'FIELDHLPPSEUDNOVOGR06',
 						name: 'NOVOGR06',
-						size: 'medium',
-						hasLabel: true,
+						size: 'block',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtitle',
+								text: computed(() => this.Resources._114127414),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1141_VERBOSE60151),
+							}
+						},
 						label: '',
-						userHelp: computed(() => this.Resources._111418227),
-						description: computed(() => this.Resources._1114_VERBOSE42095),
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_YEAR____: new fieldControlClass.NumberControl({
-						modelField: 'ValYear',
-						valueChangeEvent: 'fieldChange:flds.year',
-						maxIntegers: 4,
-						maxDecimals: 0,
-						id: 'FIELDHLPFLDS_YEAR____',
-						name: 'YEAR',
-						size: 'mini',
-						hasLabel: true,
-						label: computed(() => this.Resources.YEAR61794),
-						userHelp: computed(() => this.Resources._111737822),
-						description: computed(() => this.Resources._1117_VERBOSE04450),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_TIME____: new fieldControlClass.TimeControl({
-						modelField: 'ValTime',
-						valueChangeEvent: 'fieldChange:flds.time',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
-						id: 'FIELDHLPFLDS_TIME____',
-						name: 'TIME',
-						size: 'mini',
-						hasLabel: true,
-						label: computed(() => this.Resources.TIME15328),
-						userHelp: computed(() => this.Resources._111838179),
-						description: computed(() => this.Resources._1118_VERBOSE37983),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_DATE____: new fieldControlClass.DateControl({
-						modelField: 'ValDate',
-						valueChangeEvent: 'fieldChange:flds.date',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
-						id: 'FIELDHLPFLDS_DATE____',
-						name: 'DATE',
-						size: 'small',
-						hasLabel: true,
-						label: computed(() => this.Resources.DATE18475),
-						userHelp: computed(() => this.Resources._111938548),
-						description: computed(() => this.Resources._1119_VERBOSE52944),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_DATETIME: new fieldControlClass.DateControl({
-						modelField: 'ValDatetime',
-						valueChangeEvent: 'fieldChange:flds.datetime',
-						id: 'FIELDHLPFLDS_DATETIME',
-						name: 'DATETIME',
-						size: 'medium',
-						hasLabel: true,
-						label: computed(() => this.Resources.DATE_TIME59103),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_DATESECO: new fieldControlClass.DateControl({
-						modelField: 'ValDateseco',
-						valueChangeEvent: 'fieldChange:flds.dateseco',
-						id: 'FIELDHLPFLDS_DATESECO',
-						name: 'DATESECO',
-						size: 'medium',
-						hasLabel: true,
-						label: computed(() => this.Resources.DATE_SECOND44057),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_NPASSAGE: new fieldControlClass.NumberControl({
-						modelField: 'ValNpassage',
-						valueChangeEvent: 'fieldChange:flds.npassage',
-						maxIntegers: 3,
-						maxDecimals: 0,
-						id: 'FIELDHLPFLDS_NPASSAGE',
-						name: 'NPASSAGE',
-						size: 'mini',
-						hasLabel: true,
-						label: computed(() => this.Resources.NUMERIC19292),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR03',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_DURATION: new fieldControlClass.NumberControl({
-						modelField: 'ValDuration',
-						valueChangeEvent: 'fieldChange:flds.duration',
-						maxIntegers: 2,
-						maxDecimals: 2,
-						id: 'FIELDHLPFLDS_DURATION',
-						name: 'DURATION',
-						size: 'small',
-						hasLabel: true,
-						label: computed(() => this.Resources.NUMERIC_DECIMAL49512),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR03',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_PRECOBIL: new fieldControlClass.CurrencyControl({
-						modelField: 'ValPrecobil',
-						valueChangeEvent: 'fieldChange:flds.precobil',
-						maxIntegers: 3,
-						maxDecimals: 2,
-						id: 'FIELDHLPFLDS_PRECOBIL',
-						name: 'PRECOBIL',
-						size: 'small',
-						hasLabel: true,
-						label: computed(() => this.Resources.CURRENCY_DECIMAL48296),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR03',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_PRICE___: new fieldControlClass.CurrencyControl({
-						modelField: 'ValPrice',
-						valueChangeEvent: 'fieldChange:flds.price',
-						maxIntegers: 3,
-						maxDecimals: 2,
-						id: 'FIELDHLPFLDS_PRICE___',
-						name: 'PRICE',
-						size: 'mini',
-						hasLabel: true,
-						label: computed(() => this.Resources.CURRENCY13881),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR03',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPPSEUDNOVOGR01: new fieldControlClass.GroupControl({
-						id: 'FIELDHLPPSEUDNOVOGR01',
-						name: 'NOVOGR01',
-						size: 'medium',
-						hasLabel: true,
-						label: computed(() => this.Resources.DATE_TIME_INPUTS06842),
-						userHelp: '',
-						description: '',
-						placeholder: '',
-						labelPosition: '',
-						isCollapsible: false,
-						anchored: false,
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPPSEUDNOVOGR03: new fieldControlClass.GroupControl({
-						id: 'FIELDHLPPSEUDNOVOGR03',
-						name: 'NOVOGR03',
-						size: 'medium',
-						hasLabel: true,
-						label: computed(() => this.Resources.NUMERIC_INPUTS64739),
-						userHelp: '',
-						description: '',
-						placeholder: '',
-						labelPosition: '',
-						isCollapsible: false,
-						anchored: false,
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_SSNUMBER: new fieldControlClass.MaskControl({
-						modelField: 'ValSsnumber',
-						valueChangeEvent: 'fieldChange:flds.ssnumber',
-						id: 'FIELDHLPFLDS_SSNUMBER',
-						name: 'SSNUMBER',
-						size: 'medium',
-						hasLabel: true,
-						label: computed(() => this.Resources.SOCIAL_SECURITY_NO48150),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: computed(() => this.Resources._1234567891237929),
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR04',
-						maxLength: 11,
-						labelId: 'label_FIELDHLPFLDS_SSNUMBER',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_ZIPFIELD: new fieldControlClass.MaskControl({
-						modelField: 'ValZipfield',
-						valueChangeEvent: 'fieldChange:flds.zipfield',
-						id: 'FIELDHLPFLDS_ZIPFIELD',
-						name: 'ZIPFIELD',
-						size: 'small',
-						hasLabel: true,
-						label: computed(() => this.Resources.ZIPCODE21021),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: computed(() => this.Resources.XXXX_XXX51420),
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR04',
-						maxLength: 8,
-						labelId: 'label_FIELDHLPFLDS_ZIPFIELD',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_VATNUMBR: new fieldControlClass.MaskControl({
-						modelField: 'ValVatnumbr',
-						valueChangeEvent: 'fieldChange:flds.vatnumbr',
-						id: 'FIELDHLPFLDS_VATNUMBR',
-						name: 'VATNUMBR',
-						size: 'small',
-						hasLabel: true,
-						label: computed(() => this.Resources.VAT_NUMBER24236),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: computed(() => this.Resources._12345678953785),
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR04',
-						maxLength: 9,
-						labelId: 'label_FIELDHLPFLDS_VATNUMBR',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_LICPLATE: new fieldControlClass.MaskControl({
-						modelField: 'ValLicplate',
-						valueChangeEvent: 'fieldChange:flds.licplate',
-						id: 'FIELDHLPFLDS_LICPLATE',
-						name: 'LICPLATE',
-						size: 'small',
-						hasLabel: true,
-						label: computed(() => this.Resources.LICENCE_PLATE07627),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: computed(() => this.Resources.XX_00_XX10122),
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR04',
-						maxLength: 8,
-						labelId: 'label_FIELDHLPFLDS_LICPLATE',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_BANKNMBR: new fieldControlClass.MaskControl({
-						modelField: 'ValBanknmbr',
-						valueChangeEvent: 'fieldChange:flds.banknmbr',
-						id: 'FIELDHLPFLDS_BANKNMBR',
-						name: 'BANKNMBR',
-						size: 'large',
-						hasLabel: true,
-						label: computed(() => this.Resources.BANKING_ACCOUNT_NUMB62548),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: computed(() => this.Resources._1234_5678_90123456761043),
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR04',
-						maxLength: 24,
-						labelId: 'label_FIELDHLPFLDS_BANKNMBR',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_EMAILFLD: new fieldControlClass.MaskControl({
-						modelField: 'ValEmailfld',
-						valueChangeEvent: 'fieldChange:flds.emailfld',
-						id: 'FIELDHLPFLDS_EMAILFLD',
-						name: 'EMAILFLD',
-						size: 'large',
-						hasLabel: true,
-						label: computed(() => this.Resources.EMAIL25170),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: computed(() => this.Resources.QUIDGESTAT_QUIDGEST_PT47872),
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR04',
-						maxLength: 50,
-						labelId: 'label_FIELDHLPFLDS_EMAILFLD',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_IBANFIEL: new fieldControlClass.MaskControl({
-						modelField: 'ValIbanfiel',
-						valueChangeEvent: 'fieldChange:flds.ibanfiel',
-						id: 'FIELDHLPFLDS_IBANFIEL',
-						name: 'IBANFIEL',
-						size: 'large',
-						hasLabel: true,
-						label: computed(() => this.Resources.IBAN28506),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: computed(() => this.Resources.PT12345678901234567820477),
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR04',
-						maxLength: 34,
-						labelId: 'label_FIELDHLPFLDS_IBANFIEL',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_UPPRTEXT: new fieldControlClass.MaskControl({
-						modelField: 'ValUpprtext',
-						valueChangeEvent: 'fieldChange:flds.upprtext',
-						id: 'FIELDHLPFLDS_UPPRTEXT',
-						name: 'UPPRTEXT',
-						size: 'xlarge',
-						hasLabel: true,
-						label: computed(() => this.Resources.UPPERCASE48238),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: computed(() => this.Resources.QUIDGEST56322),
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR04',
-						maxLength: 50,
-						labelId: 'label_FIELDHLPFLDS_UPPRTEXT',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPPSEUDNOVOGR04: new fieldControlClass.GroupControl({
-						id: 'FIELDHLPPSEUDNOVOGR04',
-						name: 'NOVOGR04',
-						size: 'xlarge',
-						hasLabel: true,
-						label: computed(() => this.Resources.INPUTS_WITH_MASKS08900),
-						userHelp: '',
-						description: '',
-						placeholder: '',
-						labelPosition: '',
-						isCollapsible: false,
-						anchored: false,
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPFLDS_PASSFLD_: new fieldControlClass.StringControl({
-						modelField: 'ValPassfld',
-						valueChangeEvent: 'fieldChange:flds.passfld',
-						id: 'FIELDHLPFLDS_PASSFLD_',
-						name: 'PASSFLD',
-						size: 'large',
-						hasLabel: true,
-						label: computed(() => this.Resources.PASSWORD09467),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR05',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					ConfirmFIELDHLPFLDS_PASSFLD_: new fieldControlClass.StringControl({
-						modelField: 'ConfirmValPassfld',
-						id: 'ConfirmFIELDHLPFLDS_PASSFLD_',
-						name: 'ConfirmPASSFLD',
-						size: 'large',
-						hasLabel: true,
-						label: computed(() => this.Resources.CONFIRMAR09808),
-						placeholder: computed(() => this.Resources.CONFIRMAR09808),
-						// Hide confirmation field in non-editable mode.
-						hiddenInNonEditableMode: true
-					}, this),
-					FIELDHLPFLDS_CLRPICKE: new fieldControlClass.StringControl({
-						modelField: 'ValClrpicke',
-						valueChangeEvent: 'fieldChange:flds.clrpicke',
-						id: 'FIELDHLPFLDS_CLRPICKE',
-						name: 'CLRPICKE',
-						size: 'large',
-						hasLabel: true,
-						label: computed(() => this.Resources.COLORPICKER39653),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR05',
-						maxLength: 50,
-						labelId: 'label_FIELDHLPFLDS_CLRPICKE',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					FIELDHLPPSEUDNOVOGR05: new fieldControlClass.GroupControl({
-						id: 'FIELDHLPPSEUDNOVOGR05',
-						name: 'NOVOGR05',
-						size: 'large',
-						hasLabel: true,
-						label: '',
-						userHelp: '',
-						description: '',
-						placeholder: '',
-						labelPosition: '',
-						isCollapsible: false,
-						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1706,14 +1276,20 @@
 						id: 'FIELDHLPFLDS_PRIMVIAG',
 						name: 'PRIMVIAG',
 						size: 'mini',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._114228043),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1142_VERBOSE19186),
+							}
+						},
 						label: computed(() => this.Resources.LOGICAL47485),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.layoutConfig.CheckboxLabelAlignment),
 						container: 'FIELDHLPPSEUDNOVOGR06',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1723,118 +1299,53 @@
 						id: 'FIELDHLPFLDS_LOGICENU',
 						name: 'LOGICENU',
 						size: 'mini',
-						hasLabel: true,
-						label: '',
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.YES_OR_NO49030),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FIELDHLPPSEUDNOVOGR06',
+						maxIntegers: 1,
+						maxDecimals: 0,
 						arrayName: 'PRIMVIAG',
 						trueLabel: computed(() => this.Resources.YES34196),
 						falseLabel: computed(() => this.Resources.NO57340),
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
-					FIELDHLPFLDS_CREATUSE: new fieldControlClass.StringControl({
-						modelField: 'ValCreatuse',
-						valueChangeEvent: 'fieldChange:flds.creatuse',
-						id: 'FIELDHLPFLDS_CREATUSE',
-						name: 'CREATUSE',
+					FIELDHLPFLDS_CLASSNUM: new fieldControlClass.ArrayNumberControl({
+						modelField: 'ValClassnum',
+						valueChangeEvent: 'fieldChange:flds.classnum',
+						id: 'FIELDHLPFLDS_CLASSNUM',
+						name: 'CLASSNUM',
 						size: 'medium',
-						hasLabel: true,
-						label: computed(() => this.Resources.CREATED_BY12292),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 20,
-						labelId: 'label_FIELDHLPFLDS_CREATUSE',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						isFixed: true,
-					}, this),
-					FIELDHLPFLDS_CREATDAT: new fieldControlClass.DateControl({
-						modelField: 'ValCreatdat',
-						valueChangeEvent: 'fieldChange:flds.creatdat',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
-						id: 'FIELDHLPFLDS_CREATDAT',
-						name: 'CREATDAT',
-						size: 'small',
-						hasLabel: true,
-						label: computed(() => this.Resources.DAY27593),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						isFixed: true,
-					}, this),
-					FIELDHLPFLDS_CREATINS: new fieldControlClass.DateControl({
-						modelField: 'ValCreatins',
-						valueChangeEvent: 'fieldChange:flds.creatins',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
-						id: 'FIELDHLPFLDS_CREATINS',
-						name: 'CREATINS',
-						size: 'medium',
-						hasLabel: true,
-						label: computed(() => this.Resources.COMPLETE_DATE53774),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						isFixed: true,
-					}, this),
-					FIELDHLPFLDS_CREATHOU: new fieldControlClass.TimeControl({
-						modelField: 'ValCreathou',
-						valueChangeEvent: 'fieldChange:flds.creathou',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
-						id: 'FIELDHLPFLDS_CREATHOU',
-						name: 'CREATHOU',
-						size: 'mini',
-						hasLabel: true,
-						label: computed(() => this.Resources.HOUR15646),
-						userHelp: computed(() => this.Resources._112047598),
-						description: computed(() => this.Resources._1120_VERBOSE06198),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						isFixed: true,
-					}, this),
-					FIELDHLPPSEUDBTN_ISAP: new fieldControlClass.ButtonControl({
-						id: 'FIELDHLPPSEUDBTN_ISAP',
-						name: 'BTN_ISAP',
-						size: 'small',
-						hasLabel: false,
-						label: computed(() => this.Resources.APPLY29100),
-						userHelp: '',
-						description: '',
-						placeholder: '',
-						labelPosition: '',
-						// eslint-disable-next-line
-						action: (event) => {
-							let btnAction = () => {
-								vm.Fieldhlp_BR_APPLWIT(vm.primaryKeyValue)
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._114429549),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1144_VERBOSE29746),
 							}
-							let options = {
-								form: 'FIELDHLP',
-								callback: btnAction
-							}
-							vm.$eventHub.emit('form-apply', options)
 						},
-						mustBeFilled: false,
+						label: computed(() => this.Resources.NUMERIC_ENUMERATION19068),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR06',
+						maxIntegers: 1,
+						maxDecimals: 0,
+						arrayName: 'CLASSNUM',
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -1843,19 +1354,605 @@
 						valueChangeEvent: 'fieldChange:flds.radiob',
 						id: 'FIELDHLPFLDS_RADIOB__',
 						name: 'RADIOB',
-						size: 'mini',
-						hasLabel: true,
+						size: 'small',
 						label: computed(() => this.Resources.RADIO_BTN20980),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FIELDHLPPSEUDNOVOGR06',
 						maxLength: 5,
 						labelId: 'label_FIELDHLPFLDS_RADIOB__',
 						arrayName: 'RADIOBTN',
-						columnNumber: 2,
-						mustBeFilled: false,
+						columnNumber: 0,
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPPSEUDFIELD002: new fieldControlClass.BaseControl({
+						id: 'FIELDHLPPSEUDFIELD002',
+						name: 'FIELD002',
+						size: 'medium',
+						hasLabel: false,
+						helpControl: {
+							shortHelp: {
+								type: '',
+								text: '',
+							},
+						},
+						label: computed(() => this.Resources.STATIC_TEXT_17624),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR06',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPPSEUDFIELD003: new fieldControlClass.ImageControl({
+						id: 'FIELDHLPPSEUDFIELD003',
+						name: 'FIELD003',
+						size: 'medium',
+						hasLabel: false,
+						helpControl: {
+							shortHelp: {
+								type: '',
+								text: '',
+							},
+						},
+						label: computed(() => this.Resources.STATIC_IMAGE44130),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR06',
+						icon: {
+							icon: computed(() => `${this.system.resourcesPath}pexels-polat-eyyüp-albayrak-13933341.jpg`),
+							type: 'img',
+						},
+						height: 0,
+						width: 150,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.STATIC_IMAGE44130)),
+						isStatic: true,
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPPSEUDFIELD001: new fieldControlClass.StringControl({
+						modelField: 'PseudValField001',
+						valueChangeEvent: 'fieldChange:pseud.field001',
+						id: 'FIELDHLPPSEUDFIELD001',
+						name: 'FIELD001',
+						size: 'large',
+						helpControl: {
+							shortHelp: {
+								type: '',
+								text: '',
+							},
+						},
+						label: computed(() => this.Resources.MANUAL_FILLING_FIELD38373),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR06',
+						maxLength: 15,
+						labelId: 'label_FIELDHLPPSEUDFIELD001',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPPSEUDNOVOGR01: new fieldControlClass.GroupControl({
+						id: 'FIELDHLPPSEUDNOVOGR01',
+						name: 'NOVOGR01',
+						size: 'medium',
+						label: computed(() => this.Resources.DATE_TIME_INPUTS06842),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						isCollapsible: false,
+						anchored: false,
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_YEAR____: new fieldControlClass.NumberControl({
+						modelField: 'ValYear',
+						valueChangeEvent: 'fieldChange:flds.year',
+						id: 'FIELDHLPFLDS_YEAR____',
+						name: 'YEAR',
+						size: 'mini',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._111737822),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1117_VERBOSE04450),
+							}
+						},
+						label: computed(() => this.Resources.YEAR61794),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR01',
+						maxIntegers: 4,
+						maxDecimals: 0,
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_TIME____: new fieldControlClass.TimeControl({
+						modelField: 'ValTime',
+						valueChangeEvent: 'fieldChange:flds.time',
+						id: 'FIELDHLPFLDS_TIME____',
+						name: 'TIME',
+						size: 'mini',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._111838179),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1118_VERBOSE37983),
+							}
+						},
+						label: computed(() => this.Resources.TIME15328),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR01',
+						format: 'time',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_DATE____: new fieldControlClass.DateControl({
+						modelField: 'ValDate',
+						valueChangeEvent: 'fieldChange:flds.date',
+						id: 'FIELDHLPFLDS_DATE____',
+						name: 'DATE',
+						size: 'small',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._111938548),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1119_VERBOSE52944),
+							}
+						},
+						label: computed(() => this.Resources.DATE18475),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR01',
+						format: 'date',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_DATETIME: new fieldControlClass.DateControl({
+						modelField: 'ValDatetime',
+						valueChangeEvent: 'fieldChange:flds.datetime',
+						id: 'FIELDHLPFLDS_DATETIME',
+						name: 'DATETIME',
+						size: 'medium',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.DATE_TIME59103),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR01',
+						format: 'dateTime',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_DATESECO: new fieldControlClass.DateControl({
+						modelField: 'ValDateseco',
+						valueChangeEvent: 'fieldChange:flds.dateseco',
+						id: 'FIELDHLPFLDS_DATESECO',
+						name: 'DATESECO',
+						size: 'medium',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.DATE_SECOND44057),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR01',
+						format: 'dateTimeSeconds',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPPSEUDNOVOGR03: new fieldControlClass.GroupControl({
+						id: 'FIELDHLPPSEUDNOVOGR03',
+						name: 'NOVOGR03',
+						size: 'block',
+						label: computed(() => this.Resources.NUMERIC_INPUTS64739),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						isCollapsible: false,
+						anchored: false,
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_DURATION: new fieldControlClass.NumberControl({
+						modelField: 'ValDuration',
+						valueChangeEvent: 'fieldChange:flds.duration',
+						id: 'FIELDHLPFLDS_DURATION',
+						name: 'DURATION',
+						size: 'small',
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.NUMERIC_DECIMAL49512),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR03',
+						maxIntegers: 2,
+						maxDecimals: 2,
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_NPASSAGE: new fieldControlClass.NumberControl({
+						modelField: 'ValNpassage',
+						valueChangeEvent: 'fieldChange:flds.npassage',
+						id: 'FIELDHLPFLDS_NPASSAGE',
+						name: 'NPASSAGE',
+						size: 'mini',
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.NUMERIC19292),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR03',
+						maxIntegers: 3,
+						maxDecimals: 0,
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_PRECOBIL: new fieldControlClass.CurrencyControl({
+						modelField: 'ValPrecobil',
+						valueChangeEvent: 'fieldChange:flds.precobil',
+						id: 'FIELDHLPFLDS_PRECOBIL',
+						name: 'PRECOBIL',
+						size: 'small',
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.CURRENCY_DECIMAL48296),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR03',
+						maxIntegers: 3,
+						maxDecimals: 2,
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_PRICE___: new fieldControlClass.CurrencyControl({
+						modelField: 'ValPrice',
+						valueChangeEvent: 'fieldChange:flds.price',
+						id: 'FIELDHLPFLDS_PRICE___',
+						name: 'PRICE',
+						size: 'mini',
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.CURRENCY13881),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR03',
+						maxIntegers: 3,
+						maxDecimals: 2,
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPPSEUDNOVOGR04: new fieldControlClass.GroupControl({
+						id: 'FIELDHLPPSEUDNOVOGR04',
+						name: 'NOVOGR04',
+						size: 'block',
+						label: computed(() => this.Resources.INPUTS_WITH_MASKS08900),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						isCollapsible: false,
+						anchored: false,
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_SSNUMBER: new fieldControlClass.MaskControl({
+						modelField: 'ValSsnumber',
+						valueChangeEvent: 'fieldChange:flds.ssnumber',
+						id: 'FIELDHLPFLDS_SSNUMBER',
+						name: 'SSNUMBER',
+						size: 'medium',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.SOCIAL_SECURITY_NO48150),
+						placeholder: computed(() => this.Resources._1234567891237929),
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR04',
+						maxLength: 11,
+						labelId: 'label_FIELDHLPFLDS_SSNUMBER',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_ZIPFIELD: new fieldControlClass.MaskControl({
+						modelField: 'ValZipfield',
+						valueChangeEvent: 'fieldChange:flds.zipfield',
+						id: 'FIELDHLPFLDS_ZIPFIELD',
+						name: 'ZIPFIELD',
+						size: 'small',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.ZIPCODE21021),
+						placeholder: computed(() => this.Resources.XXXX_XXX51420),
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR04',
+						maxLength: 8,
+						labelId: 'label_FIELDHLPFLDS_ZIPFIELD',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_VATNUMBR: new fieldControlClass.MaskControl({
+						modelField: 'ValVatnumbr',
+						valueChangeEvent: 'fieldChange:flds.vatnumbr',
+						id: 'FIELDHLPFLDS_VATNUMBR',
+						name: 'VATNUMBR',
+						size: 'small',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.VAT_NUMBER24236),
+						placeholder: computed(() => this.Resources._12345678953785),
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR04',
+						maxLength: 9,
+						labelId: 'label_FIELDHLPFLDS_VATNUMBR',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_LICPLATE: new fieldControlClass.MaskControl({
+						modelField: 'ValLicplate',
+						valueChangeEvent: 'fieldChange:flds.licplate',
+						id: 'FIELDHLPFLDS_LICPLATE',
+						name: 'LICPLATE',
+						size: 'small',
+						helpControl: {
+							shortHelp: {
+								type: '',
+								text: '',
+							},
+						},
+						label: computed(() => this.Resources.LICENCE_PLATE07627),
+						placeholder: computed(() => this.Resources.XX_00_XX10122),
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR04',
+						maxLength: 8,
+						labelId: 'label_FIELDHLPFLDS_LICPLATE',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_BANKNMBR: new fieldControlClass.MaskControl({
+						modelField: 'ValBanknmbr',
+						valueChangeEvent: 'fieldChange:flds.banknmbr',
+						id: 'FIELDHLPFLDS_BANKNMBR',
+						name: 'BANKNMBR',
+						size: 'large',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.BANKING_ACCOUNT_NUMB62548),
+						placeholder: computed(() => this.Resources._1234_5678_90123456761043),
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR04',
+						maxLength: 24,
+						labelId: 'label_FIELDHLPFLDS_BANKNMBR',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_EMAILFLD: new fieldControlClass.MaskControl({
+						modelField: 'ValEmailfld',
+						valueChangeEvent: 'fieldChange:flds.emailfld',
+						id: 'FIELDHLPFLDS_EMAILFLD',
+						name: 'EMAILFLD',
+						size: 'large',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.EMAIL25170),
+						placeholder: computed(() => this.Resources.QUIDGESTAT_QUIDGEST_PT47872),
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR04',
+						maxLength: 50,
+						labelId: 'label_FIELDHLPFLDS_EMAILFLD',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_IBANFIEL: new fieldControlClass.MaskControl({
+						modelField: 'ValIbanfiel',
+						valueChangeEvent: 'fieldChange:flds.ibanfiel',
+						id: 'FIELDHLPFLDS_IBANFIEL',
+						name: 'IBANFIEL',
+						size: 'large',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.IBAN28506),
+						placeholder: computed(() => this.Resources.PT12345678901234567820477),
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR04',
+						maxLength: 34,
+						labelId: 'label_FIELDHLPFLDS_IBANFIEL',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_UPPRTEXT: new fieldControlClass.MaskControl({
+						modelField: 'ValUpprtext',
+						valueChangeEvent: 'fieldChange:flds.upprtext',
+						id: 'FIELDHLPFLDS_UPPRTEXT',
+						name: 'UPPRTEXT',
+						size: 'block',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.UPPERCASE48238),
+						placeholder: computed(() => this.Resources.QUIDGEST56322),
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR04',
+						maxLength: 50,
+						labelId: 'label_FIELDHLPFLDS_UPPRTEXT',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPPSEUDNOVOGR05: new fieldControlClass.GroupControl({
+						id: 'FIELDHLPPSEUDNOVOGR05',
+						name: 'NOVOGR05',
+						size: 'block',
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._111418227),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1114_VERBOSE42095),
+							}
+						},
+						label: '',
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						isCollapsible: false,
+						anchored: false,
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_PASSFLD_: new fieldControlClass.StringControl({
+						modelField: 'ValPassfld',
+						valueChangeEvent: 'fieldChange:flds.passfld',
+						id: 'FIELDHLPFLDS_PASSFLD_',
+						name: 'PASSFLD',
+						size: 'large',
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.PASSWORD09467),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR05',
+						maxLength: 50,
+						labelId: 'label_FIELDHLPFLDS_PASSFLD_',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_CLRPICKE: new fieldControlClass.StringControl({
+						modelField: 'ValClrpicke',
+						valueChangeEvent: 'fieldChange:flds.clrpicke',
+						id: 'FIELDHLPFLDS_CLRPICKE',
+						name: 'CLRPICKE',
+						size: 'large',
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.COLORPICKER39653),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR05',
+						maxLength: 50,
+						labelId: 'label_FIELDHLPFLDS_CLRPICKE',
 						controlLimits: [
 						],
 					}, this),
@@ -1863,15 +1960,37 @@
 						id: 'FIELDHLPPSEUDNOVOGR07',
 						name: 'NOVOGR07',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.DOCUMENTS14470),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_LOGOEXTE: new fieldControlClass.ImageControl({
+						modelField: 'ValLogoexte',
+						valueChangeEvent: 'fieldChange:flds.logoexte',
+						id: 'FIELDHLPFLDS_LOGOEXTE',
+						name: 'LOGOEXTE',
+						size: 'large',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.LOGO__EXTERNAL_FILE_58162),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FIELDHLPPSEUDNOVOGR07',
+						height: 10,
+						width: 30,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.LOGO__EXTERNAL_FILE_58162)),
 						controlLimits: [
 						],
 					}, this),
@@ -1881,16 +2000,13 @@
 						id: 'FIELDHLPFLDS_LOGO____',
 						name: 'LOGO',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.LOGO62483),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FIELDHLPPSEUDNOVOGR07',
 						height: 50,
-						width: 100,
-						mustBeFilled: false,
+						width: 30,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.LOGO62483)),
 						controlLimits: [
 						],
 					}, this),
@@ -1900,42 +2016,106 @@
 						id: 'FIELDHLPFLDS_ATTACH__',
 						name: 'ATTACH',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DOCUMENT00695),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FIELDHLPPSEUDNOVOGR07',
-						documentProperties: computed(() => vm.model.ValAttachPropertiesVM),
-						documentFK: computed(() => vm.model.ValAttachfk),
-						documentVersions: computed(() => vm.model.ValAttachPropertiesVM.value ? vm.model.ValAttachPropertiesVM.value.Versions : {}),
-						isInCheckout: computed(() => vm.model.ValAttachPropertiesVM.value ? vm.model.ValAttachPropertiesVM.value.IsCheckout : false),
-						currentVersion: computed(() => vm.model.ValAttachPropertiesVM.value ? vm.model.ValAttachPropertiesVM.value.Version : '1'),
-						usesTemplates: false,
+						versioningIsOn: true,
+						viewType: qEnums.documentViewTypeMode.print,
 						extensions: [],
-						viewType: qEnums.documentViewTypeMode.Print,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
-					FIELDHLPFLDS_CLASSNUM: new fieldControlClass.ArrayNumberControl({
-						modelField: 'ValClassnum',
-						valueChangeEvent: 'fieldChange:flds.classnum',
-						maxIntegers: 1,
-						maxDecimals: 0,
-						id: 'FIELDHLPFLDS_CLASSNUM',
-						name: 'CLASSNUM',
-						size: 'medium',
-						hasLabel: true,
-						label: computed(() => this.Resources.NUMERIC_ENUMERATION19068),
-						userHelp: '',
-						description: '',
+					FIELDHLPFLDS_CREATDAT: new fieldControlClass.DateControl({
+						modelField: 'ValCreatdat',
+						valueChangeEvent: 'fieldChange:flds.creatdat',
+						id: 'FIELDHLPFLDS_CREATDAT',
+						name: 'CREATDAT',
+						size: 'small',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.DAY27593),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'FIELDHLPPSEUDNOVOGR06',
-						arrayName: 'CLASSNUM',
-						mustBeFilled: false,
+						format: 'date',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_CREATUSE: new fieldControlClass.StringControl({
+						modelField: 'ValCreatuse',
+						valueChangeEvent: 'fieldChange:flds.creatuse',
+						id: 'FIELDHLPFLDS_CREATUSE',
+						name: 'CREATUSE',
+						size: 'medium',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.CREATED_BY12292),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxLength: 20,
+						labelId: 'label_FIELDHLPFLDS_CREATUSE',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_CREATINS: new fieldControlClass.DateControl({
+						modelField: 'ValCreatins',
+						valueChangeEvent: 'fieldChange:flds.creatins',
+						id: 'FIELDHLPFLDS_CREATINS',
+						name: 'CREATINS',
+						size: 'medium',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.COMPLETE_DATE53774),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						format: 'dateTimeSeconds',
+						controlLimits: [
+						],
+					}, this),
+					FIELDHLPFLDS_CREATHOU: new fieldControlClass.TimeControl({
+						modelField: 'ValCreathou',
+						valueChangeEvent: 'fieldChange:flds.creathou',
+						id: 'FIELDHLPFLDS_CREATHOU',
+						name: 'CREATHOU',
+						size: 'mini',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
+						label: computed(() => this.Resources.HOUR15646),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						format: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1972,10 +2152,6 @@
 						get ValName() { return vm.model.TableAeroName.value },
 						set ValName(value) { vm.model.TableAeroName.updateValue(value) },
 					},
-					Equip: {
-						get ValRegistnr() { return vm.model.TableEquipRegistnr.value },
-						set ValRegistnr(value) { vm.model.TableEquipRegistnr.updateValue(value) },
-					},
 					Flds: {
 						get ValAttach() { return vm.model.ValAttach.value },
 						set ValAttach(value) { vm.model.ValAttach.updateValue(value) },
@@ -1991,6 +2167,8 @@
 						set ValCodaero(value) { vm.model.ValCodaero.updateValue(value) },
 						get ValCodequip() { return vm.model.ValCodequip.value },
 						set ValCodequip(value) { vm.model.ValCodequip.updateValue(value) },
+						get ValCond() { return vm.model.ValCond.value },
+						set ValCond(value) { vm.model.ValCond.updateValue(value) },
 						get ValConditio() { return vm.model.ValConditio.value },
 						set ValConditio(value) { vm.model.ValConditio.updateValue(value) },
 						get ValCreatdat() { return vm.model.ValCreatdat.value },
@@ -2021,6 +2199,8 @@
 						set ValLogicenu(value) { vm.model.ValLogicenu.updateValue(value) },
 						get ValLogo() { return vm.model.ValLogo.value },
 						set ValLogo(value) { vm.model.ValLogo.updateValue(value) },
+						get ValLogoexte() { return vm.model.ValLogoexte.value },
+						set ValLogoexte(value) { vm.model.ValLogoexte.updateValue(value) },
 						get ValNpassage() { return vm.model.ValNpassage.value },
 						set ValNpassage(value) { vm.model.ValNpassage.updateValue(value) },
 						get ValPassfld() { return vm.model.ValPassfld.value },
@@ -2037,6 +2217,8 @@
 						set ValShwrc(value) { vm.model.ValShwrc.updateValue(value) },
 						get ValSsnumber() { return vm.model.ValSsnumber.value },
 						set ValSsnumber(value) { vm.model.ValSsnumber.updateValue(value) },
+						get ValTblcond() { return vm.model.ValTblcond.value },
+						set ValTblcond(value) { vm.model.ValTblcond.updateValue(value) },
 						get ValTime() { return vm.model.ValTime.value },
 						set ValTime(value) { vm.model.ValTime.updateValue(value) },
 						get ValTxtfield() { return vm.model.ValTxtfield.value },
@@ -2050,6 +2232,10 @@
 						get ValZipfield() { return vm.model.ValZipfield.value },
 						set ValZipfield(value) { vm.model.ValZipfield.updateValue(value) },
 					},
+					Pseud: {		
+						get ValField001() { return vm.model.PseudValField001.value },
+						set ValField001(value) { vm.model.PseudValField001.updateValue(value) },
+					},
 					keys: {
 						/** The primary key of the FLDS table */
 						get flds() { return vm.model.ValCodflds },
@@ -2058,7 +2244,7 @@
 						/** The foreign key to the EQUIP table */
 						get equip() { return vm.model.ValCodequip },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -2154,6 +2340,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2193,6 +2387,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -2319,6 +2521,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR FIELDHLP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -2334,145 +2552,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
-			// eslint-disable-next-line
-			Fieldhlp_BR_APPLWIT(id)
-			{
-				this.$eventTracker.addTrace({
-					origin: 'Routine APPLWIT',
-					message: 'Start of execution of the manual routine'
-				})
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT VIEW_MANUAL_ROUTINE APPLWIT]/
+// USE /[MANUAL GQT FUNCTIONS_JS FIELDHLP]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
-
-				this.Fieldhlp_BR_APPLWIT_BeforeSend(id).then((result) => {
-					return this.Fieldhlp_BR_APPLWIT_AjaxCall(result)
-				})
-			},
-
-			Fieldhlp_BR_APPLWIT_AjaxCall(id)
-			{
-				var params = {}
-				if (typeof id === 'object')
-					params = id
-				else if (typeof id !== 'undefined')
-					params = { id }
-
-				this.$eventTracker.addTrace({
-					origin: 'Routine APPLWIT',
-					message: 'Ajax call method',
-					contextData: { params }
-				})
-
-				/*
-				 * This param can come from the jsonRouteValues that come from the
-				 * component in case of forms, for example. We do not want to replace
-				 * it with this new one!
-				 */
-				if (typeof params.allSelected === 'undefined')
-				{
-					params.allSelected = false
-				}
-
-				asyncProcM.AddBusy(netAPI.postData(
-					'Flds',
-					'Fieldhlp_BR_APPLWIT',
-					params,
-					(data) => {
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT DONE_ROUTINE APPLWIT]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-
-						// DISCLAIMER: Adding code to "DONE_ROUTINE" will override the code below.
-						try
-						{
-							if (typeof data.success !== 'string' || typeof data.message !== 'string')
-								throw new Error('Invalid data structure.')
-
-							const result = qEnums.messageTypes[data.success]
-							if (!genericFunctions.isEmpty(result))
-							{
-								this.$eventTracker.addTrace({
-									origin: 'Routine APPLWIT',
-									message: 'Manual routine "APPLWIT" finished execution with result: ' + qEnums.messageTypes[data.success]
-								})
-
-								let message = data.message
-
-								if (!genericFunctions.isEmpty(message))
-								{
-									const buttons = {
-										confirm: {
-											label: this.Resources.OK15819,
-											action: () => this.Fieldhlp_BR_APPLWIT_AfterDone(data)
-										}
-									}
-
-									genericFunctions.displayMessage(message, result, null, buttons)
-								}
-								else
-									this.Fieldhlp_BR_APPLWIT_AfterDone(data)
-							}
-							else
-								this.$eventTracker.addError({ origin: 'Routine APPLWIT', message: 'Routine "APPLWIT" finished execution with an unknown result type: ' + data.success })
-						}
-						catch (e)
-						{
-							genericFunctions.displayMessage(this.Resources.NAO_FOI_POSSIVEL_CON65121, 'error')
-							this.$eventTracker.addError({ origin: 'Routine APPLWIT (catch)', message: e.toString() })
-						}
-					},
-					() => {
-						genericFunctions.displayMessage(this.Resources.NAO_FOI_POSSIVEL_CON65121, 'error')
-					},
-					undefined,
-					this.navigationId)
-				)
-			},
-
-			// eslint-disable-next-line
-			async Fieldhlp_BR_APPLWIT_AfterDone(data)
-			{
-				this.$eventTracker.addTrace({
-					origin: 'Routine APPLWIT',
-					message: 'After done method',
-					contextData: { data }
-				})
-
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT AFTER_DONE_ROUTINE APPLWIT]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-			},
-
-			Fieldhlp_BR_APPLWIT_BeforeSend(data)
-			{
-				this.$eventTracker.addTrace({
-					origin: 'Routine APPLWIT',
-					message: 'Before send method',
-					contextData: { data }
-				})
-
-				return new Promise((resolve, reject) => {
-					try
-					{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT BEFORESEND_ROUTINE APPLWIT]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-
-						resolve(data)
-					}
-					catch (e)
-					{
-						reject(e.toString())
-					}
-				})
-			},
 		},
 
 		watch: {

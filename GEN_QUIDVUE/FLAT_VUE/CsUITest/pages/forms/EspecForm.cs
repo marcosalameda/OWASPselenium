@@ -1,45 +1,22 @@
-namespace quidgest.uitests.pages;
+﻿using quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
 
 [System.CodeDom.Compiler.GeneratedCode("Genio", "")]
-public class EspecForm: PageObject {
-
-	private By formLocator = By.CssSelector("#form-container");
-	private IWebElement form => driver.FindElement(formLocator);
-
+public class EspecForm : Form
+{
 	/// <summary>
 	/// Specialty
 	/// </summary>
-	public BaseInputControl SpeciEspecial => new BaseInputControl(driver, formLocator, "#ESPEC___SPECIESPECIAL");
+	public BaseInputControl SpeciEspecial => new BaseInputControl(driver, ContainerLocator, "#ESPEC___SPECIESPECIAL");
+
 	/// <summary>
 	/// Technical  area
 	/// </summary>
-	public RadiobuttonControl SpeciAreatecn => new RadiobuttonControl(driver, formLocator, "container-ESPEC___SPECIAREATECN");
+	public RadiobuttonControl SpeciAreatecn => new RadiobuttonControl(driver, ContainerLocator, "container-ESPEC___SPECIAREATECN");
 
-	private IWebElement saveBtn => form.FindElement(By.CssSelector("#bottom-save-btn"));
-	private IWebElement cancelBtn => form.FindElement(By.CssSelector("#bottom-cancel-btn"));
-	public FORM_MODE mode {get; private set;}
-
-	public EspecForm(IWebDriver driver, FORM_MODE mode, By subformLocator=null): base(driver) {
-		this.mode = mode;
-		formLocator = subformLocator ?? formLocator;
-
-		wait.Until(c => form);
-		WaitForLoading();
-	}
-
-	public void WaitForLoading()
-	{
-        wait.Until(c => form.FindElement(ByData.Key("ESPEC")).GetAttribute("data-loading") != "true");
-    }
-
-	public void Save() {
-		WaitForLoading();
-		saveBtn.Click();
-	}
-
-	public void Cancel() {
-		WaitForLoading();
-		cancelBtn.Click();
-	}
-
+	public EspecForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "ESPEC", containerLocator: containerLocator) { }
 }

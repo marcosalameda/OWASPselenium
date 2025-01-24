@@ -103,9 +103,10 @@ namespace GenioMVC.ViewModels
         /// <param name="fieldName">The name of the field being validated.</param>
         /// <param name="fieldTitle">The title of the field being validated.</param>
         /// <param name="value">The value to validate for being required.</param>
-        public void Required(string fieldName, string fieldTitle, object? value)
+        /// <param name="format">The format of the field to be validated.</param>
+        public void Required(string fieldName, string fieldTitle, object? value, FieldFormatting? format = null)
         {
-            bool isValid = CrudViewModelFieldValidatorImpl.Required(value);
+            bool isValid = CrudViewModelFieldValidatorImpl.Required(value, format);
 
             if (!isValid)
             {
@@ -114,6 +115,46 @@ namespace GenioMVC.ViewModels
                     fieldTitle
                 );
 
+                _aggregator.AddModelError(fieldName, errorMessage);
+            }
+        }
+
+        /// <summary>
+        /// Validates whether a field is required and adds an error to the aggregator if invalid.
+        /// For fields that may not receive a value from the client side, such as encrypted fields, 
+        /// the value will be validated not only in the ViewModel but also in the Model (database value). One of them must be filled.
+        /// </summary>
+        /// <param name="fieldName">The name of the field being validated.</param>
+        /// <param name="fieldTitle">The title of the field being validated.</param>
+        /// <param name="values">The value(s) to validate for being required.</param>
+        /// <param name="format">The format of the field to be validated.</param>
+        public void Required(string fieldName, string fieldTitle, object?[] values, FieldFormatting? format = null)
+        {
+            bool isValid = values?.Any(value => CrudViewModelFieldValidatorImpl.Required(value, format)) ?? false;
+
+            if (!isValid)
+            {
+                string errorMessage = string.Format(
+                    Translations.Get("O campo {0} é obrigatório.", _language),
+                    fieldTitle
+                );
+
+                _aggregator.AddModelError(fieldName, errorMessage);
+            }
+        }
+
+        /// <summary>
+        /// Validates whether a field is a valid email and adds an error to the aggregator if invalid.
+        /// </summary>
+        /// <param name="fieldName">The name of the field being validated.</param>
+        /// <param name="value">The value to validate.</param>
+        public void Email(string fieldName, string value)
+        {
+            bool isValid = CrudViewModelFieldValidatorImpl.Email(value);
+
+            if (!isValid)
+            {
+                string errorMessage = Translations.Get("Por favor indique um email válido!", _language);
                 _aggregator.AddModelError(fieldName, errorMessage);
             }
         }
@@ -130,7 +171,7 @@ namespace GenioMVC.ViewModels
 
             if (!isValid)
             {
-                string errorMessage = Translations.Get("Endereço inválido!", _language);
+                string errorMessage = string.Format(Translations.Get("O campo {0} tem um endereço inválido.", _language), fieldName);
                 _aggregator.AddModelError(fieldName, errorMessage);
             }
         }
@@ -227,15 +268,26 @@ namespace GenioMVC.ViewModels
         /// Validates that a data field is not empty.
         /// </summary>
         /// <param name="value">The value to be validated.</param>
+        /// <param name="format">The format of the field to be validated.</param>
         /// <returns>True if the value is not empty; otherwise, false.</returns>
-        public static bool Required(object? value)
+        public static bool Required(object? value, FieldFormatting? format)
         {
-            if (value is null)
+            if (value is null || (format != null && Field.isEmptyValue(value, (FieldFormatting)format)))
             {
                 return false;
             }
 
             return value is not string stringValue || !string.IsNullOrWhiteSpace(stringValue);
+        }
+
+        /// <summary>
+        /// Validates that a data field is a valid email.
+        /// </summary>
+        /// <param name="value">The value to be validated.</param>
+        /// <returns>True if the value is not valid; otherwise, false.</returns>
+        public static bool Email(string value)
+        {
+            return CSGenio.business.Validation.validateEM(value);
         }
 
         /// <summary>

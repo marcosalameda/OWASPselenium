@@ -1,5 +1,7 @@
 ﻿<template>
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<form class="form-horizontal">
 			<fieldset>
 				<div class="form-flow">
@@ -126,13 +128,17 @@
 	import fakeData from './Chart.mock.js'
 
 	export default {
-		docsfile: "./docs/rendering/chart/QChart.md",
-		
+		name: 'QChartContainer',
+
+		docsfile: './docs/rendering/chart/QChart.md',
+
 		components: {
 			QChart
 		},
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{

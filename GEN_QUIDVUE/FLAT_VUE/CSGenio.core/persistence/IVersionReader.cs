@@ -3,9 +3,9 @@ namespace CSGenio.core.persistence
     
     public interface IVersionReader
     {
-        double GetDbVersion();
+        int GetDbVersion();
 
-        double GetDbIndexVersion();
+        int GetDbIndexVersion();
 
         int GetDbUpgradeVersion();
     }

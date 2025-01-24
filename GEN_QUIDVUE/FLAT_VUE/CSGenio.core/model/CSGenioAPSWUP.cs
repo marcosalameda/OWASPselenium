@@ -72,6 +72,8 @@ namespace CSGenio.business
 			info.DBFields["reg"].FieldSize = 3;
 			info.RegisterFieldDB(new Field("imo", FieldType.NUMERO));
 			info.DBFields["imo"].FieldSize = 3;
+			info.RegisterFieldDB(new Field("trn", FieldType.NUMERO));
+			info.DBFields["trn"].FieldSize = 3;
 			info.RegisterFieldDB(new Field("nome", FieldType.TEXTO));
 			info.DBFields["nome"].FieldSize = 100;
 			

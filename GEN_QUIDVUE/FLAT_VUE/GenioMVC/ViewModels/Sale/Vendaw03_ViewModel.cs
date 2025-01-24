@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Sale
 {
-	public class Vendaw03_ViewModel : FormViewModel<Models.Sale>
+	public class Vendaw03_ViewModel : FormViewModel<Models.Sale>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,11 +29,18 @@ namespace GenioMVC.ViewModels.Sale
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodorgan { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Pre-approach" | Type: "DT"
 		/// </summary>
 		public DateTime? ValPreabord { get; set; }
-
 		/// <summary>
 		/// Title: "Homework done" | Type: "L"
 		/// </summary>
@@ -48,15 +55,6 @@ namespace GenioMVC.ViewModels.Sale
 
 		#endregion
 
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodorgan { get; set; }
-		#endregion
-
 		#region Extra database fields
 
 
@@ -67,18 +65,21 @@ namespace GenioMVC.ViewModels.Sale
 
 		// Field for formula
 		/// <summary>Field: "Identification of business opportunity" Tipo: "C"</summary>
+		[ValidateSetAccess]
 		public string ValIdentifi { get; set; }
 		// Field for formula
 		/// <summary>Field: "Qualification carried out" Tipo: "L"</summary>
+		[ValidateSetAccess]
 		public bool ValQualific { get; set; }
 
 		#endregion
 
 		public string ValCodvenda { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Vendaw03_ViewModel() : base(null!) { }
@@ -114,6 +115,15 @@ namespace GenioMVC.ViewModels.Sale
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Sale model = new Models.Sale(userContext) { Identifier = "FVENDAW03" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FVENDAW03");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -174,9 +184,9 @@ namespace GenioMVC.ViewModels.Sale
 
 			try
 			{
+				ValCodorgan = ViewModelConversion.ToString(m.ValCodorgan);
 				ValPreabord = ViewModelConversion.ToDateTime(m.ValPreabord);
 				ValHomework = ViewModelConversion.ToLogic(m.ValHomework);
-				ValCodorgan = ViewModelConversion.ToString(m.ValCodorgan);
 				ValIdentifi = ViewModelConversion.ToString(m.ValIdentifi);
 				ValQualific = ViewModelConversion.ToLogic(m.ValQualific);
 				ValCodvenda = ViewModelConversion.ToString(m.ValCodvenda);
@@ -188,6 +198,20 @@ namespace GenioMVC.ViewModels.Sale
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Sale m)
 		{
 			if (m == null)
@@ -200,20 +224,75 @@ namespace GenioMVC.ViewModels.Sale
 			{
 				m.ValPreabord = ViewModelConversion.ToDateTime(ValPreabord);
 				m.ValHomework = ViewModelConversion.ToLogic(ValHomework);
+				m.ValCodvenda = ViewModelConversion.ToString(ValCodvenda);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
 				m.ValCodorgan = ViewModelConversion.ToString(ValCodorgan);
 				m.ValIdentifi = ViewModelConversion.ToString(ValIdentifi);
 				m.ValQualific = ViewModelConversion.ToLogic(ValQualific);
-				m.ValCodvenda = ViewModelConversion.ToString(ValCodvenda);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Vendaw03) to Model (Sale) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Vendaw03) to Model (Sale) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "sale.preabord":
+						this.ValPreabord = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "sale.homework":
+						this.ValHomework = ViewModelConversion.ToLogic(_value);
+						break;
+					case "sale.codvenda":
+						this.ValCodvenda = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Vendaw03) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Vendaw03)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Sale.Find(id ?? Navigation.GetStrValue("sale"), m_userContext, "FVENDAW03"); }
+			finally { Model ??= new Models.Sale(m_userContext) { Identifier = "FVENDAW03" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -227,20 +306,13 @@ namespace GenioMVC.ViewModels.Sale
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FVENDAW03";
@@ -250,6 +322,7 @@ namespace GenioMVC.ViewModels.Sale
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -311,25 +384,19 @@ namespace GenioMVC.ViewModels.Sale
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE VENDAW03]/
 		public override void Save()
 		{
 
-			try { Model = Models.Sale.Find(Navigation.GetStrValue("sale"), m_userContext, "FVENDAW03"); }
-			finally { if (Model == null) Model = new Models.Sale(m_userContext) { Identifier = "FVENDAW03" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY VENDAW03]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Sale.Find(Navigation.GetStrValue("sale"), m_userContext, "FVENDAW03"); }
-			finally { if (Model == null) Model = new Models.Sale(m_userContext) { Identifier = "FVENDAW03" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE VENDAW03]/
 
@@ -353,15 +420,17 @@ namespace GenioMVC.ViewModels.Sale
 		{
 			return identifier switch
 			{
+				"sale.codorgan" => ViewModelConversion.ToString(modelValue),
 				"sale.preabord" => ViewModelConversion.ToDateTime(modelValue),
 				"sale.homework" => ViewModelConversion.ToLogic(modelValue),
-				"sale.codorgan" => ViewModelConversion.ToString(modelValue),
 				"sale.identifi" => ViewModelConversion.ToString(modelValue),
 				"sale.qualific" => ViewModelConversion.ToLogic(modelValue),
 				"sale.codvenda" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

@@ -137,13 +137,13 @@ export default {
 						},
 
 						{
-							label: "VALUE", //() => vm.$t('VALUE10285'),
+							label: "VALUE",
 							name: "Val",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
 							sortable: true,
-							textColor: (row, column) => {
+							textColor: (row) => {
 								return qapi.iif(
 									row.Fields.Val.length > 3,
 									"#C08000",
@@ -164,7 +164,7 @@ export default {
 					config: {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
-						tableTitle: "Basic Types", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Basic Types",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -192,7 +192,6 @@ export default {
 								name: "show_table",
 								title: "custom",
 								icon: "duplicate",
-								icon:"duplicate",
 								isInReadOnly: false,
 								params: { type: "form", formName: "FORMY", mode: "SHOW" },
 							},
@@ -217,7 +216,7 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								isInReadOnly: true,
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 								separator: true,
@@ -225,21 +224,21 @@ export default {
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								isInReadOnly: false,
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								isInReadOnly: false,
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								isInReadOnly: false,
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
@@ -248,14 +247,14 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							isInReadOnly: false,
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 						rowClickAction: {
 							name: "EDIT",
 							title: "EDITAR11616",
-							icon:"pencil",
+							icon: "pencil",
 							params: { type: "form", formName: "FORMX", mode: "EDIT" },
 						},
 						actionsPlacement: "left",
@@ -341,7 +340,7 @@ export default {
 							},
 						],
 						dateValue: {
-							type: "Date",
+							type: "date",
 							title: "Date",
 							id: "GQT_Menu_111_dataRef",
 							value: "",
@@ -350,7 +349,8 @@ export default {
 					rowsChecked: {},
 					dataImportResponse: {},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestScroll: new controlClass.TableListControl(
 				{
@@ -595,7 +595,7 @@ export default {
 							visibility: false,
 						},
 						{
-							label: "KEY", //() => vm.$t('KEY01046'),
+							label: "KEY",
 							name: "Key",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -604,7 +604,7 @@ export default {
 							sortable: true,
 							initialSort: true,
 							initialSortOrder: "asc",
-							bgColor: (row, column) => {
+							bgColor: (row) => {
 								return qapi.iif(
 									row.Fields.Key.length > 3,
 									"#C0C0C0",
@@ -621,14 +621,14 @@ export default {
 							scrollData: 5,
 						},
 						{
-							label: "VALUE", //() => vm.$t('VALUE10285'),
+							label: "VALUE",
 							name: "Val",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataDisplayText: listFunctions.textTextCell,
 							dataSearch: listFunctions.textSearchCell,
 							sortable: true,
-							textColor: (row, column) => {
+							textColor: (row) => {
 								return qapi.iif(
 									row.Fields.Val.length > 3,
 									"#C08000",
@@ -667,7 +667,7 @@ export default {
 							dataDisplay: listFunctions.dateDisplayCell,
 							dataDisplayText: listFunctions.dateTextCell,
 							dataSearch: listFunctions.dateSearchCell,
-							dateTimeType: "DateTimeSeconds",
+							dateTimeType: "dateTimeSeconds",
 							sortable: true,
 							scrollData: 5,
 						},
@@ -725,7 +725,7 @@ export default {
 					config: {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
-						tableTitle: "Basic Types (scroll)", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Basic Types (scroll)",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -756,26 +756,26 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 								separator: true,
 							},
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
 						],
@@ -783,13 +783,13 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 						rowClickAction: {
 							name: "EDIT",
 							title: "EDITAR11616",
-							icon:"pencil",
+							icon: "pencil",
 							params: { type: "form", formName: "FORMX", mode: "EDIT" },
 						},
 						actionsPlacement: "left",
@@ -808,7 +808,8 @@ export default {
 						},
 					},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestLimit_1: new controlClass.TableListControl(
 				{
@@ -1053,7 +1054,7 @@ export default {
 							visibility: false,
 						},
 						{
-							label: "KEY", //() => vm.$t('KEY01046'),
+							label: "KEY",
 							name: "Key",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -1061,7 +1062,7 @@ export default {
 							sortable: true,
 							initialSort: true,
 							initialSortOrder: "asc",
-							bgColor: (row, column) => {
+							bgColor: (row) => {
 								return qapi.iif(
 									row.Fields.Key.length > 3,
 									"#C0C0C0",
@@ -1077,13 +1078,13 @@ export default {
 							cellAction: true,
 						},
 						{
-							label: "VALUE", //() => vm.$t('VALUE10285'),
+							label: "VALUE",
 							name: "Val",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
 							sortable: true,
-							textColor: (row, column) => {
+							textColor: (row) => {
 								return qapi.iif(
 									row.Fields.Val.length > 3,
 									"#C08000",
@@ -1117,7 +1118,7 @@ export default {
 							dataType: "Date",
 							dataDisplay: listFunctions.dateDisplayCell,
 							dataSearch: listFunctions.dateSearchCell,
-							dateTimeType: "DateTimeSeconds",
+							dateTimeType: "dateTimeSeconds",
 							sortable: true,
 						},
 						{
@@ -1169,7 +1170,7 @@ export default {
 						pkColumn: "PrimaryKey",
 						tableAlias: "DFLDS",
 						tableNamePlural: "D Fields",
-						tableTitle: "Basic Types (Limit)", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Basic Types (Limit)",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -1200,26 +1201,26 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 								separator: true,
 							},
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
 						],
@@ -1227,13 +1228,13 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 						rowClickAction: {
 							name: "EDIT",
 							title: "EDITAR11616",
-							icon:"pencil",
+							icon: "pencil",
 							params: { type: "form", formName: "FORMX", mode: "EDIT" },
 						},
 						actionsPlacement: "left",
@@ -1486,7 +1487,8 @@ export default {
 						},
 					],
 				},
-				this
+				this,
+				{}
 			),
 			tableTestEdit: new controlClass.TableListControl(
 				{
@@ -1731,7 +1733,7 @@ export default {
 							visibility: false,
 						},
 						{
-							label: "KEY", //() => vm.$t('KEY01046'),
+							label: "KEY",
 							name: "Key",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -1739,7 +1741,7 @@ export default {
 							sortable: true,
 							initialSort: true,
 							initialSortOrder: "asc",
-							bgColor: (row, column) => {
+							bgColor: (row) => {
 								return qapi.iif(
 									row.Fields.Key.length > 3,
 									"#C0C0C0",
@@ -1755,13 +1757,13 @@ export default {
 							cellAction: true,
 						},
 						{
-							label: "VALUE", //() => vm.$t('VALUE10285'),
+							label: "VALUE",
 							name: "Val",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
 							sortable: true,
-							textColor: (row, column) => {
+							textColor: (row) => {
 								return qapi.iif(
 									row.Fields.Val.length > 3,
 									"#C08000",
@@ -1793,7 +1795,6 @@ export default {
 							component: "q-edit-numeric",
 							componentOptions: {
 								maxDigits: 10,
-								isCurrency: false,
 								isDecimal: true,
 								thousandsSep: " ",
 								decimalSep: ".",
@@ -1805,7 +1806,7 @@ export default {
 							dataType: "Date",
 							dataDisplay: listFunctions.dateDisplayCell,
 							dataSearch: listFunctions.dateSearchCell,
-							dateTimeType: "DateTimeSeconds",
+							dateTimeType: "dateTimeSeconds",
 							sortable: true,
 						},
 						{
@@ -1855,7 +1856,7 @@ export default {
 					config: {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
-						tableTitle: "Basic Types (Edit)", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Basic Types (Edit)",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -1882,14 +1883,13 @@ export default {
 								name: "show_table",
 								title: "custom",
 								icon: "duplicate",
-								icon:"duplicate",
 								isInReadOnly: false,
 								params: { type: "form", formName: "FORMY", mode: "SHOW" },
 							},
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								isInReadOnly: true,
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 								separator: true,
@@ -1897,21 +1897,21 @@ export default {
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								isInReadOnly: false,
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								isInReadOnly: false,
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								isInReadOnly: false,
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
@@ -1920,14 +1920,14 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							isInReadOnly: false,
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 						rowClickAction: {
 							name: "EDIT",
 							title: "EDITAR11616",
-							icon:"pencil",
+							icon: "pencil",
 							params: { type: "form", formName: "FORMX", mode: "EDIT" },
 						},
 						actionsPlacement: "left",
@@ -2010,7 +2010,7 @@ export default {
 							},
 						],
 						dateValue: {
-							type: "Date",
+							type: "date",
 							title: "Date",
 							id: "GQT_Menu_111_dataRef",
 							value: "",
@@ -2018,7 +2018,8 @@ export default {
 					},
 					dataImportResponse: {},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestReorder: new controlClass.TableListControl(
 				{
@@ -2263,13 +2264,13 @@ export default {
 							visibility: false,
 						},
 						{
-							label: "KEY", //() => vm.$t('KEY01046'),
+							label: "KEY",
 							name: "Key",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
 							sortable: true,
-							bgColor: (row, column) => {
+							bgColor: (row) => {
 								return qapi.iif(
 									row.Fields.Key.length > 3,
 									"#C0C0C0",
@@ -2285,13 +2286,13 @@ export default {
 							cellAction: true,
 						},
 						{
-							label: "VALUE", //() => vm.$t('VALUE10285'),
+							label: "VALUE",
 							name: "Val",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
 							sortable: true,
-							textColor: (row, column) => {
+							textColor: (row) => {
 								return qapi.iif(
 									row.Fields.Val.length > 3,
 									"#C08000",
@@ -2323,7 +2324,6 @@ export default {
 							component: "q-edit-numeric",
 							componentOptions: {
 								maxDigits: 10,
-								isCurrency: false,
 								isDecimal: false,
 								thousandsSep: " ",
 								decimalSep: ".",
@@ -2336,7 +2336,7 @@ export default {
 							dataType: "Date",
 							dataDisplay: listFunctions.dateDisplayCell,
 							dataSearch: listFunctions.dateSearchCell,
-							dateTimeType: "DateTimeSeconds",
+							dateTimeType: "dateTimeSeconds",
 							sortable: true,
 						},
 						{
@@ -2386,7 +2386,7 @@ export default {
 					config: {
 						name: "DFLDS_REORDER",
 						pkColumn: "PrimaryKey",
-						tableTitle: "Basic Types (Reorder)", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Basic Types (Reorder)",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -2413,14 +2413,13 @@ export default {
 								name: "show_table",
 								title: "custom",
 								icon: "duplicate",
-								icon:"duplicate",
 								isInReadOnly: false,
 								params: { type: "form", formName: "FORMY", mode: "SHOW" },
 							},
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								isInReadOnly: true,
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 								separator: true,
@@ -2428,21 +2427,21 @@ export default {
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								isInReadOnly: false,
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								isInReadOnly: false,
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								isInReadOnly: false,
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
@@ -2451,14 +2450,14 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							isInReadOnly: false,
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 						rowClickAction: {
 							name: "EDIT",
 							title: "EDITAR11616",
-							icon:"pencil",
+							icon: "pencil",
 							params: { type: "form", formName: "FORMX", mode: "EDIT" },
 						},
 						actionsPlacement: "left",
@@ -2543,7 +2542,7 @@ export default {
 							},
 						],
 						dateValue: {
-							type: "Date",
+							type: "date",
 							title: "Date",
 							id: "GQT_Menu_111_dataRef",
 							value: "",
@@ -2551,7 +2550,8 @@ export default {
 					},
 					dataImportResponse: {},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestDates: new controlClass.TableListControl(
 				{
@@ -2675,7 +2675,7 @@ export default {
 							dataType: "Date",
 							dataDisplay: listFunctions.dateDisplayCell,
 							dataSearch: listFunctions.dateSearchCell,
-							dateTimeType: "Date",
+							dateTimeType: "date",
 							sortable: true,
 						},
 						{
@@ -2684,7 +2684,7 @@ export default {
 							dataType: "Date",
 							dataDisplay: listFunctions.dateDisplayCell,
 							dataSearch: listFunctions.dateSearchCell,
-							dateTimeType: "DateTime",
+							dateTimeType: "dateTime",
 							sortable: true,
 						},
 						{
@@ -2693,7 +2693,7 @@ export default {
 							dataType: "Date",
 							dataDisplay: listFunctions.dateDisplayCell,
 							dataSearch: listFunctions.dateSearchCell,
-							dateTimeType: "DateTimeSeconds",
+							dateTimeType: "dateTimeSeconds",
 							sortable: true,
 						},
 						{
@@ -2702,14 +2702,14 @@ export default {
 							dataType: "Date",
 							dataDisplay: listFunctions.dateDisplayCell,
 							dataSearch: listFunctions.dateSearchCell,
-							dateTimeType: "Time",
+							dateTimeType: "time",
 							sortable: true,
 						},
 					],
 					config: {
 						name: "DDATE",
 						pkColumn: "",
-						tableTitle: "Date Types", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Date Types",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -2735,25 +2735,25 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 							},
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
 						],
@@ -2761,12 +2761,13 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 					},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestOther: new controlClass.TableListControl(
 				{
@@ -3046,7 +3047,7 @@ export default {
 					config: {
 						name: "DMISC",
 						pkColumn: "Key",
-						tableTitle: "Other Types", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Other Types",
 						lcid: "pt-PT",
 						system: 0,
 						supportForm: {
@@ -3062,25 +3063,25 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 							},
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
 						],
@@ -3088,12 +3089,13 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 					},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestOtherScroll: new controlClass.TableListControl(
 				{
@@ -3379,7 +3381,7 @@ export default {
 					config: {
 						name: "DMISC",
 						pkColumn: "Key",
-						tableTitle: "Other Types (scroll)", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Other Types (scroll)",
 						lcid: "pt-PT",
 						system: 0,
 						supportForm: {
@@ -3395,25 +3397,25 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 							},
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
 						],
@@ -3421,12 +3423,13 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 					},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestTotaler: new controlClass.TableListControl(
 				{
@@ -3601,7 +3604,7 @@ export default {
 							visibility: false,
 						},
 						{
-							label: "KEY", //() => vm.$t('KEY01046'),
+							label: "KEY",
 							name: "Key",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -3611,7 +3614,7 @@ export default {
 							initialSortOrder: "asc",
 						},
 						{
-							label: "VALUE", //() => vm.$t('VALUE10285'),
+							label: "VALUE",
 							name: "Val",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -3696,7 +3699,7 @@ export default {
 					config: {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
-						tableTitle: "Column Totalers", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Column Totalers",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -3722,25 +3725,25 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 							},
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
 						],
@@ -3748,14 +3751,14 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
-						actionsPlacement: "left",
-						showColumnTotals: true,
+						actionsPlacement: "left"
 					},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestTotalerSelected: new controlClass.TableListControl(
 				{
@@ -3930,7 +3933,7 @@ export default {
 							visibility: false,
 						},
 						{
-							label: "KEY", //() => vm.$t('KEY01046'),
+							label: "KEY",
 							name: "Key",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -3940,7 +3943,7 @@ export default {
 							initialSortOrder: "asc",
 						},
 						{
-							label: "VALUE", //() => vm.$t('VALUE10285'),
+							label: "VALUE",
 							name: "Val",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -4025,7 +4028,7 @@ export default {
 					config: {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
-						tableTitle: "Column Totalers (selected)", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Column Totalers (selected)",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -4051,25 +4054,25 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 							},
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
 						],
@@ -4077,17 +4080,17 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 						actionsPlacement: "left",
 						rowClickActionInternal: "selectMultiple",
 						rowBgColorSelected: "#e0e0e0",
-						showColumnTotalsSelected: true,
 						showRowsSelectedCount: true,
 					},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestSelectMultiple: new controlClass.TableListControl(
 				{
@@ -4262,7 +4265,7 @@ export default {
 							visibility: false,
 						},
 						{
-							label: "KEY", //() => vm.$t('KEY01046'),
+							label: "KEY",
 							name: "Key",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -4272,7 +4275,7 @@ export default {
 							initialSortOrder: "asc",
 						},
 						{
-							label: "VALUE", //() => vm.$t('VALUE10285'),
+							label: "VALUE",
 							name: "Val",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -4357,7 +4360,7 @@ export default {
 					config: {
 						name: "DFLDS_SELECT_CHECK",
 						pkColumn: "PrimaryKey",
-						tableTitle: "Select Multiple Rows", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Select Multiple Rows",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -4383,25 +4386,25 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 							},
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
 						],
@@ -4409,7 +4412,7 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 						actionsPlacement: "left",
@@ -4422,7 +4425,8 @@ export default {
 					},
 					rowsChecked: {},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestSelectMultipleMultiAction: new controlClass.TableListControl(
 				{
@@ -4597,7 +4601,7 @@ export default {
 							visibility: false,
 						},
 						{
-							label: "KEY", //() => vm.$t('KEY01046'),
+							label: "KEY",
 							name: "Key",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -4607,7 +4611,7 @@ export default {
 							initialSortOrder: "asc",
 						},
 						{
-							label: "VALUE", //() => vm.$t('VALUE10285'),
+							label: "VALUE",
 							name: "Val",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -4692,7 +4696,7 @@ export default {
 					config: {
 						name: "DFLDS_SELECT_CHECK_MULTI",
 						pkColumn: "PrimaryKey",
-						tableTitle: "Select Multiple Rows (Multiple Actions)", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Select Multiple Rows (Multiple Actions)",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -4718,25 +4722,25 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 							},
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
 						],
@@ -4744,7 +4748,7 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 						actionsPlacement: "left",
@@ -4756,7 +4760,7 @@ export default {
 							{
 								name: "ROUTINE_1",
 								title: "ROUTINE_1",
-								icon:"view",
+								icon: "view",
 								params: {
 									type: "routine",
 									action: "openRoutineAction",
@@ -4766,7 +4770,7 @@ export default {
 							{
 								name: "ROUTINE_2",
 								title: "ROUTINE_2",
-								icon:"pencil",
+								icon: "pencil",
 								params: {
 									type: "routine",
 									action: "openRoutineAction",
@@ -4776,7 +4780,7 @@ export default {
 							{
 								name: "ROUTINE_3",
 								title: "ROUTINE_3",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: {
 									type: "routine",
 									action: "openRoutineAction",
@@ -4789,7 +4793,8 @@ export default {
 					},
 					rowsChecked: {},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestSelectSingle: new controlClass.TableListControl(
 				{
@@ -4964,7 +4969,7 @@ export default {
 							visibility: false,
 						},
 						{
-							label: "KEY", //() => vm.$t('KEY01046'),
+							label: "KEY",
 							name: "Key",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -4974,7 +4979,7 @@ export default {
 							initialSortOrder: "asc",
 						},
 						{
-							label: "VALUE", //() => vm.$t('VALUE10285'),
+							label: "VALUE",
 							name: "Val",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -5059,7 +5064,7 @@ export default {
 					config: {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
-						tableTitle: "Select Single Row", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Select Single Row",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -5085,25 +5090,25 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 							},
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
 						],
@@ -5111,7 +5116,7 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 						actionsPlacement: "left",
@@ -5120,7 +5125,8 @@ export default {
 					},
 					rowsChecked: {},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestRemoveRows: new controlClass.TableListControl(
 				{
@@ -5295,7 +5301,7 @@ export default {
 							visibility: false,
 						},
 						{
-							label: "KEY", //() => vm.$t('KEY01046'),
+							label: "KEY",
 							name: "Key",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -5305,7 +5311,7 @@ export default {
 							initialSortOrder: "asc",
 						},
 						{
-							label: "VALUE", //() => vm.$t('VALUE10285'),
+							label: "VALUE",
 							name: "Val",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -5384,7 +5390,7 @@ export default {
 					config: {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
-						tableTitle: "Remove Rows", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Remove Rows",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -5409,13 +5415,13 @@ export default {
 						actionsPlacement: "left",
 						rowClickActionInternal: "",
 						rowBgColorSelected: "#e0e0e0",
-						showColumnTotalsSelected: false,
 						showRowsSelectedCount: false,
 						extendedActions: ["remove"],
 						perPage: 5,
 					},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestPaginationNormal: new controlClass.TableListControl(
 				{
@@ -5530,7 +5536,7 @@ export default {
 							visibility: false,
 						},
 						{
-							label: "KEY", //() => vm.$t('KEY01046'),
+							label: "KEY",
 							name: "Key",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -5540,7 +5546,7 @@ export default {
 							initialSortOrder: "asc",
 						},
 						{
-							label: "VALUE", //() => vm.$t('VALUE10285'),
+							label: "VALUE",
 							name: "Val",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -5552,7 +5558,7 @@ export default {
 					config: {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
-						tableTitle: "Pagination (normal)", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Pagination (normal)",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -5572,25 +5578,25 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 							},
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
 						],
@@ -5598,7 +5604,7 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 						actionsPlacement: "left",
@@ -5608,14 +5614,15 @@ export default {
 						showRecordCount: true,
 					},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestPaginationNormalServer: new controlClass.TableListControl(
 				{
 					config: {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
-						tableTitle: "Pagination (normal, server)", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Pagination (normal, server)",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -5635,25 +5642,25 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 							},
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
 						],
@@ -5661,7 +5668,7 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 						actionsPlacement: "left",
@@ -5674,7 +5681,8 @@ export default {
 						hydrate: listFunctions.hydrateTableData,
 					},
 				},
-				this
+				this,
+				{}
 			),
 			tableTestPaginationAlt: new controlClass.TableListControl(
 				{
@@ -5789,7 +5797,7 @@ export default {
 							visibility: false,
 						},
 						{
-							label: "KEY", //() => vm.$t('KEY01046'),
+							label: "KEY",
 							name: "Key",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -5799,7 +5807,7 @@ export default {
 							initialSortOrder: "asc",
 						},
 						{
-							label: "VALUE", //() => vm.$t('VALUE10285'),
+							label: "VALUE",
 							name: "Val",
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
@@ -5811,7 +5819,7 @@ export default {
 					config: {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
-						tableTitle: "Pagination (alternate)", //() => vm.$t('MORE_PROPERTIES36834'),
+						tableTitle: "Pagination (alternate)",
 						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
@@ -5831,25 +5839,25 @@ export default {
 							{
 								name: "SHOW",
 								title: "CONSULTAR57388",
-								icon:"view",
+								icon: "view",
 								params: { type: "form", formName: "FORMX", mode: "SHOW" },
 							},
 							{
 								name: "EDIT",
 								title: "EDITAR11616",
-								icon:"pencil",
+								icon: "pencil",
 								params: { type: "form", formName: "FORMX", mode: "EDIT" },
 							},
 							{
 								name: "DUPLICATE",
 								title: "DUPLICAR09748",
-								icon:"duplicate",
+								icon: "duplicate",
 								params: { type: "form", formName: "FORMX", mode: "DUPLICATE" },
 							},
 							{
 								name: "DELETE",
 								title: "ELIMINAR21155",
-								icon:"delete",
+								icon: "delete",
 								params: { type: "form", formName: "FORMX", mode: "DELETE" },
 							},
 						],
@@ -5857,7 +5865,7 @@ export default {
 							name: "INSERT",
 							title: "INSERIR",
 							isInsertEnabled: () => true,
-							icon:"plus-sign",
+							icon: "plus-sign",
 							params: { type: "form", formName: "FORMX", mode: "NEW" },
 						},
 						actionsPlacement: "left",
@@ -5866,25 +5874,13 @@ export default {
 						showAlternatePagination: true,
 					},
 				},
-				this
+				this,
+				{}
 			),
 		};
 	},
 	simpleUsageMethods: {
 		runAction(eventName, emittedAction) {
-			/*
-			var str = eventName + ":\n [" + emittedAction.name;
-			if(emittedAction.row !== undefined){
-				str += ", \n" + JSON.stringify(emittedAction.row);
-			}
-			if(emittedAction.column !== undefined){
-				str += ", \n" + JSON.stringify(emittedAction.column);
-			}
-			if(emittedAction.params !== undefined){
-				str += ", \n" + JSON.stringify(emittedAction.params);
-			}
-			str += "]";
-			*/
 			var str = eventName + ":\n" + JSON.stringify(emittedAction);
 			alert(str);
 		},
@@ -5905,7 +5901,7 @@ export default {
 		cellAction(emittedAction) {
 			this.runAction("cell-action", emittedAction);
 		},
-		selectRows(emittedAction) {
+		selectRows() {
 			return;
 		},
 		exportDataAction(emittedAction) {

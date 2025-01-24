@@ -89,24 +89,34 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValDigdocum',
 			area: 'MANUA',
 			field: 'DIGDOCUM',
+			properties: computed(() => this.ValDigdocumPropertiesVM),
+			documentFK: computed(() => this.ValDigdocumfk),
+			currentDocument: computed(() => this.ValDigdocumData),
 			description: computed(() => this.Resources.DIGITAL_DOCUMENT59580),
 		}).cloneFrom(values?.ValDigdocum))
 		watch(() => this.ValDigdocum.value, (newValue, oldValue) => this.onUpdate('manua.digdocum', this.ValDigdocum, newValue, oldValue))
 
-		this.ValDigdocumPropertiesVM = new modelFieldType.Base({
+		this.ValDigdocumPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'ValDigdocumPropertiesVM',
 			area: 'MANUA',
 			field: 'DIGDOCUMDOCUM',
 			ignoreFldSubmit: true
-		}).cloneFrom(values?.ValDigdocumPropertiesVM)
+		}).cloneFrom(values?.ValDigdocumPropertiesVM))
 		this.ValDigdocumfk = reactive(new modelFieldType.Base({
 			id: 'ValDigdocumfk',
 			area: 'MANUA',
-			field: 'DIGDOCUMDOCUMFK'
+			field: 'DIGDOCUMFK'
 		}).cloneFrom(values?.ValDigdocumfk))
-		watch(() => this.ValDigdocumfk.value, (newValue, oldValue) => this.onUpdate('manua.digdocumdocumfk', this.ValDigdocumfk, newValue, oldValue))
+		watch(() => this.ValDigdocumfk.value, (newValue, oldValue) => this.onUpdate('manua.digdocumfk', this.ValDigdocumfk, newValue, oldValue))
+		this.ValDigdocumData = reactive(new modelFieldType.DocumentData({
+			id: 'ValDigdocumData',
+			area: 'MANUA',
+			field: 'DIGDOCUMDATA',
+			ignoreFldSubmit: true
+		}).cloneFrom(values?.ValDigdocumData))
+		watch(() => this.ValDigdocumData.value, (newValue, oldValue) => this.onUpdate('manua.digdocumdata', this.ValDigdocumData, newValue, oldValue), { deep: true })
 
-		this.ValNotes = reactive(new modelFieldType.String({
+		this.ValNotes = reactive(new modelFieldType.MultiLineString({
 			id: 'ValNotes',
 			originId: 'ValNotes',
 			area: 'MANUA',
@@ -128,5 +138,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodmanua'
 
 	get QPrimaryKey() { return this.ValCodmanua.value }
-	set QPrimaryKey(value) { this.ValCodmanua.value = value }
+	set QPrimaryKey(value) { this.ValCodmanua.updateValue(value) }
 }

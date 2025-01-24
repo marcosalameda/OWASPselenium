@@ -132,9 +132,9 @@
 			 */
 			stepClasses()
 			{
-				var classes = ['step-link', 'q-wizard__step']
+				const classes = ['step-link', 'q-wizard__step']
 
-				if (this.isActivated)
+				if (this.isActivated || this.isClickable)
 					classes.push('filled-step')
 
 				if (this.isSelected)
@@ -150,11 +150,19 @@
 			},
 
 			/**
+			 * Whether or not the step is clickable.
+			 */
+			isClickable()
+			{
+				return this.isActivated && !this.isSelected || !this.isDisabled
+			},
+
+			/**
 			 * The object of handlers for the step.
 			 */
 			stepHandlers()
 			{
-				return { click: this.isActivated && !this.isSelected ? (event) => this.stepClicked(event) : null }
+				return { click: this.isClickable ? (event) => this.stepClicked(event) : null }
 			}
 		},
 

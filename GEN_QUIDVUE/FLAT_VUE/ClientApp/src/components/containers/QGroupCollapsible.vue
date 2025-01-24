@@ -3,18 +3,35 @@
 		v-show="isVisible"
 		:id="`${controlId}-container`"
 		:class="classes">
-		<div class="q-group-collapsible__header">
+		<div
+			class="q-group-collapsible__header">
 			<q-button
+				:id="buttonId"
 				b-style="tertiary"
-				block
 				@click="toggleCollapse">
 				<span
-					:help-id="id"
 					:data-val-required="isRequired">
 					<q-icon :icon="accordionIcon" />
-					<span class="q-group-collapsible__label">{{ label }}</span>
+					<span
+						class="q-group-collapsible__label"
+						:id="labelId">
+						{{ label }}
+					</span>
 				</span>
 			</q-button>
+
+			<q-popover-help
+				v-if="popoverText"
+				:help-control="helpControl"
+				:id="id"
+				:label="label"
+				:texts="texts" />
+
+			<q-tooltip-help
+				v-if="tooltipText"
+				:anchor="anchorId"
+				:label="label"
+				:help-control="helpControl" />
 		</div>
 		<div
 			class="q-group-collapsible__content"
@@ -29,6 +46,9 @@
 </template>
 
 <script>
+	import HelpControl from '@/mixins/helpControls.js'
+	import { defineAsyncComponent } from 'vue'
+
 	export default {
 		name: 'QCollapsibleContainer',
 
@@ -36,11 +56,23 @@
 
 		inheritAttrs: false,
 
+		mixins: [HelpControl],
+
+		components: {
+			QPopoverHelp: defineAsyncComponent(() => import('@/components/QPopoverHelp.vue')),
+			QTooltipHelp: defineAsyncComponent(() => import('@/components/QTooltipHelp.vue'))
+		},
+
 		props: {
 			/**
 			 * Unique identifier for the control.
 			 */
 			id: String,
+			
+			/**
+			 * Text strings which might be used to override default texts within the component.
+			 */
+			texts: Object,
 
 			/**
 			 * The title of the group.
@@ -113,6 +145,13 @@
 					// Must use 'visibility' property so the contents are still their full height even when hidden
 					visibility: this.contentsVisible ? null : 'hidden'
 				}
+			},
+
+			labelId() {
+				return `label_${this.controlId}`
+			},
+			buttonId() {
+				return this.controlId
 			}
 		},
 

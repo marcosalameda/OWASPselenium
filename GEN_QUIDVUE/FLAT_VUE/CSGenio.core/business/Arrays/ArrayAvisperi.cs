@@ -5,7 +5,7 @@ namespace CSGenio.business
 	/// <summary>
 	/// Array aVisPeri ()
 	/// </summary>
-	public class ArrayAvisperi : Array<double>
+	public class ArrayAvisperi : Array<decimal>
 	{
 		/// <summary>
 		/// The instance
@@ -28,19 +28,19 @@ namespace CSGenio.business
 		/// <summary>
 		/// Mensal
 		/// </summary>
-		public const double E_4_1 = 4;
+		public const decimal E_4_1 = 4M;
 		/// <summary>
 		/// Trimestral
 		/// </summary>
-		public const double E_5_2 = 5;
+		public const decimal E_5_2 = 5M;
 		/// <summary>
 		/// Semestral
 		/// </summary>
-		public const double E_6_3 = 6;
+		public const decimal E_6_3 = 6M;
 		/// <summary>
 		/// Anual
 		/// </summary>
-		public const double E_7_4 = 7;
+		public const decimal E_7_4 = 7M;
 
 		/// <summary>
 		/// Prevents a default instance of the <see cref="ArrayAvisperi"/> class from being created.
@@ -51,9 +51,9 @@ namespace CSGenio.business
         /// Loads the dictionary.
         /// </summary>
         /// <returns></returns>
-		protected override Dictionary<double, ArrayElement> LoadDictionary()
+		protected override Dictionary<decimal, ArrayElement> LoadDictionary()
 		{
-			return new Dictionary<double, ArrayElement>()
+			return new Dictionary<decimal, ArrayElement>()
 			{
 				{ E_4_1, new ArrayElement() { ResourceId = "MENSAL53343", HelpId = "", Group = "" } },
 				{ E_5_2, new ArrayElement() { ResourceId = "TRIMESTRAL58756", HelpId = "", Group = "" } },
@@ -67,7 +67,7 @@ namespace CSGenio.business
 		/// </summary>
 		/// <param name="cod">The cod.</param>
 		/// <returns></returns>
-		public static string CodToDescricao(double cod)
+		public static string CodToDescricao(decimal cod)
 		{
 			return Instance.CodToDescricaoImpl(cod);
 		}
@@ -76,7 +76,7 @@ namespace CSGenio.business
 		/// Gets the elements.
 		/// </summary>
 		/// <returns></returns>
-		public static List<double> GetElements()
+		public static List<decimal> GetElements()
 		{
 			return Instance.GetElementsImpl();
 		}
@@ -88,14 +88,14 @@ namespace CSGenio.business
 		/// <returns></returns>
 		public static ArrayElement GetElement(string cod)
 		{
-            return Instance.GetElementImpl(double.Parse(cod));
+            return Instance.GetElementImpl(decimal.Parse(cod));
         }
 
 		/// <summary>
 		/// Gets the dictionary.
 		/// </summary>
 		/// <returns></returns>
-		public static IDictionary<double, string> GetDictionary()
+		public static IDictionary<decimal, string> GetDictionary()
 		{
 			return Instance.GetDictionaryImpl();
 		}
@@ -107,7 +107,7 @@ namespace CSGenio.business
 		/// <returns></returns>
 		public static string GetHelpId(string cod)
 		{
-			return Instance.GetHelpIdImpl(double.Parse(cod));
+			return Instance.GetHelpIdImpl(decimal.Parse(cod));
 		}
 	}
 }

@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -115,8 +115,7 @@
 										v-on="controls.EMPRE___CMPNYLOGO____.handlers"
 										:loading="controls.EMPRE___CMPNYLOGO____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-image
 											v-if="controls.EMPRE___CMPNYLOGO____.isVisible"
 											v-bind="controls.EMPRE___CMPNYLOGO____.props"
@@ -147,12 +146,12 @@
 										v-on="controls.EMPRE___CMPNYACRONYM_.handlers"
 										:loading="controls.EMPRE___CMPNYACRONYM_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EMPRE___CMPNYACRONYM_.props"
 											:model-value="model.ValAcronym.value"
-											@update:model-value="model.ValAcronym.fnUpdateValue" />
+											@blur="onBlur(controls.EMPRE___CMPNYACRONYM_, model.ValAcronym.value)"
+											@change="model.ValAcronym.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -166,12 +165,12 @@
 										v-on="controls.EMPRE___CMPNYNIF_____.handlers"
 										:loading="controls.EMPRE___CMPNYNIF_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EMPRE___CMPNYNIF_____.props"
 											:model-value="model.ValNif.value"
-											@update:model-value="model.ValNif.fnUpdateValue" />
+											@blur="onBlur(controls.EMPRE___CMPNYNIF_____, model.ValNif.value)"
+											@change="model.ValNif.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -185,12 +184,12 @@
 										v-on="controls.EMPRE___CMPNYTELEPHON.handlers"
 										:loading="controls.EMPRE___CMPNYTELEPHON.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EMPRE___CMPNYTELEPHON.props"
 											:model-value="model.ValTelephon.value"
-											@update:model-value="model.ValTelephon.fnUpdateValue" />
+											@blur="onBlur(controls.EMPRE___CMPNYTELEPHON, model.ValTelephon.value)"
+											@change="model.ValTelephon.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -204,12 +203,12 @@
 										v-on="controls.EMPRE___CMPNYEMAIL___.handlers"
 										:loading="controls.EMPRE___CMPNYEMAIL___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EMPRE___CMPNYEMAIL___.props"
 											:model-value="model.ValEmail.value"
-											@update:model-value="model.ValEmail.fnUpdateValue" />
+											@blur="onBlur(controls.EMPRE___CMPNYEMAIL___, model.ValEmail.value)"
+											@change="model.ValEmail.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -227,12 +226,12 @@
 							v-on="controls.EMPRE___CMPNYDESIGNAT.handlers"
 							:loading="controls.EMPRE___CMPNYDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.EMPRE___CMPNYDESIGNAT.props"
 								:model-value="model.ValDesignat.value"
-								@update:model-value="model.ValDesignat.fnUpdateValue" />
+								@blur="onBlur(controls.EMPRE___CMPNYDESIGNAT, model.ValDesignat.value)"
+								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -257,14 +256,11 @@
 										v-on="controls.EMPRE___CNTRYCOUNTRY_.handlers"
 										:loading="controls.EMPRE___CNTRYCOUNTRY_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.EMPRE___CNTRYCOUNTRY_.isVisible"
 											v-bind="controls.EMPRE___CNTRYCOUNTRY_.props"
-											:model-value="model.ValCodcntry.value"
-											v-on="controls.EMPRE___CNTRYCOUNTRY_.handlers"
-											@update:model-value="model.ValCodcntry.fnUpdateValue" />
+											v-on="controls.EMPRE___CNTRYCOUNTRY_.handlers" />
 										<q-see-more-empre-cntrycountry
 											v-if="controls.EMPRE___CNTRYCOUNTRY_.seeMoreIsVisible"
 											v-bind="controls.EMPRE___CNTRYCOUNTRY_.seeMoreParams"
@@ -284,12 +280,10 @@
 							v-on="controls.EMPRE___CMPNYQTDPESSO.handlers"
 							:loading="controls.EMPRE___CMPNYQTDPESSO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.EMPRE___CMPNYQTDPESSO.isVisible"
-								v-bind="controls.EMPRE___CMPNYQTDPESSO"
-								:model-value="model.ValQtdpesso.value"
+								v-bind="controls.EMPRE___CMPNYQTDPESSO.props"
 								@update:model-value="model.ValQtdpesso.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -306,12 +300,12 @@
 							v-on="controls.EMPRE___CMPNYHEADLOC_.handlers"
 							:loading="controls.EMPRE___CMPNYHEADLOC_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.EMPRE___CMPNYHEADLOC_.props"
 								:model-value="model.ValHeadloc.value"
-								@update:model-value="model.ValHeadloc.fnUpdateValue" />
+								@blur="onBlur(controls.EMPRE___CMPNYHEADLOC_, model.ValHeadloc.value)"
+								@change="model.ValHeadloc.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -397,15 +391,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'EMPRE',
-						location: 'form-EMPRE',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'EMPRE',
+					location: 'form-EMPRE',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -451,6 +443,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -523,8 +517,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -606,7 +601,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -660,21 +655,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -683,15 +663,11 @@
 						id: 'EMPRE___PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.LOGO62483),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -701,16 +677,13 @@
 						id: 'EMPRE___CMPNYLOGO____',
 						name: 'LOGO',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.LOGO62483),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR02',
 						height: 50,
 						width: 100,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.LOGO62483)),
 						controlLimits: [
 						],
 					}, this),
@@ -718,15 +691,11 @@
 						id: 'EMPRE___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY52963),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -736,10 +705,7 @@
 						id: 'EMPRE___CMPNYDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESIGNATION35876),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
@@ -754,16 +720,12 @@
 						id: 'EMPRE___CMPNYACRONYM_',
 						name: 'ACRONYM',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACRONYM00872),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR01',
 						maxLength: 15,
 						labelId: 'label_EMPRE___CMPNYACRONYM_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -773,16 +735,12 @@
 						id: 'EMPRE___CMPNYNIF_____',
 						name: 'NIF',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.TAX_IDENTIFICATION_55044),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR01',
 						maxLength: 15,
 						labelId: 'label_EMPRE___CMPNYNIF_____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -792,16 +750,12 @@
 						id: 'EMPRE___CMPNYTELEPHON',
 						name: 'TELEPHON',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.TELEPHONE28697),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR01',
 						maxLength: 20,
 						labelId: 'label_EMPRE___CMPNYTELEPHON',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -811,16 +765,12 @@
 						id: 'EMPRE___CMPNYEMAIL___',
 						name: 'EMAIL',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.EMAIL_44228),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR01',
 						maxLength: 254,
 						labelId: 'label_EMPRE___CMPNYEMAIL___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -828,15 +778,11 @@
 						id: 'EMPRE___PSEUDNOVOGR03',
 						name: 'NOVOGR03',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.ORIGIN03068),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -846,26 +792,10 @@
 						id: 'EMPRE___CNTRYCOUNTRY_',
 						name: 'COUNTRY',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COUNTRY64133),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR03',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodcntry',
-							dependencyEvent: 'fieldChange:cmpny.codcntry'
-						},
-						dependentFields: () => {
-							return {
-								set 'cntry.codcntry'(value) { vm.model.ValCodcntry.updateValue(value) },
-								set 'cntry.country'(value) { vm.model.TableCntryCountry.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -874,26 +804,31 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodcntry',
+							dependencyEvent: 'fieldChange:cmpny.codcntry'
+						},
+						dependentFields: () => ({
+							set 'cntry.codcntry'(value) { vm.model.ValCodcntry.updateValue(value) },
+							set 'cntry.country'(value) { vm.model.TableCntryCountry.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					EMPRE___CMPNYQTDPESSO: new fieldControlClass.NumberControl({
 						modelField: 'ValQtdpesso',
 						valueChangeEvent: 'fieldChange:cmpny.qtdpesso',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'EMPRE___CMPNYQTDPESSO',
 						name: 'QTDPESSO',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.QUANTITY_OF_PEOPLE64893),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EMPRE___CMPNYHEADLOC_: new fieldControlClass.FieldSpecialRenderingControl({
 						modelField: 'ValHeadloc',
@@ -903,15 +838,9 @@
 						id: 'EMPRE___CMPNYHEADLOC_',
 						name: 'HEADLOC',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.HEADQUARTER_LOCATION30734),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
-						labelId: 'label_EMPRE___CMPNYHEADLOC_',
-						mustBeFilled: false,
 						viewModes: [
 							{
 								id: 'MAP',
@@ -962,10 +891,6 @@
 									},
 									centerCoord: {
 										rawValue: undefined,
-										isMapped: false
-									},
-									enableAddressSearch: {
-										rawValue: false,
 										isMapped: false
 									},
 									showSourcesInDescription: {
@@ -1044,6 +969,10 @@
 										rawValue: 'OpenStreetMap',
 										isMapped: false
 									},
+									openPopupOnHover: {
+										rawValue: false,
+										isMapped: false
+									},
 								},
 								groups: {
 									externalLayer: [
@@ -1109,7 +1038,7 @@
 						/** The foreign key to the CNTRY table */
 						get cntry() { return vm.model.ValCodcntry },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1207,6 +1136,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1246,6 +1183,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1372,6 +1317,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR EMPRE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1387,6 +1348,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS EMPRE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

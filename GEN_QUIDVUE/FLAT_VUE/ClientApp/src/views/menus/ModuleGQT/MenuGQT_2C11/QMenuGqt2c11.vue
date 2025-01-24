@@ -9,7 +9,7 @@
 				:tabs-list="controls.tabGroup.tabsList"
 				:selected-tab="controls.tabGroup.selectedTab"
 				:is-visible="controls.tabGroup.isVisible"
-				@tab-changed="controls.tabGroup.SelectTab($event)">
+				@tab-changed="controls.tabGroup.selectTab($event)">
 				<template #tab-panel>
 					<section v-show="controls.tabGroup.selectedTab === 'firstTab'">
 						<q-row-container is-large>
@@ -41,8 +41,7 @@
 						<q-row-container is-large>
 							<q-control-wrapper class="row-line-group">
 								<q-button
-									b-style="secondary"
-									:class="['float-left']"
+									b-style="secondary"									
 									:label="Resources.APLICAR33981"
 									:title="Resources.APLICAR33981"
 									@click="applyChanges">
@@ -92,6 +91,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_2C11ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_2C11', 'hardcoded', 'messages']
 
 	export default {
@@ -139,9 +140,7 @@
 					order: '2C11'
 				},
 
-				model: {
-					selectedRows: {}
-				},
+				model: new MenuViewModel(this),
 
 				controls: {
 					firstTab: new controlClass.BaseControl({
@@ -170,6 +169,7 @@
 					}, this),
 
 					firstTable: new controlClass.TableListControl({
+						id: 'GQT_Menu_2C11',
 						controller: 'EQUIP',
 						action: 'GQT_Menu_2C11',
 						hasDependencies: false,
@@ -200,7 +200,7 @@
 								field: 'DTAQUISI',
 								label: computed(() => this.Resources.ACQUISITION44180),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -220,7 +220,7 @@
 								field: 'DTDECO',
 								label: computed(() => this.Resources.DECOMISSION14486),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.BooleanColumn({
 								order: 6,
@@ -236,8 +236,10 @@
 								area: 'EQUIP',
 								field: 'PHOTOGRA',
 								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -262,7 +264,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -370,23 +372,16 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: EQUIP
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValRegistnr',
 							defaultSearchColumnNameOriginal: 'ValRegistnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValRegistnr',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
 						uuid: '1ac74500-24cd-4979-9f76-49d2b8b45ea2',
 						allSelectedRows: 'false',
-						id: 'GQT_Menu_2C11',
 						headerLevel: 1,
 						handlers: {
 							// Handles the row click.
@@ -407,6 +402,7 @@
 					}, this),
 
 					secondTable: new controlClass.TableListControl({
+						id: 'GQT_Menu_2C111',
 						controller: 'DECOM',
 						action: 'GQT_Menu_2C111',
 						hasDependencies: false,
@@ -429,7 +425,7 @@
 								field: 'DTDECO',
 								label: computed(() => this.Resources.DECOMISSION14486),
 								scrollData: 8,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -452,7 +448,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -560,23 +556,16 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: ABATE
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValDecomnr',
 							defaultSearchColumnNameOriginal: 'ValDecomnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValDtdeco',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-DECOM'],
 						uuid: 'e6356714-1875-490b-820c-71ac269df34f',
 						allSelectedRows: 'false',
-						id: 'GQT_Menu_2C111',
 						headerLevel: 1,
 						handlers: {
 							selectRow: (eventData) => {
@@ -618,17 +607,12 @@
 							},
 							formsDefinition: {
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: [],
 						uuid: '',

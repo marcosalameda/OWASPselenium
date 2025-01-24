@@ -198,6 +198,17 @@ namespace ExecuteQueryCore
         public string Origin { get; set; }
     }
 
+    /**
+     * Auxiliary class to extract the essential information from a RdxOperationLog instance.
+     */
+    public class RdxOperationInfo
+    {
+        public string StartTime { get; set; }
+        public int Duration { get; set; }
+        public string Database { get; set; }
+        public string Origin { get; set; }
+        public bool Success { get; set; }
+    }
 
     public class RdxOperationLog
     {

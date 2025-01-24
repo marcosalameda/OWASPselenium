@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Cntry
 {
-	public class Pais_ViewModel : FormViewModel<Models.Cntry>
+	public class Pais_ViewModel : FormViewModel<Models.Cntry>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,36 +29,34 @@ namespace GenioMVC.ViewModels.Cntry
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+
+		#endregion
 		/// <summary>
 		/// Title: "Designation:" | Type: "C"
 		/// </summary>
 		public string ValCountry { get; set; }
-
 		/// <summary>
 		/// Title: "Active" | Type: "L"
 		/// </summary>
 		public bool ValActive { get; set; }
-
 		/// <summary>
 		/// Title: "Numeric" | Type: "C"
 		/// </summary>
 		public string ValCodigonr { get; set; }
-
 		/// <summary>
 		/// Title: "Alphabetic 2:" | Type: "C"
 		/// </summary>
 		public string ValAlfa2 { get; set; }
-
 		/// <summary>
 		/// Title: "Alphabetic 3:" | Type: "C"
 		/// </summary>
 		public string ValAlfa3 { get; set; }
-
 		/// <summary>
 		/// Title: "Bandeira" | Type: "IJ"
 		/// </summary>
 		[ImageThumbnailJsonConverter(100, 50)]
-		public GenioMVC.ViewModels.ImageModel ValFlag { get; set; }
+		public GenioMVC.Models.ImageModel ValFlag { get; set; }
 
 		#region Navigations
 		#endregion
@@ -66,10 +64,6 @@ namespace GenioMVC.ViewModels.Cntry
 		#region Auxiliar Keys for Image controls
 
 
-
-		#endregion
-
-		#region Additional foreign keys
 
 		#endregion
 
@@ -86,9 +80,10 @@ namespace GenioMVC.ViewModels.Cntry
 
 		public string ValCodcntry { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Pais_ViewModel() : base(null!) { }
@@ -124,6 +119,15 @@ namespace GenioMVC.ViewModels.Cntry
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Cntry model = new Models.Cntry(userContext) { Identifier = "FPAIS" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FPAIS");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -199,6 +203,20 @@ namespace GenioMVC.ViewModels.Cntry
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Cntry m)
 		{
 			if (m == null)
@@ -214,18 +232,78 @@ namespace GenioMVC.ViewModels.Cntry
 				m.ValCodigonr = ViewModelConversion.ToString(ValCodigonr);
 				m.ValAlfa2 = ViewModelConversion.ToString(ValAlfa2);
 				m.ValAlfa3 = ViewModelConversion.ToString(ValAlfa3);
-				m.ValFlag = ViewModelConversion.ToImage(ValFlag);
+				if (ValFlag == null || !ValFlag.IsThumbnail)
+					m.ValFlag = ViewModelConversion.ToImage(ValFlag);
 				m.ValCodcntry = ViewModelConversion.ToString(ValCodcntry);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Pais) to Model (Cntry) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Pais) to Model (Cntry) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "cntry.country":
+						this.ValCountry = ViewModelConversion.ToString(_value);
+						break;
+					case "cntry.active":
+						this.ValActive = ViewModelConversion.ToLogic(_value);
+						break;
+					case "cntry.codigonr":
+						this.ValCodigonr = ViewModelConversion.ToString(_value);
+						break;
+					case "cntry.alfa2":
+						this.ValAlfa2 = ViewModelConversion.ToString(_value);
+						break;
+					case "cntry.alfa3":
+						this.ValAlfa3 = ViewModelConversion.ToString(_value);
+						break;
+					case "cntry.flag":
+						this.ValFlag = ViewModelConversion.ToImage(_value);
+						break;
+					case "cntry.codcntry":
+						this.ValCodcntry = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Pais) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Pais)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Cntry.Find(id ?? Navigation.GetStrValue("cntry"), m_userContext, "FPAIS"); }
+			finally { Model ??= new Models.Cntry(m_userContext) { Identifier = "FPAIS" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -239,20 +317,13 @@ namespace GenioMVC.ViewModels.Cntry
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FPAIS";
@@ -262,6 +333,7 @@ namespace GenioMVC.ViewModels.Cntry
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -318,34 +390,28 @@ namespace GenioMVC.ViewModels.Cntry
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValCountry", Resources.Resources.DESIGNATION_35800, ValCountry, 90);
 			validator.StringLength("ValCodigonr", Resources.Resources.NUMERIC19292, ValCodigonr, 3);
 			validator.StringLength("ValAlfa2", Resources.Resources.ALPHABETIC_2_16300, ValAlfa2, 2);
 			validator.StringLength("ValAlfa3", Resources.Resources.ALPHABETIC_3_29295, ValAlfa3, 3);
 
+
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE PAIS]/
 		public override void Save()
 		{
 
-			try { Model = Models.Cntry.Find(Navigation.GetStrValue("cntry"), m_userContext, "FPAIS"); }
-			finally { if (Model == null) Model = new Models.Cntry(m_userContext) { Identifier = "FPAIS" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY PAIS]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Cntry.Find(Navigation.GetStrValue("cntry"), m_userContext, "FPAIS"); }
-			finally { if (Model == null) Model = new Models.Cntry(m_userContext) { Identifier = "FPAIS" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE PAIS]/
 
@@ -376,8 +442,16 @@ namespace GenioMVC.ViewModels.Cntry
 				"cntry.alfa3" => ViewModelConversion.ToString(modelValue),
 				"cntry.flag" => ViewModelConversion.ToImage(modelValue),
 				"cntry.codcntry" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
+		}
+
+
+		/// <inheritdoc/>
+		protected override void SetTicketToImageFields()
+		{
+			if (ValFlag != null)
+				ValFlag.Ticket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaCNTRY, CSGenioAcntry.FldFlag.Field, null, ValCodcntry);
 		}
 
 		#region Charts

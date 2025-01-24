@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Wareh;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_MLTFORM_CANCEL = new NavigationLocation("MULTIFORM41286", "Mltform_Cancel", "Wareh") { vueRouteName = "form-MLTFORM", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_MLTFORM_SHOW = new NavigationLocation("MULTIFORM41286", "Mltform_Show", "Wareh") { vueRouteName = "form-MLTFORM", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_MLTFORM_NEW = new NavigationLocation("MULTIFORM41286", "Mltform_New", "Wareh") { vueRouteName = "form-MLTFORM", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_MLTFORM_EDIT = new NavigationLocation("MULTIFORM41286", "Mltform_Edit", "Wareh") { vueRouteName = "form-MLTFORM", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_MLTFORM_DUPLICATE = new NavigationLocation("MULTIFORM41286", "Mltform_Duplicate", "Wareh") { vueRouteName = "form-MLTFORM", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_MLTFORM_DELETE = new NavigationLocation("MULTIFORM41286", "Mltform_Delete", "Wareh") { vueRouteName = "form-MLTFORM", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_MLTFORM_CANCEL = new("MULTIFORM41286", "Mltform_Cancel", "Wareh") { vueRouteName = "form-MLTFORM", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_MLTFORM_SHOW = new("MULTIFORM41286", "Mltform_Show", "Wareh") { vueRouteName = "form-MLTFORM", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_MLTFORM_NEW = new("MULTIFORM41286", "Mltform_New", "Wareh") { vueRouteName = "form-MLTFORM", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_MLTFORM_EDIT = new("MULTIFORM41286", "Mltform_Edit", "Wareh") { vueRouteName = "form-MLTFORM", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_MLTFORM_DUPLICATE = new("MULTIFORM41286", "Mltform_Duplicate", "Wareh") { vueRouteName = "form-MLTFORM", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_MLTFORM_DELETE = new("MULTIFORM41286", "Mltform_Delete", "Wareh") { vueRouteName = "form-MLTFORM", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Mltform_ModalDBEdit()
-		{
-			Mltform_ViewModel model = new Mltform_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Mltform_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Mltform Multiform actions
-
-		//
-		// GET /Wareh/MFMltform_New
-		[HttpGet]
-		[ActionName("MFMltform_New")]
-		public ActionResult MFMltform_New()
-		{
-			var model = new Mltform_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_MLTFORM_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("wareh", model.ValCodwareh);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFMltform_New_GET()
-		{
-			return MFMltform_New();
-		}
-
-		//
-		// GET /Wareh/MFMltform_Edit
-		[HttpGet]
-		[ActionName("MFMltform_Edit")]
-		public ActionResult MFMltform_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("MLTFORM", "EDIT", new { id = id, partialView = "MFMltform", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFMltform_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFMltform_Edit(requestModel);
-		}
-
-		//
-		// GET /Wareh/MFMltform_Cancel
-		[ActionName("MFMltform_Cancel")]
-		public ActionResult MFMltform_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Wareh(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Wareh/MFMltform_Save
-		[HttpPost]
-		[ActionName("MFMltform_Save")]
-		public JsonResult MFMltform_Save(Mltform_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFMltform_Save",
-				ViewName = "MFMltform",
-				AreaName = "wareh"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Wareh/MFMltform_Delete
-		[HttpPost]
-		[ActionName("MFMltform_Delete")]
-		public JsonResult MFMltform_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFMltform_Delete",
-				ViewName = "MFMltform",
-				AreaName = "wareh",
-				Location = ACTION_MLTFORM_EDIT
-			};
-
-			var model = new Mltform_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Wareh/Mltform_ValMltform1
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wpess")))
@@ -552,33 +415,45 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
 			Mltform_ValMltform1_ViewModel model = new Mltform_ValMltform1_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodwareh = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Wareh/Mltform_SaveEdit
 		[HttpPost]

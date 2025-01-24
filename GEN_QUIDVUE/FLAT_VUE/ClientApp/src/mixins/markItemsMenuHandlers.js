@@ -1,7 +1,7 @@
 ﻿import _isEmpty from 'lodash-es/isEmpty'
 
 import { loadResources } from '@/plugins/i18n.js'
-import netAPI from '@/api/network'
+import { postData } from '@/api/network'
 import listFunctions from './listFunctions.js'
 import formFunctions from './formFunctions.js'
 import genericFunctions from './genericFunctions.js'
@@ -17,14 +17,23 @@ export default {
 
 	created()
 	{
-		this.componentOnLoadProc.AddImmediateBusy(loadResources(this, this.interfaceMetadata.requiredTextResources))
+		this.componentOnLoadProc.addImmediateBusy(loadResources(this, this.interfaceMetadata.requiredTextResources))
 
 		this.setSelectedTab()
-		for (let i in this.controls)
-			this.controls[i].Init()
 
-		this.fetchListData(this.controls.firstTable, {})
-		this.fetchListData(this.controls.secondTable, {})
+		for (let i in this.controls)
+			this.controls[i].init()
+
+		// We need to wait for data from fetchListData for both firstTable and secondTable
+		// before running init on controls. This is because certain operations like
+		// crudConditions evaluation might depend on the data fetched from these calls.
+		Promise.all([
+			this.fetchListData(this.controls.firstTable, {}),
+			this.fetchListData(this.controls.secondTable, {})
+		]).then(() => {
+			this.controls.firstTable.initData()
+			this.controls.secondTable.initData()
+		})
 
 		this.mainTable.config.showRowsSelectedCount = true
 		this.mainTable.config.rowClickActionInternal = 'selectMultiple'
@@ -91,6 +100,8 @@ export default {
 		handleSelectedRow(tableConf, rowKey)
 		{
 			this.onSelectRow(tableConf, { rowKeyPath: rowKey, multipleSelection: true })
+			if (rowKey?.multipleSelection)
+				rowKey = rowKey.rowKeyPath
 			this.selectRowData(rowKey)
 		},
 
@@ -102,6 +113,8 @@ export default {
 		handleUnSelectedRow(tableConf, rowKey)
 		{
 			this.onUnselectRow(tableConf, rowKey)
+			if (rowKey?.multipleSelection)
+				rowKey = rowKey.rowKeyPath
 			this.unselectRowData(rowKey)
 		},
 
@@ -159,41 +172,44 @@ export default {
 				return
 
 			const params = {
-				selected_ids: this.selectedItemsKeys,
-				dest_id: this.selectedItemKey
+				SelectedIds: this.selectedItemsKeys,
+				DestinationId: this.selectedItemKey
 			}
 
-			//Add all Selected
-			let allSelected = this.navigation.currentLevel.params.allSelected || []
-			if (allSelected.findIndex(e => e === this.controls.firstTable.id) !== -1)
-				params.allSelected = true
+			// Add all selected.
+			const allSelected = this.navigation.currentLevel.params.allSelected ?? []
+			if (allSelected.findIndex((e) => e === this.controls.firstTable.id) !== -1)
+				params.AllSelected = true
 
-			let tableParams = this.navigation.currentLevel.params.qTableQueryParams || {}
-			if(tableParams[this.controls.firstTable.id])
-				params.queryParams = tableParams[this.controls.firstTable.id].queryParams;
-			else
-				params.queryParams = null;
-	
-			netAPI.postData(this.controls.firstTable.controller, action, params, (data) => {
-				this.fetchListData(this.controls.firstTable, {})
+			params.TableConfiguration = listFunctions.getTableConfiguration(this.controls.firstTable)
 
-				// Reload table with related records.
-				if (reloadTable && !_isEmpty(baseArea))
-				{
-					const queryParams = {}
-					queryParams[baseArea] = this.selectedItemKey
-					this.fetchListData(this.controls.secondTable, { queryParams })
-				}
+			postData(
+				this.controls.firstTable.controller,
+				action,
+				params,
+				(data) => {
+					this.fetchListData(this.controls.firstTable, {})
 
-				var msgType = 'error'
-				if (data.Success === true)
-				{
-					this.clearSelectedRows()
-					msgType = 'success'
-				}
+					// Reload table with related records.
+					if (reloadTable && !_isEmpty(baseArea))
+					{
+						const queryParams = {}
+						queryParams[baseArea] = this.selectedItemKey
+						this.fetchListData(this.controls.secondTable, { queryParams })
+					}
 
-				genericFunctions.displayMessage(data.Message, msgType)
-			}, undefined, undefined, this.navigationId)
+					let msgType = 'error'
+					if (data.Success === true)
+					{
+						this.clearSelectedRows()
+						msgType = 'success'
+					}
+
+					genericFunctions.displayMessage(data.Message, msgType)
+				},
+				undefined,
+				undefined,
+				this.navigationId)
 		},
 
 		/**
@@ -202,10 +218,10 @@ export default {
 		 */
 		selectRowData(rowKey)
 		{
-			var rowKeys = {}
+			const rowKeys = {}
 			rowKeys[rowKey] = true
 
-			var rows = this.mainTable.rows,
+			const rows = this.mainTable.rows,
 				selectedRows = listFunctions.getRowsFromKeyHash(rows, rowKeys)
 
 			if (selectedRows.length < 1)
@@ -220,7 +236,7 @@ export default {
 		 */
 		selectRowsData(rowKeys)
 		{
-			var rows = this.mainTable.rows,
+			const rows = this.mainTable.rows,
 				selectedRows = listFunctions.getRowsFromKeyHash(rows, rowKeys)
 
 			if (selectedRows.length < 1)
@@ -260,7 +276,7 @@ export default {
 
 			const selectedTab = this.containersState[areaName][areaName][menuName].tabGroup
 			if (selectedTab && typeof selectedTab === 'string')
-				this.controls.tabGroup.SelectTab(selectedTab)
+				this.controls.tabGroup.selectTab(selectedTab)
 		}
 	},
 

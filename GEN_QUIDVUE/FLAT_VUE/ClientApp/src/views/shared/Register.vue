@@ -7,45 +7,21 @@
 		</div>
 	</div>
 
-	<q-validation-summary :error-data="validationErrors" />
+	<q-validation-summary :messages="validationErrors" />
 
 	<div class="form-flow">
 		<template v-if="componentOnLoadProc.loaded">
-			<template v-if="model.FormDataOrdem >= model.FormPswOrdem">
-				<q-form-account-info
-					v-if="model.FormPswData"
-					:nested-model="model.FormPswData"
-					@update:nested-model="handlePswModelUpdate" />
-			</template>
-			<template v-else>
-				<q-row-container
-					v-show="controls.secondForm.isVisible"
-					is-large>
-					<q-control-wrapper class="control-join-group">
-						<q-form-container
-							v-bind="controls.secondForm"
-							@update:nested-model="handleModelUpdate" />
-					</q-control-wrapper>
-				</q-row-container>
-			</template>
-
-			<template v-if="model.FormDataOrdem >= model.FormPswOrdem">
-				<q-row-container
-					v-show="controls.secondForm.isVisible"
-					is-large>
-					<q-control-wrapper class="control-join-group">
-						<q-form-container
-							v-bind="controls.secondForm"
-							@update:nested-model="handleModelUpdate" />
-					</q-control-wrapper>
-				</q-row-container>
-			</template>
-			<template v-else>
-				<q-form-account-info
-					v-if="model.FormPswData"
-					:nested-model="model.FormPswData"
-					@update:nested-model="handlePswModelUpdate" />
-			</template>
+			<q-row-container
+				v-for="form in formsOrdered"
+				:key="form.control"
+				is-large>
+				<q-control-wrapper class="control-row-group">
+					<q-form-container
+						v-bind="form.control"
+						@update:nested-model="form.handler"
+						class="account-register-form" />
+				</q-control-wrapper>
+			</q-row-container>
 
 			<div
 				id="captcha-field"
@@ -56,7 +32,7 @@
 
 				<q-button
 					b-style="secondary"
-					:class="['i-captcha__reset']"
+					class="i-captcha__reset"
 					:title="texts.refresh"
 					@click="resetCaptcha">
 					<q-icon icon="reset" />
@@ -65,42 +41,46 @@
 				<q-row-container>
 					<q-control-wrapper class="control-join-group">
 						<q-text-field
-							v-bind="controls.captchaInput"
+							v-bind="controls.captchaInput.props"
 							v-model="userEnteredCaptchaCode" />
 					</q-control-wrapper>
 				</q-row-container>
 			</div>
 
-			<div class="form-actions">
-				<q-button
-					b-style="primary"
-					:label="texts.register"
-					:title="texts.register"
-					@click="register">
-					<q-icon icon="save" />
-				</q-button>
+			<q-row-container
+				class="form-actions"
+				is-large>
+				<q-control-wrapper class="control-join-group">
+					<q-button
+						b-style="primary"
+						:label="texts.register"
+						:title="texts.register"
+						@click="register">
+						<q-icon icon="save" />
+					</q-button>
 
-				<q-button
-					b-style="secondary"
-					:label="texts.leave"
-					:title="texts.leave"
-					@click="cancel">
-					<q-icon icon="cancel" />
-				</q-button>
-			</div>
+					<q-button
+						b-style="secondary"
+						:label="texts.leave"
+						:title="texts.leave"
+						@click="cancel">
+						<q-icon icon="cancel" />
+					</q-button>
+				</q-control-wrapper>
+			</q-row-container>
 		</template>
 	</div>
 </template>
 
 <script>
 	import { computed } from 'vue'
-	import { mapActions } from 'pinia'
+	import { mapActions, mapState } from 'pinia'
+	import { v4 as uuidv4 } from 'uuid'
+
 	import _assignIn from 'lodash-es/assignIn'
 	import _forEach from 'lodash-es/forEach'
 	import _isEmpty from 'lodash-es/isEmpty'
-
-	import { v4 as uuidv4 } from 'uuid'
-
+	import { useSystemDataStore } from '@/stores/systemData.js'
 	import { useGenericDataStore } from '@/stores/genericData.js'
 	import { messageTypes } from '@/mixins/quidgest.mainEnums.js'
 	import NavHandlers from '@/mixins/navHandlers.js'
@@ -108,6 +88,7 @@
 	import fieldControlClass from '@/mixins/fieldControl.js'
 	import genericFunctions from '@/mixins/genericFunctions.js'
 	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 	import ViewModelBase from '@/mixins/formViewModelBase.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 
@@ -116,7 +97,8 @@
 
 		mixins: [
 			NavHandlers,
-			VueNavigation
+			VueNavigation,
+			LayoutHandlers
 		],
 
 		props: {
@@ -181,7 +163,18 @@
 							fnKeySelector: () => null
 						}
 					}, this),
-
+					pswForm: new fieldControlClass.FormContainerControl({
+						id: 'formPswData',
+						name: 'formPswData',
+						size: 'xxlarge',
+						hasLabel: false,
+						supportForm: {
+							name: null,
+							component: null,
+							mode: 'NEW',
+							fnKeySelector: () => null
+						}
+					}, this),
 					captchaInput: new fieldControlClass.StringControl({
 						id: 'registerCaptchaUserInput',
 						size: 'large',
@@ -201,13 +194,28 @@
 		created()
 		{
 			// Load data.
-			this.componentOnLoadProc.AddBusy(this.fetchData(), this.Resources[hardcodedTexts.genericLoad], 300)
+			this.componentOnLoadProc.addBusy(this.fetchData(), this.Resources[hardcodedTexts.genericLoad], 300)
 			this.resetCaptcha()
+		},
+
+		computed: {
+			...mapState(useSystemDataStore, ['userRegistration', 'system']),
+
+			formsOrdered()
+			{
+				const formData = { control: this.controls.secondForm, handler: this.handleModelUpdate }
+				const formPsw = { control: this.controls.pswForm, handler: this.handlePswModelUpdate }
+
+				if (this.model.FormDataOrdem <= this.model.FormPswOrdem)
+					return [formData, formPsw]
+				return [formPsw, formData]
+			}
 		},
 
 		beforeUnmount()
 		{
 			this.controls.secondForm.destroy()
+			this.controls.pswForm.destroy()
 			this.componentOnLoadProc.destroy()
 		},
 
@@ -253,52 +261,57 @@
 				if (_isEmpty(this.model.redirect))
 					return
 
-				return this.netAPI.postData('Account', this.model.redirect, {
+				const params = {
 					FormPswData: this.modelToSend.FormPswData.serverObjModel,
 					FormData: this.modelToSend.FormData.serverObjModel,
 					CaptchaData: this.getCaptchaData()
-				}, async (data, response) => {
-					if (response.data.Success)
-					{
-						this.validationErrors = {}
-						this.clearInfoMessages()
+				}
 
-						// If there are any warning messages, they will be displayed.
-						if (typeof data.Warnings === 'object' && Array.isArray(data.Warnings))
-						{
-							data.Warnings.forEach((w) => {
-								const warningProps = {
-									type: messageTypes.W,
-									message: w,
-									icon: 'error',
-									pinned: true
-								}
-								this.setInfoMessage(warningProps)
-							})
-						}
+				return this.netAPI.postData('Account', this.model.redirect, params, this.executeRegister)
+			},
 
-						// Sets up the success message that the user will see after leaving the form.
-						const successProps = {
-							type: messageTypes.OK,
-							message: data.Message,
+			async executeRegister(data, response)
+			{
+				if (!response.data.Success)
+				{
+					this.resetCaptcha()
+
+					if (!_isEmpty(response.data.Errors))
+						this.validationErrors = response.data.Errors
+					else if (typeof response.data.Message === 'string')
+						genericFunctions.displayMessage(response.data.Message, 'error')
+
+					return
+				}
+
+				this.validationErrors = {}
+				this.clearInfoMessages()
+
+				// If there are any warning messages, they will be displayed.
+				if (typeof data.Warnings === 'object' && Array.isArray(data.Warnings))
+				{
+					data.Warnings.forEach((w) => {
+						const warningProps = {
+							type: messageTypes.W,
+							message: w,
+							icon: 'error',
 							pinned: true
 						}
-						this.setInfoMessage(successProps)
+						this.setInfoMessage(warningProps)
+					})
+				}
 
-						this.clearHistory()
+				// Sets up the success message that the user will see after leaving the form.
+				const successProps = {
+					type: messageTypes.OK,
+					message: data.Message,
+					pinned: true
+				}
+				this.setInfoMessage(successProps)
 
-						this.navigateToRouteName('creation-success')
-					}
-					else
-					{
-						this.resetCaptcha()
+				this.clearHistory()
 
-						if (!_isEmpty(response.data.Errors))
-							this.validationErrors = response.data.Errors
-						else if (typeof response.data.Message === 'string')
-							genericFunctions.displayMessage(response.data.Message, 'error')
-					}
-				})
+				this.navigateToRouteName('creation-success')
 			},
 
 			/**
@@ -306,7 +319,10 @@
 			 */
 			cancel()
 			{
-				this.$router.push({ name: 'main' })
+				this.$router.push({
+					name: 'main',
+					params: { culture: this.system.currentLang }
+				})
 			},
 
 			/**
@@ -335,9 +351,12 @@
 			{
 				_assignIn(this.model, modelValue)
 
+				const id = this.$route.params.id
+				const registrationType = this.userRegistration.registrationTypes.find(x => x.id === id)
+
 				this.controls.secondForm.supportForm = {
 					name: this.model.partialViewJS,
-					component: this.$route.params.component,
+					component: registrationType.component,
 					mode: 'NEW',
 					fnKeySelector: () => this.model.FormData.QPrimaryKey
 				}
@@ -347,7 +366,7 @@
 					historyBranchId: this.navigationId,
 					isNested: true,
 					form: this.model.partialViewJS,
-					component: this.$route.params.component,
+					component: registrationType.component,
 					mode: 'NEW',
 					modes: '',
 					nestedModel: this.model.FormData
@@ -356,7 +375,32 @@
 				this.controls.secondForm.nestedFormConfig.uiComponents.header = false
 				this.controls.secondForm.nestedFormConfig.uiComponents.headerButtons = false
 				this.controls.secondForm.nestedFormConfig.uiComponents.footer = false
-				this.controls.secondForm.Init(true)
+				this.controls.secondForm.init(true)
+
+				this.controls.captchaInput.init(true)
+
+				this.controls.pswForm.supportForm = {
+					name: 'PSWUSER',
+					component: registrationType.PswComponent,
+					mode: 'NEW',
+					fnKeySelector: () => this.model.FormPswData.QPrimaryKey
+				}
+
+				this.controls.pswForm.formData = {
+					id: this.model.FormPswData.QPrimaryKey,
+					historyBranchId: this.navigationId,
+					isNested: true,
+					form: 'PSWUSER',
+					component: registrationType.PswComponent,
+					mode: 'NEW',
+					modes: '',
+					nestedModel: this.model.FormPswData
+				}
+
+				this.controls.pswForm.nestedFormConfig.uiComponents.header = false
+				this.controls.pswForm.nestedFormConfig.uiComponents.headerButtons = false
+				this.controls.pswForm.nestedFormConfig.uiComponents.footer = false
+				this.controls.pswForm.init(true)
 			},
 
 			/**
@@ -365,13 +409,20 @@
 			 */
 			fetchData()
 			{
+				const id = this.$route.params.id
+				const registrationType = this.userRegistration.registrationTypes.find((x) => x.id === id)
+
 				const params = {
-					Form: this.$route.params.form,
-					Pswform: this.$route.params.pswform,
-					Id: this.$route.params.id
+					Form: registrationType.form,
+					Pswform: registrationType.pswForm,
+					Id: id
 				}
 
-				return this.netAPI.fetchData('Account', 'Register', params, (data) => this.setData(data))
+				return this.netAPI.fetchData(
+					'Account',
+					'Register',
+					params,
+					(data) => this.setData(data))
 			}
 		}
 	}

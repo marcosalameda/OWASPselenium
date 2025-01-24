@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -48,17 +48,17 @@ namespace GenioMVC.Models
 		private Equip _equip;
 		[DisplayName("Equip")]
 		[ShouldSerialize("Equip")]
-		public virtual Equip Equip { 
-			get { 
+		public virtual Equip Equip {
+			get {
 				if (!this.isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
 					_equip = Models.Equip.Find(ValCodequip, m_userContext, Identifier, _fieldsToSerialize);
 				if (_equip == null)
 					_equip = new Models.Equip(m_userContext, true, _fieldsToSerialize);
 				return _equip;
 			}
-			set { _equip = value; } 
+			set { _equip = value; }
 		}
-		
+
 
 		[DisplayName(">ROOM")]
 		/// <summary>Field : ">ROOM" Tipo: "CE" Formula:  ""</summary>
@@ -67,17 +67,17 @@ namespace GenioMVC.Models
 		private Rooms _rooms;
 		[DisplayName("Rooms")]
 		[ShouldSerialize("Rooms")]
-		public virtual Rooms Rooms { 
-			get { 
+		public virtual Rooms Rooms {
+			get {
 				if (!this.isEmptyModel && (_rooms == null || (!string.IsNullOrEmpty(ValCodrooms) && (_rooms.isEmptyModel || _rooms.klass.QPrimaryKey != ValCodrooms))))
 					_rooms = Models.Rooms.Find(ValCodrooms, m_userContext, Identifier, _fieldsToSerialize);
 				if (_rooms == null)
 					_rooms = new Models.Rooms(m_userContext, true, _fieldsToSerialize);
 				return _rooms;
 			}
-			set { _rooms = value; } 
+			set { _rooms = value; }
 		}
-		
+
 
 		[DisplayName("Observation")]
 		/// <summary>Field : "Observation" Tipo: "MO" Formula:  ""</summary>
@@ -98,19 +98,19 @@ namespace GenioMVC.Models
 		public Movim(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAmovim(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Movim(UserContext userContext, CSGenioAmovim val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAmovim csgenioa)
@@ -137,7 +137,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

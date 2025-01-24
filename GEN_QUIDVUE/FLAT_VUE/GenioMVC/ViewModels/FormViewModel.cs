@@ -15,19 +15,35 @@ namespace GenioMVC.ViewModels
 
 		public override StatusMessage CheckPermissions(FormMode mode)
 		{
-			if (Model == null)
+			/*
+				The validation of permissions does not require a Model with data.
+					It is used solely for accessing the Role validation of CSGenioA.
+				The MapToModel, which performed a hidden mapping, was removed from here,
+					and the rest of the code that took advantage of this mapping now handles it explicitly.
+					Thus, CheckPermissions only performs permission validation,
+					and the rest of the code, whenever it needs to map data, does so explicitly.
+			 */
+			var baseModel = Model;
+			if (baseModel == null)
 			{
-				Model = CreateModelBase();
-				Model.Identifier = Identifier;
+				baseModel = CreateModelBase();
+				baseModel.Identifier = Identifier;
 			}
-			if (mode.Equals(FormMode.Edit) || mode.Equals(FormMode.Delete))
-				MapToModel(Model);
-			return base.CheckPermissions(Model, mode);
+			return base.CheckPermissions(baseModel, mode);
 		}
 
 		public override void Apply()
 		{
-			MapToModel(Model);
+			/*
+				The loading of the Model (LoadModel), the mapping of the Model to ViewModel (MapToModel),
+				 and the execution of internal formulas (ExecuteModelFormulas) must always be done before invoking Apply.
+				This method no longer does this, so we can perform these types of actions before CRUD validations on the GenericHandler,
+				 thereby ensuring that the data are correct and valid.
+				In addition to making the values of the calculated fields valid, invoking the recalculation of the formulas after mapping
+					also allows for protecting the fields that could not be filled due to the Fill When condition, but came in the ViewModel with a value.
+				This also reduces the duplicate execution of record positioning, recalculation of internal formulas
+					and ensures that the validation of write conditions is performed on valid data.
+			*/
 
 			var result = EvaluateWriteConditions(isApply: true);
 			if (result.Status != Status.OK)
@@ -36,14 +52,20 @@ namespace GenioMVC.ViewModels
 				throw new FieldValidationException(result, "apply");
 
 			Model.Apply();
-			MapFromModel(Model);
 		}
 
 		public override void Save()
 		{
-			var backupFields = Model.BackupAgregationFields();
-			MapToModel(Model);
-			Model.MergeFields(backupFields);
+			/*
+				The loading of the Model (LoadModel), the mapping of the Model to ViewModel (MapToModel),
+				 and the execution of internal formulas (ExecuteModelFormulas) must always be done before invoking Save.
+				This method no longer does this, so we can perform these types of actions before CRUD validations on the GenericHandler,
+				 thereby ensuring that the data are correct and valid.
+				In addition to making the values of the calculated fields valid, invoking the recalculation of the formulas after mapping
+					also allows for protecting the fields that could not be filled due to the Fill When condition, but came in the ViewModel with a value.
+				This also reduces the duplicate execution of record positioning, recalculation of internal formulas
+					and ensures that the validation of write conditions is performed on valid data.
+			*/
 
 			// Write conditions
 			if (HasWriteConditions)
@@ -79,10 +101,10 @@ namespace GenioMVC.ViewModels
 		{
 			editable = true;
 			Model = CreateModelBase();
-			Model.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level);
+			Model.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level);
 			Model.New(Identifier);
 			// Voltar preencher as chaves a partir do Historial, caso se as replicas preencherem a null
-			Model.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level);
+			Model.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level);
 			MapFromModel(Model);
 		}
 
@@ -91,15 +113,10 @@ namespace GenioMVC.ViewModels
 		{
 			this.LoadPartial(new NameValueCollection());
 
-			// After the interface contextual fill, we give a last chance for the row to update internal formulas
-			if (Model == null) // To não perder o Qvalue do ZZState executa inicialização do Model só quando o objeto está vazio.
-			{
-				Model = CreateModelBase();
-				Model.Identifier = Identifier;
-			}
-			MapToModel(Model);
 			// Fill in the event fields inserted by the calendar control
 			LoadCalendarValues();
+			// After the interface contextual fill, we give a last chance for the row to update internal formulas
+			MapToModel(Model);
 			// Fill in default values
 			Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, FunctionType.INS);
 			LoadDefaultValues();
@@ -114,7 +131,7 @@ namespace GenioMVC.ViewModels
 			Model = CreateModelBase();
 			Model.Identifier = Identifier;
 			Model.Duplicate(id);
-			Model.LoadKeysFormHistory(this.Navigation, this.Navigation.CurrentLevel.Level);
+			Model.LoadKeysFromHistory(this.Navigation, this.Navigation.CurrentLevel.Level);
 			LoadDefaultValues();
 			MapFromModel(Model);
 			this.LoadPartial(new NameValueCollection());
@@ -128,24 +145,24 @@ namespace GenioMVC.ViewModels
 				var json = Navigation.GetStrValue("CalendarOptions", true);
 				if (!string.IsNullOrWhiteSpace(json))
 				{
-					var options = Newtonsoft.Json.JsonConvert.DeserializeObject<CalendarVariables>(json);
-					if (options != null && options.HasCalendarFields)
+					var options = System.Text.Json.JsonSerializer.Deserialize<CalendarVariables>(json);
+					if (options != null /*&& this.IsInsideCalendar */ && options.HasCalendarFields)
 					{
 						if (!string.IsNullOrWhiteSpace(options.startDateField))
-							Model.baseklass.insertNameValueField(options.startDateField.ToLower(), options.DateStart);
+							SetViewModelValue(options.startDateField.ToLower(), options.DateStart);
 						if (!string.IsNullOrWhiteSpace(options.endDateField))
-							Model.baseklass.insertNameValueField(options.endDateField.ToLower(), options.DateEnd);
+							SetViewModelValue(options.endDateField.ToLower(), options.DateEnd);
 						if (!string.IsNullOrWhiteSpace(options.allDayField))
-							Model.baseklass.insertNameValueField(options.allDayField.ToLower(), options.allDay ? 1 : 0);
+							SetViewModelValue(options.allDayField.ToLower(), options.allDay);
 
 						// Start and Ending Times
 						// http://jenkinsvm/geniodoc/patterns/interface/custom-controls/fullcalendar/extra-options/nodates/nodates-starting-time
 						if (!string.IsNullOrWhiteSpace(options.startTimeField))
-							Model.baseklass.insertNameValueField(options.startTimeField.ToLower(), options.minTime);
+							SetViewModelValue(options.startTimeField.ToLower(), options.minTime);
 						if (!string.IsNullOrWhiteSpace(options.endTimeField))
-							Model.baseklass.insertNameValueField(options.endTimeField.ToLower(), options.maxTime);
+							SetViewModelValue(options.endTimeField.ToLower(), options.maxTime);
 						if (!string.IsNullOrWhiteSpace(options.selectedDateField))
-							Model.baseklass.insertNameValueField(options.selectedDateField.ToLower(), options.selectedDate);
+							SetViewModelValue(options.selectedDateField.ToLower(), options.selectedDate);
 					}
 					// Remove the history entry after it has already been used.
 					Navigation.ClearValue("CalendarOptions", true);

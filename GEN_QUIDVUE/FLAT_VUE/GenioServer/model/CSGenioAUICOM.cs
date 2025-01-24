@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// UI Component
 	/// </summary>
-	public class CSGenioAuicom : DbArea	{
+	public class CSGenioAuicom : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -260,7 +261,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoduicom, value); }
 		}
 
-
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("uicom", "name");
@@ -271,7 +271,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldName); }
 			set { insertNameValueField(FldName, value); }
 		}
-
 
 		/// <summary>Field : "Category" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldCategory { get { return m_fldCategory; } }
@@ -284,7 +283,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCategory, value); }
 		}
 
-
 		/// <summary>Field : "Fixed menu name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldMenuid { get { return m_fldMenuid; } }
 		private static FieldRef m_fldMenuid = new FieldRef("uicom", "menuid");
@@ -296,7 +294,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldMenuid, value); }
 		}
 
-
 		/// <summary>Field : "Thumbnail" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldThumbnai { get { return m_fldThumbnai; } }
 		private static FieldRef m_fldThumbnai = new FieldRef("uicom", "thumbnai");
@@ -307,7 +304,6 @@ namespace CSGenio.business
 			get { return (byte[])returnValueField(FldThumbnai); }
 			set { insertNameValueField(FldThumbnai, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -350,23 +346,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAuicom> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAuicom> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAuicom>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -415,7 +394,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX UICOM]/

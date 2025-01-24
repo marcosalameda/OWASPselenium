@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Cmpki;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_CMPKI_CANCEL = new NavigationLocation("KIT_COMPONENT05829", "Cmpki_Cancel", "Cmpki") { vueRouteName = "form-CMPKI", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_CMPKI_SHOW = new NavigationLocation("KIT_COMPONENT05829", "Cmpki_Show", "Cmpki") { vueRouteName = "form-CMPKI", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_CMPKI_NEW = new NavigationLocation("KIT_COMPONENT05829", "Cmpki_New", "Cmpki") { vueRouteName = "form-CMPKI", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_CMPKI_EDIT = new NavigationLocation("KIT_COMPONENT05829", "Cmpki_Edit", "Cmpki") { vueRouteName = "form-CMPKI", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_CMPKI_DUPLICATE = new NavigationLocation("KIT_COMPONENT05829", "Cmpki_Duplicate", "Cmpki") { vueRouteName = "form-CMPKI", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_CMPKI_DELETE = new NavigationLocation("KIT_COMPONENT05829", "Cmpki_Delete", "Cmpki") { vueRouteName = "form-CMPKI", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_CMPKI_CANCEL = new("KIT_COMPONENT05829", "Cmpki_Cancel", "Cmpki") { vueRouteName = "form-CMPKI", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_CMPKI_SHOW = new("KIT_COMPONENT05829", "Cmpki_Show", "Cmpki") { vueRouteName = "form-CMPKI", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_CMPKI_NEW = new("KIT_COMPONENT05829", "Cmpki_New", "Cmpki") { vueRouteName = "form-CMPKI", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_CMPKI_EDIT = new("KIT_COMPONENT05829", "Cmpki_Edit", "Cmpki") { vueRouteName = "form-CMPKI", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_CMPKI_DUPLICATE = new("KIT_COMPONENT05829", "Cmpki_Duplicate", "Cmpki") { vueRouteName = "form-CMPKI", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_CMPKI_DELETE = new("KIT_COMPONENT05829", "Cmpki_Delete", "Cmpki") { vueRouteName = "form-CMPKI", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Cmpki_ModalDBEdit()
-		{
-			Cmpki_ViewModel model = new Cmpki_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Cmpki_Show
 
@@ -138,39 +129,6 @@ namespace GenioMVC.Controllers
 				Redirect = redirect,
 				BeforeOp = (sink, sp) =>
 				{
-					//FOR: ROW_REORDERING
-					string tableName = Navigation.GetStrValue("TableName");
-					string tableViewModelName = Navigation.GetStrValue("TableViewModelName");
-
-					Type tableViewModelType = Type.GetType("GenioMVC.ViewModels." + tableName + "." + tableViewModelName);
-					if (tableViewModelType != null)
-					{
-						dynamic tableViewModel = Activator.CreateInstance(tableViewModelType, this.UserContext.Current);
-						if (tableViewModel != null)
-						{
-							User u = UserContext.Current.User;
-							var row = CSGenioAcmpki.search(sp, model.ValCodcmpki, u);
-
-							var orderField = model.ValOrder;
-							int orderFieldValue = Convert.ToInt32(orderField);
-
-							int maxOrder = 0;
-							try
-							{
-								maxOrder = sp.GetMaxFieldValue(Area.AreaCMPKI, CSGenioAcmpki.FldOrder, tableViewModel.baseConditions, tableViewModel.relations);
-							}
-							catch (Exception ex)
-							{
-								Log.Error(ex.Message);
-							}
-
-							if (maxOrder > 0 && orderFieldValue > maxOrder)
-								model.ValOrder = orderFieldValue = maxOrder + 1;
-
-							row.Reorder_Order(sp, orderFieldValue - 1, tableViewModel.baseConditions, tableViewModel.relations, false);
-						}
-					}
-
 // USE /[MANUAL GQT BEFORE_SAVE_NEW CMPKI]/
 				},
 				AfterOp = (sink, sp) =>
@@ -306,17 +264,6 @@ namespace GenioMVC.Controllers
 				},
 				AfterOp = (sink, sp) =>
 				{
-					//FOR: ROW_REORDERING
-					string tableName = Navigation.GetStrValue("TableName");
-					string tableViewModelName = Navigation.GetStrValue("TableViewModelName");
-
-					Type tableViewModelType = Type.GetType("GenioMVC.ViewModels." + tableName + "." + tableViewModelName);
-					if (tableViewModelType != null)
-					{
-						dynamic tableViewModel = Activator.CreateInstance(tableViewModelType, this.UserContext.Current);
-						if (tableViewModel != null)
-							sp.ReorderSequence(CSGenio.business.Area.AreaCMPKI, CSGenioAcmpki.FldOrder, tableViewModel.baseConditions, tableViewModel.relations);
-					}
 // USE /[MANUAL GQT AFTER_DESTROY_DELETE CMPKI]/
 				}
 			};
@@ -444,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Cmpki Multiform actions
-
-		//
-		// GET /Cmpki/MFCmpki_New
-		[HttpGet]
-		[ActionName("MFCmpki_New")]
-		public ActionResult MFCmpki_New()
-		{
-			var model = new Cmpki_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_CMPKI_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("cmpki", model.ValCodcmpki);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFCmpki_New_GET()
-		{
-			return MFCmpki_New();
-		}
-
-		//
-		// GET /Cmpki/MFCmpki_Edit
-		[HttpGet]
-		[ActionName("MFCmpki_Edit")]
-		public ActionResult MFCmpki_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("CMPKI", "EDIT", new { id = id, partialView = "MFCmpki", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFCmpki_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFCmpki_Edit(requestModel);
-		}
-
-		//
-		// GET /Cmpki/MFCmpki_Cancel
-		[ActionName("MFCmpki_Cancel")]
-		public ActionResult MFCmpki_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Cmpki(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Cmpki/MFCmpki_Save
-		[HttpPost]
-		[ActionName("MFCmpki_Save")]
-		public JsonResult MFCmpki_Save(Cmpki_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFCmpki_Save",
-				ViewName = "MFCmpki",
-				AreaName = "cmpki"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Cmpki/MFCmpki_Delete
-		[HttpPost]
-		[ActionName("MFCmpki_Delete")]
-		public JsonResult MFCmpki_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFCmpki_Delete",
-				ViewName = "MFCmpki",
-				AreaName = "cmpki",
-				Location = ACTION_CMPKI_EDIT
-			};
-
-			var model = new Cmpki_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Cmpki/Cmpki_TpequValTipoequi
@@ -583,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_tpequ")))
@@ -596,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -618,9 +422,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Cmpki_TpequValTipoequi_ViewModel model = new Cmpki_TpequValTipoequi_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodcmpki = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -634,6 +464,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_tpeq1")))
@@ -647,21 +478,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -669,12 +485,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Cmpki_Tpeq1ValTipoequi_ViewModel model = new Cmpki_Tpeq1ValTipoequi_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodcmpki = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Cmpki/Cmpki_SaveEdit
 		[HttpPost]

@@ -1,49 +1,27 @@
-namespace quidgest.uitests.pages;
+﻿using quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
 
 [System.CodeDom.Compiler.GeneratedCode("Genio", "")]
-public class CamenumForm: PageObject {
-
-	private By formLocator = By.CssSelector("#form-container");
-	private IWebElement form => driver.FindElement(formLocator);
-
+public class CamenumForm : Subform
+{
 	/// <summary>
 	/// Numeric enumeration
 	/// </summary>
-	public RadiobuttonControl FldsClassnum => new RadiobuttonControl(driver, formLocator, "container-CAMENUM_FLDS_CLASSNUM");
+	public RadiobuttonControl FldsClassnum => new RadiobuttonControl(driver, ContainerLocator, "container-CAMENUM_FLDS_CLASSNUM");
+
 	/// <summary>
 	/// Text Enumeration
 	/// </summary>
-	public EnumControl FldsClass => new EnumControl(driver, formLocator, "container-CAMENUM_FLDS_CLASS___");
+	public EnumControl FldsClass => new EnumControl(driver, ContainerLocator, "container-CAMENUM_FLDS_CLASS___");
+
 	/// <summary>
 	/// Logical Enumeration
 	/// </summary>
-	public EnumControl FldsLogicenu => new EnumControl(driver, formLocator, "container-CAMENUM_FLDS_LOGICENU");
+	public EnumControl FldsLogicenu => new EnumControl(driver, ContainerLocator, "container-CAMENUM_FLDS_LOGICENU");
 
-	private IWebElement saveBtn => form.FindElement(By.CssSelector("#bottom-save-btn"));
-	private IWebElement cancelBtn => form.FindElement(By.CssSelector("#bottom-cancel-btn"));
-	public FORM_MODE mode {get; private set;}
-
-	public CamenumForm(IWebDriver driver, FORM_MODE mode, By subformLocator=null): base(driver) {
-		this.mode = mode;
-		formLocator = subformLocator ?? formLocator;
-
-		wait.Until(c => form);
-		WaitForLoading();
-	}
-
-	public void WaitForLoading()
-	{
-        wait.Until(c => form.FindElement(ByData.Key("CAMENUM")).GetAttribute("data-loading") != "true");
-    }
-
-	public void Save() {
-		WaitForLoading();
-		saveBtn.Click();
-	}
-
-	public void Cancel() {
-		WaitForLoading();
-		cancelBtn.Click();
-	}
-
+	public CamenumForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "CAMENUM", "LISTACAM", containerLocator: containerLocator) { }
 }

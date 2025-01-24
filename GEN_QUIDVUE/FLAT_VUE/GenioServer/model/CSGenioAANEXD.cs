@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Digital Attachement
 	/// </summary>
-	public class CSGenioAanexd : DbArea	{
+	public class CSGenioAanexd : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -91,7 +92,6 @@ namespace CSGenio.business
 			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "DOCUMENT00695";
 
-            Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
  			Qfield = new Field("documentfk", FieldType.CHAVE_ESTRANGEIRA_GUID);
@@ -161,12 +161,13 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(13);
+			info.Pathways = new Dictionary<string, string>(14);
 			info.Pathways.Add("langu","langu");
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");
+			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
@@ -315,7 +316,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodanexd, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodequip { get { return m_fldCodequip; } }
 		private static FieldRef m_fldCodequip = new FieldRef("anexd", "codequip");
@@ -326,7 +326,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodequip); }
 			set { insertNameValueField(FldCodequip, value); }
 		}
-
 
 		/// <summary>Field : "Attached" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDthranex { get { return m_fldDthranex; } }
@@ -339,7 +338,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDthranex, value); }
 		}
 
-
 		/// <summary>Field : "Title" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTitle { get { return m_fldTitle; } }
 		private static FieldRef m_fldTitle = new FieldRef("anexd", "title");
@@ -350,7 +348,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldTitle); }
 			set { insertNameValueField(FldTitle, value); }
 		}
-
 
 		/// <summary>Field : "Document" Tipo: "IB" Formula:  ""</summary>
 		public static FieldRef FldDocument { get { return m_fldDocument; } }
@@ -385,7 +382,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodlang, value); }
 		}
 
-
 		/// <summary>Field : "Translated title" Tipo: "C" Formula: CT "TRADU[ANEXD->TITLE][TRADU->ATRADUZI][TRADU->TRADUZID][ANEXD->CODLANG][TRADU->CODIDIO2](DESC)"</summary>
 		public static FieldRef FldTittradu { get { return m_fldTittradu; } }
 		private static FieldRef m_fldTittradu = new FieldRef("anexd", "tittradu");
@@ -397,7 +393,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldTittradu, value); }
 		}
 
-
 		/// <summary>Field : "Reference" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldReferenc { get { return m_fldReferenc; } }
 		private static FieldRef m_fldReferenc = new FieldRef("anexd", "referenc");
@@ -408,7 +403,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldReferenc); }
 			set { insertNameValueField(FldReferenc, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -451,23 +445,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAanexd> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAanexd> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAanexd>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -516,7 +493,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX ANEXD]/

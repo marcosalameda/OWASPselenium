@@ -1,4 +1,4 @@
-﻿.q-card {
+﻿.q-card-view {
 	$this: &;
 	$size-small-factor: 0.67;
 	$base-card-width: 18rem;
@@ -210,6 +210,8 @@
 			background-color: $light;
 			border-bottom: 1px solid $input-border-color;
 			padding: 0.5rem;
+			border-top-left-radius: $border-radius;
+			border-top-right-radius: $border-radius;
 		}
 
 		#{$this}__title {
@@ -290,6 +292,12 @@
 	}
 
 	&--insert {
+		img {
+			width: auto;
+			height: 100%;
+			max-width: 100%;
+		}
+
 		#{$this}__underlay {
 			display: flex;
 			align-items: center;

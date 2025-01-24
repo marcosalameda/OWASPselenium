@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'FKEY1',
 			relatedArea: 'GRPB',
 			description: computed(() => this.Resources.FOREIGN_KEY39588),
+			isFixed: true,
 		}).cloneFrom(values?.ValFkey1))
 		watch(() => this.ValFkey1.value, (newValue, oldValue) => this.onUpdate('tblb.fkey1', this.ValFkey1, newValue, oldValue))
 
@@ -73,7 +74,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValText))
 		watch(() => this.ValText.value, (newValue, oldValue) => this.onUpdate('tblb.text', this.ValText, newValue, oldValue))
 
-		this.ValTextml = reactive(new modelFieldType.String({
+		this.ValTextml = reactive(new modelFieldType.MultiLineString({
 			id: 'ValTextml',
 			originId: 'ValTextml',
 			area: 'TBLB',
@@ -207,5 +208,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodtblb'
 
 	get QPrimaryKey() { return this.ValCodtblb.value }
-	set QPrimaryKey(value) { this.ValCodtblb.value = value }
+	set QPrimaryKey(value) { this.ValCodtblb.updateValue(value) }
 }

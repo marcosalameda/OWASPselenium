@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Cmpny
 {
-	public class Empre_ViewModel : FormViewModel<Models.Cmpny>
+	public class Empre_ViewModel : FormViewModel<Models.Cmpny>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,47 +29,48 @@ namespace GenioMVC.ViewModels.Cmpny
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Country" | Type: "CE"
+		/// </summary>
+		public string ValCodcntry { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Logo" | Type: "IJ"
 		/// </summary>
 		[ImageThumbnailJsonConverter(100, 50)]
-		public GenioMVC.ViewModels.ImageModel ValLogo { get; set; }
-
+		public GenioMVC.Models.ImageModel ValLogo { get; set; }
 		/// <summary>
 		/// Title: "Designation" | Type: "C"
 		/// </summary>
 		public string ValDesignat { get; set; }
-
 		/// <summary>
 		/// Title: "Acronym" | Type: "C"
 		/// </summary>
 		public string ValAcronym { get; set; }
-
 		/// <summary>
 		/// Title: "Tax identification:" | Type: "C"
 		/// </summary>
 		public string ValNif { get; set; }
-
 		/// <summary>
 		/// Title: "Telephone" | Type: "C"
 		/// </summary>
 		public string ValTelephon { get; set; }
-
 		/// <summary>
 		/// Title: "Email:" | Type: "C"
 		/// </summary>
 		public string ValEmail { get; set; }
-
 		/// <summary>
 		/// Title: "Country" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Cntry> TableCntryCountry { get; set; }
-
 		/// <summary>
 		/// Title: "Quantity of people" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValQtdpesso { get; set; }
-
 		/// <summary>
 		/// Title: "Headquarter location" | Type: "GG"
 		/// </summary>
@@ -82,15 +83,6 @@ namespace GenioMVC.ViewModels.Cmpny
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Country" | Type: "CE"
-		/// </summary>
-		public string ValCodcntry { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -106,9 +98,10 @@ namespace GenioMVC.ViewModels.Cmpny
 
 		public string ValCodempre { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Empre_ViewModel() : base(null!) { }
@@ -144,6 +137,15 @@ namespace GenioMVC.ViewModels.Cmpny
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Cmpny model = new Models.Cmpny(userContext) { Identifier = "FEMPRE" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FEMPRE");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -204,6 +206,7 @@ namespace GenioMVC.ViewModels.Cmpny
 
 			try
 			{
+				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
 				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
 				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
 				ValAcronym = ViewModelConversion.ToString(m.ValAcronym);
@@ -212,7 +215,6 @@ namespace GenioMVC.ViewModels.Cmpny
 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
 				ValQtdpesso = ViewModelConversion.ToNumeric(m.ValQtdpesso);
 				ValHeadloc = ViewModelConversion.ToString(m.ValHeadloc);
-				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
 			}
 			catch (Exception)
@@ -222,6 +224,20 @@ namespace GenioMVC.ViewModels.Cmpny
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Cmpny m)
 		{
 			if (m == null)
@@ -232,26 +248,100 @@ namespace GenioMVC.ViewModels.Cmpny
 
 			try
 			{
-				m.ValLogo = ViewModelConversion.ToImage(ValLogo);
+				m.ValCodcntry = ViewModelConversion.ToString(ValCodcntry);
+				if (ValLogo == null || !ValLogo.IsThumbnail)
+					m.ValLogo = ViewModelConversion.ToImage(ValLogo);
 				m.ValDesignat = ViewModelConversion.ToString(ValDesignat);
 				m.ValAcronym = ViewModelConversion.ToString(ValAcronym);
 				m.ValNif = ViewModelConversion.ToString(ValNif);
 				m.ValTelephon = ViewModelConversion.ToString(ValTelephon);
 				m.ValEmail = ViewModelConversion.ToString(ValEmail);
-				m.ValQtdpesso = ViewModelConversion.ToNumeric(ValQtdpesso);
 				m.ValHeadloc = ViewModelConversion.ToString(ValHeadloc);
-				m.ValCodcntry = ViewModelConversion.ToString(ValCodcntry);
 				m.ValCodempre = ViewModelConversion.ToString(ValCodempre);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValQtdpesso = ViewModelConversion.ToNumeric(ValQtdpesso);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Empre) to Model (Cmpny) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Empre) to Model (Cmpny) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "cmpny.codcntry":
+						this.ValCodcntry = ViewModelConversion.ToString(_value);
+						break;
+					case "cmpny.logo":
+						this.ValLogo = ViewModelConversion.ToImage(_value);
+						break;
+					case "cmpny.designat":
+						this.ValDesignat = ViewModelConversion.ToString(_value);
+						break;
+					case "cmpny.acronym":
+						this.ValAcronym = ViewModelConversion.ToString(_value);
+						break;
+					case "cmpny.nif":
+						this.ValNif = ViewModelConversion.ToString(_value);
+						break;
+					case "cmpny.telephon":
+						this.ValTelephon = ViewModelConversion.ToString(_value);
+						break;
+					case "cmpny.email":
+						this.ValEmail = ViewModelConversion.ToString(_value);
+						break;
+					case "cmpny.headloc":
+						this.ValHeadloc = ViewModelConversion.ToString(_value);
+						break;
+					case "cmpny.codempre":
+						this.ValCodempre = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Empre) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Empre)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Cmpny.Find(id ?? Navigation.GetStrValue("cmpny"), m_userContext, "FEMPRE"); }
+			finally { Model ??= new Models.Cmpny(m_userContext) { Identifier = "FEMPRE" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -265,20 +355,13 @@ namespace GenioMVC.ViewModels.Cmpny
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FEMPRE";
@@ -288,6 +371,7 @@ namespace GenioMVC.ViewModels.Cmpny
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -345,36 +429,31 @@ namespace GenioMVC.ViewModels.Cmpny
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValDesignat", Resources.Resources.DESIGNATION35876, ValDesignat, 85);
-			validator.Required("ValDesignat", Resources.Resources.DESIGNATION35876, ValDesignat);
+
+			validator.Required("ValDesignat", Resources.Resources.DESIGNATION35876, ViewModelConversion.ToString(ValDesignat), FieldType.TEXTO.Formatting);
 			validator.StringLength("ValAcronym", Resources.Resources.ACRONYM00872, ValAcronym, 15);
 			validator.StringLength("ValNif", Resources.Resources.TAX_IDENTIFICATION_55044, ValNif, 15);
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 20);
 			validator.StringLength("ValEmail", Resources.Resources.EMAIL_44228, ValEmail, 254);
 
+
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE EMPRE]/
 		public override void Save()
 		{
 
-			try { Model = Models.Cmpny.Find(Navigation.GetStrValue("cmpny"), m_userContext, "FEMPRE"); }
-			finally { if (Model == null) Model = new Models.Cmpny(m_userContext) { Identifier = "FEMPRE" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY EMPRE]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Cmpny.Find(Navigation.GetStrValue("cmpny"), m_userContext, "FEMPRE"); }
-			finally { if (Model == null) Model = new Models.Cmpny(m_userContext) { Identifier = "FEMPRE" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE EMPRE]/
 
@@ -407,8 +486,8 @@ namespace GenioMVC.ViewModels.Cmpny
 				object hValue = Navigation.GetValue("cntry", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					empre___cntrycountry_Conds.Equal(CSGenioAcntry.FldCodcntry, Navigation.GetValue("cntry"));
-					this.ValCodcntry = Navigation.GetStrValue("cntry");
+					empre___cntrycountry_Conds.Equal(CSGenioAcntry.FldCodcntry, hValue);
+					this.ValCodcntry = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -425,8 +504,6 @@ namespace GenioMVC.ViewModels.Cmpny
 					Navigation.CurrentLevel.SetEntry("RETURN_cntry", null);
 				}
 				FillDependant_EmpreTableCntryCountry(lazyLoad);
-				//Check if foreignkey comes from history
-				TableCntryCountry.FilledByHistory = Navigation.CheckFilledByHistory("cntry");
 				return;
 			}
 
@@ -494,9 +571,6 @@ namespace GenioMVC.ViewModels.Cmpny
 
 				TableCntryCountry.List = new SelectList(TableCntryCountry.Elements.ToSelectList(x => x.ValCountry, x => x.ValCodcntry,  x => x.ValCodcntry == this.ValCodcntry), "Value", "Text", this.ValCodcntry);
 				FillDependant_EmpreTableCntryCountry();
-
-				//Check if foreignkey comes from history
-				TableCntryCountry.FilledByHistory = Navigation.CheckFilledByHistory("cntry");
 			}
 		}
 
@@ -593,6 +667,7 @@ namespace GenioMVC.ViewModels.Cmpny
 		{
 			return identifier switch
 			{
+				"cmpny.codcntry" => ViewModelConversion.ToString(modelValue),
 				"cmpny.logo" => ViewModelConversion.ToImage(modelValue),
 				"cmpny.designat" => ViewModelConversion.ToString(modelValue),
 				"cmpny.acronym" => ViewModelConversion.ToString(modelValue),
@@ -601,12 +676,19 @@ namespace GenioMVC.ViewModels.Cmpny
 				"cmpny.email" => ViewModelConversion.ToString(modelValue),
 				"cmpny.qtdpesso" => ViewModelConversion.ToNumeric(modelValue),
 				"cmpny.headloc" => ViewModelConversion.ToString(modelValue),
-				"cmpny.codcntry" => ViewModelConversion.ToString(modelValue),
 				"cmpny.codempre" => ViewModelConversion.ToString(modelValue),
 				"cntry.codcntry" => ViewModelConversion.ToString(modelValue),
 				"cntry.country" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
+		}
+
+
+		/// <inheritdoc/>
+		protected override void SetTicketToImageFields()
+		{
+			if (ValLogo != null)
+				ValLogo.Ticket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaCMPNY, CSGenioAcmpny.FldLogo.Field, null, ValCodempre);
 		}
 
 		#region Charts

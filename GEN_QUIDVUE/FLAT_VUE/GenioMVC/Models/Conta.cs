@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Pesso _pesso;
 		[DisplayName("Pesso")]
 		[ShouldSerialize("Pesso")]
-		public virtual Pesso Pesso { 
-			get { 
+		public virtual Pesso Pesso {
+			get {
 				if (!this.isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
 					_pesso = Models.Pesso.Find(ValCodpesso, m_userContext, Identifier, _fieldsToSerialize);
 				if (_pesso == null)
 					_pesso = new Models.Pesso(m_userContext, true, _fieldsToSerialize);
 				return _pesso;
 			}
-			set { _pesso = value; } 
+			set { _pesso = value; }
 		}
-		
+
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Genre _genre;
 		[DisplayName("Genre")]
 		[ShouldSerialize("Genre")]
-		public virtual Genre Genre { 
-			get { 
+		public virtual Genre Genre {
+			get {
 				if (!this.isEmptyModel && (_genre == null || (!string.IsNullOrEmpty(ValCodgenre) && (_genre.isEmptyModel || _genre.klass.QPrimaryKey != ValCodgenre))))
 					_genre = Models.Genre.Find(ValCodgenre, m_userContext, Identifier, _fieldsToSerialize);
 				if (_genre == null)
 					_genre = new Models.Genre(m_userContext, true, _fieldsToSerialize);
 				return _genre;
 			}
-			set { _genre = value; } 
+			set { _genre = value; }
 		}
-		
+
 
 		[DisplayName("Contact type")]
 		/// <summary>Field : "Contact type" Tipo: "CE" Formula:  ""</summary>
@@ -79,17 +79,17 @@ namespace GenioMVC.Models
 		private Tpcon _tpcon;
 		[DisplayName("Tpcon")]
 		[ShouldSerialize("Tpcon")]
-		public virtual Tpcon Tpcon { 
-			get { 
+		public virtual Tpcon Tpcon {
+			get {
 				if (!this.isEmptyModel && (_tpcon == null || (!string.IsNullOrEmpty(ValCodtpcon) && (_tpcon.isEmptyModel || _tpcon.klass.QPrimaryKey != ValCodtpcon))))
 					_tpcon = Models.Tpcon.Find(ValCodtpcon, m_userContext, Identifier, _fieldsToSerialize);
 				if (_tpcon == null)
 					_tpcon = new Models.Tpcon(m_userContext, true, _fieldsToSerialize);
 				return _tpcon;
 			}
-			set { _tpcon = value; } 
+			set { _tpcon = value; }
 		}
-		
+
 
 		[DisplayName("Contact")]
 		/// <summary>Field : "Contact" Tipo: "C" Formula:  ""</summary>
@@ -104,19 +104,19 @@ namespace GenioMVC.Models
 		public Conta(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAconta(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Conta(UserContext userContext, CSGenioAconta val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAconta csgenioa)
@@ -148,7 +148,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

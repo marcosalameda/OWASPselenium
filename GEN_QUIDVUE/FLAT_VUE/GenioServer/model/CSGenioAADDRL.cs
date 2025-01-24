@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Address
 	/// </summary>
-	public class CSGenioAaddrl : DbArea	{
+	public class CSGenioAaddrl : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -84,6 +85,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  9;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 9;
 			Qfield.CavDesignation = "ADDRESS_NUMBER36138";
 
 			Qfield.Dupmsg = "";
@@ -181,7 +183,7 @@ namespace CSGenio.business
 			argumentsListByArea= new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"addressnumber","addressnumber"},new int[] {0,1},"addrl","customeraddressid"));
 			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 2, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return ((double)args[0])>=0&&((double)args[1])<=1000000000;
+				return ((decimal)args[0])>=0&&((decimal)args[1])<=1000000000;
 			});
 			writeCondition.ErrorWarning = "minimumValue=0 and maximumValue=1000000000";
             writeCondition.Type =  ConditionType.ERROR;
@@ -302,7 +304,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCustomeraddressid, value); }
 		}
 
-
 		/// <summary>Field : "Parent" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldParentid { get { return m_fldParentid; } }
 		private static FieldRef m_fldParentid = new FieldRef("addrl", "parentid");
@@ -313,7 +314,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldParentid); }
 			set { insertNameValueField(FldParentid, value); }
 		}
-
 
 		/// <summary>Field : "parentId Type" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldParentidtypecode { get { return m_fldParentidtypecode; } }
@@ -326,30 +326,27 @@ namespace CSGenio.business
 			set { insertNameValueField(FldParentidtypecode, value); }
 		}
 
-
 		/// <summary>Field : "Address Number" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldAddressnumber { get { return m_fldAddressnumber; } }
 		private static FieldRef m_fldAddressnumber = new FieldRef("addrl", "addressnumber");
 
 		/// <summary>Field : "Address Number" Tipo: "N" Formula:  ""</summary>
-		public double ValAddressnumber
+		public decimal ValAddressnumber
 		{
-			get { return (double)returnValueField(FldAddressnumber); }
+			get { return (decimal)returnValueField(FldAddressnumber); }
 			set { insertNameValueField(FldAddressnumber, value); }
 		}
-
 
 		/// <summary>Field : "Object Type" Tipo: "AN" Formula:  ""</summary>
 		public static FieldRef FldObjecttypecode { get { return m_fldObjecttypecode; } }
 		private static FieldRef m_fldObjecttypecode = new FieldRef("addrl", "objecttypecode");
 
 		/// <summary>Field : "Object Type" Tipo: "AN" Formula:  ""</summary>
-		public double ValObjecttypecode
+		public decimal ValObjecttypecode
 		{
-			get { return (double)returnValueField(FldObjecttypecode); }
+			get { return (decimal)returnValueField(FldObjecttypecode); }
 			set { insertNameValueField(FldObjecttypecode, value); }
 		}
-
 
 		/// <summary>Field : "objectTypeCode_display" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldObjecttypecode_display { get { return m_fldObjecttypecode_display; } }
@@ -362,18 +359,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldObjecttypecode_display, value); }
 		}
 
-
 		/// <summary>Field : "Address Type Code" Tipo: "AN" Formula:  ""</summary>
 		public static FieldRef FldAddresstypecode { get { return m_fldAddresstypecode; } }
 		private static FieldRef m_fldAddresstypecode = new FieldRef("addrl", "addresstypecode");
 
 		/// <summary>Field : "Address Type Code" Tipo: "AN" Formula:  ""</summary>
-		public double ValAddresstypecode
+		public decimal ValAddresstypecode
 		{
-			get { return (double)returnValueField(FldAddresstypecode); }
+			get { return (decimal)returnValueField(FldAddresstypecode); }
 			set { insertNameValueField(FldAddresstypecode, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -416,23 +411,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAaddrl> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAaddrl> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAaddrl>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -481,7 +459,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX ADDRL]/

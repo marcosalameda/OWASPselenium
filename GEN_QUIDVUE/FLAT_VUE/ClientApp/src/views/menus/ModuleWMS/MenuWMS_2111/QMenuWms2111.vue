@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuWMS_2111ViewModel.js'
+
 	const requiredTextResources = ['QMenuWMS_2111', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '2111',
 					isMenuList: true,
+					designation: computed(() => this.Resources.DISPATCHES13773),
 					acronym: 'WMS_2111',
 					name: 'DISPA',
 					route: 'menu-WMS_2111',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'WMS_Menu_2111',
 						controller: 'DISPA',
 						action: 'WMS_Menu_2111',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.DateColumn({
 								order: 1,
@@ -139,7 +149,7 @@
 								field: 'DISPADT',
 								label: computed(() => this.Resources.DISPATCH_DATE54413),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -174,7 +184,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -278,6 +288,7 @@
 								id: 'RCA_WMS_21111',
 								name: 'form-DISPA',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -294,23 +305,21 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: DISPA
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValDispanr',
 							defaultSearchColumnNameOriginal: 'ValDispanr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValDispadt',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-DISPA', 'changed-PERSO', 'changed-ENTIT'],
 						uuid: 'cfbb1913-41cc-44c3-9c1e-563789f3471f',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
+						/** Menu limits */
+						controlLimits: [
+							/** SC */
+						]
 					}, this)
 				}
 			}
@@ -339,6 +348,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS WMS_2111]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_2111]/
 // eslint-disable-next-line

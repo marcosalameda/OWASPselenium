@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Anexd;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ANEXD_CANCEL = new NavigationLocation("ANEXO_DIGITAL09547", "Anexd_Cancel", "Anexd") { vueRouteName = "form-ANEXD", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ANEXD_SHOW = new NavigationLocation("ANEXO_DIGITAL09547", "Anexd_Show", "Anexd") { vueRouteName = "form-ANEXD", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ANEXD_NEW = new NavigationLocation("ANEXO_DIGITAL09547", "Anexd_New", "Anexd") { vueRouteName = "form-ANEXD", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ANEXD_EDIT = new NavigationLocation("ANEXO_DIGITAL09547", "Anexd_Edit", "Anexd") { vueRouteName = "form-ANEXD", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ANEXD_DUPLICATE = new NavigationLocation("ANEXO_DIGITAL09547", "Anexd_Duplicate", "Anexd") { vueRouteName = "form-ANEXD", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ANEXD_DELETE = new NavigationLocation("ANEXO_DIGITAL09547", "Anexd_Delete", "Anexd") { vueRouteName = "form-ANEXD", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ANEXD_CANCEL = new("ANEXO_DIGITAL09547", "Anexd_Cancel", "Anexd") { vueRouteName = "form-ANEXD", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ANEXD_SHOW = new("ANEXO_DIGITAL09547", "Anexd_Show", "Anexd") { vueRouteName = "form-ANEXD", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ANEXD_NEW = new("ANEXO_DIGITAL09547", "Anexd_New", "Anexd") { vueRouteName = "form-ANEXD", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ANEXD_EDIT = new("ANEXO_DIGITAL09547", "Anexd_Edit", "Anexd") { vueRouteName = "form-ANEXD", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ANEXD_DUPLICATE = new("ANEXO_DIGITAL09547", "Anexd_Duplicate", "Anexd") { vueRouteName = "form-ANEXD", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ANEXD_DELETE = new("ANEXO_DIGITAL09547", "Anexd_Delete", "Anexd") { vueRouteName = "form-ANEXD", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Anexd_ModalDBEdit()
-		{
-			Anexd_ViewModel model = new Anexd_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Anexd_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Anexd Multiform actions
-
-		//
-		// GET /Anexd/MFAnexd_New
-		[HttpGet]
-		[ActionName("MFAnexd_New")]
-		public ActionResult MFAnexd_New()
-		{
-			var model = new Anexd_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_ANEXD_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("anexd", model.ValCodanexd);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFAnexd_New_GET()
-		{
-			return MFAnexd_New();
-		}
-
-		//
-		// GET /Anexd/MFAnexd_Edit
-		[HttpGet]
-		[ActionName("MFAnexd_Edit")]
-		public ActionResult MFAnexd_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("ANEXD", "EDIT", new { id = id, partialView = "MFAnexd", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFAnexd_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFAnexd_Edit(requestModel);
-		}
-
-		//
-		// GET /Anexd/MFAnexd_Cancel
-		[ActionName("MFAnexd_Cancel")]
-		public ActionResult MFAnexd_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Anexd(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Anexd/MFAnexd_Save
-		[HttpPost]
-		[ActionName("MFAnexd_Save")]
-		public JsonResult MFAnexd_Save(Anexd_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAnexd_Save",
-				ViewName = "MFAnexd",
-				AreaName = "anexd"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Anexd/MFAnexd_Delete
-		[HttpPost]
-		[ActionName("MFAnexd_Delete")]
-		public JsonResult MFAnexd_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAnexd_Delete",
-				ViewName = "MFAnexd",
-				AreaName = "anexd",
-				Location = ACTION_ANEXD_EDIT
-			};
-
-			var model = new Anexd_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Anexd/Anexd_EquipValRegistnr
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,9 +422,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Anexd_EquipValRegistnr_ViewModel model = new Anexd_EquipValRegistnr_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodanexd = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -590,6 +464,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_langu")))
@@ -603,21 +478,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -625,12 +485,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Anexd_LanguValLangua_ViewModel model = new Anexd_LanguValLangua_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodanexd = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Anexd/Anexd_SaveEdit
 		[HttpPost]

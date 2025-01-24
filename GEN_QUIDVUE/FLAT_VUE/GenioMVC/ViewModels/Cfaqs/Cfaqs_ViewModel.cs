@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Cfaqs
 {
-	public class Cfaqs_ViewModel : FormViewModel<Models.Cfaqs>
+	public class Cfaqs_ViewModel : FormViewModel<Models.Cfaqs>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,17 +29,18 @@ namespace GenioMVC.ViewModels.Cfaqs
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+
+		#endregion
 		/// <summary>
 		/// Title: "Icon" | Type: "IJ"
 		/// </summary>
 		[ImageThumbnailJsonConverter(480, 10)]
-		public GenioMVC.ViewModels.ImageModel ValIcon { get; set; }
-
+		public GenioMVC.Models.ImageModel ValIcon { get; set; }
 		/// <summary>
 		/// Title: "Category" | Type: "MO"
 		/// </summary>
 		public string ValCategory { get; set; }
-
 		/// <summary>
 		/// Title: "Description" | Type: "MO"
 		/// </summary>
@@ -51,10 +52,6 @@ namespace GenioMVC.ViewModels.Cfaqs
 		#region Auxiliar Keys for Image controls
 
 
-
-		#endregion
-
-		#region Additional foreign keys
 
 		#endregion
 
@@ -71,9 +68,10 @@ namespace GenioMVC.ViewModels.Cfaqs
 
 		public string ValCodcfaqs { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Cfaqs_ViewModel() : base(null!) { }
@@ -109,6 +107,15 @@ namespace GenioMVC.ViewModels.Cfaqs
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Cfaqs model = new Models.Cfaqs(userContext) { Identifier = "FCFAQS" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FCFAQS");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -181,6 +188,20 @@ namespace GenioMVC.ViewModels.Cfaqs
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Cfaqs m)
 		{
 			if (m == null)
@@ -191,20 +212,71 @@ namespace GenioMVC.ViewModels.Cfaqs
 
 			try
 			{
-				m.ValIcon = ViewModelConversion.ToImage(ValIcon);
+				if (ValIcon == null || !ValIcon.IsThumbnail)
+					m.ValIcon = ViewModelConversion.ToImage(ValIcon);
 				m.ValCategory = ViewModelConversion.ToString(ValCategory);
 				m.ValDescript = ViewModelConversion.ToString(ValDescript);
 				m.ValCodcfaqs = ViewModelConversion.ToString(ValCodcfaqs);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Cfaqs) to Model (Cfaqs) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Cfaqs) to Model (Cfaqs) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "cfaqs.icon":
+						this.ValIcon = ViewModelConversion.ToImage(_value);
+						break;
+					case "cfaqs.category":
+						this.ValCategory = ViewModelConversion.ToString(_value);
+						break;
+					case "cfaqs.descript":
+						this.ValDescript = ViewModelConversion.ToString(_value);
+						break;
+					case "cfaqs.codcfaqs":
+						this.ValCodcfaqs = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Cfaqs) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Cfaqs)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Cfaqs.Find(id ?? Navigation.GetStrValue("cfaqs"), m_userContext, "FCFAQS"); }
+			finally { Model ??= new Models.Cfaqs(m_userContext) { Identifier = "FCFAQS" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -218,20 +290,13 @@ namespace GenioMVC.ViewModels.Cfaqs
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FCFAQS";
@@ -241,6 +306,7 @@ namespace GenioMVC.ViewModels.Cfaqs
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -302,25 +368,19 @@ namespace GenioMVC.ViewModels.Cfaqs
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE CFAQS]/
 		public override void Save()
 		{
 
-			try { Model = Models.Cfaqs.Find(Navigation.GetStrValue("cfaqs"), m_userContext, "FCFAQS"); }
-			finally { if (Model == null) Model = new Models.Cfaqs(m_userContext) { Identifier = "FCFAQS" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY CFAQS]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Cfaqs.Find(Navigation.GetStrValue("cfaqs"), m_userContext, "FCFAQS"); }
-			finally { if (Model == null) Model = new Models.Cfaqs(m_userContext) { Identifier = "FCFAQS" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE CFAQS]/
 
@@ -348,8 +408,16 @@ namespace GenioMVC.ViewModels.Cfaqs
 				"cfaqs.category" => ViewModelConversion.ToString(modelValue),
 				"cfaqs.descript" => ViewModelConversion.ToString(modelValue),
 				"cfaqs.codcfaqs" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
+		}
+
+
+		/// <inheritdoc/>
+		protected override void SetTicketToImageFields()
+		{
+			if (ValIcon != null)
+				ValIcon.Ticket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaCFAQS, CSGenioAcfaqs.FldIcon.Field, null, ValCodcfaqs);
 		}
 
 		#region Charts

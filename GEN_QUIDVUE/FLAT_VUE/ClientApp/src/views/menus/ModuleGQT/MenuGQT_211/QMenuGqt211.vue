@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_211ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_211', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '211',
 					isMenuList: true,
+					designation: computed(() => this.Resources.EQUIPMENT03632),
 					acronym: 'GQT_211',
 					name: 'EQUIP',
 					route: 'menu-GQT_211',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableSpecialRenderingControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'GQT_Menu_211',
 						controller: 'EQUIP',
 						action: 'GQT_Menu_211',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -187,7 +197,7 @@
 								field: 'DTAQUISI',
 								label: computed(() => this.Resources.ACQUISITION44180),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 7,
@@ -196,7 +206,7 @@
 								field: 'DTDECO',
 								label: computed(() => this.Resources.DECOMISSION14486),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.HyperLinkColumn({
 								order: 8,
@@ -220,7 +230,7 @@
 							showRecordCount: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -324,6 +334,7 @@
 								id: 'RCA_GQT_2111',
 								name: 'form-EQUIP',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -340,45 +351,36 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
 							allowFileExport: true,
-							// The list support form: EQUIP
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValRegistnr',
 							defaultSearchColumnNameOriginal: 'ValRegistnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValRegistnr',
+								sortOrder: 'asc'
+							}
 						},
 						activeFilters: {
-							options: [
-								{
+							options: {
+								active: {
 									id: 'filter_GQT_Menu_211_ActiveFilter_A',
-									key: '0',
 									value: computed(() => this.Resources.ATIVOS54304),
 									selected: true
 								},
-								{
+								inactive: {
 									id: 'filter_GQT_Menu_211_ActiveFilter_I',
-									key: '1',
 									value: computed(() => this.Resources.INATIVOS00149),
 									selected: false
 								},
-								{
+								future: {
 									id: 'filter_GQT_Menu_211_ActiveFilter_F',
-									key: '2',
 									value: computed(() => this.Resources.FUTUROS10545),
 									selected: false
 								}
-							],
+							},
 							dateValue: {
-								type: 'Date',
 								id: 'GQT_Menu_211_dataRef',
-								value: null,
+								type: 'date',
+								value: new Date(),
 								title: computed(() => this.Resources.DATA18071),
 							}
 						},
@@ -553,7 +555,7 @@
 								}
 							},
 						],
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -582,6 +584,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS GQT_211]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_211]/
 // eslint-disable-next-line

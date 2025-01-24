@@ -110,6 +110,8 @@
 	}
 
 	export default {
+		name: 'QImageContainer',
+
 		docsfile: './docs/inputs/image/QImage.md',
 
 		emits: [
@@ -125,11 +127,16 @@
 		inheritAttrs: false,
 
 		props: {
+			/**
+			 * Whether the popup is currently visible.
+			 */
 			popupIsVisible: {
 				type: Boolean,
 				default: false
 			}
 		},
+
+		expose: [],
 
 		data()
 		{

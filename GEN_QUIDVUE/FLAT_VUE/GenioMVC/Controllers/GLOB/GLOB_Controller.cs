@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Glob;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER GLOB]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Glob row = null;
 
-			try
-			{
-				row = Models.Glob.Find(Navigation.GetStrValue("glob"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model glob");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Glob(UserContext.Current);
+				row = new Models.Glob(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("glob");
 			}
 
@@ -82,14 +75,15 @@ namespace GenioMVC.Controllers
 				{
 					case "GLOBFACTFACTYTYPE____":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Globfact_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Globfact_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Globfactfactytype____(qs);
 							result = model.TableFactyType;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -135,11 +129,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -148,50 +143,47 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Glob" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Glob([FromBody]Glob_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Glob([FromBody]Glob_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "glob",
+			return GenericRecalculateFormulas(formData, "glob",
 				(primaryKey) => Models.Glob.Find(primaryKey, UserContext.Current, "FGLOB"),
-				(model) => form_data.MapToModel(model as Models.Glob)
+				(model) => formData.MapToModel(model as Models.Glob)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Globfact" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Globfact([FromBody]Globfact_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Globfact([FromBody]Globfact_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "glob",
+			return GenericRecalculateFormulas(formData, "glob",
 				(primaryKey) => Models.Glob.Find(primaryKey, UserContext.Current, "FGLOBFACT"),
-				(model) => form_data.MapToModel(model as Models.Glob)
+				(model) => formData.MapToModel(model as Models.Glob)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Homeg" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Homeg([FromBody]Homeg_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Homeg([FromBody]Homeg_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "glob",
+			return GenericRecalculateFormulas(formData, "glob",
 				(primaryKey) => Models.Glob.Find(primaryKey, UserContext.Current, "FHOMEG"),
-				(model) => form_data.MapToModel(model as Models.Glob)
+				(model) => formData.MapToModel(model as Models.Glob)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -199,7 +191,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try
@@ -229,44 +221,30 @@ namespace GenioMVC.Controllers
 			return base.GetDocumsTickets(requestModel.TableName, requestModel.FieldName, requestModel.KeyValue);
 		}
 
-		public ActionResult GetDocumsVersionsDBEdit([FromBody]RequestDocumTicketsModel requestModel)
+		public ActionResult GetFileVersions([FromBody]RequestDocumGetModel requestModel)
 		{
-			return base.GetDocumsVersionsDBEdit(requestModel.Ticket);
+			return base.GetFileVersions(requestModel.Ticket);
 		}
 
-		public ActionResult GetFileProperties([FromBody]RequestDocumTicketsModel requestModel)
+		public ActionResult GetFileProperties([FromBody]RequestDocumGetModel requestModel)
 		{
 			return base.GetFileProperties(requestModel.Ticket);
 		}
 
-		public ActionResult SubmitVersion([FromBody]RequestDocumTicketsModel requestModel)
-		{
-			return base.SubmitVersion(requestModel.Ticket);
-		}
-
-		public ActionResult CheckoutDocum([FromBody]RequestDocumTicketsModel requestModel)
-		{
-			return base.CheckoutDocum(requestModel.Ticket);
-		}
-
-		public ActionResult DeleteFile([FromBody]RequestDocumDeleteModel requestModel)
-		{
-			return base.DeleteFile(requestModel.Ticket, requestModel.Action);
-		}
-
-		public new ActionResult SetFile([FromForm] string ticket, [FromForm] ControllerBase.VersionSubmitAction mode = VersionSubmitAction.Insert, [FromForm] string version = "1")
-		{
-			return base.SetFile(ticket, mode, version);
-		}
-
-		public ActionResult GetFile([FromBody]RequestDocumTicketsModel requestModel)
+		public ActionResult GetFile([FromBody]RequestDocumGetModel requestModel)
 		{
 			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
 		}
 
-		public ActionResult GetSpecificFile([FromBody]RequestDocumTicketsModel requestModel)
+		[DisableRequestSizeLimit]
+		public new ActionResult SetFile([FromForm] string ticket, [FromForm] VersionSubmitAction mode = VersionSubmitAction.Insert, [FromForm] string version = "1")
 		{
-			return base.GetSpecificFile(requestModel.Ticket);
+			return base.SetFile(ticket, mode, version);
+		}
+
+		public ActionResult SetFilesState([FromBody]RequestDocumsChangeModel requestModel)
+		{
+			return base.SetFilesState(requestModel.Documents);
 		}
 	}
 }

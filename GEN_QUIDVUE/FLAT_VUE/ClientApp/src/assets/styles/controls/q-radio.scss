@@ -71,6 +71,24 @@
 		}
 	}
 
+	&__data {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 0.25rem;
+
+		&-content {
+			width: 100%;
+			display: flex;
+			align-items: center;
+
+			label {
+				margin-top: 0;
+				margin-right: 0.8rem;
+				flex-grow: 1;
+			}
+		}
+	}
+
 	/* When the radio button is checked, add a blue background */
 	& input:checked ~ &__field {
 		background-color: $primary;
@@ -90,7 +108,7 @@
 		height: 6px;
 		border-radius: 50%;
 		background: white;
-		background-color: $input-bg;
+		background-color: $container;
 	}
 
 	&__label {

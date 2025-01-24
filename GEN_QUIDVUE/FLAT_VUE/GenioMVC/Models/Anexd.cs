@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Equip _equip;
 		[DisplayName("Equip")]
 		[ShouldSerialize("Equip")]
-		public virtual Equip Equip { 
-			get { 
+		public virtual Equip Equip {
+			get {
 				if (!this.isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
 					_equip = Models.Equip.Find(ValCodequip, m_userContext, Identifier, _fieldsToSerialize);
 				if (_equip == null)
 					_equip = new Models.Equip(m_userContext, true, _fieldsToSerialize);
 				return _equip;
 			}
-			set { _equip = value; } 
+			set { _equip = value; }
 		}
-		
+
 
 		[DisplayName("Attached")]
 		/// <summary>Field : "Attached" Tipo: "DT" Formula:  ""</summary>
@@ -68,7 +68,7 @@ namespace GenioMVC.Models
 		[DisplayName("Document")]
 		/// <summary>Field : "Document" Tipo: "IB" Formula:  ""</summary>
 		[ShouldSerialize("Anexd.ValDocument")]
-		[Document("ValDocument", false, true, false, true)]
+		[Document("ValDocument", true, false, false)]
 		public string ValDocument { get { return klass.ValDocument; } set { klass.ValDocument = value; } }
 		public string ValDocumentfk { get { return klass.ValDocumentfk; } set { klass.ValDocumentfk = value; } }
 
@@ -79,17 +79,17 @@ namespace GenioMVC.Models
 		private Langu _langu;
 		[DisplayName("Langu")]
 		[ShouldSerialize("Langu")]
-		public virtual Langu Langu { 
-			get { 
+		public virtual Langu Langu {
+			get {
 				if (!this.isEmptyModel && (_langu == null || (!string.IsNullOrEmpty(ValCodlang) && (_langu.isEmptyModel || _langu.klass.QPrimaryKey != ValCodlang))))
 					_langu = Models.Langu.Find(ValCodlang, m_userContext, Identifier, _fieldsToSerialize);
 				if (_langu == null)
 					_langu = new Models.Langu(m_userContext, true, _fieldsToSerialize);
 				return _langu;
 			}
-			set { _langu = value; } 
+			set { _langu = value; }
 		}
-		
+
 
 		[DisplayName("Translated title")]
 		/// <summary>Field : "Translated title" Tipo: "C" Formula: CT "TRADU[ANEXD->TITLE][TRADU->ATRADUZI][TRADU->TRADUZID][ANEXD->CODLANG][TRADU->CODIDIO2](DESC)"</summary>
@@ -109,19 +109,19 @@ namespace GenioMVC.Models
 		public Anexd(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAanexd(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Anexd(UserContext userContext, CSGenioAanexd val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAanexd csgenioa)
@@ -148,7 +148,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

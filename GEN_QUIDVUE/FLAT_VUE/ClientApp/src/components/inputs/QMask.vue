@@ -239,7 +239,7 @@
 							mask: 'x*@y*.z*',
 							tokens: {
 								x: { pattern: /[0-9a-zA-Z_\-.]/, lowercase: true },
-								y: { pattern: /[0-9a-zA-Z.]/, lowercase: true },
+								y: { pattern: /[0-9a-zA-Z\-.]/, lowercase: true },
 								z: { pattern: /[a-zA-Z]/, lowercase: true },
 								'*': { repeat: true }
 							}
@@ -250,6 +250,15 @@
 							mask: 'A*',
 							tokens: {
 								A: { pattern: /.*/, uppercase: true },
+								'*': { repeat: true }
+							}
+						}
+						break
+					case 'LO':
+						customConfig = {
+							mask: 'a*',
+							tokens: {
+								a: { pattern: /.*/, lowercase: true },
 								'*': { repeat: true }
 							}
 						}

@@ -1,105 +1,114 @@
 ﻿<template>
-	<thead class="c-table__head">
-		<tr>
-			<slot
-				name="columns"
-				:columns="columns">
-				<template
-					v-for="(column, key, index) in columns"
-					:key="column.name">
-					<th
-						v-if="canShowColumn(column)"
-						:key="index"
-						:class="columnClasses(column)"
-						:data-column-name="column.name"
-						@mousedown="onColumnMouseDown()"
-						@mousemove="onColumnMouseMove()"
-						@mouseup="onColumnMouseUp()">
-						<!-- BEGIN: FOR: TABLE LIST ROW ACTIONS -->
-						<div
-							v-if="isActionsColumn(column) || isDragAndDropColumn(column)"
-							class="column-header-content">
-							<q-icon icon="actions" />
-						</div>
-						<!-- END: FOR: TABLE LIST ROW ACTIONS -->
-						<!-- BEGIN: Checklist header cell content -->
-						<div
-							v-else-if="isChecklistColumn(column)"
-							class="column-header-content">
+	<tr
+		v-bind="$attrs"
+		:index="rowIndex">
+		<slot
+			name="columns"
+			:columns="columns">
+			<template
+				v-for="(column, key, index) in columns"
+				:key="column.name">
+				<th
+					v-if="canShowColumn(column)"
+					:key="index"
+					:class="columnClasses(column)"
+					:aria-sort="getTableColumnSort(column, columnSorting, true)"
+					:data-column-name="column.name"
+					@mousedown="onColumnMouseDown()"
+					@mousemove="onColumnMouseMove()"
+					@mouseup="onColumnMouseUp()">
+					<!-- BEGIN: TABLE LIST TOTALIZER TITLE COLUMN -->
+					<div
+						v-if="isTotalizerColumn(column)"
+						class="column-header-content">
+						<q-icon icon="sigma" />
+					</div>
+					<!-- BEGIN: FOR: TABLE LIST ROW ACTIONS -->
+					<div
+						v-else-if="isActionsColumn(column) || isDragAndDropColumn(column)"
+						class="column-header-content">
+						<q-icon icon="actions" />
+						<span class="hidden-elem">{{ column.label }}</span>
+					</div>
+					<!-- END: FOR: TABLE LIST ROW ACTIONS -->
+					<!-- BEGIN: Checklist header cell content -->
+					<div
+						v-else-if="isChecklistColumn(column)"
+						class="column-header-content">
+						<slot
+							:name="'column_' + getCellSlotName(column)"
+							:column="column">
+							<q-table-selector
+								:texts="texts"
+								:readonly="readonly"
+								:disable-selector="rowCount < 1"
+								:table-name="tableName"
+								@check-all-rows="$emit('check-all-rows')"
+								@check-current-page-rows="$emit('check-current-page-rows')"
+								@check-none-rows="$emit('check-none-rows')" />
+						</slot>
+					</div>
+					<!-- END: Checklist header cell content -->
+					<!-- BEGIN: Extended row action column -->
+					<div
+						v-else-if="isExtendedActionsColumn(column)"
+						class="extended-row-header">
+						<slot
+							:name="getCellSlotName(column)"
+							:column="column">
+							<span
+								v-if="hasExtendedAction('remove-reset')"
+								:key="column.name">
+								<q-button
+									b-style="secondary"
+									:title="texts.resetText"
+									data-table-action-selected="false"
+									tabindex="-1"
+									@click="$emit('unselect-all-rows')">
+									<q-icon icon="reset" />
+								</q-button>
+							</span>
+						</slot>
+					</div>
+					<!-- END: Extended row action column -->
+					<!-- BEGIN: Header cell content -->
+					<div
+						v-else
+						class="column-header-content">
+						<!-- BEGIN: Header cell title -->
+						<div class="column-header-text">
 							<slot
 								:name="'column_' + getCellSlotName(column)"
 								:column="column">
-								<q-table-selector
-									:texts="texts"
-									:readonly="readonly"
-									:disable-selector="rowCount < 1"
-									@check-all-rows="$emit('check-all-rows')"
-									@check-current-page-rows="$emit('check-current-page-rows')"
-									@check-none-rows="$emit('check-none-rows')" />
+								{{ column.label }}
 							</slot>
+							<q-table-column-filters
+								v-if="(allowColumnFilters && isSearchableColumn(column)) || (allowColumnSort && isSortableColumn(column))"
+								:allow-column-filters="allowColumnFilters"
+								:allow-column-sort="allowColumnSort"
+								:allow-advanced-filters="allowAdvancedFilters"
+								:column="column"
+								:disabled="disabled"
+								:filter="filters[columnFullName(column)]"
+								:filter-operators="filterOperators"
+								:searchable-columns="searchableColumns"
+								:sort-direction="getTableColumnSort(column, columnSorting)"
+								:table-name="tableName"
+								:texts="texts"
+								:locale="locale"
+								@update-sort="(...args) => $emit('update-sort', ...args)"
+								@edit-column-filter="(...args) => $emit('edit-column-filter', ...args)"
+								@remove-column-filter="(...args) => $emit('remove-column-filter', ...args)"
+								@add-advanced-filter="(...args) => $emit('add-advanced-filter', ...args)"
+								@show-advanced-filters="(...args) => $emit('show-advanced-filters', ...args)" />
 						</div>
-						<!-- END: Checklist header cell content -->
-						<!-- BEGIN: Extended row action column -->
-						<div
-							v-else-if="isExtendedActionsColumn(column)"
-							class="extended-row-header">
-							<slot
-								:name="getCellSlotName(column)"
-								:column="column">
-								<span
-									v-if="hasExtendedAction('remove-reset')"
-									:key="column.name">
-									<q-button
-										b-style="secondary"
-										:title="texts.resetText"
-										@click="$emit('unselect-all-rows')">
-										<q-icon icon="reset" />
-									</q-button>
-								</span>
-							</slot>
-						</div>
-						<!-- END: Extended row action column -->
-						<!-- BEGIN: Header cell content -->
-						<div
-							v-else
-							class="column-header-content">
-							<!-- BEGIN: Header cell title -->
-							<div class="column-header-text">
-								<slot
-									:name="'column_' + getCellSlotName(column)"
-									:column="column">
-									{{ column.label }}
-								</slot>
-								<div v-if="(allowColumnFilters && isSearchableColumn(column)) || (allowColumnSort && isSortableColumn(column))">
-									<q-table-column-filters
-										:column="column"
-										:query="query"
-										:texts="texts"
-										:allow-column-filters="allowColumnFilters"
-										:allow-column-sort="allowColumnSort"
-										:searchable-columns="searchableColumns"
-										:filter="filters[columnFullName(column)]"
-										:table-container-elem="tableContainerElem"
-										:filter-operators="filterOperators"
-										:disabled="disabled"
-										:table-name="tableName"
-										@set-dropdown="(...args) => $emit('set-dropdown', ...args)"
-										@set-property="(...args) => $emit('set-property', ...args)"
-										@update-sort="(...args) => $emit('update-sort', ...args)"
-										@edit-column-filter="(...args) => $emit('edit-column-filter', ...args)"
-										@remove-column-filter="(...args) => $emit('remove-column-filter', ...args)"
-										@add-advanced-filter="(...args) => $emit('add-advanced-filter', ...args)"
-										@show-advanced-filters="(...args) => $emit('show-advanced-filters', ...args)" />
-								</div>
-							</div>
-							<!-- END: Header cell title -->
-						</div>
-						<!-- END: Header cell content -->
-					</th>
-				</template>
-			</slot>
-		</tr>
-	</thead>
+						<!-- END: Header cell title -->
+					</div>
+					<!-- END: Header cell content -->
+				</th>
+			</template>
+		</slot>
+	</tr>
 </template>
 
 <script>
@@ -107,6 +116,8 @@
 	import includes from 'lodash-es/includes'
 
 	import searchFilterDataModule from '@/api/genio/searchFilterData'
+
+	import listFunctions from '@/mixins/listFunctions.js'
 
 	import QTableColumnFilters from './QTableColumnFilters.vue'
 	import QTableSelector from './QTableSelector.vue'
@@ -118,8 +129,6 @@
 			'column-resize',
 			'update-sort',
 			'unselect-all-rows',
-			'set-property',
-			'set-dropdown',
 			'edit-column-filter',
 			'remove-column-filter',
 			'add-advanced-filter',
@@ -133,6 +142,8 @@
 			QTableColumnFilters,
 			QTableSelector
 		},
+
+		inheritAttrs: false,
 
 		props: {
 			/**
@@ -152,9 +163,9 @@
 			},
 
 			/**
-			 * The object representing the current state of sorting and filtering applied to the table.
+			 * The object representing the current column sorting.
 			 */
-			query: {
+			columnSorting: {
 				type: Object,
 				default: () => ({})
 			},
@@ -198,6 +209,15 @@
 				type: Boolean,
 				default: false
 			},
+			
+			/**
+			 * Flag indicating whether advanced filters are allowed in the table.
+			 */
+			allowAdvancedFilters: {
+				type: Boolean,
+				default: false
+			},
+
 
 			/**
 			 * An array of columns that can be used for search filtering.
@@ -253,6 +273,33 @@
 			disabled: {
 				type: Boolean,
 				default: false
+			},
+
+			/**
+			 * The row index. Can be a multi-index which has the index for each level (in tree tables) separated by underscores.
+			 */
+			rowIndex: {
+				type: String,
+				default: 'h'
+			},
+
+			/**
+			 * Object with properties for the state:
+			 * isNavigated : Indicate whether the header is navigated to (for keyboard and mouse operations).
+			 */
+			headerRow: {
+				type: Object,
+				default: () => ({
+					isNavigated: false
+				})
+			},
+
+			/**
+			 * Current system locale
+			 */
+			locale: {
+				type: String,
+				default: 'en-US'
 			}
 		},
 
@@ -275,23 +322,13 @@
 			'isChecklistColumn',
 			'isDragAndDropColumn',
 			'isExtendedActionsColumn',
+			'isTotalizerColumn',
 			'hasExtendedAction',
 			'columnFullName'
 		],
 
 		methods: {
-			/**
-			 * Determine if rows are sorted by this column? (built-in method)
-			 * @param column {Object}
-			 * @returns Boolean
-			 */
-			isSort(column) {
-				if (this.query.sort.name === undefined || this.query.sort.name === null) {
-					return false
-				}
-
-				return this.query.sort.name === column.name
-			},
+			getTableColumnSort: listFunctions.getTableColumnSort,
 
 			/**
 			 * Get CSS classes for this column

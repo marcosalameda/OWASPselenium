@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Airline
 	/// </summary>
-	public class CSGenioAaero : DbArea	{
+	public class CSGenioAaero : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -71,6 +72,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  2;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 2;
 			Qfield.CavDesignation = "CODE49225";
 
 			Qfield.Dupmsg = "";
@@ -243,7 +245,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodaero, value); }
 		}
 
-
 		/// <summary>Field : "Airline name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("aero", "name");
@@ -255,18 +256,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldName, value); }
 		}
 
-
 		/// <summary>Field : "Code" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldCodcmaer { get { return m_fldCodcmaer; } }
 		private static FieldRef m_fldCodcmaer = new FieldRef("aero", "codcmaer");
 
 		/// <summary>Field : "Code" Tipo: "N" Formula:  ""</summary>
-		public double ValCodcmaer
+		public decimal ValCodcmaer
 		{
-			get { return (double)returnValueField(FldCodcmaer); }
+			get { return (decimal)returnValueField(FldCodcmaer); }
 			set { insertNameValueField(FldCodcmaer, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -309,23 +308,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAaero> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAaero> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAaero>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -374,7 +356,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX AERO]/

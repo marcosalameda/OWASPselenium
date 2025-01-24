@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODPAIS1',
 			relatedArea: 'PAIS1',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCodpais1))
 		watch(() => this.ValCodpais1.value, (newValue, oldValue) => this.onUpdate('regio.codpais1', this.ValCodpais1, newValue, oldValue))
 
@@ -108,5 +109,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodregia'
 
 	get QPrimaryKey() { return this.ValCodregia.value }
-	set QPrimaryKey(value) { this.ValCodregia.value = value }
+	set QPrimaryKey(value) { this.ValCodregia.updateValue(value) }
 }

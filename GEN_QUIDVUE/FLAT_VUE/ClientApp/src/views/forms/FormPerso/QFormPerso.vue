@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -125,8 +125,7 @@
 													v-on="controls.PERSO___PERSOPHOTO___.handlers"
 													:loading="controls.PERSO___PERSOPHOTO___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-image
 														v-if="controls.PERSO___PERSOPHOTO___.isVisible"
 														v-bind="controls.PERSO___PERSOPHOTO___.props"
@@ -156,12 +155,12 @@
 													v-on="controls.PERSO___PERSONAME____.handlers"
 													:loading="controls.PERSO___PERSONAME____.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PERSO___PERSONAME____.props"
 														:model-value="model.ValName.value"
-														@update:model-value="model.ValName.fnUpdateValue" />
+														@blur="onBlur(controls.PERSO___PERSONAME____, model.ValName.value)"
+														@change="model.ValName.fnUpdateValueOnChange" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -175,12 +174,12 @@
 													v-on="controls.PERSO___PERSOIDENTIFI.handlers"
 													:loading="controls.PERSO___PERSOIDENTIFI.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PERSO___PERSOIDENTIFI.props"
 														:model-value="model.ValIdentifi.value"
-														@update:model-value="model.ValIdentifi.fnUpdateValue" />
+														@blur="onBlur(controls.PERSO___PERSOIDENTIFI, model.ValIdentifi.value)"
+														@change="model.ValIdentifi.fnUpdateValueOnChange" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -194,8 +193,7 @@
 													v-on="controls.PERSO___PERSOGENDER__.handlers"
 													:loading="controls.PERSO___PERSOGENDER__.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-select
 														v-if="controls.PERSO___PERSOGENDER__.isVisible"
 														v-bind="controls.PERSO___PERSOGENDER__.props"
@@ -214,12 +212,12 @@
 													v-on="controls.PERSO___PERSOEMAIL___.handlers"
 													:loading="controls.PERSO___PERSOEMAIL___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PERSO___PERSOEMAIL___.props"
 														:model-value="model.ValEmail.value"
-														@update:model-value="model.ValEmail.fnUpdateValue" />
+														@blur="onBlur(controls.PERSO___PERSOEMAIL___, model.ValEmail.value)"
+														@change="model.ValEmail.fnUpdateValueOnChange" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -250,14 +248,13 @@
 										v-on="controls.PERSO___PERSODOB_____.handlers"
 										:loading="controls.PERSO___PERSODOB_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.PERSO___PERSODOB_____.isVisible"
-											v-bind="controls.PERSO___PERSODOB_____"
-											format="Date"
+											v-bind="controls.PERSO___PERSODOB_____.props"
 											:model-value="model.ValDob.value"
-											@update:model-value="model.ValDob.fnUpdateValue" />
+											@reset-icon-click="model.ValDob.fnUpdateValue(model.ValDob.originalValue ?? new Date())"
+											@update:model-value="model.ValDob.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -269,14 +266,13 @@
 										v-on="controls.PERSO___PERSOTOB_____.handlers"
 										:loading="controls.PERSO___PERSOTOB_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.PERSO___PERSOTOB_____.isVisible"
-											v-bind="controls.PERSO___PERSOTOB_____"
-											format="Time"
+											v-bind="controls.PERSO___PERSOTOB_____.props"
 											:model-value="model.ValTob.value"
-											@update:model-value="model.ValTob.fnUpdateValue" />
+											@reset-icon-click="model.ValTob.fnUpdateValue(model.ValTob.originalValue ?? new Date())"
+											@update:model-value="model.ValTob.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -288,12 +284,10 @@
 										v-on="controls.PERSO___PERSOYEAR____.handlers"
 										:loading="controls.PERSO___PERSOYEAR____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.PERSO___PERSOYEAR____.isVisible"
-											v-bind="controls.PERSO___PERSOYEAR____"
-											:model-value="model.ValYear.value"
+											v-bind="controls.PERSO___PERSOYEAR____.props"
 											@update:model-value="model.ValYear.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -306,8 +300,7 @@
 										v-on="controls.PERSO___PERSOMONTH___.handlers"
 										:loading="controls.PERSO___PERSOMONTH___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-select
 											v-if="controls.PERSO___PERSOMONTH___.isVisible"
 											v-bind="controls.PERSO___PERSOMONTH___.props"
@@ -330,8 +323,7 @@
 							v-on="controls.PERSO___PERSOCREATUSR.handlers"
 							:loading="controls.PERSO___PERSOCREATUSR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PERSO___PERSOCREATUSR.props"
 								:model-value="model.ValCreatusr.value" />
@@ -346,14 +338,13 @@
 							v-on="controls.PERSO___PERSOCREATDAT.handlers"
 							:loading="controls.PERSO___PERSOCREATDAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.PERSO___PERSOCREATDAT.isVisible"
-								v-bind="controls.PERSO___PERSOCREATDAT"
-								format="Date"
+								v-bind="controls.PERSO___PERSOCREATDAT.props"
 								:model-value="model.ValCreatdat.value"
-								@update:model-value="model.ValCreatdat.fnUpdateValue" />
+								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
+								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -365,8 +356,7 @@
 							v-on="controls.PERSO___PERSOMODIFUSR.handlers"
 							:loading="controls.PERSO___PERSOMODIFUSR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PERSO___PERSOMODIFUSR.props"
 								:model-value="model.ValModifusr.value" />
@@ -381,14 +371,13 @@
 							v-on="controls.PERSO___PERSOMODIFDAT.handlers"
 							:loading="controls.PERSO___PERSOMODIFDAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.PERSO___PERSOMODIFDAT.isVisible"
-								v-bind="controls.PERSO___PERSOMODIFDAT"
-								format="Date"
+								v-bind="controls.PERSO___PERSOMODIFDAT.props"
 								:model-value="model.ValModifdat.value"
-								@update:model-value="model.ValModifdat.fnUpdateValue" />
+								@reset-icon-click="model.ValModifdat.fnUpdateValue(model.ValModifdat.originalValue ?? new Date())"
+								@update:model-value="model.ValModifdat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -473,15 +462,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'PERSO',
-						location: 'form-PERSO',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'PERSO',
+					location: 'form-PERSO',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -527,6 +514,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -599,8 +588,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -682,7 +672,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -736,21 +726,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -759,15 +734,11 @@
 						id: 'PERSO___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.IDENTIFICATION37731),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -775,16 +746,12 @@
 						id: 'PERSO___PSEUDNOVOGR04',
 						name: 'NOVOGR04',
 						size: 'medium',
-						hasLabel: true,
 						label: '',
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR01',
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -794,16 +761,13 @@
 						id: 'PERSO___PERSOPHOTO___',
 						name: 'PHOTO',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTO51874),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR04',
 						height: 115,
 						width: 100,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PHOTO51874)),
 						controlLimits: [
 						],
 					}, this),
@@ -811,16 +775,12 @@
 						id: 'PERSO___PSEUDNOVOGR05',
 						name: 'NOVOGR05',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: '',
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR01',
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -830,16 +790,12 @@
 						id: 'PERSO___PERSONAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PERSON_NAME40980),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR05',
 						maxLength: 85,
 						labelId: 'label_PERSO___PERSONAME____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -849,16 +805,12 @@
 						id: 'PERSO___PERSOIDENTIFI',
 						name: 'IDENTIFI',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.IDENTIFICATION_NUMBE11999),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR05',
 						maxLength: 10,
 						labelId: 'label_PERSO___PERSOIDENTIFI',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -868,17 +820,15 @@
 						id: 'PERSO___PERSOGENDER__',
 						name: 'GENDER',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.GENDER44172),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR05',
 						maxLength: 1,
 						labelId: 'label_PERSO___PERSOGENDER__',
 						arrayName: 'Gender',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -888,16 +838,12 @@
 						id: 'PERSO___PERSOEMAIL___',
 						name: 'EMAIL',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.EMAIL25170),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR05',
 						maxLength: 254,
 						labelId: 'label_PERSO___PERSOEMAIL___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -905,92 +851,72 @@
 						id: 'PERSO___PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: '',
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					PERSO___PERSODOB_____: new fieldControlClass.DateControl({
 						modelField: 'ValDob',
 						valueChangeEvent: 'fieldChange:perso.dob',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'PERSO___PERSODOB_____',
 						name: 'DOB',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE_OF_BIRTH63058),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR02',
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
 					PERSO___PERSOTOB_____: new fieldControlClass.TimeControl({
 						modelField: 'ValTob',
 						valueChangeEvent: 'fieldChange:perso.tob',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'PERSO___PERSOTOB_____',
 						name: 'TOB',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.TIME_OF_BIRTH04797),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR02',
-						mustBeFilled: false,
+						format: 'time',
 						controlLimits: [
 						],
 					}, this),
 					PERSO___PERSOYEAR____: new fieldControlClass.NumberControl({
 						modelField: 'ValYear',
 						valueChangeEvent: 'fieldChange:perso.year',
-						maxIntegers: 4,
-						maxDecimals: 0,
 						id: 'PERSO___PERSOYEAR____',
 						name: 'YEAR',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.YEAR61794),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR02',
-						mustBeFilled: false,
+						maxIntegers: 4,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					PERSO___PERSOMONTH___: new fieldControlClass.ArrayNumberControl({
 						modelField: 'ValMonth',
 						valueChangeEvent: 'fieldChange:perso.month',
-						maxIntegers: 2,
-						maxDecimals: 0,
 						id: 'PERSO___PERSOMONTH___',
 						name: 'MONTH',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.MONTH46035),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR02',
+						maxIntegers: 2,
+						maxDecimals: 0,
 						arrayName: 'Months',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -1000,37 +926,26 @@
 						id: 'PERSO___PERSOCREATUSR',
 						name: 'CREATUSR',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CREATED_BY12292),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
 						labelId: 'label_PERSO___PERSOCREATUSR',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					PERSO___PERSOCREATDAT: new fieldControlClass.DateControl({
 						modelField: 'ValCreatdat',
 						valueChangeEvent: 'fieldChange:perso.creatdat',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'PERSO___PERSOCREATDAT',
 						name: 'CREATDAT',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.CREATED_ON00051),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					PERSO___PERSOMODIFUSR: new fieldControlClass.StringControl({
 						modelField: 'ValModifusr',
@@ -1038,37 +953,26 @@
 						id: 'PERSO___PERSOMODIFUSR',
 						name: 'MODIFUSR',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.MODIFIED_BY02094),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
 						labelId: 'label_PERSO___PERSOMODIFUSR',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					PERSO___PERSOMODIFDAT: new fieldControlClass.DateControl({
 						modelField: 'ValModifdat',
 						valueChangeEvent: 'fieldChange:perso.modifdat',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'PERSO___PERSOMODIFDAT',
 						name: 'MODIFDAT',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.MODIFIED_ON31953),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 				},
 
@@ -1128,7 +1032,7 @@
 						/** The primary key of the PERSO table */
 						get perso() { return vm.model.ValCodperso },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1224,6 +1128,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1263,6 +1175,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1389,6 +1309,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR PERSO]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1404,6 +1340,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PERSO]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

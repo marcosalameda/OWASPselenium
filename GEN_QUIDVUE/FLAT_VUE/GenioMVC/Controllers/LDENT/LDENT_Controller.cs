@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Ldent;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER LDENT]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Ldent row = null;
 
-			try
-			{
-				row = Models.Ldent.Find(Navigation.GetStrValue("ldent"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model ldent");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Ldent(UserContext.Current);
+				row = new Models.Ldent(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("ldent");
 			}
 
@@ -82,8 +75,8 @@ namespace GenioMVC.Controllers
 				{
 					case "LDENT___INDOCDOCUMENR":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Ldent_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Ldent_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Ldent___indocdocumenr(qs);
 							result = model.TableIndocDocumenr;
@@ -91,8 +84,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "LDENT___WAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Ldent_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Ldent_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Ldent___warehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -100,8 +93,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "LDENT___ITEM_ITEMDES_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Ldent_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Ldent_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Ldent___item_itemdes_(qs);
 							result = model.TableItemItemdes;
@@ -109,8 +102,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "LDENTNORINDOCDOCUMENR":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Ldentnor_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Ldentnor_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Ldentnorindocdocumenr(qs);
 							result = model.TableIndocDocumenr;
@@ -118,8 +111,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "LDENTNORWAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Ldentnor_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Ldentnor_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Ldentnorwarehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -127,14 +120,15 @@ namespace GenioMVC.Controllers
 						break;
 					case "LDENTNORITEM_ITEMDES_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Ldentnor_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Ldentnor_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Ldentnoritem_itemdes_(qs);
 							result = model.TableItemItemdes;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -195,11 +189,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -208,36 +203,33 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Ldent" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Ldent([FromBody]Ldent_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Ldent([FromBody]Ldent_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "ldent",
+			return GenericRecalculateFormulas(formData, "ldent",
 				(primaryKey) => Models.Ldent.Find(primaryKey, UserContext.Current, "FLDENT"),
-				(model) => form_data.MapToModel(model as Models.Ldent)
+				(model) => formData.MapToModel(model as Models.Ldent)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Ldentnor" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Ldentnor([FromBody]Ldentnor_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Ldentnor([FromBody]Ldentnor_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "ldent",
+			return GenericRecalculateFormulas(formData, "ldent",
 				(primaryKey) => Models.Ldent.Find(primaryKey, UserContext.Current, "FLDENTNOR"),
-				(model) => form_data.MapToModel(model as Models.Ldent)
+				(model) => formData.MapToModel(model as Models.Ldent)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -245,7 +237,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

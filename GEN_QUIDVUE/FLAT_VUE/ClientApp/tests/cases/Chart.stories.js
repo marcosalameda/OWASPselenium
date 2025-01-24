@@ -1,12 +1,11 @@
 import Chart from './Chart.case.vue'
 
 export default {
-    title: 'Views/Chart',
-    component: Chart,
-    tags: [],
-  };
+	title: 'Views/Chart',
+	component: Chart,
+	tags: []
+}
 
-  export const Simple = {
-    args: {
-    },
-  };
+export const Simple = {
+	args: {}
+}

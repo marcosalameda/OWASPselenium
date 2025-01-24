@@ -1,5 +1,7 @@
 ﻿<template>
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<form class="form-horizontal">
 			<fieldset>
 				<div class="form-flow">
@@ -17,8 +19,7 @@
 								:list-config="map1.listConfig"
 								@row-action="handleRowAction"
 								@set-marker="handleSetMarker('map1', $event)"
-								@remove-marker="handleRemoveMarker('map1', $event)"
-								@find-address="handleFindAddress('map1', $event)" />
+								@remove-marker="handleRemoveMarker('map1', $event)" />
 						</q-control-wrapper>
 					</q-row-container>
 
@@ -38,8 +39,7 @@
 								:overlays="extraProperties.overlays"
 								@row-action="handleRowAction"
 								@set-marker="handleSetMarker('map2', $event)"
-								@remove-marker="handleRemoveMarker('map2', $event)"
-								@find-address="handleFindAddress('map2', $event)" />
+								@remove-marker="handleRemoveMarker('map2', $event)" />
 						</q-control-wrapper>
 					</q-row-container>
 
@@ -60,8 +60,7 @@
 								readonly
 								@row-action="handleRowAction"
 								@set-marker="handleSetMarker('map3', $event)"
-								@remove-marker="handleRemoveMarker('map3', $event)"
-								@find-address="handleFindAddress('map3', $event)" />
+								@remove-marker="handleRemoveMarker('map3', $event)" />
 						</q-control-wrapper>
 					</q-row-container>
 
@@ -82,8 +81,7 @@
 								:overlays="extraProperties.overlays"
 								@row-action="handleRowAction"
 								@set-marker="handleSetMarker('map4', $event)"
-								@remove-marker="handleRemoveMarker('map4', $event)"
-								@find-address="handleFindAddress('map4', $event)" />
+								@remove-marker="handleRemoveMarker('map4', $event)" />
 						</q-control-wrapper>
 					</q-row-container>
 
@@ -102,8 +100,7 @@
 								:is-single-point="map5.viewMode.isSinglePoint"
 								@row-action="handleRowAction"
 								@set-marker="handleSetMarker('map5', $event)"
-								@remove-marker="handleRemoveMarker('map5', $event)"
-								@find-address="handleFindAddress('map5', $event)" />
+								@remove-marker="handleRemoveMarker('map5', $event)" />
 						</q-control-wrapper>
 					</q-row-container>
 
@@ -121,8 +118,7 @@
 								:is-single-point="map6.viewMode.isSinglePoint"
 								@row-action="handleRowAction"
 								@set-marker="handleSetMarker('map6', $event)"
-								@remove-marker="handleRemoveMarker('map6', $event)"
-								@find-address="handleFindAddress('map6', $event)" />
+								@remove-marker="handleRemoveMarker('map6', $event)" />
 						</q-control-wrapper>
 					</q-row-container>
 
@@ -142,8 +138,7 @@
 								readonly
 								@row-action="handleRowAction"
 								@set-marker="handleSetMarker('map7', $event)"
-								@remove-marker="handleRemoveMarker('map7', $event)"
-								@find-address="handleFindAddress('map7', $event)" />
+								@remove-marker="handleRemoveMarker('map7', $event)" />
 						</q-control-wrapper>
 					</q-row-container>
 
@@ -162,8 +157,7 @@
 								readonly
 								@row-action="handleRowAction"
 								@set-marker="handleSetMarker('map8', $event)"
-								@remove-marker="handleRemoveMarker('map8', $event)"
-								@find-address="handleFindAddress('map8', $event)" />
+								@remove-marker="handleRemoveMarker('map8', $event)" />
 						</q-control-wrapper>
 					</q-row-container>
 
@@ -184,7 +178,6 @@
 								@row-action="handleRowAction"
 								@set-marker="handleSetMarker('map9', $event)"
 								@remove-marker="handleRemoveMarker('map9', $event)"
-								@find-address="handleFindAddress('map9', $event)"
 								@shape-clicked="handleShapeClick"
 								@set-shapes="handleShapeSet('map9', $event)" />
 						</q-control-wrapper>
@@ -207,7 +200,6 @@
 								@row-action="handleRowAction"
 								@set-marker="handleSetMarker('map10', $event)"
 								@remove-marker="handleRemoveMarker('map10', $event)"
-								@find-address="handleFindAddress('map10', $event)"
 								@shape-clicked="handleShapeClick"
 								@set-shapes="handleShapeSet('map10', $event)" />
 						</q-control-wrapper>
@@ -226,13 +218,17 @@
 	import fakeData from './Map.mock.js'
 
 	export default {
-		docsfile: "./docs/rendering/map/QMap.md",
-		
+		name: 'QMapContainer',
+
+		docsfile: './docs/rendering/map/QMap.md',
+
 		components: {
 			QMap
 		},
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{
@@ -254,6 +250,7 @@
 		methods: {
 			handleRowAction(actionData)
 			{
+				// eslint-disable-next-line no-console
 				console.log('Row action emit was triggered.')
 
 				alert(JSON.stringify(actionData))
@@ -261,6 +258,7 @@
 
 			handleSetMarker(map, marker)
 			{
+				// eslint-disable-next-line no-console
 				console.log('Set marker emit was triggered.')
 
 				const isSinglePoint = this[map].viewMode.isSinglePoint
@@ -316,6 +314,7 @@
 
 			handleRemoveMarker(map, marker)
 			{
+				// eslint-disable-next-line no-console
 				console.log('Remove marker emit was triggered.')
 
 				const mappedValues = this[map].viewMode.mappedValues
@@ -336,25 +335,9 @@
 				}
 			},
 
-			handleFindAddress(map, marker)
-			{
-				console.log('Find address emit was triggered.')
-
-				setTimeout(() => {
-					const mappedValues = this[map].viewMode.mappedValues
-					const markerAddress = 'Test address no. 7'
-					const lat = marker.coords.lat
-					const long = marker.coords.lng
-
-					for (let val of mappedValues)
-						for (let geoData of val.geographicData)
-							if (geoData.value !== null && geoData.value.lat === lat && geoData.value.lng === long)
-								val.address = markerAddress
-				}, 500)
-			},
-
 			handleShapeClick(layerProps)
 			{
+				// eslint-disable-next-line no-console
 				console.log('Shape click emit was triggered.')
 
 				// Timeout to give time for the map to recenter on the clicked shape.
@@ -363,6 +346,7 @@
 
 			handleShapeSet(map, shapes)
 			{
+				// eslint-disable-next-line no-console
 				console.log('Shape set emit was triggered.')
 
 				const mappedValues = this[map].viewMode.mappedValues

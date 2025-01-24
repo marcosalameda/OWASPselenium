@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,8 +106,7 @@
 							v-on="controls.ARTIGVALITEM_IMAGE___.handlers"
 							:loading="controls.ARTIGVALITEM_IMAGE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-image
 								v-if="controls.ARTIGVALITEM_IMAGE___.isVisible"
 								v-bind="controls.ARTIGVALITEM_IMAGE___.props"
@@ -125,14 +124,11 @@
 							v-on="controls.ARTIGVALGITEMITEMDES_.handlers"
 							:loading="controls.ARTIGVALGITEMITEMDES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.ARTIGVALGITEMITEMDES_.isVisible"
 								v-bind="controls.ARTIGVALGITEMITEMDES_.props"
-								:model-value="model.ValCodgitem.value"
-								v-on="controls.ARTIGVALGITEMITEMDES_.handlers"
-								@update:model-value="model.ValCodgitem.fnUpdateValue" />
+								v-on="controls.ARTIGVALGITEMITEMDES_.handlers" />
 							<q-see-more-artigvalgitemitemdes
 								v-if="controls.ARTIGVALGITEMITEMDES_.seeMoreIsVisible"
 								v-bind="controls.ARTIGVALGITEMITEMDES_.seeMoreParams"
@@ -150,14 +146,11 @@
 							v-on="controls.ARTIGVALWAREHWAREHDES.handlers"
 							:loading="controls.ARTIGVALWAREHWAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.ARTIGVALWAREHWAREHDES.isVisible"
 								v-bind="controls.ARTIGVALWAREHWAREHDES.props"
-								:model-value="model.ValCodwareh.value"
-								v-on="controls.ARTIGVALWAREHWAREHDES.handlers"
-								@update:model-value="model.ValCodwareh.fnUpdateValue" />
+								v-on="controls.ARTIGVALWAREHWAREHDES.handlers" />
 							<q-see-more-artigvalwarehwarehdes
 								v-if="controls.ARTIGVALWAREHWAREHDES.seeMoreIsVisible"
 								v-bind="controls.ARTIGVALWAREHWAREHDES.seeMoreParams"
@@ -175,8 +168,7 @@
 							v-on="controls.ARTIGVALITEM_ITEMTYPE.handlers"
 							:loading="controls.ARTIGVALITEM_ITEMTYPE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.ARTIGVALITEM_ITEMTYPE.isVisible"
 								v-bind="controls.ARTIGVALITEM_ITEMTYPE.props"
@@ -193,12 +185,12 @@
 							v-on="controls.ARTIGVALITEM_ITEMCOD_.handlers"
 							:loading="controls.ARTIGVALITEM_ITEMCOD_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARTIGVALITEM_ITEMCOD_.props"
 								:model-value="model.ValItemcod.value"
-								@update:model-value="model.ValItemcod.fnUpdateValue" />
+								@blur="onBlur(controls.ARTIGVALITEM_ITEMCOD_, model.ValItemcod.value)"
+								@change="model.ValItemcod.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -212,12 +204,12 @@
 							v-on="controls.ARTIGVALITEM_ITEMDES_.handlers"
 							:loading="controls.ARTIGVALITEM_ITEMDES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARTIGVALITEM_ITEMDES_.props"
 								:model-value="model.ValItemdes.value"
-								@update:model-value="model.ValItemdes.fnUpdateValue" />
+								@blur="onBlur(controls.ARTIGVALITEM_ITEMDES_, model.ValItemdes.value)"
+								@change="model.ValItemdes.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -231,14 +223,13 @@
 							v-on="controls.ARTIGVALITEM_DATE____.handlers"
 							:loading="controls.ARTIGVALITEM_DATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.ARTIGVALITEM_DATE____.isVisible"
-								v-bind="controls.ARTIGVALITEM_DATE____"
-								format="Date"
+								v-bind="controls.ARTIGVALITEM_DATE____.props"
 								:model-value="model.ValDate.value"
-								@update:model-value="model.ValDate.fnUpdateValue" />
+								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
+								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -250,12 +241,10 @@
 							v-on="controls.ARTIGVALITEM_ENTRIES_.handlers"
 							:loading="controls.ARTIGVALITEM_ENTRIES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.ARTIGVALITEM_ENTRIES_.isVisible"
-								v-bind="controls.ARTIGVALITEM_ENTRIES_"
-								:model-value="model.ValEntries.value"
+								v-bind="controls.ARTIGVALITEM_ENTRIES_.props"
 								@update:model-value="model.ValEntries.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -268,12 +257,10 @@
 							v-on="controls.ARTIGVALITEM_EXITS___.handlers"
 							:loading="controls.ARTIGVALITEM_EXITS___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.ARTIGVALITEM_EXITS___.isVisible"
-								v-bind="controls.ARTIGVALITEM_EXITS___"
-								:model-value="model.ValExits.value"
+								v-bind="controls.ARTIGVALITEM_EXITS___.props"
 								@update:model-value="model.ValExits.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -286,12 +273,10 @@
 							v-on="controls.ARTIGVALITEM_EXISTENC.handlers"
 							:loading="controls.ARTIGVALITEM_EXISTENC.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.ARTIGVALITEM_EXISTENC.isVisible"
-								v-bind="controls.ARTIGVALITEM_EXISTENC"
-								:model-value="model.ValExistenc.value"
+								v-bind="controls.ARTIGVALITEM_EXISTENC.props"
 								@update:model-value="model.ValExistenc.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -306,18 +291,14 @@
 							v-on="controls.ARTIGVALITEM_CATEGORY.handlers"
 							:loading="controls.ARTIGVALITEM_CATEGORY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.ARTIGVALITEM_CATEGORY.isVisible"
+								v-bind="controls.ARTIGVALITEM_CATEGORY.props"
 								id="ARTIGVALITEM_CATEGORY"
-								size="xxlarge"
 								:model-value="model.ValCategory.value"
 								:rows="2"
 								:cols="85"
-								:is-required="controls.ARTIGVALITEM_CATEGORY.isRequired"
-								:readonly="controls.ARTIGVALITEM_CATEGORY.readonly"
-								:placeholder="controls.ARTIGVALITEM_CATEGORY.placeholder"
 								@update:model-value="model.ValCategory.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -332,8 +313,7 @@
 							v-on="controls.ARTIGVALITEM_DISPONIB.handlers"
 							:loading="controls.ARTIGVALITEM_DISPONIB.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.ARTIGVALITEM_DISPONIB.isVisible"
 								v-bind="controls.ARTIGVALITEM_DISPONIB.props"
@@ -424,15 +404,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'ARTIGVAL',
-						location: 'form-ARTIGVAL',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'ARTIGVAL',
+					location: 'form-ARTIGVAL',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -478,6 +456,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -550,8 +530,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -633,7 +614,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -687,21 +668,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -712,15 +678,12 @@
 						id: 'ARTIGVALITEM_IMAGE___',
 						name: 'IMAGE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.IMAGE65174),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						height: 50,
 						width: 100,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.IMAGE65174)),
 						controlLimits: [
 						],
 					}, this),
@@ -730,26 +693,9 @@
 						id: 'ARTIGVALGITEMITEMDES_',
 						name: 'ITEMDES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.GLOBAL_ITEM49586),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodgitem',
-							dependencyEvent: 'fieldChange:item.codgitem'
-						},
-						dependentFields: () => {
-							return {
-								set 'gitem.codgitem'(value) { vm.model.ValCodgitem.updateValue(value) },
-								set 'gitem.itemdes'(value) { vm.model.TableGitemItemdes.updateValue(value) },
-								set 'gitem.itemgcod'(value) { vm.model.GitemValItemgcod.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -758,6 +704,17 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodgitem',
+							dependencyEvent: 'fieldChange:item.codgitem'
+						},
+						dependentFields: () => ({
+							set 'gitem.codgitem'(value) { vm.model.ValCodgitem.updateValue(value) },
+							set 'gitem.itemdes'(value) { vm.model.TableGitemItemdes.updateValue(value) },
+							set 'gitem.itemgcod'(value) { vm.model.GitemValItemgcod.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					ARTIGVALWAREHWAREHDES: new fieldControlClass.LookupControl({
 						modelField: 'TableWarehWarehdes',
@@ -765,25 +722,9 @@
 						id: 'ARTIGVALWAREHWAREHDES',
 						name: 'WAREHDES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.WAREHOUSE51864),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: true,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodwareh',
-							dependencyEvent: 'fieldChange:item.codwareh'
-						},
-						dependentFields: () => {
-							return {
-								set 'wareh.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
-								set 'wareh.warehdes'(value) { vm.model.TableWarehWarehdes.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -792,6 +733,17 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodwareh',
+							dependencyEvent: 'fieldChange:item.codwareh'
+						},
+						dependentFields: () => ({
+							set 'wareh.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
+							set 'wareh.warehdes'(value) { vm.model.TableWarehWarehdes.updateValue(value) },
+						}),
+						mustBeFilled: true,
+						controlLimits: [
+						],
 					}, this),
 					ARTIGVALITEM_ITEMTYPE: new fieldControlClass.ArrayStringControl({
 						modelField: 'ValItemtype',
@@ -799,16 +751,14 @@
 						id: 'ARTIGVALITEM_ITEMTYPE',
 						name: 'ITEMTYPE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.TIPO55111),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						labelId: 'label_ARTIGVALITEM_ITEMTYPE',
 						arrayName: 'TipoArti',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -818,15 +768,11 @@
 						id: 'ARTIGVALITEM_ITEMCOD_',
 						name: 'ITEMCOD',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CODE49225),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 15,
 						labelId: 'label_ARTIGVALITEM_ITEMCOD_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -836,10 +782,7 @@
 						id: 'ARTIGVALITEM_ITEMDES_',
 						name: 'ITEMDES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ITEM40802),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
@@ -851,80 +794,60 @@
 					ARTIGVALITEM_DATE____: new fieldControlClass.DateControl({
 						modelField: 'ValDate',
 						valueChangeEvent: 'fieldChange:item.date',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'ARTIGVALITEM_DATE____',
 						name: 'DATE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE18475),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
 					ARTIGVALITEM_ENTRIES_: new fieldControlClass.NumberControl({
 						modelField: 'ValEntries',
 						valueChangeEvent: 'fieldChange:item.entries',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'ARTIGVALITEM_ENTRIES_',
 						name: 'ENTRIES',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ENTRIES32319),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					ARTIGVALITEM_EXITS___: new fieldControlClass.NumberControl({
 						modelField: 'ValExits',
 						valueChangeEvent: 'fieldChange:item.exits',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'ARTIGVALITEM_EXITS___',
 						name: 'EXITS',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.OUTPUT_10769),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					ARTIGVALITEM_EXISTENC: new fieldControlClass.NumberControl({
 						modelField: 'ValExistenc',
 						valueChangeEvent: 'fieldChange:item.existenc',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'ARTIGVALITEM_EXISTENC',
 						name: 'EXISTENC',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.EXISTENCE30081),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					ARTIGVALITEM_CATEGORY: new fieldControlClass.StringControl({
 						modelField: 'ValCategory',
@@ -932,19 +855,12 @@
 						id: 'ARTIGVALITEM_CATEGORY',
 						name: 'CATEGORY',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.CATEGORIZATION17554),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						maxLength: 85,
-						labelId: 'label_ARTIGVALITEM_CATEGORY',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					ARTIGVALITEM_DISPONIB: new fieldControlClass.ArrayStringControl({
 						modelField: 'ValDisponib',
@@ -952,20 +868,17 @@
 						id: 'ARTIGVALITEM_DISPONIB',
 						name: 'DISPONIB',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.AVAILABILITY56489),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
 						maxLength: 1,
 						labelId: 'label_ARTIGVALITEM_DISPONIB',
 						arrayName: 'dsiponib',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 				},
 
@@ -1033,7 +946,7 @@
 						/** The foreign key to the WAREH table */
 						get wareh() { return vm.model.ValCodwareh },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1131,6 +1044,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1170,6 +1091,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1296,6 +1225,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR ARTIGVAL]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1311,6 +1256,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS ARTIGVAL]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

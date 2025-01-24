@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.COMOD___PESS1NAME____.handlers"
 							:loading="controls.COMOD___PESS1NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.COMOD___PESS1NAME____.isVisible"
 								v-bind="controls.COMOD___PESS1NAME____.props"
-								:model-value="model.ValCodpess1.value"
-								v-on="controls.COMOD___PESS1NAME____.handlers"
-								@update:model-value="model.ValCodpess1.fnUpdateValue" />
+								v-on="controls.COMOD___PESS1NAME____.handlers" />
 							<q-see-more-comod-pess1name
 								v-if="controls.COMOD___PESS1NAME____.seeMoreIsVisible"
 								v-bind="controls.COMOD___PESS1NAME____.seeMoreParams"
@@ -131,14 +128,11 @@
 							v-on="controls.COMOD___PESS2NAME____.handlers"
 							:loading="controls.COMOD___PESS2NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.COMOD___PESS2NAME____.isVisible"
 								v-bind="controls.COMOD___PESS2NAME____.props"
-								:model-value="model.ValCodpess2.value"
-								v-on="controls.COMOD___PESS2NAME____.handlers"
-								@update:model-value="model.ValCodpess2.fnUpdateValue" />
+								v-on="controls.COMOD___PESS2NAME____.handlers" />
 							<q-see-more-comod-pess2name
 								v-if="controls.COMOD___PESS2NAME____.seeMoreIsVisible"
 								v-bind="controls.COMOD___PESS2NAME____.seeMoreParams"
@@ -154,14 +148,11 @@
 							v-on="controls.COMOD___EQUIPREGISTNR.handlers"
 							:loading="controls.COMOD___EQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.COMOD___EQUIPREGISTNR.isVisible"
 								v-bind="controls.COMOD___EQUIPREGISTNR.props"
-								:model-value="model.ValCodequip.value"
-								v-on="controls.COMOD___EQUIPREGISTNR.handlers"
-								@update:model-value="model.ValCodequip.fnUpdateValue" />
+								v-on="controls.COMOD___EQUIPREGISTNR.handlers" />
 							<q-see-more-comod-equipregistnr
 								v-if="controls.COMOD___EQUIPREGISTNR.seeMoreIsVisible"
 								v-bind="controls.COMOD___EQUIPREGISTNR.seeMoreParams"
@@ -179,8 +170,7 @@
 							v-on="controls.COMOD___EQUIPDESIGNAT.handlers"
 							:loading="controls.COMOD___EQUIPDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.COMOD___EQUIPDESIGNAT.props"
 								:model-value="model.EquipValDesignat.value" />
@@ -195,8 +185,7 @@
 							v-on="controls.COMOD___EQUIPFREQUENC.handlers"
 							:loading="controls.COMOD___EQUIPFREQUENC.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.COMOD___EQUIPFREQUENC.isVisible"
 								v-bind="controls.COMOD___EQUIPFREQUENC.props"
@@ -214,12 +203,10 @@
 							v-on="controls.COMOD___LENDILENDINNR.handlers"
 							:loading="controls.COMOD___LENDILENDINNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.COMOD___LENDILENDINNR.isVisible"
-								v-bind="controls.COMOD___LENDILENDINNR"
-								:model-value="model.ValLendinnr.value"
+								v-bind="controls.COMOD___LENDILENDINNR.props"
 								@update:model-value="model.ValLendinnr.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -232,14 +219,13 @@
 							v-on="controls.COMOD___LENDISTART___.handlers"
 							:loading="controls.COMOD___LENDISTART___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.COMOD___LENDISTART___.isVisible"
-								v-bind="controls.COMOD___LENDISTART___"
-								format="DateTime"
+								v-bind="controls.COMOD___LENDISTART___.props"
 								:model-value="model.ValStart.value"
-								@update:model-value="model.ValStart.fnUpdateValue" />
+								@reset-icon-click="model.ValStart.fnUpdateValue(model.ValStart.originalValue ?? new Date())"
+								@update:model-value="model.ValStart.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -251,14 +237,13 @@
 							v-on="controls.COMOD___LENDIWARNDT__.handlers"
 							:loading="controls.COMOD___LENDIWARNDT__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.COMOD___LENDIWARNDT__.isVisible"
-								v-bind="controls.COMOD___LENDIWARNDT__"
-								format="DateTime"
+								v-bind="controls.COMOD___LENDIWARNDT__.props"
 								:model-value="model.ValWarndt.value"
-								@update:model-value="model.ValWarndt.fnUpdateValue" />
+								@reset-icon-click="model.ValWarndt.fnUpdateValue(model.ValWarndt.originalValue ?? new Date())"
+								@update:model-value="model.ValWarndt.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -270,14 +255,13 @@
 							v-on="controls.COMOD___LENDIEND_____.handlers"
 							:loading="controls.COMOD___LENDIEND_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.COMOD___LENDIEND_____.isVisible"
-								v-bind="controls.COMOD___LENDIEND_____"
-								format="DateTime"
+								v-bind="controls.COMOD___LENDIEND_____.props"
 								:model-value="model.ValEnd.value"
-								@update:model-value="model.ValEnd.fnUpdateValue" />
+								@reset-icon-click="model.ValEnd.fnUpdateValue(model.ValEnd.originalValue ?? new Date())"
+								@update:model-value="model.ValEnd.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -291,18 +275,14 @@
 							v-on="controls.COMOD___LENDIOBSERVAT.handlers"
 							:loading="controls.COMOD___LENDIOBSERVAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.COMOD___LENDIOBSERVAT.isVisible"
+								v-bind="controls.COMOD___LENDIOBSERVAT.props"
 								id="COMOD___LENDIOBSERVAT"
-								size="xxlarge"
 								:model-value="model.ValObservat.value"
 								:rows="3"
 								:cols="85"
-								:is-required="controls.COMOD___LENDIOBSERVAT.isRequired"
-								:readonly="controls.COMOD___LENDIOBSERVAT.readonly"
-								:placeholder="controls.COMOD___LENDIOBSERVAT.placeholder"
 								@update:model-value="model.ValObservat.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -391,15 +371,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'COMOD',
-						location: 'form-COMOD',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'COMOD',
+					location: 'form-COMOD',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -445,6 +423,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -517,8 +497,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -600,7 +581,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -654,21 +635,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -679,25 +645,19 @@
 						id: 'COMOD___PESS1NAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
-						label: computed(() => this.Resources.LENDING18782),
-						userHelp: computed(() => this.Resources.____114843),
-						description: '',
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodpess1',
-							dependencyEvent: 'fieldChange:lendi.codpess1'
-						},
-						dependentFields: () => {
-							return {
-								set 'pess1.codpesso'(value) { vm.model.ValCodpess1.updateValue(value) },
-								set 'pess1.name'(value) { vm.model.TablePess1Name.updateValue(value) },
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._114828953),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1148_VERBOSE59791),
 							}
 						},
+						label: computed(() => this.Resources.LENDING18782),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -706,6 +666,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodpess1',
+							dependencyEvent: 'fieldChange:lendi.codpess1'
+						},
+						dependentFields: () => ({
+							set 'pess1.codpesso'(value) { vm.model.ValCodpess1.updateValue(value) },
+							set 'pess1.name'(value) { vm.model.TablePess1Name.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					COMOD___PESS2NAME____: new fieldControlClass.LookupControl({
 						modelField: 'TablePess2Name',
@@ -713,25 +683,15 @@
 						id: 'COMOD___PESS2NAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.____210674),
+							},
+						},
 						label: computed(() => this.Resources.BORROWER_22692),
-						userHelp: computed(() => this.Resources.____210674),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodpess2',
-							dependencyEvent: 'fieldChange:lendi.codpess2'
-						},
-						dependentFields: () => {
-							return {
-								set 'pess2.codpesso'(value) { vm.model.ValCodpess2.updateValue(value) },
-								set 'pess2.name'(value) { vm.model.TablePess2Name.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -740,6 +700,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodpess2',
+							dependencyEvent: 'fieldChange:lendi.codpess2'
+						},
+						dependentFields: () => ({
+							set 'pess2.codpesso'(value) { vm.model.ValCodpess2.updateValue(value) },
+							set 'pess2.name'(value) { vm.model.TablePess2Name.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					COMOD___EQUIPREGISTNR: new fieldControlClass.LookupControl({
 						modelField: 'TableEquipRegistnr',
@@ -747,12 +717,35 @@
 						id: 'COMOD___EQUIPREGISTNR',
 						name: 'REGISTNR',
 						size: 'medium',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.____409508),
+							},
+						},
 						label: computed(() => this.Resources.REGISTRATION_NO_06209),
-						userHelp: computed(() => this.Resources.____409508),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodequip',
+							dependencyEvent: 'fieldChange:lendi.codequip'
+						},
+						dependentFields: () => ({
+							set 'equip.codequip'(value) { vm.model.ValCodequip.updateValue(value) },
+							set 'equip.registnr'(value) { vm.model.TableEquipRegistnr.updateValue(value) },
+							set 'equip.designat'(value) { vm.model.EquipValDesignat.updateValue(value) },
+							set 'equip.frequenc'(value) { vm.model.EquipValFrequenc.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'EQUIP',
 						mustBeFilled: true,
 						controlLimits: [
 							{
@@ -762,28 +755,6 @@
 								fnValueSelector: (model) => model.ValCodpess1.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodequip',
-							dependencyEvent: 'fieldChange:lendi.codequip'
-						},
-						dependentFields: () => {
-							return {
-								set 'equip.codequip'(value) { vm.model.ValCodequip.updateValue(value) },
-								set 'equip.registnr'(value) { vm.model.TableEquipRegistnr.updateValue(value) },
-								set 'equip.designat'(value) { vm.model.EquipValDesignat.updateValue(value) },
-								set 'equip.frequenc'(value) { vm.model.EquipValFrequenc.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'EQUIP',
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					COMOD___EQUIPDESIGNAT: new fieldControlClass.StringControl({
 						modelField: 'EquipValDesignat',
@@ -793,56 +764,51 @@
 						id: 'COMOD___EQUIPDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.EQUIPMENT03632),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
 						labelId: 'label_COMOD___EQUIPDESIGNAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					COMOD___EQUIPFREQUENC: new fieldControlClass.ArrayNumberControl({
 						modelField: 'EquipValFrequenc',
 						valueChangeEvent: 'fieldChange:equip.frequenc',
-						maxIntegers: 1,
-						maxDecimals: 0,
 						dependentModelField: 'ValCodequip',
 						dependentChangeEvent: 'fieldChange:lendi.codequip',
 						id: 'COMOD___EQUIPFREQUENC',
 						name: 'FREQUENC',
 						size: 'medium',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___1438719),
+							},
+						},
 						label: computed(() => this.Resources.LOAN_FREQUENCY00930),
-						userHelp: computed(() => this.Resources.___1438719),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 2,
+						maxDecimals: 0,
 						arrayName: 'FreqEmpr',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					COMOD___LENDILENDINNR: new fieldControlClass.NumberControl({
 						modelField: 'ValLendinnr',
 						valueChangeEvent: 'fieldChange:lendi.lendinnr',
-						maxIntegers: 6,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'COMOD___LENDILENDINNR',
 						name: 'LENDINNR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.LENDING_NO14727),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 6,
+						maxDecimals: 0,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -853,12 +819,10 @@
 						id: 'COMOD___LENDISTART___',
 						name: 'START',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.START_59353),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						format: 'dateTime',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -869,17 +833,13 @@
 						id: 'COMOD___LENDIWARNDT__',
 						name: 'WARNDT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.WARNING52043),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					COMOD___LENDIEND_____: new fieldControlClass.DateControl({
 						modelField: 'ValEnd',
@@ -887,17 +847,13 @@
 						id: 'COMOD___LENDIEND_____',
 						name: 'END',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.END47577),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					COMOD___LENDIOBSERVAT: new fieldControlClass.StringControl({
 						modelField: 'ValObservat',
@@ -905,15 +861,9 @@
 						id: 'COMOD___LENDIOBSERVAT',
 						name: 'OBSERVAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.OBSERVATION37880),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
-						labelId: 'label_COMOD___LENDIOBSERVAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -987,7 +937,7 @@
 						/** The foreign key to the PESS2 table */
 						get pess2() { return vm.model.ValCodpess2 },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1083,6 +1033,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1122,6 +1080,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1248,6 +1214,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR COMOD]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1263,6 +1245,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS COMOD]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

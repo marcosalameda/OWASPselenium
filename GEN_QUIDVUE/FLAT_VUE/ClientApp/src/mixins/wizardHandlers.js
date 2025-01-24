@@ -1,4 +1,4 @@
-﻿import { postData } from '@/api/network'
+﻿import { postData, fetchData } from '@/api/network'
 
 /*****************************************************************
  * This mixin defines methods to be reused by wizard components. *
@@ -119,6 +119,36 @@ export default {
 			this.$router.push({ name: stepRoute, params })
 		},
 
+
+		/**
+		 * Handles the click of a step in the wizard.
+		 * @param {string} clickedStep - The route of the step that was clicked.
+		 */
+		async stepClicked(clickedStep)
+		{	
+			const handler =  `${this.wizardData.wizardId}_GetPath`
+			const params = {
+				formId: this.primaryKeyValue,
+			}
+			
+			await fetchData(this.formArea, handler, params, (data, request) => {
+				if (!request.data.Success || !Array.isArray(data.Path))
+					return
+	
+				const path = data.Path
+				this.applyChanges(false).then((success) => {
+					if (path.includes(clickedStep) && success)
+					{
+						this.handleStepChange(clickedStep, path)
+					}
+					else {
+						this.$eventTracker.addError({ origin: 'stepClicked (wizardHandlers)', message: `Error while going changing from step "${this.formInfo.name}" in wizard "${this.wizardData.wizardId}".` })
+					}
+
+				})
+			})
+		},
+
 		/**
 		 * Clears the values of the current wizard step from the DB.
 		 * @param {function} callback A function to be called after the ajax request completes (optional)
@@ -169,7 +199,12 @@ export default {
 			else if (saveData)
 			{
 				if (this.isEditable)
-					this.applyChanges(false).then((success) => { if(success) goBack() })
+				{
+					this.applyChanges(false).then((success) => {
+						if (success)
+							goBack()
+					})
+				}
 				else
 					goBack()
 			}
@@ -209,7 +244,12 @@ export default {
 			}
 
 			if (this.isEditable)
-				this.applyChanges(false).then((success) => { if(success) goForward() })
+			{
+				this.applyChanges(false).then((success) => {
+					if (success)
+						goForward()
+				})
+			}
 			else
 				goForward()
 		}

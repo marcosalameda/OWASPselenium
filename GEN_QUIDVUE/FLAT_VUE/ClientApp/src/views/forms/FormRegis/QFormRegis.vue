@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -117,12 +117,12 @@
 										v-on="controls.REGIS___REGISNAME____.handlers"
 										:loading="controls.REGIS___REGISNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.REGIS___REGISNAME____.props"
 											:model-value="model.ValName.value"
-											@update:model-value="model.ValName.fnUpdateValue" />
+											@blur="onBlur(controls.REGIS___REGISNAME____, model.ValName.value)"
+											@change="model.ValName.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -134,12 +134,12 @@
 										v-on="controls.REGIS___REGISNIF_____.handlers"
 										:loading="controls.REGIS___REGISNIF_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.REGIS___REGISNIF_____.props"
 											:model-value="model.ValNif.value"
-											@update:model-value="model.ValNif.fnUpdateValue" />
+											@blur="onBlur(controls.REGIS___REGISNIF_____, model.ValNif.value)"
+											@change="model.ValNif.fnUpdateValueOnChange" />
 									</base-input-structure>
 									<base-input-structure
 										class="i-text"
@@ -147,12 +147,12 @@
 										v-on="controls.REGIS___REGISTELEPHON.handlers"
 										:loading="controls.REGIS___REGISTELEPHON.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.REGIS___REGISTELEPHON.props"
 											:model-value="model.ValTelephon.value"
-											@update:model-value="model.ValTelephon.fnUpdateValue" />
+											@blur="onBlur(controls.REGIS___REGISTELEPHON, model.ValTelephon.value)"
+											@change="model.ValTelephon.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -164,12 +164,12 @@
 										v-on="controls.REGIS___REGISEMAIL1__.handlers"
 										:loading="controls.REGIS___REGISEMAIL1__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.REGIS___REGISEMAIL1__.props"
 											:model-value="model.ValEmail1.value"
-											@update:model-value="model.ValEmail1.fnUpdateValue" />
+											@blur="onBlur(controls.REGIS___REGISEMAIL1__, model.ValEmail1.value)"
+											@change="model.ValEmail1.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -183,12 +183,12 @@
 										v-on="controls.REGIS___REGISEMAIL2__.handlers"
 										:loading="controls.REGIS___REGISEMAIL2__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.REGIS___REGISEMAIL2__.props"
 											:model-value="model.ValEmail2.value"
-											@update:model-value="model.ValEmail2.fnUpdateValue" />
+											@blur="onBlur(controls.REGIS___REGISEMAIL2__, model.ValEmail2.value)"
+											@change="model.ValEmail2.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -204,12 +204,11 @@
 							v-on="controls.REGIS___PSEUDOBRIGATO.handlers"
 							:loading="controls.REGIS___PSEUDOBRIGATO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-static-text
 								v-if="controls.REGIS___PSEUDOBRIGATO.isVisible"
 								id="REGIS___PSEUDOBRIGATO"
-								size="xxlarge"
+								:size="controls.REGIS___PSEUDOBRIGATO.size"
 								:text="controls.REGIS___PSEUDOBRIGATO.label"
 								supports-html />
 						</base-input-structure>
@@ -296,15 +295,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'REGIS',
-						location: 'form-REGIS',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'REGIS',
+					location: 'form-REGIS',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -350,6 +347,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -422,8 +421,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -505,7 +505,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -559,21 +559,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -582,12 +567,9 @@
 						id: 'REGIS___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.REGISTRATION_IN_THE_64490),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
 						mustBeFilled: true,
@@ -600,10 +582,7 @@
 						id: 'REGIS___REGISNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.NAME31974),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'REGIS___PSEUDNOVOGR01',
@@ -619,10 +598,7 @@
 						id: 'REGIS___REGISNIF_____',
 						name: 'NIF',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.TAX_ID_NO_58377),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'REGIS___PSEUDNOVOGR01',
@@ -638,16 +614,12 @@
 						id: 'REGIS___REGISTELEPHON',
 						name: 'TELEPHON',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.TELEPHONE28697),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'REGIS___PSEUDNOVOGR01',
 						maxLength: 15,
 						labelId: 'label_REGIS___REGISTELEPHON',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -657,16 +629,12 @@
 						id: 'REGIS___REGISEMAIL1__',
 						name: 'EMAIL1',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.EMAIL_44228),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'REGIS___PSEUDNOVOGR01',
 						maxLength: 254,
 						labelId: 'label_REGIS___REGISEMAIL1__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -676,16 +644,12 @@
 						id: 'REGIS___REGISEMAIL2__',
 						name: 'EMAIL2',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ALTERNATIVE_EMAIL17444),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'REGIS___PSEUDNOVOGR01',
 						maxLength: 254,
 						labelId: 'label_REGIS___REGISEMAIL2__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -695,11 +659,9 @@
 						size: 'xxlarge',
 						hasLabel: false,
 						label: computed(() => this.Resources.AT_REQUIRED65277),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						supportsHtml: true,
 						controlLimits: [
 						],
 					}, this),
@@ -742,7 +704,7 @@
 						/** The primary key of the REGIS table */
 						get regis() { return vm.model.ValCodregis },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -838,6 +800,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -877,6 +847,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1003,6 +981,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR REGIS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1018,6 +1012,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS REGIS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

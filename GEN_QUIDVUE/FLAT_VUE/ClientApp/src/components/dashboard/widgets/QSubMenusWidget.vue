@@ -5,7 +5,8 @@
 		<div 
 			class="q-submenus-widget__links" 
 			v-if="!isEmpty(widget.MenuEntry.Children)">
-			<div 
+			<a
+				href="javascript:void(0)"
 				class="q-submenus-widget__link"
 				v-for="(child, index) in widget.MenuEntry.Children" 
 				:key="index"
@@ -16,7 +17,7 @@
 					v-bind="getMenuIcon(child)"
 				></q-icon>
 				{{ Resources[child.Title] }}
-			</div>
+			</a>
 		</div>
 
 		<div class="q-submenus-widget__footer">

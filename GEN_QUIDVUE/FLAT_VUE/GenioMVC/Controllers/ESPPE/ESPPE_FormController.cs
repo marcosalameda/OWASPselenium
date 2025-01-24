@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Esppe;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ESPPE_CANCEL = new NavigationLocation("PERSON_SPECIALTY62734", "Esppe_Cancel", "Esppe") { vueRouteName = "form-ESPPE", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ESPPE_SHOW = new NavigationLocation("PERSON_SPECIALTY62734", "Esppe_Show", "Esppe") { vueRouteName = "form-ESPPE", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ESPPE_NEW = new NavigationLocation("PERSON_SPECIALTY62734", "Esppe_New", "Esppe") { vueRouteName = "form-ESPPE", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ESPPE_EDIT = new NavigationLocation("PERSON_SPECIALTY62734", "Esppe_Edit", "Esppe") { vueRouteName = "form-ESPPE", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ESPPE_DUPLICATE = new NavigationLocation("PERSON_SPECIALTY62734", "Esppe_Duplicate", "Esppe") { vueRouteName = "form-ESPPE", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ESPPE_DELETE = new NavigationLocation("PERSON_SPECIALTY62734", "Esppe_Delete", "Esppe") { vueRouteName = "form-ESPPE", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ESPPE_CANCEL = new("PERSON_SPECIALTY62734", "Esppe_Cancel", "Esppe") { vueRouteName = "form-ESPPE", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ESPPE_SHOW = new("PERSON_SPECIALTY62734", "Esppe_Show", "Esppe") { vueRouteName = "form-ESPPE", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ESPPE_NEW = new("PERSON_SPECIALTY62734", "Esppe_New", "Esppe") { vueRouteName = "form-ESPPE", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ESPPE_EDIT = new("PERSON_SPECIALTY62734", "Esppe_Edit", "Esppe") { vueRouteName = "form-ESPPE", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ESPPE_DUPLICATE = new("PERSON_SPECIALTY62734", "Esppe_Duplicate", "Esppe") { vueRouteName = "form-ESPPE", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ESPPE_DELETE = new("PERSON_SPECIALTY62734", "Esppe_Delete", "Esppe") { vueRouteName = "form-ESPPE", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Esppe_ModalDBEdit()
-		{
-			Esppe_ViewModel model = new Esppe_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Esppe_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Esppe Multiform actions
-
-		//
-		// GET /Esppe/MFEsppe_New
-		[HttpGet]
-		[ActionName("MFEsppe_New")]
-		public ActionResult MFEsppe_New()
-		{
-			var model = new Esppe_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_ESPPE_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("esppe", model.ValCodesppe);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFEsppe_New_GET()
-		{
-			return MFEsppe_New();
-		}
-
-		//
-		// GET /Esppe/MFEsppe_Edit
-		[HttpGet]
-		[ActionName("MFEsppe_Edit")]
-		public ActionResult MFEsppe_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("ESPPE", "EDIT", new { id = id, partialView = "MFEsppe", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFEsppe_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFEsppe_Edit(requestModel);
-		}
-
-		//
-		// GET /Esppe/MFEsppe_Cancel
-		[ActionName("MFEsppe_Cancel")]
-		public ActionResult MFEsppe_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Esppe(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Esppe/MFEsppe_Save
-		[HttpPost]
-		[ActionName("MFEsppe_Save")]
-		public JsonResult MFEsppe_Save(Esppe_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFEsppe_Save",
-				ViewName = "MFEsppe",
-				AreaName = "esppe"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Esppe/MFEsppe_Delete
-		[HttpPost]
-		[ActionName("MFEsppe_Delete")]
-		public JsonResult MFEsppe_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFEsppe_Delete",
-				ViewName = "MFEsppe",
-				AreaName = "esppe",
-				Location = ACTION_ESPPE_EDIT
-			};
-
-			var model = new Esppe_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Esppe/Esppe_PessoValName
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_pesso")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,9 +422,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Esppe_PessoValName_ViewModel model = new Esppe_PessoValName_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodesppe = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -590,6 +464,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_speci")))
@@ -603,21 +478,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -625,12 +485,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Esppe_SpeciValEspecial_ViewModel model = new Esppe_SpeciValEspecial_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodesppe = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Esppe/Esppe_SaveEdit
 		[HttpPost]

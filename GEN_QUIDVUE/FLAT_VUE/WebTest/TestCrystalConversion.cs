@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 
 using CSGenio.framework;
 
@@ -10,45 +9,44 @@ namespace WebTest
     ///This is a test class for Test and is intended
     ///to contain all Test Unit Tests
     ///</summary>
-    [TestClass()]
     public class TestConversaoCrystal
     {
 
         /// <summary>
         /// Teste aos metodos de To(xxx) que devem retornar uma excepção de operação invalida
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToMethods()
         {
-            Test.AssertThrows<FrameworkException>(() =>
+            Assert.Throws<FrameworkException>(() =>
             {
                 CrystalConversion.ToString(null);
             });
-            Test.AssertThrows<FrameworkException>(() =>
+            Assert.Throws<FrameworkException>(() =>
             {
                 CrystalConversion.ToInteger(null);
             });
-            Test.AssertThrows<FrameworkException>(() =>
+            Assert.Throws<FrameworkException>(() =>
             {
                 CrystalConversion.ToNumeric(null);
             });
-            Test.AssertThrows<FrameworkException>(() =>
+            Assert.Throws<FrameworkException>(() =>
             {
                 CrystalConversion.ToDateTime(null);
             });
-            Test.AssertThrows<FrameworkException>(() =>
+            Assert.Throws<FrameworkException>(() =>
             {
                 CrystalConversion.ToKey(null);
             });
-            Test.AssertThrows<FrameworkException>(() =>
+            Assert.Throws<FrameworkException>(() =>
             {
                 CrystalConversion.ToLogic(null);
             });
-            Test.AssertThrows<FrameworkException>(() =>
+            Assert.Throws<FrameworkException>(() =>
             {
                 CrystalConversion.ToBinary(null);
             });
-            Test.AssertThrows<FrameworkException>(() =>
+            Assert.Throws<FrameworkException>(() =>
             {
                 CrystalConversion.ToInternal(null, FieldFormatting.CARACTERES);
             });
@@ -57,7 +55,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromString
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromString()
         {
             string res = null;
@@ -88,7 +86,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromInteger
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromInteger()
         {
             // Como CrystalConversion.FromInteger é essencialmente um Convert.ToString(int),
@@ -109,7 +107,7 @@ namespace WebTest
         /// <summary>
         ///Teste à função FromDateTime
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromDateTime()
         {
             string res = null;
@@ -124,7 +122,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromLogic
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromLogic()
         {
             string res = null;
@@ -148,7 +146,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromKey
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromKey()
         {
             string res = null;
@@ -177,7 +175,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromBinary
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromBinary()
         {
         }
@@ -185,7 +183,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromInternal
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromInterno()
         {
             string res = null;
@@ -264,7 +262,7 @@ namespace WebTest
             //
 
             // null --> exception
-            Test.AssertThrows<Exception>(() =>
+            Assert.Throws<NullReferenceException>(() =>
                 CrystalConversion.FromInternal(null, FieldFormatting.DATA)
             );
 
@@ -273,7 +271,7 @@ namespace WebTest
             Assert.AreEqual("", res);
 
             // empty string --> NULL should throw exception
-            Test.AssertThrows<FrameworkException>(() =>
+            Assert.Throws<FrameworkException>(() =>
                 CrystalConversion.FromInternal("", FieldFormatting.DATA)
             );
 

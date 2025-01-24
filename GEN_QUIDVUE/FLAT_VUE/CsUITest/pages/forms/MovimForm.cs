@@ -1,55 +1,34 @@
-namespace quidgest.uitests.pages;
+﻿using quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
 
 [System.CodeDom.Compiler.GeneratedCode("Genio", "")]
-public class MovimForm: PageObject {
-
-	private By formLocator = By.CssSelector("#form-container");
-	private IWebElement form => driver.FindElement(formLocator);
-
+public class MovimForm : Form
+{
 	/// <summary>
 	/// Change
 	/// </summary>
-	public DateInputControl MovimDhmudanc => new DateInputControl(driver, formLocator, "#MOVIM___MOVIMDHMUDANC", "dd/MM/yyyy HH:mm");
+	public DateInputControl MovimDhmudanc => new DateInputControl(driver, ContainerLocator, "#MOVIM___MOVIMDHMUDANC", "dd/MM/yyyy HH:mm");
+
 	/// <summary>
 	/// Registration No.
 	/// </summary>
-	public LookupControl EquipRegistnr => new LookupControl(driver, formLocator, "container-MOVIM___EQUIPREGISTNR");
-	public SeeMorePage EquipRegistnrSeeMorePage => new SeeMorePage(driver, "MOVIM", "EQUIP.REGISTNR");
+	public LookupControl EquipRegistnr => new LookupControl(driver, ContainerLocator, "container-MOVIM___EQUIPREGISTNR");
+	public SeeMorePage EquipRegistnrSeeMorePage => new SeeMorePage(driver, "MOVIM", "MOVIM___EQUIPREGISTNR");
+
 	/// <summary>
 	/// Room No.
 	/// </summary>
-	public LookupControl RoomsRoomnr => new LookupControl(driver, formLocator, "container-MOVIM___ROOMSROOMNR__");
-	public SeeMorePage RoomsRoomnrSeeMorePage => new SeeMorePage(driver, "MOVIM", "ROOMS.ROOMNR");
+	public LookupControl RoomsRoomnr => new LookupControl(driver, ContainerLocator, "container-MOVIM___ROOMSROOMNR__");
+	public SeeMorePage RoomsRoomnrSeeMorePage => new SeeMorePage(driver, "MOVIM", "MOVIM___ROOMSROOMNR__");
+
 	/// <summary>
 	/// Observation
 	/// </summary>
-	public BaseInputControl MovimObservat => new BaseInputControl(driver, formLocator, "#MOVIM___MOVIMOBSERVAT");
+	public BaseInputControl MovimObservat => new BaseInputControl(driver, ContainerLocator, "#MOVIM___MOVIMOBSERVAT");
 
-	private IWebElement saveBtn => form.FindElement(By.CssSelector("#bottom-save-btn"));
-	private IWebElement cancelBtn => form.FindElement(By.CssSelector("#bottom-cancel-btn"));
-	public FORM_MODE mode {get; private set;}
-
-	public MovimForm(IWebDriver driver, FORM_MODE mode, By subformLocator=null): base(driver) {
-		this.mode = mode;
-		formLocator = subformLocator ?? formLocator;
-
-		wait.Until(c => form);
-		WaitForLoading();
-	}
-
-	public void WaitForLoading()
-	{
-        wait.Until(c => form.FindElement(ByData.Key("MOVIM")).GetAttribute("data-loading") != "true");
-    }
-
-	public void Save() {
-		WaitForLoading();
-		saveBtn.Click();
-	}
-
-	public void Cancel() {
-		WaitForLoading();
-		cancelBtn.Click();
-	}
-
+	public MovimForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "MOVIM", containerLocator: containerLocator) { }
 }

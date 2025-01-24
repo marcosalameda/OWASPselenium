@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Cntry _cntry;
 		[DisplayName("Cntry")]
 		[ShouldSerialize("Cntry")]
-		public virtual Cntry Cntry { 
-			get { 
+		public virtual Cntry Cntry {
+			get {
 				if (!this.isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodcntry) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodcntry))))
 					_cntry = Models.Cntry.Find(ValCodcntry, m_userContext, Identifier, _fieldsToSerialize);
 				if (_cntry == null)
 					_cntry = new Models.Cntry(m_userContext, true, _fieldsToSerialize);
 				return _cntry;
 			}
-			set { _cntry = value; } 
+			set { _cntry = value; }
 		}
-		
+
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Cmpny _cmpny;
 		[DisplayName("Cmpny")]
 		[ShouldSerialize("Cmpny")]
-		public virtual Cmpny Cmpny { 
-			get { 
+		public virtual Cmpny Cmpny {
+			get {
 				if (!this.isEmptyModel && (_cmpny == null || (!string.IsNullOrEmpty(ValCodempre) && (_cmpny.isEmptyModel || _cmpny.klass.QPrimaryKey != ValCodempre))))
 					_cmpny = Models.Cmpny.Find(ValCodempre, m_userContext, Identifier, _fieldsToSerialize);
 				if (_cmpny == null)
 					_cmpny = new Models.Cmpny(m_userContext, true, _fieldsToSerialize);
 				return _cmpny;
 			}
-			set { _cmpny = value; } 
+			set { _cmpny = value; }
 		}
-		
+
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -79,17 +79,17 @@ namespace GenioMVC.Models
 		private Pesso _pesso;
 		[DisplayName("Pesso")]
 		[ShouldSerialize("Pesso")]
-		public virtual Pesso Pesso { 
-			get { 
+		public virtual Pesso Pesso {
+			get {
 				if (!this.isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
 					_pesso = Models.Pesso.Find(ValCodpesso, m_userContext, Identifier, _fieldsToSerialize);
 				if (_pesso == null)
 					_pesso = new Models.Pesso(m_userContext, true, _fieldsToSerialize);
 				return _pesso;
 			}
-			set { _pesso = value; } 
+			set { _pesso = value; }
 		}
-		
+
 
 		[DisplayName("BY OMISSION")]
 		/// <summary>Field : "BY OMISSION" Tipo: "CE" Formula:  ""</summary>
@@ -98,23 +98,23 @@ namespace GenioMVC.Models
 		private Ware1 _ware1;
 		[DisplayName("Ware1")]
 		[ShouldSerialize("Ware1")]
-		public virtual Ware1 Ware1 { 
-			get { 
+		public virtual Ware1 Ware1 {
+			get {
 				if (!this.isEmptyModel && (_ware1 == null || (!string.IsNullOrEmpty(ValCodwareh) && (_ware1.isEmptyModel || _ware1.klass.QPrimaryKey != ValCodwareh))))
 					_ware1 = Models.Ware1.Find(ValCodwareh, m_userContext, Identifier, _fieldsToSerialize);
 				if (_ware1 == null)
 					_ware1 = new Models.Ware1(m_userContext, true, _fieldsToSerialize);
 				return _ware1;
 			}
-			set { _ware1 = value; } 
+			set { _ware1 = value; }
 		}
-		
+
 
 		[DisplayName("No.")]
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Indoc.ValDocumenr")]
 		[NumericAttribute(0)]
-		public decimal? ValDocumenr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDocumenr, 0)); } set { klass.ValDocumenr = Convert.ToDouble(value); } }
+		public decimal? ValDocumenr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDocumenr, 0)); } set { klass.ValDocumenr = Convert.ToDecimal(value); } }
 
 		[DisplayName("Date")]
 		/// <summary>Field : "Date" Tipo: "DT" Formula:  ""</summary>
@@ -138,19 +138,19 @@ namespace GenioMVC.Models
 		public Indoc(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAindoc(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Indoc(UserContext userContext, CSGenioAindoc val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAindoc csgenioa)
@@ -187,7 +187,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Language
 	/// </summary>
-	public class CSGenioAlang2 : DbArea	{
+	public class CSGenioAlang2 : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -238,7 +239,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodlang, value); }
 		}
 
-
 		/// <summary>Field : "Language" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldLangua { get { return m_fldLangua; } }
 		private static FieldRef m_fldLangua = new FieldRef("lang2", "langua");
@@ -250,7 +250,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldLangua, value); }
 		}
 
-
 		/// <summary>Field : "Acronym" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldAcron { get { return m_fldAcron; } }
 		private static FieldRef m_fldAcron = new FieldRef("lang2", "acron");
@@ -261,7 +260,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldAcron); }
 			set { insertNameValueField(FldAcron, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -304,23 +302,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAlang2> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAlang2> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAlang2>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -369,7 +350,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX LANG2]/

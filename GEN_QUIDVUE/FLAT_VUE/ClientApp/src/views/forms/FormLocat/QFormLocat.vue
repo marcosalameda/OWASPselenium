@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -117,14 +117,11 @@
 										v-on="controls.LOCAT___ENTITNAME____.handlers"
 										:loading="controls.LOCAT___ENTITNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.LOCAT___ENTITNAME____.isVisible"
 											v-bind="controls.LOCAT___ENTITNAME____.props"
-											:model-value="model.ValCodentit.value"
-											v-on="controls.LOCAT___ENTITNAME____.handlers"
-											@update:model-value="model.ValCodentit.fnUpdateValue" />
+											v-on="controls.LOCAT___ENTITNAME____.handlers" />
 										<q-see-more-locat-entitname
 											v-if="controls.LOCAT___ENTITNAME____.seeMoreIsVisible"
 											v-bind="controls.LOCAT___ENTITNAME____.seeMoreParams"
@@ -142,14 +139,11 @@
 										v-on="controls.LOCAT___FACILNAME____.handlers"
 										:loading="controls.LOCAT___FACILNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.LOCAT___FACILNAME____.isVisible"
 											v-bind="controls.LOCAT___FACILNAME____.props"
-											:model-value="model.ValCodfacil.value"
-											v-on="controls.LOCAT___FACILNAME____.handlers"
-											@update:model-value="model.ValCodfacil.fnUpdateValue" />
+											v-on="controls.LOCAT___FACILNAME____.handlers" />
 										<q-see-more-locat-facilname
 											v-if="controls.LOCAT___FACILNAME____.seeMoreIsVisible"
 											v-bind="controls.LOCAT___FACILNAME____.seeMoreParams"
@@ -167,12 +161,12 @@
 										v-on="controls.LOCAT___LOCATGLN_____.handlers"
 										:loading="controls.LOCAT___LOCATGLN_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.LOCAT___LOCATGLN_____.props"
 											:model-value="model.ValGln.value"
-											@update:model-value="model.ValGln.fnUpdateValue" />
+											@blur="onBlur(controls.LOCAT___LOCATGLN_____, model.ValGln.value)"
+											@change="model.ValGln.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -183,8 +177,7 @@
 									<q-table
 										v-show="controls.LOCAT___PSEUDLOCALEXT.isVisible"
 										v-bind="controls.LOCAT___PSEUDLOCALEXT"
-										v-on="controls.LOCAT___PSEUDLOCALEXT.handlers">
-									</q-table>
+										v-on="controls.LOCAT___PSEUDLOCALEXT.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.LOCAT___PSEUDLOCALEXT"
 										v-on="controls.LOCAT___PSEUDLOCALEXT.handlers" />
@@ -277,15 +270,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'LOCAT',
-						location: 'form-LOCAT',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'LOCAT',
+					location: 'form-LOCAT',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -331,6 +322,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -403,8 +396,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -486,7 +480,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -540,21 +534,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -563,15 +542,11 @@
 						id: 'LOCAT___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.LOCATION54790),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -581,26 +556,10 @@
 						id: 'LOCAT___ENTITNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.LEGAL_NAME42902),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LOCAT___PSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodentit',
-							dependencyEvent: 'fieldChange:locat.codentit'
-						},
-						dependentFields: () => {
-							return {
-								set 'entit.codentit'(value) { vm.model.ValCodentit.updateValue(value) },
-								set 'entit.name'(value) { vm.model.TableEntitName.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -609,6 +568,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodentit',
+							dependencyEvent: 'fieldChange:locat.codentit'
+						},
+						dependentFields: () => ({
+							set 'entit.codentit'(value) { vm.model.ValCodentit.updateValue(value) },
+							set 'entit.name'(value) { vm.model.TableEntitName.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					LOCAT___FACILNAME____: new fieldControlClass.LookupControl({
 						modelField: 'TableFacilName',
@@ -616,14 +585,26 @@
 						id: 'LOCAT___FACILNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.FACILITY_NAME19514),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LOCAT___PSEUDNOVOGR01',
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodfacil',
+							dependencyEvent: 'fieldChange:locat.codfacil'
+						},
+						dependentFields: () => ({
+							set 'facil.codfacil'(value) { vm.model.ValCodfacil.updateValue(value) },
+							set 'facil.name'(value) { vm.model.TableFacilName.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: ['entit', 'locat.codentit'],
@@ -632,24 +613,6 @@
 								fnValueSelector: (model) => model.ValCodentit.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodfacil',
-							dependencyEvent: 'fieldChange:locat.codfacil'
-						},
-						dependentFields: () => {
-							return {
-								set 'facil.codfacil'(value) { vm.model.ValCodfacil.updateValue(value) },
-								set 'facil.name'(value) { vm.model.TableFacilName.updateValue(value) },
-							}
-						},
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					LOCAT___LOCATGLN_____: new fieldControlClass.StringControl({
 						modelField: 'ValGln',
@@ -657,27 +620,20 @@
 						id: 'LOCAT___LOCATGLN_____',
 						name: 'GLN',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.GLOBAL_LOCATION_NUMB24637),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LOCAT___PSEUDNOVOGR01',
 						maxLength: 50,
 						labelId: 'label_LOCAT___LOCATGLN_____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					LOCAT___PSEUDLOCALEXT: new fieldControlClass.TableListControl({
 						id: 'LOCAT___PSEUDLOCALEXT',
 						name: 'LOCALEXT',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.LOCATION_EXTENSION_C33560),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LOCAT___PSEUDNOVOGR01',
@@ -728,7 +684,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -834,6 +790,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'LCEXT',
@@ -847,18 +804,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: LCEXT
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValGlnext',
 							defaultSearchColumnNameOriginal: 'ValGlnext',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValGlnext',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-LCEXT', 'changed-LOCAT'],
 						uuid: 'Locat_ValLocalext',
@@ -920,7 +871,7 @@
 						/** The foreign key to the FACIL table */
 						get facil() { return vm.model.ValCodfacil },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1016,6 +967,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1055,6 +1014,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1181,6 +1148,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR LOCAT]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1196,6 +1179,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS LOCAT]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

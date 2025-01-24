@@ -4,6 +4,7 @@ using System.Linq;
 
 using CSGenio.business;
 using CSGenio.persistence;
+using CSGenio.framework;
 using GenioMVC.Helpers;
 using GenioMVC.Models;
 using GenioMVC.Models.Navigation;
@@ -23,7 +24,7 @@ namespace GenioMVC.Controllers
 			if (p == null)
 			{
 				p = new Models.Sale(m_userContext);
-				p.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level);
+				p.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level);
 			}
 
 			Models.WizardStep nextStep = new Models.WizardStep();
@@ -74,7 +75,7 @@ namespace GenioMVC.Controllers
 			try
 			{
 				var model = Models.Sale.Find(formId, UserContext.Current);
-				model?.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level);
+				model?.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level);
 				Models.WizardStep nextStep = Vendawv_Fases_GetNextStep(model, currentStep);
 
 				return JsonOK(new { Route = "form-VENDAWV-" + nextStep.FormName });
@@ -130,7 +131,7 @@ namespace GenioMVC.Controllers
 
 				if (model != null)
 				{
-					model.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level);
+					model.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level);
 					Vendawv_Fases_CalculatePath(model, "", ref path);
 				}
 

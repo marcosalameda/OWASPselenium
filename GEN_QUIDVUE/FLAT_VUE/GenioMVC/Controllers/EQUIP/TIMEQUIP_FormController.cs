@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Equip;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_TIMEQUIP_CANCEL = new NavigationLocation("TIMELINE45857", "Timequip_Cancel", "Equip") { vueRouteName = "form-TIMEQUIP", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_TIMEQUIP_SHOW = new NavigationLocation("TIMELINE45857", "Timequip_Show", "Equip") { vueRouteName = "form-TIMEQUIP", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_TIMEQUIP_NEW = new NavigationLocation("TIMELINE45857", "Timequip_New", "Equip") { vueRouteName = "form-TIMEQUIP", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_TIMEQUIP_EDIT = new NavigationLocation("TIMELINE45857", "Timequip_Edit", "Equip") { vueRouteName = "form-TIMEQUIP", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_TIMEQUIP_DUPLICATE = new NavigationLocation("TIMELINE45857", "Timequip_Duplicate", "Equip") { vueRouteName = "form-TIMEQUIP", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_TIMEQUIP_DELETE = new NavigationLocation("TIMELINE45857", "Timequip_Delete", "Equip") { vueRouteName = "form-TIMEQUIP", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_TIMEQUIP_CANCEL = new("TIMELINE45857", "Timequip_Cancel", "Equip") { vueRouteName = "form-TIMEQUIP", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_TIMEQUIP_SHOW = new("TIMELINE45857", "Timequip_Show", "Equip") { vueRouteName = "form-TIMEQUIP", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_TIMEQUIP_NEW = new("TIMELINE45857", "Timequip_New", "Equip") { vueRouteName = "form-TIMEQUIP", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_TIMEQUIP_EDIT = new("TIMELINE45857", "Timequip_Edit", "Equip") { vueRouteName = "form-TIMEQUIP", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_TIMEQUIP_DUPLICATE = new("TIMELINE45857", "Timequip_Duplicate", "Equip") { vueRouteName = "form-TIMEQUIP", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_TIMEQUIP_DELETE = new("TIMELINE45857", "Timequip_Delete", "Equip") { vueRouteName = "form-TIMEQUIP", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Timequip_ModalDBEdit()
-		{
-			Timequip_ViewModel model = new Timequip_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Timequip_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Timequip Multiform actions
-
-		//
-		// GET /Equip/MFTimequip_New
-		[HttpGet]
-		[ActionName("MFTimequip_New")]
-		public ActionResult MFTimequip_New()
-		{
-			var model = new Timequip_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_TIMEQUIP_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("equip", model.ValCodequip);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFTimequip_New_GET()
-		{
-			return MFTimequip_New();
-		}
-
-		//
-		// GET /Equip/MFTimequip_Edit
-		[HttpGet]
-		[ActionName("MFTimequip_Edit")]
-		public ActionResult MFTimequip_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("TIMEQUIP", "EDIT", new { id = id, partialView = "MFTimequip", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFTimequip_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFTimequip_Edit(requestModel);
-		}
-
-		//
-		// GET /Equip/MFTimequip_Cancel
-		[ActionName("MFTimequip_Cancel")]
-		public ActionResult MFTimequip_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Equip(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Equip/MFTimequip_Save
-		[HttpPost]
-		[ActionName("MFTimequip_Save")]
-		public JsonResult MFTimequip_Save(Timequip_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFTimequip_Save",
-				ViewName = "MFTimequip",
-				AreaName = "equip"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Equip/MFTimequip_Delete
-		[HttpPost]
-		[ActionName("MFTimequip_Delete")]
-		public JsonResult MFTimequip_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFTimequip_Delete",
-				ViewName = "MFTimequip",
-				AreaName = "equip",
-				Location = ACTION_TIMEQUIP_EDIT
-			};
-
-			var model = new Timequip_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Equip/Timequip_ValReparaco
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_repar")))
@@ -552,30 +415,41 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
 			Timequip_ValReparaco_ViewModel model = new Timequip_ValReparaco_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -589,6 +463,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
@@ -608,9 +483,35 @@ namespace GenioMVC.Controllers
 			}
 
 			Timequip_ValPrimary_ViewModel model = new Timequip_ValPrimary_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -624,6 +525,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
@@ -643,12 +545,39 @@ namespace GenioMVC.Controllers
 			}
 
 			Timequip_ValSecundar_ViewModel model = new Timequip_ValSecundar_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodequip = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Equip/Timequip_SaveEdit
 		[HttpPost]

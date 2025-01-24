@@ -1,5 +1,6 @@
 ﻿<template>
 	<q-table-row
+		ref="rowComp"
 		v-bind="$attrs"
 		data-testid="parentRow"
 		:row="row"
@@ -17,8 +18,13 @@
 		:expand-icon="expandIcon"
 		:collapse-icon="collapseIcon"
 		:show-child-rows="row.showChildRows"
+		:navigated-row-key-path="navigatedRowKeyPath"
+		:texts="texts"
 		@toggle-show-children="setChildRowsVisibility"
-		@go-to-row="(...args) => $emit('go-to-row', ...args)" />
+		@go-to-row="(...args) => $emit('go-to-row', ...args)"
+		@navigate-row="(...args) => $emit('navigate-row', ...args)"
+		@loaded="$emit('loaded')"
+		@keydown="rowOnKeydown" />
 
 	<template v-if="showChildren">
 		<component :is="hasSubTable ? 'tr' : 'v-fragment'">
@@ -29,17 +35,21 @@
 				<component
 					:is="hasSubTable ? 'table' : 'v-fragment'"
 					class="c-table">
-					<q-table-header
-						v-if="hasSubTable"
-						:columns="columnHierarchy[columnsLevel + 1] ? columnHierarchy[columnsLevel + 1] : null"
-						:table-name="tableName + '_sub_' + row.rowKey"
-						:allow-column-filters="false"
-						:texts="$attrs.texts" />
-
+					<component
+						:is="hasSubTable ? 'thead' : 'v-fragment'"
+						class="c-table__head">
+						<q-table-header
+							v-if="hasSubTable"
+							:columns="columnHierarchy[columnsLevel + 1] ?? null"
+							:table-name="tableName + '_sub_' + row.rowKey"
+							:allow-column-filters="false"
+							:texts="texts" />
+					</component>
 					<component
 						:is="hasSubTable ? 'tbody' : 'v-fragment'"
 						class="c-table__body">
 						<q-tree-table-row
+							ref="subRowComp"
 							v-bind="$attrs"
 							v-for="childRow in row.children"
 							:key="childRow.rowKey"
@@ -57,8 +67,14 @@
 							:level="level + 1"
 							:expand-icon="expandIcon"
 							:collapse-icon="collapseIcon"
+							:navigated-row-key-path="navigatedRowKeyPath"
+							:texts="texts"
 							@toggle-show-children="setChildRowsVisibility"
-							@go-to-row="(...args) => $emit('go-to-row', ...args)" />
+							@go-to-row="(...args) => $emit('go-to-row', ...args)"
+							@navigate-row="(...args) => $emit('navigate-row', ...args)"
+							@loaded="onSubRowLoaded"
+							@unloaded="onSubRowUnloaded"
+							@sub-rows-loaded="$emit('sub-rows-loaded')" />
 					</component>
 				</component>
 			</component>
@@ -69,15 +85,23 @@
 <script>
 	import { defineAsyncComponent } from 'vue'
 
+	import { getParentMultiIndex } from '@/mixins/listFunctions.js'
+
 	export default {
 		name: 'QTreeTableRow',
 
-		emits: ['toggle-show-children', 'go-to-row'],
+		emits: [
+			'loaded',
+			'unloaded',
+			'toggle-show-children',
+			'go-to-row',
+			'sub-rows-loaded',
+			'navigate-row'
+		],
 
 		components: {
 			QTableRow: defineAsyncComponent(() => import('./QTableRow.vue')),
-			QTableHeader: defineAsyncComponent(() => import('./QTableHeader.vue')),
-			VFragment: defineAsyncComponent(() => import('@/components/VFragment.vue'))
+			QTableHeader: defineAsyncComponent(() => import('./QTableHeader.vue'))
 		},
 
 		inheritAttrs: false,
@@ -87,7 +111,7 @@
 			 * The key path composed of row keys leading to this particular row's position within a hierarchical data structure.
 			 */
 			rowKeyPath: {
-				type: [Array],
+				type: Array,
 				required: true
 			},
 
@@ -145,7 +169,24 @@
 			row: {
 				type: Object,
 				required: true
-			}
+			},
+
+			/**
+			 * Specifies the index of the row that is navigated to.
+			 * Can be a mulit-index which is the indexes for each level (in tree tables) separated by underscores.
+			 */
+			navigatedRowKeyPath: {
+				type: Array,
+				default: () => []
+			},
+
+			/**
+			 * Localized text strings to be used within the component (for labels, headers, etc.).
+			 */
+			texts: {
+				type: Object,
+				required: true
+			},
 		},
 
 		inject: ['getRowClasses', 'getRowTitle', 'rowIsValid', 'getCellDataDisplay', 'getRowCellDataTitles', 'isRowSelected', 'getRowCellDataTitles'],
@@ -154,7 +195,106 @@
 
 		data() {
 			return {
-				showChildren: false
+				showChildren: false,
+				subRowsLoaded: 0,
+				subRowsUnloaded: 0
+			}
+		},
+
+		unmounted() {
+			//Signal that the component is unloaded
+			this.$emit('unloaded')
+		},
+
+		methods: {
+			getParentMultiIndex,
+
+			/**
+			 * Set whether the sub-rows are visible
+			 * @param {object} eventData
+			 */
+			setChildRowsVisibility(eventData) {
+				if (eventData?.row?.rowKey === this.row.rowKey) this.showChildren = eventData.show
+				this.$emit('toggle-show-children', eventData)
+			},
+
+			/**
+			 * Get the row key path for a sub row
+			 * @param {object} row
+			 */
+			getSubRowKeyPath(row)
+			{
+				if(!this.rowKeyPath)
+					return []
+				return this.rowKeyPath.concat(row.rowKey)
+			},
+
+			/**
+			 * Called when a sub-row is mounted
+			 */
+			onSubRowLoaded()
+			{
+				this.subRowsLoaded++
+				if(this.subRowsLoaded === this.row?.children?.length)
+				{
+					this.subRowsLoaded = 0
+					this.$emit('sub-rows-loaded')
+				}
+			},
+
+			/**
+			 * Called when a sub-row is unmounted
+			 */
+			onSubRowUnloaded()
+			{
+				this.subRowsUnloaded++
+				if(this.subRowsUnloaded === this.row?.children?.length)
+				{
+					this.subRowsUnloaded = 0
+					this.$emit('sub-rows-loaded')
+				}
+			},
+
+			/**
+			 * Row keydown handler
+			 * @param event {object} Event object
+			 */
+			rowOnKeydown(event)
+			{
+				const key = event?.key
+				const element = event?.target
+				const rowComp = this.$refs?.rowComp
+				const rowElem = rowComp?.$refs?.rowElem
+
+				switch(key)
+				{
+					case "ArrowLeft":
+						// If collapsed, focus on parent row
+						if(!this.showChildren)
+						{
+							let index = rowElem.getAttribute('index')
+							this.$emit('navigate-row', this.getParentMultiIndex(index))
+						}
+					case "-":
+						event.preventDefault()
+						// When focused on the row element, if expanded, collapse
+						if(element === rowElem && this.showChildren)
+						{
+							event.stopPropagation()
+							rowComp?.setSubRowsVisibility(false)
+						}
+						break;
+					case "ArrowRight":
+					case "+":
+						event.preventDefault()
+						// When focused on the row element, if collapsed, expand
+						if(element === rowElem && !this.showChildren)
+						{
+							event.stopPropagation()
+							rowComp?.setSubRowsVisibility(true)
+						}
+						break;
+				}
 			}
 		},
 
@@ -180,24 +320,6 @@
 				if (!subLevelFirstDataColumn) return false
 
 				return currentLevelFirstDataColumn.area !== subLevelFirstDataColumn.area
-			}
-		},
-
-		methods: {
-			setChildRowsVisibility(eventData) {
-				if (eventData?.row?.rowKey === this.row.rowKey) this.showChildren = eventData.show
-				this.$emit('toggle-show-children', eventData)
-			},
-
-			/**
-			 * Get the row key path for a sub row
-			 * @param {object} row
-			 */
-			getSubRowKeyPath(row)
-			{
-				if(!this.rowKeyPath)
-					return []
-				return this.rowKeyPath.concat(row.rowKey)
 			}
 		}
 	}

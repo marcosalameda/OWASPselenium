@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Oudoc;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_DOCSD_CANCEL = new NavigationLocation("OUTPUT_DOCUMENT44972", "Docsd_Cancel", "Oudoc") { vueRouteName = "form-DOCSD", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_DOCSD_SHOW = new NavigationLocation("OUTPUT_DOCUMENT44972", "Docsd_Show", "Oudoc") { vueRouteName = "form-DOCSD", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_DOCSD_NEW = new NavigationLocation("OUTPUT_DOCUMENT44972", "Docsd_New", "Oudoc") { vueRouteName = "form-DOCSD", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_DOCSD_EDIT = new NavigationLocation("OUTPUT_DOCUMENT44972", "Docsd_Edit", "Oudoc") { vueRouteName = "form-DOCSD", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_DOCSD_DUPLICATE = new NavigationLocation("OUTPUT_DOCUMENT44972", "Docsd_Duplicate", "Oudoc") { vueRouteName = "form-DOCSD", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_DOCSD_DELETE = new NavigationLocation("OUTPUT_DOCUMENT44972", "Docsd_Delete", "Oudoc") { vueRouteName = "form-DOCSD", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_DOCSD_CANCEL = new("OUTPUT_DOCUMENT44972", "Docsd_Cancel", "Oudoc") { vueRouteName = "form-DOCSD", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_DOCSD_SHOW = new("OUTPUT_DOCUMENT44972", "Docsd_Show", "Oudoc") { vueRouteName = "form-DOCSD", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_DOCSD_NEW = new("OUTPUT_DOCUMENT44972", "Docsd_New", "Oudoc") { vueRouteName = "form-DOCSD", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_DOCSD_EDIT = new("OUTPUT_DOCUMENT44972", "Docsd_Edit", "Oudoc") { vueRouteName = "form-DOCSD", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_DOCSD_DUPLICATE = new("OUTPUT_DOCUMENT44972", "Docsd_Duplicate", "Oudoc") { vueRouteName = "form-DOCSD", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_DOCSD_DELETE = new("OUTPUT_DOCUMENT44972", "Docsd_Delete", "Oudoc") { vueRouteName = "form-DOCSD", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Docsd_ModalDBEdit()
-		{
-			Docsd_ViewModel model = new Docsd_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Docsd_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Docsd Multiform actions
 
-		//
-		// GET /Oudoc/MFDocsd_New
-		[HttpGet]
-		[ActionName("MFDocsd_New")]
-		public ActionResult MFDocsd_New()
-		{
-			var model = new Docsd_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_DOCSD_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("oudoc", model.ValCoddocsd);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFDocsd_New_GET()
-		{
-			return MFDocsd_New();
-		}
-
-		//
-		// GET /Oudoc/MFDocsd_Edit
-		[HttpGet]
-		[ActionName("MFDocsd_Edit")]
-		public ActionResult MFDocsd_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("DOCSD", "EDIT", new { id = id, partialView = "MFDocsd", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFDocsd_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFDocsd_Edit(requestModel);
-		}
-
-		//
-		// GET /Oudoc/MFDocsd_Cancel
-		[ActionName("MFDocsd_Cancel")]
-		public ActionResult MFDocsd_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Oudoc(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Oudoc/MFDocsd_Save
-		[HttpPost]
-		[ActionName("MFDocsd_Save")]
-		public JsonResult MFDocsd_Save(Docsd_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFDocsd_Save",
-				ViewName = "MFDocsd",
-				AreaName = "oudoc"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Oudoc/MFDocsd_Delete
-		[HttpPost]
-		[ActionName("MFDocsd_Delete")]
-		public JsonResult MFDocsd_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFDocsd_Delete",
-				ViewName = "MFDocsd",
-				AreaName = "oudoc",
-				Location = ACTION_DOCSD_EDIT
-			};
-
-			var model = new Docsd_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Oudoc/Docsd_SaveEdit
 		[HttpPost]

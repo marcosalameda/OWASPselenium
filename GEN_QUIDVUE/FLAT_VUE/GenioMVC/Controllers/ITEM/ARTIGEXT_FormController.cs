@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Item;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ARTIGEXT_CANCEL = new NavigationLocation("ITEM40802", "Artigext_Cancel", "Item") { vueRouteName = "form-ARTIGEXT", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ARTIGEXT_SHOW = new NavigationLocation("ITEM40802", "Artigext_Show", "Item") { vueRouteName = "form-ARTIGEXT", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ARTIGEXT_NEW = new NavigationLocation("ITEM40802", "Artigext_New", "Item") { vueRouteName = "form-ARTIGEXT", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ARTIGEXT_EDIT = new NavigationLocation("ITEM40802", "Artigext_Edit", "Item") { vueRouteName = "form-ARTIGEXT", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ARTIGEXT_DUPLICATE = new NavigationLocation("ITEM40802", "Artigext_Duplicate", "Item") { vueRouteName = "form-ARTIGEXT", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ARTIGEXT_DELETE = new NavigationLocation("ITEM40802", "Artigext_Delete", "Item") { vueRouteName = "form-ARTIGEXT", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ARTIGEXT_CANCEL = new("ITEM40802", "Artigext_Cancel", "Item") { vueRouteName = "form-ARTIGEXT", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ARTIGEXT_SHOW = new("ITEM40802", "Artigext_Show", "Item") { vueRouteName = "form-ARTIGEXT", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ARTIGEXT_NEW = new("ITEM40802", "Artigext_New", "Item") { vueRouteName = "form-ARTIGEXT", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ARTIGEXT_EDIT = new("ITEM40802", "Artigext_Edit", "Item") { vueRouteName = "form-ARTIGEXT", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ARTIGEXT_DUPLICATE = new("ITEM40802", "Artigext_Duplicate", "Item") { vueRouteName = "form-ARTIGEXT", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ARTIGEXT_DELETE = new("ITEM40802", "Artigext_Delete", "Item") { vueRouteName = "form-ARTIGEXT", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Artigext_ModalDBEdit()
-		{
-			Artigext_ViewModel model = new Artigext_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Artigext_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Artigext Multiform actions
-
-		//
-		// GET /Item/MFArtigext_New
-		[HttpGet]
-		[ActionName("MFArtigext_New")]
-		public ActionResult MFArtigext_New()
-		{
-			var model = new Artigext_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_ARTIGEXT_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("item", model.ValCoditem);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFArtigext_New_GET()
-		{
-			return MFArtigext_New();
-		}
-
-		//
-		// GET /Item/MFArtigext_Edit
-		[HttpGet]
-		[ActionName("MFArtigext_Edit")]
-		public ActionResult MFArtigext_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("ARTIGEXT", "EDIT", new { id = id, partialView = "MFArtigext", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFArtigext_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFArtigext_Edit(requestModel);
-		}
-
-		//
-		// GET /Item/MFArtigext_Cancel
-		[ActionName("MFArtigext_Cancel")]
-		public ActionResult MFArtigext_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Item(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Item/MFArtigext_Save
-		[HttpPost]
-		[ActionName("MFArtigext_Save")]
-		public JsonResult MFArtigext_Save(Artigext_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFArtigext_Save",
-				ViewName = "MFArtigext",
-				AreaName = "item"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Item/MFArtigext_Delete
-		[HttpPost]
-		[ActionName("MFArtigext_Delete")]
-		public JsonResult MFArtigext_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFArtigext_Delete",
-				ViewName = "MFArtigext",
-				AreaName = "item",
-				Location = ACTION_ARTIGEXT_EDIT
-			};
-
-			var model = new Artigext_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Item/Artigext_WarehValWarehdes
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,9 +422,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Artigext_WarehValWarehdes_ViewModel model = new Artigext_WarehValWarehdes_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCoditem = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -590,6 +464,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_gitem")))
@@ -603,21 +478,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -625,12 +485,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Artigext_GitemValItemdes_ViewModel model = new Artigext_GitemValItemdes_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCoditem = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Item/Artigext_SaveEdit
 		[HttpPost]

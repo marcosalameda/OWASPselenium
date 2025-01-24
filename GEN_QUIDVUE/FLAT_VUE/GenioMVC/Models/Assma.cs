@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Asset _asset;
 		[DisplayName("Asset")]
 		[ShouldSerialize("Asset")]
-		public virtual Asset Asset { 
-			get { 
+		public virtual Asset Asset {
+			get {
 				if (!this.isEmptyModel && (_asset == null || (!string.IsNullOrEmpty(ValCodasset) && (_asset.isEmptyModel || _asset.klass.QPrimaryKey != ValCodasset))))
 					_asset = Models.Asset.Find(ValCodasset, m_userContext, Identifier, _fieldsToSerialize);
 				if (_asset == null)
 					_asset = new Models.Asset(m_userContext, true, _fieldsToSerialize);
 				return _asset;
 			}
-			set { _asset = value; } 
+			set { _asset = value; }
 		}
-		
+
 
 		[DisplayName("Manual name")]
 		/// <summary>Field : "Manual name" Tipo: "C" Formula:  ""</summary>
@@ -61,7 +61,7 @@ namespace GenioMVC.Models
 		[DisplayName("Digital document")]
 		/// <summary>Field : "Digital document" Tipo: "IB" Formula:  ""</summary>
 		[ShouldSerialize("Assma.ValDigdocum")]
-		[Document("ValDigdocum", false, true, false, false)]
+		[Document("ValDigdocum", true, false, false)]
 		public string ValDigdocum { get { return klass.ValDigdocum; } set { klass.ValDigdocum = value; } }
 		public string ValDigdocumfk { get { return klass.ValDigdocumfk; } set { klass.ValDigdocumfk = value; } }
 
@@ -79,19 +79,19 @@ namespace GenioMVC.Models
 		public Assma(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAassma(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Assma(UserContext userContext, CSGenioAassma val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAassma csgenioa)
@@ -113,7 +113,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

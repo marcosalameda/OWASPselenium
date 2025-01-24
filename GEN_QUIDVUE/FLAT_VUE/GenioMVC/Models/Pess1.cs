@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Cmpny _cmpny;
 		[DisplayName("Cmpny")]
 		[ShouldSerialize("Cmpny")]
-		public virtual Cmpny Cmpny { 
-			get { 
+		public virtual Cmpny Cmpny {
+			get {
 				if (!this.isEmptyModel && (_cmpny == null || (!string.IsNullOrEmpty(ValCodempre) && (_cmpny.isEmptyModel || _cmpny.klass.QPrimaryKey != ValCodempre))))
 					_cmpny = Models.Cmpny.Find(ValCodempre, m_userContext, Identifier, _fieldsToSerialize);
 				if (_cmpny == null)
 					_cmpny = new Models.Cmpny(m_userContext, true, _fieldsToSerialize);
 				return _cmpny;
 			}
-			set { _cmpny = value; } 
+			set { _cmpny = value; }
 		}
-		
+
 
 		[DisplayName(">INTERESTED PARTY")]
 		/// <summary>Field : ">INTERESTED PARTY" Tipo: "CE" Formula:  ""</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Stake _stake;
 		[DisplayName("Stake")]
 		[ShouldSerialize("Stake")]
-		public virtual Stake Stake { 
-			get { 
+		public virtual Stake Stake {
+			get {
 				if (!this.isEmptyModel && (_stake == null || (!string.IsNullOrEmpty(ValCodparte) && (_stake.isEmptyModel || _stake.klass.QPrimaryKey != ValCodparte))))
 					_stake = Models.Stake.Find(ValCodparte, m_userContext, Identifier, _fieldsToSerialize);
 				if (_stake == null)
 					_stake = new Models.Stake(m_userContext, true, _fieldsToSerialize);
 				return _stake;
 			}
-			set { _stake = value; } 
+			set { _stake = value; }
 		}
-		
+
 
 		[DisplayName("Name")]
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
@@ -96,13 +96,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Age" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Pess1.ValIdade")]
 		[NumericAttribute(0)]
-		public decimal? ValIdade { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIdade, 0)); } set { klass.ValIdade = Convert.ToDouble(value); } }
+		public decimal? ValIdade { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIdade, 0)); } set { klass.ValIdade = Convert.ToDecimal(value); } }
 
 		[DisplayName("Official No.")]
 		/// <summary>Field : "Official No." Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Pess1.ValIdfuncio")]
 		[NumericAttribute(0)]
-		public decimal? ValIdfuncio { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIdfuncio, 0)); } set { klass.ValIdfuncio = Convert.ToDouble(value); } }
+		public decimal? ValIdfuncio { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIdfuncio, 0)); } set { klass.ValIdfuncio = Convert.ToDecimal(value); } }
 
 		[DisplayName("Phone")]
 		/// <summary>Field : "Phone" Tipo: "C" Formula:  ""</summary>
@@ -123,7 +123,9 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Photo" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Pess1.ValPhotogra")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValPhotogra { get { return klass.ValPhotogra; } set { klass.ValPhotogra = value; } }
+		public ImageModel ValPhotogra { get { return new ImageModel(klass.ValPhotogra) { Ticket = ValPhotograQTicket }; } set { klass.ValPhotogra = value; } }
+		[JsonIgnore]
+		public string ValPhotograQTicket = null;
 
 		[DisplayName("Since")]
 		/// <summary>Field : "Since" Tipo: "D" Formula:  ""</summary>
@@ -139,17 +141,17 @@ namespace GenioMVC.Models
 		private Cate2 _cate2;
 		[DisplayName("Cate2")]
 		[ShouldSerialize("Cate2")]
-		public virtual Cate2 Cate2 { 
-			get { 
+		public virtual Cate2 Cate2 {
+			get {
 				if (!this.isEmptyModel && (_cate2 == null || (!string.IsNullOrEmpty(ValCodcateg) && (_cate2.isEmptyModel || _cate2.klass.QPrimaryKey != ValCodcateg))))
 					_cate2 = Models.Cate2.Find(ValCodcateg, m_userContext, Identifier, _fieldsToSerialize);
 				if (_cate2 == null)
 					_cate2 = new Models.Cate2(m_userContext, true, _fieldsToSerialize);
 				return _cate2;
 			}
-			set { _cate2 = value; } 
+			set { _cate2 = value; }
 		}
-		
+
 
 		[DisplayName("External")]
 		/// <summary>Field : "External" Tipo: "L" Formula:  ""</summary>
@@ -196,7 +198,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Minimum zoom to load features" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Pess1.ValExtminzm")]
 		[NumericAttribute(0)]
-		public decimal? ValExtminzm { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValExtminzm, 0)); } set { klass.ValExtminzm = Convert.ToDouble(value); } }
+		public decimal? ValExtminzm { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValExtminzm, 0)); } set { klass.ValExtminzm = Convert.ToDecimal(value); } }
 
 		[DisplayName("Map height")]
 		/// <summary>Field : "Map height" Tipo: "C" Formula:  ""</summary>
@@ -207,13 +209,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Zoom level" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Pess1.ValZoomlvl")]
 		[NumericAttribute(0)]
-		public decimal? ValZoomlvl { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValZoomlvl, 0)); } set { klass.ValZoomlvl = Convert.ToDouble(value); } }
+		public decimal? ValZoomlvl { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValZoomlvl, 0)); } set { klass.ValZoomlvl = Convert.ToDecimal(value); } }
 
 		[DisplayName("Outline weight")]
 		/// <summary>Field : "Outline weight" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Pess1.ValOutweigh")]
 		[NumericAttribute(0)]
-		public decimal? ValOutweigh { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutweigh, 0)); } set { klass.ValOutweigh = Convert.ToDouble(value); } }
+		public decimal? ValOutweigh { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutweigh, 0)); } set { klass.ValOutweigh = Convert.ToDecimal(value); } }
 
 		[DisplayName("Polyline color")]
 		/// <summary>Field : "Polyline color" Tipo: "C" Formula:  ""</summary>
@@ -283,19 +285,19 @@ namespace GenioMVC.Models
 		public Pess1(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioApess1(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Pess1(UserContext userContext, CSGenioApess1 val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioApess1 csgenioa)
@@ -327,7 +329,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

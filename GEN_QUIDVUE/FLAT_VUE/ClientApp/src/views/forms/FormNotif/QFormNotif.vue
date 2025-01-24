@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,12 +106,10 @@
 							v-on="controls.NOTIF___NOTIFNRCOMODA.handlers"
 							:loading="controls.NOTIF___NOTIFNRCOMODA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.NOTIF___NOTIFNRCOMODA.isVisible"
-								v-bind="controls.NOTIF___NOTIFNRCOMODA"
-								:model-value="model.ValNrcomoda.value"
+								v-bind="controls.NOTIF___NOTIFNRCOMODA.props"
 								@update:model-value="model.ValNrcomoda.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
@@ -120,14 +118,13 @@
 							v-on="controls.NOTIF___NOTIFBEGIN___.handlers"
 							:loading="controls.NOTIF___NOTIFBEGIN___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.NOTIF___NOTIFBEGIN___.isVisible"
-								v-bind="controls.NOTIF___NOTIFBEGIN___"
-								format="DateTime"
+								v-bind="controls.NOTIF___NOTIFBEGIN___.props"
 								:model-value="model.ValBegin.value"
-								@update:model-value="model.ValBegin.fnUpdateValue" />
+								@reset-icon-click="model.ValBegin.fnUpdateValue(model.ValBegin.originalValue ?? new Date())"
+								@update:model-value="model.ValBegin.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -139,14 +136,13 @@
 							v-on="controls.NOTIF___NOTIFEND_____.handlers"
 							:loading="controls.NOTIF___NOTIFEND_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.NOTIF___NOTIFEND_____.isVisible"
-								v-bind="controls.NOTIF___NOTIFEND_____"
-								format="DateTime"
+								v-bind="controls.NOTIF___NOTIFEND_____.props"
 								:model-value="model.ValEnd.value"
-								@update:model-value="model.ValEnd.fnUpdateValue" />
+								@reset-icon-click="model.ValEnd.fnUpdateValue(model.ValEnd.originalValue ?? new Date())"
+								@update:model-value="model.ValEnd.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -160,12 +156,12 @@
 							v-on="controls.NOTIF___NOTIFEMAIL___.handlers"
 							:loading="controls.NOTIF___NOTIFEMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.NOTIF___NOTIFEMAIL___.props"
 								:model-value="model.ValEmail.value"
-								@update:model-value="model.ValEmail.fnUpdateValue" />
+								@blur="onBlur(controls.NOTIF___NOTIFEMAIL___, model.ValEmail.value)"
+								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -179,12 +175,12 @@
 							v-on="controls.NOTIF___NOTIFIDNOTIF_.handlers"
 							:loading="controls.NOTIF___NOTIFIDNOTIF_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.NOTIF___NOTIFIDNOTIF_.props"
 								:model-value="model.ValIdnotif.value"
-								@update:model-value="model.ValIdnotif.fnUpdateValue" />
+								@blur="onBlur(controls.NOTIF___NOTIFIDNOTIF_, model.ValIdnotif.value)"
+								@change="model.ValIdnotif.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -198,12 +194,12 @@
 							v-on="controls.NOTIF___NOTIFIDMSG___.handlers"
 							:loading="controls.NOTIF___NOTIFIDMSG___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.NOTIF___NOTIFIDMSG___.props"
 								:model-value="model.ValIdmsg.value"
-								@update:model-value="model.ValIdmsg.fnUpdateValue" />
+								@blur="onBlur(controls.NOTIF___NOTIFIDMSG___, model.ValIdmsg.value)"
+								@change="model.ValIdmsg.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -217,18 +213,14 @@
 							v-on="controls.NOTIF___NOTIFMESSAGE_.handlers"
 							:loading="controls.NOTIF___NOTIFMESSAGE_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.NOTIF___NOTIFMESSAGE_.isVisible"
+								v-bind="controls.NOTIF___NOTIFMESSAGE_.props"
 								id="NOTIF___NOTIFMESSAGE_"
-								size="xxlarge"
 								:model-value="model.ValMessage.value"
 								:rows="15"
 								:cols="99"
-								:is-required="controls.NOTIF___NOTIFMESSAGE_.isRequired"
-								:readonly="controls.NOTIF___NOTIFMESSAGE_.readonly"
-								:placeholder="controls.NOTIF___NOTIFMESSAGE_.placeholder"
 								@update:model-value="model.ValMessage.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -243,12 +235,12 @@
 							v-on="controls.NOTIF___NOTIFMAILERR_.handlers"
 							:loading="controls.NOTIF___NOTIFMAILERR_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.NOTIF___NOTIFMAILERR_.props"
 								:model-value="model.ValMailerr.value"
-								@update:model-value="model.ValMailerr.fnUpdateValue" />
+								@blur="onBlur(controls.NOTIF___NOTIFMAILERR_, model.ValMailerr.value)"
+								@change="model.ValMailerr.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -262,12 +254,12 @@
 							v-on="controls.NOTIF___NOTIFDESIGNAT.handlers"
 							:loading="controls.NOTIF___NOTIFDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.NOTIF___NOTIFDESIGNAT.props"
 								:model-value="model.ValDesignat.value"
-								@update:model-value="model.ValDesignat.fnUpdateValue" />
+								@blur="onBlur(controls.NOTIF___NOTIFDESIGNAT, model.ValDesignat.value)"
+								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -281,15 +273,11 @@
 							v-on="controls.NOTIF___NOTIFRETURNED.handlers"
 							:loading="controls.NOTIF___NOTIFRETURNED.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.NOTIF___NOTIFRETURNED.isVisible"
-									id="NOTIF___NOTIFRETURNED"
-									size="small"
-									:model-value="model.ValReturned.value"
-									:readonly="controls.NOTIF___NOTIFRETURNED.readonly"
+									v-bind="controls.NOTIF___NOTIFRETURNED.props"
 									@update:model-value="model.ValReturned.fnUpdateValue" />
 							</template>
 						</base-input-structure>
@@ -303,14 +291,13 @@
 							v-on="controls.NOTIF___NOTIFDTDEVOLU.handlers"
 							:loading="controls.NOTIF___NOTIFDTDEVOLU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.NOTIF___NOTIFDTDEVOLU.isVisible"
-								v-bind="controls.NOTIF___NOTIFDTDEVOLU"
-								format="Date"
+								v-bind="controls.NOTIF___NOTIFDTDEVOLU.props"
 								:model-value="model.ValDtdevolu.value"
-								@update:model-value="model.ValDtdevolu.fnUpdateValue" />
+								@reset-icon-click="model.ValDtdevolu.fnUpdateValue(model.ValDtdevolu.originalValue ?? new Date())"
+								@update:model-value="model.ValDtdevolu.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -324,14 +311,11 @@
 							v-on="controls.NOTIF___PESS2NAME____.handlers"
 							:loading="controls.NOTIF___PESS2NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.NOTIF___PESS2NAME____.isVisible"
 								v-bind="controls.NOTIF___PESS2NAME____.props"
-								:model-value="model.ValCodpesso.value"
-								v-on="controls.NOTIF___PESS2NAME____.handlers"
-								@update:model-value="model.ValCodpesso.fnUpdateValue" />
+								v-on="controls.NOTIF___PESS2NAME____.handlers" />
 							<q-see-more-notif-pess2name
 								v-if="controls.NOTIF___PESS2NAME____.seeMoreIsVisible"
 								v-bind="controls.NOTIF___PESS2NAME____.seeMoreParams"
@@ -421,15 +405,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'NOTIF',
-						location: 'form-NOTIF',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'NOTIF',
+					location: 'form-NOTIF',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -475,6 +457,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -547,8 +531,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -630,7 +615,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -684,21 +669,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -706,18 +676,14 @@
 					NOTIF___NOTIFNRCOMODA: new fieldControlClass.NumberControl({
 						modelField: 'ValNrcomoda',
 						valueChangeEvent: 'fieldChange:notif.nrcomoda',
-						maxIntegers: 6,
-						maxDecimals: 0,
 						id: 'NOTIF___NOTIFNRCOMODA',
 						name: 'NRCOMODA',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.LENDING_NO14727),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 6,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -727,12 +693,10 @@
 						id: 'NOTIF___NOTIFBEGIN___',
 						name: 'BEGIN',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.START00919),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						format: 'dateTime',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -743,13 +707,10 @@
 						id: 'NOTIF___NOTIFEND_____',
 						name: 'END',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.END47577),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -759,15 +720,11 @@
 						id: 'NOTIF___NOTIFEMAIL___',
 						name: 'EMAIL',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.RECEIVER_S_EMAIL60306),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 100,
 						labelId: 'label_NOTIF___NOTIFEMAIL___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -777,15 +734,11 @@
 						id: 'NOTIF___NOTIFIDNOTIF_',
 						name: 'IDNOTIF',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ID_OF_THE_NOTIFICATI28920),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_NOTIF___NOTIFIDNOTIF_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -795,15 +748,11 @@
 						id: 'NOTIF___NOTIFIDMSG___',
 						name: 'IDMSG',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.MENSAGE_ID32109),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
 						labelId: 'label_NOTIF___NOTIFIDMSG___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -813,15 +762,9 @@
 						id: 'NOTIF___NOTIFMESSAGE_',
 						name: 'MESSAGE',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TEXT_OF_SENT_MESSAGE03008),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
-						labelId: 'label_NOTIF___NOTIFMESSAGE_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -831,15 +774,11 @@
 						id: 'NOTIF___NOTIFMAILERR_',
 						name: 'MAILERR',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ERRO_ON_SENDING_THE_05516),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 300,
 						labelId: 'label_NOTIF___NOTIFMAILERR_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -849,15 +788,11 @@
 						id: 'NOTIF___NOTIFDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.RECEIVER16744),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
 						labelId: 'label_NOTIF___NOTIFDESIGNAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -867,31 +802,22 @@
 						id: 'NOTIF___NOTIFRETURNED',
 						name: 'RETURNED',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.RETURNED01606),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
 					NOTIF___NOTIFDTDEVOLU: new fieldControlClass.DateControl({
 						modelField: 'ValDtdevolu',
 						valueChangeEvent: 'fieldChange:notif.dtdevolu',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'NOTIF___NOTIFDTDEVOLU',
 						name: 'DTDEVOLU',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.RETURNED01606),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -901,25 +827,9 @@
 						id: 'NOTIF___PESS2NAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.NAME31974),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodpesso',
-							dependencyEvent: 'fieldChange:notif.codpesso'
-						},
-						dependentFields: () => {
-							return {
-								set 'pess2.codpesso'(value) { vm.model.ValCodpesso.updateValue(value) },
-								set 'pess2.name'(value) { vm.model.TablePess2Name.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -928,6 +838,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodpesso',
+							dependencyEvent: 'fieldChange:notif.codpesso'
+						},
+						dependentFields: () => ({
+							set 'pess2.codpesso'(value) { vm.model.ValCodpesso.updateValue(value) },
+							set 'pess2.name'(value) { vm.model.TablePess2Name.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 				},
 
@@ -991,7 +911,7 @@
 						/** The foreign key to the PESS2 table */
 						get pess2() { return vm.model.ValCodpesso },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1087,6 +1007,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1126,6 +1054,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1252,6 +1188,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR NOTIF]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1267,6 +1219,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS NOTIF]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

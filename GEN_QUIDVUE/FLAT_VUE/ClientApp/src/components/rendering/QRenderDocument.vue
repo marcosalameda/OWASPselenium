@@ -1,9 +1,13 @@
 ﻿<template>
 	<a
 		v-if="value?.fileName && value?.ticket"
+		class="column-data-link"
 		rel="tooltip"
-		title="Descarregar"
-		@click.stop.prevent="onClick">
+		:title="Resources.DESCARREGAR58418"
+		data-table-action-selected="false"
+		tabindex="-1"
+		@click.stop.prevent="onSelect"
+		@keyup.enter="onSelect">
 		{{ value.fileName }}
 	</a>
 </template>
@@ -28,8 +32,16 @@
 					ticket: '',
 					fileName: '',
 					title: '',
-					viewType: documentViewTypeMode.print
+					viewType: documentViewTypeMode.preview
 				})
+			},
+
+			/**
+			 * Object containing properties of the column.
+			 */
+			options: {
+				type: Object,
+				default: null
 			}
 		},
 
@@ -40,15 +52,18 @@
 			 * Method to execute when the anchor link is clicked.
 			 * It emits the 'execute-action' event with details for the document download.
 			 */
-			onClick()
+			onSelect()
 			{
-				const viewType = this.value?.viewType ?? documentViewTypeMode.print
+				const viewType = this.value?.viewType ?? documentViewTypeMode.preview
+				//Area of the document column, which may be different from the area of the table.
+				const area = this.options?.area
 
 				this.$emit('execute-action', {
 					action: 'download',
 					ticket: this.value.ticket,
 					fileName: this.value.fileName,
-					viewType: viewType
+					viewType: viewType,
+					area: area
 				})
 			}
 		}

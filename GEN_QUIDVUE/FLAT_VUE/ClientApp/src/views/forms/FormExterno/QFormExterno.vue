@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -117,14 +117,11 @@
 										v-on="controls.EXTERNO_CMPNYDESIGNAT.handlers"
 										:loading="controls.EXTERNO_CMPNYDESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.EXTERNO_CMPNYDESIGNAT.isVisible"
 											v-bind="controls.EXTERNO_CMPNYDESIGNAT.props"
-											:model-value="model.ValCodempre.value"
-											v-on="controls.EXTERNO_CMPNYDESIGNAT.handlers"
-											@update:model-value="model.ValCodempre.fnUpdateValue" />
+											v-on="controls.EXTERNO_CMPNYDESIGNAT.handlers" />
 										<q-see-more-externo-cmpnydesignat
 											v-if="controls.EXTERNO_CMPNYDESIGNAT.seeMoreIsVisible"
 											v-bind="controls.EXTERNO_CMPNYDESIGNAT.seeMoreParams"
@@ -157,12 +154,12 @@
 										v-on="controls.EXTERNO_PESSONAME____.handlers"
 										:loading="controls.EXTERNO_PESSONAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EXTERNO_PESSONAME____.props"
 											:model-value="model.ValName.value"
-											@update:model-value="model.ValName.fnUpdateValue" />
+											@blur="onBlur(controls.EXTERNO_PESSONAME____, model.ValName.value)"
+											@change="model.ValName.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -176,8 +173,7 @@
 										v-on="controls.EXTERNO_PESSOGENDER__.handlers"
 										:loading="controls.EXTERNO_PESSOGENDER__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-select
 											v-if="controls.EXTERNO_PESSOGENDER__.isVisible"
 											v-bind="controls.EXTERNO_PESSOGENDER__.props"
@@ -203,6 +199,7 @@
 							v-slot="{ onStateChanged }">
 							<!-- Start EXTERNO_PSEUDNOVOGR06 -->
 							<q-group-collapsible
+								id="EXTERNO_PSEUDNOVOGR03"
 								v-bind="controls.EXTERNO_PSEUDNOVOGR03"
 								v-on="controls.EXTERNO_PSEUDNOVOGR03.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -217,12 +214,12 @@
 											v-on="controls.EXTERNO_PESSOTELEPHON.handlers"
 											:loading="controls.EXTERNO_PESSOTELEPHON.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.EXTERNO_PESSOTELEPHON.props"
 												:model-value="model.ValTelephon.value"
-												@update:model-value="model.ValTelephon.fnUpdateValue" />
+												@blur="onBlur(controls.EXTERNO_PESSOTELEPHON, model.ValTelephon.value)"
+												@change="model.ValTelephon.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 									<q-control-wrapper
@@ -234,18 +231,19 @@
 											v-on="controls.EXTERNO_PESSOEMAIL___.handlers"
 											:loading="controls.EXTERNO_PESSOEMAIL___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.EXTERNO_PESSOEMAIL___.props"
 												:model-value="model.ValEmail.value"
-												@update:model-value="model.ValEmail.fnUpdateValue" />
+												@blur="onBlur(controls.EXTERNO_PESSOEMAIL___, model.ValEmail.value)"
+												@change="model.ValEmail.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End EXTERNO_PSEUDNOVOGR03 -->
 							</q-group-collapsible>
 							<q-group-collapsible
+								id="EXTERNO_PSEUDNOVOGR04"
 								v-bind="controls.EXTERNO_PSEUDNOVOGR04"
 								v-on="controls.EXTERNO_PSEUDNOVOGR04.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -260,8 +258,7 @@
 											v-on="controls.EXTERNO_PESSOPHOTOGRA.handlers"
 											:loading="controls.EXTERNO_PESSOPHOTOGRA.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-image
 												v-if="controls.EXTERNO_PESSOPHOTOGRA.isVisible"
 												v-bind="controls.EXTERNO_PESSOPHOTOGRA.props"
@@ -283,12 +280,11 @@
 							v-on="controls.EXTERNO_PSEUDOBRIGATO.handlers"
 							:loading="controls.EXTERNO_PSEUDOBRIGATO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-static-text
 								v-if="controls.EXTERNO_PSEUDOBRIGATO.isVisible"
 								id="EXTERNO_PSEUDOBRIGATO"
-								size="xxlarge"
+								:size="controls.EXTERNO_PSEUDOBRIGATO.size"
 								:text="controls.EXTERNO_PSEUDOBRIGATO.label"
 								supports-html />
 						</base-input-structure>
@@ -376,15 +372,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'EXTERNO',
-						location: 'form-EXTERNO',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'EXTERNO',
+					location: 'form-EXTERNO',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -430,6 +424,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -502,8 +498,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -585,7 +582,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -639,21 +636,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -662,15 +644,11 @@
 						id: 'EXTERNO_PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY20759),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -680,28 +658,10 @@
 						id: 'EXTERNO_CMPNYDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY_22615),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodempre',
-							dependencyEvent: 'fieldChange:pesso.codempre'
-						},
-						dependentFields: () => {
-							return {
-								set 'cmpny.codempre'(value) { vm.model.ValCodempre.updateValue(value) },
-								set 'cmpny.designat'(value) { vm.model.TableCmpnyDesignat.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'EMPRE',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -710,17 +670,26 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodempre',
+							dependencyEvent: 'fieldChange:pesso.codempre'
+						},
+						dependentFields: () => ({
+							set 'cmpny.codempre'(value) { vm.model.ValCodempre.updateValue(value) },
+							set 'cmpny.designat'(value) { vm.model.TableCmpnyDesignat.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'EMPRE',
+						controlLimits: [
+						],
 					}, this),
 					EXTERNO_PSEUDNOVOGR02: new fieldControlClass.GroupControl({
 						id: 'EXTERNO_PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.IDENTIFICATION40793),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
 						mustBeFilled: true,
@@ -733,10 +702,7 @@
 						id: 'EXTERNO_PESSONAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.NAME_23841),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR02',
@@ -752,17 +718,15 @@
 						id: 'EXTERNO_PESSOGENDER__',
 						name: 'GENDER',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.GENDER44172),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR02',
 						maxLength: 1,
 						labelId: 'label_EXTERNO_PESSOGENDER__',
 						arrayName: 'Genero',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -770,15 +734,11 @@
 						id: 'EXTERNO_PSEUDNOVOGR06',
 						name: 'NOVOGR06',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACCORDION01950),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -786,18 +746,14 @@
 						id: 'EXTERNO_PSEUDNOVOGR03',
 						name: 'NOVOGR03',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.CONTACT05134),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-EXTERNO_PSEUDNOVOGR03',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -807,17 +763,13 @@
 						id: 'EXTERNO_PESSOTELEPHON',
 						name: 'TELEPHON',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.TELEPHONE28697),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-EXTERNO_PSEUDNOVOGR03',
 						container: 'EXTERNO_PSEUDNOVOGR03',
 						maxLength: 20,
 						labelId: 'label_EXTERNO_PESSOTELEPHON',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -827,17 +779,13 @@
 						id: 'EXTERNO_PESSOEMAIL___',
 						name: 'EMAIL',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.EMAIL_44228),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-EXTERNO_PSEUDNOVOGR03',
 						container: 'EXTERNO_PSEUDNOVOGR03',
 						maxLength: 254,
 						labelId: 'label_EXTERNO_PESSOEMAIL___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -845,18 +793,14 @@
 						id: 'EXTERNO_PSEUDNOVOGR04',
 						name: 'NOVOGR04',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTO32097),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-EXTERNO_PSEUDNOVOGR04',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -866,17 +810,14 @@
 						id: 'EXTERNO_PESSOPHOTOGRA',
 						name: 'PHOTOGRA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTO51874),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-EXTERNO_PSEUDNOVOGR04',
 						container: 'EXTERNO_PSEUDNOVOGR04',
 						height: 50,
 						width: 100,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PHOTO51874)),
 						controlLimits: [
 						],
 					}, this),
@@ -886,11 +827,9 @@
 						size: 'xxlarge',
 						hasLabel: false,
 						label: computed(() => this.Resources.AT_REQUIRED65277),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						supportsHtml: true,
 						controlLimits: [
 						],
 					}, this),
@@ -938,6 +877,8 @@
 						set ValCodregia(value) { vm.model.ValCodregia.updateValue(value) },
 						get ValEmail() { return vm.model.ValEmail.value },
 						set ValEmail(value) { vm.model.ValEmail.updateValue(value) },
+						get ValEmail2() { return vm.model.ValEmail2.value },
+						set ValEmail2(value) { vm.model.ValEmail2.updateValue(value) },
 						get ValGender() { return vm.model.ValGender.value },
 						set ValGender(value) { vm.model.ValGender.updateValue(value) },
 						get ValName() { return vm.model.ValName.value },
@@ -961,7 +902,7 @@
 						/** The foreign key to the REGI1 table */
 						get regi1() { return vm.model.ValCodregia },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1057,6 +998,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1096,6 +1045,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1222,6 +1179,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR EXTERNO]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1237,6 +1210,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS EXTERNO]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

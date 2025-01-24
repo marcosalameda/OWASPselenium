@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -127,14 +127,13 @@
 													v-on="controls.VENDAW05SALE_DTAPRESE.handlers"
 													:loading="controls.VENDAW05SALE_DTAPRESE.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
-													<q-datetime-input
+													:suggestion-mode-on="suggestionModeOn">
+													<q-date-time-picker
 														v-if="controls.VENDAW05SALE_DTAPRESE.isVisible"
-														v-bind="controls.VENDAW05SALE_DTAPRESE"
-														format="DateTime"
+														v-bind="controls.VENDAW05SALE_DTAPRESE.props"
 														:model-value="model.ValDtaprese.value"
-														@update:model-value="model.ValDtaprese.fnUpdateValue" />
+														@reset-icon-click="model.ValDtaprese.fnUpdateValue(model.ValDtaprese.originalValue ?? new Date())"
+														@update:model-value="model.ValDtaprese.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
 											</q-control-wrapper>
 											<q-control-wrapper
@@ -146,15 +145,11 @@
 													v-on="controls.VENDAW05SALE_APRESENT.handlers"
 													:loading="controls.VENDAW05SALE_APRESENT.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<template #label>
 														<q-checkbox-input
 															v-if="controls.VENDAW05SALE_APRESENT.isVisible"
-															id="VENDAW05SALE_APRESENT"
-															size="small"
-															:model-value="model.ValApresent.value"
-															:readonly="controls.VENDAW05SALE_APRESENT.readonly"
+															v-bind="controls.VENDAW05SALE_APRESENT.props"
 															@update:model-value="model.ValApresent.fnUpdateValue" />
 													</template>
 												</base-input-structure>
@@ -251,15 +246,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'VENDAW05',
-						location: 'form-VENDAW-VENDAW05',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'VENDAW05',
+					location: 'form-VENDAW-VENDAW05',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -308,6 +301,8 @@
 					mode: ''
 				},
 
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
+
 				wizardData: readonly({
 					type: qEnums.wizardTypes.horizontal,
 					wizardId: 'Vendaw_Fases',
@@ -323,56 +318,56 @@
 							title: computed(() => this.Resources.PROSPECTING26583),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAW-VENDAW01',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 2,
 							title: computed(() => this.Resources.QUALIFICATION64257),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAW-VENDAW02',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 3,
 							title: computed(() => this.Resources.PRE_APPROACH58979),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAW-VENDAW03',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 4,
 							title: computed(() => this.Resources.APPROACH06577),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAW-VENDAW04',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 5,
 							title: computed(() => this.Resources.PRESENTATION64246),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAW-VENDAW05',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 6,
 							title: computed(() => this.Resources.OVERCOMING_OBJECTION04521),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAW-VENDAW06',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 7,
 							title: computed(() => this.Resources.SALE_CLOSING56682),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAW-VENDAW07',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 8,
 							title: computed(() => this.Resources.ACCOMPANIMENT25201),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAW-VENDAW08',
-							isRequired: false
+							isRequired: false,
 						}
 					],
 					stepData: {
@@ -382,8 +377,8 @@
 						applyIsOff: true,
 						isFinal: false,
 						backwardIsOff: false,
-						applyOnBackward: false,
-						clearOnBackward: true
+						applyOnBackward: true,
+						clearOnBackward: false
 					},
 					stepFieldIds: [
 						'VENDAW05PSEUDNOVOGR05',
@@ -463,8 +458,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -581,7 +577,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -635,21 +631,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -658,15 +639,11 @@
 						id: 'VENDAW05PSEUDNOVOGR05',
 						name: 'NOVOGR05',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRESENTATION64246),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -676,14 +653,11 @@
 						id: 'VENDAW05SALE_DTAPRESE',
 						name: 'DTAPRESE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRESENTATION_MADE15117),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDAW05PSEUDNOVOGR05',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -693,14 +667,10 @@
 						id: 'VENDAW05SALE_APRESENT',
 						name: 'APRESENT',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRESENTATION64246),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'VENDAW05PSEUDNOVOGR05',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -708,13 +678,9 @@
 						id: 'VENDAW__PSEUDFASES___',
 						name: 'FASES',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.WIZARD24114),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -757,7 +723,7 @@
 						/** The foreign key to the ORGAN table */
 						get organ() { return vm.model.ValCodorgan },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -857,6 +823,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -896,6 +870,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1022,6 +1004,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR VENDAW05]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1037,6 +1035,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS VENDAW05]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

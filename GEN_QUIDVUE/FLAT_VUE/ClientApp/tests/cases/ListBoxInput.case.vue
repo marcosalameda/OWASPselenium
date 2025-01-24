@@ -220,9 +220,13 @@
 	import fakeData from './ListBoxInput.mock'
 
 	export default {
+		name: 'QListBoxContainer',
+
 		docsfile: './docs/inputs/ListBoxInput.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{

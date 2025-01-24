@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Attac;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ATTAC_CANCEL = new NavigationLocation("ATTACHMENT29376", "Attac_Cancel", "Attac") { vueRouteName = "form-ATTAC", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ATTAC_SHOW = new NavigationLocation("ATTACHMENT29376", "Attac_Show", "Attac") { vueRouteName = "form-ATTAC", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ATTAC_NEW = new NavigationLocation("ATTACHMENT29376", "Attac_New", "Attac") { vueRouteName = "form-ATTAC", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ATTAC_EDIT = new NavigationLocation("ATTACHMENT29376", "Attac_Edit", "Attac") { vueRouteName = "form-ATTAC", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ATTAC_DUPLICATE = new NavigationLocation("ATTACHMENT29376", "Attac_Duplicate", "Attac") { vueRouteName = "form-ATTAC", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ATTAC_DELETE = new NavigationLocation("ATTACHMENT29376", "Attac_Delete", "Attac") { vueRouteName = "form-ATTAC", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ATTAC_CANCEL = new("ATTACHMENT29376", "Attac_Cancel", "Attac") { vueRouteName = "form-ATTAC", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ATTAC_SHOW = new("ATTACHMENT29376", "Attac_Show", "Attac") { vueRouteName = "form-ATTAC", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ATTAC_NEW = new("ATTACHMENT29376", "Attac_New", "Attac") { vueRouteName = "form-ATTAC", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ATTAC_EDIT = new("ATTACHMENT29376", "Attac_Edit", "Attac") { vueRouteName = "form-ATTAC", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ATTAC_DUPLICATE = new("ATTACHMENT29376", "Attac_Duplicate", "Attac") { vueRouteName = "form-ATTAC", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ATTAC_DELETE = new("ATTACHMENT29376", "Attac_Delete", "Attac") { vueRouteName = "form-ATTAC", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Attac_ModalDBEdit()
-		{
-			Attac_ViewModel model = new Attac_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Attac_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Attac Multiform actions
-
-		//
-		// GET /Attac/MFAttac_New
-		[HttpGet]
-		[ActionName("MFAttac_New")]
-		public ActionResult MFAttac_New()
-		{
-			var model = new Attac_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_ATTAC_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("attac", model.ValCodattac);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFAttac_New_GET()
-		{
-			return MFAttac_New();
-		}
-
-		//
-		// GET /Attac/MFAttac_Edit
-		[HttpGet]
-		[ActionName("MFAttac_Edit")]
-		public ActionResult MFAttac_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("ATTAC", "EDIT", new { id = id, partialView = "MFAttac", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFAttac_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFAttac_Edit(requestModel);
-		}
-
-		//
-		// GET /Attac/MFAttac_Cancel
-		[ActionName("MFAttac_Cancel")]
-		public ActionResult MFAttac_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Attac(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Attac/MFAttac_Save
-		[HttpPost]
-		[ActionName("MFAttac_Save")]
-		public JsonResult MFAttac_Save(Attac_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAttac_Save",
-				ViewName = "MFAttac",
-				AreaName = "attac"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Attac/MFAttac_Delete
-		[HttpPost]
-		[ActionName("MFAttac_Delete")]
-		public JsonResult MFAttac_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAttac_Delete",
-				ViewName = "MFAttac",
-				AreaName = "attac",
-				Location = ACTION_ATTAC_EDIT
-			};
-
-			var model = new Attac_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Attac/Attac_AssetValName
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_asset")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,12 +422,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Attac_AssetValName_ViewModel model = new Attac_AssetValName_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodattac = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Attac/Attac_SaveEdit
 		[HttpPost]

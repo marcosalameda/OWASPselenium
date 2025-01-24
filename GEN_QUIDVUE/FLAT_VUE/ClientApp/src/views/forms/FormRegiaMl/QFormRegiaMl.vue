@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.REGIA_MLCNTRYCOUNTRY_.handlers"
 							:loading="controls.REGIA_MLCNTRYCOUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.REGIA_MLCNTRYCOUNTRY_.isVisible"
 								v-bind="controls.REGIA_MLCNTRYCOUNTRY_.props"
-								:model-value="model.ValCodcntry.value"
-								v-on="controls.REGIA_MLCNTRYCOUNTRY_.handlers"
-								@update:model-value="model.ValCodcntry.fnUpdateValue" />
+								v-on="controls.REGIA_MLCNTRYCOUNTRY_.handlers" />
 							<q-see-more-regia-mlcntrycountry
 								v-if="controls.REGIA_MLCNTRYCOUNTRY_.seeMoreIsVisible"
 								v-bind="controls.REGIA_MLCNTRYCOUNTRY_.seeMoreParams"
@@ -129,12 +126,12 @@
 							v-on="controls.REGIA_MLREGIOREGIAO__.handlers"
 							:loading="controls.REGIA_MLREGIOREGIAO__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.REGIA_MLREGIOREGIAO__.props"
 								:model-value="model.ValRegiao.value"
-								@update:model-value="model.ValRegiao.fnUpdateValue" />
+								@blur="onBlur(controls.REGIA_MLREGIOREGIAO__, model.ValRegiao.value)"
+								@change="model.ValRegiao.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -146,14 +143,11 @@
 							v-on="controls.REGIA_MLPAIS1COUNTRY_.handlers"
 							:loading="controls.REGIA_MLPAIS1COUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.REGIA_MLPAIS1COUNTRY_.isVisible"
 								v-bind="controls.REGIA_MLPAIS1COUNTRY_.props"
-								:model-value="model.ValCodpais1.value"
-								v-on="controls.REGIA_MLPAIS1COUNTRY_.handlers"
-								@update:model-value="model.ValCodpais1.fnUpdateValue" />
+								v-on="controls.REGIA_MLPAIS1COUNTRY_.handlers" />
 							<q-see-more-regia-mlpais1country
 								v-if="controls.REGIA_MLPAIS1COUNTRY_.seeMoreIsVisible"
 								v-bind="controls.REGIA_MLPAIS1COUNTRY_.seeMoreParams"
@@ -166,8 +160,7 @@
 						<q-table
 							v-show="controls.REGIA_MLPSEUDIMOVEISL.isVisible"
 							v-bind="controls.REGIA_MLPSEUDIMOVEISL"
-							v-on="controls.REGIA_MLPSEUDIMOVEISL.handlers">
-						</q-table>
+							v-on="controls.REGIA_MLPSEUDIMOVEISL.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.REGIA_MLPSEUDIMOVEISL"
 							v-on="controls.REGIA_MLPSEUDIMOVEISL.handlers" />
@@ -256,15 +249,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'REGIA_ML',
-						location: 'form-REGIA_ML',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'REGIA_ML',
+					location: 'form-REGIA_ML',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -310,6 +301,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -382,8 +375,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -465,7 +459,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -519,21 +513,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -544,27 +523,9 @@
 						id: 'REGIA_MLCNTRYCOUNTRY_',
 						name: 'COUNTRY',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PAIS_44650),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodcntry',
-							dependencyEvent: 'fieldChange:regio.codcntry'
-						},
-						dependentFields: () => {
-							return {
-								set 'cntry.codcntry'(value) { vm.model.ValCodcntry.updateValue(value) },
-								set 'cntry.country'(value) { vm.model.TableCntryCountry.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'PAIS',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -573,6 +534,18 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodcntry',
+							dependencyEvent: 'fieldChange:regio.codcntry'
+						},
+						dependentFields: () => ({
+							set 'cntry.codcntry'(value) { vm.model.ValCodcntry.updateValue(value) },
+							set 'cntry.country'(value) { vm.model.TableCntryCountry.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'PAIS',
+						controlLimits: [
+						],
 					}, this),
 					REGIA_MLREGIOREGIAO__: new fieldControlClass.StringControl({
 						modelField: 'ValRegiao',
@@ -580,15 +553,11 @@
 						id: 'REGIA_MLREGIOREGIAO__',
 						name: 'REGIAO',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.REGIAO_39589),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_REGIA_MLREGIOREGIAO__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -598,25 +567,9 @@
 						id: 'REGIA_MLPAIS1COUNTRY_',
 						name: 'COUNTRY',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PAIS_PESSOA61621),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodpais1',
-							dependencyEvent: 'fieldChange:regio.codpais1'
-						},
-						dependentFields: () => {
-							return {
-								set 'pais1.codcntry'(value) { vm.model.ValCodpais1.updateValue(value) },
-								set 'pais1.country'(value) { vm.model.TablePais1Country.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -625,15 +578,22 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodpais1',
+							dependencyEvent: 'fieldChange:regio.codpais1'
+						},
+						dependentFields: () => ({
+							set 'pais1.codcntry'(value) { vm.model.ValCodpais1.updateValue(value) },
+							set 'pais1.country'(value) { vm.model.TablePais1Country.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					REGIA_MLPSEUDIMOVEISL: new fieldControlClass.TableListControl({
 						id: 'REGIA_MLPSEUDIMOVEISL',
 						name: 'IMOVEISL',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.IMOVEIS09219),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'REGIO',
@@ -666,8 +626,10 @@
 								area: 'PROPR',
 								field: 'PHOTOGRA',
 								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -686,6 +648,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -720,13 +683,14 @@
 							showAlternatePagination: true,
 							rowClickActionInternal: 'selectMultiple',
 							showRowsSelectedCount: true,
+							showRowsSelectedTotalizer: true,
 							permissions: {
 								canEdit: false,
 								canDuplicate: false,
 								canDelete: false,
 								canInsert: false
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -767,6 +731,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'PROPRALL',
@@ -780,18 +745,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: PROPRALL
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
 						uuid: 'Regia_ml_ValImoveisl',
@@ -852,7 +811,7 @@
 						/** The foreign key to the PAIS1 table */
 						get pais1() { return vm.model.ValCodpais1 },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -948,6 +907,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -987,6 +954,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1113,6 +1088,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR REGIA_ML]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1128,6 +1119,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS REGIA_ML]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

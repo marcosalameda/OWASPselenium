@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Wareh;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_BTNSFORM_CANCEL = new NavigationLocation("BUTTONS20612", "Btnsform_Cancel", "Wareh") { vueRouteName = "form-BTNSFORM", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_BTNSFORM_SHOW = new NavigationLocation("BUTTONS20612", "Btnsform_Show", "Wareh") { vueRouteName = "form-BTNSFORM", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_BTNSFORM_NEW = new NavigationLocation("BUTTONS20612", "Btnsform_New", "Wareh") { vueRouteName = "form-BTNSFORM", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_BTNSFORM_EDIT = new NavigationLocation("BUTTONS20612", "Btnsform_Edit", "Wareh") { vueRouteName = "form-BTNSFORM", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_BTNSFORM_DUPLICATE = new NavigationLocation("BUTTONS20612", "Btnsform_Duplicate", "Wareh") { vueRouteName = "form-BTNSFORM", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_BTNSFORM_DELETE = new NavigationLocation("BUTTONS20612", "Btnsform_Delete", "Wareh") { vueRouteName = "form-BTNSFORM", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_BTNSFORM_CANCEL = new("BUTTONS20612", "Btnsform_Cancel", "Wareh") { vueRouteName = "form-BTNSFORM", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_BTNSFORM_SHOW = new("BUTTONS20612", "Btnsform_Show", "Wareh") { vueRouteName = "form-BTNSFORM", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_BTNSFORM_NEW = new("BUTTONS20612", "Btnsform_New", "Wareh") { vueRouteName = "form-BTNSFORM", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_BTNSFORM_EDIT = new("BUTTONS20612", "Btnsform_Edit", "Wareh") { vueRouteName = "form-BTNSFORM", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_BTNSFORM_DUPLICATE = new("BUTTONS20612", "Btnsform_Duplicate", "Wareh") { vueRouteName = "form-BTNSFORM", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_BTNSFORM_DELETE = new("BUTTONS20612", "Btnsform_Delete", "Wareh") { vueRouteName = "form-BTNSFORM", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Btnsform_ModalDBEdit()
-		{
-			Btnsform_ViewModel model = new Btnsform_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Btnsform_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Btnsform Multiform actions
 
-		//
-		// GET /Wareh/MFBtnsform_New
-		[HttpGet]
-		[ActionName("MFBtnsform_New")]
-		public ActionResult MFBtnsform_New()
-		{
-			var model = new Btnsform_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_BTNSFORM_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("wareh", model.ValCodwareh);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFBtnsform_New_GET()
-		{
-			return MFBtnsform_New();
-		}
-
-		//
-		// GET /Wareh/MFBtnsform_Edit
-		[HttpGet]
-		[ActionName("MFBtnsform_Edit")]
-		public ActionResult MFBtnsform_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("BTNSFORM", "EDIT", new { id = id, partialView = "MFBtnsform", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFBtnsform_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFBtnsform_Edit(requestModel);
-		}
-
-		//
-		// GET /Wareh/MFBtnsform_Cancel
-		[ActionName("MFBtnsform_Cancel")]
-		public ActionResult MFBtnsform_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Wareh(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Wareh/MFBtnsform_Save
-		[HttpPost]
-		[ActionName("MFBtnsform_Save")]
-		public JsonResult MFBtnsform_Save(Btnsform_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFBtnsform_Save",
-				ViewName = "MFBtnsform",
-				AreaName = "wareh"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Wareh/MFBtnsform_Delete
-		[HttpPost]
-		[ActionName("MFBtnsform_Delete")]
-		public JsonResult MFBtnsform_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFBtnsform_Delete",
-				ViewName = "MFBtnsform",
-				AreaName = "wareh",
-				Location = ACTION_BTNSFORM_EDIT
-			};
-
-			var model = new Btnsform_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Wareh/Btnsform_SaveEdit
 		[HttpPost]

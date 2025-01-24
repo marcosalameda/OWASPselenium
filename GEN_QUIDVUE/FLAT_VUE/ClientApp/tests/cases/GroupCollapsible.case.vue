@@ -96,8 +96,7 @@
 								thousands-separator="."
 								decimal-point=","
 								:max-integers="4"
-								:max-decimals="0"
-								:is-currency="false" />
+								:max-decimals="0" />
 						</base-input-structure>
 					</div>
 
@@ -160,9 +159,13 @@
 	import { computed } from 'vue'
 
 	export default {
+		name: 'QGroupCollapsibleContainer',
+
 		docsfile: './docs/containers/QGroupCollapsible.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{

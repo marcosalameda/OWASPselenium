@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.DSAID___WARE1WAREHDES.handlers"
 							:loading="controls.DSAID___WARE1WAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.DSAID___WARE1WAREHDES.isVisible"
 								v-bind="controls.DSAID___WARE1WAREHDES.props"
-								:model-value="model.ValCodwareh.value"
-								v-on="controls.DSAID___WARE1WAREHDES.handlers"
-								@update:model-value="model.ValCodwareh.fnUpdateValue" />
+								v-on="controls.DSAID___WARE1WAREHDES.handlers" />
 							<q-see-more-dsaid-ware1warehdes
 								v-if="controls.DSAID___WARE1WAREHDES.seeMoreIsVisible"
 								v-bind="controls.DSAID___WARE1WAREHDES.seeMoreParams"
@@ -129,12 +126,10 @@
 							v-on="controls.DSAID___OUTPTDOCUMENR.handlers"
 							:loading="controls.DSAID___OUTPTDOCUMENR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.DSAID___OUTPTDOCUMENR.isVisible"
-								v-bind="controls.DSAID___OUTPTDOCUMENR"
-								:model-value="model.ValDocumenr.value"
+								v-bind="controls.DSAID___OUTPTDOCUMENR.props"
 								@update:model-value="model.ValDocumenr.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -146,8 +141,7 @@
 						<q-table
 							v-show="controls.DSAID___PSEUDSAIDAS__.isVisible"
 							v-bind="controls.DSAID___PSEUDSAIDAS__"
-							v-on="controls.DSAID___PSEUDSAIDAS__.handlers">
-						</q-table>
+							v-on="controls.DSAID___PSEUDSAIDAS__.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.DSAID___PSEUDSAIDAS__"
 							v-on="controls.DSAID___PSEUDSAIDAS__.handlers" />
@@ -163,8 +157,7 @@
 							v-on="controls.DSAID___PSEUDSAIDA___.handlers"
 							:loading="controls.DSAID___PSEUDSAIDA___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-button
 								v-if="controls.DSAID___PSEUDSAIDA___.isVisible"
 								id="DSAID___PSEUDSAIDA___"
@@ -258,15 +251,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'DSAID',
-						location: 'form-DSAID',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'DSAID',
+					location: 'form-DSAID',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -312,6 +303,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -384,8 +377,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -484,7 +478,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -538,21 +532,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -563,25 +542,9 @@
 						id: 'DSAID___WARE1WAREHDES',
 						name: 'WAREHDES',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.WAREHOUSE51864),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: true,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodwareh',
-							dependencyEvent: 'fieldChange:outpt.codwareh'
-						},
-						dependentFields: () => {
-							return {
-								set 'ware1.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
-								set 'ware1.warehdes'(value) { vm.model.TableWare1Warehdes.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -590,22 +553,30 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodwareh',
+							dependencyEvent: 'fieldChange:outpt.codwareh'
+						},
+						dependentFields: () => ({
+							set 'ware1.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
+							set 'ware1.warehdes'(value) { vm.model.TableWare1Warehdes.updateValue(value) },
+						}),
+						mustBeFilled: true,
+						controlLimits: [
+						],
 					}, this),
 					DSAID___OUTPTDOCUMENR: new fieldControlClass.NumberControl({
 						modelField: 'ValDocumenr',
 						valueChangeEvent: 'fieldChange:outpt.documenr',
-						maxIntegers: 10,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'DSAID___OUTPTDOCUMENR',
 						name: 'DOCUMENR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.NO_29277),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 10,
+						maxDecimals: 0,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -613,11 +584,8 @@
 					DSAID___PSEUDSAIDAS__: new fieldControlClass.TableListControl({
 						id: 'DSAID___PSEUDSAIDAS__',
 						name: 'SAIDAS',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.OUTPUT_10769),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'OUTPT',
@@ -678,6 +646,7 @@
 								supportFormIsPopup: true,
 								params: {
 									type: 'form',
+									isRoute: true,
 									formName: 'ARMAZPOP',
 									mode: 'SHOW'
 								},
@@ -703,7 +672,7 @@
 								canDelete: false,
 								canInsert: false
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -745,6 +714,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									canExecuteAction: vm.applyChanges,
 									action: vm.openFormAction,
 									type: 'form',
@@ -763,18 +733,12 @@
 									isPopup: true
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: LDSAI
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: 'ValLine',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValLine',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-ITEM', 'changed-OUTPU', 'changed-OUTPT', 'changed-OUDOC', 'changed-WAREH'],
 						uuid: 'Dsaid_ValSaidas',
@@ -794,13 +758,12 @@
 						size: 'small',
 						hasLabel: false,
 						label: computed(() => this.Resources.NEW_OUTPUT02002),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
 							icon: computed(() => `${this.system.resourcesPath}ok.ico`),
 							type: 'img',
+							role: 'presentation',
 						},
 						// eslint-disable-next-line
 						action: (event) => {
@@ -808,7 +771,7 @@
 								// Button to open the form "LDSAI" in "INS" mode.
 								const params = {
 									mode: vm.formModes.new,
-									modes: vm.navigation.currentLevel.params.modes,
+									modes: 'vedai',
 									isControlled: true,
 									extraData: JSON.stringify(event)
 								}
@@ -821,7 +784,6 @@
 							}
 							vm.$eventHub.emit('form-apply', options)
 						},
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -866,7 +828,7 @@
 						/** The foreign key to the WARE1 table */
 						get ware1() { return vm.model.ValCodwareh },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -962,6 +924,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1001,6 +971,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1127,6 +1105,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR DSAID]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1142,6 +1136,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS DSAID]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

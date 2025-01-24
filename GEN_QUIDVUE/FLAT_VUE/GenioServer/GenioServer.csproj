@@ -64,16 +64,18 @@
       <Version>13.0.1</Version>
     </PackageReference>
     <Reference Include="System.Net.Http" />
-    <Reference Include="Quidgest.Mail" Version="1.0.0">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libs\Quidgest.Mail.dll</HintPath>
-    </Reference>
     <Reference Include="DocumentEngine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libs\DocumentEngine.dll</HintPath>
     </Reference>
-    <PackageReference Include="DotNetZip" Version="1.16.0" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.11.2" />
+    <!-- It has to be this version. The lastest version of Types only works with the new Microsoft.Data.SqlClient provider -->
+    <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.1016.290">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
+    <PackageReference Include="QRCoder">
+      <Version>1.4.1</Version>
+    </PackageReference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.DirectoryServices" />
@@ -82,9 +84,6 @@
     <Reference Include="System.Messaging" />
     <Reference Include="System.Web" />
     <Reference Include="System.Runtime.Serialization" />
-    <PackageReference Include="QRCoder">
-      <Version>1.4.1</Version>
-    </PackageReference>
 <!-- USE /[MANUAL GQT REFEREN]/ -->
   </ItemGroup>
   <ItemGroup>
@@ -107,11 +106,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="GenioDIDefault.cs" />
     <Compile Include="framework\Profile.cs" />
     <Compile Include="framework\CryptographicFunctionsWeb.cs" />
     <Compile Include="framework\OverrideQueryDefinition.cs" />
+    <Compile Include="business\ElasticsearchQueriesExtra.cs" />
     <Compile Include="model\CSGenioAPWCOM.cs" />
     <Compile Include="model\CSGenioAADDRL.cs" />
+    <Compile Include="model\CSGenioALNHDF.cs" />
     <Compile Include="model\CSGenioAGENRE.cs" />
     <Compile Include="model\CSGenioAFEECA.cs" />
     <Compile Include="model\CSGenioANOTIF.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="model\CSGenioAS_PAX.cs" />
     <Compile Include="model\CSGenioACNTRY.cs" />
     <Compile Include="model\CSGenioAREPAR.cs" />
+    <Compile Include="model\CSGenioAC_ADD.cs" />
     <Compile Include="model\CSGenioASALE.cs" />
     <Compile Include="model\CSGenioADISPA.cs" />
     <Compile Include="model\CSGenioAINPGR.cs" />
@@ -135,6 +138,7 @@
     <Compile Include="model\CSGenioAGITEM.cs" />
     <Compile Include="model\CSGenioALNHDE.cs" />
     <Compile Include="model\CSGenioASTRAT.cs" />
+    <Compile Include="model\CSGenioAC_BRN.cs" />
     <Compile Include="model\CSGenioADECOM.cs" />
     <Compile Include="model\CSGenioAROOM1.cs" />
     <Compile Include="model\CSGenioAPROJE.cs" />
@@ -142,9 +146,12 @@
     <Compile Include="model\CSGenioATABPR.cs" />
     <Compile Include="model\CSGenioAREGIO.cs" />
     <Compile Include="model\CSGenioATPEQ1.cs" />
+    <Compile Include="model\CSGenioAAGENT.cs" />
     <Compile Include="model\CSGenioAFAQS.cs" />
     <Compile Include="model\CSGenioATPCON.cs" />
     <Compile Include="model\CSGenioAS_APR.cs" />
+    <Compile Include="model\CSGenioAAIRFR.cs" />
+    <Compile Include="model\CSGenioACTRY.cs" />
     <Compile Include="model\CSGenioAFAMI1.cs" />
     <Compile Include="model\CSGenioAMOVIM.cs" />
     <Compile Include="model\CSGenioALANGU.cs" />
@@ -156,6 +163,7 @@
     <Compile Include="model\CSGenioACATTP.cs" />
     <Compile Include="model\CSGenioAREGIS.cs" />
     <Compile Include="model\CSGenioAFACTY.cs" />
+    <Compile Include="model\CSGenioAAIRPL.cs" />
     <Compile Include="model\CSGenioARORDI.cs" />
     <Compile Include="model\CSGenioADILIN.cs" />
     <Compile Include="model\CSGenioAORGAN.cs" />
@@ -168,6 +176,7 @@
     <Compile Include="model\CSGenioALCEXT.cs" />
     <Compile Include="model\CSGenioADTTYP.cs" />
     <Compile Include="model\CSGenioATBLB.cs" />
+    <Compile Include="model\CSGenioAPROPH.cs" />
     <Compile Include="model\CSGenioAYEAR1.cs" />
     <Compile Include="model\CSGenioAREGI1.cs" />
     <Compile Include="model\CSGenioASPACE.cs" />
@@ -175,6 +184,8 @@
     <Compile Include="model\CSGenioAMANUA.cs" />
     <Compile Include="model\CSGenioAWAREH.cs" />
     <Compile Include="model\CSGenioAGLOB.cs" />
+    <Compile Include="model\CSGenioAAIRTO.cs" />
+    <Compile Include="model\CSGenioAPSNGR.cs" />
     <Compile Include="model\CSGenioATBLK.cs" />
     <Compile Include="model\CSGenioACMPNY.cs" />
     <Compile Include="model\CSGenioALDENT.cs" />
@@ -185,6 +196,7 @@
     <Compile Include="model\CSGenioACMPKI.cs" />
     <Compile Include="model\CSGenioAPRODU.cs" />
     <Compile Include="model\CSGenioAKINDE.cs" />
+    <Compile Include="model\CSGenioAITEMP.cs" />
     <Compile Include="model\CSGenioARULES.cs" />
     <Compile Include="model\CSGenioAS_UA.cs" />
     <Compile Include="model\CSGenioAFTGRI.cs" />
@@ -198,7 +210,6 @@
     <Compile Include="model\CSGenioAGRPB.cs" />
     <Compile Include="model\CSGenioAUSERS.cs" />
     <Compile Include="model\CSGenioAPAIS1.cs" />
-    <Compile Include="model\CSGenioACOMPA.cs" />
     <Compile Include="model\CSGenioAS_NES.cs" />
     <Compile Include="model\CSGenioAUICOM.cs" />
     <Compile Include="model\CSGenioACATE2.cs" />
@@ -208,11 +219,16 @@
     <Compile Include="model\CSGenioAPERIO.cs" />
     <Compile Include="model\CSGenioAPERSO.cs" />
     <Compile Include="model\CSGenioALANG1.cs" />
+    <Compile Include="model\CSGenioAPROCN.cs" />
+    <Compile Include="model\CSGenioAHPESS.cs" />
     <Compile Include="model\CSGenioAMESSA.cs" />
     <Compile Include="model\CSGenioAOUTPT.cs" />
+    <Compile Include="model\CSGenioABRDPS.cs" />
     <Compile Include="model\CSGenioAITEM.cs" />
+    <Compile Include="model\CSGenioAFLTSC.cs" />
     <Compile Include="model\CSGenioAEXPE1.cs" />
     <Compile Include="model\CSGenioANOTI1.cs" />
+    <Compile Include="model\CSGenioAAIRLN.cs" />
     <Compile Include="model\CSGenioAROIGF.cs" />
     <Compile Include="model\CSGenioAVISIT.cs" />
     <Compile Include="model\CSGenioACONTA.cs" />
@@ -227,7 +243,7 @@
     <Compile Include="model\CSGenioAROIGI.cs" />
     <Compile Include="model\CSGenioAITEMC.cs" />
     <Compile Include="model\CSGenioADESAM.cs" />
-    <Compile Include="model\CSGenioAPATIE.cs" />
+    <Compile Include="model\CSGenioATICKT.cs" />
     <Compile Include="model\CSGenioATRSB.cs" />
     <Compile Include="model\CSGenioAATTAC.cs" />
     <Compile Include="model\CSGenioAROLE.cs" />
@@ -240,6 +256,7 @@
     <Compile Include="model\CSGenioAROGL1.cs" />
     <Compile Include="model\CSGenioAS_ARG.cs" />
     <Compile Include="model\CSGenioAEQUIP.cs" />
+    <Compile Include="model\CSGenioACITY.cs" />
     <Compile Include="model\CSGenioAPWORG.cs" />
     <Compile Include="model\CSGenioACATE3.cs" />
     <Compile Include="model\CSGenioAGRID.cs" />
@@ -250,10 +267,13 @@
     <Compile Include="model\CSGenioAFLDS.cs" />
     <Compile Include="model\CSGenioAFACI1.cs" />
     <Compile Include="model\CSGenioASALES.cs" />
+    <Compile Include="model\CSGenioAFLIGH.cs" />
     <Compile Include="model\CSGenioAFACI2.cs" />
     <Compile Include="model\CSGenioAAGREG.cs" />
     <Compile Include="model\CSGenioAEVCAT.cs" />
     <Compile Include="model\CSGenioALNHAG.cs" />
+    <Compile Include="model\CSGenioAAIRPT.cs" />
+    <Compile Include="model\CSGenioAPROPE.cs" />
     <Compile Include="business\GlobalFunctions.cs" />
     <Compile Include="business\GlobalFunctions.ManualFunctions.cs" />
     <Compile Include="business\GlobalFunctions.FunctionInformation.cs" />
@@ -266,13 +286,8 @@
     <Compile Include="business\MapServiceProvider.cs" />
     <Compile Include="business\MessageQueueProcessor.cs" />
     <Compile Include="business\DocumentEngine.cs" />
-    <Compile Include="business\async\Scheduling.cs" />
-    <Compile Include="business\async\StatusMessageExtension.cs" />
-    <Compile Include="business\async\SchedulerProcessManager.cs" />
-    <Compile Include="business\async\GenioScheduler.cs" />
-    <Compile Include="business\async\SchedulerJob.cs" />
-    <Compile Include="business\async\SchedulerWorker.cs" />
-    <Compile Include="business\async\PartitionPolicy.cs" />
+    <Compile Include="business\async\**"/>
+    <Compile Include="messaging\**" />
     <Compile Include="business\RequestFlashBSC.cs" />
     <Compile Include="business\RequestFlashWorkflow.cs" />
     <Compile Include="business\RequestFlashPicagem.cs" />
@@ -300,9 +315,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

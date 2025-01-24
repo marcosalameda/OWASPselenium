@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -117,12 +117,10 @@
 										v-on="controls.PESSOSEPPESSOIDFUNCIO.handlers"
 										:loading="controls.PESSOSEPPESSOIDFUNCIO.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.PESSOSEPPESSOIDFUNCIO.isVisible"
-											v-bind="controls.PESSOSEPPESSOIDFUNCIO"
-											:model-value="model.ValIdfuncio.value"
+											v-bind="controls.PESSOSEPPESSOIDFUNCIO.props"
 											@update:model-value="model.ValIdfuncio.fnUpdateValue" />
 									</base-input-structure>
 									<base-input-structure
@@ -131,12 +129,12 @@
 										v-on="controls.PESSOSEPPESSONAME____.handlers"
 										:loading="controls.PESSOSEPPESSONAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PESSOSEPPESSONAME____.props"
 											:model-value="model.ValName.value"
-											@update:model-value="model.ValName.fnUpdateValue" />
+											@blur="onBlur(controls.PESSOSEPPESSONAME____, model.ValName.value)"
+											@change="model.ValName.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -148,14 +146,13 @@
 										v-on="controls.PESSOSEPPESSODTNASCIM.handlers"
 										:loading="controls.PESSOSEPPESSODTNASCIM.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.PESSOSEPPESSODTNASCIM.isVisible"
-											v-bind="controls.PESSOSEPPESSODTNASCIM"
-											format="Date"
+											v-bind="controls.PESSOSEPPESSODTNASCIM.props"
 											:model-value="model.ValDtnascim.value"
-											@update:model-value="model.ValDtnascim.fnUpdateValue" />
+											@reset-icon-click="model.ValDtnascim.fnUpdateValue(model.ValDtnascim.originalValue ?? new Date())"
+											@update:model-value="model.ValDtnascim.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 									<base-input-structure
 										class="i-radio-container"
@@ -164,9 +161,8 @@
 										:label-position="labelAlignment.topleft"
 										:loading="controls.PESSOSEPPESSOGENDER__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-radio-button-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-radio-group
 											v-if="controls.PESSOSEPPESSOGENDER__.isVisible"
 											id="PESSOSEPPESSOGENDER__"
 											:model-value="model.ValGender.value"
@@ -190,15 +186,11 @@
 										v-on="controls.PESSOSEPPESSOINTERNA_.handlers"
 										:loading="controls.PESSOSEPPESSOINTERNA_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.PESSOSEPPESSOINTERNA_.isVisible"
-												id="PESSOSEPPESSOINTERNA_"
-												size="mini"
-												:model-value="model.ValInterna.value"
-												:readonly="controls.PESSOSEPPESSOINTERNA_.readonly"
+												v-bind="controls.PESSOSEPPESSOINTERNA_.props"
 												@update:model-value="model.ValInterna.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -208,15 +200,11 @@
 										v-on="controls.PESSOSEPPESSOEXTERNA_.handlers"
 										:loading="controls.PESSOSEPPESSOEXTERNA_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.PESSOSEPPESSOEXTERNA_.isVisible"
-												id="PESSOSEPPESSOEXTERNA_"
-												size="small"
-												:model-value="model.ValExterna.value"
-												:readonly="controls.PESSOSEPPESSOEXTERNA_.readonly"
+												v-bind="controls.PESSOSEPPESSOEXTERNA_.props"
 												@update:model-value="model.ValExterna.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -232,14 +220,11 @@
 										v-on="controls.PESSOSEPCATEGCATEGORY.handlers"
 										:loading="controls.PESSOSEPCATEGCATEGORY.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.PESSOSEPCATEGCATEGORY.isVisible"
 											v-bind="controls.PESSOSEPCATEGCATEGORY.props"
-											:model-value="model.ValCodcateg.value"
-											v-on="controls.PESSOSEPCATEGCATEGORY.handlers"
-											@update:model-value="model.ValCodcateg.fnUpdateValue" />
+											v-on="controls.PESSOSEPCATEGCATEGORY.handlers" />
 										<q-see-more-pessosepcategcategory
 											v-if="controls.PESSOSEPCATEGCATEGORY.seeMoreIsVisible"
 											v-bind="controls.PESSOSEPCATEGCATEGORY.seeMoreParams"
@@ -255,14 +240,13 @@
 										v-on="controls.PESSOSEPPESSODTULTCAT.handlers"
 										:loading="controls.PESSOSEPPESSODTULTCAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.PESSOSEPPESSODTULTCAT.isVisible"
-											v-bind="controls.PESSOSEPPESSODTULTCAT"
-											format="Date"
+											v-bind="controls.PESSOSEPPESSODTULTCAT.props"
 											:model-value="model.ValDtultcat.value"
-											@update:model-value="model.ValDtultcat.fnUpdateValue" />
+											@reset-icon-click="model.ValDtultcat.fnUpdateValue(model.ValDtultcat.originalValue ?? new Date())"
+											@update:model-value="model.ValDtultcat.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -278,12 +262,11 @@
 							v-on="controls.PESSOSEPPSEUDOBRIGATO.handlers"
 							:loading="controls.PESSOSEPPSEUDOBRIGATO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-static-text
 								v-if="controls.PESSOSEPPSEUDOBRIGATO.isVisible"
 								id="PESSOSEPPSEUDOBRIGATO"
-								size="xxlarge"
+								:size="controls.PESSOSEPPSEUDOBRIGATO.size"
 								:text="controls.PESSOSEPPSEUDOBRIGATO.label"
 								supports-html />
 						</base-input-structure>
@@ -294,17 +277,17 @@
 						v-show="controls.PESSOSEPPSEUDPESSOS00.isVisible || controls.PESSOSEPPSEUDPESSOS01.isVisible"
 						class="control-join-group">
 						<q-tab-container
-							id="tabs_PESSOSEP"
-							align-tabs="left"
-							:tabs-list="controls.formTabs.tabsList"
-							:selected-tab="controls.formTabs.selectedTab"
-							:is-visible="controls.formTabs.isVisible"
-							@tab-changed="controls.formTabs.SelectTab($event)">
+							id="q-tabs-PESSOSEP"
+							v-bind="controls.formTabs.props"
+							@tab-changed="controls.formTabs.selectTab($event)">
 							<template #tab-panel>
 								<section
 									v-if="controls.PESSOSEPPSEUDPESSOS00.isVisible"
 									v-show="controls.formTabs.selectedTab === 'PESSOSEPPSEUDPESSOS00'">
-									<div id="PESSOSEPPSEUDPESSOS00">
+									<div
+										id="PESSOSEPPSEUDPESSOS00"
+										role="tabpanel"
+										aria-labelledby="tab-container-PESSOSEPPSEUDPESSOS00">
 										<q-row-container v-show="controls.PESSOS00CMPNYDESIGNAT.isVisible">
 											<q-control-wrapper
 												v-show="controls.PESSOS00CMPNYDESIGNAT.isVisible"
@@ -315,14 +298,11 @@
 													v-on="controls.PESSOS00CMPNYDESIGNAT.handlers"
 													:loading="controls.PESSOS00CMPNYDESIGNAT.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-lookup
 														v-if="controls.PESSOS00CMPNYDESIGNAT.isVisible"
 														v-bind="controls.PESSOS00CMPNYDESIGNAT.props"
-														:model-value="model.ValCodempre.value"
-														v-on="controls.PESSOS00CMPNYDESIGNAT.handlers"
-														@update:model-value="model.ValCodempre.fnUpdateValue" />
+														v-on="controls.PESSOS00CMPNYDESIGNAT.handlers" />
 													<q-see-more-pessos00cmpnydesignat
 														v-if="controls.PESSOS00CMPNYDESIGNAT.seeMoreIsVisible"
 														v-bind="controls.PESSOS00CMPNYDESIGNAT.seeMoreParams"
@@ -335,7 +315,10 @@
 								<section
 									v-if="controls.PESSOSEPPSEUDPESSOS01.isVisible"
 									v-show="controls.formTabs.selectedTab === 'PESSOSEPPSEUDPESSOS01'">
-									<div id="PESSOSEPPSEUDPESSOS01">
+									<div
+										id="PESSOSEPPSEUDPESSOS01"
+										role="tabpanel"
+										aria-labelledby="tab-container-PESSOSEPPSEUDPESSOS01">
 										<q-row-container
 											v-show="controls.PESSOS01PSEUDNOVOGR06.isVisible"
 											is-large>
@@ -349,6 +332,7 @@
 													v-slot="{ onStateChanged }">
 													<!-- Start PESSOS01PSEUDNOVOGR06 -->
 													<q-group-collapsible
+														id="PESSOS01PSEUDNOVOGR03"
 														v-bind="controls.PESSOS01PSEUDNOVOGR03"
 														v-on="controls.PESSOS01PSEUDNOVOGR03.handlers"
 														@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -363,12 +347,12 @@
 																	v-on="controls.PESSOS01PESSOTELEPHON.handlers"
 																	:loading="controls.PESSOS01PESSOTELEPHON.props.loading"
 																	:reporting-mode-on="reportingModeCAV"
-																	:suggestion-mode-on="suggestionModeOn"
-																	:help-style="layoutConfig.HelpStyle">
+																	:suggestion-mode-on="suggestionModeOn">
 																	<q-text-field
 																		v-bind="controls.PESSOS01PESSOTELEPHON.props"
 																		:model-value="model.ValTelephon.value"
-																		@update:model-value="model.ValTelephon.fnUpdateValue" />
+																		@blur="onBlur(controls.PESSOS01PESSOTELEPHON, model.ValTelephon.value)"
+																		@change="model.ValTelephon.fnUpdateValueOnChange" />
 																</base-input-structure>
 															</q-control-wrapper>
 															<q-control-wrapper
@@ -380,18 +364,19 @@
 																	v-on="controls.PESSOS01PESSOEMAIL___.handlers"
 																	:loading="controls.PESSOS01PESSOEMAIL___.props.loading"
 																	:reporting-mode-on="reportingModeCAV"
-																	:suggestion-mode-on="suggestionModeOn"
-																	:help-style="layoutConfig.HelpStyle">
+																	:suggestion-mode-on="suggestionModeOn">
 																	<q-text-field
 																		v-bind="controls.PESSOS01PESSOEMAIL___.props"
 																		:model-value="model.ValEmail.value"
-																		@update:model-value="model.ValEmail.fnUpdateValue" />
+																		@blur="onBlur(controls.PESSOS01PESSOEMAIL___, model.ValEmail.value)"
+																		@change="model.ValEmail.fnUpdateValueOnChange" />
 																</base-input-structure>
 															</q-control-wrapper>
 														</q-row-container>
 														<!-- End PESSOS01PSEUDNOVOGR03 -->
 													</q-group-collapsible>
 													<q-group-collapsible
+														id="PESSOS01PSEUDNOVOGR04"
 														v-bind="controls.PESSOS01PSEUDNOVOGR04"
 														v-on="controls.PESSOS01PSEUDNOVOGR04.handlers"
 														@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -406,8 +391,7 @@
 																	v-on="controls.PESSOS01PESSOPHOTOGRA.handlers"
 																	:loading="controls.PESSOS01PESSOPHOTOGRA.props.loading"
 																	:reporting-mode-on="reportingModeCAV"
-																	:suggestion-mode-on="suggestionModeOn"
-																	:help-style="layoutConfig.HelpStyle">
+																	:suggestion-mode-on="suggestionModeOn">
 																	<q-image
 																		v-if="controls.PESSOS01PESSOPHOTOGRA.isVisible"
 																		v-bind="controls.PESSOS01PESSOPHOTOGRA.props"
@@ -418,6 +402,7 @@
 														<!-- End PESSOS01PSEUDNOVOGR04 -->
 													</q-group-collapsible>
 													<q-group-collapsible
+														id="PESSOS01PSEUDNOVOGR05"
 														v-bind="controls.PESSOS01PSEUDNOVOGR05"
 														v-on="controls.PESSOS01PSEUDNOVOGR05.handlers"
 														@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -429,8 +414,7 @@
 																<q-table
 																	v-show="controls.PESSOS01PSEUDEVOLUCAO.isVisible"
 																	v-bind="controls.PESSOS01PSEUDEVOLUCAO"
-																	v-on="controls.PESSOS01PSEUDEVOLUCAO.handlers">
-																</q-table>
+																	v-on="controls.PESSOS01PSEUDEVOLUCAO.handlers" />
 																<q-table-extra-extension
 																	:list-ctrl="controls.PESSOS01PSEUDEVOLUCAO"
 																	v-on="controls.PESSOS01PSEUDEVOLUCAO.handlers" />
@@ -441,6 +425,7 @@
 																v-show="controls.PESSOS01PSEUDFICHACAR.isVisible"
 																class="control-join-group">
 																<q-form-container
+																	:ref="controls.PESSOS01PSEUDFICHACAR.id"
 																	v-bind="controls.PESSOS01PSEUDFICHACAR"
 																	v-on="controls.PESSOS01PSEUDFICHACAR.handlers" />
 															</q-control-wrapper>
@@ -448,6 +433,7 @@
 														<!-- End PESSOS01PSEUDNOVOGR05 -->
 													</q-group-collapsible>
 													<q-group-collapsible
+														id="PESSOS01PSEUDNOVOGR07"
 														v-bind="controls.PESSOS01PSEUDNOVOGR07"
 														v-on="controls.PESSOS01PSEUDNOVOGR07.handlers"
 														@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -459,8 +445,7 @@
 																<q-table
 																	v-show="controls.PESSOS01PSEUDCONTACTO.isVisible"
 																	v-bind="controls.PESSOS01PSEUDCONTACTO"
-																	v-on="controls.PESSOS01PSEUDCONTACTO.handlers">
-																</q-table>
+																	v-on="controls.PESSOS01PSEUDCONTACTO.handlers" />
 																<q-table-extra-extension
 																	:list-ctrl="controls.PESSOS01PSEUDCONTACTO"
 																	v-on="controls.PESSOS01PSEUDCONTACTO.handlers" />
@@ -561,15 +546,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'PESSOSEP',
-						location: 'form-PESSOSEP',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'PESSOSEP',
+					location: 'form-PESSOSEP',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -615,6 +598,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -687,8 +672,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -770,7 +756,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -824,21 +810,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -847,12 +818,9 @@
 						id: 'PESSOSEPPSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.IDENTIFICATION40793),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
 						mustBeFilled: true,
@@ -862,19 +830,16 @@
 					PESSOSEPPESSOIDFUNCIO: new fieldControlClass.NumberControl({
 						modelField: 'ValIdfuncio',
 						valueChangeEvent: 'fieldChange:pesso.idfuncio',
-						maxIntegers: 6,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'PESSOSEPPESSOIDFUNCIO',
 						name: 'IDFUNCIO',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.EMPLOYEE_NO_01176),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOSEPPSEUDNOVOGR02',
+						maxIntegers: 6,
+						maxDecimals: 0,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -885,10 +850,7 @@
 						id: 'PESSOSEPPESSONAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.NAME_23841),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOSEPPSEUDNOVOGR02',
@@ -901,19 +863,14 @@
 					PESSOSEPPESSODTNASCIM: new fieldControlClass.DateControl({
 						modelField: 'ValDtnascim',
 						valueChangeEvent: 'fieldChange:pesso.dtnascim',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'PESSOSEPPESSODTNASCIM',
 						name: 'DTNASCIM',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.BIRTH21799),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOSEPPSEUDNOVOGR02',
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -923,18 +880,14 @@
 						id: 'PESSOSEPPESSOGENDER__',
 						name: 'GENDER',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.GENDER44172),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'PESSOSEPPSEUDNOVOGR02',
 						maxLength: 1,
 						labelId: 'label_PESSOSEPPESSOGENDER__',
 						arrayName: 'Genero',
 						columnNumber: 3,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -944,14 +897,10 @@
 						id: 'PESSOSEPPESSOINTERNA_',
 						name: 'INTERNA',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.INTERN65375),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'PESSOSEPPSEUDNOVOGR02',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -961,14 +910,10 @@
 						id: 'PESSOSEPPESSOEXTERNA_',
 						name: 'EXTERNA',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.EXTERNAL13375),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'PESSOSEPPSEUDNOVOGR02',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -978,41 +923,11 @@
 						id: 'PESSOSEPCATEGCATEGORY',
 						name: 'CATEGORY',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.CATEGORY18978),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOSEPPSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodcateg',
-							dependencyEvent: 'fieldChange:pesso.codcateg'
-						},
-						dependentFields: () => {
-							return {
-								set 'categ.codcateg'(value) { vm.model.ValCodcateg.updateValue(value) },
-								set 'categ.categoria'(value) { vm.model.TableCategCategory.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'CATEG',
-						showWhen: {
-							// eslint-disable-next-line no-unused-vars
-							fnFormula(params)
-							{
-								// Formula: [PESSO->INTERNA]==1
-								// eslint-disable-next-line eqeqeq
-								return (this.ValInterna.value ? 1 : 0)==1
-							},
-							dependencyEvents: ['fieldChange:pesso.interna'],
-							isServerRecalc: false,
-							isServerFormula: false,
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1021,24 +936,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
-					}, this),
-					PESSOSEPPESSODTULTCAT: new fieldControlClass.DateControl({
-						modelField: 'ValDtultcat',
-						valueChangeEvent: 'fieldChange:pesso.dtultcat',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
-						id: 'PESSOSEPPESSODTULTCAT',
-						name: 'DTULTCAT',
-						size: 'small',
-						hasLabel: true,
-						label: computed(() => this.Resources.SINCE47259),
-						userHelp: '',
-						description: '',
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'PESSOSEPPSEUDNOVOGR02',
-						isFormulaBlocked: true,
-						mustBeFilled: false,
+						lookupKeyModelField: {
+							name: 'ValCodcateg',
+							dependencyEvent: 'fieldChange:pesso.codcateg'
+						},
+						dependentFields: () => ({
+							set 'categ.codcateg'(value) { vm.model.ValCodcateg.updateValue(value) },
+							set 'categ.categoria'(value) { vm.model.TableCategCategory.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'CATEG',
 						controlLimits: [
 						],
 						showWhen: {
@@ -1046,14 +953,36 @@
 							fnFormula(params)
 							{
 								// Formula: [PESSO->INTERNA]==1
-								// eslint-disable-next-line eqeqeq
-								return (this.ValInterna.value ? 1 : 0)==1
+								return (this.ValInterna.value ? 1 : 0)===1
 							},
 							dependencyEvents: ['fieldChange:pesso.interna'],
 							isServerRecalc: false,
-							isServerFormula: false,
 						},
-						isFixed: true,
+					}, this),
+					PESSOSEPPESSODTULTCAT: new fieldControlClass.DateControl({
+						modelField: 'ValDtultcat',
+						valueChangeEvent: 'fieldChange:pesso.dtultcat',
+						id: 'PESSOSEPPESSODTULTCAT',
+						name: 'DTULTCAT',
+						size: 'small',
+						label: computed(() => this.Resources.SINCE47259),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'PESSOSEPPSEUDNOVOGR02',
+						isFormulaBlocked: true,
+						format: 'date',
+						controlLimits: [
+						],
+						showWhen: {
+							// eslint-disable-next-line no-unused-vars
+							fnFormula(params)
+							{
+								// Formula: [PESSO->INTERNA]==1
+								return (this.ValInterna.value ? 1 : 0)===1
+							},
+							dependencyEvents: ['fieldChange:pesso.interna'],
+							isServerRecalc: false,
+						},
 					}, this),
 					PESSOSEPPSEUDOBRIGATO: new fieldControlClass.BaseControl({
 						id: 'PESSOSEPPSEUDOBRIGATO',
@@ -1061,11 +990,9 @@
 						size: 'xxlarge',
 						hasLabel: false,
 						label: computed(() => this.Resources.AT_REQUIRED65277),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						supportsHtml: true,
 						controlLimits: [
 						],
 					}, this),
@@ -1073,14 +1000,10 @@
 						id: 'PESSOSEPPSEUDPESSOS00',
 						name: 'PESSOS00',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY20759),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						openingEvent: 'opened-PESSOSEPPSEUDPESSOS00',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1088,14 +1011,10 @@
 						id: 'PESSOSEPPSEUDPESSOS01',
 						name: 'PESSOS01',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.EVERYTHING62829),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						openingEvent: 'opened-PESSOSEPPSEUDPESSOS01',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1105,27 +1024,11 @@
 						id: 'PESSOS00CMPNYDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESIGNATION35876),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PESSOSEPPSEUDPESSOS00',
 						tab: 'PESSOSEPPSEUDPESSOS00',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodempre',
-							dependencyEvent: 'fieldChange:pesso.codempre'
-						},
-						dependentFields: () => {
-							return {
-								set 'cmpny.codempre'(value) { vm.model.ValCodempre.updateValue(value) },
-								set 'cmpny.designat'(value) { vm.model.TableCmpnyDesignat.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1134,22 +1037,28 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodempre',
+							dependencyEvent: 'fieldChange:pesso.codempre'
+						},
+						dependentFields: () => ({
+							set 'cmpny.codempre'(value) { vm.model.ValCodempre.updateValue(value) },
+							set 'cmpny.designat'(value) { vm.model.TableCmpnyDesignat.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					PESSOS01PSEUDNOVOGR06: new fieldControlClass.AccordionControl({
 						id: 'PESSOS01PSEUDNOVOGR06',
 						name: 'NOVOGR06',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACCORDION01950),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PESSOSEPPSEUDPESSOS01',
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1157,12 +1066,9 @@
 						id: 'PESSOS01PSEUDNOVOGR03',
 						name: 'NOVOGR03',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.CONTACT05134),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PESSOSEPPSEUDPESSOS01',
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
@@ -1170,7 +1076,6 @@
 						anchored: false,
 						openingEvent: 'opened-PESSOS01PSEUDNOVOGR03',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1180,10 +1085,7 @@
 						id: 'PESSOS01PESSOTELEPHON',
 						name: 'TELEPHON',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.TELEPHONE28697),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PESSOS01PSEUDNOVOGR03',
@@ -1191,7 +1093,6 @@
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						maxLength: 20,
 						labelId: 'label_PESSOS01PESSOTELEPHON',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1201,10 +1102,7 @@
 						id: 'PESSOS01PESSOEMAIL___',
 						name: 'EMAIL',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.EMAIL_44228),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PESSOS01PSEUDNOVOGR03',
@@ -1212,7 +1110,6 @@
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						maxLength: 254,
 						labelId: 'label_PESSOS01PESSOEMAIL___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1220,12 +1117,9 @@
 						id: 'PESSOS01PSEUDNOVOGR04',
 						name: 'NOVOGR04',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTO32097),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PESSOSEPPSEUDPESSOS01',
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
@@ -1233,7 +1127,6 @@
 						anchored: false,
 						openingEvent: 'opened-PESSOS01PSEUDNOVOGR04',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1243,10 +1136,7 @@
 						id: 'PESSOS01PESSOPHOTOGRA',
 						name: 'PHOTOGRA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTO51874),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PESSOS01PSEUDNOVOGR04',
@@ -1254,7 +1144,7 @@
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						height: 50,
 						width: 100,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PHOTO51874)),
 						controlLimits: [
 						],
 					}, this),
@@ -1262,12 +1152,9 @@
 						id: 'PESSOS01PSEUDNOVOGR05',
 						name: 'NOVOGR05',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.CAREER41490),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PESSOSEPPSEUDPESSOS01',
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
@@ -1275,7 +1162,6 @@
 						anchored: false,
 						openingEvent: 'opened-PESSOS01PSEUDNOVOGR05',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 						showWhen: {
@@ -1283,22 +1169,17 @@
 							fnFormula(params)
 							{
 								// Formula: [PESSO->INTERNA]==1
-								// eslint-disable-next-line eqeqeq
-								return (this.ValInterna.value ? 1 : 0)==1
+								return (this.ValInterna.value ? 1 : 0)===1
 							},
 							dependencyEvents: ['fieldChange:pesso.interna'],
 							isServerRecalc: false,
-							isServerFormula: false,
 						},
 					}, this),
 					PESSOS01PSEUDEVOLUCAO: new fieldControlClass.TableListControl({
 						id: 'PESSOS01PSEUDEVOLUCAO',
 						name: 'EVOLUCAO',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.PROFESSIONAL_CATEGOR43519),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PESSOS01PSEUDNOVOGR05',
@@ -1306,7 +1187,7 @@
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						controller: 'PESSO',
 						action: 'Pessos01_ValEvolucao',
-						hasDependencies: false,
+						hasDependencies: true,
 						isInCollapsible: true,
 						columnsOriginal: [
 							new listColumnTypes.DateColumn({
@@ -1316,13 +1197,13 @@
 								field: 'SINCE',
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Cate1.ValCategoria',
 								area: 'CATE1',
-								field: 'CATEGORY',
+								field: 'CATEGORIA',
 								label: computed(() => this.Resources.CATEGORY18978),
 								dataLength: 50,
 								scrollData: 30,
@@ -1335,7 +1216,7 @@
 								field: 'FIMPERIO',
 								label: computed(() => this.Resources.END_OF_PERIOD44616),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1356,9 +1237,10 @@
 							showLimitsInfo: true,
 							tableTitle: computed(() => this.Resources.PROFESSIONAL_CATEGOR43519),
 							showAlternatePagination: true,
+							rowClickActionInternal: 'selectSingle',
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -1464,6 +1346,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'EVCAT',
@@ -1477,18 +1360,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: EVCAT
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValSince',
+								sortOrder: 'desc'
+							}
 						},
 						changeEvents: ['changed-PESSO', 'changed-EVCAT', 'changed-CATE1'],
 						uuid: 'Pessos01_ValEvolucao',
@@ -1506,18 +1383,12 @@
 						id: 'PESSOS01PSEUDFICHACAR',
 						name: 'FICHACAR',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.CAREER_RECORD36379),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PESSOS01PSEUDNOVOGR05',
 						container: 'PESSOS01PSEUDNOVOGR05',
 						tab: 'PESSOSEPPSEUDPESSOS01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
 						targetTableListId: 'PESSOS01PSEUDEVOLUCAO',
 						supportForm: {
 							name: 'EVCAT',
@@ -1527,17 +1398,16 @@
 						},
 						allowFormActions: {
 						},
+						controlLimits: [
+						],
 					}, this),
 					PESSOS01PSEUDNOVOGR07: new fieldControlClass.GroupControl({
 						id: 'PESSOS01PSEUDNOVOGR07',
 						name: 'NOVOGR07',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.CONTACT05134),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PESSOSEPPSEUDPESSOS01',
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
@@ -1545,18 +1415,14 @@
 						anchored: false,
 						openingEvent: 'opened-PESSOS01PSEUDNOVOGR07',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					PESSOS01PSEUDCONTACTO: new fieldControlClass.TableListControl({
 						id: 'PESSOS01PSEUDCONTACTO',
 						name: 'CONTACTO',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.CONTACTS55742),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-PESSOS01PSEUDNOVOGR07',
@@ -1600,7 +1466,7 @@
 							permissions: {
 								canView: false,
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -1692,18 +1558,12 @@
 									isPopup: true
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: CONTA
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'Tpcon.ValTipocont',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-GENRE', 'changed-TPCON', 'changed-CONTA', 'changed-PESSO'],
 						uuid: 'Pessos01_ValContacto',
@@ -1780,6 +1640,8 @@
 						set ValDtultcat(value) { vm.model.ValDtultcat.updateValue(value) },
 						get ValEmail() { return vm.model.ValEmail.value },
 						set ValEmail(value) { vm.model.ValEmail.updateValue(value) },
+						get ValEmail2() { return vm.model.ValEmail2.value },
+						set ValEmail2(value) { vm.model.ValEmail2.updateValue(value) },
 						get ValExterna() { return vm.model.ValExterna.value },
 						set ValExterna(value) { vm.model.ValExterna.updateValue(value) },
 						get ValGender() { return vm.model.ValGender.value },
@@ -1809,7 +1671,7 @@
 						/** The foreign key to the REGI1 table */
 						get regi1() { return vm.model.ValCodregia },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1905,6 +1767,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1944,6 +1814,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -2070,6 +1948,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR PESSOSEP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -2085,6 +1979,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PESSOSEP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

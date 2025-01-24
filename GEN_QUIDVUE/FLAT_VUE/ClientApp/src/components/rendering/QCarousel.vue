@@ -1,9 +1,9 @@
 ﻿<template>
 	<div
-		:id="controlId"
+		:id="id"
 		:class="['carousel-container', $attrs.class]">
 		<div
-			:id="`${controlId}-content`"
+			:id="`${id}-content`"
 			class="carousel slide"
 			:data-interval="autoCycleInterval"
 			:data-keyboard="keyboardControllable"
@@ -11,38 +11,42 @@
 			:data-ride="ride"
 			:data-wrap="wrap">
 			<ol
-				v-if="showIndicators"
+				v-if="showIndicators && slides.length > 1"
 				class="carousel-indicators">
 				<li
-					v-for="(row, index) in mappedValues"
-					:key="row.rowKey"
+					v-for="(slide, index) in slides"
+					:key="slide.id"
 					:class="{ active: index === 0 }"
 					:data-target="target"
 					:data-slide-to="index" />
 			</ol>
 
-			<div class="carousel-inner">
+			<q-skeleton-loader v-if="loading" />
+
+			<div
+				v-else
+				class="carousel-inner">
 				<div
-					v-for="(row, index) in mappedValues"
-					:key="row.rowKey"
+					v-for="(slide, index) in slides"
+					:key="slide.id"
 					:class="itemClasses(index)"
-					:style="itemStyle(row.slideImage?.previewData)"
-					@click="onSlideClick(row)">
+					:style="itemStyle(slide)"
+					@click="onSlideClick(slide)">
 					<div class="carousel-content">
 						<div class="carousel-caption d-none d-md-block">
-							<h2 v-if="row.slideTitle">
-								{{ row.slideTitle?.value }}
+							<h2 v-if="slide.title">
+								{{ slide.title }}
 							</h2>
 
-							<p v-if="row.slideSubtitle">
-								{{ row.slideSubtitle?.value }}
+							<p v-if="slide.subtitle">
+								{{ slide.subtitle }}
 							</p>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<template v-if="showControls">
+			<template v-if="showControls && slides.length > 1">
 				<a
 					class="carousel-control-prev"
 					role="button"
@@ -81,38 +85,78 @@
 	export default {
 		name: 'QCarousel',
 
-		emits: ['row-action'],
+		emits: ['update:visible', 'click:slide'],
 
 		inheritAttrs: false,
 
 		props: {
 			/**
-			 * The unique identifier for the container.
+			 * The unique identifier for the carousel.
 			 */
-			containerId: String,
+			id: String,
 
 			/**
-			 * The data from which we will build the carousel.
+			 * The slides of the carousel.
 			 */
-			mappedValues: {
+			slides: {
 				type: Array,
 				default: () => []
 			},
 
 			/**
-			 * The defined style variables.
+			 * Whether to show carousel indicators.
 			 */
-			styleVariables: {
-				type: Object,
-				default: () => ({})
+			showIndicators: {
+				type: Boolean,
+				default: true
 			},
 
 			/**
-			 * The configuration of the list.
+			 * Whether to show carousel controls.
 			 */
-			listConfig: {
-				type: Object,
-				default: () => ({})
+			showControls: {
+				type: Boolean,
+				default: true
+			},
+
+			/**
+			 * Whether carousel can be controlled via keyboard.
+			 */
+			keyboardControllable: {
+				type: Boolean,
+				default: true
+			},
+
+			/**
+			 * The interval for auto-cycling the carousel.
+			 */
+			autoCycleInterval: {
+				type: Number,
+				default: 5000
+			},
+
+			/**
+			 * The condition for pausing auto-cycling ('hover' or 'false').
+			 */
+			autoCyclePause: {
+				type: String,
+				default: 'hover'
+			},
+
+			/**
+			 * The type of ride behavior for carousel ('carousel' or 'false').
+			 */
+			ride: {
+				type: String,
+				default: 'carousel'
+			},
+
+			/**
+			 * Whether to wrap carousel slides.
+			 */
+			wrap: {
+				type: Boolean,
+				default: true
 			},
 
 			/**
@@ -122,78 +166,36 @@
 				type: Object,
 				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
 				default: () => DEFAULT_TEXTS
+			},
+
+			/**
+			 * Whether or not content is loading.
+			 */
+			loading: {
+				type: Boolean,
+				default: false
 			}
 		},
 
 		expose: [],
 
-		data()
-		{
-			return {
-				controlId: this.containerId ?? `q-carousel-${this._.uid}`
-			}
-		},
-
 		computed: {
 			target()
 			{
-				return `#${this.controlId}-content`
-			},
-
-			showIndicators()
-			{
-				return (this.styleVariables.showIndicators?.value || true) && this.mappedValues.length > 1
-			},
-
-			showControls()
-			{
-				return (this.styleVariables.showControls?.value || true) && this.mappedValues.length > 1
-			},
-
-			keyboardControllable()
-			{
-				return this.styleVariables.keyboardControllable?.value || true
-			},
-
-			autoCycleInterval()
-			{
-				return this.styleVariables.autoCycleInterval?.value ?? 5000
-			},
-
-			autoCyclePause()
-			{
-				return this.styleVariables.autoCyclePause?.value ?? 'hover'
-			},
-
-			ride()
-			{
-				return this.styleVariables.ride?.value ?? 'carousel'
-			},
-
-			wrap()
-			{
-				return this.styleVariables.wrap?.value || true
+				return `#${this.id}-content`
 			}
 		},
 
 		methods: {
-			/* Set the click event of each slide */
-			onSlideClick(row)
+			onSlideClick(slide)
 			{
-				var selection = window.getSelection()
+				const selection = window.getSelection()
 
 				// To allow text selection without triggering the click action
 				if (selection.toString().length !== 0)
 					return
 
-				// Execute default row action
-				if (Object.keys(this.listConfig.rowClickAction).length > 0)
-				{
-					this.$emit('row-action', {
-						id: this.listConfig.rowClickAction.id,
-						rowKey: row.rowKey
-					})
-				}
+				this.$emit('click:slide', slide.id)
 			},
 
 			itemClasses(idx)
@@ -206,9 +208,33 @@
 				return classes
 			},
 
-			itemStyle(image)
+			itemStyle(slide)
 			{
-				return image ? `background-image: url('${image}')` : ''
+				const style = {}
+
+				if (slide?.colorPlaceholder)
+					style['background-color'] = slide.colorPlaceholder
+
+				if (slide?.image)
+					style['background-image'] = `url('${slide.image}')`
+
+				return style
+			}
+		},
+
+		watch: {
+			slides: {
+				handler(newVal, oldSlides)
+				{
+					// TODO: use lazy: request slide image just before it scrolls into view
+					newVal.forEach((newSlide) => {
+						const oldSlide = oldSlides?.find((s) => s.id === newSlide.id)
+						if (!oldSlide || (oldSlide.image !== newSlide.image))
+							this.$emit('update:visible', newSlide.id, newSlide.image)
+					})
+				},
+				immediate: true,
+				deep: true
 			}
 		}
 	}

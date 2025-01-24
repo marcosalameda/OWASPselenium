@@ -9,9 +9,7 @@
 					<p>{{ texts.appName }}</p>
 				</div>
 
-				<h2>{{ texts.changePassword }}</h2>
-
-				<p>{{ texts.loginWithCredentials }}</p>
+				<p class="q-logon-text">{{ texts.loginWithCredentials }}</p>
 
 				<q-router-link
 					class="f-login__link"
@@ -46,7 +44,6 @@
 			return {
 				texts: {
 					appName: computed(() => this.Resources[hardcodedTexts.appName]),
-					changePassword: computed(() => this.Resources[hardcodedTexts.changePassword]),
 					loginWithCredentials: computed(() => this.Resources[hardcodedTexts.loginWithCredentials]),
 					backToLogin: computed(() => this.Resources[hardcodedTexts.backToLogin])
 				}

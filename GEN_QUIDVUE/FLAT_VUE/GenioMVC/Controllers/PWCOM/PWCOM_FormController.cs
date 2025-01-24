@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Pwcom;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_PWCOM_CANCEL = new NavigationLocation("MOVING_ACCESS62712", "Pwcom_Cancel", "Pwcom") { vueRouteName = "form-PWCOM", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_PWCOM_SHOW = new NavigationLocation("MOVING_ACCESS62712", "Pwcom_Show", "Pwcom") { vueRouteName = "form-PWCOM", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_PWCOM_NEW = new NavigationLocation("MOVING_ACCESS62712", "Pwcom_New", "Pwcom") { vueRouteName = "form-PWCOM", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_PWCOM_EDIT = new NavigationLocation("MOVING_ACCESS62712", "Pwcom_Edit", "Pwcom") { vueRouteName = "form-PWCOM", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_PWCOM_DUPLICATE = new NavigationLocation("MOVING_ACCESS62712", "Pwcom_Duplicate", "Pwcom") { vueRouteName = "form-PWCOM", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_PWCOM_DELETE = new NavigationLocation("MOVING_ACCESS62712", "Pwcom_Delete", "Pwcom") { vueRouteName = "form-PWCOM", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_PWCOM_CANCEL = new("MOVING_ACCESS62712", "Pwcom_Cancel", "Pwcom") { vueRouteName = "form-PWCOM", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_PWCOM_SHOW = new("MOVING_ACCESS62712", "Pwcom_Show", "Pwcom") { vueRouteName = "form-PWCOM", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_PWCOM_NEW = new("MOVING_ACCESS62712", "Pwcom_New", "Pwcom") { vueRouteName = "form-PWCOM", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_PWCOM_EDIT = new("MOVING_ACCESS62712", "Pwcom_Edit", "Pwcom") { vueRouteName = "form-PWCOM", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_PWCOM_DUPLICATE = new("MOVING_ACCESS62712", "Pwcom_Duplicate", "Pwcom") { vueRouteName = "form-PWCOM", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_PWCOM_DELETE = new("MOVING_ACCESS62712", "Pwcom_Delete", "Pwcom") { vueRouteName = "form-PWCOM", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Pwcom_ModalDBEdit()
-		{
-			Pwcom_ViewModel model = new Pwcom_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Pwcom_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Pwcom Multiform actions
-
-		//
-		// GET /Pwcom/MFPwcom_New
-		[HttpGet]
-		[ActionName("MFPwcom_New")]
-		public ActionResult MFPwcom_New()
-		{
-			var model = new Pwcom_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_PWCOM_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("pwcom", model.ValCodpwcom);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFPwcom_New_GET()
-		{
-			return MFPwcom_New();
-		}
-
-		//
-		// GET /Pwcom/MFPwcom_Edit
-		[HttpGet]
-		[ActionName("MFPwcom_Edit")]
-		public ActionResult MFPwcom_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("PWCOM", "EDIT", new { id = id, partialView = "MFPwcom", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFPwcom_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFPwcom_Edit(requestModel);
-		}
-
-		//
-		// GET /Pwcom/MFPwcom_Cancel
-		[ActionName("MFPwcom_Cancel")]
-		public ActionResult MFPwcom_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Pwcom(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Pwcom/MFPwcom_Save
-		[HttpPost]
-		[ActionName("MFPwcom_Save")]
-		public JsonResult MFPwcom_Save(Pwcom_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFPwcom_Save",
-				ViewName = "MFPwcom",
-				AreaName = "pwcom"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Pwcom/MFPwcom_Delete
-		[HttpPost]
-		[ActionName("MFPwcom_Delete")]
-		public JsonResult MFPwcom_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFPwcom_Delete",
-				ViewName = "MFPwcom",
-				AreaName = "pwcom",
-				Location = ACTION_PWCOM_EDIT
-			};
-
-			var model = new Pwcom_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Pwcom/Pwcom_PswValNome
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_psw")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,9 +422,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Pwcom_PswValNome_ViewModel model = new Pwcom_PswValNome_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodpwcom = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -590,6 +464,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_pess1")))
@@ -603,21 +478,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -625,12 +485,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Pwcom_Pess1ValName_ViewModel model = new Pwcom_Pess1ValName_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodpwcom = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Pwcom/Pwcom_SaveEdit
 		[HttpPost]

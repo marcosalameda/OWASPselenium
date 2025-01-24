@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_531ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_531', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '531',
 					isMenuList: true,
+					designation: computed(() => this.Resources.VENDAS00012),
 					acronym: 'GQT_531',
 					name: 'VENDA',
 					route: 'menu-GQT_531',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'GQT_Menu_531',
 						controller: 'SALE',
 						action: 'GQT_Menu_531',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -159,7 +169,7 @@
 								field: 'STARTDT',
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -218,7 +228,7 @@
 								field: 'DTQUALIF',
 								label: computed(() => this.Resources.QUALIFICACAO07026),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.BooleanColumn({
 								order: 11,
@@ -235,7 +245,7 @@
 								field: 'PREABORD',
 								label: computed(() => this.Resources.PRE_ABORDAGEM30870),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.BooleanColumn({
 								order: 13,
@@ -252,7 +262,7 @@
 								field: 'DTABORDA',
 								label: computed(() => this.Resources.ABORDAGEM05839),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.BooleanColumn({
 								order: 15,
@@ -277,7 +287,7 @@
 								field: 'DTAPRESE',
 								label: computed(() => this.Resources.APRESENTACAO_EFECTUA37455),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 18,
@@ -286,7 +296,7 @@
 								field: 'DTSUPERA',
 								label: computed(() => this.Resources.SUPERAR_OBJECOES02243),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 19,
@@ -295,7 +305,7 @@
 								field: 'TENTFECH',
 								label: computed(() => this.Resources.TENTATIVAS_DE_FECHO20342),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 20,
@@ -304,7 +314,7 @@
 								field: 'DTVENDA',
 								label: computed(() => this.Resources.FECHO_DA_VENDA48081),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 21,
@@ -313,7 +323,7 @@
 								field: 'DTACOMPA',
 								label: computed(() => this.Resources.ACOMPANHAMENTO53507),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 						],
 						config: {
@@ -328,7 +338,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -432,6 +442,7 @@
 								id: 'RCA_GQT_5311',
 								name: 'form-VENDA',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -448,23 +459,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: VENDA
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValIdentifi',
 							defaultSearchColumnNameOriginal: 'ValIdentifi',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValStartdt',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-ORGAN', 'changed-SALE'],
 						uuid: 'a300146c-6059-4337-93c5-37ca4f6a9191',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -493,6 +498,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS GQT_531]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_531]/
 // eslint-disable-next-line

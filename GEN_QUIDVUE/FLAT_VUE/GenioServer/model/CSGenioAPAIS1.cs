@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Country
 	/// </summary>
-	public class CSGenioApais1 : DbArea	{
+	public class CSGenioApais1 : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -130,12 +131,14 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
-			info.ChildTable = new ChildRelation[5];
+			info.ChildTable = new ChildRelation[7];
 			info.ChildTable[0]= new ChildRelation("regio", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
-			info.ChildTable[1]= new ChildRelation("cmpny", new String[] {"codcntry"}, DeleteProc.NA);
-			info.ChildTable[2]= new ChildRelation("indoc", new String[] {"codcntry"}, DeleteProc.NA);
-			info.ChildTable[3]= new ChildRelation("propr", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
-			info.ChildTable[4]= new ChildRelation("pesso", new String[] {"codpaise","codcntry"}, DeleteProc.NA);
+			info.ChildTable[1]= new ChildRelation("airpt", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[2]= new ChildRelation("cmpny", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[3]= new ChildRelation("indoc", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[4]= new ChildRelation("propr", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
+			info.ChildTable[5]= new ChildRelation("pesso", new String[] {"codpaise","codcntry"}, DeleteProc.NA);
+			info.ChildTable[6]= new ChildRelation("facil", new String[] {"codcntry"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------
@@ -282,7 +285,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodcntry, value); }
 		}
 
-
 		/// <summary>Field : "Country" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldCountry { get { return m_fldCountry; } }
 		private static FieldRef m_fldCountry = new FieldRef("pais1", "country");
@@ -293,7 +295,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCountry); }
 			set { insertNameValueField(FldCountry, value); }
 		}
-
 
 		/// <summary>Field : "Active" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldActive { get { return m_fldActive; } }
@@ -306,7 +307,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldActive, value); }
 		}
 
-
 		/// <summary>Field : "Numeric" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldCodigonr { get { return m_fldCodigonr; } }
 		private static FieldRef m_fldCodigonr = new FieldRef("pais1", "codigonr");
@@ -317,7 +317,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodigonr); }
 			set { insertNameValueField(FldCodigonr, value); }
 		}
-
 
 		/// <summary>Field : "Alphabetic 2" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldAlfa2 { get { return m_fldAlfa2; } }
@@ -330,7 +329,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldAlfa2, value); }
 		}
 
-
 		/// <summary>Field : "Alphabetic 3" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldAlfa3 { get { return m_fldAlfa3; } }
 		private static FieldRef m_fldAlfa3 = new FieldRef("pais1", "alfa3");
@@ -342,7 +340,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldAlfa3, value); }
 		}
 
-
 		/// <summary>Field : "Flag" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldFlag { get { return m_fldFlag; } }
 		private static FieldRef m_fldFlag = new FieldRef("pais1", "flag");
@@ -353,7 +350,6 @@ namespace CSGenio.business
 			get { return (byte[])returnValueField(FldFlag); }
 			set { insertNameValueField(FldFlag, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -396,23 +392,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioApais1> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioApais1> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioApais1>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -461,7 +440,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX PAIS1]/

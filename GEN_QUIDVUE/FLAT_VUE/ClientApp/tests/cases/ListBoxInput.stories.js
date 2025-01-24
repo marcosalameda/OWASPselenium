@@ -1,12 +1,11 @@
-﻿import ListboxInput from './ListboxInput.case.vue'
+﻿import ListboxInput from './ListBoxInput.case.vue'
 
 export default {
-    title: 'Inputs/ListboxInput',
-    component: ListboxInput,
-    tags: [],
-  };
+	title: 'Inputs/ListboxInput',
+	component: ListboxInput,
+	tags: []
+}
 
-  export const Simple = {
-    args: {
-    },
-  };
+export const Simple = {
+	args: {}
+}

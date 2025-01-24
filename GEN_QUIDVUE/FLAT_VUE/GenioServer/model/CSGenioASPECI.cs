@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Specialty
 	/// </summary>
-	public class CSGenioAspeci : DbArea	{
+	public class CSGenioAspeci : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -243,7 +244,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodespec, value); }
 		}
 
-
 		/// <summary>Field : "Specialty" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldEspecial { get { return m_fldEspecial; } }
 		private static FieldRef m_fldEspecial = new FieldRef("speci", "especial");
@@ -255,7 +255,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldEspecial, value); }
 		}
 
-
 		/// <summary>Field : "Technical area" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldAreatecn { get { return m_fldAreatecn; } }
 		private static FieldRef m_fldAreatecn = new FieldRef("speci", "areatecn");
@@ -266,7 +265,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldAreatecn); }
 			set { insertNameValueField(FldAreatecn, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -309,23 +307,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAspeci> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAspeci> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAspeci>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -374,7 +355,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX SPECI]/

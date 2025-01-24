@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Item _item;
 		[DisplayName("Item")]
 		[ShouldSerialize("Item")]
-		public virtual Item Item { 
-			get { 
+		public virtual Item Item {
+			get {
 				if (!this.isEmptyModel && (_item == null || (!string.IsNullOrEmpty(ValCoditem) && (_item.isEmptyModel || _item.klass.QPrimaryKey != ValCoditem))))
 					_item = Models.Item.Find(ValCoditem, m_userContext, Identifier, _fieldsToSerialize);
 				if (_item == null)
 					_item = new Models.Item(m_userContext, true, _fieldsToSerialize);
 				return _item;
 			}
-			set { _item = value; } 
+			set { _item = value; }
 		}
-		
+
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Cattp _cattp;
 		[DisplayName("Cattp")]
 		[ShouldSerialize("Cattp")]
-		public virtual Cattp Cattp { 
-			get { 
+		public virtual Cattp Cattp {
+			get {
 				if (!this.isEmptyModel && (_cattp == null || (!string.IsNullOrEmpty(ValCodtpcat) && (_cattp.isEmptyModel || _cattp.klass.QPrimaryKey != ValCodtpcat))))
 					_cattp = Models.Cattp.Find(ValCodtpcat, m_userContext, Identifier, _fieldsToSerialize);
 				if (_cattp == null)
 					_cattp = new Models.Cattp(m_userContext, true, _fieldsToSerialize);
 				return _cattp;
 			}
-			set { _cattp = value; } 
+			set { _cattp = value; }
 		}
-		
+
 
 		[DisplayName("Category type")]
 		/// <summary>Field : "Category type" Tipo: "C" Formula: ++ "[CATTP->TPCATEGO]"</summary>
@@ -85,19 +85,19 @@ namespace GenioMVC.Models
 		public Itemc(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAitemc(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Itemc(UserContext userContext, CSGenioAitemc val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAitemc csgenioa)
@@ -124,7 +124,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

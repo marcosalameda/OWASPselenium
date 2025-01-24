@@ -169,7 +169,7 @@
 			 */
 			containerClasses()
 			{
-				var classes = ['step-buttons--container']
+				const classes = ['step-buttons--container']
 
 				if (this.isVertical)
 				{
@@ -195,7 +195,7 @@
 			 */
 			stepListClasses()
 			{
-				var classes = ['step-buttons']
+				const classes = ['step-buttons']
 
 				if (this.isVertical)
 					classes.push('q-wizard__steps--vertical')
@@ -297,7 +297,7 @@
 			 */
 			scrollLeft()
 			{
-				var visibleCount = 0
+				let visibleCount = 0
 
 				for (let i = 0; i < this.activatedSteps.length; i++)
 				{
@@ -320,7 +320,7 @@
 			 */
 			scrollRight()
 			{
-				var visibleCount = 0
+				let visibleCount = 0
 
 				for (let i = this.activatedSteps.length - 1; i >= 0; i--)
 				{
@@ -347,7 +347,7 @@
 				if (!this.showScroll || this.isStepVisible(step))
 					return
 
-				var firstVisible, lastVisible
+				let firstVisible, lastVisible
 
 				// Sets the first and last visible steps.
 				for (let s of this.activatedSteps)
@@ -395,7 +395,7 @@
 					}
 				}
 
-				var selectedStep = this.stepList[this.selectedStep - 1]
+				const selectedStep = this.stepList[this.selectedStep - 1]
 				this.focusOnStep(selectedStep)
 			}
 		},

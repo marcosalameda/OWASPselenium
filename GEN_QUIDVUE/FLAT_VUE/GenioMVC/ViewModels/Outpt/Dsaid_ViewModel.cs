@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Outpt
 {
-	public class Dsaid_ViewModel : FormViewModel<Models.Outpt>
+	public class Dsaid_ViewModel : FormViewModel<Models.Outpt>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,16 +29,22 @@ namespace GenioMVC.ViewModels.Outpt
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Warehouse" | Type: "CE"
+		/// </summary>
+		public string ValCodwareh { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Warehouse" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Ware1> TableWare1Warehdes { get; set; }
-
 		/// <summary>
 		/// Title: "No:" | Type: "N"
 		/// </summary>
 		public decimal? ValDocumenr { get; set; }
-
 		/// <summary>
 		/// Title: "Date:" | Type: "DT"
 		/// </summary>
@@ -51,15 +57,6 @@ namespace GenioMVC.ViewModels.Outpt
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Warehouse" | Type: "CE"
-		/// </summary>
-		public string ValCodwareh { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -75,9 +72,10 @@ namespace GenioMVC.ViewModels.Outpt
 
 		public string ValCodoutpt { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Dsaid_ViewModel() : base(null!) { }
@@ -113,6 +111,15 @@ namespace GenioMVC.ViewModels.Outpt
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Outpt model = new Models.Outpt(userContext) { Identifier = "FDSAID" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FDSAID");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -173,9 +180,9 @@ namespace GenioMVC.ViewModels.Outpt
 
 			try
 			{
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
 				ValDocumenr = ViewModelConversion.ToNumeric(m.ValDocumenr);
 				ValDhdocume = ViewModelConversion.ToDateTime(m.ValDhdocume);
-				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
 				ValCodoutpt = ViewModelConversion.ToString(m.ValCodoutpt);
 			}
 			catch (Exception)
@@ -185,6 +192,20 @@ namespace GenioMVC.ViewModels.Outpt
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Outpt m)
 		{
 			if (m == null)
@@ -195,20 +216,70 @@ namespace GenioMVC.ViewModels.Outpt
 
 			try
 			{
+				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
 				m.ValDocumenr = ViewModelConversion.ToNumeric(ValDocumenr);
 				m.ValDhdocume = ViewModelConversion.ToDateTime(ValDhdocume);
-				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
 				m.ValCodoutpt = ViewModelConversion.ToString(ValCodoutpt);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Dsaid) to Model (Outpt) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Dsaid) to Model (Outpt) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "outpt.codwareh":
+						this.ValCodwareh = ViewModelConversion.ToString(_value);
+						break;
+					case "outpt.documenr":
+						this.ValDocumenr = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "outpt.dhdocume":
+						this.ValDhdocume = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "outpt.codoutpt":
+						this.ValCodoutpt = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Dsaid) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Dsaid)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Outpt.Find(id ?? Navigation.GetStrValue("outpt"), m_userContext, "FDSAID"); }
+			finally { Model ??= new Models.Outpt(m_userContext) { Identifier = "FDSAID" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -222,20 +293,13 @@ namespace GenioMVC.ViewModels.Outpt
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FDSAID";
@@ -245,6 +309,7 @@ namespace GenioMVC.ViewModels.Outpt
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -303,30 +368,25 @@ namespace GenioMVC.ViewModels.Outpt
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
-			validator.Required("ValCodwareh", Resources.Resources.WAREHOUSE51864, ValCodwareh);
+			validator.Required("ValCodwareh", Resources.Resources.WAREHOUSE51864, ViewModelConversion.ToString(ValCodwareh), FieldType.CHAVE_ESTRANGEIRA_GUID.Formatting);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE DSAID]/
 		public override void Save()
 		{
 
-			try { Model = Models.Outpt.Find(Navigation.GetStrValue("outpt"), m_userContext, "FDSAID"); }
-			finally { if (Model == null) Model = new Models.Outpt(m_userContext) { Identifier = "FDSAID" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY DSAID]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Outpt.Find(Navigation.GetStrValue("outpt"), m_userContext, "FDSAID"); }
-			finally { if (Model == null) Model = new Models.Outpt(m_userContext) { Identifier = "FDSAID" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE DSAID]/
 
@@ -359,8 +419,8 @@ namespace GenioMVC.ViewModels.Outpt
 				object hValue = Navigation.GetValue("ware1", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					dsaid___ware1warehdesConds.Equal(CSGenioAware1.FldCodwareh, Navigation.GetValue("ware1"));
-					this.ValCodwareh = Navigation.GetStrValue("ware1");
+					dsaid___ware1warehdesConds.Equal(CSGenioAware1.FldCodwareh, hValue);
+					this.ValCodwareh = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -377,8 +437,6 @@ namespace GenioMVC.ViewModels.Outpt
 					Navigation.CurrentLevel.SetEntry("RETURN_ware1", null);
 				}
 				FillDependant_DsaidTableWare1Warehdes(lazyLoad);
-				//Check if foreignkey comes from history
-				TableWare1Warehdes.FilledByHistory = Navigation.CheckFilledByHistory("ware1");
 				return;
 			}
 
@@ -446,9 +504,6 @@ namespace GenioMVC.ViewModels.Outpt
 
 				TableWare1Warehdes.List = new SelectList(TableWare1Warehdes.Elements.ToSelectList(x => x.ValWarehdes, x => x.ValCodwareh,  x => x.ValCodwareh == this.ValCodwareh), "Value", "Text", this.ValCodwareh);
 				FillDependant_DsaidTableWare1Warehdes();
-
-				//Check if foreignkey comes from history
-				TableWare1Warehdes.FilledByHistory = Navigation.CheckFilledByHistory("ware1");
 			}
 		}
 
@@ -545,15 +600,17 @@ namespace GenioMVC.ViewModels.Outpt
 		{
 			return identifier switch
 			{
+				"outpt.codwareh" => ViewModelConversion.ToString(modelValue),
 				"outpt.documenr" => ViewModelConversion.ToNumeric(modelValue),
 				"outpt.dhdocume" => ViewModelConversion.ToDateTime(modelValue),
-				"outpt.codwareh" => ViewModelConversion.ToString(modelValue),
 				"outpt.codoutpt" => ViewModelConversion.ToString(modelValue),
 				"ware1.codwareh" => ViewModelConversion.ToString(modelValue),
 				"ware1.warehdes" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

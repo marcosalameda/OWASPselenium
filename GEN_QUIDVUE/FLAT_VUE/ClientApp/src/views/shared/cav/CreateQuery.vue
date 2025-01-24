@@ -24,13 +24,12 @@
 						class="i-text"
 						:label="texts.saveQuery"
 						:label-attrs="{ class: 'i-text__label' }">
-						<q-radio-button-input
+						<q-radio-group
 							id="text-persistence-input"
 							v-model="radioOption"
 							:options-list="accessTypes"
 							:label-left-side="false"
-							:deselect-radio="false"
-							@update:model-value="radioOption = $event" />
+							:deselect-radio="false" />
 					</base-input-structure>
 				</q-control-wrapper>
 			</q-row-container>

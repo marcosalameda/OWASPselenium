@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Entit _entit;
 		[DisplayName("Entit")]
 		[ShouldSerialize("Entit")]
-		public virtual Entit Entit { 
-			get { 
+		public virtual Entit Entit {
+			get {
 				if (!this.isEmptyModel && (_entit == null || (!string.IsNullOrEmpty(ValCodentit) && (_entit.isEmptyModel || _entit.klass.QPrimaryKey != ValCodentit))))
 					_entit = Models.Entit.Find(ValCodentit, m_userContext, Identifier, _fieldsToSerialize);
 				if (_entit == null)
 					_entit = new Models.Entit(m_userContext, true, _fieldsToSerialize);
 				return _entit;
 			}
-			set { _entit = value; } 
+			set { _entit = value; }
 		}
-		
+
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Facil _facil;
 		[DisplayName("Facil")]
 		[ShouldSerialize("Facil")]
-		public virtual Facil Facil { 
-			get { 
+		public virtual Facil Facil {
+			get {
 				if (!this.isEmptyModel && (_facil == null || (!string.IsNullOrEmpty(ValCodfacil) && (_facil.isEmptyModel || _facil.klass.QPrimaryKey != ValCodfacil))))
 					_facil = Models.Facil.Find(ValCodfacil, m_userContext, Identifier, _fieldsToSerialize);
 				if (_facil == null)
 					_facil = new Models.Facil(m_userContext, true, _fieldsToSerialize);
 				return _facil;
 			}
-			set { _facil = value; } 
+			set { _facil = value; }
 		}
-		
+
 
 		[DisplayName("Global Location Number")]
 		/// <summary>Field : "Global Location Number" Tipo: "C" Formula:  ""</summary>
@@ -85,19 +85,19 @@ namespace GenioMVC.Models
 		public Locat(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAlocat(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Locat(UserContext userContext, CSGenioAlocat val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAlocat csgenioa)
@@ -124,7 +124,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

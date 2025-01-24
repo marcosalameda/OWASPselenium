@@ -7,15 +7,18 @@
 			<q-control-wrapper class="row-line-group">
 				<q-group-box-container
 					id="user-register-acc-info"
-					:label="texts.accountInfo">
+					:label="texts.accountInfo"
+					class="c-groupbox--minor">
 					<q-row-container>
 						<q-control-wrapper class="row-line-group">
 							<base-input-structure
 								class="i-text"
 								v-bind="controls.Nome">
-								<q-input-group :prepend-icon="{ icon: 'user' }">
+								<q-input-group 
+									:prepend-icon="{ icon: 'user' }"
+									size="xlarge">
 									<q-text-field
-										v-bind="controls.Nome"
+										v-bind="controls.Nome.props"
 										:model-value="model.ValNome.value"
 										@update:model-value="model.ValNome.fnUpdateValue" />
 								</q-input-group>
@@ -28,9 +31,11 @@
 							<base-input-structure
 								class="i-text"
 								v-bind="controls.Email">
-								<q-input-group :prepend-icon="{ icon: 'envelope' }">
+								<q-input-group 
+									:prepend-icon="{ icon: 'envelope' }" 
+									size="xlarge">
 									<q-text-field
-										v-bind="controls.Email"
+										v-bind="controls.Email.props"
 										:model-value="model.ValEmail.value"
 										@update:model-value="model.ValEmail.fnUpdateValue" />
 								</q-input-group>
@@ -45,6 +50,7 @@
 								v-bind="controls.Password">
 								<q-password-input
 									v-bind="controls.Password"
+									size="xlarge"
 									:model-value="model.ValPassword.value"
 									@update:model-value="model.ValPassword.fnUpdateValue">
 									<template #prepend>
@@ -65,6 +71,7 @@
 								<q-password-input
 									v-bind="controls.ConfirmPassword"
 									:model-value="model.ConfirmValPassword.value"
+									size="xlarge"
 									@update:model-value="model.ConfirmValPassword.fnUpdateValue">
 									<template #prepend>
 										<span>
@@ -235,7 +242,7 @@
 			 */
 			initFormControls()
 			{
-				_forEach(this.controls, ctrl => ctrl.Init(true))
+				_forEach(this.controls, (ctrl) => ctrl.init(true))
 			}
 		},
 

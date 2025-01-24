@@ -59,6 +59,39 @@ export default function getFormsRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/:module/form/AGENT01/:mode/:id?',
+			name: 'form-AGENT01',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormAgent01/QFormAgent01.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'AGENT',
+				humanKeyFields: ['ValName']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/AGENT02/:mode/:id?',
+			name: 'form-AGENT02',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormAgent02/QFormAgent02.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'AGENT',
+				humanKeyFields: ['ValName']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/AGENT05/:mode/:id?',
+			name: 'form-AGENT05',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormAgent05/QFormAgent05.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'AGENT',
+				humanKeyFields: ['ValName']
+			}
+		},
+		{
 			path: '/:culture/:system/:module/form/AGREG/:mode/:id?',
 			name: 'form-AGREG',
 			props: route => propsConverter(route),
@@ -246,6 +279,28 @@ export default function getFormsRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/:module/form/C_ADD/:mode/:id?',
+			name: 'form-C_ADD',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormCAdd/QFormCAdd.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'C_ADD',
+				humanKeyFields: ['ValCountry']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/C_BRN/:mode/:id?',
+			name: 'form-C_BRN',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormCBrn/QFormCBrn.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'C_BRN',
+				humanKeyFields: ['ValCountry']
+			}
+		},
+		{
 			path: '/:culture/:system/:module/form/CAMPO/:mode/:id?',
 			name: 'form-CAMPO',
 			props: route => propsConverter(route),
@@ -301,6 +356,17 @@ export default function getFormsRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/:module/form/CITY03/:mode/:id?',
+			name: 'form-CITY03',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormCity03/QFormCity03.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'CITY',
+				humanKeyFields: ['ValCity']
+			}
+		},
+		{
 			path: '/:culture/:system/:module/form/CMPKI/:mode/:id?',
 			name: 'form-CMPKI',
 			props: route => propsConverter(route),
@@ -331,6 +397,50 @@ export default function getFormsRoutes()
 				routeType: 'form',
 				baseArea: 'CONTA',
 				humanKeyFields: ['ValContacto']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/CONTAC03/:mode/:id?',
+			name: 'form-CONTAC03',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormContac03/QFormContac03.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROCN',
+				humanKeyFields: ['ValName']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/CONTAC06/:mode/:id?',
+			name: 'form-CONTAC06',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormContac06/QFormContac06.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROCN',
+				humanKeyFields: ['ValName']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/CONTAC19/:mode/:id?',
+			name: 'form-CONTAC19',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormContac19/QFormContac19.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROCN',
+				humanKeyFields: ['ValName']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/CTRY03/:mode/:id?',
+			name: 'form-CTRY03',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormCtry03/QFormCtry03.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'CTRY',
+				humanKeyFields: ['ValCountry']
 			}
 		},
 		{
@@ -448,6 +558,17 @@ export default function getFormsRoutes()
 			name: 'form-EQUDOCUM',
 			props: route => propsConverter(route),
 			component: () => import('@/views/forms/FormEqudocum/QFormEqudocum.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'EQUIP',
+				humanKeyFields: ['ValRegistnr']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/EQUIGROU/:mode/:id?',
+			name: 'form-EQUIGROU',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormEquigrou/QFormEquigrou.vue'),
 			meta: {
 				routeType: 'form',
 				baseArea: 'EQUIP',
@@ -602,6 +723,28 @@ export default function getFormsRoutes()
 			name: 'form-FIELDHLP',
 			props: route => propsConverter(route),
 			component: () => import('@/views/forms/FormFieldhlp/QFormFieldhlp.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'FLDS',
+				humanKeyFields: ['ValDescrip']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/FLDSCOND/:mode/:id?',
+			name: 'form-FLDSCOND',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormFldscond/QFormFldscond.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'FLDS',
+				humanKeyFields: ['ValDescrip']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/FLDSTBL/:mode/:id?',
+			name: 'form-FLDSTBL',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormFldstbl/QFormFldstbl.vue'),
 			meta: {
 				routeType: 'form',
 				baseArea: 'FLDS',
@@ -873,6 +1016,17 @@ export default function getFormsRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/:module/form/LNHDF/:mode/:id?',
+			name: 'form-LNHDF',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormLnhdf/QFormLnhdf.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'LNHDF',
+				humanKeyFields: ['ValName']
+			}
+		},
+		{
 			path: '/:culture/:system/:module/form/LNHPD/:mode/:id?',
 			name: 'form-LNHPD',
 			props: route => propsConverter(route),
@@ -983,6 +1137,17 @@ export default function getFormsRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/:module/form/PEOPLE/:mode/:id?',
+			name: 'form-PEOPLE',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPeople/QFormPeople.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: '',
+				humanKeyFields: []
+			}
+		},
+		{
 			path: '/:culture/:system/:module/form/PERSO/:mode/:id?',
 			name: 'form-PERSO',
 			props: route => propsConverter(route),
@@ -1027,6 +1192,17 @@ export default function getFormsRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/:module/form/PESSOHIS/:mode/:id?',
+			name: 'form-PESSOHIS',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPessohis/QFormPessohis.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PESSO',
+				humanKeyFields: ['ValName']
+			}
+		},
+		{
 			path: '/:culture/:system/:module/form/PESSOSEP/:mode/:id?',
 			name: 'form-PESSOSEP',
 			props: route => propsConverter(route),
@@ -1046,6 +1222,28 @@ export default function getFormsRoutes()
 				routeType: 'form',
 				baseArea: 'WPESS',
 				humanKeyFields: ['ValName']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PHOTO03/:mode/:id?',
+			name: 'form-PHOTO03',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPhoto03/QFormPhoto03.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROPH',
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PLIST/:mode/:id?',
+			name: 'form-PLIST',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPlist/QFormPlist.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'ITEM',
+				humanKeyFields: ['ValItemdes']
 			}
 		},
 		{
@@ -1079,6 +1277,127 @@ export default function getFormsRoutes()
 				routeType: 'form',
 				baseArea: 'PROJE',
 				humanKeyFields: ['ValProjecto']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PROPE01/:mode/:id?',
+			name: 'form-PROPE01',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPrope01/QFormPrope01.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROPE',
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PROPE03/:mode/:id?',
+			name: 'form-PROPE03',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPrope03/QFormPrope03.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROPE',
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PROPE05/:mode/:id?',
+			name: 'form-PROPE05',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPrope05/QFormPrope05.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROPE',
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PROPE06/:mode/:id?',
+			name: 'form-PROPE06',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPrope06/QFormPrope06.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROPE',
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PROPE07/:mode/:id?',
+			name: 'form-PROPE07',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPrope07/QFormPrope07.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROPE',
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PROPE08/:mode/:id?',
+			name: 'form-PROPE08',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPrope08/QFormPrope08.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROPE',
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PROPE09/:mode/:id?',
+			name: 'form-PROPE09',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPrope09/QFormPrope09.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROPE',
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PROPE10/:mode/:id?',
+			name: 'form-PROPE10',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPrope10/QFormPrope10.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROPE',
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PROPE11/:mode/:id?',
+			name: 'form-PROPE11',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPrope11/QFormPrope11.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROPE',
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PROPE17/:mode/:id?',
+			name: 'form-PROPE17',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPrope17/QFormPrope17.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROPE',
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PROPE19/:mode/:id?',
+			name: 'form-PROPE19',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPrope19/QFormPrope19.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'PROPE',
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -1856,6 +2175,61 @@ export default function getFormsRoutes()
 				routeType: 'form',
 				baseArea: 'VISIT',
 				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/WID_COLA/:mode/:id?',
+			name: 'form-WID_COLA',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormWidCola/QFormWidCola.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'CMPNY',
+				humanKeyFields: ['ValDesignat']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/WID_EQUI/:mode/:id?',
+			name: 'form-WID_EQUI',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormWidEqui/QFormWidEqui.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: '',
+				humanKeyFields: []
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/WID_GRAP/:mode/:id?',
+			name: 'form-WID_GRAP',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormWidGrap/QFormWidGrap.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: '',
+				humanKeyFields: []
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/WID_IEQU/:mode/:id?',
+			name: 'form-WID_IEQU',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormWidIequ/QFormWidIequ.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'EQUIP',
+				humanKeyFields: ['ValRegistnr']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/WID_PESS/:mode/:id?',
+			name: 'form-WID_PESS',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormWidPess/QFormWidPess.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: '',
+				humanKeyFields: []
 			}
 		},
 	]

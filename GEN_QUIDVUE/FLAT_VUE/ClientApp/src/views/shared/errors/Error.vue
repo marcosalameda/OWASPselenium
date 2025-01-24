@@ -16,12 +16,24 @@
 
 		<br />
 
-		<q-button
+		<q-button 
+			v-if="backButtonVisible"
 			b-style="secondary"
 			:label="goBackText"
 			:title="goBackText"
 			@click="back">
 			<q-icon icon="back" />
+		</q-button>
+
+		<br />
+
+		<q-button 
+			v-if="mainPageButtonVisible"
+			b-style="secondary"
+			:label="goMainPageText"
+			:title="goMainPageText"
+			@click="mainPage">
+			<q-icon icon="home" />
 		</q-button>
 	</div>
 </template>
@@ -36,9 +48,7 @@
 	export default {
 		name: 'QError',
 
-		mixins: [
-			NavHandlers
-		],
+		mixins: [NavHandlers],
 
 		props: {
 			/**
@@ -56,6 +66,22 @@
 			imageName: {
 				type: String,
 				default: 'generic-error.png'
+			},
+
+			/**
+			 * Whether the back button should be visible.
+			 */
+			backButtonVisible: {
+				type: Boolean,
+				default: true
+			},
+
+			/**
+			 * Whether the Main page button should be visible.
+			 */
+			mainPageButtonVisible: {
+				type: Boolean,
+				default: false
 			}
 		},
 
@@ -72,13 +98,10 @@
 
 		created()
 		{
-			let eMsgParams = this.$route.params.errorMessage,
-				eMsgQuery = this.$route.query.errorMessage
+			let eMsgParams = this.$route.params.errorMessage
 
 			if (typeof eMsgParams === 'string')
 				this.errorMessage = eMsgParams
-			else if (typeof eMsgQuery === 'string')
-				this.errorMessage = eMsgQuery
 		},
 
 		computed: {
@@ -92,6 +115,14 @@
 			goBackText()
 			{
 				return this.Resources[hardcodedTexts.goBack]
+			},
+
+			/**
+			 * Computed property to get localized text for the 'Home page' button label.
+			 */
+			goMainPageText()
+			{
+				return this.Resources[hardcodedTexts.initialPage]
 			}
 		},
 
@@ -108,6 +139,14 @@
 				 */
 				this.removeHistoryLevel()
 				this.goBack()
+			},
+
+			/**
+			 * Method to navigate to the main page.
+			 */
+			mainPage()
+			{
+				this.$router.push({ name: 'main' })
 			}
 		}
 	}

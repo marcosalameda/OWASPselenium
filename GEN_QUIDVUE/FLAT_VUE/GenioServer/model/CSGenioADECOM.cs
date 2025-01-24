@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Equipment decommission
 	/// </summary>
-	public class CSGenioAdecom : DbArea	{
+	public class CSGenioAdecom : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -78,6 +79,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "No bate";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "NO_BATE21045";
 
             Qfield.NotNull = true;
@@ -316,7 +318,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddeco, value); }
 		}
 
-
 		/// <summary>Field : "Decomission" Tipo: "DT" Formula: DF "[Now]"</summary>
 		public static FieldRef FldDtdeco { get { return m_fldDtdeco; } }
 		private static FieldRef m_fldDtdeco = new FieldRef("decom", "dtdeco");
@@ -328,18 +329,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDtdeco, value); }
 		}
 
-
 		/// <summary>Field : "No bate" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldDecomnr { get { return m_fldDecomnr; } }
 		private static FieldRef m_fldDecomnr = new FieldRef("decom", "decomnr");
 
 		/// <summary>Field : "No bate" Tipo: "N" Formula:  ""</summary>
-		public double ValDecomnr
+		public decimal ValDecomnr
 		{
-			get { return (double)returnValueField(FldDecomnr); }
+			get { return (decimal)returnValueField(FldDecomnr); }
 			set { insertNameValueField(FldDecomnr, value); }
 		}
-
 
 		/// <summary>Field : "Notes" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldNote { get { return m_fldNote; } }
@@ -352,7 +351,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldNote, value); }
 		}
 
-
 		/// <summary>Field : "Creation date" Tipo: "OD" Formula:  ""</summary>
 		public static FieldRef FldCreatdat { get { return m_fldCreatdat; } }
 		private static FieldRef m_fldCreatdat = new FieldRef("decom", "creatdat");
@@ -363,7 +361,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldCreatdat); }
 			set { insertNameValueField(FldCreatdat, value); }
 		}
-
 
 		/// <summary>Field : "Created by" Tipo: "ON" Formula:  ""</summary>
 		public static FieldRef FldCreatope { get { return m_fldCreatope; } }
@@ -376,7 +373,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCreatope, value); }
 		}
 
-
 		/// <summary>Field : "Changed on" Tipo: "ED" Formula:  ""</summary>
 		public static FieldRef FldChngdate { get { return m_fldChngdate; } }
 		private static FieldRef m_fldChngdate = new FieldRef("decom", "chngdate");
@@ -388,7 +384,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldChngdate, value); }
 		}
 
-
 		/// <summary>Field : "Changed by" Tipo: "EN" Formula:  ""</summary>
 		public static FieldRef FldOperchng { get { return m_fldOperchng; } }
 		private static FieldRef m_fldOperchng = new FieldRef("decom", "operchng");
@@ -399,7 +394,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldOperchng); }
 			set { insertNameValueField(FldOperchng, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -442,23 +436,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAdecom> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAdecom> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAdecom>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -507,7 +484,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX DECOM]/

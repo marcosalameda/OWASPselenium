@@ -11,16 +11,17 @@ using GenioMVC.Helpers;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Asset
 {
 	public class Equip03_ValDocument_ViewModel : ListViewModel
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements.
+		/// Gets or sets the object that represents the table and its elements. List type: "DP"
 		/// </summary>
 		[JsonPropertyName("Table")]
-		public TablePartial<GenioMVC.Models.Assma> Menu { get; set; }
+		public TablePartial<Equip03_ValDocument_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
 		public override string TableAlias { get => "assma"; }
@@ -69,6 +70,7 @@ namespace GenioMVC.ViewModels.Asset
 		/// <param name="userContext">The current user request context</param>
 		public Equip03_ValDocument_ViewModel(UserContext userContext) : base(userContext)
 		{
+			ValCodasset = userContext.CurrentNavigation.CurrentLevel.GetEntry("asset")?.ToString();
 		}
 
 		/// <inheritdoc/>
@@ -87,35 +89,36 @@ namespace GenioMVC.ViewModels.Asset
 
 		public void LoadToExport(out ListingMVC<CSGenioAassma> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			listing = null;
-			conditions = null;
-			columns = this.GetColumnsToExport(ajaxRequest);
-			Load(-1, requestValues, ajaxRequest, true, ref listing, ref conditions);
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
 
-			//user config listing:
-			if (ajaxRequest && userColumns!=null)
-			{
-				List<Exports.QColumn> current_List = new List<Exports.QColumn>();
-				foreach (CSGenioAlstcol column in userColumns)
-				{
-					//check if theres a match in existing list columns
-					string areabase = column.ValTabela.ToLower() != "assma" ? CultureInfo.InvariantCulture.TextInfo.ToTitleCase(column.ValTabela) + "." : "";
-					Exports.QColumn matching_column = columns.Where(x => x.BaseArea == column.ValTabela && areabase + "Val" + x.FieldName.First().ToString().ToUpper() + x.FieldName.Substring(1).ToLower() == column.ValCampo && column.ValVisivel==1).FirstOrDefault();
-					if (matching_column != null)
-						current_List.Add(matching_column);
-				}
-				columns = current_List;
-			}
+			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
-		/// <summary>
-		/// Builds the list CriteriaSet with all the limits, filters and conditions
-		/// </summary>
-		/// <param name="requestValues">Table filters</param>
-		/// <param name="tableReload">[Quick fix] Indicates whether the data list should be loaded. If set to false within the method, it signals that the data list should not display rows due to unmet mandatory limits.</param>
-		/// <param name="crs">Pass a CriteriaSet by reference to be modified</param>
-		/// <param name="isToExport">If the  table is to be exported</param>
-		public CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
+		public void LoadToExport(out ListingMVC<CSGenioAassma> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
+		{
+			listing = null;
+			conditions = null;
+			columns = this.GetExportColumns(tableConfig.ColumnConfiguration);
+
+			// Store number of records to reset it after loading
+			int rowsPerPage = tableConfig.RowsPerPage;
+			tableConfig.RowsPerPage = -1;
+
+			Load(tableConfig, requestValues, ajaxRequest, true, ref listing, ref conditions);
+
+			// Reset number of records to original value
+			tableConfig.RowsPerPage = rowsPerPage;
+		}
+
+		/// <inheritdoc/>
+		public override CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
+		{
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
+			return BuildCriteriaSet(tableConfig, requestValues, out tableReload, crs, isToExport);
+		}
+
+		/// <inheritdoc/>
+		public override CriteriaSet BuildCriteriaSet(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
 		{
 			User u = m_userContext.User;
 			tableReload = true;
@@ -126,22 +129,20 @@ namespace GenioMVC.ViewModels.Asset
 
 
 			if (Menu == null)
-				Menu = new TablePartial<GenioMVC.Models.Assma>();
-			Menu.SetFilters(bool.Parse(requestValues["ValDocument_tableFilters"] ?? "false"), false);
+				Menu = new TablePartial<Equip03_ValDocument_RowViewModel>();
+			Menu.SetFilters(false, false);
 
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 
 
-			int numberListItems = 0; //The value of this doesnt really matter
-			LoadUserTableConfig(requestValues, allSortOrders, "ValDocument", ref numberListItems);
-
-			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValDocument_"));
+			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
 			//Subfilters
 			CriteriaSet subfilters = CriteriaSet.And();
+
 
 			crs.SubSets.Add(subfilters);
 
@@ -214,76 +215,88 @@ namespace GenioMVC.ViewModels.Asset
 		/// <param name="conditions">The conditions.</param>
 		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAassma> Qlisting, ref CriteriaSet conditions)
 		{
-			//TODO: Tem um problema quando saímos de um form e voltamos ao dbedit e mudamos de página.
-			//como não é devolvido to a view o text pesquisado, ao mudar de página assume que o Qfield está a vazio
-			if (ajaxRequest)
-				this.Navigation.SetValue("requestValues" + "Equip03_ValDocument", requestValues);
-			else if (!ajaxRequest && this.Navigation.CheckKey("requestValues" + "Equip03_ValDocument"))
-				requestValues = this.Navigation.GetValue<NameValueCollection>("requestValues" + "Equip03_ValDocument");
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
 
-			User u = m_userContext.User;
-			Menu = new TablePartial<GenioMVC.Models.Assma>();
+			tableConfig.RowsPerPage = numberListItems;
 
-			CriteriaSet equip03_pseuddocumentConds = CriteriaSet.And();
+			Load(tableConfig, requestValues, ajaxRequest, isToExport, ref Qlisting, ref conditions);
+		}
 
-			bool tableReload = true;
+		/// <summary>
+		/// Loads the table with the specified configuration.
+		/// </summary>
+		/// <param name="tableConfig">The table configuration object</param>
+		/// <param name="requestValues">The request values.</param>
+		/// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
+		/// <param name="isToExport">Whether the list is being loaded to be exported</param>
+		/// <param name="conditions">The conditions.</param>
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport = false, CriteriaSet conditions = null)
+		{
+			ListingMVC<CSGenioAassma> listing = null;
 
-			Menu.SetFilters(bool.Parse(requestValues["ValDocument_tableFilters"] ?? "false"), false);
+			Load(tableConfig, requestValues, ajaxRequest, isToExport, ref listing, ref conditions);
+		}
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
+		/// <summary>
+		/// Loads the table with the specified configuration.
+		/// </summary>
+		/// <param name="tableConfig">The table configuration object</param>
+		/// <param name="requestValues">The request values.</param>
+		/// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
+		/// <param name="isToExport">Whether the list is being loaded to be exported</param>
+		/// <param name="Qlisting">The rows.</param>
+		/// <param name="conditions">The conditions.</param>
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAassma> Qlisting, ref CriteriaSet conditions)
+		{
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+				new("Form", "EQUIP03")
+			}, "ms", "Time to load the form.")) {
+
+				User u = m_userContext.User;
+				Menu = new TablePartial<Equip03_ValDocument_RowViewModel>();
+
+				CriteriaSet equip03_pseuddocumentConds = CriteriaSet.And();
+
+				bool tableReload = true;
+
+				//FOR: MENU LIST SORTING
+				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 
 
-			LoadUserTableConfig(requestValues, allSortOrders, "ValDocument", ref numberListItems);
 
 
+				int numberListItems = tableConfig.RowsPerPage;
+				var pageNumber = ajaxRequest ? tableConfig.Page : 1;
 
-			var pageNumber = (ajaxRequest && !String.IsNullOrEmpty(requestValues["pValDocument"])) ? int.Parse(requestValues["pValDocument"]) : 1;
+				// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+				if (pageNumber < 1)
+					pageNumber = 1;
 
-			// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
-			if (pageNumber < 1)
-				pageNumber = 1;
-
-			List<ColumnSort> sorts = GetRequestSorts(this.Menu, "sValDocument", "dValDocument", requestValues, "assma", allSortOrders);
-
-
-FieldRef[] fields = new FieldRef[] { CSGenioAassma.FldCodassma, CSGenioAassma.FldZzstate, CSGenioAassma.FldName, CSGenioAassma.FldDigdocum, CSGenioAassma.FldDigdocumfk, CSGenioAassma.FldNotes };
+				List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig.ColumnOrderBy, "assma", allSortOrders);
 
 
-			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(m_userContext.PersistentSupport, Uuid, m_userContext.User).userColumns;
-			FieldRef firstVisibleColumn = null;
+				FieldRef[] fields = new FieldRef[] { CSGenioAassma.FldCodassma, CSGenioAassma.FldZzstate, CSGenioAassma.FldName, CSGenioAassma.FldDigdocum, CSGenioAassma.FldDigdocumfk, CSGenioAassma.FldNotes };
 
-			if (sorts == null)
-				if (userColumns != null)
+
+				// Totalizers
+				List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+
+				FieldRef firstVisibleColumn = null;
+
+				if (sorts == null)
 				{
-					CSGenioAlstcol col = userColumns.FirstOrDefault(x => x.ValVisivel == 1);
+					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (col != null)
-					{
-						string table = col.ValTabela.ToLower();
-						string field = col.ValCampo.ToLower(); //may contain Table.ValField
-						if (field.Contains("."))
-						{
-							field = field.Substring(table.Length + 4); //remove table name and .Val from ValCampo data. i.e: "Pesso.ValNome", pesso lenght will remove "Pesso" and then +4 for the fixed ".Val"
-						}
-						else
-						{
-							field = field.Substring(3); //remove table Val from ValCampo data. i.e: "ValNome", Substring(3) will remove "Val"
-						}
-
-						firstVisibleColumn = new FieldRef(table, field);
-					}
+					if (firstVisibleColumn == null)
+						firstVisibleColumn = new FieldRef("assma", "name");
 				}
-				else
-					firstVisibleColumn = new FieldRef("assma", "name");
 
 
-			// Limitations
-			if (this.tableLimits == null)
-				this.tableLimits = new List<Limit>();
-			//Comparer to check if limit is already present in tableLimits
-			LimitComparer limitComparer = new LimitComparer();
+				// Limitations
+				if (this.tableLimits == null)
+					this.tableLimits = new List<Limit>();
+				//Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new LimitComparer();
 
 			//Tooltip for EPHs affecting this viewmodel list
 			{
@@ -296,76 +309,91 @@ FieldRef[] fields = new FieldRef[] { CSGenioAassma.FldCodassma, CSGenioAassma.Fl
 			}
 
 
-			if (conditions == null)
-				conditions = CriteriaSet.And();
+				if (conditions == null)
+					conditions = CriteriaSet.And();
 
-			conditions.SubSets.Add(equip03_pseuddocumentConds);
-			equip03_pseuddocumentConds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
-			tableReload &= hasAllRequiredLimits;
+				conditions.SubSets.Add(equip03_pseuddocumentConds);
+				equip03_pseuddocumentConds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
+				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ EQUIP03_PSEUDDOCUMENT]/
 
-			if (isToExport)
-			{
-				if (!tableReload)
-					return;
+				if (isToExport)
+				{
+					if (!tableReload)
+						return;
 
-				Qlisting = Models.ModelBase.Where<CSGenioAassma>(m_userContext, false, equip03_pseuddocumentConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP03_PSEUDDOCUMENT", true, firstVisibleColumn: firstVisibleColumn);
+					Qlisting = Models.ModelBase.Where<CSGenioAassma>(m_userContext, false, equip03_pseuddocumentConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP03_PSEUDDOCUMENT", true, firstVisibleColumn: firstVisibleColumn);
 
 // USE /[MANUAL GQT OVERRQLSTEXP EQUIP03_PSEUDDOCUMENT]/
 
-				return;
-			}
-
-			if (tableReload)
-			{
-// USE /[MANUAL GQT OVERRQLIST EQUIP03_PSEUDDOCUMENT]/
-
-				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_assma");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_assma");
-				CriteriaSet m_PagingPosEPHs = null;
-
-				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
-				{
-					var m_iCurPag = m_userContext.PersistentSupport.getPagingPos(CSGenioAassma.GetInformation(), QMVC_POS_RECORD, sorts, equip03_pseuddocumentConds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
-					if (m_iCurPag != -1)
-					{
-						pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
-						Menu.FocusOnRecord = QMVC_POS_RECORD;
-					}
+					return;
 				}
 
-				ListingMVC<CSGenioAassma> listing = Models.ModelBase.Where<CSGenioAassma>(m_userContext, false, equip03_pseuddocumentConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP03_PSEUDDOCUMENT", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn);
+				if (tableReload)
+				{
+// USE /[MANUAL GQT OVERRQLIST EQUIP03_PSEUDDOCUMENT]/
 
-				if (listing.CurrentPage > 0)
-					pageNumber = listing.CurrentPage;
+					string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_assma");
+					Navigation.DestroyEntry("QMVC_POS_RECORD_assma");
+					CriteriaSet m_PagingPosEPHs = null;
 
-				//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
-				if (pageNumber < 1)
-					pageNumber = 1;
+					if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
+					{
+						var m_iCurPag = m_userContext.PersistentSupport.getPagingPos(CSGenioAassma.GetInformation(), QMVC_POS_RECORD, sorts, equip03_pseuddocumentConds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
+						if (m_iCurPag != -1)
+							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
+					}
 
-				//Set document field values to objects
-				SetDocumentFields(listing);
+					ListingMVC<CSGenioAassma> listing = Models.ModelBase.Where<CSGenioAassma>(m_userContext, false, equip03_pseuddocumentConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP03_PSEUDDOCUMENT", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
-				Menu.Elements = MapEquip03_ValDocument(listing);
+					if (listing.CurrentPage > 0)
+						pageNumber = listing.CurrentPage;
 
-				Menu.Identifier = "IBL_EQUIP03_PSEUDDOCUMENT";
+					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+					if (pageNumber < 1)
+						pageNumber = 1;
 
-				// Last updated by [CJP] at [2015.02.03]
-				// Adds the identifier to each element
-				foreach (var element in Menu.Elements)
-					element.Identifier = "IBL_EQUIP03_PSEUDDOCUMENT";
 
-				Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
+					//Set document field values to objects
+					SetDocumentFields(listing);
+
+					Menu.Elements = MapEquip03_ValDocument(listing);
+
+					Menu.Identifier = "IBL_EQUIP03_PSEUDDOCUMENT";
+
+					// Last updated by [CJP] at [2015.02.03]
+					// Adds the identifier to each element
+					foreach (var element in Menu.Elements)
+						element.Identifier = "IBL_EQUIP03_PSEUDDOCUMENT";
+
+					Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
+
+					// Set table totalizers
+					if (listing.Totalizers != null && listing.Totalizers.Count > 0)
+						Menu.SetTotalizers(listing.Totalizers);
+				}
+
+				//Set table limits display property
+				FillTableLimitsDisplayData();
+
+				// Store table configuration so it gets sent to the client-side to be processed
+				CurrentTableConfig = tableConfig;
+
+				//Set table limits display property
+				FillTableLimitsDisplayData();
+
+				// Store table configuration so it gets sent to the client-side to be processed
+				CurrentTableConfig = tableConfig;
+				
+				// Load the user table configuration names and default name
+				LoadUserTableConfigNameProperties();
 			}
-
-			//Set table limits display property
-			FillTableLimitsDisplayData();
 		}
 
-		private List<Models.Assma> MapEquip03_ValDocument(ListingMVC<CSGenioAassma> Qlisting)
+		private List<Equip03_ValDocument_RowViewModel> MapEquip03_ValDocument(ListingMVC<CSGenioAassma> Qlisting)
 		{
-			var Elements = new List<Models.Assma>();
+			var Elements = new List<Equip03_ValDocument_RowViewModel>();
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -382,16 +410,16 @@ FieldRef[] fields = new FieldRef[] { CSGenioAassma.FldCodassma, CSGenioAassma.Fl
 			return Elements;
 		}
 
+
 		/// <summary>
 		/// Maps a single CSGenioAassma row
-		/// to a Models.Assma object.
+		/// to a Equip03_ValDocument_RowViewModel object.
 		/// </summary>
 		/// <param name="row">The row.</param>
-		private Models.Assma MapEquip03_ValDocument(CSGenioAassma row)
+		private Equip03_ValDocument_RowViewModel MapEquip03_ValDocument(CSGenioAassma row)
 		{
-			var model = new Models.Assma(m_userContext, true, _fieldsToSerialize);
+			var model = new Equip03_ValDocument_RowViewModel(m_userContext, true, _fieldsToSerialize);
 			if (row == null) return model;
-
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -403,7 +431,32 @@ FieldRef[] fields = new FieldRef[] { CSGenioAassma.FldCodassma, CSGenioAassma.Fl
 				}
 			}
 
+			CalculateButtonPermissions(model);
+
+
 			return model;
+		}
+
+		/// <summary>
+		/// Checks CRUD conditions to determine which actions the user can perform.
+		/// </summary>
+		public void CalculateButtonPermissions(Equip03_ValDocument_RowViewModel model)
+		{
+			bool canView = true;
+			bool canEdit = true;
+			bool canDelete = true;
+			bool canDuplicate = true;
+			bool canInsert = true;
+			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
+			}
+			model.BtnPermission = new TableRowCrudButtonPermissions()
+			{
+				DeleteBtnDisabled = !canDelete,
+				EditBtnDisabled = !canEdit,
+				ViewBtnDisabled = !canView,
+				DuplicateBtnDisabled = !canDuplicate,
+				InsertBtnDisabled = !canInsert,
+			};
 		}
 
 		/// <summary>
@@ -451,15 +504,18 @@ FieldRef[] fields = new FieldRef[] { CSGenioAassma.FldCodassma, CSGenioAassma.Fl
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
-		{
-			"Assma", "Assma.ValCodassma", "Assma.ValZzstate", "Assma.ValName", "Assma.ValDigdocum", "Assma.ValNotes", "Assma.ValCodasset"
-		};
+		[
+			"Assma", "Assma.ValCodassma", "Assma.ValZzstate", "Assma.ValName", "Assma.ValDigdocum", "Assma.ValNotes", "Assma.ValCodasset", "BtnPermission"
+		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>
-		{
+		private static readonly List<TableSearchColumn> _searchableColumns = 
+		[
 			new TableSearchColumn("ValName", CSGenioAassma.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValDigdocum", CSGenioAassma.FldDigdocum, typeof(string)),
 			new TableSearchColumn("ValNotes", CSGenioAassma.FldNotes, typeof(string))
-		};
+		];
+
+
+
 	}
 }

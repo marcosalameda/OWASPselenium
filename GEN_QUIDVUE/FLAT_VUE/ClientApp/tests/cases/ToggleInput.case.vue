@@ -63,7 +63,7 @@
 										v-model="isActive3"
 										true-label="yes"
 										false-label="no"
-										displayType="label-toggle"
+										display-type="label-toggle"
 										nullable />
 									<q-button
 										b-style="tertiary"
@@ -82,7 +82,7 @@
 										v-model="isActive4"
 										true-label="yes"
 										false-label="no"
-										displayType="label-left"
+										display-type="label-left"
 										nullable />
 									<q-button
 										b-style="tertiary"
@@ -101,9 +101,13 @@
 
 <script>
 	export default {
+		name: 'QToggleContainer',
+
 		docsfile: './docs/inputs/ToggleInput.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{
@@ -115,7 +119,8 @@
 			}
 		},
 		methods: {
-			changeStuff(number) {
+			changeStuff(number)
+			{
 				this['isActive' + number] = null
 			}
 		}

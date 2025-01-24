@@ -8,15 +8,18 @@
 				b-style="primary"
 				:label="texts.enter"
 				:title="texts.enter"
+				:tabindex="$attrs.tabindex"
 				@click="setMenuState(!showLogin)">
 				<q-icon icon="login" />
 			</q-button>
 
-			<log-on
-				:is-visible="showLogin"
+			<q-log-on 
+				v-if="showLogin"
 				@set-visibility="setMenuState($event)" />
 		</li>
-		<user-avatar v-else />
+		<user-avatar
+			v-else
+			:tabindex="$attrs.tabindex" />
 	</ul>
 </template>
 
@@ -31,8 +34,10 @@
 	export default {
 		name: 'EmbeddedMenu',
 
+		inheritAttrs: false,
+
 		components: {
-			LogOn: defineAsyncComponent(() => import('@/views/shared/LogOn.vue')),
+			QLogOn: defineAsyncComponent(() => import('@/views/shared/LogOn.vue')),
 			UserAvatar
 		},
 

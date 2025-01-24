@@ -2,34 +2,6 @@
 // Component: Sidebar Mini
 //
 
-// Logo style
-.logo-xs,
-.logo-xl {
-	opacity: 1;
-	position: absolute;
-	visibility: visible;
-
-	&.brand-image-xs {
-		left: 18px;
-		top: 12px;
-	}
-
-	&.brand-image-xl {
-		left: 12px;
-		top: 6px;
-	}
-}
-
-.logo-xs {
-	opacity: 0;
-	visibility: hidden;
-
-	&.brand-image-xl {
-		left: 16px;
-		top: 8px;
-	}
-}
-
 .brand-link {
 	&.logo-switch {
 		&::before {
@@ -421,20 +393,6 @@
 				float: none !important;
 			}
 
-			.logo-xs {
-				animation-name: fadeIn;
-				animation-duration: $transition-speed;
-				animation-fill-mode: both;
-				visibility: visible;
-			}
-
-			.logo-xl {
-				animation-name: fadeOut;
-				animation-duration: $transition-speed;
-				animation-fill-mode: both;
-				visibility: hidden;
-			}
-
 			.nav-sidebar.nav-child-indent .nav-treeview {
 				padding-left: 0;
 			}
@@ -484,8 +442,6 @@
 
 .sidebar .nav-link p,
 .main-sidebar .brand-text,
-.main-sidebar .logo-xs,
-.main-sidebar .logo-xl,
 .sidebar .user-panel .info {
 	@include transition(margin-left $transition-speed linear, opacity $transition-speed ease, visibility $transition-speed ease);
 }

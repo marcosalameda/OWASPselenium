@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Flds
 {
-	public class Infields_ViewModel : FormViewModel<Models.Flds>
+	public class Infields_ViewModel : FormViewModel<Models.Flds>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,152 +29,140 @@ namespace GenioMVC.ViewModels.Flds
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodaero { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodequip { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Text Field" | Type: "C"
 		/// </summary>
 		public string ValTxtfield { get; set; }
-
 		/// <summary>
 		/// Title: "Multine Text" | Type: "MO"
 		/// </summary>
 		public string ValDescrip { get; set; }
-
 		/// <summary>
 		/// Title: "Year" | Type: "N"
 		/// </summary>
 		public decimal? ValYear { get; set; }
-
 		/// <summary>
 		/// Title: "Time" | Type: "T"
 		/// </summary>
 		public string ValTime { get; set; }
-
 		/// <summary>
 		/// Title: "Date" | Type: "D"
 		/// </summary>
 		public DateTime? ValDate { get; set; }
-
 		/// <summary>
 		/// Title: "Date time" | Type: "DT"
 		/// </summary>
 		public DateTime? ValDatetime { get; set; }
-
 		/// <summary>
 		/// Title: "Date second" | Type: "DS"
 		/// </summary>
 		public DateTime? ValDateseco { get; set; }
-
 		/// <summary>
 		/// Title: "Numeric" | Type: "N"
 		/// </summary>
 		public decimal? ValNpassage { get; set; }
-
 		/// <summary>
 		/// Title: "Numeric decimal" | Type: "ND"
 		/// </summary>
 		public decimal? ValDuration { get; set; }
-
 		/// <summary>
 		/// Title: "Currency Decimal" | Type: "$D"
 		/// </summary>
 		public decimal? ValPrecobil { get; set; }
-
 		/// <summary>
 		/// Title: "Currency" | Type: "$"
 		/// </summary>
 		public decimal? ValPrice { get; set; }
-
 		/// <summary>
 		/// Title: "Social Security No" | Type: "C"
 		/// </summary>
 		public string ValSsnumber { get; set; }
-
 		/// <summary>
 		/// Title: "Zipcode" | Type: "C"
 		/// </summary>
 		public string ValZipfield { get; set; }
-
 		/// <summary>
 		/// Title: "VAT Number" | Type: "C"
 		/// </summary>
 		public string ValVatnumbr { get; set; }
-
 		/// <summary>
 		/// Title: "Licence plate" | Type: "C"
 		/// </summary>
 		public string ValLicplate { get; set; }
-
 		/// <summary>
 		/// Title: "Banking Account Number" | Type: "C"
 		/// </summary>
 		public string ValBanknmbr { get; set; }
-
 		/// <summary>
 		/// Title: "Email" | Type: "C"
 		/// </summary>
 		public string ValEmailfld { get; set; }
-
 		/// <summary>
 		/// Title: "IBAN" | Type: "C"
 		/// </summary>
 		public string ValIbanfiel { get; set; }
-
 		/// <summary>
 		/// Title: "Uppercase" | Type: "C"
 		/// </summary>
 		public string ValUpprtext { get; set; }
-
 		/// <summary>
 		/// Title: "Password" | Type: "C"
 		/// </summary>
 		public string ValPassfld { get; set; }
-
 		/// <summary>
 		/// Title: "Colorpicker" | Type: "C"
 		/// </summary>
 		public string ValClrpicke { get; set; }
-
 		/// <summary>
 		/// Title: "Logical" | Type: "L"
 		/// </summary>
 		public bool ValPrimviag { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "AL"
 		/// </summary>
 		public int ValLogicenu { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValLogicenu { get; set; }
-
 		/// <summary>
 		/// Title: "Created by" | Type: "ON"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValCreatuse { get; set; }
-
 		/// <summary>
 		/// Title: "Day" | Type: "OD"
 		/// </summary>
+		[ValidateSetAccess]
 		public DateTime? ValCreatdat { get; set; }
-
 		/// <summary>
 		/// Title: "Complete Date" | Type: "OI"
 		/// </summary>
+		[ValidateSetAccess]
 		public DateTime? ValCreatins { get; set; }
-
 		/// <summary>
 		/// Title: "Hour" | Type: "OT"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValCreathou { get; set; }
-
 		/// <summary>
 		/// Title: "Radio Btn" | Type: "AC"
 		/// </summary>
 		public string ValRadiob { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
@@ -190,20 +178,6 @@ namespace GenioMVC.ViewModels.Flds
 
 		#endregion
 
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodaero { get; set; }
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValCodequip { get; set; }
-		#endregion
-
 		#region Extra database fields
 
 
@@ -212,14 +186,23 @@ namespace GenioMVC.ViewModels.Flds
 
 		#region Fields for formulas
 
+		// Field for formula
+		/// <summary>Field: "Enforce table conditions" Tipo: "L"</summary>
+		[ValidateSetAccess]
+		public bool ValTblcond { get; set; }
+		// Field for formula
+		/// <summary>Field: "Field state" Tipo: "AC"</summary>
+		[ValidateSetAccess]
+		public string ValCond { get; set; }
 
 		#endregion
 
 		public string ValCodflds { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Infields_ViewModel() : base(null!) { }
@@ -255,6 +238,15 @@ namespace GenioMVC.ViewModels.Flds
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Flds model = new Models.Flds(userContext) { Identifier = "FINFIELDS" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FINFIELDS");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -315,6 +307,8 @@ namespace GenioMVC.ViewModels.Flds
 
 			try
 			{
+				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 				ValTxtfield = ViewModelConversion.ToString(m.ValTxtfield);
 				ValDescrip = ViewModelConversion.ToString(m.ValDescrip);
 				ValYear = ViewModelConversion.ToNumeric(m.ValYear);
@@ -343,8 +337,8 @@ namespace GenioMVC.ViewModels.Flds
 				ValCreatins = ViewModelConversion.ToDateTime(m.ValCreatins);
 				ValCreathou = ViewModelConversion.ToString(m.ValCreathou);
 				ValRadiob = ViewModelConversion.ToString(m.ValRadiob);
-				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
-				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValTblcond = ViewModelConversion.ToLogic(m.ValTblcond);
+				ValCond = ViewModelConversion.ToString(m.ValCond);
 				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
 			}
 			catch (Exception)
@@ -354,6 +348,20 @@ namespace GenioMVC.ViewModels.Flds
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Flds m)
 		{
 			if (m == null)
@@ -387,24 +395,147 @@ namespace GenioMVC.ViewModels.Flds
 				m.ValClrpicke = ViewModelConversion.ToString(ValClrpicke);
 				m.ValPrimviag = ViewModelConversion.ToLogic(ValPrimviag);
 				m.ValLogicenu = ViewModelConversion.ToInteger(ValLogicenu);
+				m.ValRadiob = ViewModelConversion.ToString(ValRadiob);
+				m.ValCodflds = ViewModelConversion.ToString(ValCodflds);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValCodaero = ViewModelConversion.ToString(ValCodaero);
+				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
 				m.ValCreatuse = ViewModelConversion.ToString(ValCreatuse);
 				m.ValCreatdat = ViewModelConversion.ToDateTime(ValCreatdat);
 				m.ValCreatins = ViewModelConversion.ToDateTime(ValCreatins);
 				m.ValCreathou = ViewModelConversion.ToString(ValCreathou);
-				m.ValRadiob = ViewModelConversion.ToString(ValRadiob);
-				m.ValCodaero = ViewModelConversion.ToString(ValCodaero);
-				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
-				m.ValCodflds = ViewModelConversion.ToString(ValCodflds);
+				m.ValTblcond = ViewModelConversion.ToLogic(ValTblcond);
+				m.ValCond = ViewModelConversion.ToString(ValCond);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Infields) to Model (Flds) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Infields) to Model (Flds) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "flds.txtfield":
+						this.ValTxtfield = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.descrip":
+						this.ValDescrip = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.year":
+						this.ValYear = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "flds.time":
+						this.ValTime = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.date":
+						this.ValDate = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "flds.datetime":
+						this.ValDatetime = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "flds.dateseco":
+						this.ValDateseco = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "flds.npassage":
+						this.ValNpassage = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "flds.duration":
+						this.ValDuration = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "flds.precobil":
+						this.ValPrecobil = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "flds.price":
+						this.ValPrice = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "flds.ssnumber":
+						this.ValSsnumber = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.zipfield":
+						this.ValZipfield = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.vatnumbr":
+						this.ValVatnumbr = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.licplate":
+						this.ValLicplate = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.banknmbr":
+						this.ValBanknmbr = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.emailfld":
+						this.ValEmailfld = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.ibanfiel":
+						this.ValIbanfiel = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.upprtext":
+						this.ValUpprtext = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.passfld":
+						this.ValPassfld = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.clrpicke":
+						this.ValClrpicke = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.primviag":
+						this.ValPrimviag = ViewModelConversion.ToLogic(_value);
+						break;
+					case "flds.logicenu":
+						this.ValLogicenu = ViewModelConversion.ToInteger(_value);
+						break;
+					case "flds.radiob":
+						this.ValRadiob = ViewModelConversion.ToString(_value);
+						break;
+					case "flds.codflds":
+						this.ValCodflds = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Infields) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Infields)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Flds.Find(id ?? Navigation.GetStrValue("flds"), m_userContext, "FINFIELDS"); }
+			finally { Model ??= new Models.Flds(m_userContext) { Identifier = "FINFIELDS" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -418,20 +549,13 @@ namespace GenioMVC.ViewModels.Flds
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FINFIELDS";
@@ -441,6 +565,7 @@ namespace GenioMVC.ViewModels.Flds
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -497,7 +622,6 @@ namespace GenioMVC.ViewModels.Flds
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValTxtfield", Resources.Resources.TEXT_FIELD41810, ValTxtfield, 50);
 			validator.StringLength("ValSsnumber", Resources.Resources.SOCIAL_SECURITY_NO48150, ValSsnumber, 11);
 			validator.StringLength("ValZipfield", Resources.Resources.ZIPCODE21021, ValZipfield, 8);
@@ -510,28 +634,23 @@ namespace GenioMVC.ViewModels.Flds
 			validator.StringLength("ValPassfld", Resources.Resources.PASSWORD09467, ValPassfld, 50);
 			validator.StringLength("ValClrpicke", Resources.Resources.COLORPICKER39653, ValClrpicke, 50);
 
+
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE INFIELDS]/
 		public override void Save()
 		{
 
-			try { Model = Models.Flds.Find(Navigation.GetStrValue("flds"), m_userContext, "FINFIELDS"); }
-			finally { if (Model == null) Model = new Models.Flds(m_userContext) { Identifier = "FINFIELDS" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY INFIELDS]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Flds.Find(Navigation.GetStrValue("flds"), m_userContext, "FINFIELDS"); }
-			finally { if (Model == null) Model = new Models.Flds(m_userContext) { Identifier = "FINFIELDS" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE INFIELDS]/
 
@@ -555,6 +674,8 @@ namespace GenioMVC.ViewModels.Flds
 		{
 			return identifier switch
 			{
+				"flds.codaero" => ViewModelConversion.ToString(modelValue),
+				"flds.codequip" => ViewModelConversion.ToString(modelValue),
 				"flds.txtfield" => ViewModelConversion.ToString(modelValue),
 				"flds.descrip" => ViewModelConversion.ToString(modelValue),
 				"flds.year" => ViewModelConversion.ToNumeric(modelValue),
@@ -583,12 +704,14 @@ namespace GenioMVC.ViewModels.Flds
 				"flds.creatins" => ViewModelConversion.ToDateTime(modelValue),
 				"flds.creathou" => ViewModelConversion.ToString(modelValue),
 				"flds.radiob" => ViewModelConversion.ToString(modelValue),
-				"flds.codaero" => ViewModelConversion.ToString(modelValue),
-				"flds.codequip" => ViewModelConversion.ToString(modelValue),
+				"flds.tblcond" => ViewModelConversion.ToLogic(modelValue),
+				"flds.cond" => ViewModelConversion.ToString(modelValue),
 				"flds.codflds" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

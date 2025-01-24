@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Location Extension Component
 	/// </summary>
-	public class CSGenioAlcext : DbArea	{
+	public class CSGenioAlcext : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -141,11 +142,12 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(6);
+			info.Pathways = new Dictionary<string, string>(7);
 			info.Pathways.Add("locat","locat");
 			info.Pathways.Add("facil","locat");
 			info.Pathways.Add("entit","locat");
 			info.Pathways.Add("facty","locat");
+			info.Pathways.Add("cntry","locat");
 			info.Pathways.Add("faci1","locat");
 			info.Pathways.Add("faci2","locat");
 		}
@@ -280,7 +282,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodlcext, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodlocat { get { return m_fldCodlocat; } }
 		private static FieldRef m_fldCodlocat = new FieldRef("lcext", "codlocat");
@@ -291,7 +292,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodlocat); }
 			set { insertNameValueField(FldCodlocat, value); }
 		}
-
 
 		/// <summary>Field : "GLN Extension Component" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldGlnext { get { return m_fldGlnext; } }
@@ -304,7 +304,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGlnext, value); }
 		}
 
-
 		/// <summary>Field : "Space type" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldSpacetyp { get { return m_fldSpacetyp; } }
 		private static FieldRef m_fldSpacetyp = new FieldRef("lcext", "spacetyp");
@@ -316,7 +315,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSpacetyp, value); }
 		}
 
-
 		/// <summary>Field : "Space" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSpaceobs { get { return m_fldSpaceobs; } }
 		private static FieldRef m_fldSpaceobs = new FieldRef("lcext", "spaceobs");
@@ -327,7 +325,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldSpaceobs); }
 			set { insertNameValueField(FldSpaceobs, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -370,23 +367,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAlcext> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAlcext> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAlcext>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -435,7 +415,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX LCEXT]/

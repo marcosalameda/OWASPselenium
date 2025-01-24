@@ -1,9 +1,10 @@
 ﻿<template>
 	<q-layout
-		v-if="mainAppOnLoadProc.loaded"
+		v-if="mainAppLoadMonitor.loaded"
 		v-show="isReady"
 		:custom-classes="layoutCustomClasses"
-		:loading-menus="!menuOnLoadProc.loaded">
+		:loading="isLoading"
+		:loading-menus="!isPublicModule && !menuLoadMonitor.loaded">
 		<template #layout-loading-effect>
 			<q-page-busy-state
 				:processes="busyPageStateStack"
@@ -11,7 +12,7 @@
 
 			<template v-if="progressBar.isVisible">
 				<teleport :to="`#${progressBar.containerId}-body`">
-					<q-progress-bar
+					<q-progress
 						v-bind="progressBar.props"
 						v-on="progressBar.handlers" />
 				</teleport>
@@ -108,6 +109,11 @@
 				</template>
 			</div>
 
+			<q-cookies
+				v-if="cookieBanner.isVisible"
+				v-bind="cookieBanner.props"
+				@set-cookie="handleSetCookie" />
+
 			<q-footer v-if="layoutConfig.FooterEnable && (showContent || isPublicRoute)" />
 		</template>
 	</q-layout>
@@ -135,10 +141,6 @@
 		</template>
 	</q-modal-container>
 
-	<div
-		id="q-dropdown"
-		:style="{ 'position': 'absolute', 'z-index': 1060, ...dropdown }" />
-
 	<q-suggestions
 		v-if="!isEmpty(suggestionsPopupData.component)"
 		:key="suggestionsKey"
@@ -153,6 +155,7 @@
 	import 'bootstrap'
 
 	import { defineAsyncComponent, shallowRef } from 'vue'
+	import { isNavigationFailure } from 'vue-router'
 	import { mapState, mapActions } from 'pinia'
 	import { v4 as uuidv4 } from 'uuid'
 
@@ -163,18 +166,22 @@
 
 	import { useGenericDataStore } from '@/stores/genericData.js'
 	import { useTracingDataStore } from '@/stores/tracingData.js'
+	import { useSystemDataStore } from '@/stores/systemData.js'
+
 	import { navigateToRouteName, processRedirect as vueProcessSrvRedirect } from '@/mixins/vueNavigation.js'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 	import AuthHandlers from '@/mixins/authHandlers.js'
 	import CavHandler from '@/mixins/cavHandler.js'
 	import NavHandlers from '@/mixins/navHandlers.js'
 	import genericFunctions from '@/mixins/genericFunctions.js'
+	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	import QLayout from '@/views/layout/Layout.vue'
 	import QBreadcrumbs from '@/views/shared/Breadcrumbs.vue'
 	import QSidebar from '@/views/shared/RightSidebar.vue'
 	import QInfoMessageContainer from '@/views/shared/QInfoMessageContainer.vue'
 	import QPageBusyState from '@/components/QPageBusyState.vue'
+	import QCookies from '@/components/inputs/QCookies.vue'
 
 	export default {
 		name: 'QApp',
@@ -189,7 +196,8 @@
 			QLayout,
 			QBreadcrumbs,
 			QSidebar,
-			QPageBusyState
+			QPageBusyState,
+			QCookies
 		},
 
 		mixins: [
@@ -206,9 +214,9 @@
 		data()
 		{
 			return {
-				mainAppOnLoadProc: asyncProcM.getProcListMonitor('QMainApp', false),
+				mainAppLoadMonitor: asyncProcM.getProcListMonitor('QMainApp', false),
 
-				menuOnLoadProc: asyncProcM.getProcListMonitor('QMenus', false),
+				menuLoadMonitor: asyncProcM.getProcListMonitor('QMenus', false),
 
 				// The current main route (if there are active modals, this will be the route of the content in the background).
 				displayRoute: null,
@@ -247,7 +255,7 @@
 
 		created()
 		{
-			this.mainAppOnLoadProc.Add(loadResources(this, ['hardcoded', 'messages', 'projectArrays', 'TreeMenu']), true)
+			this.mainAppLoadMonitor.add(this.loadUIResources(), true)
 			this.$eventHub.on('set-culture', this.loadUIResources)
 
 			// Checks whether or not a user is currently logged.
@@ -259,28 +267,32 @@
 
 			this.$eventHub.on('go-to-route', this.goToRoute)
 
-			this.$eventHub.on('open-external-app', () => { this.showContent = false })
+			this.$eventHub.on('open-external-app', () => this.showContent = false)
 
-			this.$eventHub.on('closed-external-app', () => { this.showContent = true })
+			this.$eventHub.on('closed-external-app', () => this.showContent = true)
 
 			this.$eventHub.on('navigation-id-change', this.updateNavigationId)
 
 			// Listens for requests of full quality images.
-			this.$eventHub.on('image-request', ({ baseArea, params, callback }) => {
-				netAPI.retrieveImage(baseArea, params, (data) => {
-					if (callback)
-						callback(data)
+			this.$eventHub.on(
+				'image-request',
+				({ baseArea, params, callback }) => {
+					netAPI.retrieveImage(
+						baseArea,
+						params,
+						(data) => {
+							if (callback)
+								callback(data)
+						})
 				})
-			})
 
-			this.$eventHub.on('add-process-to-busy-page-stack', this.addProcessToBusyPageStack)
-			this.$eventHub.on('remove-process-from-busy-page-stack', this.removeProcessFromBusyPageStack)
-
-			this.$eventHub.on('show-suggestion-popup', (component, params) => {
-				this.suggestionsPopupData.component = component
-				this.suggestionsPopupData.params = params
-				this.suggestionsKey++
-			})
+			this.$eventHub.on(
+				'show-suggestion-popup',
+				(component, params) => {
+					this.suggestionsPopupData.component = component
+					this.suggestionsPopupData.params = params
+					this.suggestionsKey++
+				})
 
 			if (this.isEventTracingActive)
 				document.addEventListener('keydown', this.handleKeyPress)
@@ -289,6 +301,7 @@
 		mounted()
 		{
 			this.getMenus()
+			this.checkCookiesState()
 		},
 
 		beforeUnmount()
@@ -301,12 +314,10 @@
 			this.$eventHub.off('closed-external-app')
 			this.$eventHub.off('navigation-id-change', this.updateNavigationId)
 			this.$eventHub.off('image-request')
-			this.$eventHub.off('add-process-to-busy-page-stack', this.addProcessToBusyPageStack)
-			this.$eventHub.off('remove-process-from-busy-page-stack', this.removeProcessFromBusyPageStack)
 			this.$eventHub.off('show-suggestion-popup')
 
-			this.mainAppOnLoadProc.destroy()
-			this.menuOnLoadProc.destroy()
+			this.mainAppLoadMonitor.destroy()
+			this.menuLoadMonitor.destroy()
 
 			document.removeEventListener('keydown', this.handleKeyPress)
 		},
@@ -314,10 +325,10 @@
 		computed: {
 			...mapState(useGenericDataStore, [
 				'latestModalId',
+				'isLoading',
 				'fixedInfoMessages',
 				'relativeInfoMessages',
 				'modals',
-				'dropdown',
 				'busyPageStateStack'
 			]),
 
@@ -330,6 +341,21 @@
 				return this.relativeInfoMessages.length > 0 && (!this.hasPopup || this.latestModalId === this.$route.name)
 			},
 
+			cookieBanner()
+			{
+				const systemDataStore = useSystemDataStore()
+				const cookies = systemDataStore.cookies
+
+				return {
+					isVisible: cookies.cookieActive && cookies.shouldShowCookies,
+					props: {
+						filePath: cookies.filePath,
+						text: this.Resources[cookies.cookieText],
+						buttonText: this.Resources[hardcodedTexts.imAware]
+					}
+				}
+			},
+
 			breadcrumbsIsVisible()
 			{
 				return !this.isEmpty(this.displayRoute) ? this.displayRoute.meta.noBreadcrumbs !== true : true
@@ -337,7 +363,7 @@
 
 			mainClasses()
 			{
-				var classes = []
+				const classes = []
 
 				if (this.displayRoute)
 					classes.push(`${this.system.currentModule}-${this.displayRoute.name}`)
@@ -352,7 +378,7 @@
 
 			routerViews()
 			{
-				var routerViews = []
+				const routerViews = []
 
 				// The main route, which is always visible, either in foreground or in the background.
 				routerViews.push({
@@ -373,6 +399,11 @@
 			layoutCustomClasses()
 			{
 				return this.isDashboardMenu ? ['layout-dashboard'] : []
+			},
+
+			isPublicModule()
+			{
+				return this.system.currentModule === 'Public'
 			}
 		},
 
@@ -380,16 +411,32 @@
 			...mapActions(useGenericDataStore, [
 				'removeInfoMessage',
 				'clearInfoMessages',
-				'setDropdown',
 				'setMenus',
 				'setModal',
 				'setPublicRoute',
-				'setFullScreenPage',
-				'addProcessToBusyPageStack',
-				'removeProcessFromBusyPageStack'
+				'setFullScreenPage'
 			]),
 
 			removeModal: genericFunctions.removeModal,
+
+			/**
+			 * Changes the state of the cookies.
+			 * @param {boolean} isVisible Value to change
+			 */
+			handleSetCookie(isVisible)
+			{
+				localStorage.setItem('cookieAccepted', !isVisible)
+				genericFunctions.setShowCookies(!isVisible)
+			},
+
+			/**
+			 * Gets the value of the cookie in the localStorage.
+			 */
+			checkCookiesState()
+			{
+				const isAccepted = localStorage.getItem('cookieAccepted') ? localStorage.cookieAccepted : false
+				genericFunctions.setShowCookies(!isAccepted)
+			},
 
 			/**
 			 * Checks whether or not a user is currently logged.
@@ -397,12 +444,16 @@
 			 */
 			getIfUserLogged(checkIfSame)
 			{
-				return netAPI.fetchData('Account', 'GetIfUserLogged', {}, data => {
-					if (checkIfSame && data?.username === this.userData.name)
-						return
+				return netAPI.fetchData(
+					'Account',
+					'GetIfUserLogged',
+					{},
+					(data) => {
+						if (checkIfSame && data?.username === this.userData.name)
+							return
 
-					this.setUser(data)
-				})
+						this.setUser(data)
+					})
 			},
 
 			/**
@@ -441,7 +492,7 @@
 					Name: data.username
 				}
 
-				let userIsSame = data?.username === this.userData.name
+				const userIsSame = data?.username === this.userData.name
 
 				this.setUserData(userData)
 				this.isReady = true
@@ -486,15 +537,30 @@
 			/**
 			 * Navigates to the specified route.
 			 * @param {object} routeParams The properties of the route
+			 * @param {function} successCallback A function to be called in case the route change succeeds
+			 * @param {function} failCallback A function to be called in case the route change fails
 			 */
-			goToRoute(routeParams = {})
+			async goToRoute(routeParams = {}, successCallback, failCallback)
 			{
+				if (typeof successCallback !== 'function')
+					successCallback = () => {}
+				if (typeof failCallback !== 'function')
+					failCallback = () => {}
+
 				const { name, params, query, prefillValues } = routeParams
 
 				if (this.isEmpty(name))
+				{
+					failCallback()
 					return
+				}
 
-				navigateToRouteName(this, name, params ?? {}, query ?? {}, prefillValues ?? {})
+				const navResult = await navigateToRouteName(this, name, params ?? {}, query ?? {}, prefillValues ?? {})
+
+				if (isNavigationFailure(navResult))
+					failCallback(navResult)
+				else
+					successCallback(navResult)
 			},
 
 			/**
@@ -512,10 +578,19 @@
 			 */
 			getMenus()
 			{
-				this.menuOnLoadProc.Add(netAPI.fetchData('Home', 'NavigationalBar', {}, (data) => {
-					if (this.system.currentModule === data.Module)
-						this.setMenus(data)
-				}), true)
+				if (this.isPublicModule)
+					return
+
+				this.menuLoadMonitor.add(
+					netAPI.fetchData(
+						'Home',
+						'NavigationalBar',
+						{},
+						(data) => {
+							if (this.system.currentModule === data.Module)
+								this.setMenus(data)
+						}),
+					true)
 			},
 
 			/**
@@ -541,7 +616,7 @@
 			 */
 			handleKeyPress(event)
 			{
-				// Open Debug dialog
+				// Open Debug dialog.
 				if (this.isEventTracingActive
 					&& !this.showDebugWindow
 					&& (event.altKey && event.shiftKey && event.ctrlKey))
@@ -566,14 +641,19 @@
 						{
 							to.params.noModal = true
 
-							let homeModule = to.params.module || this.system.currentModule
-							let mainRoute = this.$router.resolve({
+							const homeModule = to.params.module || this.system.currentModule
+							const mainRoute = this.$router.resolve({
 								name: `home-${homeModule}`,
 								params: {
 									culture: to.params.culture,
 									system: to.params.system,
 									module: homeModule,
-									noModal: true
+									noModal: true,
+									/**
+									 * In the case of direct navigation via URL, since the PHE form is a popup, the Home page is opened to provide a background. 
+									 * In this scenario, we must not lose the 'noRedirect' parameter to avoid entering a loop.
+									 */
+									noRedirect: to.params.noRedirect
 								}
 							})
 
@@ -584,7 +664,10 @@
 									it does not execute 'beforeCreate' and thus does not create the history level of that form. */
 								this.displayRoute = {
 									...mainRoute,
-									meta: { ...mainRoute.meta, routeKey: uuidv4() }
+									meta: {
+										...mainRoute.meta,
+										routeKey: uuidv4()
+									}
 								}
 								this.$router.push(to)
 							})
@@ -608,7 +691,10 @@
 								it does not execute 'beforeCreate' and thus does not create the history level of that form. */
 							this.displayRoute = shallowRef({
 								...to,
-								meta: { ...to.meta, routeKey: uuidv4() }
+								meta: {
+									...to.meta,
+									routeKey: uuidv4()
+								}
 							})
 						}
 						else
@@ -654,7 +740,7 @@
 
 			displayRoute(newValue)
 			{
-				let routeMeta = ((newValue || {}).meta || {}),
+				const routeMeta = ((newValue || {}).meta || {}),
 					// True if the current display route is a public page (form/menu), false otherwise.
 					isPublicRoute = routeMeta.isPublicPage === true,
 					// True if the current display route should be shown in full screen, false otherwise.

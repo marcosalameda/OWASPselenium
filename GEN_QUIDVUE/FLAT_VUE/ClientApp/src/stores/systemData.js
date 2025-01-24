@@ -16,16 +16,16 @@ const state = () => {
 		applicationName: 'Vertical layout - Vue',
 
 		genio: {
-			buildVersion: 2678,
-			dbIdxVersion: 1159,
-			dbVersion: '3510',
-			genioVersion: '341,06',
+			buildVersion: 2890,
+			dbIdxVersion: 1574,
+			dbVersion: '3907',
+			genioVersion: '361,29',
 			trackChangesVersion: '0',
-			assemblyVersion: '341,06.3510.0.2678',
+			assemblyVersion: '361,29.3907.0.2890',
 			generationDate: {
-				year: 2024,
-				month: 3,
-				day: 18
+				year: 2025,
+				month: 1,
+				day: 24
 			}
 		},
 
@@ -43,16 +43,25 @@ const state = () => {
 					acronym: 'EN',
 					languageName: 'English'
 				},
+				{
+					language: 'pt-PT',
+					acronym: 'PT',
+					languageName: 'Português'
+				},
 			],
 			defaultModule: 'Public',
 			currentModule: 'Public',
 			availableModules: {},
 			defaultListRows: 0,
+			numberFormat: {
+				decimalSeparator: ',',
+				thousandsSeparator: ' '
+			},
 			dateFormat: {
-				Date: 'dd/MM/yyyy',
-				DateTime: 'dd/MM/yyyy HH:mm',
-				DateTimeSeconds: 'dd/MM/yyyy HH:mm:ss',
-				Time: 'HH:mm'
+				date: 'dd/MM/yyyy',
+				dateTime: 'dd/MM/yyyy HH:mm',
+				dateTimeSeconds: 'dd/MM/yyyy HH:mm:ss',
+				time: 'HH:mm'
 			},
 			baseCurrency: {
 				symbol: '€',
@@ -69,9 +78,22 @@ const state = () => {
 			maxPswSize: 150
 		},
 
+		maintenance: {
+			isActive: false,
+			isScheduled: false,
+			schedule: undefined
+		},
+
+		cookies: {
+			cookieText: '',
+			cookieActive: false,
+			filePath: '',
+			shouldShowCookies: true
+		},
+
 		isCavAvailable: true,
 
-		isChatBotAvailable: false,
+		isChatBotAvailable: true,
 
 		isSuggestionsAvailable: true,
 
@@ -131,6 +153,14 @@ const state = () => {
 		userRegistration: {
 			allowRegistration: true,
 			registrationTypes: [
+				{
+					id: '75f89df6-5f63-4719-b81a-43a2c304c7c2',
+					designation: 'REGISTO48087',
+					component: 'QFormRegis',
+					form: 'Regis',
+					pswForm: 'Defaultpsw',
+					PswComponent: 'QFormAccountInfo'
+				},
 			]
 		}
 	}
@@ -260,6 +290,19 @@ const actions = {
 	},
 
 	/**
+	 * Sets the format used by numeric inputs in the application.
+	 * @param {object} numberFormat The formats of the numbers
+	 */
+	setNumberFormat(numberFormat)
+	{
+		if (typeof numberFormat !== 'object' || numberFormat === null)
+			return
+
+		this.system.numberFormat.decimalSeparator = numberFormat.DecimalSeparator ?? ','
+		this.system.numberFormat.thousandsSeparator = numberFormat.GroupSeparator ?? ' '
+	},
+
+	/**
 	 * Sets the format used by date inputs in the application.
 	 * @param {object} dateFormat The formats of the dates
 	 */
@@ -267,16 +310,20 @@ const actions = {
 	{
 		if (typeof dateFormat !== 'object' || dateFormat === null)
 			return
-		if (!dateFormat.Date && !dateFormat.DateTime && !dateFormat.DateTimeSeconds && !dateFormat.Time)
+		if (!dateFormat.date && !dateFormat.dateTime && !dateFormat.dateTimeSeconds && !dateFormat.time)
 			return
 
 		for (let i in dateFormat)
-			this.system.dateFormat[i] = dateFormat[i]
+		{
+			// Get property name starting with lowercase letter
+			let propName = i.substring(0, 1).toLowerCase() + i.substring(1)
+			this.system.dateFormat[propName] = dateFormat[i]
+		}
 	},
 
 	/**
-	 * Sets the scheduler license key to use premium features of the Full Calendar.
-	 * @param {string} schedulerLicenseKey The the license key
+	 * Sets the scheduler license key to use premium features of the Calendar.
+	 * @param {string} schedulerLicenseKey The license key
 	 */
 	setSchedulerLicenseKey(schedulerLicenseKey)
 	{
@@ -284,6 +331,29 @@ const actions = {
 			return
 
 		this.system.schedulerLicense = schedulerLicenseKey
+	},
+
+	/**
+	 * Sets whether the cookies are visible.
+	 * @param {boolean} showCookies The value of the cookies visibility
+	 */
+	setShowCookies(showCookies)
+	{
+		if (typeof showCookies !== 'boolean')
+			return
+
+		this.cookies.shouldShowCookies = showCookies
+	},
+
+	/**
+	 * Updates the maintenance information.
+	 * @param {object} maintenance The updated maintenance information
+	 */
+	setMaintenanceStatus(maintenance)
+	{
+		this.maintenance.isActive = maintenance.IsActive
+		this.maintenance.isScheduled = maintenance.IsScheduled
+		this.maintenance.schedule = maintenance.Schedule
 	},
 
 	/**

@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Organization, New Organization
 	/// </summary>
-	public class CSGenioAorgan : DbArea	{
+	public class CSGenioAorgan : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -257,7 +258,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodorgan, value); }
 		}
 
-
 		/// <summary>Field : "Organization" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldOrganiza { get { return m_fldOrganiza; } }
 		private static FieldRef m_fldOrganiza = new FieldRef("organ", "organiza");
@@ -268,7 +268,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldOrganiza); }
 			set { insertNameValueField(FldOrganiza, value); }
 		}
-
 
 		/// <summary>Field : "Acronym" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSigla { get { return m_fldSigla; } }
@@ -281,7 +280,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSigla, value); }
 		}
 
-
 		/// <summary>Field : "Logo" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldLogo { get { return m_fldLogo; } }
 		private static FieldRef m_fldLogo = new FieldRef("organ", "logo");
@@ -292,7 +290,6 @@ namespace CSGenio.business
 			get { return (byte[])returnValueField(FldLogo); }
 			set { insertNameValueField(FldLogo, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -335,23 +332,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAorgan> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAorgan> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAorgan>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -400,7 +380,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX ORGAN]/

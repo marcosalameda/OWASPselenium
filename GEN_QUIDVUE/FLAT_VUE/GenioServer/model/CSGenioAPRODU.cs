@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Product
 	/// </summary>
-	public class CSGenioAprodu : DbArea	{
+	public class CSGenioAprodu : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -139,6 +140,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "WEIGHT36329";
 
@@ -151,6 +153,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  12;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 4;
 			Qfield.CavDesignation = "PRICE06900";
 
@@ -163,6 +166,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "INPUTS19315";
 
 			Qfield.Dupmsg = "";
@@ -174,6 +178,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "OUTPUTS47833";
 
 			Qfield.Dupmsg = "";
@@ -185,6 +190,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "STOCK37618";
 
 			Qfield.Dupmsg = "";
@@ -249,12 +255,13 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(7);
+			info.Pathways = new Dictionary<string, string>(8);
 			info.Pathways.Add("locat","locat");
 			info.Pathways.Add("lcext","lcext");
 			info.Pathways.Add("facil","locat");
 			info.Pathways.Add("entit","locat");
 			info.Pathways.Add("facty","locat");
+			info.Pathways.Add("cntry","locat");
 			info.Pathways.Add("faci1","locat");
 			info.Pathways.Add("faci2","locat");
 		}
@@ -393,7 +400,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodprodu, value); }
 		}
 
-
 		/// <summary>Field : ">>LOCATION" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodlocat { get { return m_fldCodlocat; } }
 		private static FieldRef m_fldCodlocat = new FieldRef("produ", "codlocat");
@@ -404,7 +410,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodlocat); }
 			set { insertNameValueField(FldCodlocat, value); }
 		}
-
 
 		/// <summary>Field : ">>LOCATION EXTENSION" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodlcext { get { return m_fldCodlcext; } }
@@ -417,7 +422,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodlcext, value); }
 		}
 
-
 		/// <summary>Field : "Product" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldProduct { get { return m_fldProduct; } }
 		private static FieldRef m_fldProduct = new FieldRef("produ", "product");
@@ -428,7 +432,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldProduct); }
 			set { insertNameValueField(FldProduct, value); }
 		}
-
 
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldDescript { get { return m_fldDescript; } }
@@ -441,7 +444,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDescript, value); }
 		}
 
-
 		/// <summary>Field : "SKU" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSku { get { return m_fldSku; } }
 		private static FieldRef m_fldSku = new FieldRef("produ", "sku");
@@ -452,7 +454,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldSku); }
 			set { insertNameValueField(FldSku, value); }
 		}
-
 
 		/// <summary>Field : "GTIN" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldGtin { get { return m_fldGtin; } }
@@ -465,7 +466,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGtin, value); }
 		}
 
-
 		/// <summary>Field : "Size" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSize { get { return m_fldSize; } }
 		private static FieldRef m_fldSize = new FieldRef("produ", "size");
@@ -477,66 +477,60 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSize, value); }
 		}
 
-
 		/// <summary>Field : "Weight" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldWeight { get { return m_fldWeight; } }
 		private static FieldRef m_fldWeight = new FieldRef("produ", "weight");
 
 		/// <summary>Field : "Weight" Tipo: "N" Formula:  ""</summary>
-		public double ValWeight
+		public decimal ValWeight
 		{
-			get { return (double)returnValueField(FldWeight); }
+			get { return (decimal)returnValueField(FldWeight); }
 			set { insertNameValueField(FldWeight, value); }
 		}
-
 
 		/// <summary>Field : "Price" Tipo: "$D" Formula:  ""</summary>
 		public static FieldRef FldPrice { get { return m_fldPrice; } }
 		private static FieldRef m_fldPrice = new FieldRef("produ", "price");
 
 		/// <summary>Field : "Price" Tipo: "$D" Formula:  ""</summary>
-		public double ValPrice
+		public decimal ValPrice
 		{
-			get { return (double)returnValueField(FldPrice); }
+			get { return (decimal)returnValueField(FldPrice); }
 			set { insertNameValueField(FldPrice, value); }
 		}
-
 
 		/// <summary>Field : "Inputs" Tipo: "N" Formula: SR "[RELIN->RECEIVED]"</summary>
 		public static FieldRef FldInputs { get { return m_fldInputs; } }
 		private static FieldRef m_fldInputs = new FieldRef("produ", "inputs");
 
 		/// <summary>Field : "Inputs" Tipo: "N" Formula: SR "[RELIN->RECEIVED]"</summary>
-		public double ValInputs
+		public decimal ValInputs
 		{
-			get { return (double)returnValueField(FldInputs); }
+			get { return (decimal)returnValueField(FldInputs); }
 			set { insertNameValueField(FldInputs, value); }
 		}
-
 
 		/// <summary>Field : "Outputs" Tipo: "N" Formula: SR "[DILIN->DELIVERE]"</summary>
 		public static FieldRef FldOutputs { get { return m_fldOutputs; } }
 		private static FieldRef m_fldOutputs = new FieldRef("produ", "outputs");
 
 		/// <summary>Field : "Outputs" Tipo: "N" Formula: SR "[DILIN->DELIVERE]"</summary>
-		public double ValOutputs
+		public decimal ValOutputs
 		{
-			get { return (double)returnValueField(FldOutputs); }
+			get { return (decimal)returnValueField(FldOutputs); }
 			set { insertNameValueField(FldOutputs, value); }
 		}
-
 
 		/// <summary>Field : "Stock" Tipo: "N" Formula: SR "[RELIN->RECEIVED]-[DILIN->DELIVERE]"</summary>
 		public static FieldRef FldStock { get { return m_fldStock; } }
 		private static FieldRef m_fldStock = new FieldRef("produ", "stock");
 
 		/// <summary>Field : "Stock" Tipo: "N" Formula: SR "[RELIN->RECEIVED]-[DILIN->DELIVERE]"</summary>
-		public double ValStock
+		public decimal ValStock
 		{
-			get { return (double)returnValueField(FldStock); }
+			get { return (decimal)returnValueField(FldStock); }
 			set { insertNameValueField(FldStock, value); }
 		}
-
 
 		/// <summary>Field : "Image" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldImage { get { return m_fldImage; } }
@@ -549,7 +543,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldImage, value); }
 		}
 
-
 		/// <summary>Field : "In use" Tipo: "AL" Formula:  ""</summary>
 		public static FieldRef FldIn_use { get { return m_fldIn_use; } }
 		private static FieldRef m_fldIn_use = new FieldRef("produ", "in_use");
@@ -560,7 +553,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldIn_use); }
 			set { insertNameValueField(FldIn_use, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -603,23 +595,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAprodu> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAprodu> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAprodu>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -668,7 +643,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX PRODU]/

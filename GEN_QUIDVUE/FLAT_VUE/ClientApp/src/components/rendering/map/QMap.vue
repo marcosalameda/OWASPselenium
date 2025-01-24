@@ -2,9 +2,11 @@
 	<div
 		:id="controlId"
 		:class="['q-maps', $attrs.class]"
-		ref="mapContainer">
+		ref="mapContainer"
+		@mousemove="updateMousePosition">
 		<component
 			:is="`q-${subtype}`"
+			ref="map"
 			:key="internalMapKey"
 			:markers="markers"
 			:shapes="shapes"
@@ -31,9 +33,11 @@
 				:marker-actions="markerActions"
 				:style-variables="styleVariables"
 				:resources-path="resourcesPath"
+				:dismissible="!styleVariables.openPopupOnHover?.value"
+				:mouse-x="mouseX"
+				:mouse-y="mouseY"
 				@close-info-window="closeInfoWindow"
-				@row-action="$emit('row-action', $event)"
-				@find-address="$emit('find-address', $event)" />
+				@row-action="$emit('row-action', $event)" />
 		</component>
 	</div>
 </template>
@@ -53,8 +57,6 @@
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {
 		search: 'Search',
-		address: 'Address',
-		getAddress: 'Get address',
 		defaultLayer: 'Default layer',
 		clusterGroupLayer: 'Cluster group layer',
 		shapesLayer: 'Shapes layer',
@@ -112,7 +114,6 @@
 			'changed-center',
 			'changed-zoom',
 			'export-map',
-			'find-address',
 			'is-ready',
 			'remove-marker',
 			'row-action',
@@ -317,7 +318,7 @@
 		{
 			return {
 				controlId: this.containerId || `q-map-${this._.uid}`,
-				isMapReady: false,
+				map: null,
 				isContainerReady: false,
 				internalMapKey: 0,
 				markers: [],
@@ -325,7 +326,9 @@
 				externalLayers: [],
 				currentMarker: null,
 				resizeObserver: null,
-				isShape: false
+				isShape: false,
+				mouseX: 0,
+				mouseY: 0
 			}
 		},
 
@@ -334,7 +337,7 @@
 			if (typeof ResizeObserver !== 'undefined')
 			{
 				this.resizeObserver = new ResizeObserver(_debounce(() => {
-					if (this.isMapReady)
+					if (this.map?.isReady && !this.map?.isFullscreen)
 					{
 						// We don't want this to be triggered the first time the map is loaded,
 						// only when there's a resize of it's container.
@@ -385,13 +388,24 @@
 
 		methods: {
 			/**
+			 * Called to set the mouse coordinates.
+			 * @param {object} event Information about the cursor
+			 */
+			updateMousePosition(event)
+			{
+				this.mouseX = event.clientX
+				// MouseY position is inverted to be used as bottom of the element
+				this.mouseY = window.innerHeight - event.clientY
+			},
+
+			/**
 			 * Called to set the map state as either ready or not ready.
 			 * @param {object} map The map node object
 			 */
 			onMapIsReady(map)
 			{
 				this.$emit('is-ready', map)
-				this.isMapReady = typeof map === 'object'
+				this.map = this.$refs.map
 			},
 
 			/**
@@ -400,15 +414,18 @@
 			 */
 			openInfoWindow(geoData)
 			{
-				if (this.activateInfoWindow)
+				const hoverPopup = this.styleVariables.openPopupOnHover?.value
+
+				if (geoData.shapeClicked)
+					this.$emit('shape-clicked', geoData.marker)
+
+				if (geoData.shapeClicked !== hoverPopup && this.activateInfoWindow)
 				{
 					this.currentMarker = geoData.marker
 					this.isShape = geoData.isShape
 
 					this.setCurrentMarkerDescription()
 				}
-
-				this.$emit('shape-clicked', geoData.marker)
 			},
 
 			/**
@@ -496,8 +513,6 @@
 						}
 
 						feature.description = descriptionTexts
-						if (mappedData.address)
-							feature.address = mappedData.address
 						if (mappedData.rowKey)
 							feature.rowKey = mappedData.rowKey
 						if (mappedData.btnPermission)
@@ -596,32 +611,8 @@
 				{
 					this.setMarkersAndShapes()
 				},
+				deep: true,
 				immediate: true
-			},
-
-			markers: {
-				handler(markers)
-				{
-					if (this.currentMarker === null)
-						return
-
-					for (let marker of markers)
-					{
-						if (marker.coords.lat === this.currentMarker.coords.lat && marker.coords.lng === this.currentMarker.coords.lng)
-						{
-							// We don't want to lose the address of the current marker while the info window
-							// is open (might happen if the value of a mapped source suffers a change).
-							const address = this.currentMarker.address
-
-							this.currentMarker = marker
-							if (address)
-								this.currentMarker.address = address
-
-							return
-						}
-					}
-				},
-				deep: true
 			},
 
 			'groups.externalLayer': {

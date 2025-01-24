@@ -98,6 +98,17 @@ namespace GenioMVC.ViewModels
 		void LoadPartial(NameValueCollection qs, bool lazyLoad = false);
 
 		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter.
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		void LoadModel(string id = null);
+
+		/// <summary>
+		/// Executes the calculation of the Model’s internal formulas.
+		/// </summary>
+		void ExecuteModelFormulas();
+
+		/// <summary>
 		/// Initializes the ViewModel for creating a new instance and loads data.
 		/// </summary>
 		void NewLoad();
@@ -106,6 +117,21 @@ namespace GenioMVC.ViewModels
 		/// Maps data from the underlying data model to the ViewModel.
 		/// </summary>
 		void MapFromModel();
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		void MapToModel();
+
+		/// <summary>
+		/// Disable the protection that prevents mapping the fields from the ViewModel to the Model that could not be edited in this form.
+		/// </summary>
+		/// <param name="disabled">If TRUE, allows filling in the Model fields that could not be edited in this form.</param>
+		/// <remarks>
+		/// This should only be used in controlled cases; otherwise,
+		/// it can lead to data security issues, allowing a form that could not edit a specific field to change its value.
+		/// </remarks>
+		void DisableUserValuesSecurity(bool disabled = true);
 
 		/// <summary>
 		/// Displays conditions relevant to the current view.
@@ -138,6 +164,20 @@ namespace GenioMVC.ViewModels
 		/// <param name="editable">Specifies whether the ViewModel should be loaded in an editable state.</param>
 		/// <param name="ajaxRequest">Indicates whether the request is an AJAX request.</param>
 		void LoadGlob(NameValueCollection qs, bool editable, bool ajaxRequest = false);
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		void SetViewModelValue(string fullFieldName, object value);
+
+		/// <summary>
+		/// Populates the properties of the view model with values from the provided dictionary.
+		/// </summary>
+		/// <param name="values">A dictionary containing the keys in the format "table.field" and values to populate the view model with. Must not be null.</param>
+		void PopulateViewModel(Dictionary<string, object> values);
 	}
 
 
@@ -149,14 +189,19 @@ namespace GenioMVC.ViewModels
 		protected T Model;
 
 		/// <summary>
+		/// The base CSGenioA class with the old (DB) values
+		/// </summary>
+		protected CSGenio.business.Area oldValues;
+
+		/// <summary>
 		/// Allocates a new empty ModelBase of the correct type
 		/// </summary>
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException"></exception>
-        public T CreateModelBase()
-        {
-            return Activator.CreateInstance(typeof(T), m_userContext, false, null) as T ?? throw new InvalidOperationException("Failed to create ModelBase of type " + typeof(T));
-        }
+		public T CreateModelBase()
+		{
+			return Activator.CreateInstance(typeof(T), m_userContext, false, null) as T ?? throw new InvalidOperationException("Failed to create ModelBase of type " + typeof(T));
+		}
 
 		/// <summary>
 		/// The model's queue list property
@@ -192,9 +237,7 @@ namespace GenioMVC.ViewModels
 
 		protected CrudViewModel(UserContext userContext, string identifier, T row, bool nestedForm = false) : this(userContext, identifier, nestedForm)
 		{
-			if (row == null)
-				throw new ModelNotFoundException("Model not found");
-			Model = row;
+			Model = row ?? throw new ModelNotFoundException("Model not found");
 			InitModel();
 		}
 
@@ -203,14 +246,22 @@ namespace GenioMVC.ViewModels
 			if (Model == null)
 				return;
 
-			Model.LoadKeysFormHistory(this.Navigation, this.Navigation.CurrentLevel.Level);
+			Model.LoadKeysFromHistory(this.Navigation, this.Navigation.CurrentLevel.Level);
 			MapFromModel(Model);
 			if (loadDocuments)
 				LoadDocumentsProperties(Model);
-				
+
 			// Here we already have access to the model, so we can fill the remaining values.
 			FillExtraProperties();
-			LoadPartial(qs ?? new NameValueCollection(), lazyLoad);
+			LoadPartial(qs ?? [], lazyLoad);
+		}
+
+		/// <summary>
+		/// Executes the calculation of the Model’s internal formulas.
+		/// </summary>
+		public void ExecuteModelFormulas()
+		{
+			Model?.baseklass.fillInternalOperations(m_userContext.PersistentSupport, oldValues);
 		}
 
 		/// <summary>
@@ -231,6 +282,28 @@ namespace GenioMVC.ViewModels
 		public void MapFromModel()
 		{
 			MapFromModel(Model);
+		}
+
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter.
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		/// <remarks>
+		/// Each view model must implement its own model load.
+		/// This virtual method only implements storing the old values for formula calculation and 'recalc if' conditions
+		/// before merging with values received from the interface, requiring further implementation in subclasses.
+		/// </remarks>
+		public virtual void LoadModel(string id = null)
+		{
+			// Store the Old Values to calculate formulas and 'recalc if' before merge with values that come from the interface
+			if (Model != null)
+			{
+				oldValues = CSGenio.business.Area.createArea(Model.baseklass.Alias, m_userContext.User, m_userContext.User.CurrentModule);
+				foreach (RequestedField fld in Model.baseklass.Fields.Values)
+					oldValues.insertNameValueField(fld.FullName, fld.Value);
+			}
+			else
+				oldValues = null;
 		}
 
 		[JsonIgnore]
@@ -263,7 +336,19 @@ namespace GenioMVC.ViewModels
 		// Mapping must be implemented by the subclass
 		public abstract void MapFromModel(T model);
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public abstract void MapToModel(T model);
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		public abstract void MapToModel();
+
+		public abstract void SetViewModelValue(string fullFieldName, object value);
 
 		public abstract StatusMessage ViewConditions();
 
@@ -289,34 +374,36 @@ namespace GenioMVC.ViewModels
 		[JsonIgnore]
 		public CalendarVariables CalendarOptions { get; set; }
 
-		public void UpdateCalendarOptions()
+		/// <summary>
+		/// Indicates whether the protection that prevents mapping the fields from the ViewModel to the Model that could not be edited in this form is disabled.
+		/// </summary>
+		[JsonIgnore]
+		public bool HasDisabledUserValuesSecurity { get; private set; }
+
+		/// <summary>
+		/// Disable the protection that prevents mapping the fields from the ViewModel to the Model that could not be edited in this form.
+		/// </summary>
+		/// <param name="disabled">Allows filling in the Model fields that could not be edited in this form.</param>
+		/// <remarks>
+		/// This should only be used in controlled cases; otherwise,
+		/// it can lead to data security issues, allowing a form that could not edit a specific field to change its value.
+		/// </remarks>
+		public void DisableUserValuesSecurity(bool disabled = true)
 		{
-			var startDateField = Navigation.GetStrValue("startDateField");
-			var endDateField = Navigation.GetStrValue("endDateField");
-			IsInsideCalendar = (startDateField != "" && endDateField != "");
+			HasDisabledUserValuesSecurity = disabled;
+		}
 
-			var minTime = Navigation.GetStrValue("minTime").Substring(0, 5);
-			var maxTime = Navigation.GetStrValue("maxTime").Substring(0, 5);
-
-			var allDayField = Navigation.GetStrValue("allDayField");
-			var startTimeField = Navigation.GetStrValue("startTimeField");
-			var endTimeField = Navigation.GetStrValue("endTimeField");
-
-			var validDateStart = Navigation.GetStrValue("validDateStart");
-			var validDateEnd = Navigation.GetStrValue("validDateEnd");
-
-			CalendarOptions = new CalendarVariables()
+		/// <summary>
+		/// Populates the properties of the view model with values from the provided dictionary.
+		/// </summary>
+		/// <param name="values">A dictionary containing the keys in the format "table.field" and values to populate the view model with. Must not be null.</param>
+		public void PopulateViewModel(Dictionary<string, object> values)
+		{
+			if (values != null)
 			{
-				startDateField = startDateField,
-				endDateField = endDateField,
-				minTime = minTime,
-				maxTime = maxTime,
-				allDayField = allDayField,
-				startTimeField = startTimeField,
-				endTimeField = endTimeField,
-				validDateStart = validDateStart,
-				validDateEnd = validDateEnd
-			};
+				foreach (var kvp in values)
+					SetViewModelValue(kvp.Key, kvp.Value);
+			}
 		}
 	}
 }

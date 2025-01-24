@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Expense
 	/// </summary>
-	public class CSGenioAexpe1 : DbArea	{
+	public class CSGenioAexpe1 : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -82,6 +83,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  4;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 4;
 			Qfield.CavDesignation = "YEAR61794";
 
 			Qfield.Dupmsg = "";
@@ -92,6 +94,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Previous year";
 			Qfield.FieldSize =  4;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 4;
 			Qfield.CavDesignation = "PREVIOUS_YEAR11345";
 
 			Qfield.Dupmsg = "";
@@ -125,6 +128,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "VALUE10285";
 
@@ -137,6 +141,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "PREVIOUS_VALUE06374";
 
@@ -307,7 +312,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddespe, value); }
 		}
 
-
 		/// <summary>Field : ">PROJECT" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldCodproje { get { return m_fldCodproje; } }
 		private static FieldRef m_fldCodproje = new FieldRef("expe1", "codproje");
@@ -318,7 +322,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodproje); }
 			set { insertNameValueField(FldCodproje, value); }
 		}
-
 
 		/// <summary>Field : ">YEAR" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldCodyear { get { return m_fldCodyear; } }
@@ -331,30 +334,27 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodyear, value); }
 		}
 
-
 		/// <summary>Field : "Year" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldYearnumb { get { return m_fldYearnumb; } }
 		private static FieldRef m_fldYearnumb = new FieldRef("expe1", "yearnumb");
 
 		/// <summary>Field : "Year" Tipo: "N" Formula:  ""</summary>
-		public double ValYearnumb
+		public decimal ValYearnumb
 		{
-			get { return (double)returnValueField(FldYearnumb); }
+			get { return (decimal)returnValueField(FldYearnumb); }
 			set { insertNameValueField(FldYearnumb, value); }
 		}
-
 
 		/// <summary>Field : "Previous year" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldYearprev { get { return m_fldYearprev; } }
 		private static FieldRef m_fldYearprev = new FieldRef("expe1", "yearprev");
 
 		/// <summary>Field : "Previous year" Tipo: "N" Formula:  ""</summary>
-		public double ValYearprev
+		public decimal ValYearprev
 		{
-			get { return (double)returnValueField(FldYearprev); }
+			get { return (decimal)returnValueField(FldYearprev); }
 			set { insertNameValueField(FldYearprev, value); }
 		}
-
 
 		/// <summary>Field : ">AGGREGATOR" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldCodaggre { get { return m_fldCodaggre; } }
@@ -367,7 +367,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodaggre, value); }
 		}
 
-
 		/// <summary>Field : "Description" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldDescript { get { return m_fldDescript; } }
 		private static FieldRef m_fldDescript = new FieldRef("expe1", "descript");
@@ -379,30 +378,27 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDescript, value); }
 		}
 
-
 		/// <summary>Field : "Value" Tipo: "$D" Formula:  ""</summary>
 		public static FieldRef FldValue { get { return m_fldValue; } }
 		private static FieldRef m_fldValue = new FieldRef("expe1", "value");
 
 		/// <summary>Field : "Value" Tipo: "$D" Formula:  ""</summary>
-		public double ValValue
+		public decimal ValValue
 		{
-			get { return (double)returnValueField(FldValue); }
+			get { return (decimal)returnValueField(FldValue); }
 			set { insertNameValueField(FldValue, value); }
 		}
-
 
 		/// <summary>Field : "Previous value" Tipo: "$D" Formula:  ""</summary>
 		public static FieldRef FldPrevval { get { return m_fldPrevval; } }
 		private static FieldRef m_fldPrevval = new FieldRef("expe1", "prevval");
 
 		/// <summary>Field : "Previous value" Tipo: "$D" Formula:  ""</summary>
-		public double ValPrevval
+		public decimal ValPrevval
 		{
-			get { return (double)returnValueField(FldPrevval); }
+			get { return (decimal)returnValueField(FldPrevval); }
 			set { insertNameValueField(FldPrevval, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -445,23 +441,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAexpe1> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAexpe1> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAexpe1>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -510,7 +489,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX EXPE1]/

@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuTBS_131ViewModel.js'
+
 	const requiredTextResources = ['QMenuTBS_131', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '131',
 					isMenuList: true,
+					designation: computed(() => this.Resources.PROFESSIONAL_CATEGOR49666),
 					acronym: 'TBS_131',
 					name: 'CATEG',
 					route: 'menu-TBS_131',
@@ -125,18 +127,26 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'TBS_Menu_131',
 						controller: 'CATEG',
 						action: 'TBS_Menu_131',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
 								name: 'ValCategoria',
 								area: 'CATEG',
-								field: 'CATEGORY',
+								field: 'CATEGORIA',
 								label: computed(() => this.Resources.CATEGORY18978),
 								dataLength: 50,
 								scrollData: 30,
@@ -145,7 +155,7 @@
 								order: 2,
 								name: 'ValAbbreviation',
 								area: 'CATEG',
-								field: 'ABBREVIA',
+								field: 'ABBREVIATION',
 								label: computed(() => this.Resources.ABBREVIATION31267),
 								dataLength: 10,
 								scrollData: 10,
@@ -163,7 +173,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -267,6 +277,7 @@
 								id: 'RCA_TBS_1311',
 								name: 'form-CATEG',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -283,23 +294,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: CATEG
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValCategoria',
 							defaultSearchColumnNameOriginal: 'ValCategoria',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValCategoria',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-CATEG'],
 						uuid: '0871948f-4b43-478c-a5e4-7887be983613',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -328,6 +333,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS TBS_131]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS TBS_MENU_131]/
 // eslint-disable-next-line

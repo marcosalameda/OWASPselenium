@@ -35,8 +35,8 @@
         /// <returns>True, if the value is considered empty</returns>
         public bool IsEmpty()
         {
-            return ((EncryptedValue == null || (EncryptedValue is string ev && string.IsNullOrEmpty(ev))) 
-                && (DecryptedValue == null || (DecryptedValue is string uv && string.IsNullOrEmpty(uv))));
+            return (EncryptedValue == null || (EncryptedValue is string ev && string.IsNullOrEmpty(ev))) 
+                && (DecryptedValue == null || (DecryptedValue is string uv && string.IsNullOrEmpty(uv)));
         }
 
         ///// <summary>

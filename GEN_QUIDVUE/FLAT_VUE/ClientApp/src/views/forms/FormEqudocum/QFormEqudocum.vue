@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -96,7 +96,7 @@
 			:data-loading="!formInitialDataLoaded"
 			:key="domVersionKey">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.EQUDOCUMEQUIPDESIGNAT.isVisible || controls.EQUDOCUMPSEUDBTN_ANEX.isVisible || controls.EQUDOCUMPSEUDLISANEX_.isVisible">
+				<q-row-container v-show="controls.EQUDOCUMEQUIPDESIGNAT.isVisible || controls.EQUDOCUMPSEUDBTN_ANEX.isVisible">
 					<q-control-wrapper
 						v-show="controls.EQUDOCUMEQUIPDESIGNAT.isVisible"
 						class="control-join-group">
@@ -106,12 +106,12 @@
 							v-on="controls.EQUDOCUMEQUIPDESIGNAT.handlers"
 							:loading="controls.EQUDOCUMEQUIPDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.EQUDOCUMEQUIPDESIGNAT.props"
 								:model-value="model.ValDesignat.value"
-								@update:model-value="model.ValDesignat.fnUpdateValue" />
+								@blur="onBlur(controls.EQUDOCUMEQUIPDESIGNAT, model.ValDesignat.value)"
+								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -123,8 +123,7 @@
 							v-on="controls.EQUDOCUMPSEUDBTN_ANEX.handlers"
 							:loading="controls.EQUDOCUMPSEUDBTN_ANEX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-button
 								v-if="controls.EQUDOCUMPSEUDBTN_ANEX.isVisible"
 								id="EQUDOCUMPSEUDBTN_ANEX"
@@ -135,14 +134,15 @@
 							</q-button>
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.EQUDOCUMPSEUDLISANEX_.isVisible">
 					<q-control-wrapper
 						v-show="controls.EQUDOCUMPSEUDLISANEX_.isVisible"
 						class="control-join-group">
 						<q-table
 							v-show="controls.EQUDOCUMPSEUDLISANEX_.isVisible"
 							v-bind="controls.EQUDOCUMPSEUDLISANEX_"
-							v-on="controls.EQUDOCUMPSEUDLISANEX_.handlers">
-						</q-table>
+							v-on="controls.EQUDOCUMPSEUDLISANEX_.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.EQUDOCUMPSEUDLISANEX_"
 							v-on="controls.EQUDOCUMPSEUDLISANEX_.handlers" />
@@ -229,15 +229,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'EQUDOCUM',
-						location: 'form-EQUDOCUM',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'EQUDOCUM',
+					location: 'form-EQUDOCUM',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -283,6 +281,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -355,8 +355,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -438,7 +439,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -492,21 +493,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -517,15 +503,21 @@
 						id: 'EQUDOCUMEQUIPDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'large',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources._112047598),
+							},
+							detailedHelp: {
+								type: 'None',
+								text: computed(() => this.Resources._1120_VERBOSE06198),
+							}
+						},
 						label: computed(() => this.Resources.DESIGNATION35876),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
 						labelId: 'label_EQUDOCUMEQUIPDESIGNAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -534,14 +526,23 @@
 						name: 'BTN_ANEX',
 						size: 'small',
 						hasLabel: false,
+						helpControl: {
+							shortHelp: {
+								type: '',
+								text: computed(() => this.Resources._112414944),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1124_VERBOSE42774),
+							}
+						},
 						label: computed(() => this.Resources.ADD_ANEXD17106),
-						userHelp: computed(() => this.Resources._112414944),
-						description: computed(() => this.Resources._1124_VERBOSE42774),
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
 							icon: computed(() => `${this.system.resourcesPath}ok.ico`),
 							type: 'img',
+							role: 'presentation',
 						},
 						// eslint-disable-next-line
 						action: (event) => {
@@ -549,7 +550,7 @@
 								// Button to open the form "ANEXD" in "INS" mode.
 								const params = {
 									mode: vm.formModes.new,
-									modes: vm.navigation.currentLevel.params.modes,
+									modes: 'vedai',
 									isControlled: true,
 									extraData: JSON.stringify(event)
 								}
@@ -562,18 +563,24 @@
 							}
 							vm.$eventHub.emit('form-apply', options)
 						},
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					EQUDOCUMPSEUDLISANEX_: new fieldControlClass.TableListControl({
 						id: 'EQUDOCUMPSEUDLISANEX_',
 						name: 'LISANEX',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtitle',
+								text: computed(() => this.Resources._112319369),
+							},
+							detailedHelp: {
+								type: 'Info-banner',
+								text: computed(() => this.Resources._1123_VERBOSE50467),
+							}
+						},
 						label: computed(() => this.Resources.DIGITAL_ATTACHEMENTS44886),
-						userHelp: computed(() => this.Resources._112342843),
-						description: computed(() => this.Resources._1123_VERBOSE41412),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'EQUIP',
@@ -588,7 +595,7 @@
 								field: 'DTHRANEX',
 								label: computed(() => this.Resources.ATTACHED26247),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -608,7 +615,7 @@
 								dataLength: 260,
 								scrollData: 30,
 								sortable: false,
-								viewType: qEnums.documentViewTypeMode.Print,
+								viewType: qEnums.documentViewTypeMode.print,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -641,7 +648,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -747,6 +754,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'ANEXD',
@@ -760,18 +768,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: ANEXD
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValTitle',
 							defaultSearchColumnNameOriginal: 'ValTitle',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-EQUIP', 'changed-ANEXD', 'changed-LANGU'],
 						uuid: 'Equdocum_ValLisanex',
@@ -850,7 +852,7 @@
 						/** The foreign key to the ROOM1 table */
 						get room1() { return vm.model.ValCodrooms },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -946,6 +948,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -985,6 +995,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1111,6 +1129,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR EQUDOCUM]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1126,6 +1160,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS EQUDOCUM]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

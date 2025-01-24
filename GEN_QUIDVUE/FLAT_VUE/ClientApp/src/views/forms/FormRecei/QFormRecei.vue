@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,13 @@
 							v-on="controls.RECEI___RECEIDTRECEIP.handlers"
 							:loading="controls.RECEI___RECEIDTRECEIP.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.RECEI___RECEIDTRECEIP.isVisible"
-								v-bind="controls.RECEI___RECEIDTRECEIP"
-								format="DateTime"
+								v-bind="controls.RECEI___RECEIDTRECEIP.props"
 								:model-value="model.ValDtreceip.value"
-								@update:model-value="model.ValDtreceip.fnUpdateValue" />
+								@reset-icon-click="model.ValDtreceip.fnUpdateValue(model.ValDtreceip.originalValue ?? new Date())"
+								@update:model-value="model.ValDtreceip.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -125,12 +124,10 @@
 							v-on="controls.RECEI___RECEINUMBER__.handlers"
 							:loading="controls.RECEI___RECEINUMBER__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.RECEI___RECEINUMBER__.isVisible"
-								v-bind="controls.RECEI___RECEINUMBER__"
-								:model-value="model.ValNumber.value"
+								v-bind="controls.RECEI___RECEINUMBER__.props"
 								@update:model-value="model.ValNumber.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -143,14 +140,11 @@
 							v-on="controls.RECEI___ENTITNAME____.handlers"
 							:loading="controls.RECEI___ENTITNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.RECEI___ENTITNAME____.isVisible"
 								v-bind="controls.RECEI___ENTITNAME____.props"
-								:model-value="model.ValCodentit.value"
-								v-on="controls.RECEI___ENTITNAME____.handlers"
-								@update:model-value="model.ValCodentit.fnUpdateValue" />
+								v-on="controls.RECEI___ENTITNAME____.handlers" />
 							<q-see-more-recei-entitname
 								v-if="controls.RECEI___ENTITNAME____.seeMoreIsVisible"
 								v-bind="controls.RECEI___ENTITNAME____.seeMoreParams"
@@ -165,8 +159,7 @@
 						<q-table
 							v-show="controls.RECEI___PSEUDRECEIPTL.isVisible"
 							v-bind="controls.RECEI___PSEUDRECEIPTL"
-							v-on="controls.RECEI___PSEUDRECEIPTL.handlers">
-						</q-table>
+							v-on="controls.RECEI___PSEUDRECEIPTL.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.RECEI___PSEUDRECEIPTL"
 							v-on="controls.RECEI___PSEUDRECEIPTL.handlers" />
@@ -180,14 +173,13 @@
 							v-on="controls.RECEI___RECEIDTCHECK_.handlers"
 							:loading="controls.RECEI___RECEIDTCHECK_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.RECEI___RECEIDTCHECK_.isVisible"
-								v-bind="controls.RECEI___RECEIDTCHECK_"
-								format="DateTime"
+								v-bind="controls.RECEI___RECEIDTCHECK_.props"
 								:model-value="model.ValDtcheck.value"
-								@update:model-value="model.ValDtcheck.fnUpdateValue" />
+								@reset-icon-click="model.ValDtcheck.fnUpdateValue(model.ValDtcheck.originalValue ?? new Date())"
+								@update:model-value="model.ValDtcheck.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -201,15 +193,11 @@
 							v-on="controls.RECEI___RECEITOCHECK_.handlers"
 							:loading="controls.RECEI___RECEITOCHECK_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.RECEI___RECEITOCHECK_.isVisible"
-									id="RECEI___RECEITOCHECK_"
-									size="small"
-									:model-value="model.ValTocheck.value"
-									:readonly="controls.RECEI___RECEITOCHECK_.readonly"
+									v-bind="controls.RECEI___RECEITOCHECK_.props"
 									@update:model-value="model.ValTocheck.fnUpdateValue" />
 							</template>
 						</base-input-structure>
@@ -225,15 +213,11 @@
 							v-on="controls.RECEI___RECEICHECKED_.handlers"
 							:loading="controls.RECEI___RECEICHECKED_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.RECEI___RECEICHECKED_.isVisible"
-									id="RECEI___RECEICHECKED_"
-									size="small"
-									:model-value="model.ValChecked.value"
-									:readonly="controls.RECEI___RECEICHECKED_.readonly"
+									v-bind="controls.RECEI___RECEICHECKED_.props"
 									@update:model-value="model.ValChecked.fnUpdateValue" />
 							</template>
 						</base-input-structure>
@@ -249,15 +233,11 @@
 							v-on="controls.RECEI___RECEISTORED__.handlers"
 							:loading="controls.RECEI___RECEISTORED__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.RECEI___RECEISTORED__.isVisible"
-									id="RECEI___RECEISTORED__"
-									size="mini"
-									:model-value="model.ValStored.value"
-									:readonly="controls.RECEI___RECEISTORED__.readonly"
+									v-bind="controls.RECEI___RECEISTORED__.props"
 									@update:model-value="model.ValStored.fnUpdateValue" />
 							</template>
 						</base-input-structure>
@@ -271,14 +251,13 @@
 							v-on="controls.RECEI___RECEIDTSTORAG.handlers"
 							:loading="controls.RECEI___RECEIDTSTORAG.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.RECEI___RECEIDTSTORAG.isVisible"
-								v-bind="controls.RECEI___RECEIDTSTORAG"
-								format="DateTime"
+								v-bind="controls.RECEI___RECEIDTSTORAG.props"
 								:model-value="model.ValDtstorag.value"
-								@update:model-value="model.ValDtstorag.fnUpdateValue" />
+								@reset-icon-click="model.ValDtstorag.fnUpdateValue(model.ValDtstorag.originalValue ?? new Date())"
+								@update:model-value="model.ValDtstorag.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -364,15 +343,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'RECEI',
-						location: 'form-RECEI',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'RECEI',
+					location: 'form-RECEI',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -418,6 +395,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -490,8 +469,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -573,7 +553,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -627,21 +607,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -652,31 +617,25 @@
 						id: 'RECEI___RECEIDTRECEIP',
 						name: 'DTRECEIP',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.RECEIPT_DATE00996),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
 					RECEI___RECEINUMBER__: new fieldControlClass.NumberControl({
 						modelField: 'ValNumber',
 						valueChangeEvent: 'fieldChange:recei.number',
-						maxIntegers: 10,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'RECEI___RECEINUMBER__',
 						name: 'NUMBER',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.RECEIPT_NUMBER31380),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 10,
+						maxDecimals: 0,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -687,25 +646,9 @@
 						id: 'RECEI___ENTITNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.SUPLIER38140),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodentit',
-							dependencyEvent: 'fieldChange:recei.codentit'
-						},
-						dependentFields: () => {
-							return {
-								set 'entit.codentit'(value) { vm.model.ValCodentit.updateValue(value) },
-								set 'entit.name'(value) { vm.model.TableEntitName.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -714,15 +657,22 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodentit',
+							dependencyEvent: 'fieldChange:recei.codentit'
+						},
+						dependentFields: () => ({
+							set 'entit.codentit'(value) { vm.model.ValCodentit.updateValue(value) },
+							set 'entit.name'(value) { vm.model.TableEntitName.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					RECEI___PSEUDRECEIPTL: new fieldControlClass.TableListControl({
 						id: 'RECEI___PSEUDRECEIPTL',
 						name: 'RECEIPTL',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.RECEIPT_LINES14292),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'RECEI',
@@ -814,7 +764,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -920,6 +870,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'RELIN',
@@ -933,18 +884,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: RELIN
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValLinenumb',
 							defaultSearchColumnNameOriginal: 'ValLinenumb',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValLinenumb',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-PRODU', 'changed-RELIN', 'changed-ENTIT', 'changed-RECEI'],
 						uuid: 'Recei_ValReceiptl',
@@ -964,13 +909,10 @@
 						id: 'RECEI___RECEIDTCHECK_',
 						name: 'DTCHECK',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.RECEIPT_VERIFICATION62328),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -980,17 +922,12 @@
 						id: 'RECEI___RECEITOCHECK_',
 						name: 'TOCHECK',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.TO_CHECK57511),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					RECEI___RECEICHECKED_: new fieldControlClass.BooleanControl({
 						modelField: 'ValChecked',
@@ -998,17 +935,12 @@
 						id: 'RECEI___RECEICHECKED_',
 						name: 'CHECKED',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.CHECKED31708),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					RECEI___RECEISTORED__: new fieldControlClass.BooleanControl({
 						modelField: 'ValStored',
@@ -1016,13 +948,9 @@
 						id: 'RECEI___RECEISTORED__',
 						name: 'STORED',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.STORED41854),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
@@ -1032,13 +960,10 @@
 						id: 'RECEI___RECEIDTSTORAG',
 						name: 'DTSTORAG',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.STORAGE_DATE59954),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 						showWhen: {
@@ -1046,12 +971,10 @@
 							fnFormula(params)
 							{
 								// Formula: emptyL( [RECEI->STORED] )==0
-								// eslint-disable-next-line eqeqeq
-								return qApi.emptyL((this.ValStored.value ? 1 : 0))==0
+								return qApi.emptyL((this.ValStored.value ? 1 : 0))===0
 							},
 							dependencyEvents: ['fieldChange:recei.stored'],
 							isServerRecalc: false,
-							isServerFormula: false,
 						},
 					}, this),
 				},
@@ -1105,7 +1028,7 @@
 						/** The foreign key to the ENTIT table */
 						get entit() { return vm.model.ValCodentit },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1201,6 +1124,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1240,6 +1171,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1366,6 +1305,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR RECEI]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1381,6 +1336,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS RECEI]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

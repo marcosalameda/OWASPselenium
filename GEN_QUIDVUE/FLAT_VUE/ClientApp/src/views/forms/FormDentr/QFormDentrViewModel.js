@@ -143,18 +143,17 @@ export default class ViewModel extends ViewModelBase
 			area: 'INDOC',
 			field: 'DATE',
 			description: computed(() => this.Resources.DATE18475),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(emptyG([INDOC->CODWAREH])==1,[ZEROD],[INDOC->DHDOCUME])
-					// eslint-disable-next-line eqeqeq
-					return qApi.iif(qApi.emptyG(this.ValCodwareh.value)==1,'',this.ValDhdocume.value)
+					return qApi.iif(qApi.emptyG(this.ValCodwareh.value)===1,'',this.ValDhdocume.value)
 				},
 				dependencyEvents: ['fieldChange:indoc.codwareh', 'fieldChange:indoc.dhdocume'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyD,
 			},
 		}).cloneFrom(values?.ValDate))
@@ -193,5 +192,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCoddentr'
 
 	get QPrimaryKey() { return this.ValCoddentr.value }
-	set QPrimaryKey(value) { this.ValCoddentr.value = value }
+	set QPrimaryKey(value) { this.ValCoddentr.updateValue(value) }
 }

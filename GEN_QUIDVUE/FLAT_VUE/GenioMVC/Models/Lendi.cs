@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Pess1 _pess1;
 		[DisplayName("Pess1")]
 		[ShouldSerialize("Pess1")]
-		public virtual Pess1 Pess1 { 
-			get { 
+		public virtual Pess1 Pess1 {
+			get {
 				if (!this.isEmptyModel && (_pess1 == null || (!string.IsNullOrEmpty(ValCodpess1) && (_pess1.isEmptyModel || _pess1.klass.QPrimaryKey != ValCodpess1))))
 					_pess1 = Models.Pess1.Find(ValCodpess1, m_userContext, Identifier, _fieldsToSerialize);
 				if (_pess1 == null)
 					_pess1 = new Models.Pess1(m_userContext, true, _fieldsToSerialize);
 				return _pess1;
 			}
-			set { _pess1 = value; } 
+			set { _pess1 = value; }
 		}
-		
+
 
 		[DisplayName(">EQUIPMENT")]
 		/// <summary>Field : ">EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Equip _equip;
 		[DisplayName("Equip")]
 		[ShouldSerialize("Equip")]
-		public virtual Equip Equip { 
-			get { 
+		public virtual Equip Equip {
+			get {
 				if (!this.isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
 					_equip = Models.Equip.Find(ValCodequip, m_userContext, Identifier, _fieldsToSerialize);
 				if (_equip == null)
 					_equip = new Models.Equip(m_userContext, true, _fieldsToSerialize);
 				return _equip;
 			}
-			set { _equip = value; } 
+			set { _equip = value; }
 		}
-		
+
 
 		[DisplayName(">DADATARY")]
 		/// <summary>Field : ">DADATARY" Tipo: "CE" Formula:  ""</summary>
@@ -79,23 +79,23 @@ namespace GenioMVC.Models
 		private Pess2 _pess2;
 		[DisplayName("Pess2")]
 		[ShouldSerialize("Pess2")]
-		public virtual Pess2 Pess2 { 
-			get { 
+		public virtual Pess2 Pess2 {
+			get {
 				if (!this.isEmptyModel && (_pess2 == null || (!string.IsNullOrEmpty(ValCodpess2) && (_pess2.isEmptyModel || _pess2.klass.QPrimaryKey != ValCodpess2))))
 					_pess2 = Models.Pess2.Find(ValCodpess2, m_userContext, Identifier, _fieldsToSerialize);
 				if (_pess2 == null)
 					_pess2 = new Models.Pess2(m_userContext, true, _fieldsToSerialize);
 				return _pess2;
 			}
-			set { _pess2 = value; } 
+			set { _pess2 = value; }
 		}
-		
+
 
 		[DisplayName("Number of lending")]
 		/// <summary>Field : "Number of lending" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Lendi.ValLendinnr")]
 		[NumericAttribute(0)]
-		public decimal? ValLendinnr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLendinnr, 0)); } set { klass.ValLendinnr = Convert.ToDouble(value); } }
+		public decimal? ValLendinnr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLendinnr, 0)); } set { klass.ValLendinnr = Convert.ToDecimal(value); } }
 
 		[DisplayName("Beginning")]
 		/// <summary>Field : "Beginning" Tipo: "DT" Formula:  ""</summary>
@@ -140,7 +140,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Days for return period" Tipo: "N" Formula: +H "iif(emptyD([LENDI->END])==1,0,Diferenca_entre_Datas([Today],[LENDI->END],"D"))"</summary>
 		[ShouldSerialize("Lendi.ValDayslimi")]
 		[NumericAttribute(0)]
-		public decimal? ValDayslimi { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDayslimi, 0)); } set { klass.ValDayslimi = Convert.ToDouble(value); } }
+		public decimal? ValDayslimi { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDayslimi, 0)); } set { klass.ValDayslimi = Convert.ToDecimal(value); } }
 
 		[DisplayName("If out of date")]
 		/// <summary>Field : "If out of date" Tipo: "L" Formula: + "iif([LENDI->DAYSLIMI]<0,1,0)"</summary>
@@ -155,19 +155,19 @@ namespace GenioMVC.Models
 		public Lendi(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAlendi(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Lendi(UserContext userContext, CSGenioAlendi val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAlendi csgenioa)
@@ -199,7 +199,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

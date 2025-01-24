@@ -11,6 +11,7 @@ namespace CSGenio.reporting.serialization
     {
         public string DataSourceName;
         public List<QueryParameter> QueryParameters = new List<QueryParameter>();
+		public string CommandType;
         public string CommandText;
     }
 }

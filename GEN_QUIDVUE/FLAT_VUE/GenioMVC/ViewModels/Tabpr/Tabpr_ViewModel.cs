@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Tabpr
 {
-	public class Tabpr_ViewModel : FormViewModel<Models.Tabpr>
+	public class Tabpr_ViewModel : FormViewModel<Models.Tabpr>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,16 +29,22 @@ namespace GenioMVC.ViewModels.Tabpr
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Type of equipment" | Type: "CE"
+		/// </summary>
+		public string ValCodtpeq1 { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Type of equipment" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Tpequ> TableTpequTipoequi { get; set; }
-
 		/// <summary>
 		/// Title: "Since" | Type: "DT"
 		/// </summary>
 		public DateTime? ValSince { get; set; }
-
 		/// <summary>
 		/// Title: "Price per hour:" | Type: "$D"
 		/// </summary>
@@ -51,15 +57,6 @@ namespace GenioMVC.ViewModels.Tabpr
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Type of equipment" | Type: "CE"
-		/// </summary>
-		public string ValCodtpeq1 { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -75,9 +72,10 @@ namespace GenioMVC.ViewModels.Tabpr
 
 		public string ValCodtabpr { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Tabpr_ViewModel() : base(null!) { }
@@ -113,6 +111,15 @@ namespace GenioMVC.ViewModels.Tabpr
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Tabpr model = new Models.Tabpr(userContext) { Identifier = "FTABPR" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FTABPR");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -173,9 +180,9 @@ namespace GenioMVC.ViewModels.Tabpr
 
 			try
 			{
+				ValCodtpeq1 = ViewModelConversion.ToString(m.ValCodtpeq1);
 				ValSince = ViewModelConversion.ToDateTime(m.ValSince);
 				ValPrecohor = ViewModelConversion.ToNumeric(m.ValPrecohor);
-				ValCodtpeq1 = ViewModelConversion.ToString(m.ValCodtpeq1);
 				ValCodtabpr = ViewModelConversion.ToString(m.ValCodtabpr);
 			}
 			catch (Exception)
@@ -185,6 +192,20 @@ namespace GenioMVC.ViewModels.Tabpr
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Tabpr m)
 		{
 			if (m == null)
@@ -195,20 +216,70 @@ namespace GenioMVC.ViewModels.Tabpr
 
 			try
 			{
+				m.ValCodtpeq1 = ViewModelConversion.ToString(ValCodtpeq1);
 				m.ValSince = ViewModelConversion.ToDateTime(ValSince);
 				m.ValPrecohor = ViewModelConversion.ToNumeric(ValPrecohor);
-				m.ValCodtpeq1 = ViewModelConversion.ToString(ValCodtpeq1);
 				m.ValCodtabpr = ViewModelConversion.ToString(ValCodtabpr);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Tabpr) to Model (Tabpr) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Tabpr) to Model (Tabpr) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "tabpr.codtpeq1":
+						this.ValCodtpeq1 = ViewModelConversion.ToString(_value);
+						break;
+					case "tabpr.since":
+						this.ValSince = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "tabpr.precohor":
+						this.ValPrecohor = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "tabpr.codtabpr":
+						this.ValCodtabpr = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Tabpr) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Tabpr)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Tabpr.Find(id ?? Navigation.GetStrValue("tabpr"), m_userContext, "FTABPR"); }
+			finally { Model ??= new Models.Tabpr(m_userContext) { Identifier = "FTABPR" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -222,20 +293,13 @@ namespace GenioMVC.ViewModels.Tabpr
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FTABPR";
@@ -245,6 +309,7 @@ namespace GenioMVC.ViewModels.Tabpr
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -307,25 +372,19 @@ namespace GenioMVC.ViewModels.Tabpr
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE TABPR]/
 		public override void Save()
 		{
 
-			try { Model = Models.Tabpr.Find(Navigation.GetStrValue("tabpr"), m_userContext, "FTABPR"); }
-			finally { if (Model == null) Model = new Models.Tabpr(m_userContext) { Identifier = "FTABPR" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY TABPR]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Tabpr.Find(Navigation.GetStrValue("tabpr"), m_userContext, "FTABPR"); }
-			finally { if (Model == null) Model = new Models.Tabpr(m_userContext) { Identifier = "FTABPR" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE TABPR]/
 
@@ -358,8 +417,8 @@ namespace GenioMVC.ViewModels.Tabpr
 				object hValue = Navigation.GetValue("tpequ", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					tabpr___tpequtipoequiConds.Equal(CSGenioAtpequ.FldCodtpequ, Navigation.GetValue("tpequ"));
-					this.ValCodtpeq1 = Navigation.GetStrValue("tpequ");
+					tabpr___tpequtipoequiConds.Equal(CSGenioAtpequ.FldCodtpequ, hValue);
+					this.ValCodtpeq1 = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -376,8 +435,6 @@ namespace GenioMVC.ViewModels.Tabpr
 					Navigation.CurrentLevel.SetEntry("RETURN_tpequ", null);
 				}
 				FillDependant_TabprTableTpequTipoequi(lazyLoad);
-				//Check if foreignkey comes from history
-				TableTpequTipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpequ");
 				return;
 			}
 
@@ -445,9 +502,6 @@ namespace GenioMVC.ViewModels.Tabpr
 
 				TableTpequTipoequi.List = new SelectList(TableTpequTipoequi.Elements.ToSelectList(x => x.ValTipoequi, x => x.ValCodtpequ,  x => x.ValCodtpequ == this.ValCodtpeq1), "Value", "Text", this.ValCodtpeq1);
 				FillDependant_TabprTableTpequTipoequi();
-
-				//Check if foreignkey comes from history
-				TableTpequTipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpequ");
 			}
 		}
 
@@ -544,15 +598,17 @@ namespace GenioMVC.ViewModels.Tabpr
 		{
 			return identifier switch
 			{
+				"tabpr.codtpeq1" => ViewModelConversion.ToString(modelValue),
 				"tabpr.since" => ViewModelConversion.ToDateTime(modelValue),
 				"tabpr.precohor" => ViewModelConversion.ToNumeric(modelValue),
-				"tabpr.codtpeq1" => ViewModelConversion.ToString(modelValue),
 				"tabpr.codtabpr" => ViewModelConversion.ToString(modelValue),
 				"tpequ.codtpequ" => ViewModelConversion.ToString(modelValue),
 				"tpequ.tipoequi" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

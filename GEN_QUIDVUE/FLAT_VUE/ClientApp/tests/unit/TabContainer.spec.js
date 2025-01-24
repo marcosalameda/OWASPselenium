@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import '@testing-library/jest-dom'
 import { shallowMount } from './utils'
 
@@ -14,6 +11,8 @@ describe('TabContainer.vue', () => {
 	beforeEach(() => {
 		wrapper = shallowMount(TabContainer, {
 			props: {
+				selectedTab: 1,
+				
 				tabsList: [
 					{
 						id: 1,

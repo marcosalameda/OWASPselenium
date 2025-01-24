@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Entit;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER ENTIT]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Entit row = null;
 
-			try
-			{
-				row = Models.Entit.Find(Navigation.GetStrValue("entit"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model entit");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Entit(UserContext.Current);
+				row = new Models.Entit(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("entit");
 			}
 
@@ -82,8 +75,8 @@ namespace GenioMVC.Controllers
 				{
 					case "ENTIT___FACI1NAME____":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Entit_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Entit_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Entit___faci1name____(qs);
 							result = model.TableFaci1Name;
@@ -91,8 +84,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "ENTIT___FACI2NAME____":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Entit_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Entit_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Entit___faci2name____(qs);
 							result = model.TableFaci2Name;
@@ -100,8 +93,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "ENTIX___FACI1NAME____":	// Field (F1)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Entix_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Entix_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Entix___faci1name____(qs);
 							result = model.TableFaci1Name;
@@ -109,14 +102,15 @@ namespace GenioMVC.Controllers
 						break;
 					case "ENTIX___FACI2NAME____":	// Field (F1)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Entix_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Entix_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Entix___faci2name____(qs);
 							result = model.TableFaci2Name;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -171,11 +165,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -184,36 +179,33 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Entit" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Entit([FromBody]Entit_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Entit([FromBody]Entit_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "entit",
+			return GenericRecalculateFormulas(formData, "entit",
 				(primaryKey) => Models.Entit.Find(primaryKey, UserContext.Current, "FENTIT"),
-				(model) => form_data.MapToModel(model as Models.Entit)
+				(model) => formData.MapToModel(model as Models.Entit)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Entix" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Entix([FromBody]Entix_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Entix([FromBody]Entix_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "entit",
+			return GenericRecalculateFormulas(formData, "entit",
 				(primaryKey) => Models.Entit.Find(primaryKey, UserContext.Current, "FENTIX"),
-				(model) => form_data.MapToModel(model as Models.Entit)
+				(model) => formData.MapToModel(model as Models.Entit)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -221,7 +213,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

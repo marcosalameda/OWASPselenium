@@ -21,6 +21,8 @@
 <script>
 	import _cloneDeep from 'lodash-es/cloneDeep'
 
+	import genericFunctions from '@/mixins/genericFunctions'
+
 	import QAnchorElement from './QAnchorElement.vue'
 
 	export default {
@@ -49,14 +51,6 @@
 			tree: {
 				type: Array,
 				default: () => []
-			},
-
-			/**
-			 * The height of the header.
-			 */
-			headerHeight: {
-				type: Number,
-				default: 0
 			}
 		},
 
@@ -82,8 +76,10 @@
 		methods: {
 			handleScroll()
 			{
+				// Get the Y coordinate starting after the layout header and form header
+				const scrollYStart = genericFunctions.scrollYStart()
+
 				let isThereAnActiveSession = false
-				let offset = this.headerHeight
 
 				function findActiveAnchor(anchor)
 				{
@@ -109,8 +105,7 @@
 
 						let pos = target.getBoundingClientRect()
 
-						if (!isThereAnActiveSession &&
-							((pos.top > offset && pos.top < window.innerHeight / 3) || pos.top < offset && pos.bottom > window.innerHeight / 3))
+						if (!isThereAnActiveSession && (pos.top < scrollYStart + 5 && pos.bottom > scrollYStart))
 						{
 							anchor.isActive = true
 							isThereAnActiveSession = true

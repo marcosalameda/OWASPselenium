@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Equipment request
 	/// </summary>
-	public class CSGenioApedid : DbArea	{
+	public class CSGenioApedid : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -69,6 +70,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "No.";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 6;
 			Qfield.CavDesignation = "NO_14817";
 
             Qfield.NotNull = true;
@@ -256,7 +258,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodpedid, value); }
 		}
 
-
 		/// <summary>Field : "Date" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldDtpedido { get { return m_fldDtpedido; } }
 		private static FieldRef m_fldDtpedido = new FieldRef("pedid", "dtpedido");
@@ -268,18 +269,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDtpedido, value); }
 		}
 
-
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldNrpedido { get { return m_fldNrpedido; } }
 		private static FieldRef m_fldNrpedido = new FieldRef("pedid", "nrpedido");
 
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
-		public double ValNrpedido
+		public decimal ValNrpedido
 		{
-			get { return (double)returnValueField(FldNrpedido); }
+			get { return (decimal)returnValueField(FldNrpedido); }
 			set { insertNameValueField(FldNrpedido, value); }
 		}
-
 
 		/// <summary>Field : "Reason" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldMotivo { get { return m_fldMotivo; } }
@@ -291,7 +290,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldMotivo); }
 			set { insertNameValueField(FldMotivo, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -334,23 +332,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioApedid> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioApedid> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioApedid>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -399,7 +380,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX PEDID]/

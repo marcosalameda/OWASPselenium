@@ -30,11 +30,10 @@
 				@check-row="checkRow(tableTest.rowsChecked, $event)"
 				@uncheck-row="uncheckRow(tableTest.rowsChecked, $event)"
 				@check-rows="checkRows(tableTest.rowsChecked, $event)"
-				@uncheck-all-rows="uncheckAllRows(tableTest.rowsChecked)"
-				@set-dropdown="setDropdown" />
+				@uncheck-all-rows="uncheckAllRows(tableTest.rowsChecked)" />
 			<q-table-column-config
 				v-bind="tableTest.config"
-				:modal-id="'column-config'"
+				modal-id="column-config"
 				:columns="tableTest.columns"
 				:server-mode="tableTest.config.serverMode"
 				:is-visible="tableTest.config.columnConfigIsVisible"
@@ -47,7 +46,7 @@
 				@toggle-text-wrap="tableTest.config.hasTextWrap = !tableTest.config.hasTextWrap" />
 			<q-table-advanced-filters
 				v-if="tableTest.config.allowAdvancedFilters"
-				:modal-id="'advanced-filters'"
+				modal-id="advanced-filters"
 				:columns="tableTest.columns"
 				:filters="tableTest.advancedFilters"
 				:search-filter-data="tableTest.config.searchFilterData"
@@ -87,8 +86,7 @@
 				@check-row="checkRow(tableTest.rowsChecked, $event)"
 				@uncheck-row="uncheckRow(tableTest.rowsChecked, $event)"
 				@check-rows="checkRows(tableTest.rowsChecked, $event)"
-				@uncheck-all-rows="uncheckAllRows(tableTest.rowsChecked)"
-				@set-dropdown="setDropdown" />
+				@uncheck-all-rows="uncheckAllRows(tableTest.rowsChecked)" />
 		</div>
 
 		<div>
@@ -122,8 +120,7 @@
 				@check-row="checkRow(tableTest.rowsChecked, $event)"
 				@uncheck-row="uncheckRow(tableTest.rowsChecked, $event)"
 				@check-rows="checkRows(tableTest.rowsChecked, $event)"
-				@uncheck-all-rows="uncheckAllRows(tableTest.rowsChecked)"
-				@set-dropdown="setDropdown" />
+				@uncheck-all-rows="uncheckAllRows(tableTest.rowsChecked)" />
 		</div>
 
 		<div>
@@ -157,8 +154,7 @@
 				@check-row="checkRow(tableTest.rowsChecked, $event)"
 				@uncheck-row="uncheckRow(tableTest.rowsChecked, $event)"
 				@check-rows="checkRows(tableTest.rowsChecked, $event)"
-				@uncheck-all-rows="uncheckAllRows(tableTest.rowsChecked)"
-				@set-dropdown="setDropdown" />
+				@uncheck-all-rows="uncheckAllRows(tableTest.rowsChecked)" />
 		</div>
 
 		<div>
@@ -179,8 +175,7 @@
 				@on-import-data="displayEmit"
 				@on-export-template="exportTemplateAction"
 				@show-popup="showPopupAction"
-				@hide-popup="hidePopupAction"
-				@set-dropdown="setDropdown" />
+				@hide-popup="hidePopupAction" />
 		</div>
 
 		<div>
@@ -201,8 +196,7 @@
 				@on-import-data="displayEmit"
 				@on-export-template="exportTemplateAction"
 				@show-popup="showPopupAction"
-				@hide-popup="hidePopupAction"
-				@set-dropdown="setDropdown" />
+				@hide-popup="hidePopupAction" />
 		</div>
 
 		<div>
@@ -214,8 +208,7 @@
 				:total-rows="tableTestDates.totalRows"
 				@execute-action="executeAction"
 				@row-action="rowAction"
-				@cell-action="cellAction"
-				@set-dropdown="setDropdown" />
+				@cell-action="cellAction" />
 		</div>
 
 		<div>
@@ -249,8 +242,7 @@
 				@check-row="checkRow(tableTestOther.rowsChecked, $event)"
 				@uncheck-row="uncheckRow(tableTestOther.rowsChecked, $event)"
 				@check-rows="checkRows(tableTestOther.rowsChecked, $event)"
-				@uncheck-all-rows="uncheckAllRows(tableTestOther.rowsChecked)"
-				@set-dropdown="setDropdown" />
+				@uncheck-all-rows="uncheckAllRows(tableTestOther.rowsChecked)" />
 		</div>
 
 		<div>
@@ -284,8 +276,7 @@
 				@check-row="checkRow(tableTestOther.rowsChecked, $event)"
 				@uncheck-row="uncheckRow(tableTestOther.rowsChecked, $event)"
 				@check-rows="checkRows(tableTestOther.rowsChecked, $event)"
-				@uncheck-all-rows="uncheckAllRows(tableTestOther.rowsChecked)"
-				@set-dropdown="setDropdown" />
+				@uncheck-all-rows="uncheckAllRows(tableTestOther.rowsChecked)" />
 		</div>
 
 		<div>
@@ -301,8 +292,7 @@
 				@select-row="selectRow(tableTestTotaler.rowsSelected, $event)"
 				@unselect-row="unselectRow(tableTestTotaler.rowsSelected, $event)"
 				@select-rows="selectRows(tableTestTotaler.rowsSelected, $event)"
-				@unselect-all-rows="unselectAllRows(tableTestTotaler.rowsSelected)"
-				@set-dropdown="setDropdown" />
+				@unselect-all-rows="unselectAllRows(tableTestTotaler.rowsSelected)" />
 		</div>
 
 		<div>
@@ -319,8 +309,7 @@
 				@select-row="selectRow(tableTestTotalerSelected.rowsSelected, $event)"
 				@unselect-row="unselectRow(tableTestTotalerSelected.rowsSelected, $event)"
 				@select-rows="selectRows(tableTestTotalerSelected.rowsSelected, $event)"
-				@unselect-all-rows="unselectAllRows(tableTestTotalerSelected.rowsSelected)"
-				@set-dropdown="setDropdown" />
+				@unselect-all-rows="unselectAllRows(tableTestTotalerSelected.rowsSelected)" />
 		</div>
 
 		<div>
@@ -345,8 +334,7 @@
 				@uncheck-all-rows="uncheckAllRows(tableTestSelectMultiple.rowsChecked)"
 				@check-selected-rows="checkSelectedRows(tableTestSelectMultiple)"
 				@select-checked-rows="selectCheckedRows(tableTestSelectMultiple)"
-				@row-group-action="rowGroupAction"
-				@set-dropdown="setDropdown" />
+				@row-group-action="rowGroupAction" />
 		</div>
 
 		<div>
@@ -371,8 +359,7 @@
 				@uncheck-all-rows="uncheckAllRows(tableTestSelectMultipleMultiAction.rowsChecked)"
 				@check-selected-rows="checkSelectedRows(tableTestSelectMultipleMultiAction)"
 				@select-checked-rows="selectCheckedRows(tableTestSelectMultipleMultiAction)"
-				@row-group-action="rowGroupAction"
-				@set-dropdown="setDropdown" />
+				@row-group-action="rowGroupAction" />
 		</div>
 
 		<div>
@@ -396,8 +383,7 @@
 				@check-rows="checkRows(tableTestSelectSingle.rowsChecked, $event)"
 				@uncheck-all-rows="uncheckAllRows(tableTestSelectSingle.rowsChecked)"
 				@check-selected-rows="checkSelectedRows(tableTestSelectSingle)"
-				@select-checked-rows="selectCheckedRows(tableTestSelectSingle)"
-				@set-dropdown="setDropdown" />
+				@select-checked-rows="selectCheckedRows(tableTestSelectSingle)" />
 		</div>
 
 		<div>
@@ -415,8 +401,7 @@
 				@unselect-row="unselectRow(tableTestRemoveRows.rowsSelected, $event)"
 				@select-rows="selectRows(tableTestRemoveRows.rowsSelected, $event)"
 				@unselect-all-rows="unselectAllRows(tableTestRemoveRows.rowsSelected)"
-				@remove-row="removeRow(tableTestRemoveRows.rows, $event)"
-				@set-dropdown="setDropdown" />
+				@remove-row="removeRow(tableTestRemoveRows.rows, $event)" />
 		</div>
 
 		<div>
@@ -428,8 +413,7 @@
 				:total-rows="tableTestPaginationNormal.totalRows"
 				@execute-action="executeAction"
 				@row-action="rowAction"
-				@cell-action="cellAction"
-				@set-dropdown="setDropdown" />
+				@cell-action="cellAction" />
 		</div>
 
 		<div>
@@ -441,8 +425,7 @@
 				:total-rows="tableTestPaginationAlt.totalRows"
 				@execute-action="executeAction"
 				@row-action="rowAction"
-				@cell-action="cellAction"
-				@set-dropdown="setDropdown" />
+				@cell-action="cellAction" />
 		</div>
 
 		<div>
@@ -454,8 +437,7 @@
 				:total-rows="0"
 				@execute-action="executeAction"
 				@row-action="rowAction"
-				@cell-action="cellAction"
-				@set-dropdown="setDropdown" />
+				@cell-action="cellAction" />
 		</div>
 
 		<!--Sub-components-->
@@ -558,7 +540,7 @@
 				:crud-actions="actionsMenuN.crudActions"
 				:custom-actions="actionsMenuN.customActions"
 				:texts="tableTest.texts"
-				:display="'icons'"
+				display="icons"
 				:readonly="actionsMenuN.readonly" />
 		</div>
 
@@ -599,8 +581,8 @@
 				modal-id="data-import"
 				:texts="tableTest.texts"
 				:options="importOptions01"
-				:templateOptions="importTemplateOptions01"
-				:dataImportResponse="tableTest.config.dataImportResponse"
+				:template-options="importTemplateOptions01"
+				:data-import-response="tableTest.config.dataImportResponse"
 				:server-mode="tableTest.config.serverMode" />
 		</div>
 
@@ -637,7 +619,7 @@
 			<h3>Normal Pagination (No Pages)</h3>
 			<q-table-pagination
 				:page="1"
-				:perPage="paginationNormal01.perPage"
+				:per-page="paginationNormal01.perPage"
 				:total="0"
 				:num-visibile-pagination-buttons="paginationNormal01.numVisibilePaginationButtons" />
 		</div>
@@ -646,7 +628,7 @@
 			<h3>Normal Pagination (First Page)</h3>
 			<q-table-pagination
 				:page="1"
-				:perPage="paginationNormal01.perPage"
+				:per-page="paginationNormal01.perPage"
 				:total="paginationNormal01.rowCount"
 				:num-visibile-pagination-buttons="paginationNormal01.numVisibilePaginationButtons" />
 		</div>
@@ -655,7 +637,7 @@
 			<h3>Normal Pagination (Second Page)</h3>
 			<q-table-pagination
 				:page="2"
-				:perPage="paginationNormal01.perPage"
+				:per-page="paginationNormal01.perPage"
 				:total="paginationNormal01.rowCount"
 				:num-visibile-pagination-buttons="paginationNormal01.numVisibilePaginationButtons" />
 		</div>
@@ -664,7 +646,7 @@
 			<h3>Normal Pagination (Middle Page)</h3>
 			<q-table-pagination
 				:page="paginationNormal01.page"
-				:perPage="paginationNormal01.perPage"
+				:per-page="paginationNormal01.perPage"
 				:total="paginationNormal01.rowCount"
 				:num-visibile-pagination-buttons="paginationNormal01.numVisibilePaginationButtons" />
 		</div>
@@ -673,7 +655,7 @@
 			<h3>Normal Pagination (Second Last Page)</h3>
 			<q-table-pagination
 				:page="(paginationNormal01.rowCount / paginationNormal01.perPage) - 1"
-				:perPage="paginationNormal01.perPage"
+				:per-page="paginationNormal01.perPage"
 				:total="paginationNormal01.rowCount"
 				:num-visibile-pagination-buttons="paginationNormal01.numVisibilePaginationButtons" />
 		</div>
@@ -682,7 +664,7 @@
 			<h3>Normal Pagination (Last Page)</h3>
 			<q-table-pagination
 				:page="paginationNormal01.rowCount / paginationNormal01.perPage"
-				:perPage="paginationNormal01.perPage"
+				:per-page="paginationNormal01.perPage"
 				:total="paginationNormal01.rowCount"
 				:num-visibile-pagination-buttons="paginationNormal01.numVisibilePaginationButtons" />
 		</div>
@@ -691,45 +673,45 @@
 			<h3>Alternate Pagination (No Pages)</h3>
 			<q-table-pagination-alt
 				:page="1"
-				:perPage="paginationAlt01.perPage"
+				:per-page="paginationAlt01.perPage"
 				:total="0"
-				:hasMorePages="false" />
+				:has-more-pages="false" />
 		</div>
 
 		<div>
 			<h3>Alternate Pagination (First Page)</h3>
 			<q-table-pagination-alt
 				:page="1"
-				:perPage="paginationAlt01.perPage"
+				:per-page="paginationAlt01.perPage"
 				:total="paginationAlt01.rowCount"
-				:hasMorePages="paginationAlt01.hasMore" />
+				:has-more-pages="paginationAlt01.hasMore" />
 		</div>
 
 		<div>
 			<h3>Alternate Pagination (Second Page)</h3>
 			<q-table-pagination-alt
 				:page="2"
-				:perPage="paginationAlt01.perPage"
+				:per-page="paginationAlt01.perPage"
 				:total="paginationAlt01.rowCount"
-				:hasMorePages="paginationAlt01.hasMore" />
+				:has-more-pages="paginationAlt01.hasMore" />
 		</div>
 
 		<div>
 			<h3>Alternate Pagination (Middle Page)</h3>
 			<q-table-pagination-alt
 				:page="paginationAlt01.page"
-				:perPage="paginationAlt01.perPage"
+				:per-page="paginationAlt01.perPage"
 				:total="paginationAlt01.rowCount"
-				:hasMorePages="paginationAlt01.hasMore" />
+				:has-more-pages="paginationAlt01.hasMore" />
 		</div>
 
 		<div>
 			<h3>Alternate Pagination (Last Page)</h3>
 			<q-table-pagination-alt
 				:page="paginationAlt01.rowCount / paginationAlt01.perPage"
-				:perPage="paginationAlt01.perPage"
+				:per-page="paginationAlt01.perPage"
 				:total="paginationAlt01.rowCount"
-				:hasMorePages="false" />
+				:has-more-pages="false" />
 		</div>
 
 		<div>
@@ -776,8 +758,7 @@
 				:column="columns01[1]"
 				:searchable-columns="searchableColumns01"
 				:filter="columnFilter01"
-				:texts="tableTest.texts"
-				@set-dropdown="setDropdown" />
+				:texts="tableTest.texts" />
 		</div>
 
 		<div>
@@ -804,7 +785,9 @@
 	import QTableAdvancedFilters from '@/components/table/QTableAdvancedFilters.vue'
 
 	export default {
-		docsfile: "./docs/table/QTable.md",
+		name: 'QTableContainer',
+
+		docsfile: './docs/table/QTable.md',
 
 		components: {
 			QTableColumnConfig,
@@ -813,11 +796,12 @@
 
 		emits: [
 			'show-popup',
-			'hide-popup',
-			'set-dropdown'
+			'hide-popup'
 		],
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{

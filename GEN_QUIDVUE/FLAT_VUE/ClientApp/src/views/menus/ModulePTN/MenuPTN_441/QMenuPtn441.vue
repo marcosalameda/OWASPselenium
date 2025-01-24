@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuPTN_441ViewModel.js'
+
 	const requiredTextResources = ['QMenuPTN_441', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,45 +117,54 @@
 				menuInfo: {
 					id: '441',
 					isMenuList: true,
+					designation: computed(() => this.Resources.ROW_ORDER_GROUPS_LEV49262),
 					acronym: 'PTN_441',
-					name: 'EQUIP',
+					name: 'ROGL1',
 					route: 'menu-PTN_441',
 					order: '441',
-					controller: 'EQUIP',
+					controller: 'ROGL1',
 					action: 'PTN_Menu_441',
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
-						controller: 'EQUIP',
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'PTN_Menu_441',
+						controller: 'ROGL1',
 						action: 'PTN_Menu_441',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
-								name: 'ValDesignat',
-								area: 'EQUIP',
-								field: 'DESIGNAT',
-								label: computed(() => this.Resources.DESIGNATION35876),
-								dataLength: 85,
+								name: 'ValTitle',
+								area: 'ROGL1',
+								field: 'TITLE',
+								label: computed(() => this.Resources.TITLE21885),
+								dataLength: 50,
 								scrollData: 30,
 							}),
 						],
 						config: {
 							name: 'PTN_Menu_441',
 							serverMode: true,
-							pkColumn: 'ValCodequip',
-							tableAlias: 'EQUIP',
-							tableNamePlural: computed(() => this.Resources.EQUIPMENT03632),
+							pkColumn: 'ValCodrogl1',
+							tableAlias: 'ROGL1',
+							tableNamePlural: computed(() => this.Resources.ROW_ORDER_GROUPS_LEV49262),
 							viewManagement: 'U',
 							showLimitsInfo: true,
-							tableTitle: computed(() => this.Resources.EQUIPMENT03632),
+							tableTitle: computed(() => this.Resources.ROW_ORDER_GROUPS_LEV49262),
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -173,7 +183,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'EQUDOCUM',
+										formName: 'ROGL1',
 										mode: 'SHOW',
 										isControlled: true
 									}
@@ -189,7 +199,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'EQUDOCUM',
+										formName: 'ROGL1',
 										mode: 'EDIT',
 										isControlled: true
 									}
@@ -205,7 +215,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'EQUDOCUM',
+										formName: 'ROGL1',
 										mode: 'DUPLICATE',
 										isControlled: true
 									}
@@ -221,7 +231,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'EQUDOCUM',
+										formName: 'ROGL1',
 										mode: 'DELETE',
 										isControlled: true
 									}
@@ -239,7 +249,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'EQUDOCUM',
+										formName: 'ROGL1',
 										mode: 'NEW',
 										repeatInsertion: false,
 										isControlled: true
@@ -256,41 +266,35 @@
 							],
 							rowClickAction: {
 								id: 'RCA_PTN_4411',
-								name: 'form-EQUDOCUM',
+								name: 'menu-PTN_4411',
 								params: {
+									isRoute: true,
 									limits: [
 										{
-											identifier: 'id',
-											fnValueSelector: (row) => row.ValCodequip
+											identifier: 'rogl1',
+											fnValueSelector: (row) => row.ValCodrogl1
 										},
 									],
-									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'EQUDOCUM',
+									action: vm.openMenuAction, type: 'menu', menuName: 'PTN_4411',
 								}
 							},
 							formsDefinition: {
-								'EQUDOCUM': {
-									fnKeySelector: (row) => row.Fields.ValCodequip,
+								'ROGL1': {
+									fnKeySelector: (row) => row.Fields.ValCodrogl1,
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: EQUDOCUM
-							crudConditions: {
-							},
-							defaultSearchColumnName: '',
-							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultSearchColumnName: 'ValTitle',
+							defaultSearchColumnNameOriginal: 'ValTitle',
+							defaultColumnSorting: {
+								columnName: 'ValTitle',
+								sortOrder: 'asc'
+							}
 						},
-						changeEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
-						uuid: 'ab4ff8bd-13cd-45b6-9d09-ba5dc483a80b',
+						changeEvents: ['changed-ROGL1'],
+						uuid: '1f8b660d-6e9a-4576-8a19-9a716cd16c53',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -319,6 +323,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PTN_441]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_441]/
 // eslint-disable-next-line

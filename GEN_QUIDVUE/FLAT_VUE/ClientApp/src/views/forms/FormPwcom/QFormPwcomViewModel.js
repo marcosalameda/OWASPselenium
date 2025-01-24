@@ -112,6 +112,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'NAME',
 			maxLength: 20,
 			description: computed(() => this.Resources.NAME31974),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -123,7 +124,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:pwcom.codpsw'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValName))
@@ -142,5 +142,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodpwcom'
 
 	get QPrimaryKey() { return this.ValCodpwcom.value }
-	set QPrimaryKey(value) { this.ValCodpwcom.value = value }
+	set QPrimaryKey(value) { this.ValCodpwcom.updateValue(value) }
 }

@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -103,6 +103,7 @@
 						v-show="controls.INSTA___PSEUDNOVOGR01.isVisible"
 						class="row-line-group">
 						<q-group-collapsible
+							id="INSTA___PSEUDNOVOGR01"
 							v-bind="controls.INSTA___PSEUDNOVOGR01"
 							v-on="controls.INSTA___PSEUDNOVOGR01.handlers">
 							<!-- Start INSTA___PSEUDNOVOGR01 -->
@@ -116,14 +117,11 @@
 										v-on="controls.INSTA___TPEQUTIPOEQUI.handlers"
 										:loading="controls.INSTA___TPEQUTIPOEQUI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.INSTA___TPEQUTIPOEQUI.isVisible"
 											v-bind="controls.INSTA___TPEQUTIPOEQUI.props"
-											:model-value="model.ValCodtpequ.value"
-											v-on="controls.INSTA___TPEQUTIPOEQUI.handlers"
-											@update:model-value="model.ValCodtpequ.fnUpdateValue" />
+											v-on="controls.INSTA___TPEQUTIPOEQUI.handlers" />
 										<q-see-more-insta-tpequtipoequi
 											v-if="controls.INSTA___TPEQUTIPOEQUI.seeMoreIsVisible"
 											v-bind="controls.INSTA___TPEQUTIPOEQUI.seeMoreParams"
@@ -141,14 +139,11 @@
 										v-on="controls.INSTA___EQUIPREGISTNR.handlers"
 										:loading="controls.INSTA___EQUIPREGISTNR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.INSTA___EQUIPREGISTNR.isVisible"
 											v-bind="controls.INSTA___EQUIPREGISTNR.props"
-											:model-value="model.ValCodequip.value"
-											v-on="controls.INSTA___EQUIPREGISTNR.handlers"
-											@update:model-value="model.ValCodequip.fnUpdateValue" />
+											v-on="controls.INSTA___EQUIPREGISTNR.handlers" />
 										<q-see-more-insta-equipregistnr
 											v-if="controls.INSTA___EQUIPREGISTNR.seeMoreIsVisible"
 											v-bind="controls.INSTA___EQUIPREGISTNR.seeMoreParams"
@@ -164,8 +159,7 @@
 										v-on="controls.INSTA___EQUIPDESIGNAT.handlers"
 										:loading="controls.INSTA___EQUIPDESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.INSTA___EQUIPDESIGNAT.props"
 											:model-value="model.EquipValDesignat.value" />
@@ -182,8 +176,7 @@
 										v-on="controls.INSTA___EQUIPPHOTOGRA.handlers"
 										:loading="controls.INSTA___EQUIPPHOTOGRA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-image
 											v-if="controls.INSTA___EQUIPPHOTOGRA.isVisible"
 											v-bind="controls.INSTA___EQUIPPHOTOGRA.props"
@@ -216,14 +209,13 @@
 										v-on="controls.INSTA___INSTASINCE___.handlers"
 										:loading="controls.INSTA___INSTASINCE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.INSTA___INSTASINCE___.isVisible"
-											v-bind="controls.INSTA___INSTASINCE___"
-											format="DateTime"
+											v-bind="controls.INSTA___INSTASINCE___.props"
 											:model-value="model.ValSince.value"
-											@update:model-value="model.ValSince.fnUpdateValue" />
+											@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
+											@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -235,14 +227,13 @@
 										v-on="controls.INSTA___INSTAUNTIL___.handlers"
 										:loading="controls.INSTA___INSTAUNTIL___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.INSTA___INSTAUNTIL___.isVisible"
-											v-bind="controls.INSTA___INSTAUNTIL___"
-											format="DateTime"
+											v-bind="controls.INSTA___INSTAUNTIL___.props"
 											:model-value="model.ValUntil.value"
-											@update:model-value="model.ValUntil.fnUpdateValue" />
+											@reset-icon-click="model.ValUntil.fnUpdateValue(model.ValUntil.originalValue ?? new Date())"
+											@update:model-value="model.ValUntil.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -254,12 +245,10 @@
 										v-on="controls.INSTA___INSTAHOURS___.handlers"
 										:loading="controls.INSTA___INSTAHOURS___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.INSTA___INSTAHOURS___.isVisible"
-											v-bind="controls.INSTA___INSTAHOURS___"
-											:model-value="model.ValHours.value"
+											v-bind="controls.INSTA___INSTAHOURS___.props"
 											@update:model-value="model.ValHours.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -272,12 +261,10 @@
 										v-on="controls.INSTA___INSTAPRECOHOR.handlers"
 										:loading="controls.INSTA___INSTAPRECOHOR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.INSTA___INSTAPRECOHOR.isVisible"
-											v-bind="controls.INSTA___INSTAPRECOHOR"
-											:model-value="model.ValPrecohor.value"
+											v-bind="controls.INSTA___INSTAPRECOHOR.props"
 											@update:model-value="model.ValPrecohor.fnUpdateValue" />
 									</base-input-structure>
 									<base-input-structure
@@ -286,12 +273,10 @@
 										v-on="controls.INSTA___INSTAVALUE___.handlers"
 										:loading="controls.INSTA___INSTAVALUE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.INSTA___INSTAVALUE___.isVisible"
-											v-bind="controls.INSTA___INSTAVALUE___"
-											:model-value="model.ValValue.value"
+											v-bind="controls.INSTA___INSTAVALUE___.props"
 											@update:model-value="model.ValValue.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -323,12 +308,12 @@
 										v-on="controls.INSTA___INSTACOORDGEO.handlers"
 										:loading="controls.INSTA___INSTACOORDGEO.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.INSTA___INSTACOORDGEO.props"
 											:model-value="model.ValCoordgeo.value"
-											@update:model-value="model.ValCoordgeo.fnUpdateValue" />
+											@blur="onBlur(controls.INSTA___INSTACOORDGEO, model.ValCoordgeo.value)"
+											@change="model.ValCoordgeo.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -419,15 +404,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'INSTA',
-						location: 'form-INSTA',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'INSTA',
+					location: 'form-INSTA',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -473,6 +456,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -545,8 +530,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -628,7 +614,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -682,21 +668,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -705,16 +676,12 @@
 						id: 'INSTA___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.EQUIPMENT03632),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-INSTA___PSEUDNOVOGR01',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -724,27 +691,11 @@
 						id: 'INSTA___TPEQUTIPOEQUI',
 						name: 'TIPOEQUI',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-INSTA___PSEUDNOVOGR01',
 						container: 'INSTA___PSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodtpequ',
-							dependencyEvent: 'fieldChange:insta.codtpequ'
-						},
-						dependentFields: () => {
-							return {
-								set 'tpequ.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
-								set 'tpequ.tipoequi'(value) { vm.model.TableTpequTipoequi.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -753,6 +704,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodtpequ',
+							dependencyEvent: 'fieldChange:insta.codtpequ'
+						},
+						dependentFields: () => ({
+							set 'tpequ.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
+							set 'tpequ.tipoequi'(value) { vm.model.TableTpequTipoequi.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					INSTA___EQUIPREGISTNR: new fieldControlClass.LookupControl({
 						modelField: 'TableEquipRegistnr',
@@ -760,15 +721,29 @@
 						id: 'INSTA___EQUIPREGISTNR',
 						name: 'REGISTNR',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.REGISTRATION_NO_06209),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-INSTA___PSEUDNOVOGR01',
 						container: 'INSTA___PSEUDNOVOGR01',
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodequip',
+							dependencyEvent: 'fieldChange:insta.codequip'
+						},
+						dependentFields: () => ({
+							set 'equip.codequip'(value) { vm.model.ValCodequip.updateValue(value) },
+							set 'equip.registnr'(value) { vm.model.TableEquipRegistnr.updateValue(value) },
+							set 'equip.designat'(value) { vm.model.EquipValDesignat.updateValue(value) },
+							set 'equip.photogra'(value) { vm.model.EquipValPhotogra.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: ['tpequ', 'insta.codtpequ'],
@@ -777,26 +752,6 @@
 								fnValueSelector: (model) => model.ValCodtpequ.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodequip',
-							dependencyEvent: 'fieldChange:insta.codequip'
-						},
-						dependentFields: () => {
-							return {
-								set 'equip.codequip'(value) { vm.model.ValCodequip.updateValue(value) },
-								set 'equip.registnr'(value) { vm.model.TableEquipRegistnr.updateValue(value) },
-								set 'equip.designat'(value) { vm.model.EquipValDesignat.updateValue(value) },
-								set 'equip.photogra'(value) { vm.model.EquipValPhotogra.updateValue(value) },
-							}
-						},
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					INSTA___EQUIPDESIGNAT: new fieldControlClass.StringControl({
 						modelField: 'EquipValDesignat',
@@ -806,20 +761,15 @@
 						id: 'INSTA___EQUIPDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESIGNATION_35800),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-INSTA___PSEUDNOVOGR01',
 						container: 'INSTA___PSEUDNOVOGR01',
 						maxLength: 85,
 						labelId: 'label_INSTA___EQUIPDESIGNAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					INSTA___EQUIPPHOTOGRA: new fieldControlClass.ImageControl({
 						modelField: 'EquipValPhotogra',
@@ -829,34 +779,26 @@
 						id: 'INSTA___EQUIPPHOTOGRA',
 						name: 'PHOTOGRA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHOTO51874),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-INSTA___PSEUDNOVOGR01',
 						container: 'INSTA___PSEUDNOVOGR01',
 						height: 50,
 						width: 100,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PHOTO51874)),
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					INSTA___PSEUDNOVOGR02: new fieldControlClass.GroupControl({
 						id: 'INSTA___PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.COST06096),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -866,14 +808,11 @@
 						id: 'INSTA___INSTASINCE___',
 						name: 'SINCE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.SINCE_26335),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INSTA___PSEUDNOVOGR02',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -883,93 +822,71 @@
 						id: 'INSTA___INSTAUNTIL___',
 						name: 'UNTIL',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.UNTIL39173),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INSTA___PSEUDNOVOGR02',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
 					INSTA___INSTAHOURS___: new fieldControlClass.NumberControl({
 						modelField: 'ValHours',
 						valueChangeEvent: 'fieldChange:insta.hours',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'INSTA___INSTAHOURS___',
 						name: 'HOURS',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.QUANTITY_OF_HOURS_61426),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INSTA___PSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					INSTA___INSTAPRECOHOR: new fieldControlClass.CurrencyControl({
 						modelField: 'ValPrecohor',
 						valueChangeEvent: 'fieldChange:insta.precohor',
-						maxIntegers: 9,
-						maxDecimals: 2,
 						id: 'INSTA___INSTAPRECOHOR',
 						name: 'PRECOHOR',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRICE_PER_HOUR_37472),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INSTA___PSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 9,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					INSTA___INSTAVALUE___: new fieldControlClass.CurrencyControl({
 						modelField: 'ValValue',
 						valueChangeEvent: 'fieldChange:insta.value',
-						maxIntegers: 9,
-						maxDecimals: 2,
 						id: 'INSTA___INSTAVALUE___',
 						name: 'VALUE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.VALUE_48317),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INSTA___PSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 9,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					INSTA___PSEUDNOVOGR03: new fieldControlClass.GroupControl({
 						id: 'INSTA___PSEUDNOVOGR03',
 						name: 'NOVOGR03',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.LOCAL41011),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -981,16 +898,10 @@
 						id: 'INSTA___INSTACOORDGEO',
 						name: 'COORDGEO',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.GEOGRAPHIC_COORDINAT42880),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INSTA___PSEUDNOVOGR03',
-						maxLength: 50,
-						labelId: 'label_INSTA___INSTACOORDGEO',
-						mustBeFilled: false,
 						viewModes: [
 							{
 								id: 'MAP',
@@ -1049,10 +960,6 @@
 									},
 									centerCoord: {
 										rawValue: undefined,
-										isMapped: false
-									},
-									enableAddressSearch: {
-										rawValue: true,
 										isMapped: false
 									},
 									showSourcesInDescription: {
@@ -1131,6 +1038,10 @@
 										rawValue: 'OpenStreetMap',
 										isMapped: false
 									},
+									openPopupOnHover: {
+										rawValue: false,
+										isMapped: false
+									},
 								},
 								groups: {
 									externalLayer: [
@@ -1204,7 +1115,7 @@
 						/** The foreign key to the EQUIP table */
 						get equip() { return vm.model.ValCodequip },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1300,6 +1211,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1339,6 +1258,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1465,6 +1392,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR INSTA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1480,6 +1423,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS INSTA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

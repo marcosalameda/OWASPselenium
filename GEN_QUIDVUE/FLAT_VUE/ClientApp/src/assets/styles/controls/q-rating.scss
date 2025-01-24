@@ -37,4 +37,8 @@
 	.q-rating__shape-svg {
 		overflow: visible !important;
 	}
+
+	&:focus {
+		outline: 2px solid rgb($info-rgb / 0.5);
+	}
 }

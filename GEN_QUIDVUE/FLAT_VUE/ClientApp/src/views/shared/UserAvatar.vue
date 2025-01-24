@@ -1,7 +1,7 @@
 ﻿<template>
 	<li class="dropdown n-menu__aside-item">
 		<div class="d-flex align-items-center">
-			<a
+			<q-button
 				v-if="userIsLoggedIn && appAlerts.length > 0"
 				id="sidebar-collapse"
 				class="nav-link n-menu__aside-link"
@@ -10,6 +10,7 @@
 				aria-haspopup="true"
 				aria-expanded="true"
 				:aria-label="texts.options"
+				:tabindex="$attrs.tabindex"
 				@click.stop.prevent="openAlert">
 				<span
 					data-toggle="tooltip"
@@ -27,17 +28,20 @@
 				<span class="hidden-elem">
 					{{ texts.options }}
 				</span>
-			</a>
+			</q-button>
 
-			<button
-				type="button"
-				name="user-avatar"
-				class="dropdown-toggle n-menu__aside-link removecaret"
-				style="border-width: 0; background-color: transparent"
-				data-toggle="dropdown"
+			<q-button
+				id="user-avatar"
+				ref="userAvatarButton"
+				class="n-menu__aside-link removecaret"
+				b-style="tertiary"
+				data-table-action-selected="false"
+				@focusout="onFocusOut"
 				aria-haspopup="true"
-				aria-expanded="false"
-				:title="texts.userAvatar">
+				:aria-expanded="showUserOptionsMenu"
+				:title="texts.userAvatar"
+				:tabindex="$attrs.tabindex"
+				@click="openOverlay">
 				<img
 					class="avatar"
 					data-toggle="tooltip"
@@ -46,112 +50,130 @@
 					:src="avatarSrc"
 					:alt="texts.userAvatar"
 					:title="userData.name" />
-			</button>
+			</q-button>
 
-			<div
-				class="dropdown-menu dropdown-menu-right c-user__dropdown"
-				aria-labelledby="navbarDropdown">
-				<div class="q-card__content">
-					<div class="q-card__title n-module__title">{{ fullName }}</div>
-					<div
-						class="q-card__subtitle n-module__subtitle"
-						style="padding-bottom: 0">
-						{{ userRole }}
+			<q-overlay
+				v-model="showUserOptionsMenu"
+				ref="overlayComponent"
+				anchor="#user-avatar"
+				placement="bottom-end"
+				:offset="0"
+				trigger="manual"
+				persistent
+				@keydown="onKeydown"
+				@focusout="onFocusOut"
+				role="menu">
+				<div
+					ref="userOptionsMenu"
+					tabindex="-1"
+					class="c-user__dropdown"
+					aria-labelledby="userOptionsMenu">
+					<div class="q-card-view__content">
+						<div class="q-card-view__title n-module__title">{{ fullName }}</div>
+						<div
+							class="q-card-view__subtitle n-module__subtitle">
+							{{ userRole }}
+						</div>
 					</div>
-				</div>
 
-				<ul class="c-sidebar__list">
-					<li
-						v-for="menu in model.EPHUserAvatarMenus"
-						:key="menu.Title"
-						class="c-sidebar__list-item">
-						<q-router-link
-							data-toggle="tooltip"
-							data-placement="top"
-							class="c-sidebar__list-link"
-							:title="getMenuText(menu.Title)"
-							:link="getMenuRoute(menu, true)">
-							<i
-								v-if="menu.Font"
-								:class="[menu.Font, 'c-header__icon']"></i>
-							{{ getMenuText(menu.Title) }}
-						</q-router-link>
-					</li>
-
-					<li
-						v-for="menu in model.UserAvatarMenus"
-						:key="menu.Title"
-						class="c-sidebar__list-item">
-						<q-router-link
-							data-toggle="tooltip"
-							data-placement="top"
-							class="c-sidebar__list-link"
-							:title="getMenuText(menu.Title)"
-							:link="getMenuRoute(menu)">
-							<i
-								v-if="menu.Font"
-								:class="['glyphicons', `glyphicons-${menu.Font}`, 'c-header__icon']"></i>
-							{{ getMenuText(menu.Title) }}
-						</q-router-link>
-					</li>
-
-					<template
-						v-for="module in system.availableModules"
-						:key="module.id">
+					<ul class="c-sidebar__list">
 						<li
-							v-if="system.currentModule === module.id"
+							v-for="menu in model.EPHUserAvatarMenus"
+							:key="menu.Title"
 							class="c-sidebar__list-item">
-							<a
-								:href="`Content/Manual/${module.id}Manual.pdf`"
+							<q-router-link
 								data-toggle="tooltip"
-								target="_blank"
-								rel="noopener noreferrer"
-								class="c-sidebar__list-link"
 								data-placement="top"
-								:title="texts.userHelp">
-								<span>
-									<q-icon icon="user-help" />
-									{{ texts.userHelp }}
-								</span>
-							</a>
-						</li>
-					</template>
-
-					<template v-if="config.LoginType !== 'AD'">
-						<li 
-							class="c-sidebar__list-item" 
-							v-if="hasUserSettings">
-							<a
-								href="javascript:void(0)"
-								data-toggle="tooltip"
 								class="c-sidebar__list-link"
-								data-placement="top"
-								:title="texts.userSettings"
-								@click.prevent="userSettings">
-								<span>
-									<q-icon icon="reset-password" />
-									{{ texts.userSettings }}
-								</span>
-							</a>
+								:title="getMenuText(menu.Title)"
+								:link="getMenuRoute(menu, true)"
+								:tabindex="$attrs.tabindex">
+								<i
+									v-if="menu.Font"
+									:class="[menu.Font, 'c-header__icon']"></i>
+								{{ getMenuText(menu.Title) }}
+							</q-router-link>
 						</li>
 
-						<li class="c-sidebar__list-item">
-							<a
-								href="javascript:void(0)"
+						<li
+							v-for="menu in model.UserAvatarMenus"
+							:key="menu.Title"
+							class="c-sidebar__list-item">
+							<q-router-link
 								data-toggle="tooltip"
 								data-placement="top"
 								class="c-sidebar__list-link"
-								:title="texts.leave"
-								@click.prevent="logoffRequest">
-								<span>
-									<q-icon icon="exit" />
-									{{ texts.leave }}
-								</span>
-							</a>
+								:title="getMenuText(menu.Title)"
+								:link="getMenuRoute(menu)"
+								:tabindex="$attrs.tabindex">
+								<i
+									v-if="menu.Font"
+									:class="['glyphicons', `glyphicons-${menu.Font}`, 'c-header__icon']"></i>
+								{{ getMenuText(menu.Title) }}
+							</q-router-link>
 						</li>
-					</template>
-				</ul>
-			</div>
+
+						<template
+							v-for="module in system.availableModules"
+							:key="module.id">
+							<li
+								v-if="system.currentModule === module.id"
+								class="c-sidebar__list-item">
+								<a
+									:href="`Content/Manual/${module.id}Manual.pdf`"
+									data-toggle="tooltip"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="c-sidebar__list-link"
+									data-placement="top"
+									:title="texts.userHelp"
+									:tabindex="$attrs.tabindex">
+									<span>
+										<q-icon icon="user-help" />
+										{{ texts.userHelp }}
+									</span>
+								</a>
+							</li>
+						</template>
+
+						<template v-if="config.LoginType !== 'AD'">
+							<li
+								class="c-sidebar__list-item"
+								v-if="hasUserSettings">
+								<a
+									href="javascript:void(0)"
+									data-toggle="tooltip"
+									class="c-sidebar__list-link"
+									data-placement="top"
+									:title="texts.userSettings"
+									:tabindex="$attrs.tabindex"
+									@click.prevent="userSettings">
+									<span>
+										<q-icon icon="reset-password" />
+										{{ texts.userSettings }}
+									</span>
+								</a>
+							</li>
+
+							<li class="c-sidebar__list-item">
+								<a
+									href="javascript:void(0)"
+									data-toggle="tooltip"
+									data-placement="top"
+									class="c-sidebar__list-link"
+									:title="texts.leave"
+									:tabindex="$attrs.tabindex"
+									@click.prevent="logOff">
+									<span>
+										<q-icon icon="exit" />
+										{{ texts.leave }}
+									</span>
+								</a>
+							</li>
+						</template>
+					</ul>
+				</div>
+			</q-overlay>
 		</div>
 	</li>
 </template>
@@ -163,9 +185,9 @@
 
 	import { useSystemDataStore } from '@/stores/systemData.js'
 	import { useGenericDataStore } from '@/stores/genericData.js'
-	import { fetchData, postData } from '@/api/network'
-	import mainConfigUtils from '@/api/global/mainConfigUtils.js'
-	import { resetStoreState } from '@/mixins/genericFunctions.js'
+	import { fetchData } from '@/api/network'
+	import { logOff } from '@/utils/user.js'
+	import { dropdownIsFocused } from '@/mixins/genericFunctions'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 	import AuthHandlers from '@/mixins/authHandlers.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
@@ -177,6 +199,8 @@
 	 */
 	export default {
 		name: 'UserAvatar',
+
+		inheritAttrs: false,
 
 		components: {
 			QRouterLink
@@ -207,7 +231,9 @@
 					userSettings: computed(() => this.Resources[hardcodedTexts.userSettings]),
 					leave: computed(() => this.Resources[hardcodedTexts.leave]),
 					year: computed(() => this.Resources[hardcodedTexts.year])
-				}
+				},
+
+				showUserOptionsMenu: false
 			}
 		},
 
@@ -249,6 +275,8 @@
 		},
 
 		methods: {
+			logOff,
+
 			/**
 			 * Emits an event to open the alerts tab.
 			 */
@@ -275,45 +303,20 @@
 			fetchMenuEntries()
 			{
 				if (this.userIsLoggedIn)
-					fetchData('Account', 'UserAvatar', {}, (data) => {
-						_merge(this.model, data)
+				{
+					fetchData(
+						'Account',
+						'UserAvatar',
+						{},
+						(data) => {
+							_merge(this.model, data)
 
-						this.setOpenIdAuth(data.HasOpenIdAuth)
-						this.set2FAOptions(data.Has2FAOptions)
-					})
+							this.setOpenIdAuth(data.HasOpenIdAuth)
+							this.set2FAOptions(data.Has2FAOptions)
+						})
+				}
 				else
 					this.clearModel()
-			},
-
-			/**
-			 * Handles the server call to log out of the application.
-			 */
-			logoffRequest()
-			{
-				postData('Account', 'LogOff', {}, this.logoffSuccess)
-			},
-
-			/**
-			 * Called after a successful logout.
-			 */
-			logoffSuccess()
-			{
-				resetStoreState()
-
-				Promise.all([
-					mainConfigUtils.updateAFToken(),
-					mainConfigUtils.updateMainConfig()
-				]).then(() => {
-					const routeParams = {
-						name: 'home',
-						params: {
-							culture: this.system.defaultLang,
-							system: this.system.defaultSystem,
-							module: this.system.defaultModule
-						}
-					}
-					this.$router.push(routeParams)
-				})
 			},
 
 			/**
@@ -330,7 +333,7 @@
 				if (!this.isEmpty(menu.Action))
 					routeName = menu.Action
 
-				var routeParams = {
+				const routeParams = {
 					name: routeName,
 					params: {
 						culture: this.system.currentLang,
@@ -359,11 +362,66 @@
 				return !this.isEmpty(menuTitleId) ? this.Resources[menuTitleId] : ''
 			},
 
+			/**
+			 * Navigates to the user's profile.
+			 */
 			userSettings()
 			{
-				if(this.hasUserSettings)
+				if (this.hasUserSettings)
 					this.$router.push({ name: 'profile' })
 			},
+
+			/**
+			 * Closes the right side bar and the navigation menu.
+			 */
+			closeSidebars() {
+				if (this.mobileLayoutActive) {
+					this.collapseSidebar()
+					this.$eventHub.emit('user-options-menu-open');
+				}
+			},
+
+			onFocusOut(event) {
+				if (!this.$refs.userOptionsMenu || !this.$refs.userAvatarButton?.$el) return
+
+				if (dropdownIsFocused(this.$refs.userOptionsMenu, this.$refs.userAvatarButton.$el, event)) {
+					event.preventDefault()
+					event.stopPropagation()
+
+					return
+				}
+
+				this.closeOverlay()
+			},
+
+			onKeydown(event) {
+				if (!event.key) return
+				if ('Escape' === event.key)
+					this.closeOverlay()
+			},
+
+			openOverlay() {
+				this.showUserOptionsMenu = true
+				this.closeSidebars();
+
+				// Wait for the dropdown to exist before focusing on it
+				this.$nextTick().then(() => {
+					this.focusOverlay()
+				})
+			},
+
+			closeOverlay() {
+				this.showUserOptionsMenu = false
+				this.focusDropdownBtn()
+			},
+
+			focusOverlay() {
+				this.$refs.userOptionsMenu?.focus()
+			},
+
+			focusDropdownBtn() {
+				this.$refs.userAvatarButton?.$el?.focus()
+			}
 		},
 
 		watch: {

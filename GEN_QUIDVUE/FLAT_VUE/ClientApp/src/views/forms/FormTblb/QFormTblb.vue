@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,12 +106,12 @@
 							v-on="controls.TBLB____TBLB_TEXT____.handlers"
 							:loading="controls.TBLB____TBLB_TEXT____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TBLB____TBLB_TEXT____.props"
 								:model-value="model.ValText.value"
-								@update:model-value="model.ValText.fnUpdateValue" />
+								@blur="onBlur(controls.TBLB____TBLB_TEXT____, model.ValText.value)"
+								@change="model.ValText.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -125,18 +125,14 @@
 							v-on="controls.TBLB____TBLB_TEXTML__.handlers"
 							:loading="controls.TBLB____TBLB_TEXTML__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.TBLB____TBLB_TEXTML__.isVisible"
+								v-bind="controls.TBLB____TBLB_TEXTML__.props"
 								id="TBLB____TBLB_TEXTML__"
-								size="xlarge"
 								:model-value="model.ValTextml.value"
 								:rows="1"
 								:cols="50"
-								:is-required="controls.TBLB____TBLB_TEXTML__.isRequired"
-								:readonly="controls.TBLB____TBLB_TEXTML__.readonly"
-								:placeholder="controls.TBLB____TBLB_TEXTML__.placeholder"
 								@update:model-value="model.ValTextml.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -151,12 +147,10 @@
 							v-on="controls.TBLB____TBLB_NUMINT__.handlers"
 							:loading="controls.TBLB____TBLB_NUMINT__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.TBLB____TBLB_NUMINT__.isVisible"
-								v-bind="controls.TBLB____TBLB_NUMINT__"
-								:model-value="model.ValNumint.value"
+								v-bind="controls.TBLB____TBLB_NUMINT__.props"
 								@update:model-value="model.ValNumint.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -171,12 +165,10 @@
 							v-on="controls.TBLB____TBLB_NUMDEC__.handlers"
 							:loading="controls.TBLB____TBLB_NUMDEC__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.TBLB____TBLB_NUMDEC__.isVisible"
-								v-bind="controls.TBLB____TBLB_NUMDEC__"
-								:model-value="model.ValNumdec.value"
+								v-bind="controls.TBLB____TBLB_NUMDEC__.props"
 								@update:model-value="model.ValNumdec.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -191,12 +183,10 @@
 							v-on="controls.TBLB____TBLB_CURINT__.handlers"
 							:loading="controls.TBLB____TBLB_CURINT__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.TBLB____TBLB_CURINT__.isVisible"
-								v-bind="controls.TBLB____TBLB_CURINT__"
-								:model-value="model.ValCurint.value"
+								v-bind="controls.TBLB____TBLB_CURINT__.props"
 								@update:model-value="model.ValCurint.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -211,12 +201,10 @@
 							v-on="controls.TBLB____TBLB_CURDEC__.handlers"
 							:loading="controls.TBLB____TBLB_CURDEC__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.TBLB____TBLB_CURDEC__.isVisible"
-								v-bind="controls.TBLB____TBLB_CURDEC__"
-								:model-value="model.ValCurdec.value"
+								v-bind="controls.TBLB____TBLB_CURDEC__.props"
 								@update:model-value="model.ValCurdec.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -231,15 +219,11 @@
 							v-on="controls.TBLB____TBLB_BOOL____.handlers"
 							:loading="controls.TBLB____TBLB_BOOL____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.TBLB____TBLB_BOOL____.isVisible"
-									id="TBLB____TBLB_BOOL____"
-									size="small"
-									:model-value="model.ValBool.value"
-									:readonly="controls.TBLB____TBLB_BOOL____.readonly"
+									v-bind="controls.TBLB____TBLB_BOOL____.props"
 									@update:model-value="model.ValBool.fnUpdateValue" />
 							</template>
 						</base-input-structure>
@@ -255,14 +239,13 @@
 							v-on="controls.TBLB____TBLB_DATE____.handlers"
 							:loading="controls.TBLB____TBLB_DATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.TBLB____TBLB_DATE____.isVisible"
-								v-bind="controls.TBLB____TBLB_DATE____"
-								format="Date"
+								v-bind="controls.TBLB____TBLB_DATE____.props"
 								:model-value="model.ValDate.value"
-								@update:model-value="model.ValDate.fnUpdateValue" />
+								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
+								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -276,14 +259,13 @@
 							v-on="controls.TBLB____TBLB_DATETM__.handlers"
 							:loading="controls.TBLB____TBLB_DATETM__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.TBLB____TBLB_DATETM__.isVisible"
-								v-bind="controls.TBLB____TBLB_DATETM__"
-								format="DateTime"
+								v-bind="controls.TBLB____TBLB_DATETM__.props"
 								:model-value="model.ValDatetm.value"
-								@update:model-value="model.ValDatetm.fnUpdateValue" />
+								@reset-icon-click="model.ValDatetm.fnUpdateValue(model.ValDatetm.originalValue ?? new Date())"
+								@update:model-value="model.ValDatetm.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -297,14 +279,13 @@
 							v-on="controls.TBLB____TBLB_DATETS__.handlers"
 							:loading="controls.TBLB____TBLB_DATETS__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.TBLB____TBLB_DATETS__.isVisible"
-								v-bind="controls.TBLB____TBLB_DATETS__"
-								format="DateTimeSeconds"
+								v-bind="controls.TBLB____TBLB_DATETS__.props"
 								:model-value="model.ValDatets.value"
-								@update:model-value="model.ValDatets.fnUpdateValue" />
+								@reset-icon-click="model.ValDatets.fnUpdateValue(model.ValDatets.originalValue ?? new Date())"
+								@update:model-value="model.ValDatets.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -318,14 +299,13 @@
 							v-on="controls.TBLB____TBLB_TIMEHM__.handlers"
 							:loading="controls.TBLB____TBLB_TIMEHM__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.TBLB____TBLB_TIMEHM__.isVisible"
-								v-bind="controls.TBLB____TBLB_TIMEHM__"
-								format="Time"
+								v-bind="controls.TBLB____TBLB_TIMEHM__.props"
 								:model-value="model.ValTimehm.value"
-								@update:model-value="model.ValTimehm.fnUpdateValue" />
+								@reset-icon-click="model.ValTimehm.fnUpdateValue(model.ValTimehm.originalValue ?? new Date())"
+								@update:model-value="model.ValTimehm.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -339,8 +319,7 @@
 							v-on="controls.TBLB____TBLB_ENUMT___.handlers"
 							:loading="controls.TBLB____TBLB_ENUMT___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.TBLB____TBLB_ENUMT___.isVisible"
 								v-bind="controls.TBLB____TBLB_ENUMT___.props"
@@ -359,8 +338,7 @@
 							v-on="controls.TBLB____TBLB_ENUMN___.handlers"
 							:loading="controls.TBLB____TBLB_ENUMN___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.TBLB____TBLB_ENUMN___.isVisible"
 								v-bind="controls.TBLB____TBLB_ENUMN___.props"
@@ -450,15 +428,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'TBLB',
-						location: 'form-TBLB',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'TBLB',
+					location: 'form-TBLB',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -504,6 +480,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -576,8 +554,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -659,7 +638,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -713,21 +692,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -738,10 +702,7 @@
 						id: 'TBLB____TBLB_TEXT____',
 						name: 'TEXT',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TEXT04938),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
@@ -756,87 +717,65 @@
 						id: 'TBLB____TBLB_TEXTML__',
 						name: 'TEXTML',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.MULTILINE_TEXT38013),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
-						labelId: 'label_TBLB____TBLB_TEXTML__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					TBLB____TBLB_NUMINT__: new fieldControlClass.NumberControl({
 						modelField: 'ValNumint',
 						valueChangeEvent: 'fieldChange:tblb.numint',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'TBLB____TBLB_NUMINT__',
 						name: 'NUMINT',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMERIC__INTEGER_50289),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					TBLB____TBLB_NUMDEC__: new fieldControlClass.NumberControl({
 						modelField: 'ValNumdec',
 						valueChangeEvent: 'fieldChange:tblb.numdec',
-						maxIntegers: 6,
-						maxDecimals: 3,
 						id: 'TBLB____TBLB_NUMDEC__',
 						name: 'NUMDEC',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMERIC__DECIMAL_36157),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 6,
+						maxDecimals: 3,
 						controlLimits: [
 						],
 					}, this),
 					TBLB____TBLB_CURINT__: new fieldControlClass.CurrencyControl({
 						modelField: 'ValCurint',
 						valueChangeEvent: 'fieldChange:tblb.curint',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'TBLB____TBLB_CURINT__',
 						name: 'CURINT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CURRENCY__INTERGER_21437),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
 					TBLB____TBLB_CURDEC__: new fieldControlClass.CurrencyControl({
 						modelField: 'ValCurdec',
 						valueChangeEvent: 'fieldChange:tblb.curdec',
-						maxIntegers: 5,
-						maxDecimals: 4,
 						id: 'TBLB____TBLB_CURDEC__',
 						name: 'CURDEC',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CURRENCY__DECIMAL_11718),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 5,
+						maxDecimals: 4,
 						controlLimits: [
 						],
 					}, this),
@@ -846,31 +785,22 @@
 						id: 'TBLB____TBLB_BOOL____',
 						name: 'BOOL',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.BOOLEAN45002),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
 					TBLB____TBLB_DATE____: new fieldControlClass.DateControl({
 						modelField: 'ValDate',
 						valueChangeEvent: 'fieldChange:tblb.date',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'TBLB____TBLB_DATE____',
 						name: 'DATE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE18475),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -880,13 +810,10 @@
 						id: 'TBLB____TBLB_DATETM__',
 						name: 'DATETM',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATETIME__MINUTES_59352),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -896,31 +823,23 @@
 						id: 'TBLB____TBLB_DATETS__',
 						name: 'DATETS',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATETIME__SECONDS_49861),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
 					TBLB____TBLB_TIMEHM__: new fieldControlClass.TimeControl({
 						modelField: 'ValTimehm',
 						valueChangeEvent: 'fieldChange:tblb.timehm',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'TBLB____TBLB_TIMEHM__',
 						name: 'TIMEHM',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.TIME__HOURS_MINUTES_01660),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -930,35 +849,31 @@
 						id: 'TBLB____TBLB_ENUMT___',
 						name: 'ENUMT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.ENUMERATION__TEXT_15855),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						labelId: 'label_TBLB____TBLB_ENUMT___',
 						arrayName: 'typet',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
 					TBLB____TBLB_ENUMN___: new fieldControlClass.ArrayNumberControl({
 						modelField: 'ValEnumn',
 						valueChangeEvent: 'fieldChange:tblb.enumn',
-						maxIntegers: 1,
-						maxDecimals: 0,
 						id: 'TBLB____TBLB_ENUMN___',
 						name: 'ENUMN',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.ENUMERATION__NUMERIC44708),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 1,
+						maxDecimals: 0,
 						arrayName: 'typen',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -1020,7 +935,7 @@
 						/** The foreign key to the GRPB table */
 						get grpb() { return vm.model.ValFkey1 },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1116,6 +1031,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1155,6 +1078,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1281,6 +1212,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR TBLB]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1296,6 +1243,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS TBLB]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

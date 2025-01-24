@@ -163,18 +163,17 @@ export default class ViewModel extends ViewModelBase
 			field: 'REGISTNR',
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: RIGHT("000000"+NumericToString([EQUIP->SEQUENNR],0),6)
-					// eslint-disable-next-line eqeqeq
 					return qApi.RIGHT("000000"+qApi.NumericToString(this.ValSequennr.value,0),6)
 				},
 				dependencyEvents: ['fieldChange:equip.sequennr'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValRegistnr))
@@ -236,24 +235,23 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [ITEM->ITEMDES]
-					// eslint-disable-next-line eqeqeq
 					return this.TableItemItemdes.value
 				},
-				dependencyEvents: ['fieldChange:item.itemdes'],
+				dependencyEvents: ['fieldChange:item.itemdes', 'fieldChange:equip.coditem'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValDesignat))
 		watch(() => this.ValDesignat.value, (newValue, oldValue) => this.onUpdate('equip.designat', this.ValDesignat, newValue, oldValue))
 
 		this.ValFrequenc = reactive(new modelFieldType.Number({
+			type: 'Combobox',
 			id: 'ValFrequenc',
 			originId: 'ValFrequenc',
 			area: 'EQUIP',
 			field: 'FREQUENC',
 			arrayOptions: qProjArrays.QArrayFreqempr.setResources(vm.$getResource).elements,
-			maxDigits: 1,
+			maxDigits: 2,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.LOAN_FREQUENCY00701),
 		}).cloneFrom(values?.ValFrequenc))
@@ -267,6 +265,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 9,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.TOTAL_VALUE30570),
+			isFixed: true,
 		}).cloneFrom(values?.ValValortot))
 		watch(() => this.ValValortot.value, (newValue, oldValue) => this.onUpdate('equip.valortot', this.ValValortot, newValue, oldValue))
 
@@ -285,6 +284,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'EQUIP',
 			field: 'DTDECO',
 			description: computed(() => this.Resources.DECOMISSION14486),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -296,7 +296,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:equip.coddeco'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyD,
 			},
 		}).cloneFrom(values?.ValDtdeco))
@@ -308,18 +307,17 @@ export default class ViewModel extends ViewModelBase
 			area: 'EQUIP',
 			field: 'BOUGHT',
 			description: computed(() => this.Resources.BOUGHT32044),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(emptyD([EQUIP->DTAQUISI])==1,0,1)
-					// eslint-disable-next-line eqeqeq
-					return qApi.iif(qApi.emptyD(this.ValDtaquisi.value)==1,0,1)
+					return qApi.iif(qApi.emptyD(this.ValDtaquisi.value)===1,0,1)
 				},
 				dependencyEvents: ['fieldChange:equip.dtaquisi'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyL,
 			},
 		}).cloneFrom(values?.ValBought))
@@ -333,6 +331,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'ROOMNR',
 			maxLength: 10,
 			description: computed(() => this.Resources.N_R__ROOM43805),
+			isFixed: true,
 		}).cloneFrom(values?.TableRoom1Roomnr))
 		watch(() => this.TableRoom1Roomnr.value, (newValue, oldValue) => this.onUpdate('room1.roomnr', this.TableRoom1Roomnr, newValue, oldValue))
 
@@ -343,6 +342,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 50,
 			description: computed(() => this.Resources.ROOM_DESIGNATION37895),
+			isFixed: true,
 		}).cloneFrom(values?.Room1ValDesignat))
 		watch(() => this.Room1ValDesignat.value, (newValue, oldValue) => this.onUpdate('room1.designat', this.Room1ValDesignat, newValue, oldValue))
 
@@ -362,6 +362,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'FIRST',
 			maxLength: 10,
 			description: computed(() => this.Resources.FIRST42972),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -373,7 +374,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:equip.dtrefere', 'fieldChange:equip.codequip'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValFirst))
@@ -386,6 +386,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'BEFORE',
 			maxLength: 10,
 			description: computed(() => this.Resources.BEFORE60156),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -397,7 +398,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:equip.dtrefere'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValBefore))
@@ -410,6 +410,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'FOLLOWIN',
 			maxLength: 10,
 			description: computed(() => this.Resources.FOLLOWING22170),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -421,7 +422,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:equip.dtrefere', 'fieldChange:equip.codequip'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValFollowin))
@@ -434,6 +434,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'LAST',
 			maxLength: 10,
 			description: computed(() => this.Resources.LAST49207),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -445,7 +446,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:equip.dtrefere', 'fieldChange:equip.codequip'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValLast))
@@ -459,16 +459,18 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.QTD__MOVIMENTACOES28400),
+			isFixed: true,
 		}).cloneFrom(values?.ValQtdmovim))
 		watch(() => this.ValQtdmovim.value, (newValue, oldValue) => this.onUpdate('equip.qtdmovim', this.ValQtdmovim, newValue, oldValue))
 
-		this.ValMoviment = reactive(new modelFieldType.String({
+		this.ValMoviment = reactive(new modelFieldType.MultiLineString({
 			type: 'Text',
 			id: 'ValMoviment',
 			originId: 'ValMoviment',
 			area: 'EQUIP',
 			field: 'MOVIMENT',
 			description: computed(() => this.Resources.DRIVES34119),
+			isFixed: true,
 		}).cloneFrom(values?.ValMoviment))
 		watch(() => this.ValMoviment.value, (newValue, oldValue) => this.onUpdate('equip.moviment', this.ValMoviment, newValue, oldValue))
 
@@ -487,6 +489,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'EQUIP',
 			field: 'LASTPHO',
 			description: computed(() => this.Resources.LAST_PHOTO_ATTACHED43884),
+			isFixed: true,
 		}).cloneFrom(values?.ValLastpho))
 		watch(() => this.ValLastpho.value, (newValue, oldValue) => this.onUpdate('equip.lastpho', this.ValLastpho, newValue, oldValue))
 
@@ -508,18 +511,17 @@ export default class ViewModel extends ViewModelBase
 			area: 'EQUIP',
 			field: 'IFABATIF',
 			description: computed(() => this.Resources.DOWNED_EQUIPMENT43331),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(emptyD([EQUIP->DTDECO])==1,0,1)
-					// eslint-disable-next-line eqeqeq
-					return qApi.iif(qApi.emptyD(this.ValDtdeco.value)==1,0,1)
+					return qApi.iif(qApi.emptyD(this.ValDtdeco.value)===1,0,1)
 				},
 				dependencyEvents: ['fieldChange:equip.dtdeco'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyL,
 			},
 		}).cloneFrom(values?.ValIfabatif))
@@ -551,5 +553,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodequip'
 
 	get QPrimaryKey() { return this.ValCodequip.value }
-	set QPrimaryKey(value) { this.ValCodequip.value = value }
+	set QPrimaryKey(value) { this.ValCodequip.updateValue(value) }
 }

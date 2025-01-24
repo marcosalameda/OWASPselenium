@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Year
 	/// </summary>
-	public class CSGenioAyear : DbArea	{
+	public class CSGenioAyear : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -75,6 +76,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "VALUE10285";
 
@@ -87,6 +89,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  4;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 4;
 			Qfield.CavDesignation = "YEAR__NUMBERS_29394";
 
 			Qfield.Dupmsg = "";
@@ -267,7 +270,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodyear, value); }
 		}
 
-
 		/// <summary>Field : "Year" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldYear { get { return m_fldYear; } }
 		private static FieldRef m_fldYear = new FieldRef("year", "year");
@@ -279,30 +281,27 @@ namespace CSGenio.business
 			set { insertNameValueField(FldYear, value); }
 		}
 
-
 		/// <summary>Field : "Value" Tipo: "$D" Formula: SR "[AGREG->VALUE]"</summary>
 		public static FieldRef FldValue { get { return m_fldValue; } }
 		private static FieldRef m_fldValue = new FieldRef("year", "value");
 
 		/// <summary>Field : "Value" Tipo: "$D" Formula: SR "[AGREG->VALUE]"</summary>
-		public double ValValue
+		public decimal ValValue
 		{
-			get { return (double)returnValueField(FldValue); }
+			get { return (decimal)returnValueField(FldValue); }
 			set { insertNameValueField(FldValue, value); }
 		}
-
 
 		/// <summary>Field : "Year (numbers)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldYearnum { get { return m_fldYearnum; } }
 		private static FieldRef m_fldYearnum = new FieldRef("year", "yearnum");
 
 		/// <summary>Field : "Year (numbers)" Tipo: "N" Formula:  ""</summary>
-		public double ValYearnum
+		public decimal ValYearnum
 		{
-			get { return (double)returnValueField(FldYearnum); }
+			get { return (decimal)returnValueField(FldYearnum); }
 			set { insertNameValueField(FldYearnum, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -345,23 +344,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAyear> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAyear> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAyear>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -410,7 +392,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX YEAR]/

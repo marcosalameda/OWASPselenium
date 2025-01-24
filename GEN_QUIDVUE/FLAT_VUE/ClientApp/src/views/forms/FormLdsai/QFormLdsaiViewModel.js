@@ -75,12 +75,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [OUTPT->CODWAREH]
-					// eslint-disable-next-line eqeqeq
 					return this.OutptValCodwareh.value
 				},
-				dependencyEvents: ['fieldChange:outpt.codwareh'],
+				dependencyEvents: ['fieldChange:outpt.codwareh', 'fieldChange:outpu.codoutpt'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyG,
 			},
 		}).cloneFrom(values?.ValCodwareh))
@@ -126,6 +124,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODWAREH',
 			relatedArea: 'WARE1',
 			description: computed(() => this.Resources.BY_OMISSION13050),
+			isFixed: true,
 		}).cloneFrom(values?.OutptValCodwareh))
 		watch(() => this.OutptValCodwareh.value, (newValue, oldValue) => this.onUpdate('outpt.codwareh', this.OutptValCodwareh, newValue, oldValue))
 
@@ -198,5 +197,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodoutpu'
 
 	get QPrimaryKey() { return this.ValCodoutpu.value }
-	set QPrimaryKey(value) { this.ValCodoutpu.value = value }
+	set QPrimaryKey(value) { this.ValCodoutpu.updateValue(value) }
 }

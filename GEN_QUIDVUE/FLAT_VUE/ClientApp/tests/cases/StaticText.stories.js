@@ -1,12 +1,11 @@
 import StaticText from './StaticText.case.vue'
 
 export default {
-    title: 'Static/StaticText',
-    component: StaticText,
-    tags: [],
-  };
+	title: 'Static/StaticText',
+	component: StaticText,
+	tags: []
+}
 
-  export const Simple = {
-    args: {
-    },
-  };
+export const Simple = {
+	args: {}
+}

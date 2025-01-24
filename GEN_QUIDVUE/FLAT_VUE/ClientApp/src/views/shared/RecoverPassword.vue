@@ -1,8 +1,7 @@
 ﻿<template>
 	<div
 		v-if="isVisible"
-		class="d-block"
-		style="flex-grow: 1">
+		:class="authenticationClasses">
 		<div class="f-login">
 			<div class="f-login__container">
 				<div class="f-login__background">
@@ -12,37 +11,94 @@
 							alt="" />
 						<p>{{ texts.appName }}</p>
 					</div>
-
-					<div class="form-flow">
+					<div
+						id="recover-password-container"
+						class="form-flow">
 						<template v-if="!model.IsEmailSent">
-							<p>{{ texts.enterEmail }}</p>
+							<p class="q-logon-text">{{ texts.enterEmail }}</p>
 
-							<q-text-field
-								:classes="['f-login__input-field']"
-								v-model="model.Email.value"
-								v-bind="controls.Email"
-								:placeholder="texts.email"
-								@update:model-value="model.Email.fnUpdateValue" />
+							<q-input-group
+								size="block"
+								:prepend-icon="{ icon: 'envelope' }"
+								:class="{ error: emailError && showError }">
+								<q-text-field
+									v-model="model.Email.value"
+									:placeholder="texts.email"
+									v-bind="controls.Email"
+									@update:model-value="model.Email.fnUpdateValue"
+									@input="hideError"
+									@keyup.enter="resetPassword" />
+							</q-input-group>
+							<div
+								id="captcha-field"
+								class="i-captcha">
+								<q-input-group size="block">
+									<img
+										class="i-captcha__img_recovery"
+										alt="captcha"
+										:src="captchaImageUrl" />
 
-							<q-button
-								b-style="primary"
-								block
-								:class="['q-btn--login']"
-								:label="texts.reset"
-								:title="texts.reset"
-								@click="resetPassword" />
+									<q-button
+										b-style="secondary"
+										class="i-captcha__reset"
+										:title="texts.refresh"
+										@click="resetCaptcha">
+										<q-icon icon="reset" />
+									</q-button>
+								</q-input-group>
+								<q-control-wrapper v-show="controls.captchaInput.isVisible">
+									<base-input-structure
+										v-bind="controls.captchaInput"
+										v-on="controls.captchaInput.handlers"
+										:loading="controls.captchaInput.props.loading"
+										:class="captcha - recovery - control">
+										<q-text-field
+											v-model="model.captchaInput.value"
+											:placeholder="texts.enterCaptcha"
+											v-bind="controls.captchaInput"
+											@update:model-value="model.captchaInput.fnUpdateValue"
+											@input="hideError"
+											@keyup.enter="resetPassword" />
+									</base-input-structure>
+								</q-control-wrapper>
+							</div>
 
-							<q-validation-summary :error-data="validationErrors" />
+							<div
+								v-for="(erro, index) in errors"
+								:key="index"
+								id="error-message"
+								class="i-text__error">
+								<q-icon icon="exclamation-sign" />
+								{{ erro }}
+							</div>
+
+							<div class="q-logon-btns-container">
+								<q-button
+									b-style="secondary"
+									block
+									id="reset-button"
+									class="q-btn--login"
+									:label="texts.reset"
+									:loading="loading"
+									:data-loading="loading"
+									:title="texts.reset"
+									@click="resetPassword" />
+							</div>
 						</template>
 						<template v-else>
-							<p>{{ successMessage }}</p>
+							<p class="q-logon-text">{{ successMessage }}</p>
 						</template>
 
-						<q-router-link
-							class="f-login__link"
-							:link="{ name: 'main' }">
-							{{ texts.backToLogin }}
-						</q-router-link>
+						<div>
+							<q-router-link
+								class="f-login__link"
+								:link="{
+									name: 'main',
+									params: { culture: system.currentLang }
+								}">
+								{{ texts.backToLogin }}
+							</q-router-link>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -53,7 +109,6 @@
 <script>
 	import { computed } from 'vue'
 	import { mapState } from 'pinia'
-	import _isEmpty from 'lodash-es/isEmpty'
 
 	import { useSystemDataStore } from '@/stores/systemData.js'
 	import { useAuthDataStore } from '@/stores/authData.js'
@@ -63,7 +118,8 @@
 	import fieldControlClass from '@/mixins/fieldControl.js'
 	import genericFunctions from '@/mixins/genericFunctions.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
-
+	import LayoutHandlers from '@/mixins/layoutHandlers.js'
+	import { v4 as uuidv4 } from 'uuid'
 	import QRouterLink from '@/views/shared/QRouterLink.vue'
 
 	export default {
@@ -75,19 +131,27 @@
 
 		mixins: [
 			NavHandlers,
-			VueNavigation
+			VueNavigation,
+			LayoutHandlers
 		],
 
 		expose: [
 			'navigationId'
 		],
 
-		data()
-		{
+		data() {
 			return {
 				validationErrors: {},
 
+				captchaImageUrl: '',
+
+				captchaId: 'recoveryCaptcha', // Define a constante no data()
+
+				showError: false,
+
 				isVisible: false,
+
+				loading: false,
 
 				model: {
 					IsEmailSent: false,
@@ -97,6 +161,13 @@
 						originId: 'Email',
 						area: '',
 						field: 'EMAIL',
+						required: true
+					}),
+					captchaInput: new modelFieldType.String({
+						id: 'userEnteredCaptchaCode',
+						originId: 'userEnteredCaptchaCode',
+						area: '',
+						field: 'userEnteredCaptchaCode',
 						required: true
 					})
 				},
@@ -110,6 +181,11 @@
 						maxLength: 254,
 						hasLable: false,
 						isRequired: true
+					}, this),
+					captchaInput: new fieldControlClass.StringControl({
+						id: 'userEnteredCaptchaCode',
+						size: 'block',
+						maxLength: 254
 					}, this)
 				},
 
@@ -118,25 +194,26 @@
 					enterEmail: computed(() => this.Resources[hardcodedTexts.enterEmail]),
 					email: computed(() => this.Resources[hardcodedTexts.email]),
 					reset: computed(() => this.Resources[hardcodedTexts.reset]),
-					backToLogin: computed(() => this.Resources[hardcodedTexts.backToLogin])
+					backToLogin: computed(() => this.Resources[hardcodedTexts.backToLogin]),
+					enterCaptcha: computed(() => this.Resources[hardcodedTexts.enterCaptcha]),
 				}
 			}
 		},
 
-		created()
-		{
+		created() {
 			if (this.hasPasswordRecovery === false)
 				this.navigateToRouteName('main')
-			else
-			{
+			else {
 				this.isVisible = true
 				this.fetchData()
-				this.controls.Email.Init(true)
+				this.controls.Email.init(true)
 			}
+
+			this.controls.captchaInput.init(true)
+			this.resetCaptcha()
 		},
 
-		beforeUnmount()
-		{
+		beforeUnmount() {
 			this.controls.Email.destroy()
 		},
 
@@ -149,43 +226,84 @@
 				'hasPasswordRecovery'
 			]),
 
-			successMessage()
-			{
+			successMessage() {
 				return genericFunctions.formatString(this.Resources[hardcodedTexts.passwordRecoverEmail], this.model.Email.value)
+			},
+
+			emailError() {
+				return !this.isEmpty(this.validationErrors) && this.validationErrors["Email"];
+			},
+			captchError() {
+				return !this.isEmpty(this.validationErrors) && this.validationErrors["userEnteredCaptchaCode"];
+			},
+
+			errors() {
+				return Object.values(this.validationErrors).flat();
+
 			}
 		},
 
 		methods: {
-			setData(modelValue)
-			{
+			setData(modelValue) {
 				this.model.IsEmailSent = modelValue.IsEmailSent
 				this.model.Email.updateValue(modelValue.Email)
 			},
 
-			fetchData()
-			{
-				return this.netAPI.fetchData('Account', 'RecoverPassword', null, data => {
-					this.setData(data)
-				})
+			fetchData() {
+				return this.netAPI.fetchData('Account', 'RecoverPassword', null, (_, response) => this.setData(response.data.Data))
 			},
 
-			resetPassword()
-			{
-				return this.netAPI.postData('Account', 'RecoverPassword', {
-					Email: this.model.Email.value
-				}, async (data, response) => {
-					this.setData(data)
+			/**
+			 * Retrieves the CAPTCHA data for user validation during registration.
+			 * @returns {Object} The user-entered CAPTCHA code and its associated CAPTCHA ID.
+			 */
+			getCaptchaData() {
+				// The user-entered captcha code value to be validated at the backend side
+				const userEnteredCaptchaCode = this.model.captchaInput.value
 
-					if (response.data.Success)
-						this.validationErrors = {}
-					else
-					{
-						if (!_isEmpty(response.data.Errors))
-							this.validationErrors = response.data.Errors
-						else if (typeof response.data.Message === 'string')
-							genericFunctions.displayMessage(response.data.Message, 'error')
-					}
-				})
+				return {
+					userEnteredCaptchaCode,
+					captchaId: this.captchaId
+				}
+			},
+
+			/**
+			 * Resets the CAPTCHA by fetching a new image URL and clearing the user's input field.
+			 */
+			resetCaptcha() {
+				let apiURL = this.netAPI.apiActionURL('Account', 'GetCaptcha'), uId = uuidv4()
+
+				this.captchaImageUrl = `${apiURL}?captchaId=${this.captchaId}&t=${uId}`; // Usa a constante
+
+				this.model.captchaInput.updateValue('')
+			},
+
+			hideError() {
+				this.showError = false
+			},
+
+			async resetPassword() {
+				this.loading = true
+				const params = {
+					Email: this.model.Email.value,
+					CaptchaData: this.getCaptchaData()
+				}
+
+				await this.netAPI.postData('Account', 'RecoverPassword', params, this.handleResetPassword)
+				this.loading = false
+			},
+
+			handleResetPassword(_, response) {
+				const data = response.data
+				this.showError = !this.isEmpty(data.Errors)
+				if (this.showError) {
+					this.validationErrors = data.Errors
+					this.resetCaptcha()
+				}
+				else {
+					this.validationErrors = {}
+					this.model.IsEmailSent = data.Data.IsEmailSent
+				}
 			}
 		}
 	}

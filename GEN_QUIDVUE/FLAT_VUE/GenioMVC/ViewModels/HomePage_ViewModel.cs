@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
 using CSGenio.framework;
 using GenioMVC.Helpers.Menus;
 using GenioMVC.Models.Navigation;
-using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 
 namespace GenioMVC.ViewModels.Home
 {
@@ -33,12 +33,12 @@ namespace GenioMVC.ViewModels.Home
 		public CSGenio.framework.Role Role { get; set; }
 	}
 
-	public class HomePage_ViewModel : ViewModelBase
+	public class HomePage_ViewModel(UserContext userContext, bool isGuestUser) : ViewModelBase(userContext)
 	{
-		public bool IsGuestUser { get; private set; }
+		public bool IsGuestUser { get; private set; } = isGuestUser;
 
-		private static readonly List<HomePageDefinition> homePages = new List<HomePageDefinition>()
-		{
+		private static readonly List<HomePageDefinition> homePages =
+		[
 			new HomePageDefinition()
 			{
 				Identifier = "HomepageGQT",
@@ -65,7 +65,7 @@ namespace GenioMVC.ViewModels.Home
 				Form = "",
 				Role = CSGenio.framework.Role.UNAUTHORIZED
 			},
-		};
+		];
 
 		[JsonIgnore]
 		public static List<HomePageDefinition> HomePages { get { return homePages; } }
@@ -77,11 +77,6 @@ namespace GenioMVC.ViewModels.Home
 		public HomePageDefinition HomePageDef { get; private set; }
 
 		public bool HasHomePage { get { return HomePageDef != null && !string.IsNullOrEmpty(HomePageController) && !string.IsNullOrEmpty(HomePageAction); } }
-
-		public HomePage_ViewModel(UserContext userContext, bool isGuestUser) : base(userContext)
-		{
-			this.IsGuestUser = isGuestUser;
-		}
 
 		public Dictionary<string, HomePageDefinition> GetAvaibleHomePages(List<string> modules)
 		{

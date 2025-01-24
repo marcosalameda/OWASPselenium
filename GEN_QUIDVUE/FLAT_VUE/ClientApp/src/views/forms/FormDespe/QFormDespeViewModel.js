@@ -146,6 +146,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 7,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.PREVIOUS_VALUE30042),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -157,7 +158,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:expen.yearprev'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValPrevval))
@@ -171,18 +171,17 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 4,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.PREVIOUS_YEAR11345),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [YEAR->YEARNUM]-1
-					// eslint-disable-next-line eqeqeq
 					return this.YearValYearnum.value-1
 				},
 				dependencyEvents: ['fieldChange:year.yearnum'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValYearprev))
@@ -197,6 +196,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 4,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.YEAR__NUMBERS_29394),
+			isFixed: true,
 		}).cloneFrom(values?.YearValYearnum))
 		watch(() => this.YearValYearnum.value, (newValue, oldValue) => this.onUpdate('year.yearnum', this.YearValYearnum, newValue, oldValue))
 	}
@@ -213,5 +213,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCoddespe'
 
 	get QPrimaryKey() { return this.ValCoddespe.value }
-	set QPrimaryKey(value) { this.ValCoddespe.value = value }
+	set QPrimaryKey(value) { this.ValCoddespe.updateValue(value) }
 }

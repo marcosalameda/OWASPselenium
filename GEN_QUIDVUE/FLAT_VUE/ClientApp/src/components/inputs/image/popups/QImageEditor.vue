@@ -14,7 +14,8 @@
 							id="input-image"
 							class="container cropper-hidden"
 							ref="imageEditor"
-							:src="imageToEdit" />
+							:src="imageToEdit"
+							:alt="dataTitle" />
 					</div>
 				</div>
 
@@ -111,7 +112,7 @@
 				:label="texts.cancel"
 				:title="texts.cancel"
 				@click="closeEditor">
-				<q-icon icon="close" />
+				<q-icon icon="cancel" />
 			</q-button>
 		</div>
 	</teleport>
@@ -164,6 +165,14 @@
 			imageType: {
 				type: String,
 				default: 'png'
+			},
+
+			/**
+			 * Image title used for the alt attribute.
+			 */
+			dataTitle: {
+				type: String,
+				default: null
 			}
 		},
 
@@ -276,7 +285,8 @@
 						data: fileData,
 						dataFormat: this.imageType,
 						fileName: 'Image.png',
-						encoding: 'base64'
+						encoding: 'base64',
+						isThumbnail: false
 					}
 
 					this.$emit('image-edited', imgData)

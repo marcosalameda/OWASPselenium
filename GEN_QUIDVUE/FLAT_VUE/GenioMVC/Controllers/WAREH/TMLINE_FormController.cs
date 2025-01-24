@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Wareh;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_TMLINE_CANCEL = new NavigationLocation("TIMELINE45857", "Tmline_Cancel", "Wareh") { vueRouteName = "form-TMLINE", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_TMLINE_SHOW = new NavigationLocation("TIMELINE45857", "Tmline_Show", "Wareh") { vueRouteName = "form-TMLINE", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_TMLINE_NEW = new NavigationLocation("TIMELINE45857", "Tmline_New", "Wareh") { vueRouteName = "form-TMLINE", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_TMLINE_EDIT = new NavigationLocation("TIMELINE45857", "Tmline_Edit", "Wareh") { vueRouteName = "form-TMLINE", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_TMLINE_DUPLICATE = new NavigationLocation("TIMELINE45857", "Tmline_Duplicate", "Wareh") { vueRouteName = "form-TMLINE", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_TMLINE_DELETE = new NavigationLocation("TIMELINE45857", "Tmline_Delete", "Wareh") { vueRouteName = "form-TMLINE", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_TMLINE_CANCEL = new("TIMELINE45857", "Tmline_Cancel", "Wareh") { vueRouteName = "form-TMLINE", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_TMLINE_SHOW = new("TIMELINE45857", "Tmline_Show", "Wareh") { vueRouteName = "form-TMLINE", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_TMLINE_NEW = new("TIMELINE45857", "Tmline_New", "Wareh") { vueRouteName = "form-TMLINE", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_TMLINE_EDIT = new("TIMELINE45857", "Tmline_Edit", "Wareh") { vueRouteName = "form-TMLINE", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_TMLINE_DUPLICATE = new("TIMELINE45857", "Tmline_Duplicate", "Wareh") { vueRouteName = "form-TMLINE", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_TMLINE_DELETE = new("TIMELINE45857", "Tmline_Delete", "Wareh") { vueRouteName = "form-TMLINE", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Tmline_ModalDBEdit()
-		{
-			Tmline_ViewModel model = new Tmline_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Tmline_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Tmline Multiform actions
-
-		//
-		// GET /Wareh/MFTmline_New
-		[HttpGet]
-		[ActionName("MFTmline_New")]
-		public ActionResult MFTmline_New()
-		{
-			var model = new Tmline_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_TMLINE_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("wareh", model.ValCodwareh);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFTmline_New_GET()
-		{
-			return MFTmline_New();
-		}
-
-		//
-		// GET /Wareh/MFTmline_Edit
-		[HttpGet]
-		[ActionName("MFTmline_Edit")]
-		public ActionResult MFTmline_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("TMLINE", "EDIT", new { id = id, partialView = "MFTmline", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFTmline_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFTmline_Edit(requestModel);
-		}
-
-		//
-		// GET /Wareh/MFTmline_Cancel
-		[ActionName("MFTmline_Cancel")]
-		public ActionResult MFTmline_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Wareh(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Wareh/MFTmline_Save
-		[HttpPost]
-		[ActionName("MFTmline_Save")]
-		public JsonResult MFTmline_Save(Tmline_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFTmline_Save",
-				ViewName = "MFTmline",
-				AreaName = "wareh"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Wareh/MFTmline_Delete
-		[HttpPost]
-		[ActionName("MFTmline_Delete")]
-		public JsonResult MFTmline_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFTmline_Delete",
-				ViewName = "MFTmline",
-				AreaName = "wareh",
-				Location = ACTION_TMLINE_EDIT
-			};
-
-			var model = new Tmline_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Wareh/Tmline_ValTmdsaid
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
@@ -558,12 +421,39 @@ namespace GenioMVC.Controllers
 			}
 
 			Tmline_ValTmdsaid_ViewModel model = new Tmline_ValTmdsaid_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodwareh = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Wareh/Tmline_SaveEdit
 		[HttpPost]

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 
 using CSGenio.framework;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
+using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 
 namespace GenioMVC.ViewModels.Psw
 {
@@ -17,49 +17,55 @@ namespace GenioMVC.ViewModels.Psw
 		/// <summary>
 		/// Reference for the Models MsqActive property
 		/// </summary>
-		[Newtonsoft.Json.JsonIgnore]
+		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
-		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
-		[Display(Name = "UTILIZADOR52387", ResourceType = typeof(Resources.Resources))]
+		/// <summary>
+		/// Title: "Name" | Type: "C"
+		/// </summary>
 		public string ValNome { get; set; }
 
-		[AllowHtml]
-		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
-		[DataType(DataType.Password)]
-		[Display(Name = "PALAVRA_CHAVE39832", ResourceType = typeof(Resources.Resources))]
-		public string ValPassword { get; set; }
-
-		[Required]
-		[DataType(DataType.EmailAddress)]
-		[Display(Name = "EMAIL25170", ResourceType = typeof(Resources.Resources))]
+		/// <summary>
+		/// Title: "Email" | Type: "C"
+		/// </summary>
 		public string ValEmail { get; set; }
 
-		[DataType(DataType.Password)]
-		[Display(Name = "CONFIRMAR09808", ResourceType = typeof(Resources.Resources))]
-		[System.Web.Mvc.Compare("ValPassword", ErrorMessageResourceName = "A_NOVA_PALAVRA_CHAVE41230", ErrorMessageResourceType = typeof(Resources.Resources))]
+		/// <summary>
+		/// Title: "Password" | Type: "C"
+		/// </summary>
+		public string ValPassword { get; set; }
+
+		/// <summary>
+		/// Title: "Confirm Password" | Type: "C"
+		/// </summary>
 		public string ConfirmValPassword { get; set; }
 
 		public string ValCodpsw { get; set; }
 
 		#region ViewModel Pswnew (Password)
 
-		public Defaultpsw_ViewModel() : base() { }
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// A call to Init() needs to be manually invoked after this constructor
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Defaultpsw_ViewModel() : base(null!) { }
 
-		public Defaultpsw_ViewModel(NavigationContext currentNavigation, bool nestedForm = false) : base(currentNavigation, nestedForm) { }
+		public Defaultpsw_ViewModel(UserContext userContext) : base(userContext) { }
 
-		public Defaultpsw_ViewModel(Models.Psw row, NavigationContext currentNavigation, bool nestedForm = false) : base(currentNavigation, nestedForm)
+		public Defaultpsw_ViewModel(UserContext userContext, Models.Psw row, bool nestedForm = false) : base(userContext, null, nestedForm)
 		{
 			if (row == null)
 				throw new ModelNotFoundException("Model not found");
+
 			Model = row;
 			InitModel(new NameValueCollection(), false, false);
 		}
 
-		public Defaultpsw_ViewModel(NavigationContext currentNavigation, string id, bool nestedForm = false) : base(currentNavigation, nestedForm)
+		public Defaultpsw_ViewModel(UserContext userContext, string id, bool nestedForm = false) : base(userContext, null, nestedForm)
 		{
 			this.Navigation.SetValue("psw", id);
-			Model = Models.Psw.Find(id, "FPSWNEW");
+			Model = Models.Psw.Find(id, userContext, "FPSWNEW");
 			if (Model == null)
 				throw new ModelNotFoundException("Model not found");
 			InitModel(new NameValueCollection(), false, false);
@@ -93,6 +99,19 @@ namespace GenioMVC.ViewModels.Psw
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		public override void MapToModel()
+		{
+			MapToModel(Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Psw m)
 		{
 			if (m == null)
@@ -109,26 +128,72 @@ namespace GenioMVC.ViewModels.Psw
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Pswnew) to Model (Psw) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Pswnew) to Model (Psw) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
 			}
 		}
 
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "psw.nome":
+						this.ValNome = ViewModelConversion.ToString(_value);
+						break;
+					case "psw.email":
+						this.ValEmail = ViewModelConversion.ToString(_value);
+						break;
+					case "psw.codpsw":
+						this.ValCodpsw = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						CSGenio.framework.Log.Error($"SetViewModelValue (Psw) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Psw)", "Unexpected error", ex);
+			}
+		}
+
 		#endregion
+
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Psw.Find(id ?? Navigation.GetStrValue("psw"), m_userContext, "FPSWNEW"); }
+			finally { Model ??= new Models.Psw(m_userContext) { Identifier = "FPSWNEW" }; }
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
 			this.editable = editable;
 			CSGenio.business.Area oldvalues = null;
 			// TODO: Deve ser substituido por search do CSGenioA
-			try { Model = Models.Psw.Find(Navigation.GetStrValue("psw"), "FPSWNEW"); }
+			try
+			{
+				Model = Models.Psw.Find(Navigation.GetStrValue("psw"), m_userContext,"FPSWNEW");
+			}
 			finally
-			{ // TODO: Remove FormMode ?
+			{
+				// TODO: Remove FormMode ?
 				if ((Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate))
 				{
 					if (Model == null)
 					{
-						Model = new Models.Psw() { Identifier = "FPSWNEW" };
+						Model = new Models.Psw(m_userContext) { Identifier = "FPSWNEW" };
 						Model.klass.QPrimaryKey = Navigation.GetStrValue("psw");
 					}
 				}
@@ -136,8 +201,8 @@ namespace GenioMVC.ViewModels.Psw
 				{
 					if (Model == null)
 						throw new ModelNotFoundException("Model not found");
-					else
-						oldvalues = Model.klass;
+
+					oldvalues = Model.klass;
 				}
 			}
 
@@ -150,7 +215,7 @@ namespace GenioMVC.ViewModels.Psw
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				MapToModel(Model);
 				// Preencher operações internas
-				Model.klass.fillInternalOperations(UserContext.Current.PersistentSupport, oldvalues);
+				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
 			}
 		}
@@ -162,15 +227,16 @@ namespace GenioMVC.ViewModels.Psw
 		public override void LoadPartial(NameValueCollection qs, bool lazyLoad = false)
 		{
 			// MH [bugfix] - Quando o POST da ficha falha, ao recaregar a view os documentos na BD perdem alguma informação (ex: name do file)
-			if (System.Web.HttpContext.Current.Request.HttpMethod == "POST")
+			var codpsw = Navigation.GetStrValue("psw");
+			if (!string.IsNullOrEmpty(codpsw))
 			{
 				// Precisamos fazer o Find to obter as chaves dos documentos que já foram anexados
 				// TODO: Conseguir passar estas chaves no POST to poder retirar o Find.
-				Model = Models.Psw.Find(Navigation.GetStrValue("psw"), "FPSWNEW");
+				Model = Models.Psw.Find(codpsw, m_userContext, "FPSWNEW");
 				if (Model == null)
 				{
-					Model = new Models.Psw() { Identifier = "FPSWNEW" };
-					Model.klass.QPrimaryKey = Navigation.GetStrValue("psw");
+					Model = new Models.Psw(m_userContext) { Identifier = "FPSWNEW" };
+					Model.klass.QPrimaryKey = codpsw;
 				}
 				MapToModel(Model);
 			}
@@ -185,37 +251,36 @@ namespace GenioMVC.ViewModels.Psw
 
 			//after the interface contextual fill, we give a last chance for the row to update internal formulas
 			if (Model == null) // To não perder o Qvalue do ZZState executa inicialização do Model só quando o objeto está vazio.
-				Model = new Models.Psw() { Identifier = "FPSWNEW" };
+				Model = new Models.Psw(m_userContext) { Identifier = "FPSWNEW" };
 			MapToModel(Model);
 			// Preencher Qvalues default
-			Model.klass.fillValuesDefault(UserContext.Current.PersistentSupport, FunctionType.INS);
+			Model.klass.fillValuesDefault(m_userContext.PersistentSupport, FunctionType.INS);
 			// Preencher Qvalues default dos fields do form
 			// Preencher operações internas
-			Model.klass.fillInternalOperations(UserContext.Current.PersistentSupport, null);
+			Model.klass.fillInternalOperations(m_userContext.PersistentSupport, null);
 			MapFromModel(Model);
+		}
+
+		public override CrudViewModelValidationResult Validate()
+		{
+			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
+
+			validator.Required("ValNome", Resources.Resources.UTILIZADOR52387, ValNome);
+			validator.Required("ValPassword", Resources.Resources.PALAVRA_CHAVE39832, ValPassword);
+			validator.Required("ValEmail", Resources.Resources.EMAIL25170, ValEmail);
+
+			return validator.GetResult();
 		}
 
 		public override void Save()
 		{
-			try { Model = Models.Psw.Find(Navigation.GetStrValue("psw"), "FPSWNEW"); }
-			finally { if (Model == null) Model = new Models.Psw() { Identifier = "FPSWNEW" }; }
-
 			MapToModel(Model);
 			this.flashMessage = Model.Save();
 		}
 
-		public override void Apply()
-		{
-			// Precisamos possicionar a ficha to não "estragar" o Qvalue do zzstate
-			try { Model = Models.Psw.Find(Navigation.GetStrValue("psw"), "FPSWNEW"); }
-			finally { if (Model == null) Model = new Models.Psw() { Identifier = "FPSWNEW" }; }
-
-			base.Apply();
-		}
-
 		public override void Destroy(string id)
 		{
-			Model = Models.Psw.Find(id, "FPSWNEW");
+			Model = Models.Psw.Find(id, m_userContext, "FPSWNEW");
 			if (Model == null)
 				throw new ModelNotFoundException("Model not found");
 			this.flashMessage = Model.Destroy();

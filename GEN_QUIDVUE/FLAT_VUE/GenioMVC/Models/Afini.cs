@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -48,48 +48,48 @@ namespace GenioMVC.Models
 		[DateAttribute("D")]
 		public DateTime? ValEndafini { get { return klass.ValEndafini; } set { klass.ValEndafini = value ?? DateTime.MinValue; } }
 
-		[DisplayName(">COMOMODOR")]
-		/// <summary>Field : ">COMOMODOR" Tipo: "CE" Formula:  ""</summary>
-		[ShouldSerialize("Afini.ValCodpess1")]
-		public string ValCodpess1 { get { return klass.ValCodpess1; } set { klass.ValCodpess1 = value; } }
-		private Pess1 _pess1;
-		[DisplayName("Pess1")]
-		[ShouldSerialize("Pess1")]
-		public virtual Pess1 Pess1 { 
-			get { 
-				if (!this.isEmptyModel && (_pess1 == null || (!string.IsNullOrEmpty(ValCodpess1) && (_pess1.isEmptyModel || _pess1.klass.QPrimaryKey != ValCodpess1))))
-					_pess1 = Models.Pess1.Find(ValCodpess1, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pess1 == null)
-					_pess1 = new Models.Pess1(m_userContext, true, _fieldsToSerialize);
-				return _pess1;
-			}
-			set { _pess1 = value; } 
-		}
-		
+		[DisplayName(">AFFINITY GENRE")]
+		/// <summary>Field : ">AFFINITY GENRE" Tipo: "CF" Formula:  ""</summary>
+		[ShouldSerialize("Afini.ValCodgafin")]
+		public string ValCodgafin { get { return klass.ValCodgafin; } set { klass.ValCodgafin = value; } }
 
-		[DisplayName(">DADATARY")]
-		/// <summary>Field : ">DADATARY" Tipo: "CE" Formula:  ""</summary>
+		[DisplayName("")]
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Afini.ValCodpess2")]
 		public string ValCodpess2 { get { return klass.ValCodpess2; } set { klass.ValCodpess2 = value; } }
 		private Pess2 _pess2;
 		[DisplayName("Pess2")]
 		[ShouldSerialize("Pess2")]
-		public virtual Pess2 Pess2 { 
-			get { 
+		public virtual Pess2 Pess2 {
+			get {
 				if (!this.isEmptyModel && (_pess2 == null || (!string.IsNullOrEmpty(ValCodpess2) && (_pess2.isEmptyModel || _pess2.klass.QPrimaryKey != ValCodpess2))))
 					_pess2 = Models.Pess2.Find(ValCodpess2, m_userContext, Identifier, _fieldsToSerialize);
 				if (_pess2 == null)
 					_pess2 = new Models.Pess2(m_userContext, true, _fieldsToSerialize);
 				return _pess2;
 			}
-			set { _pess2 = value; } 
+			set { _pess2 = value; }
 		}
-		
 
-		[DisplayName(">AFFINITY GENRE")]
-		/// <summary>Field : ">AFFINITY GENRE" Tipo: "CF" Formula:  ""</summary>
-		[ShouldSerialize("Afini.ValCodgafin")]
-		public string ValCodgafin { get { return klass.ValCodgafin; } set { klass.ValCodgafin = value; } }
+
+		[DisplayName("")]
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		[ShouldSerialize("Afini.ValCodpess1")]
+		public string ValCodpess1 { get { return klass.ValCodpess1; } set { klass.ValCodpess1 = value; } }
+		private Pess1 _pess1;
+		[DisplayName("Pess1")]
+		[ShouldSerialize("Pess1")]
+		public virtual Pess1 Pess1 {
+			get {
+				if (!this.isEmptyModel && (_pess1 == null || (!string.IsNullOrEmpty(ValCodpess1) && (_pess1.isEmptyModel || _pess1.klass.QPrimaryKey != ValCodpess1))))
+					_pess1 = Models.Pess1.Find(ValCodpess1, m_userContext, Identifier, _fieldsToSerialize);
+				if (_pess1 == null)
+					_pess1 = new Models.Pess1(m_userContext, true, _fieldsToSerialize);
+				return _pess1;
+			}
+			set { _pess1 = value; }
+		}
+
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Afini.ValZzstate")]
@@ -99,19 +99,19 @@ namespace GenioMVC.Models
 		public Afini(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAafini(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Afini(UserContext userContext, CSGenioAafini val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAafini csgenioa)
@@ -123,22 +123,21 @@ namespace GenioMVC.Models
 			{
 				switch (Qfield.Area)
 				{
-					case "pess1":
-						if (_pess1 == null)
-							_pess1 = new Pess1(m_userContext, true, _fieldsToSerialize);
-						_pess1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
-						break;
 					case "pess2":
 						if (_pess2 == null)
 							_pess2 = new Pess2(m_userContext, true, _fieldsToSerialize);
 						_pess2.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
+						break;
+					case "pess1":
+						if (_pess1 == null)
+							_pess1 = new Pess1(m_userContext, true, _fieldsToSerialize);
+						_pess1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:
 						break;
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

@@ -7,24 +7,6 @@
 
 import { defineStore } from 'pinia'
 
-import { useGenericLayoutDataStore } from './genericLayoutData.js'
-
-/**
- * Returns an object with the default state of the store.
- */
-function getDefaultState()
-{
-	const genericLayoutDataStore = useGenericLayoutDataStore()
-	genericLayoutDataStore.resetStore()
-	genericLayoutDataStore.setHeaderHeight(50)
-
-	return {
-		...genericLayoutDataStore,
-		...state(),
-		...actions
-	}
-}
-
 //----------------------------------------------------------------
 // State variables
 //----------------------------------------------------------------
@@ -37,9 +19,7 @@ const state = () => {
 
 		sidebarIsVisible: true,
 
-		bookmarkMenuIsOpen: false,
-
-		moduleMenuIsOpen: false,
+		navBarIsVisible: true,
 
 		isAccordionMenu: true
 	}
@@ -63,7 +43,10 @@ const actions = {
 	},
 
 	/**
-	 * Sets the visibility of the sidebar.
+	 * Sets the visibility of the sidebar. 
+	 * This value is updated right away when expanding and collapsing, 
+	 * so it's more like the state that the sidebar should be in / is going to.
+	 * When collapsing, it will be false before the sidebar is actually invisible.
 	 * @param {boolean} isVisible Whether or not the sidebar is visible
 	 */
 	setSidebarVisibility(isVisible)
@@ -72,30 +55,25 @@ const actions = {
 			return
 
 		this.sidebarIsVisible = isVisible
+
+		//If true, the value for navBarIsVisible must also change to true right away
+		if(this.sidebarIsVisible)
+			this.setNavBarVisibility(isVisible)
 	},
 
 	/**
-	 * Sets the state of the bookmarks menu.
-	 * @param {boolean} isOpen Whether or not the bookmarks menu is open
+	 * Sets the visibility of the navigation bar. 
+	 * This is used to indicate the actual visibility in real-time.
+	 * This is needed because, with transitions, the visibility should
+	 * not be changed to hidden until the transition finishes.
+	 * @param {boolean} isVisible Whether or not the sidebar is visible
 	 */
-	setBookmarkMenuState(isOpen)
+	setNavBarVisibility(isVisible)
 	{
-		if (typeof isOpen !== 'boolean')
+		if (typeof isVisible !== 'boolean')
 			return
 
-		this.bookmarkMenuIsOpen = isOpen
-	},
-
-	/**
-	 * Sets the state of the modules menu.
-	 * @param {boolean} isOpen Whether or not the modules menu is open
-	 */
-	setModuleMenuState(isOpen)
-	{
-		if (typeof isOpen !== 'boolean')
-			return
-
-		this.moduleMenuIsOpen = isOpen
+		this.navBarIsVisible = isVisible
 	},
 
 	/**
@@ -115,7 +93,7 @@ const actions = {
 	 */
 	resetStore()
 	{
-		Object.assign(this, getDefaultState())
+		Object.assign(this, state())
 	}
 }
 
@@ -123,4 +101,16 @@ const actions = {
 // Store export
 //----------------------------------------------------------------
 
-export const useLayoutDataStore = defineStore('layoutData', () => getDefaultState())
+export const useLayoutDataStore = defineStore('layoutData', {
+	state,
+	actions
+})
+
+//----------------------------------------------------------------
+// Normal exports (so properties and functions can be used in other stores)
+//----------------------------------------------------------------
+
+export {
+	state as useMobileLayoutState,
+	actions as useMobileLayoutActions
+}

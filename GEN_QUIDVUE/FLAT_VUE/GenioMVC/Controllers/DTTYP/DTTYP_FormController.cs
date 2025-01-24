@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Dttyp;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_DTTYP_CANCEL = new NavigationLocation("DATA_TYPE47159", "Dttyp_Cancel", "Dttyp") { vueRouteName = "form-DTTYP", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_DTTYP_SHOW = new NavigationLocation("DATA_TYPE47159", "Dttyp_Show", "Dttyp") { vueRouteName = "form-DTTYP", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_DTTYP_NEW = new NavigationLocation("DATA_TYPE47159", "Dttyp_New", "Dttyp") { vueRouteName = "form-DTTYP", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_DTTYP_EDIT = new NavigationLocation("DATA_TYPE47159", "Dttyp_Edit", "Dttyp") { vueRouteName = "form-DTTYP", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_DTTYP_DUPLICATE = new NavigationLocation("DATA_TYPE47159", "Dttyp_Duplicate", "Dttyp") { vueRouteName = "form-DTTYP", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_DTTYP_DELETE = new NavigationLocation("DATA_TYPE47159", "Dttyp_Delete", "Dttyp") { vueRouteName = "form-DTTYP", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_DTTYP_CANCEL = new("DATA_TYPE47159", "Dttyp_Cancel", "Dttyp") { vueRouteName = "form-DTTYP", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_DTTYP_SHOW = new("DATA_TYPE47159", "Dttyp_Show", "Dttyp") { vueRouteName = "form-DTTYP", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_DTTYP_NEW = new("DATA_TYPE47159", "Dttyp_New", "Dttyp") { vueRouteName = "form-DTTYP", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_DTTYP_EDIT = new("DATA_TYPE47159", "Dttyp_Edit", "Dttyp") { vueRouteName = "form-DTTYP", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_DTTYP_DUPLICATE = new("DATA_TYPE47159", "Dttyp_Duplicate", "Dttyp") { vueRouteName = "form-DTTYP", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_DTTYP_DELETE = new("DATA_TYPE47159", "Dttyp_Delete", "Dttyp") { vueRouteName = "form-DTTYP", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Dttyp_ModalDBEdit()
-		{
-			Dttyp_ViewModel model = new Dttyp_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Dttyp_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Dttyp Multiform actions
 
-		//
-		// GET /Dttyp/MFDttyp_New
-		[HttpGet]
-		[ActionName("MFDttyp_New")]
-		public ActionResult MFDttyp_New()
-		{
-			var model = new Dttyp_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_DTTYP_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("dttyp", model.ValCoddttyp);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFDttyp_New_GET()
-		{
-			return MFDttyp_New();
-		}
-
-		//
-		// GET /Dttyp/MFDttyp_Edit
-		[HttpGet]
-		[ActionName("MFDttyp_Edit")]
-		public ActionResult MFDttyp_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("DTTYP", "EDIT", new { id = id, partialView = "MFDttyp", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFDttyp_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFDttyp_Edit(requestModel);
-		}
-
-		//
-		// GET /Dttyp/MFDttyp_Cancel
-		[ActionName("MFDttyp_Cancel")]
-		public ActionResult MFDttyp_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Dttyp(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Dttyp/MFDttyp_Save
-		[HttpPost]
-		[ActionName("MFDttyp_Save")]
-		public JsonResult MFDttyp_Save(Dttyp_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFDttyp_Save",
-				ViewName = "MFDttyp",
-				AreaName = "dttyp"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Dttyp/MFDttyp_Delete
-		[HttpPost]
-		[ActionName("MFDttyp_Delete")]
-		public JsonResult MFDttyp_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFDttyp_Delete",
-				ViewName = "MFDttyp",
-				AreaName = "dttyp",
-				Location = ACTION_DTTYP_EDIT
-			};
-
-			var model = new Dttyp_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Dttyp/Dttyp_SaveEdit
 		[HttpPost]

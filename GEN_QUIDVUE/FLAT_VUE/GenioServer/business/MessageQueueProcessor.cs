@@ -75,8 +75,10 @@ namespace GenioServer.business
             }
             catch (Exception ex)
             {
-                Log.SetContext("utilizador", "MessageQueueProcessor_ProcessMessage");
+                var scopeContext = Log.SetContext(new {user = "MessageQueueProcessor_ProcessMessage"});
                 Log.Error("Queue " + channelId + ". " + ex.Message);
+                
+                if(scopeContext != null) scopeContext.Dispose();
                 return null;
             }
         }
@@ -98,8 +100,7 @@ namespace GenioServer.business
             }
             catch (Exception ex)
             {
-                Log.SetContext("ACKStateRetry", key);
-                Log.Error("Error: " + ex.Message);
+                Log.Error(string.Format("[{0}] ACKStateRetry error: {1}", key, ex.Message));
             }           
         }
 
@@ -120,8 +121,7 @@ namespace GenioServer.business
             }
             catch (Exception ex)
             {
-                Log.SetContext("ACKStateResolved", key);
-                Log.Error("Error: " + ex.Message);
+                Log.Error(string.Format("[{0}] ACKStateResolved error: {1}", key, ex.Message));
             }
         }
         
@@ -164,7 +164,7 @@ namespace GenioServer.business
         }
 
 
-        public bool ProcessQueueProgress(string name, string key, MQueueACK ack, double progress, string message)
+        public bool ProcessQueueProgress(string name, string key, MQueueACK ack, decimal progress, string message)
         {
             try
             {                
@@ -278,7 +278,7 @@ namespace GenioServer.business
                 if (queueXml.ChildNodes.Count > 0)
                 {
                     string ano_app, table_rec, key, queue, desc, mqstatus;
-                    double progress;
+                    decimal progress;
                     MQueueACK statusMQ;
 
                     table_rec = queueXml.DocumentElement.GetAttribute("table");
@@ -423,7 +423,7 @@ namespace GenioServer.business
                 throw new BusinessException(null, "MessageQueueProcessor.GetFieldEx", "Field was not found: " + fName);
             }
         }
-        void GetFieldEx(XmlNode ObjNode, string fName, out double value)
+        void GetFieldEx(XmlNode ObjNode, string fName, out decimal value)
         {
             if (!GetField(ObjNode, fName, out value))
             {
@@ -501,7 +501,7 @@ namespace GenioServer.business
             }
             return res;
         }
-        private bool GetField(XmlNode ObjNode, string fName, out double value)
+        private bool GetField(XmlNode ObjNode, string fName, out decimal value)
         {
             XmlNode node = null;
             foreach (XmlNode item in ObjNode.ChildNodes)
@@ -513,7 +513,7 @@ namespace GenioServer.business
                 }
             }
             bool res = false;
-            value = 0.0;
+            value = 0;
 
             if (node != null)
             {
@@ -521,9 +521,9 @@ namespace GenioServer.business
                 MQDataType node_type = (MQDataType)GetFielProperty(node, MQPropertyField.TIPO);
                 if (node_type == MQDataType._CURRENCY_TYPE || node_type == MQDataType._NUMERIC_TYPE)
                 {
-                    // acrescentada a conversão to double usando o InvariantCulture semelhante à alteração efetuada no envio da queue
+                    // acrescentada a conversão para numerico usando o InvariantCulture semelhante à alteração efetuada no envio da queue
                     string vlrStr = DBConversion.ToString(GetFielProperty(node, MQPropertyField.VL));
-                    double.TryParse(vlrStr,System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out value);
+                    decimal.TryParse(vlrStr,System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out value);
                 }
             }
             return res;
@@ -542,11 +542,7 @@ namespace GenioServer.business
             }
             bool res = false;
             value = DateTime.MinValue;
-            string[] formats = {"M/d/yyyy h:mm:ss tt", "M/d/yyyy h:mm tt",
-                       "MM/dd/yyyy hh:mm:ss", "M/d/yyyy h:mm:ss", "dd/MM/yyyy",
-                       "M/d/yyyy hh:mm tt", "M/d/yyyy hh tt",
-                       "M/d/yyyy h:mm", "M/d/yyyy h:mm",
-                       "MM/dd/yyyy hh:mm", "M/dd/yyyy hh:mm", "dd/MM/yyyy hh:mm:ss"};
+            string[] formats = { "dd/MM/yyyy", "dd/MM/yyyy HH:mm", "dd/MM/yyyy HH:mm:ss" };
             if (node != null)
             {
                 res = true;
@@ -582,70 +578,7 @@ namespace GenioServer.business
             return null;
         }
 
-        /*
-        private string GetAttributeEx(XmlElement docEl)
-        {
-
-        }
-        */
-
-        /*
-        private bool GetField(string fName, out int value)
-        {
-            XmlElement node = queueXml.GetElementById(fName);
-            bool res = false;
-
-            if (node != null)
-            {
-                res = true;
-                MQDataType node_type = (MQDataType)GetFielProperty(node, MQPropertyField.TIPO);
-                if (node_type == MQDataType._CURRENCY_TYPE || node_type == MQDataType._NUMERIC_TYPE)
-                    value = (double)GetFielProperty(node, MQPropertyField.VL);
-
-                else if (node_type == MQDataType._STRING_TYPE)
-                    value = (string)GetFielProperty(node, MQPropertyField.VL);
-
-                else if (node_type == MQDataType._DATE_TYPE)
-                    value = ((DateTime)GetFielProperty(node, MQPropertyField.VL));// ef->m_Value.ODT().Format(_T("%d/%m/%Y")); //estava %m/%d/%Y JP 12/03/2003
-
-                else if (node_type == MQDataType._LOGIC_TYPE) //convert int to string
-                    value = (int)GetFielProperty(node, MQPropertyField.VL);
-            }
-            return res;
-        }
-        */
-
         #endregion
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pTab"></param>
-        /// <param name="sqlCheck"></param>
-        /// <param name="codRel"></param>
-        /// <param name="msgType"></param>
-        [Obsolete("Use mqImportMQRecord(DbArea pTab, SelectQuery sqlCheck, out string codRel, string msgType) instead")]
-        public void mqImportMQRecord(DbArea pTab, string sqlCheck, out string codRel, string msgType)
-        {
-            pTab.QueueMode = true;
-            bool haRegisto = false;
-            codRel = "";
-            //Verifica se deve procurar o registo com o código interno da table *pTab
-            if (!string.IsNullOrEmpty(sqlCheck))
-            {
-                //Verifica se o registo exists na base de dados
-                ArrayList resArr = this.sp.executeReaderOneRow(sqlCheck);
-                if (resArr.Count > 0)
-                    codRel = resArr[0].ToString();
-
-                haRegisto = (string.IsNullOrEmpty(codRel)) ? false : true;
-
-                //Posiciona o registo encontrado
-                if (haRegisto && msgType != "N") pTab.QPrimaryKey = codRel;
-            }
-
-            mqImportMQRecordInternal(pTab, ref codRel, msgType, haRegisto);
-        }
 
         /// <summary>
         /// 
@@ -926,6 +859,9 @@ namespace GenioServer.business
             if (mQueueACK.Equals(MQueueACK.ReplyPROGRESS))
                 QueueAckObj.progress = progress;
 
+            if(queueXml == null)
+                return new QueueResponse { Ack = MQueueACK.ReplyIGNORE };
+
             //TODO: passar a gravar as mensagens na BD e só apagar quando o retorno do envio = OK!
             if (queueXml.ChildNodes.Count > 0)
             {
@@ -1115,14 +1051,14 @@ namespace GenioServer.business
         /// <param name="orderExec">Ordered execution list</param>
         /// <param name="zero">if true, reindex with /zero</param>
         /// <param name="changedExecutionScript">Callback funtion for progress tracing</param>
-        private void TracedReindex(string year, string username, string password, List<ExecuteQueryCore.RdxScript> orderExec, bool zero, ExecuteQueryCore.ChangedEventHandler changedExecutionScript = null)
+        public void TracedReindex(string year, string username, string password, List<ExecuteQueryCore.RdxScript> orderExec, bool zero, ExecuteQueryCore.ChangedEventHandler changedExecutionScript = null)
         {
             ExecuteQueryCore.RdxParamUpgradeSchema param = new ExecuteQueryCore.RdxParamUpgradeSchema();
             param.Year = year;
             param.Username = username;
             param.Password = password;
             param.OrderExec = orderExec;
-            param.Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "Scripts", Configuration.Program + "_ReIdx\\Reindex");            
+            param.Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", Configuration.Program + "_ReIdx\\Reindex");            
             param.Zero = zero;
             param.Origin = "External";
             param.ChangedExecutionScript += changedExecutionScript;
@@ -1131,130 +1067,4 @@ namespace GenioServer.business
         }
     }
     
-    /*public class NQueueTables
-    {
-        private string table;
-        private string Qfield;
-		private string tabeladominio;
-		
-        public NQueueTables( string table, string Qfield)
-        {
-            this.table = table;
-            this.Qfield = Qfield;
-        }
-         
-		public NQueueTables(string table, string Qfield, string tabeladominio)
-        {
-            this.table = table;
-            this.Qfield = Qfield;
-            this.tabeladominio = tabeladominio;
-        }
-		
-        public string Table
-        {
-            get { return table; }
-            set { table = value; }
-        }
-
-        public string Field
-        {
-            get { return Qfield; }
-            set { Qfield = value; }
-        }
-		
-		public string DomainTable
-        {
-            get { return tabeladominio; }
-            set { tabeladominio = value; }
-        }
-    }
-    
-    /// <summary>
-    /// classe que representa uma queue
-    /// TODO: NA geracão associar todas as informações relacionadas (tables acima, tables abaixo) com as queue nesta classe. implica alteração do código de envio de queue 
-    /// </summary>
-    public class QueueGenio
-    {
-        private string name;
-        private bool naoreexporta;
-        private string queuearea;
-		private string tabeladominio;
-        private List<NQueueTables> tabelasN1;
-        private List<NQueueTables> tabelas1N;
-
-        public QueueGenio()
-        {
-            tabelas1N = new List<NQueueTables>();
-            tabelasN1 = new List<NQueueTables>();
-        }
-
-        /// <summary>
-        /// Devolve e atribui o name da queue
-        /// </summary>
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
-
-        /// <summary>
-        /// Área da Queue
-        /// </summary>
-        public string Queuearea
-        {
-            get { return queuearea; }
-            set { queuearea = value; }
-        }
-        
-		/// <summary>
-        /// Table de dóminio da area da queue
-        /// </summary>
-        public string DomainTable
-        {
-            get { return tabeladominio; }
-            set { tabeladominio = value; }
-        }
-		
-        /// <summary>
-        /// Devolve e atribui a flag que indica se a queue é reexportada ou não
-        /// </summary>
-        public bool DoNotReexport
-        {
-            get { return naoreexporta; }
-            set { naoreexporta = value; }
-        }
-
-        /// <summary>
-        /// Devolve e atribui as tables N1 
-        /// </summary>
-        public List<NQueueTables> TablesN1
-        {
-            get { return tabelasN1; }
-            set { tabelasN1 = value; }
-        }
-
-        /// <summary>
-        /// Devolve e atribui as tables 1N
-        /// </summary>
-        public List<NQueueTables> Tables1N
-        {
-            get { return tabelas1N; }
-            set { tabelas1N = value; }
-        }
-    }
-    
-    public class IsAckResponse
-    {
-        public bool IsACK { get; set; }
-        public string QueueKey { get; set; }
-    }
-    
-    public class QueueProgressStatus
-    {
-        public string Message { get; set; }
-        public int Count { get; set; }
-        public int Total { get; set; }
-        public bool Completed { get; set; }
-        public string id { get; set; }
-    }*/
 }

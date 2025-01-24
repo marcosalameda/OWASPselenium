@@ -11,7 +11,7 @@ import netAPI from '@/api/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-import DNFormViewModelGrpbPseudtblb from '@/views/forms/FormGrpb/QFormGrpbPseudtblbViewModel.js'
+import DNFormViewModelGrpbPseudtblb from '@/views/forms/FormGrpb/QGridFormGrpbPseudtblbViewModel.js'
 /* eslint-enable no-unused-vars */
 
 /**
@@ -69,7 +69,9 @@ export default class ViewModel extends ViewModelBase
 			field: 'TBLB',
 			viewModelClass: DNFormViewModelGrpbPseudtblb,
 		}, this.vueContext).cloneFrom(values?.ValTblb))
-		watch(() => this.ValTblb.value, (newValue, oldValue) => this.onUpdate('pseud.tblb', this.ValTblb, newValue, oldValue), { deep: true })
+		watch(() => this.ValTblb.value?.newElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true })
+		watch(() => this.ValTblb.value?.editedElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true })
+		watch(() => this.ValTblb.value?.removedElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true })
 	}
 
 	/**
@@ -84,5 +86,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodgrpb'
 
 	get QPrimaryKey() { return this.ValCodgrpb.value }
-	set QPrimaryKey(value) { this.ValCodgrpb.value = value }
+	set QPrimaryKey(value) { this.ValCodgrpb.updateValue(value) }
 }

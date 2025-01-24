@@ -1,4 +1,5 @@
-﻿import { updateQueryParams } from './routeUtils.js'
+﻿// eslint-disable-next-line no-unused-vars
+import { updateQueryParams } from './routeUtils.js'
 
 export default function getMenusRoutes()
 {
@@ -177,42 +178,68 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_1111',
-			name: 'menu-PTN_1111',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_1111/QMenuPtn1111.vue'),
+			path: '/:culture/:system/GQT/menu/GQT_DEVOLOBS',
+			name: 'menu-GQT_DEVOLOBS',
+			component: () => import('@/views/menus/ModuleGQT/MenuGQT_DEVOLOBS/QMenuGqtDevolobs.vue'),
 			meta: {
 				routeType: 'menu',
-				module: 'PTN',
-				order: '1111',
+				module: 'GQT',
+				order: '18111',
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_1121',
-			name: 'menu-PTN_1121',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_1121/QMenuPtn1121.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_3111',
+			name: 'menu-PTN_3111',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3111/QMenuPtn3111.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '1121',
+				order: '3111',
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_1211',
-			name: 'menu-PTN_1211',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_1211/QMenuPtn1211.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_3121',
+			name: 'menu-PTN_3121',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3121/QMenuPtn3121.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '1211',
+				order: '3121',
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_LIST_DM_MB_R',
+			name: 'menu-PTN_LIST_DM_MB_R',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_LIST_DM_MB_R/QMenuPtnListDmMbR.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3I1',
+				baseArea: 'LENDI',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValLendinnr'],
+			}
+		},
+		{
+			path: '/:culture/:system/WMS/menu/WMS_4271',
+			name: 'menu-WMS_4271',
+			component: () => import('@/views/menus/ModuleWMS/MenuWMS_4271/QMenuWms4271.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'WMS',
+				order: '4271',
+				baseArea: 'CNTRY',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCountry'],
 			}
 		},
 		{
@@ -265,6 +292,19 @@ export default function getMenusRoutes()
 				baseArea: 'REPAR',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDtrepara'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T04C_ADD',
+			name: 'menu-TRN_T04C_ADD',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T04C_ADD/QMenuTrnT04cAdd.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1421',
+				baseArea: 'C_ADD',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCountry'],
 			}
 		},
 		{
@@ -398,13 +438,13 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_1511',
-			name: 'menu-PTN_1511',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_1511/QMenuPtn1511.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_411',
+			name: 'menu-PTN_411',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_411/QMenuPtn411.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '1511',
+				order: '411',
 				baseArea: 'RORDF',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
@@ -541,6 +581,19 @@ export default function getMenusRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/TRN/menu/TRN_T04C_BRN',
+			name: 'menu-TRN_T04C_BRN',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T04C_BRN/QMenuTrnT04cBrn.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1411',
+				baseArea: 'C_BRN',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCountry'],
+			}
+		},
+		{
 			path: '/:culture/:system/GQT/menu/GQT_2C111',
 			name: 'menu-GQT_2C111',
 			component: () => import('@/views/menus/ModuleGQT/MenuGQT_2C111/QMenuGqt2c111.vue'),
@@ -567,13 +620,13 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_211',
-			name: 'menu-PTN_211',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_211/QMenuPtn211.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_111',
+			name: 'menu-PTN_111',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_111/QMenuPtn111.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '211',
+				order: '111',
 				baseArea: 'DECOM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDecomnr'],
@@ -606,26 +659,26 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_411',
-			name: 'menu-PTN_411',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_411/QMenuPtn411.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_211',
+			name: 'menu-PTN_211',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_211/QMenuPtn211.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '411',
+				order: '211',
 				baseArea: 'REGIO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegiao'],
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_421',
-			name: 'menu-PTN_421',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_421/QMenuPtn421.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_221',
+			name: 'menu-PTN_221',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_221/QMenuPtn221.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '421',
+				order: '221',
 				baseArea: 'REGIO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegiao'],
@@ -673,6 +726,136 @@ export default function getMenusRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/TRN/menu/TRN_T01AGENT',
+			name: 'menu-TRN_T01AGENT',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T01AGENT/QMenuTrnT01agent.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1111',
+				baseArea: 'AGENT',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T02AGENT',
+			name: 'menu-TRN_T02AGENT',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T02AGENT/QMenuTrnT02agent.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1211',
+				baseArea: 'AGENT',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T03AGENT',
+			name: 'menu-TRN_T03AGENT',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T03AGENT/QMenuTrnT03agent.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1311',
+				baseArea: 'AGENT',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T05AGENT',
+			name: 'menu-TRN_T05AGENT',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T05AGENT/QMenuTrnT05agent.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1511',
+				baseArea: 'AGENT',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T13AGENT',
+			name: 'menu-TRN_T13AGENT',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T13AGENT/QMenuTrnT13agent.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1D11',
+				baseArea: 'AGENT',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T14AGENT',
+			name: 'menu-TRN_T14AGENT',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T14AGENT/QMenuTrnT14agent.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1E11',
+				baseArea: 'AGENT',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T15AGENT',
+			name: 'menu-TRN_T15AGENT',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T15AGENT/QMenuTrnT15agent.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1F11',
+				baseArea: 'AGENT',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T16AGENT',
+			name: 'menu-TRN_T16AGENT',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T16AGENT/QMenuTrnT16agent.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1G11',
+				baseArea: 'AGENT',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T16AGENTBY',
+			name: 'menu-TRN_T16AGENTBY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T16AGENTBY/QMenuTrnT16agentby.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1G41',
+				baseArea: 'AGENT',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T18AGENT',
+			name: 'menu-TRN_T18AGENT',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T18AGENT/QMenuTrnT18agent.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1I11',
+				baseArea: 'AGENT',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
 			path: '/:culture/:system/STY/menu/STY_35911',
 			name: 'menu-STY_35911',
 			component: () => import('@/views/menus/ModuleSTY/MenuSTY_35911/QMenuSty35911.vue'),
@@ -698,6 +881,58 @@ export default function getMenusRoutes()
 				baseArea: 'TPCON',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTipocont'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T03COUNTRY',
+			name: 'menu-TRN_T03COUNTRY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T03COUNTRY/QMenuTrnT03country.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1331',
+				baseArea: 'CTRY',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCountry'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T12COUNTRY',
+			name: 'menu-TRN_T12COUNTRY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T12COUNTRY/QMenuTrnT12country.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1C111',
+				baseArea: 'CTRY',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCountry'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T13COUNTRY',
+			name: 'menu-TRN_T13COUNTRY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T13COUNTRY/QMenuTrnT13country.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1D311',
+				baseArea: 'CTRY',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCountry'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T16COUNTRY',
+			name: 'menu-TRN_T16COUNTRY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T16COUNTRY/QMenuTrnT16country.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1G311',
+				baseArea: 'CTRY',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCountry'],
 			}
 		},
 		{
@@ -831,13 +1066,13 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_1521',
-			name: 'menu-PTN_1521',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_1521/QMenuPtn1521.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_421',
+			name: 'menu-PTN_421',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_421/QMenuPtn421.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '1521',
+				order: '421',
 				baseArea: 'RORDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
@@ -896,19 +1131,6 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/WMS/menu/WMS_5511',
-			name: 'menu-WMS_5511',
-			component: () => import('@/views/menus/ModuleWMS/MenuWMS_5511/QMenuWms5511.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'WMS',
-				order: '5511',
-				baseArea: 'ENTIT',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValName', 'ValInitials'],
-			}
-		},
-		{
 			path: '/:culture/:system/WMS/menu/WMS_4261',
 			name: 'menu-WMS_4261',
 			component: () => import('@/views/menus/ModuleWMS/MenuWMS_4261/QMenuWms4261.vue'),
@@ -935,16 +1157,29 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_1131',
-			name: 'menu-PTN_1131',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_1131/QMenuPtn1131.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_3131',
+			name: 'menu-PTN_3131',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3131/QMenuPtn3131.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '1131',
+				order: '3131',
 				baseArea: 'TBLB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValText'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T03PHOTOS',
+			name: 'menu-TRN_T03PHOTOS',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T03PHOTOS/QMenuTrnT03photos.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1351',
+				baseArea: 'PROPH',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
 			}
 		},
 		{
@@ -1104,13 +1339,13 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_1151',
-			name: 'menu-PTN_1151',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_1151/QMenuPtn1151.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_3151',
+			name: 'menu-PTN_3151',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3151/QMenuPtn3151.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '1151',
+				order: '3151',
 				baseArea: 'TBLK',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
@@ -1249,13 +1484,13 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_231',
-			name: 'menu-PTN_231',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_231/QMenuPtn231.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_131',
+			name: 'menu-PTN_131',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_131/QMenuPtn131.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '231',
+				order: '131',
 				baseArea: 'RULES',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
@@ -1415,6 +1650,45 @@ export default function getMenusRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/PTN/menu/PTN_1411',
+			name: 'menu-PTN_1411',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_1411/QMenuPtn1411.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '1411',
+				baseArea: 'PESSO',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3F111',
+			name: 'menu-PTN_3F111',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3F111/QMenuPtn3f111.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3F111',
+				baseArea: 'PESSO',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3F211',
+			name: 'menu-PTN_3F211',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3F211/QMenuPtn3f211.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3F211',
+				baseArea: 'PESSO',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
 			path: '/:culture/:system/TBS/menu/TBS_121',
 			name: 'menu-TBS_121',
 			component: () => import('@/views/menus/ModuleTBS/MenuTBS_121/QMenuTbs121.vue'),
@@ -1428,13 +1702,26 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_431',
-			name: 'menu-PTN_431',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_431/QMenuPtn431.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_EDITABLETABLELIST',
+			name: 'menu-PTN_EDITABLETABLELIST',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_EDITABLETABLELIST/QMenuPtnEditabletablelist.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '431',
+				order: '231',
+				baseArea: 'GRPB',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3M1',
+			name: 'menu-PTN_3M1',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3M1/QMenuPtn3m1.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3M1',
 				baseArea: 'GRPB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
@@ -1508,6 +1795,45 @@ export default function getMenusRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/TRN/menu/TRN_T03CONTACTS',
+			name: 'menu-TRN_T03CONTACTS',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T03CONTACTS/QMenuTrnT03contacts.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1361',
+				baseArea: 'PROCN',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T18CONTACT',
+			name: 'menu-TRN_T18CONTACT',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T18CONTACT/QMenuTrnT18contact.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1I21',
+				baseArea: 'PROCN',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_1421',
+			name: 'menu-PTN_1421',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_1421/QMenuPtn1421.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '1421',
+				baseArea: 'HPESS',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
 			path: '/:culture/:system/WMS/menu/WMS_611',
 			name: 'menu-WMS_611',
 			component: () => import('@/views/menus/ModuleWMS/MenuWMS_611/QMenuWms611.vue'),
@@ -1544,6 +1870,19 @@ export default function getMenusRoutes()
 				baseArea: 'OUTPT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDocumenr'],
+			}
+		},
+		{
+			path: '/:culture/:system/STY/menu/STY_441',
+			name: 'menu-STY_441',
+			component: () => import('@/views/menus/ModuleSTY/MenuSTY_441/QMenuSty441.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'STY',
+				order: '441',
+				baseArea: 'ITEM',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValItemdes'],
 			}
 		},
 		{
@@ -1588,53 +1927,79 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_131',
-			name: 'menu-PTN_131',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_131/QMenuPtn131.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_121',
+			name: 'menu-PTN_121',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_121/QMenuPtn121.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '131',
+				order: '121',
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_141',
-			name: 'menu-PTN_141',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_141/QMenuPtn141.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_LIST_DB_MC_F',
+			name: 'menu-PTN_LIST_DB_MC_F',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_LIST_DB_MC_F/QMenuPtnListDbMcF.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '141',
+				order: '371',
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_221',
-			name: 'menu-PTN_221',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_221/QMenuPtn221.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_LIST_DB_MB_MC_F',
+			name: 'menu-PTN_LIST_DB_MB_MC_F',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_LIST_DB_MB_MC_F/QMenuPtnListDbMbMcF.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '221',
+				order: '381',
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_15311',
-			name: 'menu-PTN_15311',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_15311/QMenuPtn15311.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_LIST_DB_MC_R',
+			name: 'menu-PTN_LIST_DB_MC_R',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_LIST_DB_MC_R/QMenuPtnListDbMcR.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '391',
+				baseArea: 'ITEM',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValItemdes'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_LIST_DB_MB_MC_R',
+			name: 'menu-PTN_LIST_DB_MB_MC_R',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_LIST_DB_MB_MC_R/QMenuPtnListDbMbMcR.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3A1',
+				baseArea: 'ITEM',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValItemdes'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_4311',
+			name: 'menu-PTN_4311',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_4311/QMenuPtn4311.vue'),
 			beforeEnter: [updateQueryParams],
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '15311',
+				order: '4311',
 				baseArea: 'ROIGF',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
@@ -1759,6 +2124,45 @@ export default function getMenusRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/PTN/menu/PTN_3311',
+			name: 'menu-PTN_3311',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3311/QMenuPtn3311.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3311',
+				baseArea: 'ROOMS',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValRoomnr'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3411',
+			name: 'menu-PTN_3411',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3411/QMenuPtn3411.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3411',
+				baseArea: 'ROOMS',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValRoomnr'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_351',
+			name: 'menu-PTN_351',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_351/QMenuPtn351.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '351',
+				baseArea: 'ROOMS',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValRoomnr'],
+			}
+		},
+		{
 			path: '/:culture/:system/GQT/menu/GQT_A21',
 			name: 'menu-GQT_A21',
 			component: () => import('@/views/menus/ModuleGQT/MenuGQT_A21/QMenuGqtA21.vue'),
@@ -1772,14 +2176,79 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_15411',
-			name: 'menu-PTN_15411',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_15411/QMenuPtn15411.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_361',
+			name: 'menu-PTN_361',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_361/QMenuPtn361.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '361',
+				baseArea: 'EXPEN',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValDescript'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_LIST_DB_MC_T',
+			name: 'menu-PTN_LIST_DB_MC_T',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_LIST_DB_MC_T/QMenuPtnListDbMcT.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3B1',
+				baseArea: 'EXPEN',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValDescript'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_LIST_DB_MB_MC_T',
+			name: 'menu-PTN_LIST_DB_MB_MC_T',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_LIST_DB_MB_MC_T/QMenuPtnListDbMbMcT.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3C1',
+				baseArea: 'EXPEN',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValDescript'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_LIST_DB_MB_TR',
+			name: 'menu-PTN_LIST_DB_MB_TR',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_LIST_DB_MB_TR/QMenuPtnListDbMbTr.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3J1',
+				baseArea: 'EXPEN',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValDescript'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_LIST_DB_TR_F',
+			name: 'menu-PTN_LIST_DB_TR_F',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_LIST_DB_TR_F/QMenuPtnListDbTrF.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3K1',
+				baseArea: 'EXPEN',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValDescript'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_4411',
+			name: 'menu-PTN_4411',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_4411/QMenuPtn4411.vue'),
 			beforeEnter: [updateQueryParams],
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '15411',
+				order: '4411',
 				baseArea: 'ROIGI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
@@ -1800,13 +2269,13 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_1141',
-			name: 'menu-PTN_1141',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_1141/QMenuPtn1141.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_3141',
+			name: 'menu-PTN_3141',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3141/QMenuPtn3141.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '1141',
+				order: '3141',
 				baseArea: 'TRSB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
@@ -1852,78 +2321,118 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_311',
-			name: 'menu-PTN_311',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_311/QMenuPtn311.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_3H1',
+			name: 'menu-PTN_3H1',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3H1/QMenuPtn3h1.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '311',
+				order: '3H1',
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_3211',
-			name: 'menu-PTN_3211',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3211/QMenuPtn3211.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_511',
+			name: 'menu-PTN_511',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_511/QMenuPtn511.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '3211',
+				order: '511',
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_3221',
-			name: 'menu-PTN_3221',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3221/QMenuPtn3221.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_5211',
+			name: 'menu-PTN_5211',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_5211/QMenuPtn5211.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '3221',
+				order: '5211',
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_3231',
-			name: 'menu-PTN_3231',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3231/QMenuPtn3231.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_5221',
+			name: 'menu-PTN_5221',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_5221/QMenuPtn5221.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '3231',
+				order: '5221',
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_1531',
-			name: 'menu-PTN_1531',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_1531/QMenuPtn1531.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_5231',
+			name: 'menu-PTN_5231',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_5231/QMenuPtn5231.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '1531',
+				order: '5231',
+				baseArea: 'PESS1',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_531',
+			name: 'menu-PTN_531',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_531/QMenuPtn531.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '531',
+				baseArea: 'PESS1',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_5311',
+			name: 'menu-PTN_5311',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_5311/QMenuPtn5311.vue'),
+			beforeEnter: [updateQueryParams],
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '5311',
+				baseArea: 'PESS1',
+				hasInitialPHE: false,
+				limitations: ['pess1' /* DB */]
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_431',
+			name: 'menu-PTN_431',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_431/QMenuPtn431.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '431',
 				baseArea: 'ROGL1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_1541',
-			name: 'menu-PTN_1541',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_1541/QMenuPtn1541.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_441',
+			name: 'menu-PTN_441',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_441/QMenuPtn441.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '1541',
+				order: '441',
 				baseArea: 'ROGL1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
@@ -1989,6 +2498,19 @@ export default function getMenusRoutes()
 				routeType: 'menu',
 				module: 'STY',
 				order: '35211',
+				baseArea: 'EQUIP',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValRegistnr'],
+			}
+		},
+		{
+			path: '/:culture/:system/STY/menu/STY_371',
+			name: 'menu-STY_371',
+			component: () => import('@/views/menus/ModuleSTY/MenuSTY_371/QMenuSty371.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'STY',
+				order: '371',
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
@@ -2127,42 +2649,148 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_441',
-			name: 'menu-PTN_441',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_441/QMenuPtn441.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_241',
+			name: 'menu-PTN_241',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_241/QMenuPtn241.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '441',
+				order: '241',
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_451',
-			name: 'menu-PTN_451',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_451/QMenuPtn451.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_251',
+			name: 'menu-PTN_251',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_251/QMenuPtn251.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '451',
+				order: '251',
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_521',
-			name: 'menu-PTN_521',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_521/QMenuPtn521.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_331',
+			name: 'menu-PTN_331',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_331/QMenuPtn331.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '521',
+				order: '331',
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_341',
+			name: 'menu-PTN_341',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_341/QMenuPtn341.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '341',
+				baseArea: 'EQUIP',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValRegistnr'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3G1',
+			name: 'menu-PTN_3G1',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3G1/QMenuPtn3g1.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3G1',
+				baseArea: 'EQUIP',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValRegistnr'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3G11',
+			name: 'menu-PTN_3G11',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3G11/QMenuPtn3g11.vue'),
+			beforeEnter: [updateQueryParams],
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3G11',
+				baseArea: 'EQUIP',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValRegistnr'],
+				limitations: ['minEquipValDtaquisi', 'maxEquipValDtaquisi' /* SE */]
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_621',
+			name: 'menu-PTN_621',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_621/QMenuPtn621.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '621',
+				baseArea: 'EQUIP',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValRegistnr'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T03CITY',
+			name: 'menu-TRN_T03CITY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T03CITY/QMenuTrnT03city.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1341',
+				baseArea: 'CITY',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCity'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T12CITY',
+			name: 'menu-TRN_T12CITY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T12CITY/QMenuTrnT12city.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1C121',
+				baseArea: 'CITY',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCity'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T13CITY',
+			name: 'menu-TRN_T13CITY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T13CITY/QMenuTrnT13city.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1D321',
+				baseArea: 'CITY',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCity'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T16CITY',
+			name: 'menu-TRN_T16CITY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T16CITY/QMenuTrnT16city.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1G321',
+				baseArea: 'CITY',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCity'],
 			}
 		},
 		{
@@ -2226,6 +2854,19 @@ export default function getMenusRoutes()
 				module: 'WMS',
 				order: '4221',
 				baseArea: 'FACIL',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_321',
+			name: 'menu-PTN_321',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_321/QMenuPtn321.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '321',
+				baseArea: 'AERO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
 			}
@@ -2296,13 +2937,39 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_511',
-			name: 'menu-PTN_511',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_511/QMenuPtn511.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_261',
+			name: 'menu-PTN_261',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_261/QMenuPtn261.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '511',
+				order: '261',
+				baseArea: 'FLDS',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValDescrip'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_271',
+			name: 'menu-PTN_271',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_271/QMenuPtn271.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '271',
+				baseArea: 'FLDS',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValDescrip'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_611',
+			name: 'menu-PTN_611',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_611/QMenuPtn611.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '611',
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
@@ -2335,6 +3002,220 @@ export default function getMenusRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/TRN/menu/TRN_T02PROPERTY',
+			name: 'menu-TRN_T02PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T02PROPERTY/QMenuTrnT02property.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1221',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T03PROPERTY',
+			name: 'menu-TRN_T03PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T03PROPERTY/QMenuTrnT03property.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1321',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T05PROPERTY',
+			name: 'menu-TRN_T05PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T05PROPERTY/QMenuTrnT05property.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1521',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T06PROPERTY',
+			name: 'menu-TRN_T06PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T06PROPERTY/QMenuTrnT06property.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1611',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T07PROPERTY',
+			name: 'menu-TRN_T07PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T07PROPERTY/QMenuTrnT07property.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1711',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T08PROPERTY',
+			name: 'menu-TRN_T08PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T08PROPERTY/QMenuTrnT08property.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1811',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T09PROPERTY',
+			name: 'menu-TRN_T09PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T09PROPERTY/QMenuTrnT09property.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1911',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T10PROPERTY',
+			name: 'menu-TRN_T10PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T10PROPERTY/QMenuTrnT10property.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1A11',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T11PROPERTY',
+			name: 'menu-TRN_T11PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T11PROPERTY/QMenuTrnT11property.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1B11',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T13PROPERTY',
+			name: 'menu-TRN_T13PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T13PROPERTY/QMenuTrnT13property.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1D21',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T14PROPERTY',
+			name: 'menu-TRN_T14PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T14PROPERTY/QMenuTrnT14property.vue'),
+			beforeEnter: [updateQueryParams],
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1E111',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+				limitations: ['agent' /* DB */]
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T15PROPERTY',
+			name: 'menu-TRN_T15PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T15PROPERTY/QMenuTrnT15property.vue'),
+			beforeEnter: [updateQueryParams],
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1F111',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+				limitations: ['agent' /* DB */]
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T16PROPERTY',
+			name: 'menu-TRN_T16PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T16PROPERTY/QMenuTrnT16property.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1G21',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T16PROPERTYBYAGENT',
+			name: 'menu-TRN_T16PROPERTYBYAGENT',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T16PROPERTYBYAGENT/QMenuTrnT16propertybyagent.vue'),
+			beforeEnter: [updateQueryParams],
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1G411',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+				limitations: ['agent' /* DB */]
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T17PROPERTY',
+			name: 'menu-TRN_T17PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T17PROPERTY/QMenuTrnT17property.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1H11',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+			}
+		},
+		{
+			path: '/:culture/:system/TRN/menu/TRN_T19PROPERTY',
+			name: 'menu-TRN_T19PROPERTY',
+			component: () => import('@/views/menus/ModuleTRN/MenuTRN_T19PROPERTY/QMenuTrnT19property.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'TRN',
+				order: '1J11',
+				baseArea: 'PROPE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
+			}
+		},
+		{
 			path: '/:culture/:system/STY/menu/STY_DASHBOARD',
 			name: 'menu-STY_DASHBOARD',
 			component: () => import('@/views/menus/ModuleSTY/MenuSTY_DASHBOARD/QMenuStyDashboard.vue'),
@@ -2342,6 +3223,19 @@ export default function getMenusRoutes()
 				routeType: 'menu',
 				module: 'STY',
 				order: '431',
+				baseArea: 'Dashboard',
+				isDashboardPage: true,
+				hasInitialPHE: false
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3L1',
+			name: 'menu-PTN_3L1',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3L1/QMenuPtn3l1.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3L1',
 				baseArea: 'Dashboard',
 				isDashboardPage: true,
 				hasInitialPHE: false

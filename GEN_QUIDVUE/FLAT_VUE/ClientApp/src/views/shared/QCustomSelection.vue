@@ -3,7 +3,7 @@
 		v-if="!isHidden"
 		to="#q-modal-form-custom-selection-body">
 		<div :class="['form-flow']">
-			<q-row-container :is-large="false">
+			<q-row-container is-large>
 				<q-control-wrapper>
 					<q-table
 						v-if="tableManu.rows.length > 0"
@@ -41,8 +41,13 @@
 </template>
 
 <script>
+	import { computed } from 'vue'
+
+	import hardcodedTexts from '@/hardcodedTexts.js'
 	import controlClass from '@/mixins/fieldControl.js'
 	import listHandlers from '@/mixins/listHandlers.js'
+	import NavHandlers from '@/mixins/navHandlers.js'
+	import listColumnTypes from '@/mixins/listColumnTypes.js'
 
 	export default {
 		name: 'QCustomSelection',
@@ -53,7 +58,8 @@
 		],
 
 		mixins: [
-			listHandlers
+			listHandlers,
+			NavHandlers
 		],
 
 		props: {
@@ -84,14 +90,14 @@
 					totalRows: 0,
 					headerLevel: 1,
 					columnsOriginal: [
-						{
-							label: 'Record',
-							field: 'Record',
+						new listColumnTypes.TextColumn({
+							order: 1,
 							name: 'Record',
-							dataType: 'Text',
+							field: 'Record',
+							label: computed(() => this.Resources[hardcodedTexts.options]),
 							sortable: true,
 							initialSort: true
-						}
+						})
 					],
 					config: {
 						name: 'Records',
@@ -162,7 +168,7 @@
 
 		mounted()
 		{
-			this.tableManu.Init()
+			this.tableManu.init()
 			this.init()
 		},
 
@@ -174,7 +180,7 @@
 		methods: {
 			init()
 			{
-				//Initialize table rows
+				// Initialize table rows
 				if (this.fields)
 				{
 					/* Reset Props */
@@ -214,7 +220,7 @@
 			tableManu: {
 				handler(val)
 				{
-					if (val.rowsSelected && JSON.stringify(val.rowsSelected) !== '{}')
+					if (val.rowsSelected && Object.keys(val.rowsSelected).length > 0)
 						this.formButtons.confirmBtn.disabled = false
 					else
 						this.formButtons.confirmBtn.disabled = true

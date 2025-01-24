@@ -606,8 +606,10 @@ namespace GenioMVC.Helpers.Cav
 			if (!string.IsNullOrEmpty(field.Pivot))
 				return CompilePivotField(field, out type);
 
-			List<SelectField> res = new List<SelectField>();
-			res.Add(CompileSimpleField(field, out type));
+			List<SelectField> res = new List<SelectField>
+			{
+				CompileSimpleField(field, out type)
+			};
 			return res;
 		}
 
@@ -837,13 +839,6 @@ namespace GenioMVC.Helpers.Cav
 		public ReportReply ExecuteQuery(User usr, ReportDefinition query)
 		{
 			ReportReply res = new ReportReply();
-			res.Result = "OK";
-			res.ResultMessage = "";
-			res.MainGroup = new ReportReplyGroup();
-			//podem ser os detalhes ou o primeiro agrupamento
-			res.MainGroup.Groups = new List<ReportReplyGroup>();
-			//estes vão ser totalizadores globais
-			res.MainGroup.Values = new List<string>();
 
 			//----------------------------------------------------------
 			// Calcular os inner joins que vão ser partilhados por todas as queries
@@ -954,9 +949,8 @@ namespace GenioMVC.Helpers.Cav
 						{
 							if (string.IsNullOrEmpty(fld.TotalType))
 							{
-								ResultType type;
 								//var fielddb = CompileField(fld, dsJoins, out type);
-								var fielddb = CompileField(fld, out type);
+								var fielddb = CompileField(fld, out ResultType type);
 								//para o group by entram todas as chaves dos grupos acima mais as chaves deste
 								//TODO: Se aparecer neste grupo uma chave que já foi colocada em cima devo ignorar ou dar erro?
 								groupBy.AddRange(fielddb);
@@ -976,8 +970,7 @@ namespace GenioMVC.Helpers.Cav
 					{
 						foreach (var fld in group.Fields)
 						{
-							ResultType type;
-							foreach (var fielddb in CompileField(fld, out type))
+							foreach (var fielddb in CompileField(fld, out ResultType type))
 							{
 								sql.SelectFields.Add(fielddb);
 								// adiciona-se o tipo do campo tantas vezes como o número de colunas em que o mesmo se desdobra
@@ -1013,8 +1006,7 @@ namespace GenioMVC.Helpers.Cav
 							{
 								// o tipo nas ordenações é descartado, uma vez que não é necessário
 								// converter nenhum valor no resultado do relatório para os order by's
-								ResultType type;
-								var fList = CompileField(o.Field, out type);
+								var fList = CompileField(o.Field, out ResultType type);
 								if (fList.Count > 1)
 									throw new NotImplementedException("Groups over pivot fields are not supported");
 								if (fList[0].Alias == gf.Alias)
@@ -1062,9 +1054,7 @@ namespace GenioMVC.Helpers.Cav
 							// aqui é importante verificar pelo alias, uma vez que aos campos podem ser aplicadas transformações
 							// e cabe à responsabilidade da função CompileField ter isso em conta ao atribuir o Alias
 							// (TODO: ter em conta as transformações na CompileField, caso seja necessário - por enquanto ainda não está a ser feito)
-
-							ResultType type;
-							foreach (var f in CompileField(field, out type))
+							foreach (var f in CompileField(field, out ResultType type))
 							{
 								if (!sql.SelectFields.Any(x => x.Alias == f.Alias))
 								{
@@ -1114,8 +1104,7 @@ namespace GenioMVC.Helpers.Cav
 						{
 							foreach (var o in query.Orderings)
 							{
-								ResultType type;
-								var fList = CompileField(o.Field, out type);
+								var fList = CompileField(o.Field, out ResultType type);
 								if (fList.Count > 1) //assume-se que ninguem vai ordenar por campo de groupby que sejam pivot ao mesmo tempo
 									throw new NotImplementedException("orderings over grouped pivot fields are not supported");
 
@@ -1140,8 +1129,7 @@ namespace GenioMVC.Helpers.Cav
 					{
 						foreach (var o in query.Orderings)
 						{
-							ResultType type;
-							var ofList = CompileField(o.Field, out type);
+							var ofList = CompileField(o.Field, out ResultType type);
 							foreach (var of in ofList)
 							{
 								if (!orders.Contains(of.Alias))
@@ -1160,7 +1148,7 @@ namespace GenioMVC.Helpers.Cav
 					//A mensagem de resultado de uma query bem sucedida é a query de detalhes que foi executada
 					var renderer = new QueryRenderer(sp);
 					var sqlPlainText = renderer.GetSql(sql);
-					res.ResultMessage = sqlPlainText;
+					res.QuerySQL = sqlPlainText;
 				}
 
 				//-----------------------------------------------------------------
@@ -1175,8 +1163,7 @@ namespace GenioMVC.Helpers.Cav
 					{
 						if (!string.IsNullOrEmpty(fld.TotalType))
 						{
-							ResultType type;
-							foreach (var f in CompileField(fld, out type))
+							foreach (var f in CompileField(fld, out ResultType type))
 							{
 								fieldNames.Add(f);
 								fieldTypeDetails.Add(type);
@@ -1208,15 +1195,11 @@ namespace GenioMVC.Helpers.Cav
 			}
 			catch (Exception e)
 			{
-				res.Result = "E";
-				res.ResultMessage = e.Message;
-				res.MainGroup = null;
-				return res;
+				throw new FrameworkException("Error processing Advanced Query", "CavEngine.ExecuteQuery", e.Message, e);
 			}
 			finally
 			{
-				if (sp != null)
-					sp.closeConnection();
+				sp?.closeConnection();
 			}
 
 			return res;

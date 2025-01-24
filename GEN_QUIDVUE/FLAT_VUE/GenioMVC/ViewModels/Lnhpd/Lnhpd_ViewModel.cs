@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Lnhpd
 {
-	public class Lnhpd_ViewModel : FormViewModel<Models.Lnhpd>
+	public class Lnhpd_ViewModel : FormViewModel<Models.Lnhpd>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,25 +29,39 @@ namespace GenioMVC.ViewModels.Lnhpd
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Order no:" | Type: "CE"
+		/// </summary>
+		public string ValCodpedid { get; set; }
+		/// <summary>
+		/// Title: "Type of equipment" | Type: "CE"
+		/// </summary>
+		public string ValCodtpequ { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Order no:" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Pedid> TablePedidNrpedido { get; set; }
-
 		/// <summary>
 		/// Title: "Line" | Type: "N"
 		/// </summary>
 		public decimal? ValLine { get; set; }
-
 		/// <summary>
 		/// Title: "Type of equipment" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Tpequ> TableTpequTipoequi { get; set; }
-
 		/// <summary>
 		/// Title: "Quantity" | Type: "N"
 		/// </summary>
 		public decimal? ValQuantida { get; set; }
+		/// <summary>
+		/// Title: "Amount" | Type: "ND"
+		/// </summary>
+		public decimal? ValQuantdec { get; set; }
 
 		#region Navigations
 		#endregion
@@ -56,20 +70,6 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Order no:" | Type: "CE"
-		/// </summary>
-		public string ValCodpedid { get; set; }
-
-		/// <summary>
-		/// Title: "Type of equipment" | Type: "CE"
-		/// </summary>
-		public string ValCodtpequ { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -85,9 +85,10 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 		public string ValCodlnhpd { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Lnhpd_ViewModel() : base(null!) { }
@@ -123,6 +124,15 @@ namespace GenioMVC.ViewModels.Lnhpd
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Lnhpd model = new Models.Lnhpd(userContext) { Identifier = "FLNHPD" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FLNHPD");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -183,10 +193,11 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 			try
 			{
-				ValLine = ViewModelConversion.ToNumeric(m.ValLine);
-				ValQuantida = ViewModelConversion.ToNumeric(m.ValQuantida);
 				ValCodpedid = ViewModelConversion.ToString(m.ValCodpedid);
 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
+				ValLine = ViewModelConversion.ToNumeric(m.ValLine);
+				ValQuantida = ViewModelConversion.ToNumeric(m.ValQuantida);
+				ValQuantdec = ViewModelConversion.ToNumeric(m.ValQuantdec);
 				ValCodlnhpd = ViewModelConversion.ToString(m.ValCodlnhpd);
 			}
 			catch (Exception)
@@ -196,6 +207,20 @@ namespace GenioMVC.ViewModels.Lnhpd
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Lnhpd m)
 		{
 			if (m == null)
@@ -206,21 +231,78 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 			try
 			{
-				m.ValLine = ViewModelConversion.ToNumeric(ValLine);
-				m.ValQuantida = ViewModelConversion.ToNumeric(ValQuantida);
 				m.ValCodpedid = ViewModelConversion.ToString(ValCodpedid);
 				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
+				m.ValLine = ViewModelConversion.ToNumeric(ValLine);
+				m.ValQuantida = ViewModelConversion.ToNumeric(ValQuantida);
+				m.ValQuantdec = ViewModelConversion.ToNumeric(ValQuantdec);
 				m.ValCodlnhpd = ViewModelConversion.ToString(ValCodlnhpd);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Lnhpd) to Model (Lnhpd) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Lnhpd) to Model (Lnhpd) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "lnhpd.codpedid":
+						this.ValCodpedid = ViewModelConversion.ToString(_value);
+						break;
+					case "lnhpd.codtpequ":
+						this.ValCodtpequ = ViewModelConversion.ToString(_value);
+						break;
+					case "lnhpd.line":
+						this.ValLine = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "lnhpd.quantida":
+						this.ValQuantida = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "lnhpd.quantdec":
+						this.ValQuantdec = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "lnhpd.codlnhpd":
+						this.ValCodlnhpd = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Lnhpd) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Lnhpd)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Lnhpd.Find(id ?? Navigation.GetStrValue("lnhpd"), m_userContext, "FLNHPD"); }
+			finally { Model ??= new Models.Lnhpd(m_userContext) { Identifier = "FLNHPD" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -234,20 +316,13 @@ namespace GenioMVC.ViewModels.Lnhpd
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FLNHPD";
@@ -257,6 +332,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -320,25 +396,19 @@ namespace GenioMVC.ViewModels.Lnhpd
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE LNHPD]/
 		public override void Save()
 		{
 
-			try { Model = Models.Lnhpd.Find(Navigation.GetStrValue("lnhpd"), m_userContext, "FLNHPD"); }
-			finally { if (Model == null) Model = new Models.Lnhpd(m_userContext) { Identifier = "FLNHPD" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY LNHPD]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Lnhpd.Find(Navigation.GetStrValue("lnhpd"), m_userContext, "FLNHPD"); }
-			finally { if (Model == null) Model = new Models.Lnhpd(m_userContext) { Identifier = "FLNHPD" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE LNHPD]/
 
@@ -371,8 +441,8 @@ namespace GenioMVC.ViewModels.Lnhpd
 				object hValue = Navigation.GetValue("pedid", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					lnhpd___pedidnrpedidoConds.Equal(CSGenioApedid.FldCodpedid, Navigation.GetValue("pedid"));
-					this.ValCodpedid = Navigation.GetStrValue("pedid");
+					lnhpd___pedidnrpedidoConds.Equal(CSGenioApedid.FldCodpedid, hValue);
+					this.ValCodpedid = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -389,8 +459,6 @@ namespace GenioMVC.ViewModels.Lnhpd
 					Navigation.CurrentLevel.SetEntry("RETURN_pedid", null);
 				}
 				FillDependant_LnhpdTablePedidNrpedido(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePedidNrpedido.FilledByHistory = Navigation.CheckFilledByHistory("pedid");
 				return;
 			}
 
@@ -457,9 +525,6 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 				TablePedidNrpedido.List = new SelectList(TablePedidNrpedido.Elements.ToSelectList(x => x.ValNrpedido, x => x.ValCodpedid,  x => x.ValCodpedid == this.ValCodpedid), "Value", "Text", this.ValCodpedid);
 				FillDependant_LnhpdTablePedidNrpedido();
-
-				//Check if foreignkey comes from history
-				TablePedidNrpedido.FilledByHistory = Navigation.CheckFilledByHistory("pedid");
 			}
 		}
 
@@ -525,7 +590,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 				if (GlobalFunctions.emptyG(this.ValCodpedid) == 1)
 				{
 					this.ValCodpedid = "";
-					TablePedidNrpedido.Value = 0;
+					TablePedidNrpedido.Value = 0m;
 					Navigation.ClearValue("pedid");
 				}
 				else if (lazyLoad)
@@ -565,8 +630,8 @@ namespace GenioMVC.ViewModels.Lnhpd
 				object hValue = Navigation.GetValue("tpequ", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					lnhpd___tpequtipoequiConds.Equal(CSGenioAtpequ.FldCodtpequ, Navigation.GetValue("tpequ"));
-					this.ValCodtpequ = Navigation.GetStrValue("tpequ");
+					lnhpd___tpequtipoequiConds.Equal(CSGenioAtpequ.FldCodtpequ, hValue);
+					this.ValCodtpequ = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -583,8 +648,6 @@ namespace GenioMVC.ViewModels.Lnhpd
 					Navigation.CurrentLevel.SetEntry("RETURN_tpequ", null);
 				}
 				FillDependant_LnhpdTableTpequTipoequi(lazyLoad);
-				//Check if foreignkey comes from history
-				TableTpequTipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpequ");
 				return;
 			}
 
@@ -652,9 +715,6 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 				TableTpequTipoequi.List = new SelectList(TableTpequTipoequi.Elements.ToSelectList(x => x.ValTipoequi, x => x.ValCodtpequ,  x => x.ValCodtpequ == this.ValCodtpequ), "Value", "Text", this.ValCodtpequ);
 				FillDependant_LnhpdTableTpequTipoequi();
-
-				//Check if foreignkey comes from history
-				TableTpequTipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpequ");
 			}
 		}
 
@@ -751,18 +811,21 @@ namespace GenioMVC.ViewModels.Lnhpd
 		{
 			return identifier switch
 			{
-				"lnhpd.line" => ViewModelConversion.ToNumeric(modelValue),
-				"lnhpd.quantida" => ViewModelConversion.ToNumeric(modelValue),
 				"lnhpd.codpedid" => ViewModelConversion.ToString(modelValue),
 				"lnhpd.codtpequ" => ViewModelConversion.ToString(modelValue),
+				"lnhpd.line" => ViewModelConversion.ToNumeric(modelValue),
+				"lnhpd.quantida" => ViewModelConversion.ToNumeric(modelValue),
+				"lnhpd.quantdec" => ViewModelConversion.ToNumeric(modelValue),
 				"lnhpd.codlnhpd" => ViewModelConversion.ToString(modelValue),
 				"pedid.codpedid" => ViewModelConversion.ToString(modelValue),
 				"pedid.nrpedido" => ViewModelConversion.ToNumeric(modelValue),
 				"tpequ.codtpequ" => ViewModelConversion.ToString(modelValue),
 				"tpequ.tipoequi" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

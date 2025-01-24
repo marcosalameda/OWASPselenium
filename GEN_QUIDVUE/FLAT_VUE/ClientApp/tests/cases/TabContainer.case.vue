@@ -1,6 +1,8 @@
 ﻿<template>
 	<!-- Tabs with left aligned property and initially first tab selected -->
-	<div class="container-fluid mt-3 mb-3" style="flex: 1 1 auto">
+	<div
+		class="container-fluid mt-3 mb-3"
+		style="flex: 1 1 auto">
 		<base-input-structure
 			id="CTRL_1"
 			label="Tabs with left aligned property and initially first tab selected">
@@ -30,7 +32,9 @@
 	</div>
 
 	<!-- Tabs with justify aligned property and initially second tab selected -->
-	<div class="container-fluid mt-3 mb-3" style="flex: 1 1 auto">
+	<div
+		class="container-fluid mt-3 mb-3"
+		style="flex: 1 1 auto">
 		<base-input-structure
 			id="CTRL_2"
 			label="Tabs with justify aligned property and initially second tab selected">
@@ -60,7 +64,9 @@
 	</div>
 
 	<!-- Tabs with icon property and icon left aligned -->
-	<div class="container-fluid" style="flex: 1 1 auto">
+	<div
+		class="container-fluid"
+		style="flex: 1 1 auto">
 		<base-input-structure
 			id="CTRL_3"
 			label="Tabs with icon property and icon left aligned">
@@ -90,7 +96,9 @@
 	</div>
 
 	<!-- Tabs with icon property and icon right aligned -->
-	<div class="container-fluid mt-3" style="flex: 1 1 auto">
+	<div
+		class="container-fluid mt-3"
+		style="flex: 1 1 auto">
 		<base-input-structure
 			id="CTRL_4"
 			label="Tabs with icon property and icon right aligned">
@@ -120,7 +128,9 @@
 	</div>
 
 	<!-- Tabs without icon property -->
-	<div class="container-fluid mt-3" style="flex: 1 1 auto">
+	<div
+		class="container-fluid mt-3"
+		style="flex: 1 1 auto">
 		<base-input-structure
 			id="CTRL_5"
 			label="Tabs without icon property">
@@ -148,7 +158,9 @@
 	</div>
 
 	<!-- Tabs with isVisible property(tab 3 is not visible) -->
-	<div class="container-fluid mt-3" style="flex: 1 1 auto">
+	<div
+		class="container-fluid mt-3"
+		style="flex: 1 1 auto">
 		<base-input-structure
 			id="CTRL_6"
 			label="Tabs with isVisible property(tab 3 is not visible)">
@@ -176,7 +188,9 @@
 	</div>
 
 	<!-- Tabs with disabled property -->
-	<div class="container-fluid mt-3" style="flex: 1 1 auto">
+	<div
+		class="container-fluid mt-3"
+		style="flex: 1 1 auto">
 		<base-input-structure
 			id="CTRL_7"
 			label="Tabs with disabled property (Tab Two and Tab Four are disabled)">
@@ -204,7 +218,9 @@
 	</div>
 
 	<!-- Tabs with lengthy tab contents -->
-	<div class="container-fluid mt-3" style="flex: 1 1 auto">
+	<div
+		class="container-fluid mt-3"
+		style="flex: 1 1 auto">
 		<base-input-structure
 			id="CTRL_8"
 			label="Tabs with lengthy tab content">
@@ -264,7 +280,9 @@
 	</div>
 
 	<!-- Tabs with lengthy tab titles -->
-	<div class="container-fluid mt-3" style="flex: 1 1 auto">
+	<div
+		class="container-fluid mt-3"
+		style="flex: 1 1 auto">
 		<base-input-structure
 			id="CTRL_9"
 			label="Tabs with lengthy tab titles">
@@ -291,7 +309,9 @@
 		</base-input-structure>
 	</div>
 	<!-- Tabs with multiple line tabs -->
-	<div class="container-fluid mt-3 mb-5" style="flex: 1 1 auto">
+	<div
+		class="container-fluid mt-3 mb-5"
+		style="flex: 1 1 auto">
 		<base-input-structure
 			id="CTRL_10"
 			label="Tabs with multiple line tabs">
@@ -350,9 +370,13 @@
 	import fakeData from './TabContainer.mock'
 
 	export default {
+		name: 'QTabsContainer',
+
 		docsfile: './docs/containers/TabContainer.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{

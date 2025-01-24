@@ -784,13 +784,13 @@ qapi.prototype.DateDiffPart = function (startDate, endDate, unit)
 {
 	var diff = endDate - startDate;
 	if (unit === "D")
-		return Math.Floor(diff / 1000 / 3600 / 24);
+		return Math.floor(diff / 1000 / 3600 / 24);
 	if (unit === "H")
-		return Math.Floor(diff / 1000 / 3600);
+		return Math.floor(diff / 1000 / 3600);
 	if (unit === "M")
-		return Math.Floor(diff / 1000 / 60);
+		return Math.floor(diff / 1000 / 60);
 	if (unit === "S")
-		return Math.Floor(diff / 1000);
+		return Math.floor(diff / 1000);
 
 	return 0;
 }
@@ -1149,7 +1149,6 @@ qapi.prototype.isGuid = function (key)
 		return 1;
 	return 0;
 }
-
 /*********** Support data structures ***********/
 
 var FLAT_VUE_THEME_VARIABLES = {
@@ -1183,7 +1182,7 @@ var FLAT_VUE_THEME_VARIABLES = {
 	'$wizard-steps': "circle",
 	'$wizard-content': "standard",
 	'$btn-align-right': "false",
-	'$menu-multi-level': "true",
+	'$menu-multi-level': "false",
 	'$primary-light': "#cde5ff",
 	'$primary-dark': "#006398",
 	'$success': "#28a745",
@@ -1197,11 +1196,14 @@ var FLAT_VUE_THEME_VARIABLES = {
 	'$gray-dark': "#40474F",
 	'$navbar-font-size': "0.9rem",
 	'$navbar-font-weight': "400",
-	'$custom-tab-navigation': "false",
+	'$tab-style': "line",
 	'$group-border-top': "none",
 	'$group-border-bottom': "none",
 	'$hover-item': "rgb($primary-light-rgb / 0.5)",
 	'$header-bg': "$background",
+	'$header-color': "$on-background",
+	'$navbar-bg': "$primary",
+	'$navbar-color': "$on-primary",
 	'$menu-multi-level-border': "false"
 };
 
@@ -1250,11 +1252,14 @@ var HORIZONTAL_VUE_THEME_VARIABLES = {
 	'$gray-dark': "#40474F",
 	'$navbar-font-size': "0.9rem",
 	'$navbar-font-weight': "400",
-	'$custom-tab-navigation': "false",
+	'$tab-style': "line",
 	'$group-border-top': "none",
 	'$group-border-bottom': "none",
 	'$hover-item': "rgb($primary-light-rgb / 0.5)",
 	'$header-bg': "$background",
+	'$header-color': "$on-background",
+	'$navbar-bg': "$primary",
+	'$navbar-color': "$on-primary",
 	'$menu-multi-level-border': "false"
 };
 
@@ -1267,6 +1272,8 @@ qapi.prototype.GetClientLang = function(languageId)
 {
 	switch (languageId)
 	{
+		case 'por':
+			return 'pt-PT';
 		case 'eng':
 			return 'en-US';
 	}
@@ -1320,7 +1327,6 @@ export class VuejsQApi extends qapi
 	{
 		if (enableLogCmd)
 			super.LogCmd(id, args)
-		return
 	}
 
 	/**

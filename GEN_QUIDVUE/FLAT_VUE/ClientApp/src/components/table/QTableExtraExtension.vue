@@ -1,6 +1,5 @@
 ﻿<template>
 	<q-table-config
-		v-if="isListVisible"
 		:table-ctrl="listCtrl"
 		modal-id="config"
 		v-bind="listCtrl.config"
@@ -29,6 +28,7 @@
 		:filters="listCtrl.advancedFilters"
 		mode="editAll"
 		:texts="listCtrl.texts"
+		:locale="listCtrl.locale"
 		:filter-operators="filterOperators" />
 
 	<q-table-advanced-filters
@@ -42,6 +42,7 @@
 		:filters="listCtrl.advancedFilters"
 		mode="new"
 		:texts="listCtrl.texts"
+		:locale="listCtrl.locale"
 		:filter-operators="filterOperators" />
 
 	<q-table-view-save
@@ -49,7 +50,7 @@
 		v-bind="listCtrl.config"
 		v-on="tableViewSaveHandlers"
 		:signal="listCtrl.subSignals.viewSave"
-		:config-names="listCtrl.config.UserTableConfigNames"
+		:config-names="listCtrl.config.userTableConfigNames"
 		:texts="listCtrl.texts" />
 
 	<q-table-views
@@ -57,8 +58,8 @@
 		v-bind="listCtrl.config"
 		v-on="tableViewHandlers"
 		:signal="listCtrl.subSignals.views"
-		:config-names="listCtrl.config.UserTableConfigNames"
-		:config-name-default="listCtrl.config.UserTableConfigNameDefault"
+		:config-names="listCtrl.config.userTableConfigNames"
+		:config-name-default="listCtrl.config.userTableConfigNameDefault"
 		:texts="listCtrl.texts" />
 </template>
 
@@ -87,6 +88,7 @@
 			'apply-column-config',
 			'reset-column-config',
 			'reset-column-sizes',
+			'reset-column-ordering',
 			'toggle-text-wrap',
 			'add-advanced-filter',
 			'edit-advanced-filter',
@@ -136,7 +138,6 @@
 				tableConfigHandlers: {
 					showPopup: (eventData) => this.emitEvent('show-popup', eventData),
 					hidePopup: (eventData) => this.emitEvent('hide-popup', eventData),
-					setProperty: (...args) => this.emitEventArgs('set-property', ...args),
 					signalComponent: (...args) => this.emitEventArgs('signal-component', ...args)
 				},
 
@@ -155,6 +156,8 @@
 						this.emitEvent('reset-column-config', eventData),
 					resetColumnSizes: (eventData) =>
 						this.emitEvent('reset-column-sizes', eventData),
+					resetColumnOrdering: (eventData) =>
+						this.emitEvent('reset-column-ordering', eventData),
 					toggleTextWrap: (eventData) => this.emitEvent('toggle-text-wrap', eventData)
 				},
 
@@ -165,7 +168,6 @@
 						this.emitEvent('hide-popup', eventData)
 						this.closeConfigPopup()
 					},
-					setProperty: (...args) => this.emitEventArgs('set-property', ...args),
 					updateConfig: (...args) => this.$emit('update-config', ...args),
 					addAdvancedFilter: (eventData) =>
 						this.emitEvent('add-advanced-filter', eventData),
@@ -234,7 +236,7 @@
 			saveViewOpenView(callbackParams)
 			{
 				this.$emit('save-view', {
-					name: this.listCtrl.config.UserTableConfigName,
+					name: this.listCtrl.config.userTableConfigName,
 					isSelected: false
 				})
 				this.emitEventCallbackParams(callbackParams)
@@ -243,57 +245,80 @@
 			emitViewEvent(eventName, eventData)
 			{
 				if (
-					eventData.name !== undefined &&
-					eventData.name !== null &&
-					eventData.name === 'DUPLICATE'
+					eventName === undefined || eventName === null || eventName === ''
+					|| eventData?.name === undefined || eventData?.name === null || eventData?.name === ''
 				)
+					return
+
+				switch(eventData?.name)
 				{
-					this.$emit(
-						'signal-component',
-						'viewSave',
-						{ copyFromName: eventData.rowValue },
-						true
-					)
-					this.$emit('signal-component', 'config', { selectedTab: 'view-save' }, false)
-				}
-				//Opening a view, confirm whether to save changes to current view
-				else if (
-					eventData.name !== undefined &&
-					eventData.name !== null &&
-					eventData.name === 'SHOW' &&
-					this.listCtrl.confirmChanges
-				)
-				{
-					let buttons = {
-						confirm: {
-							label: this.listCtrl.texts.saveText,
-							action: this.saveViewOpenView
-						},
-						cancel: {
-							label: this.listCtrl.texts.discard,
-							action: this.emitEventCallbackParams
+					case 'SHOW':
+						//Opening a view, confirm whether to save changes to current view
+						if(this.listCtrl.confirmChanges && !this.listCtrl.readonly)
+						{
+							genericFunctions.displayMessage(
+								`${this.listCtrl.texts.wantToSaveChangesToView}`,
+								'warning',
+								null,
+								{
+									confirm: {
+										label: this.listCtrl.texts.saveText,
+										action: this.saveViewOpenView
+									},
+									cancel: {
+										label: this.listCtrl.texts.discard,
+										action: this.emitEventCallbackParams
+									}
+								},
+								{ callbackParams: { eventName: eventName, eventData: eventData } }
+							)
 						}
-					}
-					genericFunctions.displayMessage(
-						`${this.listCtrl.texts.wantToSaveChangesToView}`,
-						'warning',
-						null,
-						buttons,
-						{ callbackParams: { eventName: eventName, eventData: eventData } }
-					)
+						else
+							this.$emit(eventName, eventData)
+						break
+					case 'DUPLICATE':
+						this.$emit(
+							'signal-component',
+							'viewSave',
+							{ copyFromName: eventData.rowValue },
+							true
+						)
+						this.$emit('signal-component', 'config', { selectedTab: 'view-save' }, false)
+						break
+					case 'DELETE':
+						//Deleting a view, confirm
+						genericFunctions.displayMessage(
+							this.listCtrl.texts.wantToDelete,
+							'warning',
+							null,
+							{
+								confirm: {
+									label: this.listCtrl.texts.deleteText,
+									action: this.emitEventCallbackParams
+								},
+								cancel: {
+									label: this.listCtrl.texts.cancelText,
+									action: null
+								}
+							},
+							{ callbackParams: { eventName: eventName, eventData: eventData } }
+						)
+						break
+					default:
+						this.$emit(eventName, eventData)
+						break
 				}
-				else
-					this.$emit(eventName, eventData)
 			},
 
 			emitSaveViewEvent(eventName, eventData)
 			{
 				this.$emit(eventName, eventData)
 
-				let alertProps = {
+				const alertProps = {
 					type: 'success',
 					message: this.listCtrl.texts.tableViewSaveSuccess,
-					icon: 'ok'
+					icon: 'ok',
+					pinned: true
 				}
 				this.$emit('set-info-message', alertProps)
 			},

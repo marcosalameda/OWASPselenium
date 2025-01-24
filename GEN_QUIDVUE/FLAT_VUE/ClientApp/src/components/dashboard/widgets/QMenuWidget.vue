@@ -1,5 +1,6 @@
 ﻿<template>
-	<div
+	<a
+		href="javascript:void(0)"
 		class="q-menu-widget"
 		@click.stop="onClick">
 		<h5 class="q-menu-widget__title">{{ widget.Title }}</h5>
@@ -8,8 +9,8 @@
 			v-bind="getMenuIcon(widget.MenuEntry)" />
 		<q-icon
 			v-else
-			icon="bookmark" />
-	</div>
+			:icon="defaultIcon" />
+	</a>
 </template>
 
 <script>
@@ -46,6 +47,14 @@
 			{
 				if (this.widget.MenuEntry)
 					this.executeMenuAction(this.widget.MenuEntry)
+			}
+		},
+
+		computed: {
+			defaultIcon()
+			{	
+				// If the widget of type favorite, return the bookmark icon, otherwise return the go-to icon.
+				return this.widget.Type === 1 ? 'bookmark' : 'go-to2'
 			}
 		}
 	}

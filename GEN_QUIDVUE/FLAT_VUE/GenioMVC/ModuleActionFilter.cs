@@ -3,16 +3,21 @@ using GenioMVC.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using CSGenio.core.di;
 
 namespace GenioMVC;
 
 public class ModuleActionFilter : IActionFilter
 {
     UserContext m_userContext;
-    public ModuleActionFilter(UserContextService userContext)
+    HttpContext m_httpContext;
+    IDisposable m_loggerScope;
+
+    public ModuleActionFilter(UserContextService userContext, IHttpContextAccessor httpContextAccessor)
     {
         m_userContext = userContext.Current;
+        m_httpContext = httpContextAccessor.HttpContext;
+        m_loggerScope = setLoggerContext(userContext.Current.User);
     }
 
     /// <summary>
@@ -30,6 +35,12 @@ public class ModuleActionFilter : IActionFilter
             if (m.Value is ViewModelBase vmb)
                 vmb.Init(m_userContext);
         }
+
+        //Increment request count metric
+        GenioDI.MetricsOtlp.IncrementCounter("request_counter", 1, new List<KeyValuePair<string, object>>() {
+                new("Controller", context.RouteData.Values["controller"]),
+                new("Action", context.RouteData.Values["action"])
+        });
     }
 
     /// <summary>
@@ -57,6 +68,19 @@ public class ModuleActionFilter : IActionFilter
                 CSGenio.framework.Log.Error(ex.ToString());
             }
         }
+
+        // Dispose of the OpenTelemetry logger scope context
+        if (m_loggerScope != null) m_loggerScope.Dispose();
+    }
+
+    private IDisposable setLoggerContext(CSGenio.framework.User user)
+    {
+        return CSGenio.framework.Log.SetContext(new
+        {
+            user = user.Name, // Add user to context
+            user_ip = user.Location, // Add client ip to context
+            year = user.Year // Add year to context
+        });
     }
 
     private void AuthorizeForUsers(ActionExecutingContext context)
@@ -69,24 +93,37 @@ public class ModuleActionFilter : IActionFilter
             {
                 //Force the user to logout
                 context.HttpContext.SignOutAsync().Wait();
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary { { "action", "Index" }, { "controller", "Home" } });
+                context.Result = new RedirectToRouteResult(new RouteValueDictionary { { "action", "HomeRedirect" }, { "controller", "Home" } });
             }
             // Check if user needs to change password
             else if (u.NeedsToChangePassword() && !ActionsAllowed(context))
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary { { "action", "Profile" }, { "controller", "Home" } });
+                context.Result = new RedirectToRouteResult(new RouteValueDictionary { { "action", "ProfileRedirect" }, { "controller", "Home" } });
             // Check if user has to setup 2FA
             else if (u.NeedsToSetup2FA() && !ActionsAllowed(context))
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary { { "action", "Change2FA" }, { "controller", "Home" } });
+                context.Result = new RedirectToRouteResult(new RouteValueDictionary { { "action", "Change2FARedirect" }, { "controller", "Home" } });
         }       
     }
 
     private bool ActionsAllowed(ActionExecutingContext filterContext)
     {
-        if ((filterContext.RouteData.Values["action"].ToString() == "Profile" && filterContext.RouteData.Values["controller"].ToString() == "Home")
-            || (filterContext.RouteData.Values["action"].ToString() == "LogOff" && filterContext.RouteData.Values["controller"].ToString() == "Account")
-            || (filterContext.RouteData.Values["action"].ToString() == "GetImage" && filterContext.RouteData.Values["controller"].ToString() == "Account")
-            || (filterContext.RouteData.Values["action"].ToString() == "Change2FA" && filterContext.RouteData.Values["controller"].ToString() == "Home"))
-            return true;
-        return false;
+        var allowedActions = new HashSet<(string action, string controller)>
+        {
+            ("Profile", "Home"),
+            ("LogOff", "Account"),
+            ("GetIfUserLogged", "Account"),
+            ("UserAvatar", "Account"),
+            ("NavigationalBar", "Home"),
+            ("GetImage", "Account"),
+            ("Change2FA", "Home"),
+            ("GetConfig", "Config"),
+            ("ProfileRedirect", "Home"),
+            ("HomeRedirect", "Home"),
+            ("Change2FARedirect", "Home")
+        };
+
+        var currentAction = filterContext.RouteData.Values["action"].ToString();
+        var currentController = filterContext.RouteData.Values["controller"].ToString();
+
+        return allowedActions.Contains((currentAction, currentController));
     }
 }

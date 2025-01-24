@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuWMS_511ViewModel.js'
+
 	const requiredTextResources = ['QMenuWMS_511', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '511',
 					isMenuList: true,
+					designation: computed(() => this.Resources.ENTITIES22578),
 					acronym: 'WMS_511',
 					name: 'ENTIT',
 					route: 'menu-WMS_511',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'WMS_Menu_511',
 						controller: 'ENTIT',
 						action: 'WMS_Menu_511',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -156,7 +166,7 @@
 								area: 'ENTIT',
 								field: 'REGISTRA',
 								label: computed(() => this.Resources.LEGAL_REGISTRATION04413),
-								dataLength: 20,
+								dataLength: 30,
 								scrollData: 20,
 							}),
 							new listColumnTypes.TextColumn({
@@ -165,7 +175,7 @@
 								area: 'ENTIT',
 								field: 'TAXNUMBE',
 								label: computed(() => this.Resources.VAT_NUMBER24236),
-								dataLength: 20,
+								dataLength: 30,
 								scrollData: 20,
 							}),
 							new listColumnTypes.TextColumn({
@@ -210,7 +220,7 @@
 								area: 'ENTIT',
 								field: 'IBAN',
 								label: computed(() => this.Resources.IBAN__INTERNATIONAL_45066),
-								dataLength: 25,
+								dataLength: 33,
 								scrollData: 25,
 								visibility: false,
 							}),
@@ -220,7 +230,7 @@
 								area: 'ENTIT',
 								field: 'BUILDING',
 								label: computed(() => this.Resources.BUILDING_HOUSE_NUMBE20738),
-								dataLength: 10,
+								dataLength: 25,
 								scrollData: 10,
 								visibility: false,
 							}),
@@ -230,7 +240,7 @@
 								area: 'ENTIT',
 								field: 'STREET',
 								label: computed(() => this.Resources.STREET44324),
-								dataLength: 85,
+								dataLength: 50,
 								scrollData: 30,
 								visibility: false,
 							}),
@@ -240,7 +250,7 @@
 								area: 'ENTIT',
 								field: 'TOWN',
 								label: computed(() => this.Resources.TOWN_CITY16259),
-								dataLength: 85,
+								dataLength: 50,
 								scrollData: 30,
 								visibility: false,
 							}),
@@ -250,7 +260,7 @@
 								area: 'ENTIT',
 								field: 'COUNTY',
 								label: computed(() => this.Resources.COUNTY_PROVINCE34285),
-								dataLength: 85,
+								dataLength: 50,
 								scrollData: 30,
 								visibility: false,
 							}),
@@ -260,7 +270,7 @@
 								area: 'ENTIT',
 								field: 'STATE',
 								label: computed(() => this.Resources.STATE_PROVINCE28516),
-								dataLength: 85,
+								dataLength: 50,
 								scrollData: 30,
 								visibility: false,
 							}),
@@ -280,7 +290,7 @@
 								area: 'ENTIT',
 								field: 'POSTALCO',
 								label: computed(() => this.Resources.ZIP_POSTAL_CODE55613),
-								dataLength: 50,
+								dataLength: 10,
 								scrollData: 30,
 								visibility: false,
 							}),
@@ -310,7 +320,7 @@
 								area: 'ENTIT',
 								field: 'CONTACT',
 								label: computed(() => this.Resources.CONTACT_TELEPHONE_NU12694),
-								dataLength: 20,
+								dataLength: 30,
 								scrollData: 20,
 								visibility: false,
 							}),
@@ -330,7 +340,7 @@
 								field: 'FOUNDED',
 								label: computed(() => this.Resources.FOUNDED_IN54120),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 								visibility: false,
 							}),
 							new listColumnTypes.TextColumn({
@@ -375,13 +385,14 @@
 								scrollData: 3,
 								visibility: false,
 							}),
-							new listColumnTypes.BooleanColumn({
+							new listColumnTypes.TextColumn({
 								order: 26,
 								name: 'ValOwner',
 								area: 'ENTIT',
 								field: 'OWNER',
 								label: computed(() => this.Resources.OWNER09558),
-								scrollData: 1,
+								dataLength: 50,
+								scrollData: 30,
 							}),
 							new listColumnTypes.BooleanColumn({
 								order: 27,
@@ -412,7 +423,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -516,6 +527,7 @@
 								id: 'RCA_WMS_5111',
 								name: 'form-ENTIX',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -532,23 +544,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: ENTIX
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValName',
 							defaultSearchColumnNameOriginal: 'ValName',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValName',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-FACI1', 'changed-ENTIT', 'changed-FACI2'],
 						uuid: '07a4ae81-9ea2-4709-901d-950c72bb072b',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -577,6 +583,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS WMS_511]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_511]/
 // eslint-disable-next-line

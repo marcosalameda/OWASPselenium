@@ -9,7 +9,7 @@
 				:tabs-list="controls.tabGroup.tabsList"
 				:selected-tab="controls.tabGroup.selectedTab"
 				:is-visible="controls.tabGroup.isVisible"
-				@tab-changed="controls.tabGroup.SelectTab($event)">
+				@tab-changed="controls.tabGroup.selectTab($event)">
 				<template #tab-panel>
 					<section v-show="controls.tabGroup.selectedTab === 'firstTab'">
 						<q-row-container is-large>
@@ -41,8 +41,7 @@
 						<q-row-container is-large>
 							<q-control-wrapper class="row-line-group">
 								<q-button
-									b-style="secondary"
-									:class="['float-left']"
+									b-style="secondary"									
 									:label="Resources.APLICAR33981"
 									:title="Resources.APLICAR33981"
 									@click="applyChanges">
@@ -92,6 +91,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_2411ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_2411', 'hardcoded', 'messages']
 
 	export default {
@@ -139,9 +140,7 @@
 					order: '2411'
 				},
 
-				model: {
-					selectedRows: {}
-				},
+				model: new MenuViewModel(this),
 
 				controls: {
 					firstTab: new controlClass.BaseControl({
@@ -170,6 +169,7 @@
 					}, this),
 
 					firstTable: new controlClass.TableListControl({
+						id: 'GQT_Menu_2411',
 						controller: 'EQUIP',
 						action: 'GQT_Menu_2411',
 						hasDependencies: false,
@@ -199,8 +199,10 @@
 								area: 'EQUIP',
 								field: 'PHOTOGRA',
 								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -258,7 +260,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -366,23 +368,16 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: EQUIP
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValRegistnr',
 							defaultSearchColumnNameOriginal: 'ValRegistnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValRegistnr',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
 						uuid: 'd8fdd263-473c-451a-be4b-bf79d74ec21f',
 						allSelectedRows: 'false',
-						id: 'GQT_Menu_2411',
 						headerLevel: 1,
 						handlers: {
 							selectRow: (eventData) => {
@@ -400,6 +395,7 @@
 					}, this),
 
 					secondTable: new controlClass.TableListControl({
+						id: 'GQT_Menu_2411',
 						controller: 'EQUIP',
 						action: 'GQT_Menu_2411',
 						hasDependencies: false,
@@ -429,8 +425,10 @@
 								area: 'EQUIP',
 								field: 'PHOTOGRA',
 								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -488,7 +486,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -596,23 +594,16 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: EQUIP
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValRegistnr',
 							defaultSearchColumnNameOriginal: 'ValRegistnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValRegistnr',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
 						uuid: 'd8fdd263-473c-451a-be4b-bf79d74ec21f',
 						allSelectedRows: 'false',
-						id: 'GQT_Menu_2411',
 						headerLevel: 1,
 						handlers: {
 							selectRow: (eventData) => {
@@ -660,17 +651,12 @@
 							},
 							formsDefinition: {
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: [],
 						uuid: '',

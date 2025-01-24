@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'WAREHDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
+			isFixed: true,
 		}).cloneFrom(values?.ValWarehdes))
 		watch(() => this.ValWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.ValWarehdes, newValue, oldValue))
 	}
@@ -75,5 +76,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodwareh'
 
 	get QPrimaryKey() { return this.ValCodwareh.value }
-	set QPrimaryKey(value) { this.ValCodwareh.value = value }
+	set QPrimaryKey(value) { this.ValCodwareh.updateValue(value) }
 }

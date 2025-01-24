@@ -18,6 +18,7 @@
 					<q-router-link
 						class="n-language__link"
 						:is-disabled="lang.language === system.currentLang"
+						:tabindex="$attrs.tabindex"
 						:link="{
 							name: currentRoute.name,
 							params: { ...currentRoute.params, culture: lang.language }
@@ -41,6 +42,8 @@
 
 	export default {
 		name: 'LanguageItems',
+
+		inheritAttrs: false,
 
 		components: {
 			QRouterLink

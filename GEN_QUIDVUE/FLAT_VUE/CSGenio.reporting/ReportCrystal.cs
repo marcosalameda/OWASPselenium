@@ -1,4 +1,4 @@
-#if NETFRAMEWORK
+Ôªø#if NETFRAMEWORK
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace CSGenio.reporting
         private string tipo; // tipo de report
         private Dictionary<string, string> listaCamposArray;//lista de fields que sao array
         private string[] camposGlob; //lista de camposGlob
-        private string[] formulasEspeciais;//fields que s„o formulas especiais
+        private string[] formulasEspeciais;//fields que s√£o formulas especiais
         private string campoEntreDatas;//Qfield entre datas  
         private string[] limites;//respectivosLimites
         /// <summary>
@@ -47,10 +47,10 @@ namespace CSGenio.reporting
         /// </summary>
         /// <param name="nomeReport">name do report</param>
         /// <param name="area">area base do report</param>
-        /// <param name="tipo">tipo de formataÁ„o do report</param>
+        /// <param name="tipo">tipo de formata√ß√£o do report</param>
         /// <param name="campoEntreDatas">Qfield entre datas</param>
         /// <param name="limites">limites</param>
-        /// <param name="nomesCamposHistorial">nomes dos fields que sao limitaÁıes de historial</param>
+        /// <param name="nomesCamposHistorial">nomes dos fields que sao limita√ß√µes de historial</param>
         /// <param name="valoresCamposHistorial">Qvalues dos fields que sao limitacoes de historial</param>
         /// <param name="listaCamposArray">lista de fields que sao arrays</param>
         /// <param name="camposGlob">fields da table glob</param>
@@ -83,10 +83,10 @@ namespace CSGenio.reporting
         /// </summary>
         /// <param name="nomeReport">name do report</param>
         /// <param name="area">area base do report</param>
-        /// <param name="tipo">tipo de formataÁ„o do report</param>
+        /// <param name="tipo">tipo de formata√ß√£o do report</param>
         /// <param name="campoEntreDatas">Qfield entre datas</param>
         /// <param name="limites">limites</param>
-        /// <param name="nomesCamposHistorial">nomes dos fields que sao limitaÁıes de historial</param>
+        /// <param name="nomesCamposHistorial">nomes dos fields que sao limita√ß√µes de historial</param>
         /// <param name="valoresCamposHistorial">Qvalues dos fields que sao limitacoes de historial</param>
         /// <param name="listaCamposArray">lista de fields que sao arrays</param>
         /// <param name="camposGlob">fields da table glob</param>
@@ -116,7 +116,7 @@ namespace CSGenio.reporting
         /// </summary>
         /// <param name="nomeReport">name do report</param>
         /// <param name="area">area base do report</param>
-        /// <param name="tipo">tipo de formataÁ„o do report</param>
+        /// <param name="tipo">tipo de formata√ß√£o do report</param>
         public ReportCrystal(string nomeReport, string area, string tipo)
         {
             this.area = area;
@@ -172,7 +172,7 @@ namespace CSGenio.reporting
             FieldFormatting format = FieldFormatting.CARACTERES;
             if (value is DateTime)
                 format = FieldFormatting.DATA;
-            else if (value is double)
+            else if (value is double || value is decimal)
                 format = FieldFormatting.FLOAT;
             else if (value is int)
                 format = FieldFormatting.INTEIRO;
@@ -186,7 +186,7 @@ namespace CSGenio.reporting
 
 		
         /// <summary>
-        /// MÈtodo que faz a configuraÁ„o do report a nÌvel da base de dados - to todas as tables.   
+        /// M√©todo que faz a configura√ß√£o do report a n√≠vel da base de dados - to todas as tables.   
         /// </summary>
         /// <param name="connectionInfo">Objecto que possui as credenciais to ligar a base de dados</param>
         /// <param name="reportDocument">Objecto que representa o report a ser configurado</param>
@@ -202,13 +202,13 @@ namespace CSGenio.reporting
         }
 
         /// <summary>
-        /// MÈtodo to obter a connection info necess·ria to o report abrir
+        /// M√©todo to obter a connection info necess√°ria to o report abrir
         /// </summary>
-        /// <param name="utilizador">user em sess„o</param>
-        /// <returns>a connection info necess·ria to abrir o report</returns>
+        /// <param name="utilizador">user em sess√£o</param>
+        /// <returns>a connection info necess√°ria to abrir o report</returns>
         private ConnectionInfo getConnectionInfo(User user)
         {
-            //informaÁ„o da connection
+            //informa√ß√£o da connection
             ConnectionInfo connectionInfo = new ConnectionInfo();
             var ds = Configuration.ResolveDataSystem(user.Year, Configuration.DbTypes.NORMAL);
 
@@ -216,14 +216,14 @@ namespace CSGenio.reporting
                 connectionInfo.ServerName = ds.TnsName;
             else
             {
-                //AV(2010/10/14) quando o porto È especificado tem que ser enviado to o rpt
+                //AV(2010/10/14) quando o porto √© especificado tem que ser enviado to o rpt
                 if (!string.IsNullOrEmpty(ds.Port))
                     connectionInfo.ServerName = ds.Server + "," + ds.Port;
                 else
                     connectionInfo.ServerName = ds.Server;
             }
 
-            // JMT - 05-03-2012 - em Oracle o DatabaseName n„o pode ser preenchido, porque o report pede login e n„o vai ser executado
+            // JMT - 05-03-2012 - em Oracle o DatabaseName n√£o pode ser preenchido, porque o report pede login e n√£o vai ser executado
             if (ds.GetDatabaseType() != DatabaseType.ORACLE)
                 connectionInfo.DatabaseName = ds.Schemas[0].Schema;
             connectionInfo.UserID = ds.LoginDecode();
@@ -232,12 +232,12 @@ namespace CSGenio.reporting
         }
 
         /// <summary>
-        /// MÈtodo que constroi o report
+        /// M√©todo que constroi o report
         /// </summary>
-        /// <param name="utilizador">user em sess„o</param>
+        /// <param name="utilizador">user em sess√£o</param>
         /// <param name="modulo">module</param>
         /// <param name="sp">PersistentSupport</param>
-        public void buildReportDocument(User user, string module, PersistentSupport sp) //To ser possÌvel a passagem do sp a utilizar.
+        public void buildReportDocument(User user, string module, PersistentSupport sp) //To ser poss√≠vel a passagem do sp a utilizar.
         {
             ConnectionInfo connectionInfo = getConnectionInfo(user);
             string reportPath = Configuration.PathReports + "\\" + nomeReport;
@@ -282,9 +282,9 @@ namespace CSGenio.reporting
         }
 
         /// <summary>
-        /// MÈtodo que constroi o report
+        /// M√©todo que constroi o report
         /// </summary>
-        /// <param name="utilizador">user em sess„o</param>
+        /// <param name="utilizador">user em sess√£o</param>
         /// <param name="modulo">module</param>
         public void buildReportDocument(User user, string module) 
         {
@@ -295,11 +295,11 @@ namespace CSGenio.reporting
         }
 
 		/// <summary>
-        /// MÈtodo to preencher os fields especiais que o report contenha.
+        /// M√©todo to preencher os fields especiais que o report contenha.
         /// </summary>
-        /// <param name="utilizador">user em sess„o</param>
+        /// <param name="utilizador">user em sess√£o</param>
         /// <param name="modulo">module</param>
-        ///CHN - 13-02-2017 - PossÌvel com esta funÁ„o passar qualquer Qfield que o report precise (ex. f_colunaXX, to o preenchimento de uma coluna din‚micamente)
+        ///CHN - 13-02-2017 - Poss√≠vel com esta fun√ß√£o passar qualquer Qfield que o report precise (ex. f_colunaXX, to o preenchimento de uma coluna din√¢micamente)
 		private void preencherCamposEspeciais(User user, string module)
         {
             try
@@ -330,9 +330,9 @@ namespace CSGenio.reporting
         }
 		
         /// <summary>
-        /// MÈtodo to preencher os fields da table glob
+        /// M√©todo to preencher os fields da table glob
         /// </summary>
-        /// <param name="utilizador">user em sess„o</param>
+        /// <param name="utilizador">user em sess√£o</param>
         /// <param name="modulo">module</param>
         private void preencherCamposGlob(User user, string module, PersistentSupport sp)
         {
@@ -389,11 +389,11 @@ namespace CSGenio.reporting
         private void replaceFormulaValues(string key, string value)
         {
             // TODO
-            // Avaliar se vale a pena utilizar o mÈtodo sugerido neste link to fazer os replaces
+            // Avaliar se vale a pena utilizar o m√©todo sugerido neste link to fazer os replaces
             // http://devtoolshed.com/content/crystal-reports-and-aspnet
-			// assim podia-se utilizar esta funÁ„o em todas as funÁıes desta classe de forma genÈrica
-			// n„o alterei ainda em todos os sÌtios, porque È feito ToLower dos identificadores e ainda
-			// pode estragar alguma fÛrmula
+			// assim podia-se utilizar esta fun√ß√£o em todas as fun√ß√µes desta classe de forma gen√©rica
+			// n√£o alterei ainda em todos os s√≠tios, porque √© feito ToLower dos identificadores e ainda
+			// pode estragar alguma f√≥rmula
             if (camposDataDefinition.Contains(key))
                 reportDocument.DataDefinition.FormulaFields[key].Text = value;
             if (temSubReports)
@@ -405,9 +405,9 @@ namespace CSGenio.reporting
         }
 
         /// <summary>
-        /// MÈtodo to preencher as formulas especiais
+        /// M√©todo to preencher as formulas especiais
         /// </summary>
-        /// <param name="utilizador">user em sess„o</param>
+        /// <param name="utilizador">user em sess√£o</param>
         /// <param name="modulo">module</param>
         private void preencherFormulasEspeciais(User user, string module, PersistentSupport sp)
         {
@@ -470,7 +470,7 @@ namespace CSGenio.reporting
         }
 
         /// <summary>
-        /// MÈtodo to preencher as limitaÁıes
+        /// M√©todo to preencher as limita√ß√µes
         /// </summary>
         private void PreencherLimites()
         {
@@ -536,7 +536,7 @@ namespace CSGenio.reporting
                         break;
                     case ReportLimitParameter.LimitSource.DB: 
                         {
-                            // DBEdit com limitaÁ„o em arvore
+                            // DBEdit com limita√ß√£o em arvore
                             var limit = genLimit as ReportLimitParameter_DB;
                             if (string.IsNullOrEmpty(limit.FieldValue))
                                 throw new BusinessException(null, "ReportCrystal.PreencherLimites", "Null or Empty tree seelction limit value");
@@ -546,7 +546,7 @@ namespace CSGenio.reporting
                         break;
                     case ReportLimitParameter.LimitSource.DM:
                         {
-                            // DBEdit com seleÁ„o multipla
+                            // DBEdit com sele√ß√£o multipla
                             var limit = genLimit as ReportLimitParameter_DM;
                             if (limit.FieldValue == null)
                                 throw new BusinessException(null, "ReportCrystal.PreencherLimites", "Null or Empty multi seelction limit value");
@@ -611,13 +611,13 @@ namespace CSGenio.reporting
         }
 
         /// <summary>
-        /// MÈtodo to preencher as limitaÁıes entre datas
+        /// M√©todo to preencher as limita√ß√µes entre datas
         /// </summary>
-        /// <param name="utilizador">user em sess„o</param>
+        /// <param name="utilizador">user em sess√£o</param>
         /// <param name="modulo">module</param>
         private void preencherEntreDatas(User user, string module)
         {
-            //data no format "yyyy , MM , dd , HH,mm,ss" (Qyear, mÍs, day, hora24, minutes, segundos)
+            //data no format "yyyy , MM , dd , HH,mm,ss" (Qyear, m√™s, day, hora24, minutes, segundos)
             string[] aux = new string[2];
             for (int i = 0; i < limites.Length; i++)
             {
@@ -659,9 +659,9 @@ namespace CSGenio.reporting
         }
 
         /// <summary>
-        /// MÈtodo to preencher os fields que s„o arrays
+        /// M√©todo to preencher os fields que s√£o arrays
         /// </summary>
-        /// <param name="utilizador">user em sess„o</param>
+        /// <param name="utilizador">user em sess√£o</param>
         /// <param name="modulo">module</param>
         private void preencherCamposArray(User user, string module, PersistentSupport sp)
         {
@@ -689,7 +689,7 @@ namespace CSGenio.reporting
                     }
                     catch (System.Runtime.InteropServices.COMException ex)
                     {
-                        //o Qfield n„o est· definido no report, n„o se faz nada
+                        //o Qfield n√£o est√° definido no report, n√£o se faz nada
 						Log.Error(ex.ToString());
                     }
                 }
@@ -721,10 +721,12 @@ namespace CSGenio.reporting
             AreaInfo tabelaEPH = Area.GetInfoArea(ephArea.Table);
 
             if (ephArea.Field.ToLower().Equals(myrelacao.TargetRelField))
-            {//se a eph for da key prim·ria
+            {//se a eph for da key prim√°ria
 
                 if (ephArea.Operator == "EN")
                     condicoesEph += "(";
+                else
+                    condicoesEph += "(not(isnull({" + programa + areaBase.Alias.ToUpper() + "." + crorigem.ToUpper() + "})) AND ";
 
                 condicoesEph += "{" + programa + areaBase.Alias.ToUpper() + "." + crorigem.ToUpper() + "} IN [";
 
@@ -747,20 +749,20 @@ namespace CSGenio.reporting
                     condicoesEph += ") AND ";
                 }
                 else
-                    condicoesEph += "] AND ";
+                    condicoesEph += "]) AND ";
             }
             else
             {//se a eph for doutro Qfield da table
 
                 condicoesEph += " (";
                 if (ephArea.Operator == "L" || ephArea.Operator == "LN")
-                {//se a eph for em ·rvore usa-se o Qfield da eph como prefixo
+                {//se a eph for em √°rvore usa-se o Qfield da eph como prefixo
                     for (int i = 0; i < listaValores.Length; i++)
                     {
                         condicoesEph += "{" + programa + tabelaEPH.Alias.ToUpper() + "." + ephArea.Field.ToUpper() + "} LIKE ";
                         condicoesEph += CrystalConversion.FromInternal(listaValores[i].ToUpper() + "*", tabelaEPH.DBFields[ephArea.Field].FieldFormat) + " OR ";
                     }
-                    // MH - Eph em ·rvore ou NULL
+                    // MH - Eph em √°rvore ou NULL
                     if (ephArea.Operator == "LN")
                     {
                         Field campoEPH = tabelaEPH.DBFields[ephArea.Field];
@@ -777,13 +779,13 @@ namespace CSGenio.reporting
                     string operador = "";
 
                     //NH(2016.10.06)
-                    //Caso o Operator seja EN (EQUAL or NULL), o comportamento È semelhante ao ==, sÛ mudando na parte final em que se coloca mais a validaÁ„o do ISNULL e vazio.
+                    //Caso o Operator seja EN (EQUAL or NULL), o comportamento √© semelhante ao ==, s√≥ mudando na parte final em que se coloca mais a valida√ß√£o do ISNULL e vazio.
                     if (ephArea.Operator == "EN")
                         operador = "=";
                     else
                         operador = ephArea.Operator;
 
-                    //NH(2016.11.23) - Se o Qfield for key em Inteiro, vamos mudar a formataÁ„o to Inteiros
+                    //NH(2016.11.23) - Se o Qfield for key em Inteiro, vamos mudar a formata√ß√£o to Inteiros
                     FieldFormatting fcampo = tabelaEPH.DBFields[ephArea.Field].FieldFormat;
 
                     if (Area.GetInfoArea(ephArea.Table).KeyType == CodeType.INT_KEY && tabelaEPH.DBFields[ephArea.Field].isKey())
@@ -795,7 +797,7 @@ namespace CSGenio.reporting
                         condicoesEph += CrystalConversion.FromInternal(listaValores[i], fcampo) + " OR ";
                     }
 
-                    //Caso o Operator seja EN (Equal or NULL) vamos colocar a condiÁ„o ISnull e vazio consiante o tipo de formatting do Qfield
+                    //Caso o Operator seja EN (Equal or NULL) vamos colocar a condi√ß√£o ISnull e vazio consiante o tipo de formatting do Qfield
                     if (ephArea.Operator == "EN")
                     {
                         condicoesEph += " isnull({" + programa + areaBase.Alias.ToUpper() + "." + crorigem.ToUpper() + "}) ";
@@ -819,14 +821,14 @@ namespace CSGenio.reporting
             string condicoesEph = "";
             string programa = Configuration.Program;
             
-            ////////////adicionar condiÁ„o quando a ·rea È a mesma da eph
+            ////////////adicionar condi√ß√£o quando a √°rea √© a mesma da eph
             if (ephArea.Operator == "=" || ephArea.Operator == "EN")
             {//se o operador for "=" podemos usar o IN
 
                 if (ephArea.Operator == "EN")
                     condicoesEph += "(";
 
-                //NH(2016.11.23) - Se o Qfield for key em Inteiro, vamos mudar a formataÁ„o to Inteiros
+                //NH(2016.11.23) - Se o Qfield for key em Inteiro, vamos mudar a formata√ß√£o to Inteiros
                 FieldFormatting fcampo = areaBase.DBFields[ephArea.Field].FieldFormat;
                 if (Area.GetInfoArea(ephArea.Table).KeyType == CodeType.INT_KEY && areaBase.DBFields[ephArea.Field].isKey())
                     fcampo = FieldFormatting.INTEIRO;
@@ -852,13 +854,13 @@ namespace CSGenio.reporting
             {
                 condicoesEph += " (";
                 if (ephArea.Operator == "L" || ephArea.Operator == "LN")
-                {//se a eph for em ·rvore usa-se o Qfield da eph como prefixo
+                {//se a eph for em √°rvore usa-se o Qfield da eph como prefixo
                     for (int i = 0; i < listaValores.Length; i++)
                     {
                         condicoesEph += "{" + programa + areaBase.Alias.ToUpper() + "." + ephArea.Field.ToUpper() + "} LIKE ";
                         condicoesEph += CrystalConversion.FromInternal(listaValores[i] + "*", areaBase.DBFields[ephArea.Field].FieldFormat) + " OR ";
                     }
-                    // MH - Eph em ·rvore ou NULL
+                    // MH - Eph em √°rvore ou NULL
                     if (ephArea.Operator == "LN")
                     {
                         Field campoEPH = areaBase.DBFields[ephArea.Field];
@@ -886,9 +888,9 @@ namespace CSGenio.reporting
         }
 
         /// <summary>
-        /// MÈtodo to preencher as limitaÁıes de EPH
+        /// M√©todo to preencher as limita√ß√µes de EPH
         /// </summary>
-        /// <param name="utilizador">user em sess„o</param>
+        /// <param name="utilizador">user em sess√£o</param>
         /// <param name="modulo">module</param>
         private void preencherEPHs(User user, string module, PersistentSupport sp)
         {
@@ -913,7 +915,7 @@ namespace CSGenio.reporting
 
                     if (!string.IsNullOrEmpty(condicao1) && !string.IsNullOrEmpty(condicao2))
                     {
-                        // retira a ˙ltima partÌcula AND
+                        // retira a √∫ltima particula AND
                         condicao1 = condicao1.Substring(0, condicao1.Length - 4);
                         condicao2 = condicao2.Substring(0, condicao2.Length - 4);
 
@@ -941,7 +943,7 @@ namespace CSGenio.reporting
                 }
             }                
 
-            // retira a ˙ltima partÌcula AND
+            // retira a √∫ltima part√≠cula AND
             if (condicoesEph.Length != 0)
                 condicoesEph = condicoesEph.Substring(0, condicoesEph.Length - 4);
            
@@ -949,28 +951,28 @@ namespace CSGenio.reporting
         }
 
         /// <summary>
-        /// MÈtodo to preencher as condiÁıes de historial
+        /// M√©todo to preencher as condi√ß√µes de historial
         /// </summary>
         private void preencherCamposHistorial(User user, string module)
         {
-            //AV(2010/01/03) Alterei a funÁ„o to passar a usar as conversıes to formatar as condiÁıes
+            //AV(2010/01/03) Alterei a fun√ß√£o to passar a usar as convers√µes to formatar as condi√ß√µes
 
             AreaInfo areaBase = Area.GetInfoArea(area);
 
             for (int i = 0; i < nomesCamposHistorial.Length; i++)
             {
-                //FS(2008-11-03) Ignorar Qvalues de historial que venham a null (em principio n„o deveria acontecer, caso entre aqui investigar razıes)
+                //FS(2008-11-03) Ignorar Qvalues de historial que venham a null (em principio n√£o deveria acontecer, caso entre aqui investigar raz√µes)
                 if (valoresCamposHistorial[i] == null)
                     continue;
                 StringBuilder str_recordselection; //TSX (2008-10-30)
                 StringBuilder str_recordselectionCampo = new StringBuilder(""); //TSX (2008-10-30)
-                //podemos incializar o tpField com um tipo qualquer pois vamos sempre actualizar a vari·vel quando encontrarmos o Qfield
+                //podemos incializar o tpField com um tipo qualquer pois vamos sempre actualizar a vari√°vel quando encontrarmos o Qfield
                 FieldType tpField = FieldType.CHAVE_PRIMARIA;
-                //to cada name tem que se verificar se vem sÛ o name da area ou se vem o name completo
-                //se vier sÛ o name da area tem que se descobrir a relaÁ„o com a area base
-                if (!nomesCamposHistorial[i].Contains("."))//sÛ vem o name da area pelo que assumimos que È uma key prim·ria
+                //to cada name tem que se verificar se vem s√≥ o name da area ou se vem o name completo
+                //se vier s√≥ o name da area tem que se descobrir a rela√ß√£o com a area base
+                if (!nomesCamposHistorial[i].Contains("."))//s√≥ vem o name da area pelo que assumimos que √© uma key prim√°ria
                 {
-                    if (area == nomesCamposHistorial[i])//AV(2011/03/29) o histÛrico È da ·rea base do rpt
+                    if (area == nomesCamposHistorial[i])//AV(2011/03/29) o hist√≥rico √© da √°rea base do rpt
                     {
                         if (areaBase.KeyType == CodeType.INT_KEY)
                             tpField = FieldType.INTEIRO;
@@ -980,7 +982,7 @@ namespace CSGenio.reporting
                     }
                     else
                     {
-                        //AV(2011/03/29) o histÛrico È de uma table directamente acima da ·rea base do rpt
+                        //AV(2011/03/29) o hist√≥rico √© de uma table directamente acima da √°rea base do rpt
                         if (areaBase.ParentTables.ContainsKey(nomesCamposHistorial[i]))
                         {
                             Relation relacao = (Relation)areaBase.ParentTables[nomesCamposHistorial[i]];
@@ -996,7 +998,7 @@ namespace CSGenio.reporting
                             foreach (string areaReport in areasReport)
                             {
                                 AreaInfo areaRpt = Area.GetInfoArea(areaReport);
-                                //AV(2011/03/29) o histÛrico È de uma das ·reas do rpt identificada nas definiÁıes
+                                //AV(2011/03/29) o hist√≥rico √© de uma das √°reas do rpt identificada nas defini√ß√µes
                                 if (areaReport == nomesCamposHistorial[i])
                                 {
                                     if (areaRpt.KeyType == CodeType.INT_KEY)
@@ -1008,7 +1010,7 @@ namespace CSGenio.reporting
                                 }
                                 else
                                 {
-                                    //AV(2011/03/29) o histÛrico È de uma table directamente acima das ·reas do rpt identificada nas definiÁıes
+                                    //AV(2011/03/29) o hist√≥rico √© de uma table directamente acima das √°reas do rpt identificada nas defini√ß√µes
                                     if (areaRpt.ParentTables.ContainsKey(nomesCamposHistorial[i]))
                                     {
                                         Relation relacao = (Relation)areaRpt.ParentTables[nomesCamposHistorial[i]];
@@ -1027,7 +1029,7 @@ namespace CSGenio.reporting
                 else
                 {//vem o name da area e do Qfield (table.Qfield)
                         string[] campoCompleto = nomesCamposHistorial[i].Split('.');
-                    //AV(2011/03/29) o histÛrico È dum Qfield da ·rea base do rpt
+                    //AV(2011/03/29) o hist√≥rico √© dum Qfield da √°rea base do rpt
                     if (area == campoCompleto[0])
                     {
                         if (areaBase.KeyType == CodeType.INT_KEY && campoCompleto[1]==areaBase.PrimaryKeyName)
@@ -1041,7 +1043,7 @@ namespace CSGenio.reporting
                         foreach (string areaReport in areasReport)
                         {
                             AreaInfo areaRpt = Area.GetInfoArea(areaReport);
-                            //AV(2011/03/29) o histÛrico È dum Qfield de uma das ·reas do rpt identificada nas definiÁıes
+                            //AV(2011/03/29) o hist√≥rico √© dum Qfield de uma das √°reas do rpt identificada nas defini√ß√µes
                             if (areaReport == campoCompleto[0])
                             {
 								//RMR(2016-10-04) - Before converting to int in case of integer keys, gets the field format, and verifies if this field is any kind of key
@@ -1057,10 +1059,10 @@ namespace CSGenio.reporting
                         }
                     }
                 }
-                //AV(2011/03/29) Encontr·mos uma table no rpt to aplicar a condiÁ„o de histÛrico
+                //AV(2011/03/29) Encontr√°mos uma table no rpt to aplicar a condi√ß√£o de hist√≥rico
                 if (str_recordselectionCampo.Length != 0)
                 {
-                    //ARR(2010-01-25) separar os codigos quando temos uma seleÁ„o multipla.
+                    //ARR(2010-01-25) separar os codigos quando temos uma sele√ß√£o multipla.
                     //concatenando assim : ( Qfield = codigo or Qfield = codigo)
                     object[] Nentradas = null;
                     if (valoresCamposHistorial[i] is String)
@@ -1077,7 +1079,7 @@ namespace CSGenio.reporting
                         str_recordselection.Append(str_recordselectionCampo + CrystalConversion.FromInternal(Nentradas[nr], tpField.Formatting));
                         str_recordselection.Append(" OR ");
                     }
-                    //AV(2011/03/29) o ˙ltimo Qvalue de Nentradas n„o precisa do OR por isso È feito fora do for
+                    //AV(2011/03/29) o √∫ltimo Qvalue de Nentradas n√£o precisa do OR por isso √© feito fora do for
                     str_recordselection.Append(str_recordselectionCampo + CrystalConversion.FromInternal(Nentradas[Nentradas.Length - 1], tpField.Formatting));
 
                     str_recordselection.Append(")");
@@ -1087,17 +1089,17 @@ namespace CSGenio.reporting
         }
 
 		/// <summary>
-        /// FunÁ„o to delimitar a record selection formula existente no mapa
+        /// fun√ß√£o to delimitar a record selection formula existente no mapa
         /// </summary>
         private void DelimitarRecordSelection()
         {
-            //Quando È feito o load o ReportDocument tenta optimizar a record selection formula tendo em conta os parentesis
-            //No entanto esta analise n„o tem em conta que poder· existir outros limites que ser„o adicionados
+            //Quando √© feito o load o ReportDocument tenta optimizar a record selection formula tendo em conta os parentesis
+            //No entanto esta analise n√£o tem em conta que poder√° existir outros limites que ser√£o adicionados
             //Temos que manter a record selection formula dentro de parentesis
             if (!string.IsNullOrEmpty(reportDocument.RecordSelectionFormula))
                 reportDocument.RecordSelectionFormula = "(" + reportDocument.RecordSelectionFormula + ")";
 
-            //se os limites adicionais forem aplicados ao subreport ent„o tambÈm temos que delimitar a record de cada subreport
+            //se os limites adicionais forem aplicados ao subreport ent√£o tamb√©m temos que delimitar a record de cada subreport
             if (subReportRecord)
             {
                 for (int r = 0; r < reportDocument.Subreports.Count; r++)
@@ -1109,7 +1111,7 @@ namespace CSGenio.reporting
         }
 
         /// <summary>
-        /// FunÁ„o to adicionar uma condiÁ„o genÈrica ‡ recordselectionformula
+        /// fun√ß√£o to adicionar uma condi√ß√£o gen√©rica √† recordselectionformula
         /// </summary>
         /// <param name="recordSelectionFormula">record selection formula</param>
         /// <param name="condicao">condition a ser adicionada</param>
@@ -1127,7 +1129,7 @@ namespace CSGenio.reporting
                     reportDocument.RecordSelectionFormula = condition + " AND " + reportDocument.RecordSelectionFormula;
                 }
 
-				//se for true o RecordSelectionFormula dos subreports passam a ter tambÈm a limitaÁ„o do report
+				//se for true o RecordSelectionFormula dos subreports passam a ter tamb√©m a limita√ß√£o do report
 				if (subReportRecord)
 				{
 					
@@ -1197,7 +1199,7 @@ namespace CSGenio.reporting
         }
 
         /// <summary>
-        /// MÈtodo que devolve o objecto ReportDocument
+        /// M√©todo que devolve o objecto ReportDocument
         /// </summary>
         public ReportDocument ReportDocument
         {
@@ -1205,7 +1207,7 @@ namespace CSGenio.reporting
         }
 
         /// <summary>
-        /// MÈtodo que devolve o name do Report
+        /// M√©todo que devolve o name do Report
         /// </summary>
         public string ReportName
         {

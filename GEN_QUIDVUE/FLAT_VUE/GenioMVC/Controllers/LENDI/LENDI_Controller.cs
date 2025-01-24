@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Lendi;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER LENDI]/
 
@@ -40,7 +42,7 @@ namespace GenioMVC.Controllers
 			{
 				var isServerReports = !Configuration.SSRSServer.isLocalReports;
 				var reportName = "comodato";
-				var reportFileName = reportName + (isServerReports ? "" : ".rdl");
+				var reportFileName = reportName + (isServerReports ? "" : ".rdlc");
 				var reportPath = isServerReports ? Configuration.SSRSServer.path : Configuration.PathReports;
 				var reportFullPath = reportPath + (isServerReports ? "/" : "\\") + reportFileName;
 				if (isServerReports)
@@ -75,24 +77,26 @@ namespace GenioMVC.Controllers
 
 
 // USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 1511]/
+				List<string> allowedReportFormats = new List<string> { "PDF" };
+				if (requestModel.Format != null && !allowedReportFormats.Contains(requestModel.Format))
+					throw new Exception(Resources.Resources.O_FORMATO_DE_RELATOR01134);
+
+				string reportFormat = requestModel.Format != null ? ReportSSRS.GetExportType(requestModel.Format) : "PDF";
 				ReportSSRS_Result result;
 				using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
 				{
 					// MH (11/10/2017) - Report Server credentials
 					if (Configuration.SSRSServer.ContainsCredentials())
-						renderer.SetServerCredentials(Configuration.SSRSServer.Username, Configuration.SSRSServer.Password, Configuration.SSRSServer.Domain);
+						renderer.SetServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
 
 					renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
-					result = renderer.Render("PDF");
+					result = renderer.Render(reportFormat);
 				}
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 1511]/
 
-				Response.Headers["FileName"] = reportFileName + "." + result.FileNameExtension;
-				if (result.FileNameExtension == "pdf") // If pass file extension, browser will download file instead of opening it in PDF Viewer.
-					return File(result.File, result.MimeType);
-				else
-					return File(result.File, result.MimeType, "comodato." + result.FileNameExtension);
+				string fileName = "\"" + "comodato." + result.FileNameExtension + "\"";
+				return File(result.File, result.MimeType, fileName);
 			}
 			catch (Exception e)
 			{
@@ -104,19 +108,30 @@ namespace GenioMVC.Controllers
 		}
 
 
-		// GET: /Lendi/PTN_MenuR_MESSAGEOK
-		// <returns>Json(new { success = "OK", message = "" })</returns>
-		public JsonResult PTN_MenuR_MESSAGEOK([FromBody] RequestRoutineSingleModel requestModel)
+		protected JsonResult PTN_MenuR_DELETEONEROW(string id, string area)
 		{
-			var id = requestModel.Id;
-			var area = requestModel.Area;
 			try
 			{
-//Platform: MVC | Type: CONTROLLER_ROUTINE_BODY | Module: GQT | Parameter: MESSAGEOK | File:  | Order: 0
-//BEGIN_MANUALCODE_CODMANUA:0c2d5cb3-18c7-413c-8452-58bb80443e50
-//Return ok message
-return Json(new { success = true, message = "OK" });
+				using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("manua_exec_time", new List<KeyValuePair<string, object>>() {
+					new("Name", "CONTROLLER_ROUTINE_BODY"),
+					new("Parameter", "DELETEONEROW"),
+					new("ModuleOrSystem", "GQT")
+				}, "ms", "Time to execute the manual code.")) {
+//Platform: MVC | Type: CONTROLLER_ROUTINE_BODY | Module: GQT | Parameter: DELETEONEROW | File:  | Order: 0
+//BEGIN_MANUALCODE_CODMANUA:d31ac115-e389-497a-814c-ae4776fc238a
+			
+			var sp = m_userContext.PersistentSupport;
+			var user = m_userContext.User;
+			var id_model = CSGenioAlendi.search(sp, id, user);
+
+			sp.openConnection();
+				id_model.delete(sp);
+			sp.closeConnection();
+			
+			return Json(new { success = "OK", message = "Routine success" });
 //END_MANUALCODE
+				}
+
 			}
 			catch (BusinessException ex)
 			{
@@ -124,11 +139,97 @@ return Json(new { success = true, message = "OK" });
 			}
 			catch (Exception ex)
 			{
-				Log.Error("Error in action PTN_MenuR_MESSAGEOK: " + ex.Message);
+				Log.Error("Error in action PTN_MenuR_DELETEONEROW: " + ex.Message);
 				return Json(new { success = "E", message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 });
 			}
 		}
 
+		// POST: /Lendi/PTN_Menu_LIST_DM_MB_R_MenuR_DELETEONEROW
+		public JsonResult PTN_Menu_LIST_DM_MB_R_MenuR_DELETEONEROW([FromBody] RequestRoutineSingleModel requestModel)
+		{
+			return PTN_MenuR_DELETEONEROW(requestModel.Id, requestModel.Area);
+		}
+
+		protected JsonResult PTN_MenuR_DELETEROWS(CriteriaSet crs, List<Relation> relations, CSGenio.business.Area routineArea)
+		{
+			try
+			{
+				using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("manua_exec_time", new List<KeyValuePair<string, object>>() {
+					new("Name", "CONTROLLER_ROUTINE_BODY"),
+					new("Parameter", "DELETEROWS"),
+					new("ModuleOrSystem", "GQT")
+				}, "ms", "Time to execute the manual code.")) {
+//Platform: MVC | Type: CONTROLLER_ROUTINE_BODY | Module: GQT | Parameter: DELETEROWS | File:  | Order: 0
+//BEGIN_MANUALCODE_CODMANUA:db1bb593-c309-49f0-9eee-3ee35c5c4383
+			
+			var sp = m_userContext.PersistentSupport;
+			var user = m_userContext.User;
+			var listComod = CSGenioAlendi.searchList(sp, user, crs);
+			
+			sp.openConnection();
+			foreach (var comod in listComod) {
+				comod.delete(sp);
+			}
+			sp.closeConnection();
+			
+			return Json(new { success = "OK", message = "Routine success" });
+//END_MANUALCODE
+				}
+
+			}
+			catch (BusinessException ex)
+			{
+				return Json(new { success = "E", message = ex.UserMessage });
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Error in action PTN_MenuR_DELETEROWS: " + ex.Message);
+				return Json(new { success = "E", message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 });
+			}
+		}
+
+		// POST: /Lendi/PTN_Menu_LIST_DM_MB_R_MenuR_DELETEROWS
+		public JsonResult PTN_Menu_LIST_DM_MB_R_MenuR_DELETEROWS([FromBody] RequestRoutineMultipleModel requestModel)
+		{
+			CSGenio.business.Area area = CSGenio.business.Area.createArea("lendi", UserContext.Current.User, UserContext.Current.User.CurrentModule);
+			ListViewModel model = new PTN_Menu_LIST_DM_MB_R_ViewModel(m_userContext);
+			NameValueCollection parameters;
+
+			// Fetch and format the parameters
+			if (requestModel.QueryParams != null && requestModel.QueryParams.Count() > 0)
+				parameters = FormatQueryString(requestModel.QueryParams);
+			else
+				parameters = this.Navigation.GetValue<NameValueCollection>("requestValuesPTN_Menu_LIST_DM_MB_R");
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				m_userContext.PersistentSupport,
+				model.Uuid,
+				m_userContext.User
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView
+			);
+
+			// Get CriteriaSet
+			CriteriaSet crs = model.BuildCriteriaSet(tableConfig, parameters, out bool hasAllRequiredLimits);
+
+			if (!requestModel.AllSelected || crs == null)
+				crs.In("lendi", "CODLENDI", requestModel.Ids);
+
+			// Fetch List of Related Areas
+			List<string> relatedTables = [];
+			QueryUtils.checkConditionsForForeignTables(crs, area, relatedTables);
+
+			/*
+			 * This is a list of Relationships that has to be included in the query that will be using the CriteriaSet.
+			 * This can be done using QueryUtils.setFromTabDirect()
+			 */
+			List<CSGenio.framework.Relation> relations = QueryUtils.tablesRelationships(relatedTables, area);
+
+			return PTN_MenuR_DELETEROWS(crs, relations, area);
+		}
 
 		private List<string> GetActionIds(CriteriaSet crs, CSGenio.persistence.PersistentSupport sp = null)
 		{
@@ -153,18 +254,9 @@ return Json(new { success = true, message = "OK" });
 			dynamic result = null;
 			Models.Lendi row = null;
 
-			try
-			{
-				row = Models.Lendi.Find(Navigation.GetStrValue("lendi"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model lendi");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Lendi(UserContext.Current);
+				row = new Models.Lendi(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("lendi");
 			}
 
@@ -179,8 +271,8 @@ return Json(new { success = true, message = "OK" });
 				{
 					case "COMOD___PESS1NAME____":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Comod_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Comod_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Comod___pess1name____(qs);
 							result = model.TablePess1Name;
@@ -188,8 +280,8 @@ return Json(new { success = true, message = "OK" });
 						break;
 					case "COMOD___PESS2NAME____":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Comod_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Comod_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Comod___pess2name____(qs);
 							result = model.TablePess2Name;
@@ -197,14 +289,15 @@ return Json(new { success = true, message = "OK" });
 						break;
 					case "COMOD___EQUIPREGISTNR":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Comod_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Comod_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Comod___equipregistnr(qs);
 							result = model.TableEquipRegistnr;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -256,11 +349,12 @@ return Json(new { success = true, message = "OK" });
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -269,22 +363,19 @@ return Json(new { success = true, message = "OK" });
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Comod" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Comod([FromBody]Comod_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Comod([FromBody]Comod_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "lendi",
+			return GenericRecalculateFormulas(formData, "lendi",
 				(primaryKey) => Models.Lendi.Find(primaryKey, UserContext.Current, "FCOMOD"),
-				(model) => form_data.MapToModel(model as Models.Lendi)
+				(model) => formData.MapToModel(model as Models.Lendi)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -292,7 +383,7 @@ return Json(new { success = true, message = "OK" });
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

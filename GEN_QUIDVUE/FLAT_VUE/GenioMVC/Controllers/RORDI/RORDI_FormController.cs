@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Rordi;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_RORDI_CANCEL = new NavigationLocation("ORDER__INTEGER_FIELD38959", "Rordi_Cancel", "Rordi") { vueRouteName = "form-RORDI", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_RORDI_SHOW = new NavigationLocation("ORDER__INTEGER_FIELD38959", "Rordi_Show", "Rordi") { vueRouteName = "form-RORDI", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_RORDI_NEW = new NavigationLocation("ORDER__INTEGER_FIELD38959", "Rordi_New", "Rordi") { vueRouteName = "form-RORDI", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_RORDI_EDIT = new NavigationLocation("ORDER__INTEGER_FIELD38959", "Rordi_Edit", "Rordi") { vueRouteName = "form-RORDI", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_RORDI_DUPLICATE = new NavigationLocation("ORDER__INTEGER_FIELD38959", "Rordi_Duplicate", "Rordi") { vueRouteName = "form-RORDI", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_RORDI_DELETE = new NavigationLocation("ORDER__INTEGER_FIELD38959", "Rordi_Delete", "Rordi") { vueRouteName = "form-RORDI", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_RORDI_CANCEL = new("ORDER__INTEGER_FIELD38959", "Rordi_Cancel", "Rordi") { vueRouteName = "form-RORDI", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_RORDI_SHOW = new("ORDER__INTEGER_FIELD38959", "Rordi_Show", "Rordi") { vueRouteName = "form-RORDI", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_RORDI_NEW = new("ORDER__INTEGER_FIELD38959", "Rordi_New", "Rordi") { vueRouteName = "form-RORDI", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_RORDI_EDIT = new("ORDER__INTEGER_FIELD38959", "Rordi_Edit", "Rordi") { vueRouteName = "form-RORDI", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_RORDI_DUPLICATE = new("ORDER__INTEGER_FIELD38959", "Rordi_Duplicate", "Rordi") { vueRouteName = "form-RORDI", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_RORDI_DELETE = new("ORDER__INTEGER_FIELD38959", "Rordi_Delete", "Rordi") { vueRouteName = "form-RORDI", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Rordi_ModalDBEdit()
-		{
-			Rordi_ViewModel model = new Rordi_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Rordi_Show
 
@@ -138,39 +129,6 @@ namespace GenioMVC.Controllers
 				Redirect = redirect,
 				BeforeOp = (sink, sp) =>
 				{
-					//FOR: ROW_REORDERING
-					string tableName = Navigation.GetStrValue("TableName");
-					string tableViewModelName = Navigation.GetStrValue("TableViewModelName");
-
-					Type tableViewModelType = Type.GetType("GenioMVC.ViewModels." + tableName + "." + tableViewModelName);
-					if (tableViewModelType != null)
-					{
-						dynamic tableViewModel = Activator.CreateInstance(tableViewModelType, this.UserContext.Current);
-						if (tableViewModel != null)
-						{
-							User u = UserContext.Current.User;
-							var row = CSGenioArordi.search(sp, model.ValCodrordi, u);
-
-							var orderField = model.ValOrder;
-							int orderFieldValue = Convert.ToInt32(orderField);
-
-							int maxOrder = 0;
-							try
-							{
-								maxOrder = sp.GetMaxFieldValue(Area.AreaRORDI, CSGenioArordi.FldOrder, tableViewModel.baseConditions, tableViewModel.relations);
-							}
-							catch (Exception ex)
-							{
-								Log.Error(ex.Message);
-							}
-
-							if (maxOrder > 0 && orderFieldValue > maxOrder)
-								model.ValOrder = orderFieldValue = maxOrder + 1;
-
-							row.Reorder_Order(sp, orderFieldValue - 1, tableViewModel.baseConditions, tableViewModel.relations, false);
-						}
-					}
-
 // USE /[MANUAL GQT BEFORE_SAVE_NEW RORDI]/
 				},
 				AfterOp = (sink, sp) =>
@@ -306,17 +264,6 @@ namespace GenioMVC.Controllers
 				},
 				AfterOp = (sink, sp) =>
 				{
-					//FOR: ROW_REORDERING
-					string tableName = Navigation.GetStrValue("TableName");
-					string tableViewModelName = Navigation.GetStrValue("TableViewModelName");
-
-					Type tableViewModelType = Type.GetType("GenioMVC.ViewModels." + tableName + "." + tableViewModelName);
-					if (tableViewModelType != null)
-					{
-						dynamic tableViewModel = Activator.CreateInstance(tableViewModelType, this.UserContext.Current);
-						if (tableViewModel != null)
-							sp.ReorderSequence(CSGenio.business.Area.AreaRORDI, CSGenioArordi.FldOrder, tableViewModel.baseConditions, tableViewModel.relations);
-					}
 // USE /[MANUAL GQT AFTER_DESTROY_DELETE RORDI]/
 				}
 			};
@@ -444,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Rordi Multiform actions
 
-		//
-		// GET /Rordi/MFRordi_New
-		[HttpGet]
-		[ActionName("MFRordi_New")]
-		public ActionResult MFRordi_New()
-		{
-			var model = new Rordi_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_RORDI_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("rordi", model.ValCodrordi);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFRordi_New_GET()
-		{
-			return MFRordi_New();
-		}
-
-		//
-		// GET /Rordi/MFRordi_Edit
-		[HttpGet]
-		[ActionName("MFRordi_Edit")]
-		public ActionResult MFRordi_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("RORDI", "EDIT", new { id = id, partialView = "MFRordi", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFRordi_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFRordi_Edit(requestModel);
-		}
-
-		//
-		// GET /Rordi/MFRordi_Cancel
-		[ActionName("MFRordi_Cancel")]
-		public ActionResult MFRordi_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Rordi(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Rordi/MFRordi_Save
-		[HttpPost]
-		[ActionName("MFRordi_Save")]
-		public JsonResult MFRordi_Save(Rordi_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRordi_Save",
-				ViewName = "MFRordi",
-				AreaName = "rordi"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Rordi/MFRordi_Delete
-		[HttpPost]
-		[ActionName("MFRordi_Delete")]
-		public JsonResult MFRordi_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRordi_Delete",
-				ViewName = "MFRordi",
-				AreaName = "rordi",
-				Location = ACTION_RORDI_EDIT
-			};
-
-			var model = new Rordi_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Rordi/Rordi_SaveEdit
 		[HttpPost]

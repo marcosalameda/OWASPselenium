@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Stock evolution
 	/// </summary>
-	public class CSGenioAstock : DbArea	{
+	public class CSGenioAstock : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -60,6 +61,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 6;
 			Qfield.CavDesignation = "SEQUENCE42310";
 
 			Qfield.Dupmsg = "";
@@ -126,6 +128,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "QUANTITY06415";
 
 			Qfield.Dupmsg = "";
@@ -137,6 +140,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "BALANCE13297";
 
 			Qfield.Dupmsg = "";
@@ -184,7 +188,7 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(11);
+			info.Pathways = new Dictionary<string, string>(12);
 			info.Pathways.Add("recei","recei");
 			info.Pathways.Add("dispa","dispa");
 			info.Pathways.Add("produ","produ");
@@ -196,6 +200,7 @@ namespace CSGenio.business
 			info.Pathways.Add("lcext","produ");
 			info.Pathways.Add("facil","produ");
 			info.Pathways.Add("facty","produ");
+			info.Pathways.Add("cntry","produ");
 		}
 
 		/// <summary>
@@ -328,18 +333,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodstock, value); }
 		}
 
-
 		/// <summary>Field : "Sequence" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldSequence { get { return m_fldSequence; } }
 		private static FieldRef m_fldSequence = new FieldRef("stock", "sequence");
 
 		/// <summary>Field : "Sequence" Tipo: "N" Formula:  ""</summary>
-		public double ValSequence
+		public decimal ValSequence
 		{
-			get { return (double)returnValueField(FldSequence); }
+			get { return (decimal)returnValueField(FldSequence); }
 			set { insertNameValueField(FldSequence, value); }
 		}
-
 
 		/// <summary>Field : "Date" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDate { get { return m_fldDate; } }
@@ -352,7 +355,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDate, value); }
 		}
 
-
 		/// <summary>Field : "Type" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldType { get { return m_fldType; } }
 		private static FieldRef m_fldType = new FieldRef("stock", "type");
@@ -363,7 +365,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldType); }
 			set { insertNameValueField(FldType, value); }
 		}
-
 
 		/// <summary>Field : ">>PRODUCT" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodprodu { get { return m_fldCodprodu; } }
@@ -376,7 +377,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodprodu, value); }
 		}
 
-
 		/// <summary>Field : ">>RECEIPT" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodrecei { get { return m_fldCodrecei; } }
 		private static FieldRef m_fldCodrecei = new FieldRef("stock", "codrecei");
@@ -387,7 +387,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodrecei); }
 			set { insertNameValueField(FldCodrecei, value); }
 		}
-
 
 		/// <summary>Field : ">>DISPATCH" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCoddispa { get { return m_fldCoddispa; } }
@@ -400,30 +399,27 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddispa, value); }
 		}
 
-
 		/// <summary>Field : "Quantity" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldQuantity { get { return m_fldQuantity; } }
 		private static FieldRef m_fldQuantity = new FieldRef("stock", "quantity");
 
 		/// <summary>Field : "Quantity" Tipo: "N" Formula:  ""</summary>
-		public double ValQuantity
+		public decimal ValQuantity
 		{
-			get { return (double)returnValueField(FldQuantity); }
+			get { return (decimal)returnValueField(FldQuantity); }
 			set { insertNameValueField(FldQuantity, value); }
 		}
-
 
 		/// <summary>Field : "Balance" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldBalance { get { return m_fldBalance; } }
 		private static FieldRef m_fldBalance = new FieldRef("stock", "balance");
 
 		/// <summary>Field : "Balance" Tipo: "N" Formula:  ""</summary>
-		public double ValBalance
+		public decimal ValBalance
 		{
-			get { return (double)returnValueField(FldBalance); }
+			get { return (decimal)returnValueField(FldBalance); }
 			set { insertNameValueField(FldBalance, value); }
 		}
-
 
 		/// <summary>Field : "Reference" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldReferenc { get { return m_fldReferenc; } }
@@ -435,7 +431,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldReferenc); }
 			set { insertNameValueField(FldReferenc, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -478,23 +473,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAstock> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAstock> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAstock>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -543,7 +521,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX STOCK]/

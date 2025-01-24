@@ -26,6 +26,15 @@ namespace GenioMVC.ViewModels.Dashboard
 		public abstract bool UserHasAccess(UserContext userContext);
 	}
 
+	/// <summary>
+	/// Where to Apply the alert color
+	/// </summary>
+	public enum AlertColorTarget
+	{
+		Background,
+		Border
+	}
+
 	public class AlertWidget : Widget
 	{
 		/// <summary>
@@ -34,12 +43,17 @@ namespace GenioMVC.ViewModels.Dashboard
 		/// <param name="sp">The persistent support.</param>
 		/// <param name="user">The user.</param>
 		public delegate List<GenioMVC.Models.Navigation.Alert>
-			GenAlert(PersistentSupport sp, CSGenio.framework.User user);
+			GenAlert(PersistentSupport sp, CSGenio.framework.User user, bool FromWidget);
 
 		/// <summary>
 		/// The identifier of the alert associated with the widget
 		/// </summary>
 		public string Idalert;
+
+		/// <summary>
+		/// Where to Apply the alert color in the widget
+		/// </summary>
+		public AlertColorTarget ApplyColorTo { get; set; }
 
 		/// <summary>
 		/// The alert generation method
@@ -63,7 +77,7 @@ namespace GenioMVC.ViewModels.Dashboard
 			var sp = userContext.PersistentSupport;
 
 			sp.openConnection();
-			GenioMVC.Models.Navigation.Alert alert = _generateAlert(sp, user).FirstOrDefault();
+			GenioMVC.Models.Navigation.Alert alert = _generateAlert(sp, user, true).FirstOrDefault();
 			sp.closeConnection();
 
 			return alert;
@@ -72,7 +86,7 @@ namespace GenioMVC.ViewModels.Dashboard
 		public override bool UserHasAccess(UserContext userContext)
 		{
 			var user = userContext.User;
-			return user.VerifyAccess(Role);
+			return user.VerifyAccess(Role, this.Module);
 		}
 	}
 
@@ -98,8 +112,6 @@ namespace GenioMVC.ViewModels.Dashboard
 
 	public class MenuWidget : Widget
 	{
-		public string Module { get; set; }
-
 		public string Path { get; set; }
 
 		public bool RenderSubmenus { get; set; }

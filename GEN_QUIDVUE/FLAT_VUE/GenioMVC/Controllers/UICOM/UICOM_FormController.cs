@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Uicom;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_UICOM_CANCEL = new NavigationLocation("UI_COMPONENT15435", "Uicom_Cancel", "Uicom") { vueRouteName = "form-UICOM", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_UICOM_SHOW = new NavigationLocation("UI_COMPONENT15435", "Uicom_Show", "Uicom") { vueRouteName = "form-UICOM", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_UICOM_NEW = new NavigationLocation("UI_COMPONENT15435", "Uicom_New", "Uicom") { vueRouteName = "form-UICOM", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_UICOM_EDIT = new NavigationLocation("UI_COMPONENT15435", "Uicom_Edit", "Uicom") { vueRouteName = "form-UICOM", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_UICOM_DUPLICATE = new NavigationLocation("UI_COMPONENT15435", "Uicom_Duplicate", "Uicom") { vueRouteName = "form-UICOM", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_UICOM_DELETE = new NavigationLocation("UI_COMPONENT15435", "Uicom_Delete", "Uicom") { vueRouteName = "form-UICOM", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_UICOM_CANCEL = new("UI_COMPONENT15435", "Uicom_Cancel", "Uicom") { vueRouteName = "form-UICOM", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_UICOM_SHOW = new("UI_COMPONENT15435", "Uicom_Show", "Uicom") { vueRouteName = "form-UICOM", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_UICOM_NEW = new("UI_COMPONENT15435", "Uicom_New", "Uicom") { vueRouteName = "form-UICOM", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_UICOM_EDIT = new("UI_COMPONENT15435", "Uicom_Edit", "Uicom") { vueRouteName = "form-UICOM", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_UICOM_DUPLICATE = new("UI_COMPONENT15435", "Uicom_Duplicate", "Uicom") { vueRouteName = "form-UICOM", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_UICOM_DELETE = new("UI_COMPONENT15435", "Uicom_Delete", "Uicom") { vueRouteName = "form-UICOM", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Uicom_ModalDBEdit()
-		{
-			Uicom_ViewModel model = new Uicom_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Uicom_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Uicom Multiform actions
 
-		//
-		// GET /Uicom/MFUicom_New
-		[HttpGet]
-		[ActionName("MFUicom_New")]
-		public ActionResult MFUicom_New()
-		{
-			var model = new Uicom_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_UICOM_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("uicom", model.ValCoduicom);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFUicom_New_GET()
-		{
-			return MFUicom_New();
-		}
-
-		//
-		// GET /Uicom/MFUicom_Edit
-		[HttpGet]
-		[ActionName("MFUicom_Edit")]
-		public ActionResult MFUicom_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("UICOM", "EDIT", new { id = id, partialView = "MFUicom", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFUicom_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFUicom_Edit(requestModel);
-		}
-
-		//
-		// GET /Uicom/MFUicom_Cancel
-		[ActionName("MFUicom_Cancel")]
-		public ActionResult MFUicom_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Uicom(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Uicom/MFUicom_Save
-		[HttpPost]
-		[ActionName("MFUicom_Save")]
-		public JsonResult MFUicom_Save(Uicom_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFUicom_Save",
-				ViewName = "MFUicom",
-				AreaName = "uicom"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Uicom/MFUicom_Delete
-		[HttpPost]
-		[ActionName("MFUicom_Delete")]
-		public JsonResult MFUicom_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFUicom_Delete",
-				ViewName = "MFUicom",
-				AreaName = "uicom",
-				Location = ACTION_UICOM_EDIT
-			};
-
-			var model = new Uicom_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Uicom/Uicom_SaveEdit
 		[HttpPost]

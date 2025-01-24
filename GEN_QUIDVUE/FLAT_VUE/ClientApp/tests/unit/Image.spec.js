@@ -1,12 +1,9 @@
-/**
- * @jest-environment jsdom
- */
 import { nextTick } from 'vue'
 import { fireEvent } from '@testing-library/vue'
 import { flushPromises } from '@vue/test-utils'
 import { vi } from 'vitest'
-import { render } from './utils'
 
+import { render } from './utils'
 import QImage from '@/components/inputs/image/QImage.vue'
 import fakeData from '../cases/Image.mock.js'
 

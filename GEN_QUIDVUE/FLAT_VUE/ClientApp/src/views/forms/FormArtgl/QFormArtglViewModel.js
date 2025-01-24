@@ -77,22 +77,32 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValDocument',
 			area: 'GITEM',
 			field: 'DOCUMENT',
+			properties: computed(() => this.ValDocumentPropertiesVM),
+			documentFK: computed(() => this.ValDocumentfk),
+			currentDocument: computed(() => this.ValDocumentData),
 			description: computed(() => this.Resources.DOCUMENT00695),
 		}).cloneFrom(values?.ValDocument))
 		watch(() => this.ValDocument.value, (newValue, oldValue) => this.onUpdate('gitem.document', this.ValDocument, newValue, oldValue))
 
-		this.ValDocumentPropertiesVM = new modelFieldType.Base({
+		this.ValDocumentPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'ValDocumentPropertiesVM',
 			area: 'GITEM',
 			field: 'DOCUMENTDOCUM',
 			ignoreFldSubmit: true
-		}).cloneFrom(values?.ValDocumentPropertiesVM)
+		}).cloneFrom(values?.ValDocumentPropertiesVM))
 		this.ValDocumentfk = reactive(new modelFieldType.Base({
 			id: 'ValDocumentfk',
 			area: 'GITEM',
-			field: 'DOCUMENTDOCUMFK'
+			field: 'DOCUMENTFK'
 		}).cloneFrom(values?.ValDocumentfk))
-		watch(() => this.ValDocumentfk.value, (newValue, oldValue) => this.onUpdate('gitem.documentdocumfk', this.ValDocumentfk, newValue, oldValue))
+		watch(() => this.ValDocumentfk.value, (newValue, oldValue) => this.onUpdate('gitem.documentfk', this.ValDocumentfk, newValue, oldValue))
+		this.ValDocumentData = reactive(new modelFieldType.DocumentData({
+			id: 'ValDocumentData',
+			area: 'GITEM',
+			field: 'DOCUMENTDATA',
+			ignoreFldSubmit: true
+		}).cloneFrom(values?.ValDocumentData))
+		watch(() => this.ValDocumentData.value, (newValue, oldValue) => this.onUpdate('gitem.documentdata', this.ValDocumentData, newValue, oldValue), { deep: true })
 	}
 
 	/**
@@ -107,5 +117,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodgitem'
 
 	get QPrimaryKey() { return this.ValCodgitem.value }
-	set QPrimaryKey(value) { this.ValCodgitem.value = value }
+	set QPrimaryKey(value) { this.ValCodgitem.updateValue(value) }
 }

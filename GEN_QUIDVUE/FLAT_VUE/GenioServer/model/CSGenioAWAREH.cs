@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Warehouse
 	/// </summary>
-	public class CSGenioAwareh : DbArea	{
+	public class CSGenioAwareh : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -103,6 +104,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "NUMBER_OF_EMPLOYEES52067";
 
 			Qfield.Dupmsg = "";
@@ -281,7 +283,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodwareh, value); }
 		}
 
-
 		/// <summary>Field : "Warehouse" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldWarehdes { get { return m_fldWarehdes; } }
 		private static FieldRef m_fldWarehdes = new FieldRef("wareh", "warehdes");
@@ -292,7 +293,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldWarehdes); }
 			set { insertNameValueField(FldWarehdes, value); }
 		}
-
 
 		/// <summary>Field : "Acronym" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldWarehcod { get { return m_fldWarehcod; } }
@@ -305,7 +305,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldWarehcod, value); }
 		}
 
-
 		/// <summary>Field : "Activity" Tipo: "AL" Formula:  ""</summary>
 		public static FieldRef FldActivity { get { return m_fldActivity; } }
 		private static FieldRef m_fldActivity = new FieldRef("wareh", "activity");
@@ -316,7 +315,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldActivity); }
 			set { insertNameValueField(FldActivity, value); }
 		}
-
 
 		/// <summary>Field : "Show Record" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldShowreco { get { return m_fldShowreco; } }
@@ -329,18 +327,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldShowreco, value); }
 		}
 
-
 		/// <summary>Field : "Number of employees" Tipo: "N" Formula: SR "[WPESS->1]"</summary>
 		public static FieldRef FldNum_employee { get { return m_fldNum_employee; } }
 		private static FieldRef m_fldNum_employee = new FieldRef("wareh", "num_employee");
 
 		/// <summary>Field : "Number of employees" Tipo: "N" Formula: SR "[WPESS->1]"</summary>
-		public double ValNum_employee
+		public decimal ValNum_employee
 		{
-			get { return (double)returnValueField(FldNum_employee); }
+			get { return (decimal)returnValueField(FldNum_employee); }
 			set { insertNameValueField(FldNum_employee, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -383,23 +379,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAwareh> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAwareh> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAwareh>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -448,7 +427,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX WAREH]/

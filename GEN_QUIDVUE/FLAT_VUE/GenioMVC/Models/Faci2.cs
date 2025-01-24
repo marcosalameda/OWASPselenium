@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -74,7 +74,9 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Image" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Faci2.ValImage")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValImage { get { return klass.ValImage; } set { klass.ValImage = value; } }
+		public ImageModel ValImage { get { return new ImageModel(klass.ValImage) { Ticket = ValImageQTicket }; } set { klass.ValImage = value; } }
+		[JsonIgnore]
+		public string ValImageQTicket = null;
 
 		[DisplayName("GPS input")]
 		/// <summary>Field : "GPS input" Tipo: "AC" Formula:  ""</summary>
@@ -88,13 +90,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Latitude" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Faci2.ValLatitude")]
 		[NumericAttribute(6)]
-		public decimal? ValLatitude { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLatitude, 6)); } set { klass.ValLatitude = Convert.ToDouble(value); } }
+		public decimal? ValLatitude { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLatitude, 6)); } set { klass.ValLatitude = Convert.ToDecimal(value); } }
 
 		[DisplayName("Longitude")]
 		/// <summary>Field : "Longitude" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Faci2.ValLongitud")]
 		[NumericAttribute(6)]
-		public decimal? ValLongitud { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLongitud, 6)); } set { klass.ValLongitud = Convert.ToDouble(value); } }
+		public decimal? ValLongitud { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLongitud, 6)); } set { klass.ValLongitud = Convert.ToDecimal(value); } }
 
 		[DisplayName("Geographical coordinate")]
 		/// <summary>Field : "Geographical coordinate" Tipo: "GG" Formula:  ""</summary>
@@ -108,6 +110,11 @@ namespace GenioMVC.Models
 		[GeographicAttribute("GG")]
 		public string ValGeocoord { get { return klass.ValGeocoord; } set { klass.ValGeocoord = value; } }
 
+		[DisplayName(">> Country")]
+		/// <summary>Field : ">> Country" Tipo: "CF" Formula:  ""</summary>
+		[ShouldSerialize("Faci2.ValCodcntry")]
+		public string ValCodcntry { get { return klass.ValCodcntry; } set { klass.ValCodcntry = value; } }
+
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Faci2.ValZzstate")]
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
@@ -116,19 +123,19 @@ namespace GenioMVC.Models
 		public Faci2(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAfaci2(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Faci2(UserContext userContext, CSGenioAfaci2 val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAfaci2 csgenioa)
@@ -145,7 +152,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

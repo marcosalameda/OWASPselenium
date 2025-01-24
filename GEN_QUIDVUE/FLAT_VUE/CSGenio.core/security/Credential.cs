@@ -27,13 +27,10 @@ namespace GenioServer.security
     public class TokenCredential : Credential
     {
         public string Token { get; set; }
-    }
-	
-	public class TokenCASCredential : TokenCredential
-    {
+        public string Auth { get; set; }
         public string OriginUrl { get; set; }
     }
-
+	
     public class Password
     {
         public Password(string newPass, string confirmPass)

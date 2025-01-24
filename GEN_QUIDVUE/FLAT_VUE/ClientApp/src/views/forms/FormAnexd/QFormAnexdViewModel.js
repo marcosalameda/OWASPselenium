@@ -131,6 +131,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'TITTRADU',
 			maxLength: 85,
 			description: computed(() => this.Resources.TRANSLATED_TITLE58577),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -142,7 +143,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:anexd.title', 'fieldChange:anexd.codlang'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValTittradu))
@@ -153,22 +153,32 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValDocument',
 			area: 'ANEXD',
 			field: 'DOCUMENT',
+			properties: computed(() => this.ValDocumentPropertiesVM),
+			documentFK: computed(() => this.ValDocumentfk),
+			currentDocument: computed(() => this.ValDocumentData),
 			description: computed(() => this.Resources.DOCUMENT00695),
 		}).cloneFrom(values?.ValDocument))
 		watch(() => this.ValDocument.value, (newValue, oldValue) => this.onUpdate('anexd.document', this.ValDocument, newValue, oldValue))
 
-		this.ValDocumentPropertiesVM = new modelFieldType.Base({
+		this.ValDocumentPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'ValDocumentPropertiesVM',
 			area: 'ANEXD',
 			field: 'DOCUMENTDOCUM',
 			ignoreFldSubmit: true
-		}).cloneFrom(values?.ValDocumentPropertiesVM)
+		}).cloneFrom(values?.ValDocumentPropertiesVM))
 		this.ValDocumentfk = reactive(new modelFieldType.Base({
 			id: 'ValDocumentfk',
 			area: 'ANEXD',
-			field: 'DOCUMENTDOCUMFK'
+			field: 'DOCUMENTFK'
 		}).cloneFrom(values?.ValDocumentfk))
-		watch(() => this.ValDocumentfk.value, (newValue, oldValue) => this.onUpdate('anexd.documentdocumfk', this.ValDocumentfk, newValue, oldValue))
+		watch(() => this.ValDocumentfk.value, (newValue, oldValue) => this.onUpdate('anexd.documentfk', this.ValDocumentfk, newValue, oldValue))
+		this.ValDocumentData = reactive(new modelFieldType.DocumentData({
+			id: 'ValDocumentData',
+			area: 'ANEXD',
+			field: 'DOCUMENTDATA',
+			ignoreFldSubmit: true
+		}).cloneFrom(values?.ValDocumentData))
+		watch(() => this.ValDocumentData.value, (newValue, oldValue) => this.onUpdate('anexd.documentdata', this.ValDocumentData, newValue, oldValue), { deep: true })
 	}
 
 	/**
@@ -183,5 +193,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodanexd'
 
 	get QPrimaryKey() { return this.ValCodanexd.value }
-	set QPrimaryKey(value) { this.ValCodanexd.value = value }
+	set QPrimaryKey(value) { this.ValCodanexd.updateValue(value) }
 }

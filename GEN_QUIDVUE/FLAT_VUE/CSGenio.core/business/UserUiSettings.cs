@@ -7,155 +7,66 @@ using System.Linq;
 
 namespace CSGenio.business
 {
-    public class UserUiSettings
-    {
-		//FOR: USER_TABLE_CONFIG (VueJS)
-        public List<CSGenioAtblcfgsel> userTableConfigSelectedInfoRow { get; private set; }
-        public string userTableConfigSelectedPk { get; private set; }
-        public CSGenioAtblcfg userTableConfigSelectedRow { get; private set; }
-        public string userTableConfigSelected { get; private set; }
-        public string userTableConfigSelectedName { get; private set; }
-        public List<CSGenioAtblcfg> userTableConfigs { get; private set; }
-        public List<string> userTableConfigNames { get; private set; }
-		public CSGenioAtblcfg userTableConfigDefaultRow { get; private set; }
-        public string userTableConfigDefaultName { get; private set; }
+    /// <summary>
+	/// Manages user interface settings and configurations.
+	/// Handles the persistence and caching of UI settings for individual users.
+	/// </summary>
+	public abstract class UserUiSettings
+	{
+		#region User Settings Properties
 
-        public CSGenioAlstusr userSettings { get; private set; }
-        public List<CSGenioAlstcol> userColumns { get; private set; }
-        public List<CSGenioAlstren> userRenderings { get; private set; }
-        public List<CSGenioAusrwid> userWidgets { get; private set; }
-		
-        public string key { get; private set; }
-		
-        public static UserUiSettings Load(PersistentSupport sp, string uuid, User user, string UserTableConfigName = "", bool loadBase = false)
-        {
-			string ckey = "lstUser_" + uuid + ";" + user.Codpsw;
-            UserUiSettings res;
+		/// <summary>
+		/// Gets the cache key for this settings instance.
+		/// </summary>
+		protected string Key { get; }
 
-            if (loadBase)
-                res = new UserUiSettings();
-            else
-                res = QCache.Instance.User.Get(ckey) as UserUiSettings;
+		#endregion
 
-            if (res == null || (res.userTableConfigSelectedName != null && !res.userTableConfigSelectedName.Equals(UserTableConfigName)))
-            {
-                res = new UserUiSettings();
-                res.key = ckey;
+		/// <summary>
+		/// Initializes a new instance of the class.
+		/// </summary>
+		protected UserUiSettings(string key)
+		{
+			Key = key;
+		}
 
-                //FOR: USER_TABLE_CONFIG (VueJS)
-                //BEGIN: User table configuration
+		#region Public Methods
 
-                //BEGIN: Get selected configuration
-                //Get row of selected configuration info
-                res.userTableConfigSelectedInfoRow = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
-					.Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
-					.Equal(CSGenioAtblcfgsel.FldUuid, uuid)
-					.Equal(CSGenioAtblcfgsel.FldZzstate, 0))
-					.ToList();
-					
-				//Default configuration
-                if (res.userTableConfigSelectedInfoRow != null && res.userTableConfigSelectedInfoRow.Count > 0)
-                {
-                    res.userTableConfigDefaultRow = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
-                        .Equal(CSGenioAtblcfg.FldCodtblcfg, res.userTableConfigSelectedInfoRow[0].ValCodtblcfg)
-                        .Equal(CSGenioAtblcfg.FldZzstate, 0))
-                        .FirstOrDefault();
+		/// <summary>
+		/// Invalidates the cached settings for a specific user.
+		/// </summary>
+		/// <param name="uuid">The unique identifier for the settings.</param>
+		/// <param name="user">The user whose settings should be invalidated.</param>
+		public static void Invalidate(string uuid, User user)
+		{
+			string cacheKey = GenerateCacheKey(uuid, user);
+			QCache.Instance.User.Invalidate(cacheKey);
+		}
 
-                    res.userTableConfigDefaultName = res.userTableConfigDefaultRow.ValName;
-                }
+		#endregion
 
-                //User selected configuration
-                if (!string.IsNullOrEmpty(UserTableConfigName))
-                {
-                    //Get selected configuration row
-                    res.userTableConfigSelectedRow = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
-                        .Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
-                        .Equal(CSGenioAtblcfg.FldUuid, uuid)
-                        .Equal(CSGenioAtblcfg.FldName, UserTableConfigName)
-                        .Equal(CSGenioAtblcfg.FldZzstate, 0))
-                        .FirstOrDefault();
-                    //Get selected configuration data
-                    res.userTableConfigSelected = res.userTableConfigSelectedRow.ValConfig;
-                    res.userTableConfigSelectedName = res.userTableConfigSelectedRow.ValName;
+		#region Private Helper Methods
 
-                    //Get PK of selected configuration
-                    res.userTableConfigSelectedPk = res.userTableConfigSelectedRow.ValCodtblcfg;
-                }
-                //Default configuration
-                else if (res.userTableConfigDefaultRow != null)
-				{
-					//Get selected configuration row
-					res.userTableConfigSelectedRow = res.userTableConfigDefaultRow;
-					
-                    //Get selected configuration data
-                    res.userTableConfigSelected = res.userTableConfigSelectedRow.ValConfig;
-                    res.userTableConfigSelectedName = res.userTableConfigSelectedRow.ValName;
-					
-					//Get PK of selected configuration
-                    res.userTableConfigSelectedPk = res.userTableConfigSelectedRow.ValCodtblcfg;
+		/// <summary>
+		/// Generates a cache key for the specified user and UUID.
+		/// </summary>
+		protected static string GenerateCacheKey(string uuid, User user) 
+			=> $"lstUser_{uuid};{user.Codpsw};{user.Year}";
 
-                }
-				//END: Get selected configuration
-				
-                //END: User table configuration
+		/// <summary>
+		/// Retrieves settings from cache.
+		/// </summary>
+		protected static UserUiSettings GetFromCache(string cacheKey)
+			=> QCache.Instance.User.Get(cacheKey) as UserUiSettings;
 
-                //BEGIN: User Settings
-                res.userSettings = CSGenioAlstusr.searchList(sp, user, CriteriaSet.And()
-                    .Equal(CSGenioAlstusr.FldCodpsw, user.Codpsw)
-                    .Equal(CSGenioAlstusr.FldDescric, uuid)
-                    .Equal(CSGenioAlstusr.FldZzstate, 0))
-                    .FirstOrDefault();
-					
-                if(res.userSettings != null)
-                {
-                    res.userColumns = CSGenioAlstcol.searchList(sp, user, CriteriaSet.And()
-                        .Equal(CSGenioAlstcol.FldCodlstusr, res.userSettings.ValCodlstusr)
-                        .Equal(CSGenioAlstcol.FldZzstate, 0))
-                        .ToList();
-                    //do the sort in the client side, don't bother the database with that
-                    res.userColumns.Sort((x, y) => x.ValPosicao.CompareTo(y.ValPosicao));
+		/// <summary>
+		/// Caches the current settings instance.
+		/// </summary>
+		protected void CacheSettings()
+		{
+			QCache.Instance.User.Put(Key, this, TimeSpan.FromHours(1));
+		}
 
-                    res.userRenderings = CSGenioAlstren.searchList(sp, user, CriteriaSet.And()
-                        .Equal(CSGenioAlstren.FldCodlstusr, res.userSettings.ValCodlstusr)
-                        .Equal(CSGenioAlstren.FldZzstate, 0))
-                        .ToList();
-                    //do the sort in the client side, don't bother the database with that
-                    res.userRenderings.Sort((x, y) => x.ValPosicao.CompareTo(y.ValPosicao));
-
-                    res.userWidgets = CSGenioAusrwid.searchList(sp, user, CriteriaSet.And()
-                        .Equal(CSGenioAusrwid.FldCodlstusr, res.userSettings.ValCodlstusr)
-                        .Equal(CSGenioAusrwid.FldZzstate, 0))
-                        .ToList();
-                }
-                //END: User Settings
-
-                if (string.IsNullOrEmpty(UserTableConfigName))
-                    QCache.Instance.User.Put(ckey, res, TimeSpan.FromHours(1));
-            }
-
-            //BEGIN: User table configuration
-            //Get all user table configurations
-            res.userTableConfigs = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
-                .Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
-                .Equal(CSGenioAtblcfg.FldUuid, uuid)
-                .Equal(CSGenioAtblcfg.FldZzstate, 0))
-                .ToList();
-
-            res.userTableConfigNames = new List<string>();
-            foreach (var row in res.userTableConfigs)
-            {
-                res.userTableConfigNames.Add(row.ValName);
-            }
-            //END: User table configuration
-
-            return res;
-        }
-
-        public static void Invalidate(string uuid, User user)
-        {
-            string ckey = "lstUser_" + uuid + ";" + user.Codpsw;
-
-            QCache.Instance.User.Invalidate(ckey);
-        }
-    }
+		#endregion
+	}
 }

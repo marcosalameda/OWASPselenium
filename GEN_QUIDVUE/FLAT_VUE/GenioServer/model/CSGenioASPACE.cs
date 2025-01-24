@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Space
 	/// </summary>
-	public class CSGenioAspace : DbArea	{
+	public class CSGenioAspace : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -280,7 +281,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodespac, value); }
 		}
 
-
 		/// <summary>Field : "Code" Tipo: "TF" Formula:  ""</summary>
 		public static FieldRef FldCode { get { return m_fldCode; } }
 		private static FieldRef m_fldCode = new FieldRef("space", "code");
@@ -291,7 +291,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCode); }
 			set { insertNameValueField(FldCode, value); }
 		}
-
 
 		/// <summary>Field : "Designation" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldDesignat { get { return m_fldDesignat; } }
@@ -304,7 +303,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDesignat, value); }
 		}
 
-
 		/// <summary>Field : "Acronym" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSigla { get { return m_fldSigla; } }
 		private static FieldRef m_fldSigla = new FieldRef("space", "sigla");
@@ -316,18 +314,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSigla, value); }
 		}
 
-
 		/// <summary>Field : "Level" Tipo: "TN" Formula:  ""</summary>
 		public static FieldRef FldNivel { get { return m_fldNivel; } }
 		private static FieldRef m_fldNivel = new FieldRef("space", "nivel");
 
 		/// <summary>Field : "Level" Tipo: "TN" Formula:  ""</summary>
-		public double ValNivel
+		public decimal ValNivel
 		{
-			get { return (double)returnValueField(FldNivel); }
+			get { return (decimal)returnValueField(FldNivel); }
 			set { insertNameValueField(FldNivel, value); }
 		}
-
 
 		/// <summary>Field : "Dependency" Tipo: "TP" Formula:  ""</summary>
 		public static FieldRef FldCodigode { get { return m_fldCodigode; } }
@@ -340,7 +336,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodigode, value); }
 		}
 
-
 		/// <summary>Field : "Moving" Tipo: "TM" Formula:  ""</summary>
 		public static FieldRef FldMoviment { get { return m_fldMoviment; } }
 		private static FieldRef m_fldMoviment = new FieldRef("space", "moviment");
@@ -351,7 +346,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldMoviment); }
 			set { insertNameValueField(FldMoviment, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -394,23 +388,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAspace> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAspace> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAspace>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -459,7 +436,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX SPACE]/

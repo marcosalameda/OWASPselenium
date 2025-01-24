@@ -116,7 +116,7 @@ $header-height: 6rem;
 $btn-align-right: false;
 $menu-multi-level: true;
 $menu-multi-level-border: false;
-$border-radius: 0.25rem;
+$border-radius: var(--border-radius);
 $compactstyle: true;
 $compactheader: false;
 $table-striped: false;
@@ -141,7 +141,7 @@ $navbar-font-size: 0.9rem;
 $navbar-font-weight: 400;
 
 // Custom tab navigator
-$custom-tab-navigation: false;
+$tab-style: "line";
 
 $table-border-color: $gray-light;
 $input-border-color: $neutral-light;
@@ -152,6 +152,14 @@ $input-border-color: $neutral-light;
 
 $input-disabled-bg: rgb($neutral-light-rgb / 0.25);
 $header-bg: $background !default;
+$header-bg-rgb: $background-rgb !default;
+$header-on-bg: $on-background !default;
+$header-on-bg-rgb: $on-background-rgb !default;
+$navbar-bg: $primary !default;
+$navbar-bg-rgb: $primary-rgb !default;
+$navbar-on-bg: $on-primary !default;
+$navbar-on-bg-rgb: $on-primary-rgb !default;
+$dashboard-bg: $light !default;
 
 // Group borders
 $group-border-top: 1px solid $input-border-color !default;

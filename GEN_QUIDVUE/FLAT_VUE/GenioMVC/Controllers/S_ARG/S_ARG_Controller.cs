@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,11 +19,9 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER S_ARG]/
 
@@ -41,16 +43,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER S_ARG]/
 
 
-
-
-
 		/// <summary>
 		/// Get "See more..." tree structure
 		/// </summary>
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try
@@ -80,44 +79,30 @@ namespace GenioMVC.Controllers
 			return base.GetDocumsTickets(requestModel.TableName, requestModel.FieldName, requestModel.KeyValue);
 		}
 
-		public ActionResult GetDocumsVersionsDBEdit([FromBody]RequestDocumTicketsModel requestModel)
+		public ActionResult GetFileVersions([FromBody]RequestDocumGetModel requestModel)
 		{
-			return base.GetDocumsVersionsDBEdit(requestModel.Ticket);
+			return base.GetFileVersions(requestModel.Ticket);
 		}
 
-		public ActionResult GetFileProperties([FromBody]RequestDocumTicketsModel requestModel)
+		public ActionResult GetFileProperties([FromBody]RequestDocumGetModel requestModel)
 		{
 			return base.GetFileProperties(requestModel.Ticket);
 		}
 
-		public ActionResult SubmitVersion([FromBody]RequestDocumTicketsModel requestModel)
-		{
-			return base.SubmitVersion(requestModel.Ticket);
-		}
-
-		public ActionResult CheckoutDocum([FromBody]RequestDocumTicketsModel requestModel)
-		{
-			return base.CheckoutDocum(requestModel.Ticket);
-		}
-
-		public ActionResult DeleteFile([FromBody]RequestDocumDeleteModel requestModel)
-		{
-			return base.DeleteFile(requestModel.Ticket, requestModel.Action);
-		}
-
-		public new ActionResult SetFile([FromForm] string ticket, [FromForm] ControllerBase.VersionSubmitAction mode = VersionSubmitAction.Insert, [FromForm] string version = "1")
-		{
-			return base.SetFile(ticket, mode, version);
-		}
-
-		public ActionResult GetFile([FromBody]RequestDocumTicketsModel requestModel)
+		public ActionResult GetFile([FromBody]RequestDocumGetModel requestModel)
 		{
 			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
 		}
 
-		public ActionResult GetSpecificFile([FromBody]RequestDocumTicketsModel requestModel)
+		[DisableRequestSizeLimit]
+		public new ActionResult SetFile([FromForm] string ticket, [FromForm] VersionSubmitAction mode = VersionSubmitAction.Insert, [FromForm] string version = "1")
 		{
-			return base.GetSpecificFile(requestModel.Ticket);
+			return base.SetFile(ticket, mode, version);
+		}
+
+		public ActionResult SetFilesState([FromBody]RequestDocumsChangeModel requestModel)
+		{
+			return base.SetFilesState(requestModel.Documents);
 		}
 	}
 }

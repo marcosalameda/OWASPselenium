@@ -34,5 +34,7 @@ namespace CSGenio.persistence
         object returnValueField(string fieldName);
 
         void insertNameValueField(string fieldName, object Qvalue);
+
+        string QPrimaryKey { get; }
     }
 }

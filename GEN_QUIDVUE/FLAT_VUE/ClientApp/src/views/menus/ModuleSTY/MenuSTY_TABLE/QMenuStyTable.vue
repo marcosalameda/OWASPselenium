@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuSTY_TABLEViewModel.js'
+
 	const requiredTextResources = ['QMenuSTY_TABLE', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: 'TABLE',
 					isMenuList: true,
+					designation: computed(() => this.Resources.TABLE15475),
 					acronym: 'STY_TABLE',
 					name: 'EQUIP',
 					route: 'menu-STY_TABLE',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'STY_Menu_TABLE',
 						controller: 'EQUIP',
 						action: 'STY_Menu_TABLE',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -188,7 +198,7 @@
 								field: 'DTAQUISI',
 								label: computed(() => this.Resources.ACQUISITION44180),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.BooleanColumn({
 								order: 7,
@@ -204,8 +214,10 @@
 								area: 'EQUIP',
 								field: 'PHOTOGRA',
 								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.CurrencyColumn({
 								order: 9,
@@ -224,7 +236,7 @@
 								field: 'FREQUENC',
 								label: computed(() => this.Resources.LOAN_FREQUENCY00701),
 								scrollData: 1,
-								maxDigits: 1,
+								maxDigits: 2,
 								decimalPlaces: 0,
 								array: qProjArrays.QArrayFreqempr.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayFreqempr.type,
@@ -245,7 +257,7 @@
 								label: computed(() => this.Resources.N_R__ROOM43805),
 								dataLength: 10,
 								scrollData: 10,
-								// eslint-disable-next-line no-unused-vars, eqeqeq
+								// eslint-disable-next-line no-unused-vars
 								bgColor: (row) => qApi.RGB(220,220,220),
 								pkColumn: 'ValCodrooms',
 							}),
@@ -272,7 +284,7 @@
 							showRecordCount: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -376,6 +388,7 @@
 								id: 'RCA_STY_2511',
 								name: 'form-EQUIP',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -392,23 +405,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: EQUIP
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValRegistnr',
 							defaultSearchColumnNameOriginal: 'ValRegistnr',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValRegistnr',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
 						uuid: '6215afe4-2b62-44b3-92eb-54468e9325fe',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -437,6 +444,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS STY_TABLE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS STY_MENU_TABLE]/
 // eslint-disable-next-line

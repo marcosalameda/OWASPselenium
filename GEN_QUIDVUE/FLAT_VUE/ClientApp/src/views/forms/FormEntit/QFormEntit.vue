@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -96,7 +96,7 @@
 			:data-loading="!formInitialDataLoaded"
 			:key="domVersionKey">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.ENTIT___ENTITNAME____.isVisible || controls.ENTIT___ENTITINITIALS.isVisible || controls.ENTIT___ENTITREGISTRA.isVisible || controls.ENTIT___ENTITTAXNUMBE.isVisible || controls.ENTIT___ENTITEMAIL___.isVisible || controls.ENTIT___ENTITPHONENUM.isVisible || controls.ENTIT___ENTITIBAN____.isVisible || controls.ENTIT___ENTITBUILDING.isVisible || controls.ENTIT___ENTITSTREET__.isVisible || controls.ENTIT___ENTITTOWN____.isVisible || controls.ENTIT___ENTITCOUNTY__.isVisible || controls.ENTIT___ENTITSTATE___.isVisible || controls.ENTIT___ENTITPOBOX___.isVisible || controls.ENTIT___ENTITPOSTALCO.isVisible || controls.ENTIT___ENTITTELEPHON.isVisible || controls.ENTIT___ENTITFAX_____.isVisible || controls.ENTIT___ENTITWEBSITE_.isVisible || controls.ENTIT___ENTITPERSON__.isVisible || controls.ENTIT___ENTITCONTACT_.isVisible || controls.ENTIT___ENTITOWNER___.isVisible || controls.ENTIT___ENTITCARRIER_.isVisible || controls.ENTIT___ENTITSUPPLIER.isVisible || controls.ENTIT___ENTITMANUFACT.isVisible || controls.ENTIT___ENTITFOUNDED_.isVisible || controls.ENTIT___FACI1NAME____.isVisible || controls.ENTIT___FACI2NAME____.isVisible || controls.ENTIT___ENTITLANGUAGE.isVisible || controls.ENTIT___ENTITCURRENCY.isVisible">
+				<q-row-container v-show="controls.ENTIT___ENTITNAME____.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITNAME____.isVisible"
 						class="control-join-group">
@@ -106,14 +106,16 @@
 							v-on="controls.ENTIT___ENTITNAME____.handlers"
 							:loading="controls.ENTIT___ENTITNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITNAME____.props"
 								:model-value="model.ValName.value"
-								@update:model-value="model.ValName.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITNAME____, model.ValName.value)"
+								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITINITIALS.isVisible || controls.ENTIT___ENTITREGISTRA.isVisible || controls.ENTIT___ENTITTAXNUMBE.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITINITIALS.isVisible"
 						class="control-join-group">
@@ -123,12 +125,12 @@
 							v-on="controls.ENTIT___ENTITINITIALS.handlers"
 							:loading="controls.ENTIT___ENTITINITIALS.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITINITIALS.props"
 								:model-value="model.ValInitials.value"
-								@update:model-value="model.ValInitials.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITINITIALS, model.ValInitials.value)"
+								@change="model.ValInitials.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -140,12 +142,12 @@
 							v-on="controls.ENTIT___ENTITREGISTRA.handlers"
 							:loading="controls.ENTIT___ENTITREGISTRA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITREGISTRA.props"
 								:model-value="model.ValRegistra.value"
-								@update:model-value="model.ValRegistra.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITREGISTRA, model.ValRegistra.value)"
+								@change="model.ValRegistra.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -157,14 +159,53 @@
 							v-on="controls.ENTIT___ENTITTAXNUMBE.handlers"
 							:loading="controls.ENTIT___ENTITTAXNUMBE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITTAXNUMBE.props"
 								:model-value="model.ValTaxnumbe.value"
-								@update:model-value="model.ValTaxnumbe.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITTAXNUMBE, model.ValTaxnumbe.value)"
+								@change="model.ValTaxnumbe.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITFOUNDED_.isVisible || controls.ENTIT___ENTITOWNER___.isVisible">
+					<q-control-wrapper
+						v-show="controls.ENTIT___ENTITFOUNDED_.isVisible"
+						class="control-join-group">
+						<base-input-structure
+							class="i-text"
+							v-bind="controls.ENTIT___ENTITFOUNDED_"
+							v-on="controls.ENTIT___ENTITFOUNDED_.handlers"
+							:loading="controls.ENTIT___ENTITFOUNDED_.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
+								v-if="controls.ENTIT___ENTITFOUNDED_.isVisible"
+								v-bind="controls.ENTIT___ENTITFOUNDED_.props"
+								:model-value="model.ValFounded.value"
+								@reset-icon-click="model.ValFounded.fnUpdateValue(model.ValFounded.originalValue ?? new Date())"
+								@update:model-value="model.ValFounded.fnUpdateValue($event ?? '')" />
+						</base-input-structure>
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ENTIT___ENTITOWNER___.isVisible"
+						class="control-join-group">
+						<base-input-structure
+							class="i-text"
+							v-bind="controls.ENTIT___ENTITOWNER___"
+							v-on="controls.ENTIT___ENTITOWNER___.handlers"
+							:loading="controls.ENTIT___ENTITOWNER___.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<q-text-field
+								v-bind="controls.ENTIT___ENTITOWNER___.props"
+								:model-value="model.ValOwner.value"
+								@blur="onBlur(controls.ENTIT___ENTITOWNER___, model.ValOwner.value)"
+								@change="model.ValOwner.fnUpdateValueOnChange" />
+						</base-input-structure>
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITEMAIL___.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITEMAIL___.isVisible"
 						class="control-join-group">
@@ -174,14 +215,16 @@
 							v-on="controls.ENTIT___ENTITEMAIL___.handlers"
 							:loading="controls.ENTIT___ENTITEMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITEMAIL___.props"
 								:model-value="model.ValEmail.value"
-								@update:model-value="model.ValEmail.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITEMAIL___, model.ValEmail.value)"
+								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITPHONENUM.isVisible || controls.ENTIT___ENTITIBAN____.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITPHONENUM.isVisible"
 						class="control-join-group">
@@ -191,12 +234,12 @@
 							v-on="controls.ENTIT___ENTITPHONENUM.handlers"
 							:loading="controls.ENTIT___ENTITPHONENUM.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITPHONENUM.props"
 								:model-value="model.ValPhonenum.value"
-								@update:model-value="model.ValPhonenum.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITPHONENUM, model.ValPhonenum.value)"
+								@change="model.ValPhonenum.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -208,14 +251,16 @@
 							v-on="controls.ENTIT___ENTITIBAN____.handlers"
 							:loading="controls.ENTIT___ENTITIBAN____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITIBAN____.props"
 								:model-value="model.ValIban.value"
-								@update:model-value="model.ValIban.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITIBAN____, model.ValIban.value)"
+								@change="model.ValIban.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITBUILDING.isVisible || controls.ENTIT___ENTITSTREET__.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITBUILDING.isVisible"
 						class="control-join-group">
@@ -225,12 +270,12 @@
 							v-on="controls.ENTIT___ENTITBUILDING.handlers"
 							:loading="controls.ENTIT___ENTITBUILDING.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITBUILDING.props"
 								:model-value="model.ValBuilding.value"
-								@update:model-value="model.ValBuilding.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITBUILDING, model.ValBuilding.value)"
+								@change="model.ValBuilding.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -242,14 +287,16 @@
 							v-on="controls.ENTIT___ENTITSTREET__.handlers"
 							:loading="controls.ENTIT___ENTITSTREET__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITSTREET__.props"
 								:model-value="model.ValStreet.value"
-								@update:model-value="model.ValStreet.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITSTREET__, model.ValStreet.value)"
+								@change="model.ValStreet.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITTOWN____.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITTOWN____.isVisible"
 						class="control-join-group">
@@ -259,14 +306,16 @@
 							v-on="controls.ENTIT___ENTITTOWN____.handlers"
 							:loading="controls.ENTIT___ENTITTOWN____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITTOWN____.props"
 								:model-value="model.ValTown.value"
-								@update:model-value="model.ValTown.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITTOWN____, model.ValTown.value)"
+								@change="model.ValTown.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITCOUNTY__.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITCOUNTY__.isVisible"
 						class="control-join-group">
@@ -276,14 +325,16 @@
 							v-on="controls.ENTIT___ENTITCOUNTY__.handlers"
 							:loading="controls.ENTIT___ENTITCOUNTY__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITCOUNTY__.props"
 								:model-value="model.ValCounty.value"
-								@update:model-value="model.ValCounty.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITCOUNTY__, model.ValCounty.value)"
+								@change="model.ValCounty.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITSTATE___.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITSTATE___.isVisible"
 						class="control-join-group">
@@ -293,14 +344,16 @@
 							v-on="controls.ENTIT___ENTITSTATE___.handlers"
 							:loading="controls.ENTIT___ENTITSTATE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITSTATE___.props"
 								:model-value="model.ValState.value"
-								@update:model-value="model.ValState.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITSTATE___, model.ValState.value)"
+								@change="model.ValState.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITPOBOX___.isVisible || controls.ENTIT___ENTITPOSTALCO.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITPOBOX___.isVisible"
 						class="control-join-group">
@@ -310,12 +363,12 @@
 							v-on="controls.ENTIT___ENTITPOBOX___.handlers"
 							:loading="controls.ENTIT___ENTITPOBOX___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITPOBOX___.props"
 								:model-value="model.ValPobox.value"
-								@update:model-value="model.ValPobox.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITPOBOX___, model.ValPobox.value)"
+								@change="model.ValPobox.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -327,14 +380,16 @@
 							v-on="controls.ENTIT___ENTITPOSTALCO.handlers"
 							:loading="controls.ENTIT___ENTITPOSTALCO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITPOSTALCO.props"
 								:model-value="model.ValPostalco.value"
-								@update:model-value="model.ValPostalco.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITPOSTALCO, model.ValPostalco.value)"
+								@change="model.ValPostalco.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITTELEPHON.isVisible || controls.ENTIT___ENTITFAX_____.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITTELEPHON.isVisible"
 						class="control-join-group">
@@ -344,12 +399,12 @@
 							v-on="controls.ENTIT___ENTITTELEPHON.handlers"
 							:loading="controls.ENTIT___ENTITTELEPHON.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITTELEPHON.props"
 								:model-value="model.ValTelephon.value"
-								@update:model-value="model.ValTelephon.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITTELEPHON, model.ValTelephon.value)"
+								@change="model.ValTelephon.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -361,14 +416,16 @@
 							v-on="controls.ENTIT___ENTITFAX_____.handlers"
 							:loading="controls.ENTIT___ENTITFAX_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITFAX_____.props"
 								:model-value="model.ValFax.value"
-								@update:model-value="model.ValFax.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITFAX_____, model.ValFax.value)"
+								@change="model.ValFax.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITWEBSITE_.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITWEBSITE_.isVisible"
 						class="control-join-group">
@@ -378,14 +435,16 @@
 							v-on="controls.ENTIT___ENTITWEBSITE_.handlers"
 							:loading="controls.ENTIT___ENTITWEBSITE_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITWEBSITE_.props"
 								:model-value="model.ValWebsite.value"
-								@update:model-value="model.ValWebsite.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITWEBSITE_, model.ValWebsite.value)"
+								@change="model.ValWebsite.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITPERSON__.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITPERSON__.isVisible"
 						class="control-join-group">
@@ -395,14 +454,16 @@
 							v-on="controls.ENTIT___ENTITPERSON__.handlers"
 							:loading="controls.ENTIT___ENTITPERSON__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITPERSON__.props"
 								:model-value="model.ValPerson.value"
-								@update:model-value="model.ValPerson.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITPERSON__, model.ValPerson.value)"
+								@change="model.ValPerson.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITCONTACT_.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITCONTACT_.isVisible"
 						class="control-join-group">
@@ -412,36 +473,16 @@
 							v-on="controls.ENTIT___ENTITCONTACT_.handlers"
 							:loading="controls.ENTIT___ENTITCONTACT_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITCONTACT_.props"
 								:model-value="model.ValContact.value"
-								@update:model-value="model.ValContact.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITCONTACT_, model.ValContact.value)"
+								@change="model.ValContact.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.ENTIT___ENTITOWNER___.isVisible"
-						class="control-join-group">
-						<base-input-structure
-							class="i-checkbox"
-							v-bind="controls.ENTIT___ENTITOWNER___"
-							v-on="controls.ENTIT___ENTITOWNER___.handlers"
-							:loading="controls.ENTIT___ENTITOWNER___.props.loading"
-							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<template #label>
-								<q-checkbox-input
-									v-if="controls.ENTIT___ENTITOWNER___.isVisible"
-									id="ENTIT___ENTITOWNER___"
-									size="mini"
-									:model-value="model.ValOwner.value"
-									:readonly="controls.ENTIT___ENTITOWNER___.readonly"
-									@update:model-value="model.ValOwner.fnUpdateValue" />
-							</template>
-						</base-input-structure>
-					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITCARRIER_.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITCARRIER_.isVisible"
 						class="control-join-group">
@@ -451,19 +492,17 @@
 							v-on="controls.ENTIT___ENTITCARRIER_.handlers"
 							:loading="controls.ENTIT___ENTITCARRIER_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.ENTIT___ENTITCARRIER_.isVisible"
-									id="ENTIT___ENTITCARRIER_"
-									size="mini"
-									:model-value="model.ValCarrier.value"
-									:readonly="controls.ENTIT___ENTITCARRIER_.readonly"
+									v-bind="controls.ENTIT___ENTITCARRIER_.props"
 									@update:model-value="model.ValCarrier.fnUpdateValue" />
 							</template>
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITSUPPLIER.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITSUPPLIER.isVisible"
 						class="control-join-group">
@@ -473,19 +512,17 @@
 							v-on="controls.ENTIT___ENTITSUPPLIER.handlers"
 							:loading="controls.ENTIT___ENTITSUPPLIER.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.ENTIT___ENTITSUPPLIER.isVisible"
-									id="ENTIT___ENTITSUPPLIER"
-									size="small"
-									:model-value="model.ValSupplier.value"
-									:readonly="controls.ENTIT___ENTITSUPPLIER.readonly"
+									v-bind="controls.ENTIT___ENTITSUPPLIER.props"
 									@update:model-value="model.ValSupplier.fnUpdateValue" />
 							</template>
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITMANUFACT.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITMANUFACT.isVisible"
 						class="control-join-group">
@@ -495,38 +532,17 @@
 							v-on="controls.ENTIT___ENTITMANUFACT.handlers"
 							:loading="controls.ENTIT___ENTITMANUFACT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.ENTIT___ENTITMANUFACT.isVisible"
-									id="ENTIT___ENTITMANUFACT"
-									size="small"
-									:model-value="model.ValManufact.value"
-									:readonly="controls.ENTIT___ENTITMANUFACT.readonly"
+									v-bind="controls.ENTIT___ENTITMANUFACT.props"
 									@update:model-value="model.ValManufact.fnUpdateValue" />
 							</template>
 						</base-input-structure>
 					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.ENTIT___ENTITFOUNDED_.isVisible"
-						class="control-join-group">
-						<base-input-structure
-							class="i-text"
-							v-bind="controls.ENTIT___ENTITFOUNDED_"
-							v-on="controls.ENTIT___ENTITFOUNDED_.handlers"
-							:loading="controls.ENTIT___ENTITFOUNDED_.props.loading"
-							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
-								v-if="controls.ENTIT___ENTITFOUNDED_.isVisible"
-								v-bind="controls.ENTIT___ENTITFOUNDED_"
-								format="Date"
-								:model-value="model.ValFounded.value"
-								@update:model-value="model.ValFounded.fnUpdateValue" />
-						</base-input-structure>
-					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___FACI1NAME____.isVisible || controls.ENTIT___FACI2NAME____.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___FACI1NAME____.isVisible"
 						class="control-join-group">
@@ -536,14 +552,11 @@
 							v-on="controls.ENTIT___FACI1NAME____.handlers"
 							:loading="controls.ENTIT___FACI1NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.ENTIT___FACI1NAME____.isVisible"
 								v-bind="controls.ENTIT___FACI1NAME____.props"
-								:model-value="model.ValFirstfacilitie.value"
-								v-on="controls.ENTIT___FACI1NAME____.handlers"
-								@update:model-value="model.ValFirstfacilitie.fnUpdateValue" />
+								v-on="controls.ENTIT___FACI1NAME____.handlers" />
 							<q-see-more-entit-faci1name
 								v-if="controls.ENTIT___FACI1NAME____.seeMoreIsVisible"
 								v-bind="controls.ENTIT___FACI1NAME____.seeMoreParams"
@@ -559,20 +572,19 @@
 							v-on="controls.ENTIT___FACI2NAME____.handlers"
 							:loading="controls.ENTIT___FACI2NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.ENTIT___FACI2NAME____.isVisible"
 								v-bind="controls.ENTIT___FACI2NAME____.props"
-								:model-value="model.ValLastfacilitie.value"
-								v-on="controls.ENTIT___FACI2NAME____.handlers"
-								@update:model-value="model.ValLastfacilitie.fnUpdateValue" />
+								v-on="controls.ENTIT___FACI2NAME____.handlers" />
 							<q-see-more-entit-faci2name
 								v-if="controls.ENTIT___FACI2NAME____.seeMoreIsVisible"
 								v-bind="controls.ENTIT___FACI2NAME____.seeMoreParams"
 								v-on="controls.ENTIT___FACI2NAME____.handlers" />
 						</base-input-structure>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIT___ENTITLANGUAGE.isVisible || controls.ENTIT___ENTITCURRENCY.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIT___ENTITLANGUAGE.isVisible"
 						class="control-join-group">
@@ -582,12 +594,12 @@
 							v-on="controls.ENTIT___ENTITLANGUAGE.handlers"
 							:loading="controls.ENTIT___ENTITLANGUAGE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITLANGUAGE.props"
 								:model-value="model.ValLanguage.value"
-								@update:model-value="model.ValLanguage.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITLANGUAGE, model.ValLanguage.value)"
+								@change="model.ValLanguage.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -599,12 +611,12 @@
 							v-on="controls.ENTIT___ENTITCURRENCY.handlers"
 							:loading="controls.ENTIT___ENTITCURRENCY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITCURRENCY.props"
 								:model-value="model.ValCurrency.value"
-								@update:model-value="model.ValCurrency.fnUpdateValue" />
+								@blur="onBlur(controls.ENTIT___ENTITCURRENCY, model.ValCurrency.value)"
+								@change="model.ValCurrency.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -691,15 +703,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'ENTIT',
-						location: 'form-ENTIT',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'ENTIT',
+					location: 'form-ENTIT',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -745,6 +755,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -817,8 +829,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -900,7 +913,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -954,21 +967,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -979,10 +977,7 @@
 						id: 'ENTIT___ENTITNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.LEGAL_NAME42902),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
@@ -997,15 +992,11 @@
 						id: 'ENTIT___ENTITINITIALS',
 						name: 'INITIALS',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY_INITIALS56204),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 10,
 						labelId: 'label_ENTIT___ENTITINITIALS',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1015,15 +1006,11 @@
 						id: 'ENTIT___ENTITREGISTRA',
 						name: 'REGISTRA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.LEGAL_REGISTRATION04413),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 20,
+						maxLength: 30,
 						labelId: 'label_ENTIT___ENTITREGISTRA',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1033,15 +1020,38 @@
 						id: 'ENTIT___ENTITTAXNUMBE',
 						name: 'TAXNUMBE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.VAT_NUMBER24236),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 20,
+						maxLength: 30,
 						labelId: 'label_ENTIT___ENTITTAXNUMBE',
-						mustBeFilled: false,
+						controlLimits: [
+						],
+					}, this),
+					ENTIT___ENTITFOUNDED_: new fieldControlClass.DateControl({
+						modelField: 'ValFounded',
+						valueChangeEvent: 'fieldChange:entit.founded',
+						id: 'ENTIT___ENTITFOUNDED_',
+						name: 'FOUNDED',
+						size: 'small',
+						label: computed(() => this.Resources.FOUNDED_IN54120),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						format: 'date',
+						controlLimits: [
+						],
+					}, this),
+					ENTIT___ENTITOWNER___: new fieldControlClass.StringControl({
+						modelField: 'ValOwner',
+						valueChangeEvent: 'fieldChange:entit.owner',
+						id: 'ENTIT___ENTITOWNER___',
+						name: 'OWNER',
+						size: 'large',
+						label: computed(() => this.Resources.OWNER09558),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxLength: 50,
+						labelId: 'label_ENTIT___ENTITOWNER___',
 						controlLimits: [
 						],
 					}, this),
@@ -1051,15 +1061,11 @@
 						id: 'ENTIT___ENTITEMAIL___',
 						name: 'EMAIL',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.EMAIL25170),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 254,
 						labelId: 'label_ENTIT___ENTITEMAIL___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1069,15 +1075,11 @@
 						id: 'ENTIT___ENTITPHONENUM',
 						name: 'PHONENUM',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHONE_NUMBER20774),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
 						labelId: 'label_ENTIT___ENTITPHONENUM',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1087,15 +1089,11 @@
 						id: 'ENTIT___ENTITIBAN____',
 						name: 'IBAN',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.IBAN__INTERNATIONAL_45066),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 25,
+						maxLength: 33,
 						labelId: 'label_ENTIT___ENTITIBAN____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1105,15 +1103,11 @@
 						id: 'ENTIT___ENTITBUILDING',
 						name: 'BUILDING',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.BUILDING_HOUSE_NUMBE20738),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 10,
+						maxLength: 25,
 						labelId: 'label_ENTIT___ENTITBUILDING',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1123,15 +1117,11 @@
 						id: 'ENTIT___ENTITSTREET__',
 						name: 'STREET',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.STREET44324),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
+						maxLength: 50,
 						labelId: 'label_ENTIT___ENTITSTREET__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1141,15 +1131,11 @@
 						id: 'ENTIT___ENTITTOWN____',
 						name: 'TOWN',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TOWN_CITY16259),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
+						maxLength: 50,
 						labelId: 'label_ENTIT___ENTITTOWN____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1159,15 +1145,11 @@
 						id: 'ENTIT___ENTITCOUNTY__',
 						name: 'COUNTY',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COUNTY_PROVINCE34285),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
+						maxLength: 50,
 						labelId: 'label_ENTIT___ENTITCOUNTY__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1177,15 +1159,11 @@
 						id: 'ENTIT___ENTITSTATE___',
 						name: 'STATE',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.STATE_PROVINCE28516),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
+						maxLength: 50,
 						labelId: 'label_ENTIT___ENTITSTATE___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1195,15 +1173,11 @@
 						id: 'ENTIT___ENTITPOBOX___',
 						name: 'POBOX',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.POST_OFFICE_BOX06223),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 5,
 						labelId: 'label_ENTIT___ENTITPOBOX___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1213,15 +1187,11 @@
 						id: 'ENTIT___ENTITPOSTALCO',
 						name: 'POSTALCO',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ZIP_POSTAL_CODE55613),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
+						maxLength: 10,
 						labelId: 'label_ENTIT___ENTITPOSTALCO',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1231,15 +1201,11 @@
 						id: 'ENTIT___ENTITTELEPHON',
 						name: 'TELEPHON',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.TELEPHONE28697),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
 						labelId: 'label_ENTIT___ENTITTELEPHON',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1249,15 +1215,11 @@
 						id: 'ENTIT___ENTITFAX_____',
 						name: 'FAX',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.FAX08532),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
 						labelId: 'label_ENTIT___ENTITFAX_____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1267,15 +1229,11 @@
 						id: 'ENTIT___ENTITWEBSITE_',
 						name: 'WEBSITE',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.WEB_SITE06263),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 254,
 						labelId: 'label_ENTIT___ENTITWEBSITE_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1285,15 +1243,11 @@
 						id: 'ENTIT___ENTITPERSON__',
 						name: 'PERSON',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PERSON_DEPARTMENT_TO28777),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
 						labelId: 'label_ENTIT___ENTITPERSON__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1303,31 +1257,11 @@
 						id: 'ENTIT___ENTITCONTACT_',
 						name: 'CONTACT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CONTACT_TELEPHONE_NU12694),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 20,
+						maxLength: 30,
 						labelId: 'label_ENTIT___ENTITCONTACT_',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					ENTIT___ENTITOWNER___: new fieldControlClass.BooleanControl({
-						modelField: 'ValOwner',
-						valueChangeEvent: 'fieldChange:entit.owner',
-						id: 'ENTIT___ENTITOWNER___',
-						name: 'OWNER',
-						size: 'mini',
-						hasLabel: true,
-						label: computed(() => this.Resources.OWNER09558),
-						userHelp: '',
-						description: '',
-						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1337,13 +1271,9 @@
 						id: 'ENTIT___ENTITCARRIER_',
 						name: 'CARRIER',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.CARRIER64855),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.layoutConfig.CheckboxLabelAlignment),
 						controlLimits: [
 						],
 					}, this),
@@ -1353,13 +1283,9 @@
 						id: 'ENTIT___ENTITSUPPLIER',
 						name: 'SUPPLIER',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.SUPPLIER17230),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.layoutConfig.CheckboxLabelAlignment),
 						controlLimits: [
 						],
 					}, this),
@@ -1369,31 +1295,9 @@
 						id: 'ENTIT___ENTITMANUFACT',
 						name: 'MANUFACT',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.MANUFACTURER50759),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-					}, this),
-					ENTIT___ENTITFOUNDED_: new fieldControlClass.DateControl({
-						modelField: 'ValFounded',
-						valueChangeEvent: 'fieldChange:entit.founded',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
-						id: 'ENTIT___ENTITFOUNDED_',
-						name: 'FOUNDED',
-						size: 'small',
-						hasLabel: true,
-						label: computed(() => this.Resources.FOUNDED_IN54120),
-						userHelp: '',
-						description: '',
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						labelPosition: computed(() => this.layoutConfig.CheckboxLabelAlignment),
 						controlLimits: [
 						],
 					}, this),
@@ -1402,27 +1306,11 @@
 						valueChangeEvent: 'fieldChange:faci1.name',
 						id: 'ENTIT___FACI1NAME____',
 						name: 'NAME',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: 'large',
 						label: computed(() => this.Resources.FACILITY_NAME19514),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValFirstfacilitie',
-							dependencyEvent: 'fieldChange:entit.firstfacilitie'
-						},
-						dependentFields: () => {
-							return {
-								set 'faci1.codfacil'(value) { vm.model.ValFirstfacilitie.updateValue(value) },
-								set 'faci1.name'(value) { vm.model.TableFaci1Name.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1431,33 +1319,27 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValFirstfacilitie',
+							dependencyEvent: 'fieldChange:entit.firstfacilitie'
+						},
+						dependentFields: () => ({
+							set 'faci1.codfacil'(value) { vm.model.ValFirstfacilitie.updateValue(value) },
+							set 'faci1.name'(value) { vm.model.TableFaci1Name.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					ENTIT___FACI2NAME____: new fieldControlClass.LookupControl({
 						modelField: 'TableFaci2Name',
 						valueChangeEvent: 'fieldChange:faci2.name',
 						id: 'ENTIT___FACI2NAME____',
 						name: 'NAME',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: 'medium',
 						label: computed(() => this.Resources.FACILITY_NAME19514),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValLastfacilitie',
-							dependencyEvent: 'fieldChange:entit.lastfacilitie'
-						},
-						dependentFields: () => {
-							return {
-								set 'faci2.codfacil'(value) { vm.model.ValLastfacilitie.updateValue(value) },
-								set 'faci2.name'(value) { vm.model.TableFaci2Name.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1466,22 +1348,28 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValLastfacilitie',
+							dependencyEvent: 'fieldChange:entit.lastfacilitie'
+						},
+						dependentFields: () => ({
+							set 'faci2.codfacil'(value) { vm.model.ValLastfacilitie.updateValue(value) },
+							set 'faci2.name'(value) { vm.model.TableFaci2Name.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					ENTIT___ENTITLANGUAGE: new fieldControlClass.StringControl({
 						modelField: 'ValLanguage',
 						valueChangeEvent: 'fieldChange:entit.language',
 						id: 'ENTIT___ENTITLANGUAGE',
 						name: 'LANGUAGE',
-						size: 'mini',
-						hasLabel: true,
+						size: 'medium',
 						label: computed(() => this.Resources.LANGUAGE16872),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 2,
 						labelId: 'label_ENTIT___ENTITLANGUAGE',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1490,16 +1378,12 @@
 						valueChangeEvent: 'fieldChange:entit.currency',
 						id: 'ENTIT___ENTITCURRENCY',
 						name: 'CURRENCY',
-						size: 'mini',
-						hasLabel: true,
+						size: 'medium',
 						label: computed(() => this.Resources.CURRENCY13881),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 3,
 						labelId: 'label_ENTIT___ENTITCURRENCY',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1599,7 +1483,7 @@
 						/** The foreign key to the FACI2 table */
 						get faci2() { return vm.model.ValLastfacilitie },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1695,6 +1579,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1734,6 +1626,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1860,6 +1760,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR ENTIT]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1875,6 +1791,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS ENTIT]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

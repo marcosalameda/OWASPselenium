@@ -57,9 +57,13 @@
 	import fakeData from './CheckListExtension.mock'
 
 	export default {
+		name: 'QCheckListExtensionContainer',
+
 		docsfile: './docs/extensions/CheckListExtension.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{

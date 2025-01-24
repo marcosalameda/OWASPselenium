@@ -6,16 +6,14 @@ namespace GenioMVC.Helpers
 	public class DocumentAttribute : Attribute
 	{
 		private string fieldName;
-		private bool external;
 		private bool versioning;
 		private bool usesTemplates;
 		private bool isRequired;
 		private DocumentViewTypeMode viewType;
 
-		public DocumentAttribute(string fieldName, bool external, bool versioning, bool usesTemplates = false, bool isRequired = false, DocumentViewTypeMode viewType = DocumentViewTypeMode.Print)
+		public DocumentAttribute(string fieldName, bool versioning, bool usesTemplates = false, bool isRequired = false, DocumentViewTypeMode viewType = DocumentViewTypeMode.Print)
 		{
 			this.fieldName = fieldName;
-			this.external = external;
 			this.versioning = versioning;
 			this.usesTemplates = usesTemplates;
 			this.isRequired = isRequired;
@@ -25,11 +23,6 @@ namespace GenioMVC.Helpers
 		public string GetFieldName()
 		{
 			return this.fieldName;
-		}
-
-		public bool IsExternal()
-		{
-			return this.external;
 		}
 
 		public bool UsesVersioning()

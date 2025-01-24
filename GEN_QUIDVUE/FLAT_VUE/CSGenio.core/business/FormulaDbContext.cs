@@ -2,7 +2,7 @@
 using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
 using System.Collections.Generic;
-using System.Collections;
+using System.Linq;
 
 namespace CSGenio.business
 {
@@ -12,10 +12,7 @@ namespace CSGenio.business
     /// </summary>
     public class FormulaDbContext
     {
-        Dictionary<string, HashSet<string>> camposPorArea = new Dictionary<string, HashSet<string>>();
-        Dictionary<string, string> chavePorArea = new Dictionary<string, string>();
-        Dictionary<string, Area> areasLidas = new Dictionary<string, Area>();
-        Area areaBase;
+
         /// <summary>
         /// Creates a new FormulaDbContext
         /// </summary>
@@ -25,19 +22,127 @@ namespace CSGenio.business
             areaBase = area;
         }
 
+        private readonly Area areaBase;
+        private readonly Dictionary<string, Dictionary<string, Area>> m_readContext = new Dictionary<string, Dictionary<string, Area>>();
+        private readonly Dictionary<string, Dictionary<string, Area>> m_updateContext = new Dictionary<string, Dictionary<string, Area>>();
+        private readonly Dictionary<string, HashSet<string>> m_metaContext = new Dictionary<string, HashSet<string>>();
+        private readonly HashSet<string> m_updlockTables = new HashSet<string>();
+
+
+        private Dictionary<string, Area> GetReadTable(string target)
+        {
+            if (!m_readContext.TryGetValue(target, out var result))
+            {
+                result = new Dictionary<string, Area>();
+                m_readContext.Add(target, result);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Ensures the information for a record is available to the formulas
+        /// from the database in case it hasn't been read or from memory if it was already read.
+        /// It will only fetch the columns that were added as formula sources.
+        /// </summary>
+        /// <param name="area">The area to fetch</param>
+        /// <param name="pk">The primary key of the record to fetch</param>
+        /// <param name="sp">Persisistent support where to fetch data from</param>
+        /// <returns>The requested record</returns>
+        public Area ReadRecord(string area, string pk, PersistentSupport sp)
+        {
+            if(string.IsNullOrEmpty(pk))
+            {
+                var user = areaBase.User;
+                return Area.createArea(area, user, user.CurrentModule);
+            }
+
+            var rowContext = GetReadTable(area);
+            if (!rowContext.TryGetValue(pk, out var result))
+            {
+                var user = areaBase.User;
+                result = Area.createArea(area, user, user.CurrentModule);
+                m_metaContext.TryGetValue(area, out var fields);
+                sp.getRecord(result, pk, fields.ToArray(), m_updlockTables.Contains(area));
+                result.QPrimaryKey = pk;
+                rowContext.Add(pk, result);
+            }
+            return result;
+        }
+
+
+        
+
+        private Dictionary<string, Area> GetUpdateTable(string target)
+        {
+            if (!m_updateContext.TryGetValue(target, out var result))
+            {
+                result = new Dictionary<string, Area>();
+                m_updateContext.Add(target, result);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a record proxy to be updated.
+        /// The record should only set the columns that need to be updated.
+        /// Multiple update to the same row will be aggregated into a single update.
+        /// The updates are collected and will only be sent to the database with the RunPropagations method.
+        /// </summary>
+        /// <param name="area">The area to update</param>
+        /// <param name="pk">The primary key of the record to update</param>
+        /// <returns>A record ready to have its columns modified</returns>
+        public Area UpdateRecord(string area, string pk)
+        {
+            var rowContext = GetUpdateTable(area);
+            if (!rowContext.TryGetValue(pk, out var result))
+            {
+                var user = areaBase.User;
+                result = Area.createArea(area, user, user.CurrentModule);
+                result.QPrimaryKey = pk;
+                result.UserRecord = false;
+                rowContext.Add(pk, result);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Sends to the database all the pending updates
+        /// </summary>
+        /// <param name="sp">Persisistent support where to update data</param>
+        public void RunPropagations(PersistentSupport sp)
+        {
+            foreach (var area in m_updateContext.Values)
+                foreach (var row in area.Values)
+                    row.change(sp, null);
+        }
+
+
+        private HashSet<string> GetMetaFields(string area)
+        {
+            if (!m_metaContext.TryGetValue(area, out var fields))
+            {
+                fields = new HashSet<string>();
+                m_metaContext.Add(area, fields);
+            }
+            return fields;
+        }
+
+
+        /// <summary>
+        /// Adds a single ad-hoc formula to the field sources
+        /// </summary>
+        /// <param name="f">The formula to register</param>
         public void AddFormulaSources(InternalOperationFormula f)
         {
             foreach (var arg in f.ByAreaArguments)
             {
-                if (!camposPorArea.ContainsKey(arg.AliasName))
-                {
-                    camposPorArea.Add(arg.AliasName, new HashSet<string>());
-                    chavePorArea.Add(arg.AliasName, arg.KeyName);
-                }
+                var fields = GetMetaFields(arg.AliasName);
                 foreach (var c in arg.FieldNames)
-                    camposPorArea[arg.AliasName].Add(c);
+                    fields.Add(c);
             }
         }
+
+
 
         /// <summary>
         /// Makes the context aware of all the default formula sources
@@ -49,10 +154,10 @@ namespace CSGenio.business
                 string[] valoresDefault = areaBase.DefaultValues;
                 for (int i = 0; i < valoresDefault.Length; i++)
                 {
-                    Field Qfield = (Field)areaBase.DBFields[valoresDefault[i]];
-                    if (Qfield.DefaultValue.tpDefault == DefaultValue.DefaultType.OP_INT)
+                    var info = areaBase.DBFields[valoresDefault[i]];
+                    if (info.DefaultValue.tpDefault == DefaultValue.DefaultType.OP_INT)
                     {
-                        var f = Qfield.DefaultValue.DefaultFormula as InternalOperationFormula;
+                        var f = info.DefaultValue.DefaultFormula;
                         AddFormulaSources(f);
                     }
                 }
@@ -72,124 +177,122 @@ namespace CSGenio.business
                     AddFormulaSources(f);
                 }
             }
+
+            //There is no reason to add only internal formulas when they need all these 3 things
+            AddReplicas();
+            AddDefaults();
         }
 
 
         /// <summary>
         /// Makes the context aware of all the replica formula sources
         /// </summary>
-        public void AddReplicas()
+        private void AddReplicas()
         {
             foreach (Field Qfield in areaBase.Information.DBFieldsList)
             {
                 if (Qfield.Formula is ReplicaFormula)
                 {
                     var f = Qfield.Formula as ReplicaFormula;
-                    var _tabela = f.Alias;
-                    if (!camposPorArea.ContainsKey(f.Alias))
-                    {
-                        camposPorArea.Add(f.Alias, new HashSet<string>());
-                        chavePorArea.Add(f.Alias, areaBase.ParentTables[f.Alias].SourceRelField); //TODO: Here we can use the CE of the relationship
-                    }
-                    camposPorArea[f.Alias].Add(f.Field);
+                    //convert the replica physical relation target into a logic relation target
+                    var alias = areaBase.ParentTables[f.Alias].AliasTargetTab;
+                    var fields = GetMetaFields(alias);
+                    fields.Add(f.Field);
                 }
             }
         }
 
         /// <summary>
-        /// Get the data from an area by its physical relationship, if already cached returns the the data
+        /// Makes the context aware of all the propagation target fields
+        /// This is often needed so that the current target value can be compared with the calculated target value.
         /// </summary>
-        /// <param name="rel">The relationship you want to get data from</param>
-        /// <param name="sp">Persistent support with the current transaction</param>
-        /// <param name="u">The User</param>
-        /// <returns>The area with the formula source fields filled</returns>
-        public Area GetRelation(string rel, PersistentSupport sp, User u)
+        public void AddPropagations()
         {
-            if (!areasLidas.ContainsKey(rel))
-            {
-                Relation relacao = areaBase.ParentTables[rel];
-                string area = relacao.AliasTargetTab;
-                Area a = Area.createArea(area, u, u.CurrentModule);
-                string nomeChave = chavePorArea[rel];
-                string valorChaveEst = GetValorChaveEstrangeira(nomeChave, sp, a);
-
-                //If the foreign key is in memory or in BD (already in memory)
-                if (valorChaveEst != "")
-                {
-                    //Query to go fetch the values of the fields
-                    var fields = new string[camposPorArea[rel].Count];
-                    camposPorArea[rel].CopyTo(fields, 0);
-                    sp.getRecord(a, valorChaveEst, fields);
-                }
-                //else values are empty
-
-                //Caching this joint read
-                areasLidas.Add(rel, a);
-            }
-            return areasLidas[rel];
+            AddUV();
+            AddSR();
+            AddLG();
         }
 
-        /// <summary>
-        /// Gets the data from an area, if already cached returns that data
-        /// </summary>
-        /// <param name="area">The area to which you want to fetch data</param>
-        /// <param name="sp">Persistent support with the current transaction</param>
-        /// <param name="u">The User</param>
-        /// <returns>The area with the formula source fields filled</returns>
-        public Area GetArea(string area, PersistentSupport sp, User u)
+        private void AddUV()
         {
-            if (!areasLidas.ContainsKey(area))
+            if (areaBase.LastValueArgs == null)
+                return;
+            foreach (var arg in areaBase.LastValueArgs)
             {
-                Area a = Area.createArea(area, u, u.CurrentModule);
-                string nomeChave = chavePorArea[area];
-                string valorChaveEst = GetValorChaveEstrangeira(nomeChave, sp, a);
-
-                //If the foreign key is in memory or in BD (already in memory)
-                if (valorChaveEst != "")
-                {
-                    //Query to go fetch the values of the fields
-                    var fields = new string[camposPorArea[area].Count];
-                    camposPorArea[area].CopyTo(fields, 0);
-                    sp.getRecord(a, valorChaveEst, fields);
-                }
-                //else values are empty
-
-                //Caching this joint reading
-                areasLidas.Add(area, a);
+                var fields = GetMetaFields(arg.AliasRUV);
+                foreach (string lv in arg.LVRFields)
+                    fields.Add(lv);
             }
-            return areasLidas[area];
+        }
+        private void AddSR()
+        {
+            if (areaBase.RelatedSumArgs == null)
+                return;
+            foreach (var arg in areaBase.RelatedSumArgs)
+            {
+                var fields = GetMetaFields(arg.AliasSR);
+                fields.Add(arg.SRField);
+                //these areas need to be marked for update
+                //SR are diferencial so they are very sensitive to concurrent updates
+                //making sure their reads are done with UPDLOCK is the only way
+                //to atomize the select operation that reads the current value with
+                //the future update that will actually update the database.
+                m_updlockTables.Add(arg.AliasSR);
+            }
+        }
+        private void AddLG()
+        {
+            if (areaBase.ArgsListAggregate == null)
+                return;
+            foreach (var arg in areaBase.ArgsListAggregate)
+            {
+                var fields = GetMetaFields(arg.AliasLG);
+                fields.Add(arg.LGField);
+            }
         }
 
+
         /// <summary>
-        /// Caches the data from an area.
+        /// Caches the data from an alread read area overriding any existing values.
         /// </summary>
         /// <param name="area">The area.</param>
+        /// <remarks>Can be usefull if you need formulas to use memory values instead of database values</remarks>
         public void SetArea(Area area)
         {
-            if (!areasLidas.ContainsKey(area.Alias))
-                areasLidas.Add(area.Alias, area);
+            var rowContext = GetReadTable(area.Alias);
+            if (rowContext.ContainsKey(area.QPrimaryKey))
+                rowContext[area.QPrimaryKey] = area;
             else
-                areasLidas[area.Alias] = area;
+                rowContext.Add(area.QPrimaryKey, area);
         }
 
 		// Cache the Glob internal code (it should never change)
 		private static string m_codglob = null;
         private static object m_codglobLock = new object();
 
-        private string GetValorChaveEstrangeira(string nomeChave, PersistentSupport sp, Area a)
+        /// <summary>
+        /// Gets the value of the foreign key to an area.
+        /// The main objective of this method is to support GLOB table.
+        /// </summary>
+        /// <param name="area">The target area of the relation</param>
+        /// <param name="nomeChave">The name of the foreign key</param>
+        /// <param name="sp">A persistent support in case we need to fetch the value from the database</param>
+        /// <returns>The value of the foreign key</returns>
+        public string GetForeignKeyValue(string area, string nomeChave, PersistentSupport sp)
         {
             //Go fetch the primary key of the table to which the fields belong
             //Verify that the areaField contains the foreign key that corresponds to the primary key
             //field we're looking for, if it doesn't count then you have to go read the database
             string valorChaveEst;
             
-            if (a.Alias == "glob")
+            if (area == "glob")
             {
                 lock(m_codglobLock)
                 {
                     if (m_codglob == null)
                     {
                         //Go fetch the value of the primary key from the GLOB table
+                        var a = Area.GetInfoArea(area);
                         SelectQuery qs = new SelectQuery()
                             .Select(a.TableName, a.PrimaryKeyName)
                             .From(a.QSystem, a.TableName, a.TableName)
@@ -199,7 +302,7 @@ namespace CSGenio.business
                         if (Qresult != null)
                             m_codglob = DBConversion.ToKey(Qresult);
                         else
-                            throw new BusinessException(null, "FormulaDbContext.GetArea", "No record found in glob.");
+                            m_codglob = "";
                     }
 					valorChaveEst = m_codglob;
                 }
@@ -210,14 +313,14 @@ namespace CSGenio.business
                 if (areaBase.Fields[areaBase.Alias + "." + nomeChave] == null)//If the value is not in memory go read to BD
                 {
                     // TODO: The code should never have to come through here, if it passes we may have a problem of efficiency. You Must always read all the fields at once to the head. Review this if block.
-                    string codIntValue = (string)areaBase.returnValueField(areaBase.Alias + "." + areaBase.PrimaryKeyName, FieldFormatting.CARACTERES);
+                    string codIntValue = areaBase.QPrimaryKey;
                     if (codIntValue == "")
                         codIntValue = null;
                     valorChaveEst = DBConversion.ToKey(sp.returnField(areaBase, nomeChave, codIntValue));
                     areaBase.insertNameValueField(areaBase.Alias + "." + nomeChave, valorChaveEst);
                 }
                 else
-                    valorChaveEst = (string)areaBase.returnValueField(areaBase.Alias + "." + nomeChave, FieldFormatting.CARACTERES);
+                    valorChaveEst = (string)areaBase.returnValueField(areaBase.Alias + "." + nomeChave);
             }
 
             return valorChaveEst;

@@ -96,7 +96,7 @@ namespace CSGenio.persistence
         /// <param name="row">A linha a aceder</param>
         /// <param name="col">A coluna a aceder</param>
         /// <returns>O Qvalue interno</returns>
-        public double GetNumeric(int row, int col)
+        public decimal GetNumeric(int row, int col)
         {
             return DBConversion.ToNumeric(m_dataSet.Tables[0].Rows[row][col]);
         }
@@ -107,7 +107,7 @@ namespace CSGenio.persistence
         /// <param name="row">A linha a aceder</param>
         /// <param name="col">O name da coluna a aceder</param>
         /// <returns>O Qvalue interno</returns>
-        public double GetNumeric(int row, string col)
+        public decimal GetNumeric(int row, string col)
         {
             return DBConversion.ToNumeric(m_dataSet.Tables[0].Rows[row][col]);
         }

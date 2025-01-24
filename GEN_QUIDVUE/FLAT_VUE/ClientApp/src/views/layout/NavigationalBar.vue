@@ -8,11 +8,14 @@
 					v-if="Object.keys(system.availableModules).length > 0"
 					class="navbar-nav c-header__content--sidebar">
 					<li class="nav-item c-header__item--sidebar">
-						<span
-							class="nav-link c-header__link--sidebar action-item"
+						<q-button 
+							id="main-menu-toggle"
+							class="nav-link c-header__link--sidebar action-item" 
+							:title="texts.mainMenu"
+							:aria-expanded="!sidebarIsCollapsed"
 							@click.stop.prevent="toggleSidebar">
 							<q-icon icon="menu-hamburger" />
-						</span>
+						</q-button>
 					</li>
 
 					<li
@@ -34,7 +37,7 @@
 						:groups="availableSystemsGroups"
 						@update:model-value="selectSystem">
 						<template #prepend>
-							<q-icon icon="system-choise" />
+							<q-icon icon="system-choice" />
 						</template>
 					</q-select>
 
@@ -95,7 +98,8 @@
 		{
 			return {
 				texts: {
-					systemYears: computed(() => this.Resources[hardcodedTexts.systemYears])
+					systemYears: computed(() => this.Resources[hardcodedTexts.systemYears]),
+					mainMenu: computed(() => this.Resources[hardcodedTexts.mainMenu])
 				}
 			}
 		},
@@ -106,8 +110,6 @@
 				this.autoCollapseSidebar(false)
 
 			this.setListeners()
-
-			document.documentElement.style.setProperty('--visible-header-height', this.headerHeight)
 		},
 
 		beforeUnmount()
@@ -162,6 +164,16 @@
 						}
 					})
 				})
+			}
+		},
+
+		watch: {
+			headerHeight: {
+				handler(val)
+				{
+					document.documentElement.style.setProperty('--visible-header-height', val)
+				},
+				immediate: true
 			}
 		}
 	}

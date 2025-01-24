@@ -41,6 +41,32 @@ export function setupRouter(i18n)
 		const system = to.params.system
 		const module = to.params.module
 
+		/**
+		 * Stores an attempted access to a route for a form or menu. 
+		 * This way, if the user tries to access a route that requires authentication, it will be remembered, 
+		 * and after logging in, they will be redirected to that route. 
+		 * However, if another page is opened instead of logging in, the stored route information will be cleared in this case.
+		 */
+		const routeType = to.meta.routeType
+		const routeData = {
+			name: to.name,
+			params: to.params
+		}
+
+		if (!userDataStore.userIsLoggedIn)
+		{
+			const systemIsAvailable = system && systemDataStore.system.availableSystems.includes(system)
+			const moduleIsAvailable = module && (module === 'Public' || systemDataStore.system.availableModules[module])
+
+			// If not allowed, save the current route data
+			if((!systemIsAvailable || !moduleIsAvailable) && (routeType === 'menu' || routeType === 'form'))
+				userDataStore.setRedirectRouteAfterLogin(routeData)
+			// For any additional redirection on LogOn, add to the route exception list
+			else
+				// Remove previously saved
+				userDataStore.setRedirectRouteAfterLogin()
+		}
+
 		// Check locale.
 		if (locale && !systemDataStore.system.supportedLangs.find(lang => lang.language === locale))
 		{
@@ -51,7 +77,7 @@ export function setupRouter(i18n)
 		// Check system.
 		if (system && !systemDataStore.system.availableSystems.includes(system))
 		{
-			next(false)
+			next({ name: 'systemNotFound' })
 			return
 		}
 
@@ -131,11 +157,16 @@ export function setupRouter(i18n)
 		// he's redirected to choose which data should be displayed.
 		if (to.meta && to.meta.hasInitialPHE && to.params.noRedirect !== 'true' && typeof userDataStore.valuesOfPHEs[module] === 'undefined')
 		{
-			await postData('Home', 'GetEphFormAction', { module }, (data, request) => {
+			await postData('Home', 'GetEphFormAction', { EphModule: module }, (data, request) => {
 				if (!request.data.Success)
 					return
 
 				const routeName = data.routeName
+				// List of routes that are allowed as main or child menus
+				const allowedRoutes = data.allowedRoutes ?? []
+				// In the case where there is more than one menu in sequence, when navigating from one to another, we do not want to go back
+				const navigationBetweenPHEMenus = (allowedRoutes.includes(to.name) && allowedRoutes.includes(from.name))
+
 				if (routeName && routeName.length > 0)
 				{
 					const params = {
@@ -144,7 +175,11 @@ export function setupRouter(i18n)
 						noRedirect: true
 					}
 
-					next({ name: routeName, params })
+					// TODO: When there are no records in the second list, Back does not let it go out, in case the first one has 'Skip if just one'
+					if (!navigationBetweenPHEMenus)
+						next({ name: routeName, params })
+					else
+						next()
 				}
 				else
 				{
@@ -215,6 +250,9 @@ export function setupRouter(i18n)
 		// Navigation to some menu clears the navigation and current menu path.
 		// It cannot be in the 'beforeCreate' of 'navHandlers' because if navigation from an M->F+ to itself is done, the code will not be executed.
 		const isNewNavigation = to.params.clearHistory === 'true'
+
+		// Delete so history isn't cleared on subsequent route changes
+		delete to.params.clearHistory
 
 		if (isNewNavigation || to.meta.isHomePage || module !== from.params.module)
 		{

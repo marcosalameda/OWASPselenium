@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,7 +41,7 @@ namespace GenioMVC.Models
 
 		[DisplayName("Password")]
 		/// <summary>Field : "Password" Tipo: "C" Formula:  ""</summary>
-		[ShouldSerialize("NeverPasswords")]
+		[ShouldSerialize("NeverEncryptedField")]
 		[DataType(DataType.Password), JsonIgnore]
 		public string ValPassword { get { return klass.ValPassword; } set { klass.ValPassword = value; } }
 		[DataType(DataType.Password), JsonIgnore]
@@ -100,7 +100,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Login attempts" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Psw.ValAttempts")]
 		[NumericAttribute(0)]
-		public decimal? ValAttempts { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAttempts, 0)); } set { klass.ValAttempts = Convert.ToDouble(value); } }
+		public decimal? ValAttempts { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAttempts, 0)); } set { klass.ValAttempts = Convert.ToDecimal(value); } }
 
 		[DisplayName("Phone number")]
 		/// <summary>Field : "Phone number" Tipo: "C" Formula:  ""</summary>
@@ -111,7 +111,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Status" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Psw.ValStatus")]
 		[NumericAttribute(0)]
-		public decimal? ValStatus { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValStatus, 0)); } set { klass.ValStatus = Convert.ToDouble(value); } }
+		public decimal? ValStatus { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValStatus, 0)); } set { klass.ValStatus = Convert.ToDecimal(value); } }
 
 		[DisplayName("Has login?")]
 		/// <summary>Field : "Has login?" Tipo: "L" Formula:  ""</summary>
@@ -150,19 +150,19 @@ namespace GenioMVC.Models
 		public Psw(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioApsw(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Psw(UserContext userContext, CSGenioApsw val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioApsw csgenioa)
@@ -179,7 +179,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

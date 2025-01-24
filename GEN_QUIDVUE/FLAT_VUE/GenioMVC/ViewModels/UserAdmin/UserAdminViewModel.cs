@@ -28,17 +28,17 @@ namespace GenioMVC.ViewModels.UserAdmin
 		{
 			listing = null;
 			conditions = null;
-			columns = new List<Exports.QColumn>()
-			{
-				new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXTO, Resources.Resources.UTILIZADORES39761, 20, 0, true),
-			};
+			columns =
+			[
+				new(CSGenioApsw.FldNome, FieldType.TEXTO, Resources.Resources.UTILIZADORES39761, 20, 0, true),
+			];
 
 			Load(-1, requestValues, ajaxRequest, true, ref listing, ref conditions);
 		}
 
 		public void Load(int numberListItems, bool ajaxRequest = false)
 		{
-			Load(numberListItems, new NameValueCollection(), ajaxRequest);
+			Load(numberListItems, [], ajaxRequest);
 		}
 
 		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest = false)
@@ -50,10 +50,26 @@ namespace GenioMVC.ViewModels.UserAdmin
 
 		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioApsw> Qlisting, ref CriteriaSet conditions)
 		{
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
+
+			tableConfig.RowsPerPage = numberListItems;
+
+			Load(tableConfig, requestValues, ajaxRequest, false, ref Qlisting, ref conditions);
+		}
+
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
+		{
+			ListingMVC<CSGenioApsw> listing = null;
+			CriteriaSet conditions = null;
+			Load(tableConfig, requestValues, ajaxRequest, false, ref listing, ref conditions);
+		}
+
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioApsw> Qlisting, ref CriteriaSet conditions)
+		{
 			if (ajaxRequest)
-				this.Navigation.SetValue("requestValues" + "Index", requestValues);
-			else if (!ajaxRequest && this.Navigation.CheckKey("requestValues" + "Index"))
-				requestValues = this.Navigation.GetValue<NameValueCollection>("requestValues" + "Index");
+				this.Navigation.SetValue("requestValuesIndex", requestValues);
+			else if (!ajaxRequest && this.Navigation.CheckKey("requestValuesIndex"))
+				requestValues = this.Navigation.GetValue<NameValueCollection>("requestValuesIndex");
 
 			Menu = new TablePartial<GenioMVC.Models.Psw>();
 			CriteriaSet filters = CriteriaSet.And();
@@ -72,24 +88,24 @@ namespace GenioMVC.ViewModels.UserAdmin
 			if (!m_userContext.User.IsAdmin(m_userContext.User.CurrentModule))
 				filters.Equal(CSGenioApsw.FldZzstate, 0);
 
-			var pageNumber = !String.IsNullOrEmpty(requestValues["pIndex"]) ? int.Parse(requestValues["pIndex"]) : 1;
+			int numberListItems = tableConfig.RowsPerPage;
+			var pageNumber = !string.IsNullOrEmpty(requestValues["pIndex"]) ? int.Parse(requestValues["pIndex"]) : 1;
 			var columnSort = GetRequestSort(this.Menu, "sIndex", "dIndex", requestValues, "psw");
 
-			List<ColumnSort> sorts = new List<ColumnSort>();
-			if (columnSort != null)
-				sorts.Add(columnSort);
-			else
-				sorts.Add(new ColumnSort(new ColumnReference(CSGenioApsw.FldNome), SortOrder.Ascending));
+			List<ColumnSort> sorts =
+			[
+				columnSort ?? new(new ColumnReference(CSGenioApsw.FldNome), SortOrder.Ascending),
+			];
 
-			FieldRef[] fields = new FieldRef[] { CSGenioApsw.FldCodpsw, CSGenioApsw.FldZzstate, CSGenioApsw.FldNome };
+			FieldRef[] fields = [CSGenioApsw.FldCodpsw, CSGenioApsw.FldZzstate, CSGenioApsw.FldNome];
 
 			if (isToExport)
 			{
 				User u = m_userContext.User;
 
-				//EPH
+				// EPH
 				filters = Models.Psw.AddEPH<CSGenioApsw>(ref u, filters, "Index");
-				ColumnSort sortPk = new ColumnSort(new ColumnReference(CSGenioApsw.FldCodpsw), SortOrder.Ascending);
+				ColumnSort sortPk = new(new ColumnReference(CSGenioApsw.FldCodpsw), SortOrder.Ascending);
 				if (sorts != null && !sorts.Exists(x => x == sortPk))
 					sorts.Add(sortPk);
 
@@ -111,10 +127,7 @@ namespace GenioMVC.ViewModels.UserAdmin
 
 		public List<TableSearchColumn> GetSearchColumns()
 		{
-			List<TableSearchColumn> list = new List<TableSearchColumn>();
-
-			list.Add(new TableSearchColumn("ValNome", CSGenioApsw.FldNome, typeof(String), true));
-			return list;
+			return [new TableSearchColumn("ValNome", CSGenioApsw.FldNome, typeof(string), true)];
 		}
 	}
 }

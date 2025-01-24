@@ -62,11 +62,13 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValWarehcod))
 		watch(() => this.ValWarehcod.value, (newValue, oldValue) => this.onUpdate('wareh.warehcod', this.ValWarehcod, newValue, oldValue))
 
-		this.ValActivity = reactive(new modelFieldType.Boolean({
+		this.ValActivity = reactive(new modelFieldType.Number({
 			id: 'ValActivity',
 			originId: 'ValActivity',
 			area: 'WAREH',
 			field: 'ACTIVITY',
+			maxDigits: 1,
+			decimalDigits: 0,
 			description: computed(() => this.Resources.ACTIVITY02681),
 		}).cloneFrom(values?.ValActivity))
 		watch(() => this.ValActivity.value, (newValue, oldValue) => this.onUpdate('wareh.activity', this.ValActivity, newValue, oldValue))
@@ -94,5 +96,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodwareh'
 
 	get QPrimaryKey() { return this.ValCodwareh.value }
-	set QPrimaryKey(value) { this.ValCodwareh.value = value }
+	set QPrimaryKey(value) { this.ValCodwareh.updateValue(value) }
 }

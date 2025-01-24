@@ -1,165 +1,66 @@
 ﻿<template>
 	<div :id="controlId">
-		<q-input-group :size="size">
-			<!-- Input form where attached file name shows -->
-			<q-text-field
-				:model-value="modelValue"
-				readonly
-				:placeholder="texts.attachDocumentPlaceHolder"
-				:style="{ color: `${activeColor} !important`, cursor: modelValue ? 'pointer' : 'normal' }"
-				:aria-labelledby="labelId"
-				@click.stop.prevent="getFile" />
+		<div class="q-document__container">
+			<q-input-group :size="size">
+				<q-text-field
+					:model-value="modelValue"
+					readonly
+					data-testid="document-input"
+					:class="['q-document__field', { 'q-document__field-empty': !modelValue && (readonly || disabled) }]"
+					:aria-labelledby="labelId"
+					@click="handleFieldClick" />
 
-			<template #append>
-				<q-button
-					ref="optionsButton"
-					b-style="secondary"
-					data-toggle="dropdown"
-					aria-haspopup="true"
-					:title="texts.actionLabel"
-					:disabled="isOptionsButtonDisabled"
-					@click="setDropdownState(null, false)">
-					<q-icon icon="more-items" />
-				</q-button>
-			</template>
-		</q-input-group>
+				<template #append>
+					<q-button
+						ref="optionsButton"
+						data-testid="options-button"
+						b-style="secondary"
+						aria-haspopup="true"
+						:title="texts.actionLabel"
+						:disabled="isOptionsButtonDisabled"
+						@click="toggleDropdown">
+						<q-icon icon="more-items" />
+					</q-button>
+				</template>
+			</q-input-group>
 
-		<!-- Dropdown menu items -->
-		<ul
-			v-if="!disabled"
-			ref="optionsMenu"
-			:class="['dropdown-menu', { show: showOptions }]">
-			<!-- Download menu item -->
-			<li
-				:class="['dropdown-item', { disabled: !modelValue }]"
-				:title="texts.downloadLabel"
-				@click.stop.prevent="downloadFile">
-				<q-icon icon="download" /> {{ texts.downloadLabel }}
-			</li>
+			<input
+				:id="`q-document-file-${controlId}`"
+				ref="fileAttach"
+				class="q-document__attach"
+				type="file"
+				data-testid="file-input"
+				:accept="extensions"
+				@change="attachFile" />
 
-			<!-- Attach menu item -->
-			<li
-				v-if="!readonly && (!versioningIsOn || !modelValue)"
-				class="dropdown-item"
-				:title="texts.attachLabel">
-				<q-icon icon="attachment" /> {{ texts.attachLabel }}
+			<div
+				v-if="!disabled && !readonly && versioning && editing"
+				class="q-document__editing">
+				<q-icon icon="information" /> {{ texts.editingDocument }}
+			</div>
+		</div>
 
-				<input
-					:id="`docum-file-${controlId}`"
-					class="q-document-input__attach"
-					type="file"
-					data-testid="input-file"
-					:name="`docum-file-${controlId}`"
-					:accept="extensions"
-					@change="attachFile" />
-			</li>
-
-			<!-- Submit menu item -->
-			<li
-				v-if="!readonly && versioningIsOn && isInCheckout"
-				class="dropdown-item"
-				:title="texts.submitLabel"
-				@click.stop.prevent="setFileSubmitModalState(true)">
-				<q-icon icon="upload" /> {{ texts.submitLabel }}
-			</li>
-
-			<!-- Edit menu item -->
-			<li
-				v-if="!readonly && versioningIsOn && !isInCheckout && modelValue"
-				class="dropdown-item"
-				:title="texts.editLabel"
-				@click.stop.prevent="editFile">
-				<q-icon icon="pencil" /> {{ texts.editLabel }}
-			</li>
-
-			<!-- Delete menu item -->
-			<li
-				v-if="!readonly && !disallowRemoval"
-				:class="['dropdown-item', { disabled: isInCheckout || !modelValue }]"
-				:title="texts.deleteLabel"
-				@click.stop.prevent="confirmFileDelete">
-				<q-icon icon="delete" /> {{ texts.deleteLabel }}
-			</li>
-
-			<!-- Version dropdown menu item starts here -->
-			<li
-				v-if="versioningIsOn && !isInCheckout && versionCount > 1"
-				class="dropdown-submenu">
-				<a
-					class="dropdown-item"
-					data-toggle="dropdown"
-					aria-haspopup="true"
-					href="javascript:void(0)"
-					:title="texts.versionsLabel"
-					@click="setDropdownState($event, !showVersionsSubMenu, false)">
-					<q-icon icon="list" /> {{ texts.versionsLabel }}
-				</a>
-
-				<!-- Versions sub menu item -->
-				<ul :class="['dropdown-menu', { show: showVersionsSubMenu }]">
-					<!-- View versions history menu item -->
-					<li
-						class="dropdown-item"
-						:title="texts.viewAll"
-						@click.stop.prevent="viewAllVersions">
-						<q-icon icon="properties" /> {{ texts.viewAllLabel }}
-					</li>
-
-					<li class="dropdown-divider"></li>
-
-					<!-- Available versions -->
-					<li
-						v-for="version in visibleVersionNumbers"
-						:key="version"
-						class="dropdown-item"
-						:title="`${texts.downloadLabel} ${version}`"
-						@click.stop.prevent="downloadVersion(version)">
-						<q-icon icon="download" /> {{ version }}
-					</li>
-
-					<li
-						v-if="!readonly"
-						class="dropdown-divider"></li>
-
-					<!-- Delete last item menu -->
-					<li
-						v-if="!readonly"
-						class="dropdown-item"
-						:title="texts.deleteLastLabel"
-						@click.stop.prevent="confirmDeleteLast">
-						<q-icon icon="delete" /> {{ texts.deleteLastLabel }}
-					</li>
-
-					<!-- Delete history menu item -->
-					<li
-						v-if="!readonly"
-						class="dropdown-item"
-						:title="texts.deleteHistoryLabel"
-						@click.stop.prevent="confirmDeleteHistory">
-						<q-icon icon="delete" /> {{ texts.deleteHistoryLabel }}
-					</li>
-				</ul>
-			</li>
-
-			<!-- Create document menu item -->
-			<li
-				v-if="!readonly && usesTemplates"
-				class="dropdown-item"
-				:title="texts.createDocument"
-				@click.stop.prevent="createDocument">
-				<q-icon icon="plus" /> {{ texts.createDocument }}
-			</li>
-
-			<li class="dropdown-divider"></li>
-
-			<!-- Properties menu item -->
-			<li
-				:class="['dropdown-item', { disabled: !modelValue }]"
-				:title="texts.propertyLabel"
-				@click.stop.prevent="getProperties">
-				<q-icon icon="properties" /> {{ texts.propertyLabel }}
-			</li>
-		</ul>
+		<q-document-dropdown
+			v-if="!disabled && showOptions"
+			:model-value="modelValue"
+			:anchor="$refs.optionsButton.$el"
+			:texts="texts"
+			:readonly="readonly"
+			:editing="editing"
+			:versioning="versioning"
+			:versions="orderedVersions"
+			:uses-templates="usesTemplates"
+			@attach-file="triggerFileAttach"
+			@close="toggleDropdown"
+			@delete-file="confirmFileDelete"
+			@delete-history="confirmDeleteHistory"
+			@delete-last="confirmDeleteLast"
+			@edit-file="editFile"
+			@get-file="getFile"
+			@get-properties="getProperties"
+			@get-version-history="viewAllVersions"
+			@show-templates-popup="createDocument"
+			@submit-file="setFileSubmitModalState(true)" />
 
 		<q-document-properties
 			v-if="popupIsVisible && showProperties"
@@ -174,12 +75,9 @@
 			:texts="texts"
 			:label-id="labelId"
 			:extensions="extensions"
-			:current-version="currentVersion"
 			:max-file-size="maxFileSize"
 			:minor-version-value="minorVersionValue"
 			:major-version-value="majorVersionValue"
-			@set-minor-version="setMinorVersion"
-			@set-major-version="setMajorVersion"
 			@submit-file="submitFileVersion"
 			@hide-popup="setFileSubmitModalState(false)" />
 
@@ -191,7 +89,7 @@
 			:versions="versions"
 			:versions-info="versionsInfo"
 			:resources-path="resourcesPath"
-			@get-file-version="downloadVersion"
+			@get-file="getFile"
 			@delete-last="confirmDeleteLast"
 			@delete-history="confirmDeleteHistory" />
 	</div>
@@ -199,10 +97,8 @@
 
 <script>
 	import { defineAsyncComponent } from 'vue'
-	import Popper from 'popper.js'
-	import _isEmpty from 'lodash-es/isEmpty'
 
-	import { displayMessage, validateFileExtAndSize, validateTexts } from '@/mixins/genericFunctions.js'
+	import { displayMessage, isEmpty, validateFileExtAndSize, validateTexts } from '@/mixins/genericFunctions.js'
 	import { inputSize } from '@/mixins/quidgest.mainEnums.js'
 
 	// The texts needed by the component.
@@ -244,14 +140,16 @@
 		bytesLabel: 'Bytes',
 		author: 'Author',
 		deleteHeaderLabel: 'Are you sure you want to delete?',
-		attachDocumentPlaceHolder: 'Attach document',
 		actionLabel: 'Actions',
 		viewAll: 'View all',
 		closeLabel: 'Close',
 		theLastVersionWillEliminate: 'The last version will be eliminated.\\r\\nAre you sure you want to delete?',
 		allTheVersionsExceptLastWillEliminate: 'All the versions except the last will be deleted.\\r\\nAre you sure you want to delete?',
 		uploadDocVersionHeader: 'Document versions',
-		createDocument: 'Create document'
+		createDocument: 'Create document',
+		editingDocument: 'This document is currently being edited.',
+		pendingDocumentVersion: 'This document version is not yet saved.',
+		errorProcessingRequest: 'An error has occurred while processing the request.'
 	}
 
 	export default {
@@ -261,11 +159,9 @@
 			'delete-file': () => true,
 			'delete-history': () => true,
 			'delete-last': () => true,
-			'download-file': () => true,
 			'edit-file': () => true,
 			'file-error': (payload) => typeof payload === 'number',
-			'get-file': () => true,
-			'get-file-version': (payload) => typeof payload === 'string',
+			'get-file': (payload) => typeof payload === 'object',
 			'get-properties': () => true,
 			'get-version-history': () => true,
 			'hide-popup': (payload) => typeof payload === 'string',
@@ -275,6 +171,7 @@
 		},
 
 		components: {
+			QDocumentDropdown: defineAsyncComponent(() => import('./popups/QDocumentDropdown.vue')),
 			QDocumentSubmit: defineAsyncComponent(() => import('./popups/QDocumentSubmit.vue')),
 			QDocumentVersions: defineAsyncComponent(() => import('./popups/QDocumentVersions.vue')),
 			QDocumentProperties: defineAsyncComponent(() => import('./popups/QDocumentProperties.vue'))
@@ -322,7 +219,7 @@
 			/**
 			 * Whether or not versioning is active for the document.
 			 */
-			versioningIsOn: {
+			versioning: {
 				type: Boolean,
 				default: false
 			},
@@ -332,7 +229,7 @@
 			 */
 			size: {
 				type: String,
-				validator: (value) => _isEmpty(value) || Reflect.has(inputSize, value)
+				validator: (value) => isEmpty(value) || Reflect.has(inputSize, value)
 			},
 
 			/**
@@ -362,7 +259,7 @@
 			/**
 			 * Whether or not the document is currently being edited by someone.
 			 */
-			isInCheckout: {
+			editing: {
 				type: Boolean,
 				default: false
 			},
@@ -400,14 +297,6 @@
 			},
 
 			/**
-			 * Whether or not the current version of the document can be deleted.
-			 */
-			disallowRemoval: {
-				type: Boolean,
-				default: false
-			},
-
-			/**
 			 * The resources path.
 			 */
 			resourcesPath: {
@@ -427,27 +316,17 @@
 		provide()
 		{
 			return {
-				validateFile: this.validateFile,
-				downloadVersion: this.downloadVersion
+				validateFile: this.validateFile
 			}
 		},
 
-		// TODO: Remove these properties from the "expose" (only necessary for unit tests).
-		expose: [
-			'maxFileSize'
-		],
+		expose: [],
 
 		data()
 		{
 			return {
 				// The id of the component.
-				controlId: this.id || `q-file-input-${this._.uid}`,
-
-				// The max number of visible versions in the submenu dropdown.
-				maxVisibleVersions: 5,
-
-				// The properties of the current file.
-				properties: {},
+				controlId: this.id || `q-document-${this._.uid}`,
 
 				// Whether or not the properties popup is visible.
 				showProperties: false,
@@ -461,28 +340,12 @@
 				// Whether or not the versions dropdown menu is visible.
 				showOptions: false,
 
-				// Whether or not the versions dropdown sub-menu is visible.
-				showVersionsSubMenu: false,
-
 				// The default minor version value.
 				minorVersionValue: '',
 
 				// The default major version value.
-				majorVersionValue: '',
-
-				// The options menu popper object.
-				popper: null
+				majorVersionValue: ''
 			}
-		},
-
-		mounted()
-		{
-			this.bindOutsideClickListener()
-		},
-
-		beforeUnmount()
-		{
-			this.unbindOutsideClickListener()
 		},
 
 		computed: {
@@ -495,41 +358,34 @@
 			},
 
 			/**
-			 * The color of the displayed document name.
+			 * An array with all the versions, ordered in ascendent order.
 			 */
-			activeColor()
+			orderedVersions()
 			{
-				return this.isInCheckout ? '#4CAF50' : '#747C91'
-			},
-
-			/**
-			 * The number of document versions.
-			 */
-			versionCount()
-			{
-				return this.versions ? Object.keys(this.versions).length : 0
-			},
-
-			/**
-			 * An array with all the version numbers, ordered in ascendent order.
-			 */
-			versionNumbers()
-			{
-				var versionsArray = []
+				const versions = []
 
 				for (let i in this.versions)
-					versionsArray.push(i)
+				{
+					const value = this.versions[i]
+					const dirty = value?.length === 0
 
-				return versionsArray.sort()
+					versions.push({
+						key: i,
+						value,
+						dirty
+					})
+				}
+
+				return versions.sort((a, b) => Number(a.key) > Number(b.key) ? -1 : 1)
 			},
 
 			/**
-			 * An array with only the N most recent version numbers (N = maxVisibleVersions).
+			 * The last version that isn't dirty.
 			 */
-			visibleVersionNumbers()
+			lastNonDirtyVersion()
 			{
-				var array = this.versionNumbers
-				return array.slice(Math.max(array.length - this.maxVisibleVersions, 0))
+				const lastVersion = this.orderedVersions.find((v) => v.value?.length > 0)
+				return lastVersion?.key ?? this.currentVersion
 			},
 
 			/**
@@ -543,21 +399,14 @@
 
 		methods: {
 			/**
-			 * Sets the value of the major version.
-			 * @param {string} value The value
+			 * Handles the click event on the document field.
 			 */
-			setMinorVersion(value)
+			handleFieldClick()
 			{
-				this.minorVersionValue = value
-			},
-
-			/**
-			 * Sets the value of the minor version.
-			 * @param {string} value The value
-			 */
-			setMajorVersion(value)
-			{
-				this.majorVersionValue = value
+				if (this.modelValue)
+					this.getFile('', false)
+				else
+					this.triggerFileAttach()
 			},
 
 			/**
@@ -580,15 +429,21 @@
 			},
 
 			/**
+			 * Programatically triggers the file attach window.
+			 */
+			triggerFileAttach()
+			{
+				if (!this.readonly && !this.disabled)
+					this.$refs.fileAttach.click()
+			},
+
+			/**
 			 * Retrieves the attached file object and emits an event with it.
 			 * @param {object} event The file attach event
 			 */
 			attachFile(event)
 			{
-				const callback = (file) => {
-					this.$emit('submit-file', { file, version: this.currentVersion })
-				}
-
+				const callback = (file) => this.$emit('submit-file', { file, version: this.currentVersion })
 				this.validateFile(event, callback)
 			},
 
@@ -607,34 +462,24 @@
 			 */
 			getProperties()
 			{
-				this.$emit('get-properties')
-			},
-
-			/**
-			 * Emits the event to display the current version of the document in a new tab.
-			 */
-			getFile()
-			{
 				if (this.modelValue)
-					this.$emit('get-file')
+					this.$emit('get-properties')
 			},
 
 			/**
-			 * Emits the event to download the current version of the document from the server.
+			 * Emits the event to get the specified version of the document.
+			 * @param {string} version The id of the version
+			 * @param {boolean} download Whether to force the file download
 			 */
-			downloadFile()
+			getFile(version = '', download = true)
 			{
-				if (this.modelValue)
-					this.$emit('download-file')
-			},
+				let v = this.currentVersion
+				if (version?.length > 0)
+					v = version
+				else if (!this.modelValue)
+					return
 
-			/**
-			 * Emits the event to download the specified version of the document from the server.
-			 * @param {string} version The id of the version to be downloaded
-			 */
-			downloadVersion(version)
-			{
-				this.$emit('get-file-version', version)
+				this.$emit('get-file', { version: v, download })
 			},
 
 			/**
@@ -680,21 +525,31 @@
 			},
 
 			/**
-			 * Confirmation window for the deletion of the document.
+			 * Confirmation window for the deletion of a document.
+			 * @param {string} question The question to present to the user
+			 * @param {function} action The action to be executed in case the user wants to proceed
 			 */
-			confirmFileDelete()
+			confirmDelete(question, action)
 			{
 				const buttons = {
 					confirm: {
 						label: this.texts.yesLabel,
-						action: this.deleteFile
+						action
 					},
 					cancel: {
 						label: this.texts.noLabel
 					}
 				}
 
-				displayMessage(this.texts.deleteHeaderLabel, 'question', null, buttons)
+				displayMessage(question, 'question', null, buttons)
+			},
+
+			/**
+			 * Confirmation window for the deletion of the document.
+			 */
+			confirmFileDelete()
+			{
+				this.confirmDelete(this.texts.deleteHeaderLabel, this.deleteFile)
 			},
 
 			/**
@@ -702,17 +557,7 @@
 			 */
 			confirmDeleteLast()
 			{
-				const buttons = {
-					confirm: {
-						label: this.texts.yesLabel,
-						action: this.deleteLastVersion
-					},
-					cancel: {
-						label: this.texts.noLabel
-					}
-				}
-
-				displayMessage(this.texts.theLastVersionWillEliminate, 'question', null, buttons)
+				this.confirmDelete(this.texts.theLastVersionWillEliminate, this.deleteLastVersion)
 			},
 
 			/**
@@ -720,17 +565,7 @@
 			 */
 			confirmDeleteHistory()
 			{
-				const buttons = {
-					confirm: {
-						label: this.texts.yesLabel,
-						action: this.deleteFileHistory
-					},
-					cancel: {
-						label: this.texts.noLabel
-					}
-				}
-
-				displayMessage(this.texts.allTheVersionsExceptLastWillEliminate, 'question', null, buttons)
+				this.confirmDelete(this.texts.allTheVersionsExceptLastWillEliminate, this.deleteFileHistory)
 			},
 
 			/**
@@ -769,18 +604,21 @@
 
 				if (isVisible)
 				{
-					const version = Number(this.currentVersion)
+					const version = Number(this.lastNonDirtyVersion)
 
 					// If the popup is being opened, the default values of the versions need to be updated.
 					if (!isNaN(version))
 					{
-						this.setMinorVersion((version + 0.1).toFixed(1))
-						this.setMajorVersion((Math.floor(version) + 1).toString())
+						this.minorVersionValue = (version + 0.1).toFixed(1)
+						this.majorVersionValue = (Math.floor(version) + 1).toString()
+
+						if (Number(this.minorVersionValue) === Number(this.majorVersionValue))
+							this.minorVersionValue = this.majorVersionValue
 					}
 					else
 					{
-						this.setMinorVersion('')
-						this.setMajorVersion('')
+						this.minorVersionValue = ''
+						this.majorVersionValue = ''
 					}
 
 					const modalProps = {
@@ -825,72 +663,11 @@
 			},
 
 			/**
-			 * Sets the visibility of the options dropdown, either open or closed.
-			 * @param {object} event The mouse click event
-			 * @param {boolean} isVisible The state of the dropdown
-			 * @param {boolean} affectDropdown Whether or not to affect the entire dropdown
+			 * Toggles the options dropdown state to either open or closed.
 			 */
-			setDropdownState(event, isVisible, affectDropdown = true)
+			toggleDropdown()
 			{
-				if (affectDropdown)
-				{
-					if (this.popper === null)
-					{
-						this.popper = new Popper(this.$refs.optionsButton?.$el, this.$refs.optionsMenu, {
-							placement: 'bottom-start',
-							onCreate: () => { this.showOptions = !this.showOptions },
-							modifiers: {
-								preventOverflow: {
-									enabled: true,
-									boundariesElement: 'window'
-								}
-							}
-						})
-					}
-					else
-						this.showOptions = !this.showOptions
-				}
-
-				this.showVersionsSubMenu = isVisible
-
-				if (event === null)
-					return
-
-				event.stopPropagation()
-				event.preventDefault()
-			},
-
-			/**
-			 * Triggered when the user clicks on the page.
-			 * @param event The click event
-			 */
-			outsideClickListener(event)
-			{
-				if (
-					!(
-						this.$refs.optionsButton?.$el?.contains(event.target) ||
-						this.$refs.optionsMenu?.contains(event.target)
-					)
-				)
-					this.showOptions = false
-			},
-
-			/**
-			 * Binds a listener to check for a click event.
-			 */
-			bindOutsideClickListener()
-			{
-				window.addEventListener('mousedown', this.outsideClickListener)
-				this.hasClickListener = true
-			},
-
-			/**
-			 * Unbinds the click listener.
-			 */
-			unbindOutsideClickListener()
-			{
-				window.removeEventListener('mousedown', this.outsideClickListener)
-				this.hasClickListener = false
+				this.showOptions = !this.showOptions
 			},
 
 			/**
@@ -903,15 +680,15 @@
 		},
 
 		watch: {
-			fileProperties()
+			fileProperties(val)
 			{
-				if (Object.keys(this.fileProperties).length > 0)
+				if (val && Object.keys(val).length > 0)
 					this.setPropertiesModalState(true)
 			},
 
-			versionsInfo()
+			versionsInfo(val)
 			{
-				if (this.versionsInfo.length > 0)
+				if (val?.length > 0)
 					this.setVersionsModalState(true)
 			}
 		}

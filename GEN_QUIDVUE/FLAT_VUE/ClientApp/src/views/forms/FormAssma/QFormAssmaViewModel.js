@@ -89,24 +89,34 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValDigdocum',
 			area: 'ASSMA',
 			field: 'DIGDOCUM',
+			properties: computed(() => this.ValDigdocumPropertiesVM),
+			documentFK: computed(() => this.ValDigdocumfk),
+			currentDocument: computed(() => this.ValDigdocumData),
 			description: computed(() => this.Resources.DIGITAL_DOCUMENT59580),
 		}).cloneFrom(values?.ValDigdocum))
 		watch(() => this.ValDigdocum.value, (newValue, oldValue) => this.onUpdate('assma.digdocum', this.ValDigdocum, newValue, oldValue))
 
-		this.ValDigdocumPropertiesVM = new modelFieldType.Base({
+		this.ValDigdocumPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'ValDigdocumPropertiesVM',
 			area: 'ASSMA',
 			field: 'DIGDOCUMDOCUM',
 			ignoreFldSubmit: true
-		}).cloneFrom(values?.ValDigdocumPropertiesVM)
+		}).cloneFrom(values?.ValDigdocumPropertiesVM))
 		this.ValDigdocumfk = reactive(new modelFieldType.Base({
 			id: 'ValDigdocumfk',
 			area: 'ASSMA',
-			field: 'DIGDOCUMDOCUMFK'
+			field: 'DIGDOCUMFK'
 		}).cloneFrom(values?.ValDigdocumfk))
-		watch(() => this.ValDigdocumfk.value, (newValue, oldValue) => this.onUpdate('assma.digdocumdocumfk', this.ValDigdocumfk, newValue, oldValue))
+		watch(() => this.ValDigdocumfk.value, (newValue, oldValue) => this.onUpdate('assma.digdocumfk', this.ValDigdocumfk, newValue, oldValue))
+		this.ValDigdocumData = reactive(new modelFieldType.DocumentData({
+			id: 'ValDigdocumData',
+			area: 'ASSMA',
+			field: 'DIGDOCUMDATA',
+			ignoreFldSubmit: true
+		}).cloneFrom(values?.ValDigdocumData))
+		watch(() => this.ValDigdocumData.value, (newValue, oldValue) => this.onUpdate('assma.digdocumdata', this.ValDigdocumData, newValue, oldValue), { deep: true })
 
-		this.ValNotes = reactive(new modelFieldType.String({
+		this.ValNotes = reactive(new modelFieldType.MultiLineString({
 			id: 'ValNotes',
 			originId: 'ValNotes',
 			area: 'ASSMA',
@@ -128,5 +138,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodassma'
 
 	get QPrimaryKey() { return this.ValCodassma.value }
-	set QPrimaryKey(value) { this.ValCodassma.value = value }
+	set QPrimaryKey(value) { this.ValCodassma.updateValue(value) }
 }

@@ -151,9 +151,9 @@ namespace CSGenio.business
         public static FieldRef FldNivel { get { return m_FldNivel; } }
         private static FieldRef m_FldNivel = new FieldRef("pswuserauthlevels", "nivel");
 
-        public double ValNivel
+        public decimal ValNivel
         {
-            get { return (double)returnValueField(FldNivel); }
+            get { return (decimal)returnValueField(FldNivel); }
             set { insertNameValueField(FldNivel, value); }
         }
 

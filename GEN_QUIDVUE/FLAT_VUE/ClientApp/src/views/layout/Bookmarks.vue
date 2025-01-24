@@ -6,11 +6,16 @@
 			id="bookmarks-tree-view"
 			class="nav nav-pills nav-sidebar n-sidebar__nav d-block">
 			<li :class="[{ 'menu-open': bookmarkMenuIsOpen }, 'nav-item', 'n-sidebar__nav-item', 'has-treeview']">
-				<a
-					class="nav-link n-sidebar__nav-link d-flex bookmarks__menu-text"
+				<a 
+					ref="menuButton"
+					id="bookmarks__toggle"
 					href="javascript:void(0)"
-					@click.stop.prevent="toggleBookmarksMenu">
-					<q-icon icon="favourites" />
+					:class="['nav-link n-sidebar__nav-link', 'has-icon', 'bookmarks__menu-text']" 
+					@click.stop.prevent="toggleBookmarksMenu"
+					@keyup="menuItemKeyup">
+					<q-icon-svg
+						icon="favourites"
+						:custom-classes="['nav-icon', 'n-sidebar__icon', 'e-icon', 'section-header-icon']" />
 
 					<p>
 						{{ texts.favorites }}
@@ -24,7 +29,8 @@
 					<bookmarks-content
 						v-if="bookmarkMenuIsOpen"
 						:classes="['d-block', 'nav', 'nav-treeview']"
-						:show-titles="!sidebarIsCollapsed" />
+						:show-titles="!sidebarIsCollapsed"
+						@keyup="menuItemKeyup" />
 				</transition>
 			</li>
 		</ul>
@@ -57,6 +63,40 @@
 				texts: {
 					favorites: computed(() => this.Resources[hardcodedTexts.favorites])
 				}
+			}
+		},
+
+		methods: {
+			/**
+			 * Focus on the menu toggle button.
+			 */
+			focusItem()
+			{
+				//Focus on the menu toggle button
+				this.$refs?.menuButton?.focus()
+			},
+
+			/**
+			 * Close the menu and focus on the menu toggle button.
+			 */
+			closeMenuAndFocusItem()
+			{
+				//Focus on the menu toggle button
+				this.focusItem()
+				
+				//Close dropdown
+				this.setBookmarkMenuState(false)
+			},
+
+			/*
+			 * Called when pressing a key on any menu item
+			 */
+			menuItemKeyup(event)
+			{
+				const key = event?.key
+				
+				if(key === 'Escape')
+					this.closeMenuAndFocusItem()
 			}
 		}
 	}

@@ -36,13 +36,21 @@ const state = () => {
 	return {
 		layoutConfig: getLayoutVariables(layoutConfig),
 
+		bookmarkMenuIsOpen: false,
+
+		moduleMenuIsOpen: false,
+
 		rightSidebarIsCollapsed: false,
+
+		rightSidebarIsVisible: true,
 
 		pageScroll: 0,
 
 		headerHeight: 0,
 
-		progressBar: getProgressBarDefaultConfig()
+		progressBar: getProgressBarDefaultConfig(),
+
+		mobileLayoutActive: window.innerWidth <= 767
 	}
 }
 
@@ -67,7 +75,34 @@ const actions = {
 	},
 
 	/**
+	 * Sets the state of the bookmarks menu.
+	 * @param {boolean} isOpen Whether or not the bookmarks menu is open
+	 */
+	setBookmarkMenuState(isOpen)
+	{
+		if (typeof isOpen !== 'boolean')
+			return
+
+		this.bookmarkMenuIsOpen = isOpen
+	},
+
+	/**
+	 * Sets the state of the modules menu.
+	 * @param {boolean} isOpen Whether or not the modules menu is open
+	 */
+	setModuleMenuState(isOpen)
+	{
+		if (typeof isOpen !== 'boolean')
+			return
+
+		this.moduleMenuIsOpen = isOpen
+	},
+
+	/**
 	 * Sets the collapse state of the right sidebar.
+	 * This value is updated right away when expanding and collapsing, 
+	 * so it's more like the state that the sidebar should be in / is going to.
+	 * When collapsing, it will be false before the sidebar is actually invisible.
 	 * @param {boolean} isCollapsed Whether or not the right sidebar is collapsed
 	 */
 	setRightSidebarCollapseState(isCollapsed)
@@ -76,6 +111,25 @@ const actions = {
 			return
 
 		this.rightSidebarIsCollapsed = isCollapsed
+
+		//If false, the value for rightSidebarIsVisible must also change to true right away
+		if(!this.rightSidebarIsCollapsed)
+			this.setRightSidebarVisibility(true)
+	},
+
+	/**
+	 * Sets the visibility of the right sidebar. 
+	 * This is used to indicate the actual visibility in real-time.
+	 * This is needed because, with transitions, the visibility should
+	 * not be changed to hidden until the transition finishes.
+	 * @param {boolean} isVisible Whether or not the sidebar is visible
+	 */
+	setRightSidebarVisibility(isVisible)
+	{
+		if (typeof isVisible !== 'boolean')
+			return
+
+		this.rightSidebarIsVisible = isVisible
 	},
 
 	/**
@@ -136,6 +190,7 @@ const actions = {
 					hideHeader: !this.progressBar.modalProps.title,
 					hideFooter: !(this.progressBar.modalProps.buttons?.length > 0),
 					modalWidth: this.progressBar.modalProps.width ?? 'sm',
+					returnElement: this.progressBar.modalProps.returnElement ?? null,
 					isActive: true
 				}
 				genericDataStore.setModal(modalProps)
@@ -169,6 +224,13 @@ const actions = {
 
 		const genericDataStore = useGenericDataStore()
 		genericDataStore.removeModal('progress-bar')
+	},
+
+	/**
+	 * Updates whether the layout is in mobile mode or not by checking the window width.
+	 */
+	updateLayoutMobileState() {
+		this.mobileLayoutActive = window.innerWidth <= 767
 	},
 
 	/**

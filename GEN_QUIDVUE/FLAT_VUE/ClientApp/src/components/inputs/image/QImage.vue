@@ -10,14 +10,17 @@
 		<div class="q-image__container">
 			<a
 				:class="{ 'q-image__field-empty': isEmptyImage }"
-				href="javascript:void(0)">
+				tabindex="0"
+				:title="dataTitle"
+				@click.stop.prevent="openPreview"
+				@keydown.enter="openPreview">
 				<img
 					ref="mainImg"
 					data-testid="main-img"
 					class="q-image__field-thumbnail"
 					:style="imageStyle"
 					:src="imageURL"
-					@click.stop.prevent="openPreview" />
+					:alt="dataTitle" />
 			</a>
 
 			<input
@@ -75,38 +78,16 @@
 				v-if="popupIsVisible && showEditModal"
 				:control-id="controlId"
 				:texts="texts"
-				:image-to-edit="getImageURL(fullSizeImage)"
+				:image-to-edit="imageURL"
+				:data-title="dataTitle"
 				@image-edited="imageEdited"
 				@close-editor="handleCloseEdit" />
-			<div
+			<q-image-preview
 				v-else
-				class="q-image__modal-main-container">
-				<div class="q-image__modal-container">
-					<img
-						:src="getImageURL(fullSizeImage)"
-						class="q-image__modal-image" />
-
-					<div class="q-image__modal-buttons">
-						<q-button
-							b-style="plain"
-							borderless
-							class="q-image__modal-button"
-							:title="texts.download"
-							@click="downloadImage">
-							<q-icon icon="download" />
-						</q-button>
-
-						<q-button
-							b-style="plain"
-							borderless
-							class="q-image__modal-button"
-							:title="texts.close"
-							@click="closePreview">
-							<q-icon icon="close" />
-						</q-button>
-					</div>
-				</div>
-			</div>
+				:image="fullSizeImage"
+				:data-title="dataTitle"
+				:texts="texts"
+				@close-image-preview="$emit('close-image-preview')" />
 		</template>
 	</div>
 </template>
@@ -114,8 +95,8 @@
 <script>
 	import { defineAsyncComponent } from 'vue'
 
-	import { forceDownload } from '@/api/network'
 	import { displayMessage, validateFileExtAndSize, validateImageFormat, validateTexts } from '@/mixins/genericFunctions.js'
+	import { getImageURL } from  '@/utils/image.js'
 
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {
@@ -160,7 +141,8 @@
 		},
 
 		components: {
-			QImageEditor: defineAsyncComponent(() => import('./popups/QImageEditor.vue'))
+			QImageEditor: defineAsyncComponent(() => import('./popups/QImageEditor.vue')),
+			QImagePreview: defineAsyncComponent(() => import('@/components/QImagePreview.vue'))
 		},
 
 		inheritAttrs: false,
@@ -267,6 +249,14 @@
 			loading: {
 				type: Boolean,
 				default: false
+			},
+
+			/**
+			 * Title and alt text for the link and image element.
+			 */
+			dataTitle: {
+				type: String,
+				default: null
 			}
 		},
 
@@ -281,16 +271,6 @@
 
 				showEditModal: false
 			}
-		},
-
-		mounted()
-		{
-			document.addEventListener('keydown', this.onKeyPress)
-		},
-
-		beforeUnmount()
-		{
-			document.removeEventListener('keydown', this.onKeyPress)
 		},
 
 		computed: {
@@ -310,43 +290,11 @@
 			 */
 			imageURL()
 			{
-				return this.getImageURL(this.image)
+				return getImageURL(this.image)
 			}
 		},
 
 		methods: {
-			/**
-			 * Returns the URL of the image.
-			 * @param {String|Object} image - The ID of the image.
-			 * @returns A base64 representation of the provided image.
-			 */
-			getImageURL(image)
-			{
-				// Here we are dealing with various cases:
-				// - If image is not provided returns an empty path
-				// - If image is string use it directly
-				// - If image is dataURL object, create image url using data, encoding and data format
-				return image
-					? typeof image === 'object'
-						? `data:image/${image.dataFormat};${image.encoding},${image.data}`
-						: image
-					: ''
-			},
-
-			/**
-			 * Returns the MIME type of the image.
-			 * @param {String|Object} image - The image.
-			 * @returns The MIME type of the provided image.
-			 */
-			getImageType(image)
-			{
-				const base64Img = this.getImageURL(image)
-
-				if (base64Img?.length > 0)
-					return base64Img.split(';')[0]?.split('/').pop()
-				return undefined
-			},
-
 			/**
 			 * Reads the file and transforms it into an object.
 			 * @param {File} file - The image file.
@@ -366,7 +314,8 @@
 							data: fileData,
 							dataFormat: mimeType,
 							fileName: file.name,
-							encoding: 'base64'
+							encoding: 'base64',
+							isThumbnail: false
 						}
 
 						resolve(imgData)
@@ -530,44 +479,6 @@
 				this.$emit('submit-image', imgData)
 				this.handleCloseEdit()
 			},
-
-			/**
-			 * Handles the downloading of the image.
-			 */
-			downloadImage()
-			{
-				const imgData = this.getImageURL(this.fullSizeImage)
-				const imgType = this.getImageType(this.fullSizeImage)
-				const fileName = 'Image' // TODO: Use the original name of the file
-
-				forceDownload(imgData, fileName, imgType, false, false)
-			},
-
-			/**
-			 * Handles key press events.
-			 * @param {Object} event - The key press event.
-			 */
-			onKeyPress(event)
-			{
-				if (this.fullSizeImage &&
-					!(this.popupIsVisible && this.showEditModal) &&
-					event.key === 'Escape')
-					this.closePreview()
-			}
 		},
-
-		watch: {
-			fullSizeImage(val)
-			{
-				if (this.showEditModal)
-					return
-
-				// We are manipulating the style of the body to prevent overflow when the preview mode is on.
-				if (val)
-					document.body.style.setProperty('overflow', 'hidden')
-				else
-					document.body.style.removeProperty('overflow')
-			}
-		}
 	}
 </script>

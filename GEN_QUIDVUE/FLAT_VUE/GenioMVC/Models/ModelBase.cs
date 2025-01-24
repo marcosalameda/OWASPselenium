@@ -1,23 +1,25 @@
-﻿using CSGenio.business;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using System.Reflection;
+
+using CSGenio.business;
 using CSGenio.framework;
 using CSGenio.persistence;
 using GenioMVC.Models.Navigation;
 using GenioMVC.ViewModels;
+using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
-using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 
 namespace GenioMVC.Models
 {
-	public class ModelBase : IConditionalSerializer
+	public class ModelBase(UserContext userContext) : IConditionalSerializer
 	{
-		protected UserContext m_userContext;
-
-		public ModelBase(UserContext userContext)
-		{
-			m_userContext = userContext;
-		}
+		protected UserContext m_userContext = userContext;
+		/// <summary>
+		/// List of field values filled by history.
+		/// During the insertion of a new record, defaults or replicas may remove the value of keys filled by history.
+		/// This list is used to ensure that the values of these fields are maintained during the creation of the pseudo-new record.
+		/// </summary>
+		protected Dictionary<string, string> m_filledByHistory = [];
 
 		public bool ShouldSerialize(string tag)
 		{
@@ -71,14 +73,14 @@ namespace GenioMVC.Models
 			return (T)this;
 		}
 
-		virtual public void New(string identifier = null)
+		virtual public void New(string identifier = null, PersistentSupport persistentSupport = null)
 		{
 			var u = m_userContext.User;
-			var sp = m_userContext.PersistentSupport;
+			var sp = (persistentSupport == null? m_userContext.PersistentSupport: persistentSupport);
 			try
 			{
 				this.baseklass.fillEPH(u, sp, identifier);
-				this.baseklass.insertPseud(sp);
+				this.baseklass.insertPseud(sp, [.. m_filledByHistory.Keys], [.. m_filledByHistory.Values]);
 			}
 			finally
 			{
@@ -130,7 +132,19 @@ namespace GenioMVC.Models
 
 		public static CriteriaSet AddEPH<A>(ref User user, CriteriaSet args, string identifier = null) where A : CSGenio.business.Area
 		{
-			CriteriaSet condEph = Listing.CalculateConditionsEphGeneric(CSGenio.business.Area.createArea<A>(user, user.CurrentModule), identifier);
+			var area = CSGenio.business.Area.createArea<A>(user, user.CurrentModule);
+			return AddEPH(area, ref user, args, identifier);
+		}
+
+		public static CriteriaSet AddEPH(string areaName, ref User user, CriteriaSet args, string identifier = null)
+		{
+			var area = CSGenio.business.Area.createArea(areaName, user, user.CurrentModule);
+			return AddEPH(area, ref user, args, identifier);
+		}
+
+		public static CriteriaSet AddEPH(CSGenio.business.Area area, ref User user, CriteriaSet args, string identifier = null)
+		{
+			CriteriaSet condEph = Listing.CalculateConditionsEphGeneric(area, identifier);
 
 			if (condEph != null && (condEph.Criterias.Count > 0 || condEph.SubSets.Count > 0))
 			{
@@ -166,82 +180,6 @@ namespace GenioMVC.Models
 		}
 
 		/// <summary>
-		/// Gets a specific file (more importantly a specific version of a file)
-		/// </summary>
-		/// <param name="id">Coddocums</param>
-		/// <returns>DBFile</returns>
-		public static DBFile GetSpecificDocument(string id, UserContext userContext)
-		{
-			Docums doc = Docums.Find(id, userContext);
-			DBFile fileDB = new DBFile(doc.ValNome, doc.ValExtensao, doc.ValVersao, doc.ValDocument, int.Parse(doc.ValTamanho));
-			return fileDB;
-		}
-
-		/// <summary>
-		/// Gets the lastest version of a specific document
-		/// </summary>
-		/// <param name="documid">documid</param>
-		/// <returns>DBFile</returns>
-		public static DBFile GetDocumentsLatestVersion(string documid, UserContext userContext)
-		{
-			Docums doc = Docums.GetLatestVersion(documid, userContext);
-			DBFile fileDB = null;
-			if (doc.ValDocument == null || doc.ValDocument.Length == 0)
-				fileDB = new DBFile(doc.ValNome, doc.ValExtensao, doc.ValVersao, doc.ValDocpath, int.Parse(doc.ValTamanho));
-			else
-				fileDB = new DBFile(doc.ValNome, doc.ValExtensao, doc.ValVersao, doc.ValDocument, int.Parse(doc.ValTamanho));
-			return fileDB;
-		}
-
-		/// <summary>
-		/// Deletes the version history of a file
-		/// </summary>
-		/// <param name="field">The field name that holds the docum name</param>
-		public bool DeleteHistoricVersions(string field)
-		{
-			PersistentSupport sp = m_userContext.PersistentSupport;
-			try
-			{
-				sp.openConnection();
-				field = field.Substring(0, 3).ToLower() == "val" ? field.Substring(3).ToLower() : field.ToLower();
-				baseklass.deleteHistoryDocums(sp, field);
-				sp.closeConnection();
-
-				return true;
-			}
-			catch (System.Exception)
-			{
-				// [RC] 06/06/2017 We need to close the connection here
-				sp.closeConnection();
-				return false;
-			}
-		}
-
-		/// <summary>
-		/// Deletes the last version of a file
-		/// </summary>
-		/// <param name="field">The field name that holds the docum name</param>
-		public bool DeleteLastVersion(string field)
-		{
-			PersistentSupport sp = m_userContext.PersistentSupport;
-			try
-			{
-				sp.openConnection();
-				field = field.Substring(0, 3).ToLower() == "val" ? field.Substring(3).ToLower() : field.ToLower();
-				baseklass.deleteLastDocums(sp, field);
-				sp.closeConnection();
-
-				return true;
-			}
-			catch (System.Exception)
-			{
-				// [RC] 06/06/2017 We need to close the connection here
-				sp.closeConnection();
-				return false;
-			}
-		}
-
-		/// <summary>
 		/// Gathers all the available info for a given file (versions, size, author, etc.)
 		/// </summary>
 		/// <param name="field">The field name that holds the docum name</param>
@@ -250,18 +188,42 @@ namespace GenioMVC.Models
 		{
 			PersistentSupport sp = m_userContext.PersistentSupport;
 
-			field = field.Substring(0, 3).ToLower() == "val" ? field.Substring(3).ToLower() : field.ToLower();
-			string documid = baseklass.returnValueField(baseklass.Alias + "." + field + "fk") as string;
+			field = field[..3].ToLower() == "val" ? field[3..].ToLower() : field.ToLower();
+			string documid = baseklass?.returnValueField(baseklass.Alias + "." + field + "fk") as string;
+
 			DBFile info;
-			if (String.IsNullOrEmpty(documid))
+			if (string.IsNullOrEmpty(documid))
 				info = DBFile.EmptyFile();
 			else
 				info = baseklass.infoDocum(sp, field);
 
-			string checkoutEditor = info.CheckoutEditor == "" ? info.CurrentUser : info.CheckoutEditor;
+			return new DocumsProperties_ViewModel(m_userContext, info);
+		}
 
-			DocumsProperties_ViewModel doc = new DocumsProperties_ViewModel(m_userContext, info.Coddocums, info.DocumId, info.Name, info.GetSizeUnit(), info.Extension, info.Author, info.CreatedAt, info.Version, info.IsCheckout, checkoutEditor, info.Versions);
-			return doc;
+		/// <summary>
+		/// Saves a document
+		/// </summary>
+		/// <param name="field">The field</param>
+		/// <returns>True if successful</returns>
+		public bool CheckoutVersion(string field)
+		{
+			PersistentSupport sp = m_userContext.PersistentSupport;
+
+			try
+			{
+				field = field[..3].ToLower() == "val" ? field[3..].ToLower() : field.ToLower();
+
+				sp.openTransaction();
+				bool result = baseklass.checkoutDocums(sp, field, out string newcodDocums);
+				baseklass.updateDirect(sp);
+				sp.closeTransaction();
+				return result;
+			}
+			catch (System.Exception)
+			{
+				sp.rollbackTransaction();
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -272,25 +234,27 @@ namespace GenioMVC.Models
 		public DBFile FindDocument(string field)
 		{
 			PersistentSupport sp = m_userContext.PersistentSupport;
-			DBFile file = null;
-			field = field.Substring(0, 3).ToLower() == "val" ? field.Substring(3).ToLower() : field.ToLower();
-			file = baseklass.returnLastVersionFileDocum(sp, field);
-			return file;
+			field = field[..3].ToLower() == "val" ? field[3..].ToLower() : field.ToLower();
+			return baseklass.returnLastVersionFileDocum(sp, field);
 		}
 
 		/// <summary>
 		/// Saves a document
 		/// </summary>
-		/// <param name="area">The area</param>
 		/// <param name="field">The field</param>
 		/// <param name="file">The file</param>
-		/// <returns>True if successful</returns>
-		public bool SubmitVersion(string area, string field, byte[] file, string fileName, string coddocums , string mode, string version)
+		/// <param name="fileName">The file name</param>
+		/// <param name="coddocums">The document key</param>
+		/// <param name="mode">The mode</param>
+		/// <param name="version">The version</param>
+		/// <returns>True if successful, false otherwise</returns>
+		public bool SubmitVersion(string field, byte[] file, string fileName, string coddocums, string mode, string version)
 		{
 			PersistentSupport sp = m_userContext.PersistentSupport;
+
 			try
 			{
-				field = field.Substring(0, 3).ToLower() == "val" ? field.Substring(3).ToLower() : field.ToLower();
+				field = field[..3].ToLower() == "val" ? field[3..].ToLower() : field.ToLower();
 
 				sp.openTransaction();
 				baseklass.submitDocum(sp, field, file, fileName + "_" + coddocums, mode, version);
@@ -308,70 +272,90 @@ namespace GenioMVC.Models
 		/// <summary>
 		/// Saves a document
 		/// </summary>
-		/// <param name="area">The area</param>
 		/// <param name="field">The field</param>
 		/// <param name="file">The file</param>
 		/// <returns>True if successful</returns>
-		public bool CheckoutVersion(string field)
+		public bool SaveDocument(string field, DBFile file)
 		{
 			PersistentSupport sp = m_userContext.PersistentSupport;
-			field = field.Substring(0, 3).ToLower() == "val" ? field.Substring(3).ToLower() : field.ToLower();
+			field = field[..3].ToLower() == "val" ? field[3..].ToLower() : field.ToLower();
+
+			List<KeyValuePair<string, CSGenio.framework.Field>> fields = DbArea.GetInfoArea(baseklass.Alias).DBFields.Where(x => x.Value.FieldType.Equals(FieldType.FICHEIRO_BD)).ToList();
+
+			if (fields.Exists(x => x.Key.ToLower() == field) && file != null)
+			{
+				try
+				{
+					sp.openTransaction();
+
+					if (!string.IsNullOrEmpty(baseklass.returnValueField(baseklass.Alias + "." + field + "fk").ToString()))
+						baseklass.removeDocums(sp, field);
+					baseklass.insertNameValueFileDB(field, file.File, file.Name + "_", "", sp, file.Version, null);
+					baseklass.updateDirect(sp);
+
+					sp.closeTransaction();
+					return true;
+				}
+				catch (System.Exception ex)
+				{
+					sp.rollbackTransaction();
+					throw new BusinessException("Não foi possível gravar o documento.", "ModelBase.SaveDocument", "Error saving document: " + ex, ex);
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Deletes the version history of a file
+		/// </summary>
+		/// <param name="field">The field name that holds the docum name</param>
+		/// <param name="currentVersion">The current version that should be kept</param>
+		/// <returns>True if successful, false otherwise</returns>
+		public bool DeleteHistoricVersions(string field, string currentVersion = null)
+		{
+			PersistentSupport sp = m_userContext.PersistentSupport;
 
 			try
 			{
-				sp.openTransaction();
-				string newcodDocums = "";
+				sp.openConnection();
+				field = field[..3].ToLower() == "val" ? field[3..].ToLower() : field.ToLower();
+				string version = string.IsNullOrWhiteSpace(currentVersion) ? null : currentVersion;
+				baseklass.deleteHistoryDocums(sp, field, version);
+				sp.closeConnection();
 
-				bool result = baseklass.checkoutDocums(sp, field, out newcodDocums);
-				baseklass.updateDirect(sp);
-				sp.closeTransaction();
-				return result;
+				return true;
 			}
 			catch (System.Exception)
 			{
-				// [RC] 06/06/2017 We need to rollback the transaction here
-				sp.rollbackTransaction();
+				sp.closeConnection();
 				return false;
 			}
 		}
 
 		/// <summary>
-		/// Saves a document
+		/// Deletes the last version of a file
 		/// </summary>
-		/// <param name="area">The area</param>
-		/// <param name="field">The field</param>
-		/// <param name="file">The file</param>
-		/// <returns>True if successful</returns>
-		public bool SaveDocument(string area, string field, DBFile file)
+		/// <param name="field">The field name that holds the docum name</param>
+		/// <returns>True if successful, false otherwise</returns>
+		public bool DeleteLastVersion(string field)
 		{
 			PersistentSupport sp = m_userContext.PersistentSupport;
-			field = field.Substring(0, 3).ToLower() == "val" ? field.Substring(3).ToLower() : field.ToLower();
 
-			List<KeyValuePair<string, CSGenio.framework.Field>> fields = DbArea.GetInfoArea(baseklass.Alias).DBFields.Where(x => x.Value.FieldType.Equals(FieldType.FICHEIRO_BD)).ToList();
-
-			if (fields.Exists(x => x.Key.ToLower() == field))
+			try
 			{
-				if (file != null)
-				{
-					try
-					{
-						sp.openTransaction();
-						if (!String.IsNullOrEmpty(baseklass.returnValueField(baseklass.Alias + "." + field + "fk").ToString()))
-							baseklass.removeDocums(sp, field);
-						baseklass.insertNameValueFileDB(field, file.File, file.Name + "_", "", sp, file.Version, null);
-						baseklass.updateDirect(sp);
-						sp.closeTransaction();
-						return true;
-					}
-					catch (System.Exception ex)
-					{
-						sp.rollbackTransaction();
-						throw new BusinessException("Não foi possível gravar o documento.", "ModelBase.SaveDocument", "Error saving document: " + ex, ex);
-					}
-				}
-			}
+				sp.openConnection();
+				field = field[..3].ToLower() == "val" ? field[3..].ToLower() : field.ToLower();
+				bool result = baseklass.deleteLastDocums(sp, field);
+				sp.closeConnection();
 
-			return false;
+				return result;
+			}
+			catch (System.Exception)
+			{
+				sp.closeConnection();
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -382,10 +366,10 @@ namespace GenioMVC.Models
 		public bool DeleteDocument(string field)
 		{
 			PersistentSupport sp = m_userContext.PersistentSupport;
-			field = field.Substring(0, 3).ToLower() == "val" ? field.Substring(3).ToLower() : field.ToLower();
+			field = field[..3].ToLower() == "val" ? field[3..].ToLower() : field.ToLower();
 			bool varOk = false;
 
-			if (!String.IsNullOrEmpty(baseklass.returnValueField(baseklass.Alias + "." + field + "fk").ToString()))
+			if (!string.IsNullOrEmpty(baseklass.returnValueField(baseklass.Alias + "." + field + "fk").ToString()))
 			{
 				// [RC] 06/06/2017 We must catch exceptions here, so we can rollback the transaction
 				try
@@ -419,11 +403,11 @@ namespace GenioMVC.Models
 		/// <param name="changeHistory">Permitir change o Historial (no reload dos dbedits e dependentes é false)</param>
 		/// <param name="allowNull">Permitir override do Qvalue na ficha com Null do Historial</param>
 		/// <param name="allowOverrideComputed">Permite override do valor da ficha dos campos com formulas. Só deve ser usado nos casos como Reload do DBEdit content, para aplicar novo limite e não ter enviar e calcular a ficha inteira</param>
-		public void LoadKeysFormHistory(NavigationContext navigation, int level, bool changeHistory = true, bool allowNull = false, bool allowOverrideComputed = false)
+		public void LoadKeysFromHistory(NavigationContext navigation, int level, bool changeHistory = true, bool allowNull = false, bool allowOverrideComputed = false)
 		{
 			var allowOverrideMode = new object[] { FormMode.New, FormMode.Edit, FormMode.Duplicate };
 			var allowOverride = allowOverrideMode.Contains(navigation.CurrentLevel.FormMode);
-			LoadKeysFormHistory(navigation, level, changeHistory, allowNull, allowOverride, allowOverrideComputed);
+			LoadKeysFromHistory(navigation, level, changeHistory, allowNull, allowOverride, allowOverrideComputed);
 		}
 
 		/// <summary>
@@ -436,10 +420,12 @@ namespace GenioMVC.Models
 		/// <param name="allowNull">Permitir override do Qvalue na ficha com Null do Historial</param>
 		/// <param name="allowOverride">Permitir override do Qvalue que vem da BD com o Qvalue do Historial</param>
 		/// <param name="allowOverrideComputed">Permite override do valor da ficha dos campos com formulas. Só deve ser usado nos casos como Reload do DBEdit content, para aplicar novo limite e não ter enviar e calcular a ficha inteira</param>
-		public void LoadKeysFormHistory(NavigationContext navigation, int level, bool changeHistory, bool allowNull, bool allowOverride, bool allowOverrideComputed)
+		public void LoadKeysFromHistory(NavigationContext navigation, int level, bool changeHistory, bool allowNull, bool allowOverride, bool allowOverrideComputed)
 		{
 			if (baseklass.ParentTables == null) // Caso da table PSW
 				return;
+
+			m_filledByHistory.Clear();
 
 			foreach (var tblMae in baseklass.ParentTables)
 			{
@@ -447,9 +433,15 @@ namespace GenioMVC.Models
 				if (!tblMae.Key.Equals(areaToLoad))
 					continue;
 
-				//Value da BD
+				// DB value of FK field
+				if (!baseklass.DBFields.TryGetValue(tblMae.Value.SourceRelField, out Field? srcDbFld))
+					continue;
+
 				string Qfield = tblMae.Value.AliasSourceTab + "." + tblMae.Value.SourceRelField;
-				string fieldValue = baseklass.returnValueField(Qfield).ToString();
+
+				object fieldValue = baseklass.returnValueField(Qfield);
+				string strFieldValue = Conversion.internal2String(srcDbFld.GetValorEmpty(), srcDbFld.FieldType);
+
 				bool isEmptyVal = GlobalFunctions.emptyG(fieldValue) == 1;
 
 				var isComputedField = false;
@@ -472,35 +464,45 @@ namespace GenioMVC.Models
 				}
 
 				//Value do Hist
-				object hValue = null;
-				bool hasKey = navigation.CheckKey(areaToLoad, out hValue, level);
+				bool hasKey = navigation.CheckKey(areaToLoad, out object hValue, level);
 				bool isEmptyHistVal = GlobalFunctions.emptyG(hValue) == 1;
 
 				// skip if unable to find a single value for this key
 				if (hValue is Array)
 				{
 					// check if the value is filled and does not invalidate the EPH
-					if (!string.IsNullOrEmpty(fieldValue) && !Array.Exists<string>((string[])hValue, el => el == fieldValue))
+					if (srcDbFld.isEmptyValue(fieldValue) && !Array.Exists<string>((string[])hValue, el => el == strFieldValue))
 					{
-						object emptyVal = "";
-						if (baseklass.DBFields.ContainsKey(tblMae.Value.SourceRelField))
-							emptyVal = baseklass.DBFields[tblMae.Value.SourceRelField].GetValorEmpty();
+						object emptyVal = srcDbFld.GetValorEmpty();
+						string emptyStrVal = Conversion.internal2String(emptyVal, srcDbFld.FieldType);
 
 						// clear the field with invalid value - might have been filled by a default/formula
 						baseklass.insertNameValueField(Qfield, emptyVal);
+						m_filledByHistory.Add(Qfield, emptyStrVal);
 					}
 
 					continue;
 				}
 
-				//Overide do Qvalue da BD com Qvalue do Hist
-				if (isEmptyVal && hasKey && !isEmptyHistVal && !isComputedField) //Se o Qvalue não for preenchido na BD e existir no Hist
-					baseklass.insertNameValueField(Qfield, Convert.ToString(hValue));
-				else if (((allowNull && !isEmptyVal && hasKey && hValue == null)
-					|| (allowOverride && !isEmptyVal && hasKey)) && !isComputedField) //Override do Qvalue que vem da BD com o Qvalue do Historial
+				string hStrValue = Conversion.internal2String(hValue, srcDbFld.FieldType);
+
+				// Override do valor da BD com valor do Historial
+				if (isEmptyVal && hasKey && !isEmptyHistVal && !isComputedField)
+				{ // Se o valor não for preenchido na BD e existir no Historial
 					baseklass.insertNameValueField(Qfield, hValue);
-				else if (!isEmptyVal && changeHistory) //Preenche o Hist com Qvalue da BD
-					navigation.SetValue(areaToLoad, fieldValue, level);
+					m_filledByHistory.Add(Qfield, hStrValue);
+				}
+				else if (((allowNull && !isEmptyVal && hasKey && hValue == null)
+					|| (allowOverride && !isEmptyVal && hasKey)) && !isComputedField)
+				{ // Override do valor que vem da BD com o valor do Historial
+					baseklass.insertNameValueField(Qfield, hValue);
+					m_filledByHistory.Add(Qfield, hStrValue);
+				}
+				else if (!isEmptyVal && changeHistory)
+				{ // Preenche o Historial com valor da BD
+					object validFieldValue = Conversion.internal2InternalValid(fieldValue, srcDbFld.FieldFormat);
+					navigation.SetValue(areaToLoad, validFieldValue, level);
+				}
 			}
 		}
 
@@ -509,56 +511,28 @@ namespace GenioMVC.Models
 		/// </summary>
 		/// <param name="mode">Form mode</param>
 		/// <returns></returns>
-		public bool CheckTablePremissions(FormMode mode)
+		public bool CheckTablePermissions(FormMode mode)
 		{
-			bool status = false;
-
-			switch (mode)
+			return mode switch
 			{
-				case FormMode.List:
-				case FormMode.Show:
-					status = baseklass.AccessRightsToConsult();
-					break;
-				case FormMode.New:
-				case FormMode.Duplicate:
-					status = baseklass.AccessRightsToCreate();
-					break;
-				case FormMode.Edit:
-					status = baseklass.accessRightsToChange();
-					break;
-				case FormMode.Delete:
-					status = baseklass.accessRightsToDelete();
-					break;
-				default:
-					throw new FrameworkException("FormMode not implemented.", "CheckTablePremissions", "FormMode not implemented: " + mode);
-			}
-
-			return status;
+				FormMode.List or FormMode.Show => baseklass.AccessRightsToConsult(),
+				FormMode.New or FormMode.Duplicate => baseklass.AccessRightsToCreate(),
+				FormMode.Edit => baseklass.accessRightsToChange(),
+				FormMode.Delete => baseklass.accessRightsToDelete(),
+				_ => throw new FrameworkException("FormMode not implemented.", "CheckTablePremissions", "FormMode not implemented: " + mode)
+			};
 		}
 
+		/// <summary>
+		/// Evaluates the table conditions
+		/// </summary>
+		/// <param name="type">The condition type</param>
+		/// <returns>The result of the evaluation</returns>
 		public StatusMessage EvaluateTableConditions(ConditionType type)
 		{
 			var user = m_userContext.User;
 			var ps = m_userContext.PersistentSupport;
 			return this.baseklass.EvaluateCrudConditions(ps, user, type);
-		}
-
-		public string GetTicketForDocField(string field)
-		{
-			string modelName = this.GetType().Name;
-
-			Type type = this.GetType();
-			string fileName = type.GetProperty(field).GetValue(this, null) as string;
-
-			PropertyInfo[] infos = type.GetProperties();
-
-			var pk = "";
-			foreach (var fi in infos)
-				if (fi.IsDefined(typeof(KeyAttribute), true))
-					pk = fi.GetValue(this, null).ToString();
-
-			ResourceQuery rec = new ResourceQuery(fileName, modelName.ToLower(), field, "", pk);
-			return QResources.CreateTicketEncryptedBase64(m_userContext.User.Name, m_userContext.User.Location, rec);
 		}
 
 		/// <summary>
@@ -623,40 +597,6 @@ namespace GenioMVC.Models
 		}
 
 		/// <summary>
-		/// Backup fields that are formula aggregated like SR, UV, etc
-		/// </summary>
-		/// <returns>A dictionary will all the currrent values of these kinds of calculated fields</returns>
-		public Dictionary<string, object> BackupAgregationFields()
-		{
-			var fields = new List<string>();
-			if (baseklass.RelatedSumFields != null)
-				fields.AddRange(baseklass.RelatedSumFields);
-			if (baseklass.LastValueFields != null)
-				fields.AddRange(baseklass.LastValueFields);
-			if (baseklass.AggregateListFields != null)
-				fields.AddRange(baseklass.AggregateListFields);
-
-			var backupFields = new Dictionary<string, object>();
-			foreach (var field in fields)
-			{
-				var fullFieldName = baseklass.Alias + "." + field;
-				backupFields[fullFieldName] = baseklass.returnValueField(fullFieldName);
-			}
-
-			return backupFields;
-		}
-
-		/// <summary>
-		/// Overwrites a list of previously memorized values to the current model values
-		/// </summary>
-		/// <param name="fields">The list of fields and their values to overwrite</param>
-		public void MergeFields(Dictionary<string, object> fields)
-		{
-			foreach (var bakField in fields)
-				baseklass.insertNameValueField(bakField.Key, bakField.Value);
-		}
-
-		/// <summary>
 		/// Finds a row by its primary key
 		/// </summary>
 		/// <typeparam name="A">Class of row to find</typeparam>
@@ -677,18 +617,18 @@ namespace GenioMVC.Models
 			User u = userCtx.User;
 			CriteriaSet ephCriteria = AddEPH<A>(ref u, null, identifier);
 
-			if (!(ephCriteria is null))
+			if (ephCriteria is not null)
 			{
-				CriteriaSet ephOrZzstate = new CriteriaSet(CriteriaSetOperator.Or);
+				CriteriaSet ephOrZzstate = new(CriteriaSetOperator.Or);
 				ephOrZzstate.Equal(info.Alias, "zzstate", 1);
 				ephOrZzstate.SubSet(ephCriteria);
 				args.SubSet(ephOrZzstate);
 			}
 
 			var sp = userCtx.PersistentSupport;
-			//turns out this part needs to be called by reflection unfortunately, because searchListWhere is generated differently
-			//for manual tables that are not Db persisted. Calling the searchListWhere directly on the sp is not equivalent.
-			var method = typeof(A).GetMethod("searchList", new Type[] { typeof(PersistentSupport), typeof(User) , typeof(CriteriaSet) , typeof(string[]) , typeof(bool) , typeof(bool) });
+			// Turns out this part needs to be called by reflection unfortunately, because searchListWhere is generated differently
+			// for manual tables that are not Db persisted. Calling the searchListWhere directly on the sp is not equivalent.
+			var method = typeof(A).GetMethod("searchList", [typeof(PersistentSupport), typeof(User), typeof(CriteriaSet), typeof(string[]), typeof(bool), typeof(bool)]);
 			if (method == null)
 				return null;
 			var pos = method.Invoke(null, new object[] { sp, u, args, fieldsToQuery, false, true }) as List<A>;
@@ -703,7 +643,7 @@ namespace GenioMVC.Models
 		/// Finds rows that obey to a criteria
 		/// </summary>
 		/// <typeparam name="A">Class of rows to find</typeparam>
-		/// <param name="distinct">Does it perform a distict operation</param>
+		/// <param name="distinct">Does it perform a distinct operation</param>
 		/// <param name="args">Criteria for the search</param>
 		/// <param name="fields">Fields that we want to retrieve from the database</param>
 		/// <param name="offset">Pagination offset</param>
@@ -713,20 +653,21 @@ namespace GenioMVC.Models
 		/// <param name="noLock">True if dirty reads are allowed</param>
 		/// <param name="getTotal">True if we want to retreive a total record found value that ignores the pagination</param>
 		/// <param name="selectrow">Primary key of a row to highlight</param>
-		/// <param name="PagingPosEPHs">EPH positioning data</param>
+		/// <param name="pagingPosEPHs">EPH positioning data</param>
 		/// <param name="firstVisibleColumn">First visible column</param>
 		/// <returns>A listing containing all the rows and information retrieved</returns>
-		public static ListingMVC<A> Where<A>(UserContext ctx, bool distinct, CriteriaSet args = null, Quidgest.Persistence.FieldRef[] fields = null, int offset = 0, int numRegs = 0, List<ColumnSort> sorts = null, string identifier = null, bool noLock = true, bool getTotal = false, string selectrow = "", CriteriaSet PagingPosEPHs = null, Quidgest.Persistence.FieldRef firstVisibleColumn = null) where A : CSGenio.business.Area
+		public static ListingMVC<A> Where<A>(UserContext ctx, bool distinct, CriteriaSet args = null, Quidgest.Persistence.FieldRef[] fields = null, int offset = 0, int numRegs = 0, List<ColumnSort> sorts = null, string identifier = null, bool noLock = true, bool getTotal = false, string selectrow = "", CriteriaSet pagingPosEPHs = null, Quidgest.Persistence.FieldRef firstVisibleColumn = null, List<FieldRef> fieldsWithTotalizer = null, List<string> selectedRecords = null) where A : CSGenio.business.Area
 		{
 			User u = ctx.User;
 			PersistentSupport sp = ctx.PersistentSupport;
 
-			//EPH
+			// EPH
 			args = AddEPH<A>(ref u, args, identifier);
 
-			// `sorts` may arrive null.
-			if (sorts == null)
-				sorts = new List<ColumnSort>();
+			// `sorts`, `fieldsWithTotalizer` and `selectedRecords` may arrive null.
+			sorts ??= [];
+			fieldsWithTotalizer ??= [];
+			selectedRecords ??= [];
 
 			// No user-selected sorting method
 			if (!sorts.Any())
@@ -737,21 +678,68 @@ namespace GenioMVC.Models
 					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY
 					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEO_SHAPE)
 				{
-					ColumnSort sortFirstVisibleColumn = new ColumnSort(new ColumnReference(firstVisibleColumn), SortOrder.Ascending);
+					ColumnSort sortFirstVisibleColumn = new(new ColumnReference(firstVisibleColumn), SortOrder.Ascending);
 					sorts.Add(sortFirstVisibleColumn);
 				}
 			}
 
-			//Add priamry key column to sorts if it's not there already to keep the order of records consistent when sorting by a field where many rows have to same value
-			AreaInfo info = CSGenio.business.Area.GetInfoArea<A>();
-			ColumnSort pkColumn = new ColumnSort(new ColumnReference(info.Alias, info.PrimaryKeyName), SortOrder.Ascending);
-			if (!sorts.Contains(pkColumn) && !distinct)
-				sorts.Add(pkColumn);
+			if (!distinct)
+			{
+				//< Make sure at least one of the fields or combination of fields is unique
+				bool hasUniqueField = false;
+				AreaInfo areaInfo = CSGenio.business.Area.GetInfoArea<A>();
 
-			ListingMVC<A> listing = new ListingMVC<A>(fields, sorts, offset, numRegs, distinct, u, noLock, identifier, getTotal, selectrow, PagingPosEPHs);
+				// Iterate a copy of the sorts because fields can be added to sorts during this
+				List<ColumnSort> originalSorts = new List<ColumnSort>(sorts);
+				foreach (ColumnSort sort in originalSorts)
+				{
+					// Check if this field is unique
+					ColumnReference sortColumnReference = (ColumnReference)sort.Expression;
+					Field field = CSGenio.business.Area.GetFieldInfo(new Quidgest.Persistence.FieldRef(sortColumnReference.TableAlias, sortColumnReference.ColumnName));
+					if (
+						// Field has unique property
+						field.NotDup
+						// Field is the table's primary key
+						|| (field.Alias != null && field.Alias.Equals(areaInfo.Alias) && field.Name != null && field.Name.Equals(areaInfo.PrimaryKeyName))
+						// Field is a sequential
+						|| (areaInfo.SequentialDefaultValues != null && areaInfo.SequentialDefaultValues.Contains(field.Name))
+					)
+						hasUniqueField = true;
 
-			//turns out this part needs to be called by reflection unfortunately, because searchListWhere is generated differently
-			//for manual tables that are not Db persisted. Calling the searchListAdvancedWhere directly on the sp is not equivalent.
+					// If field has a "prefix to be unique" field, add it to the ordering
+					if (!string.IsNullOrEmpty(field.PrefNDup))
+					{
+						ColumnReference prefixColumnRef = new ColumnReference(field.Alias, field.PrefNDup);
+						ColumnSort prefixColumnSort = new ColumnSort(prefixColumnRef, SortOrder.Ascending);
+						if (!sorts.Contains(prefixColumnSort))
+							sorts.Add(prefixColumnSort);
+					}
+
+					// If the field is a "prefix to be unique" field, add its corresponding unique field to the ordering
+					if (!string.IsNullOrEmpty(field.SufNDup))
+					{
+						ColumnReference suffixColumnRef = new ColumnReference(field.Alias, field.SufNDup);
+						ColumnSort suffixColumnSort = new ColumnSort(suffixColumnRef, SortOrder.Ascending);
+						if (!sorts.Contains(suffixColumnSort))
+							sorts.Add(suffixColumnSort);
+						hasUniqueField = true;
+					}
+				}
+
+				// If ordering does not have a unique column or combination of columns, add the primary key column
+				// to keep the order of records consistent
+				if (!hasUniqueField)
+				{
+					ColumnSort pkColumnSort = new(new ColumnReference(areaInfo.Alias, areaInfo.PrimaryKeyName), SortOrder.Ascending);
+					sorts.Add(pkColumnSort);
+				}
+				//> Make sure at least one of the fields or combination of fields is unique
+			}
+
+			ListingMVC<A> listing = new(fields, sorts, offset, numRegs, distinct, u, noLock, identifier, getTotal, selectrow, pagingPosEPHs, fieldsWithTotalizer, selectedRecords);
+
+			// Turns out this part needs to be called by reflection unfortunately, because searchListWhere is generated differently
+			// for manual tables that are not Db persisted. Calling the searchListAdvancedWhere directly on the sp is not equivalent.
 			var method = typeof(A).GetMethod("searchListAdvancedWhere", BindingFlags.Public | BindingFlags.Static);
 			if (method == null)
 				return listing;
@@ -771,17 +759,18 @@ namespace GenioMVC.Models
 			return Where<A>(ctx, false, args, numRegs: -1);
 		}
 
-
 		public static ModelBase FindGeneric(string modelName, string pk, UserContext userContext, string uid, string[] fieldsToSerialize = null, string[] fieldsToQuery = null)
 		{
+			// TODO: Analyze whether using the cache can improve performance here in the case of multiple simultaneous requests, for example of GetImage.
 			Type type = Type.GetType("GenioMVC.Models." + StringUtils.CapFirst(modelName));
-			MethodInfo methodInfo = type.GetMethod("Find", new Type[] { typeof(string), typeof(UserContext), typeof(string), typeof(string[]), typeof(string[]) });
+			MethodInfo methodInfo = type.GetMethod("Find", [typeof(string), typeof(UserContext), typeof(string), typeof(string[]), typeof(string[])]);
 			var row = methodInfo.Invoke(null, new object[] { pk, userContext, uid, fieldsToSerialize, fieldsToQuery }) as ModelBase;
 			return row;
 		}
 
 		public object GetValueGeneric(string propertyName)
 		{
+			// TODO: Analyze whether using the cache can improve performance here in the case of multiple simultaneous requests, for example of GetImage.
 			Type type = this.GetType();
 			PropertyInfo prop = type.GetProperty(propertyName);
 			return prop.GetValue(this, null);

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Asspa;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ASSPA_CANCEL = new NavigationLocation("ASSET_PARAMETER22072", "Asspa_Cancel", "Asspa") { vueRouteName = "form-ASSPA", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ASSPA_SHOW = new NavigationLocation("ASSET_PARAMETER22072", "Asspa_Show", "Asspa") { vueRouteName = "form-ASSPA", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ASSPA_NEW = new NavigationLocation("ASSET_PARAMETER22072", "Asspa_New", "Asspa") { vueRouteName = "form-ASSPA", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ASSPA_EDIT = new NavigationLocation("ASSET_PARAMETER22072", "Asspa_Edit", "Asspa") { vueRouteName = "form-ASSPA", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ASSPA_DUPLICATE = new NavigationLocation("ASSET_PARAMETER22072", "Asspa_Duplicate", "Asspa") { vueRouteName = "form-ASSPA", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ASSPA_DELETE = new NavigationLocation("ASSET_PARAMETER22072", "Asspa_Delete", "Asspa") { vueRouteName = "form-ASSPA", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ASSPA_CANCEL = new("ASSET_PARAMETER22072", "Asspa_Cancel", "Asspa") { vueRouteName = "form-ASSPA", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ASSPA_SHOW = new("ASSET_PARAMETER22072", "Asspa_Show", "Asspa") { vueRouteName = "form-ASSPA", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ASSPA_NEW = new("ASSET_PARAMETER22072", "Asspa_New", "Asspa") { vueRouteName = "form-ASSPA", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ASSPA_EDIT = new("ASSET_PARAMETER22072", "Asspa_Edit", "Asspa") { vueRouteName = "form-ASSPA", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ASSPA_DUPLICATE = new("ASSET_PARAMETER22072", "Asspa_Duplicate", "Asspa") { vueRouteName = "form-ASSPA", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ASSPA_DELETE = new("ASSET_PARAMETER22072", "Asspa_Delete", "Asspa") { vueRouteName = "form-ASSPA", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Asspa_ModalDBEdit()
-		{
-			Asspa_ViewModel model = new Asspa_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Asspa_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Asspa Multiform actions
-
-		//
-		// GET /Asspa/MFAsspa_New
-		[HttpGet]
-		[ActionName("MFAsspa_New")]
-		public ActionResult MFAsspa_New()
-		{
-			var model = new Asspa_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_ASSPA_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("asspa", model.ValCodasspa);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFAsspa_New_GET()
-		{
-			return MFAsspa_New();
-		}
-
-		//
-		// GET /Asspa/MFAsspa_Edit
-		[HttpGet]
-		[ActionName("MFAsspa_Edit")]
-		public ActionResult MFAsspa_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("ASSPA", "EDIT", new { id = id, partialView = "MFAsspa", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFAsspa_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFAsspa_Edit(requestModel);
-		}
-
-		//
-		// GET /Asspa/MFAsspa_Cancel
-		[ActionName("MFAsspa_Cancel")]
-		public ActionResult MFAsspa_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Asspa(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Asspa/MFAsspa_Save
-		[HttpPost]
-		[ActionName("MFAsspa_Save")]
-		public JsonResult MFAsspa_Save(Asspa_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAsspa_Save",
-				ViewName = "MFAsspa",
-				AreaName = "asspa"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Asspa/MFAsspa_Delete
-		[HttpPost]
-		[ActionName("MFAsspa_Delete")]
-		public JsonResult MFAsspa_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAsspa_Delete",
-				ViewName = "MFAsspa",
-				AreaName = "asspa",
-				Location = ACTION_ASSPA_EDIT
-			};
-
-			var model = new Asspa_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Asspa/Asspa_AssetValName
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_asset")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,9 +422,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Asspa_AssetValName_ViewModel model = new Asspa_AssetValName_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodasspa = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -590,6 +464,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_param")))
@@ -603,21 +478,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -625,12 +485,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Asspa_ParamValParameter_ViewModel model = new Asspa_ParamValParameter_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodasspa = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Asspa/Asspa_SaveEdit
 		[HttpPost]

@@ -1,75 +1,59 @@
-namespace quidgest.uitests.pages;
+﻿using quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
 
 [System.CodeDom.Compiler.GeneratedCode("Genio", "")]
-public class RelinForm: PageObject {
-
-	private By formLocator = By.CssSelector("#form-container");
-	private IWebElement form => driver.FindElement(formLocator);
-
+public class RelinForm : Form
+{
 	/// <summary>
 	/// Receipt
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, formLocator, "#RELIN___PSEUDNOVOGR01-container");
+	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#RELIN___PSEUDNOVOGR01-container");
+
 	/// <summary>
 	/// Receipt number
 	/// </summary>
-	public LookupControl ReceiNumber => new LookupControl(driver, formLocator, "container-RELIN___RECEINUMBER__");
-	public SeeMorePage ReceiNumberSeeMorePage => new SeeMorePage(driver, "RELIN", "RECEI.NUMBER");
+	public LookupControl ReceiNumber => new LookupControl(driver, ContainerLocator, "container-RELIN___RECEINUMBER__");
+	public SeeMorePage ReceiNumberSeeMorePage => new SeeMorePage(driver, "RELIN", "RELIN___RECEINUMBER__");
+
 	/// <summary>
 	/// Legal name
 	/// </summary>
 	public IWebElement EntitName => throw new NotImplementedException();
+
 	/// <summary>
 	/// Receipt line
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, formLocator, "#RELIN___PSEUDNOVOGR02-container");
+	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#RELIN___PSEUDNOVOGR02-container");
+
 	/// <summary>
 	/// Line
 	/// </summary>
-	public BaseInputControl RelinLinenumb => new BaseInputControl(driver, formLocator, "#RELIN___RELINLINENUMB");
+	public BaseInputControl RelinLinenumb => new BaseInputControl(driver, ContainerLocator, "#RELIN___RELINLINENUMB");
+
 	/// <summary>
 	/// Product
 	/// </summary>
-	public LookupControl ProduProduct => new LookupControl(driver, formLocator, "container-RELIN___PRODUPRODUCT_");
-	public SeeMorePage ProduProductSeeMorePage => new SeeMorePage(driver, "RELIN", "PRODU.PRODUCT");
+	public LookupControl ProduProduct => new LookupControl(driver, ContainerLocator, "container-RELIN___PRODUPRODUCT_");
+	public SeeMorePage ProduProductSeeMorePage => new SeeMorePage(driver, "RELIN", "RELIN___PRODUPRODUCT_");
+
 	/// <summary>
 	/// Ordered
 	/// </summary>
-	public BaseInputControl RelinOrdered => new BaseInputControl(driver, formLocator, "#RELIN___RELINORDERED_");
+	public BaseInputControl RelinOrdered => new BaseInputControl(driver, ContainerLocator, "#RELIN___RELINORDERED_");
+
 	/// <summary>
 	/// Received
 	/// </summary>
-	public BaseInputControl RelinReceived => new BaseInputControl(driver, formLocator, "#RELIN___RELINRECEIVED");
+	public BaseInputControl RelinReceived => new BaseInputControl(driver, ContainerLocator, "#RELIN___RELINRECEIVED");
+
 	/// <summary>
 	/// Outstanding
 	/// </summary>
-	public BaseInputControl RelinOutstand => new BaseInputControl(driver, formLocator, "#RELIN___RELINOUTSTAND");
+	public BaseInputControl RelinOutstand => new BaseInputControl(driver, ContainerLocator, "#RELIN___RELINOUTSTAND");
 
-	private IWebElement saveBtn => form.FindElement(By.CssSelector("#bottom-save-btn"));
-	private IWebElement cancelBtn => form.FindElement(By.CssSelector("#bottom-cancel-btn"));
-	public FORM_MODE mode {get; private set;}
-
-	public RelinForm(IWebDriver driver, FORM_MODE mode, By subformLocator=null): base(driver) {
-		this.mode = mode;
-		formLocator = subformLocator ?? formLocator;
-
-		wait.Until(c => form);
-		WaitForLoading();
-	}
-
-	public void WaitForLoading()
-	{
-        wait.Until(c => form.FindElement(ByData.Key("RELIN")).GetAttribute("data-loading") != "true");
-    }
-
-	public void Save() {
-		WaitForLoading();
-		saveBtn.Click();
-	}
-
-	public void Cancel() {
-		WaitForLoading();
-		cancelBtn.Click();
-	}
-
+	public RelinForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "RELIN", containerLocator: containerLocator) { }
 }

@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODPAIS1',
 			relatedArea: 'PAIS1',
 			description: computed(() => this.Resources._PERSON_COUNTRY09884),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -70,7 +71,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:propr.codpesso'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyG,
 			},
 		}).cloneFrom(values?.ValCodpais1))
@@ -221,7 +221,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValDtdispon))
 		watch(() => this.ValDtdispon.value, (newValue, oldValue) => this.onUpdate('propr.dtdispon', this.ValDtdispon, newValue, oldValue))
 
-		this.ValEndereco = reactive(new modelFieldType.String({
+		this.ValEndereco = reactive(new modelFieldType.MultiLineString({
 			id: 'ValEndereco',
 			originId: 'ValEndereco',
 			area: 'PROPR',
@@ -282,17 +282,16 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.TableRegioRegiao))
 		watch(() => this.TableRegioRegiao.value, (newValue, oldValue) => this.onUpdate('regio.regiao', this.TableRegioRegiao, newValue, oldValue))
 
-		this.ValCoordgeo = reactive(new modelFieldType.String({
+		this.ValCoordgeo = reactive(new modelFieldType.Coordinate({
 			id: 'ValCoordgeo',
 			originId: 'ValCoordgeo',
 			area: 'PROPR',
 			field: 'COORDGEO',
-			maxLength: 50,
 			description: computed(() => this.Resources.GEOGRAPHIC_COORDINAT21394),
 		}).cloneFrom(values?.ValCoordgeo))
 		watch(() => this.ValCoordgeo.value, (newValue, oldValue) => this.onUpdate('propr.coordgeo', this.ValCoordgeo, newValue, oldValue))
 
-		this.ValDescript = reactive(new modelFieldType.String({
+		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			type: 'TextEditor',
 			id: 'ValDescript',
 			originId: 'ValDescript',
@@ -315,5 +314,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodpropr'
 
 	get QPrimaryKey() { return this.ValCodpropr.value }
-	set QPrimaryKey(value) { this.ValCodpropr.value = value }
+	set QPrimaryKey(value) { this.ValCodpropr.updateValue(value) }
 }

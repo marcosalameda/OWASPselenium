@@ -70,7 +70,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:entit.founded', 'fieldChange:entit.codentit'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyG,
 			},
 		}).cloneFrom(values?.ValFirstfacilitie))
@@ -94,7 +93,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:entit.founded', 'fieldChange:entit.codentit'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyG,
 			},
 		}).cloneFrom(values?.ValLastfacilitie))
@@ -126,7 +124,7 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValRegistra',
 			area: 'ENTIT',
 			field: 'REGISTRA',
-			maxLength: 20,
+			maxLength: 30,
 			description: computed(() => this.Resources.LEGAL_REGISTRATION04413),
 		}).cloneFrom(values?.ValRegistra))
 		watch(() => this.ValRegistra.value, (newValue, oldValue) => this.onUpdate('entit.registra', this.ValRegistra, newValue, oldValue))
@@ -136,10 +134,29 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValTaxnumbe',
 			area: 'ENTIT',
 			field: 'TAXNUMBE',
-			maxLength: 20,
+			maxLength: 30,
 			description: computed(() => this.Resources.VAT_NUMBER24236),
 		}).cloneFrom(values?.ValTaxnumbe))
 		watch(() => this.ValTaxnumbe.value, (newValue, oldValue) => this.onUpdate('entit.taxnumbe', this.ValTaxnumbe, newValue, oldValue))
+
+		this.ValFounded = reactive(new modelFieldType.Date({
+			id: 'ValFounded',
+			originId: 'ValFounded',
+			area: 'ENTIT',
+			field: 'FOUNDED',
+			description: computed(() => this.Resources.FOUNDED_IN54120),
+		}).cloneFrom(values?.ValFounded))
+		watch(() => this.ValFounded.value, (newValue, oldValue) => this.onUpdate('entit.founded', this.ValFounded, newValue, oldValue))
+
+		this.ValOwner = reactive(new modelFieldType.String({
+			id: 'ValOwner',
+			originId: 'ValOwner',
+			area: 'ENTIT',
+			field: 'OWNER',
+			maxLength: 50,
+			description: computed(() => this.Resources.OWNER09558),
+		}).cloneFrom(values?.ValOwner))
+		watch(() => this.ValOwner.value, (newValue, oldValue) => this.onUpdate('entit.owner', this.ValOwner, newValue, oldValue))
 
 		this.ValEmail = reactive(new modelFieldType.String({
 			id: 'ValEmail',
@@ -166,7 +183,7 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValIban',
 			area: 'ENTIT',
 			field: 'IBAN',
-			maxLength: 25,
+			maxLength: 33,
 			description: computed(() => this.Resources.IBAN__INTERNATIONAL_45066),
 		}).cloneFrom(values?.ValIban))
 		watch(() => this.ValIban.value, (newValue, oldValue) => this.onUpdate('entit.iban', this.ValIban, newValue, oldValue))
@@ -176,7 +193,7 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValBuilding',
 			area: 'ENTIT',
 			field: 'BUILDING',
-			maxLength: 10,
+			maxLength: 25,
 			description: computed(() => this.Resources.BUILDING_HOUSE_NUMBE20738),
 		}).cloneFrom(values?.ValBuilding))
 		watch(() => this.ValBuilding.value, (newValue, oldValue) => this.onUpdate('entit.building', this.ValBuilding, newValue, oldValue))
@@ -186,7 +203,7 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValStreet',
 			area: 'ENTIT',
 			field: 'STREET',
-			maxLength: 85,
+			maxLength: 50,
 			description: computed(() => this.Resources.STREET44324),
 		}).cloneFrom(values?.ValStreet))
 		watch(() => this.ValStreet.value, (newValue, oldValue) => this.onUpdate('entit.street', this.ValStreet, newValue, oldValue))
@@ -196,7 +213,7 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValTown',
 			area: 'ENTIT',
 			field: 'TOWN',
-			maxLength: 85,
+			maxLength: 50,
 			description: computed(() => this.Resources.TOWN_CITY16259),
 		}).cloneFrom(values?.ValTown))
 		watch(() => this.ValTown.value, (newValue, oldValue) => this.onUpdate('entit.town', this.ValTown, newValue, oldValue))
@@ -206,7 +223,7 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValCounty',
 			area: 'ENTIT',
 			field: 'COUNTY',
-			maxLength: 85,
+			maxLength: 50,
 			description: computed(() => this.Resources.COUNTY_PROVINCE34285),
 		}).cloneFrom(values?.ValCounty))
 		watch(() => this.ValCounty.value, (newValue, oldValue) => this.onUpdate('entit.county', this.ValCounty, newValue, oldValue))
@@ -216,7 +233,7 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValState',
 			area: 'ENTIT',
 			field: 'STATE',
-			maxLength: 85,
+			maxLength: 50,
 			description: computed(() => this.Resources.STATE_PROVINCE28516),
 		}).cloneFrom(values?.ValState))
 		watch(() => this.ValState.value, (newValue, oldValue) => this.onUpdate('entit.state', this.ValState, newValue, oldValue))
@@ -236,7 +253,7 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValPostalco',
 			area: 'ENTIT',
 			field: 'POSTALCO',
-			maxLength: 50,
+			maxLength: 10,
 			description: computed(() => this.Resources.ZIP_POSTAL_CODE55613),
 		}).cloneFrom(values?.ValPostalco))
 		watch(() => this.ValPostalco.value, (newValue, oldValue) => this.onUpdate('entit.postalco', this.ValPostalco, newValue, oldValue))
@@ -286,19 +303,10 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValContact',
 			area: 'ENTIT',
 			field: 'CONTACT',
-			maxLength: 20,
+			maxLength: 30,
 			description: computed(() => this.Resources.CONTACT_TELEPHONE_NU12694),
 		}).cloneFrom(values?.ValContact))
 		watch(() => this.ValContact.value, (newValue, oldValue) => this.onUpdate('entit.contact', this.ValContact, newValue, oldValue))
-
-		this.ValOwner = reactive(new modelFieldType.Boolean({
-			id: 'ValOwner',
-			originId: 'ValOwner',
-			area: 'ENTIT',
-			field: 'OWNER',
-			description: computed(() => this.Resources.OWNER09558),
-		}).cloneFrom(values?.ValOwner))
-		watch(() => this.ValOwner.value, (newValue, oldValue) => this.onUpdate('entit.owner', this.ValOwner, newValue, oldValue))
 
 		this.ValCarrier = reactive(new modelFieldType.Boolean({
 			id: 'ValCarrier',
@@ -326,15 +334,6 @@ export default class ViewModel extends ViewModelBase
 			description: computed(() => this.Resources.MANUFACTURER50759),
 		}).cloneFrom(values?.ValManufact))
 		watch(() => this.ValManufact.value, (newValue, oldValue) => this.onUpdate('entit.manufact', this.ValManufact, newValue, oldValue))
-
-		this.ValFounded = reactive(new modelFieldType.Date({
-			id: 'ValFounded',
-			originId: 'ValFounded',
-			area: 'ENTIT',
-			field: 'FOUNDED',
-			description: computed(() => this.Resources.FOUNDED_IN54120),
-		}).cloneFrom(values?.ValFounded))
-		watch(() => this.ValFounded.value, (newValue, oldValue) => this.onUpdate('entit.founded', this.ValFounded, newValue, oldValue))
 
 		this.TableFaci1Name = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -391,5 +390,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodentit'
 
 	get QPrimaryKey() { return this.ValCodentit.value }
-	set QPrimaryKey(value) { this.ValCodentit.value = value }
+	set QPrimaryKey(value) { this.ValCodentit.updateValue(value) }
 }

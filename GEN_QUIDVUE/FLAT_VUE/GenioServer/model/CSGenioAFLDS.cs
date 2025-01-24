@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Field Type
 	/// </summary>
-	public class CSGenioAflds : DbArea	{
+	public class CSGenioAflds : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -82,6 +83,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "NUMERIC19292";
 
 			Qfield.Dupmsg = "";
@@ -93,6 +95,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  5;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 2;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "NUMERIC_DECIMAL37352";
 
@@ -105,6 +108,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "CURRENCY13881";
 
@@ -117,6 +121,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "CURRENCY_DECIMAL48296";
 
@@ -173,6 +178,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  4;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 4;
 			Qfield.CavDesignation = "YEAR61794";
 
 			Qfield.Dupmsg = "";
@@ -511,6 +517,185 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("nrcntry", FieldType.NUMERO);
+			Qfield.FieldDescription = "Numeric";
+			Qfield.FieldSize =  3;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
+			Qfield.CavDesignation = "NUMERIC19292";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("cond", FieldType.ARRAY_COD_TEXTO);
+			Qfield.FieldDescription = "Field state";
+			Qfield.FieldSize =  8;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "FIELD_STATE03599";
+
+			Qfield.Dupmsg = "";
+            Qfield.ArrayName = "dbo.GetValArrayCacondtst";
+            Qfield.ArrayClassName = "Acondtst";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("fclient1", FieldType.TEXTO);
+			Qfield.FieldDescription = "Field with client-side conditions";
+			Qfield.FieldSize =  50;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "FIELD_WITH_CLIENT_SI60452";
+
+			Qfield.Dupmsg = "";
+			argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"}, new int[] {0,1}, "flds", "codflds"));
+			Qfield.BlockWhen = new ConditionFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return !(((int)args[0]) == 0)&&((string)args[1])=="BLOCK";
+			});
+			argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"}, new int[] {0,1}, "flds", "codflds"));
+			Qfield.ShowWhen = new ConditionFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return !(!(((int)args[0]) == 0)&&((string)args[1])=="HIDE");
+			});
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("fserver1", FieldType.DATAHORA);
+			Qfield.FieldDescription = "Field with server-side conditions";
+			Qfield.FieldSize =  16;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "FIELD_WITH_SERVER_SI13554";
+
+			Qfield.Dupmsg = "";
+			argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"}, new int[] {0,1}, "flds", "codflds"));
+			Qfield.BlockWhen = new ConditionFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return !(((int)args[0]) == 0)&&((string)args[1])=="BLOCK"&&GlobalFunctions.HasRole(user,"A");
+			});
+			argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"}, new int[] {0,1}, "flds", "codflds"));
+			Qfield.ShowWhen = new ConditionFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return !(!(((int)args[0]) == 0)&&((string)args[1])=="HIDE")&&GlobalFunctions.HasRole(user,"A");
+			});
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("fclient2", FieldType.LOGICO);
+			Qfield.FieldDescription = "Field with client-side conditions";
+			Qfield.FieldSize =  1;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "FIELD_WITH_CLIENT_SI60452";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("fserver2", FieldType.NUMERO);
+			Qfield.FieldDescription = "Field with server-side conditions";
+			Qfield.FieldSize =  8;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 5;
+			Qfield.Decimals = 2;
+			Qfield.CavDesignation = "FIELD_WITH_SERVER_SI13554";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("fclient3", FieldType.FICHEIRO_BD);
+			Qfield.FieldDescription = "Field with client-side conditions";
+			Qfield.FieldSize =  50;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "FIELD_WITH_CLIENT_SI60452";
+
+			Qfield.Dupmsg = "";
+			argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"}, new int[] {0,1}, "flds", "codflds"));
+			Qfield.BlockWhen = new ConditionFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return !(((int)args[0]) == 0)&&((string)args[1])=="BLOCK";
+			});
+			argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"}, new int[] {0,1}, "flds", "codflds"));
+			Qfield.ShowWhen = new ConditionFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return !(!(((int)args[0]) == 0)&&((string)args[1])=="HIDE");
+			});
+			info.RegisterFieldDB(Qfield);
+ 			Qfield = new Field("fclient3fk", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield.FieldSize = 16;
+			Qfield.FieldDescription = "Chave estrangeira para o documento";
+			Qfield.Alias = info.Alias;
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("fserver3", FieldType.IMAGEM_JPEG);
+			Qfield.FieldDescription = "Field with server-side conditions";
+			Qfield.FieldSize =  3;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.Decimals = 1;
+			Qfield.CavDesignation = "FIELD_WITH_SERVER_SI13554";
+
+			Qfield.Dupmsg = "";
+			argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"}, new int[] {0,1}, "flds", "codflds"));
+			Qfield.BlockWhen = new ConditionFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return !(((int)args[0]) == 0)&&((string)args[1])=="BLOCK"&&GlobalFunctions.HasRole(user,"A");
+			});
+			argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"}, new int[] {0,1}, "flds", "codflds"));
+			Qfield.ShowWhen = new ConditionFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return !(!(((int)args[0]) == 0)&&((string)args[1])=="HIDE")&&GlobalFunctions.HasRole(user,"A");
+			});
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("tblcond", FieldType.LOGICO);
+			Qfield.FieldDescription = "Enforce table conditions";
+			Qfield.FieldSize =  1;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "ENFORCE_TABLE_CONDIT17491";
+
+			Qfield.Dupmsg = "";
+			Qfield.DefaultValue = new DefaultValue(1);
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("formcond", FieldType.LOGICO);
+			Qfield.FieldDescription = "Enforce form conditions";
+			Qfield.FieldSize =  1;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "ENFORCE_FORM_CONDITI41813";
+
+			Qfield.Dupmsg = "";
+			Qfield.DefaultValue = new DefaultValue(1);
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("ffillwhn", FieldType.TEXTO);
+			Qfield.FieldDescription = "Field with Fill when condition";
+			Qfield.FieldSize =  50;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "FIELD_WITH_FILL_WHEN40052";
+
+			Qfield.Dupmsg = "";
+			argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"}, new int[] {0,1}, "flds", "codflds"));
+			Qfield.FillWhen = new ConditionFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return !(!(((int)args[0]) == 0)&&((string)args[1])=="BLOCK");
+			});
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
 			Qfield.Alias = info.Alias;
@@ -542,12 +727,13 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(13);
+			info.Pathways = new Dictionary<string, string>(14);
 			info.Pathways.Add("aero","aero");
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");
+			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
@@ -568,6 +754,10 @@ namespace CSGenio.business
 
 
 
+			info.DefaultValues = new string[] {
+			 "tblcond","formcond"
+			};
+
 
 
 
@@ -575,6 +765,66 @@ namespace CSGenio.business
 
 			//Write conditions
 			List<ConditionFormula> conditions = new List<ConditionFormula>();
+
+			// !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE"
+			{
+			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea= new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"},new int[] {0,1},"flds","codflds"));
+			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 2, delegate(object []args,User user,string module,PersistentSupport sp) {
+				return !(((int)args[0]) == 0)&&((string)args[1])=="REQUIRE";
+			});
+			writeCondition.ErrorWarning = "";
+            writeCondition.Type =  ConditionType.MANDATORY;
+            writeCondition.Validate = true;
+			writeCondition.Field = info.DBFields["fclient3"];
+			conditions.Add(writeCondition);
+			}
+
+			// !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
+			{
+			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea= new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"},new int[] {0,1},"flds","codflds"));
+			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 2, delegate(object []args,User user,string module,PersistentSupport sp) {
+				return !(((int)args[0]) == 0)&&((string)args[1])=="REQUIRE"&&GlobalFunctions.HasRole(user,"A");
+			});
+			writeCondition.ErrorWarning = "";
+            writeCondition.Type =  ConditionType.MANDATORY;
+            writeCondition.Validate = true;
+			writeCondition.Field = info.DBFields["fserver1"];
+			conditions.Add(writeCondition);
+			}
+
+			// !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
+			{
+			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea= new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"},new int[] {0,1},"flds","codflds"));
+			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 2, delegate(object []args,User user,string module,PersistentSupport sp) {
+				return !(((int)args[0]) == 0)&&((string)args[1])=="REQUIRE"&&GlobalFunctions.HasRole(user,"A");
+			});
+			writeCondition.ErrorWarning = "";
+            writeCondition.Type =  ConditionType.MANDATORY;
+            writeCondition.Validate = true;
+			writeCondition.Field = info.DBFields["fserver3"];
+			conditions.Add(writeCondition);
+			}
+
+			// !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE"
+			{
+			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea= new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"},new int[] {0,1},"flds","codflds"));
+			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 2, delegate(object []args,User user,string module,PersistentSupport sp) {
+				return !(((int)args[0]) == 0)&&((string)args[1])=="REQUIRE";
+			});
+			writeCondition.ErrorWarning = "";
+            writeCondition.Type =  ConditionType.MANDATORY;
+            writeCondition.Validate = true;
+			writeCondition.Field = info.DBFields["fclient1"];
+			conditions.Add(writeCondition);
+			}
 			info.WriteConditions = conditions.Where(c=> c.IsWriteCondition()).ToList();
 			info.CrudConditions = conditions.Where(c=> c.IsCrudCondition()).ToList();
 
@@ -644,7 +894,7 @@ namespace CSGenio.business
             // Documents in DB
             //------------------------------
 			info.DocumsForeignKeys = new List<String> {
-			 "attachfk"
+			 "attachfk","fclient3fk"
 			};
 			info.HasVersionManagment = true; //a true por omissão, quando o Qfield no genio tiver criado preencher por esse Qvalue
 
@@ -695,7 +945,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodflds, value); }
 		}
 
-
 		/// <summary>Field : "Company Name" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodaero { get { return m_fldCodaero; } }
 		private static FieldRef m_fldCodaero = new FieldRef("flds", "codaero");
@@ -706,7 +955,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodaero); }
 			set { insertNameValueField(FldCodaero, value); }
 		}
-
 
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldDescrip { get { return m_fldDescrip; } }
@@ -719,54 +967,49 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDescrip, value); }
 		}
 
-
 		/// <summary>Field : "Numeric" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldNpassage { get { return m_fldNpassage; } }
 		private static FieldRef m_fldNpassage = new FieldRef("flds", "npassage");
 
 		/// <summary>Field : "Numeric" Tipo: "N" Formula:  ""</summary>
-		public double ValNpassage
+		public decimal ValNpassage
 		{
-			get { return (double)returnValueField(FldNpassage); }
+			get { return (decimal)returnValueField(FldNpassage); }
 			set { insertNameValueField(FldNpassage, value); }
 		}
-
 
 		/// <summary>Field : "Numeric Decimal" Tipo: "ND" Formula:  ""</summary>
 		public static FieldRef FldDuration { get { return m_fldDuration; } }
 		private static FieldRef m_fldDuration = new FieldRef("flds", "duration");
 
 		/// <summary>Field : "Numeric Decimal" Tipo: "ND" Formula:  ""</summary>
-		public double ValDuration
+		public decimal ValDuration
 		{
-			get { return (double)returnValueField(FldDuration); }
+			get { return (decimal)returnValueField(FldDuration); }
 			set { insertNameValueField(FldDuration, value); }
 		}
-
 
 		/// <summary>Field : "Currency" Tipo: "$" Formula:  ""</summary>
 		public static FieldRef FldPrice { get { return m_fldPrice; } }
 		private static FieldRef m_fldPrice = new FieldRef("flds", "price");
 
 		/// <summary>Field : "Currency" Tipo: "$" Formula:  ""</summary>
-		public double ValPrice
+		public decimal ValPrice
 		{
-			get { return (double)returnValueField(FldPrice); }
+			get { return (decimal)returnValueField(FldPrice); }
 			set { insertNameValueField(FldPrice, value); }
 		}
-
 
 		/// <summary>Field : "Currency Decimal" Tipo: "$D" Formula:  ""</summary>
 		public static FieldRef FldPrecobil { get { return m_fldPrecobil; } }
 		private static FieldRef m_fldPrecobil = new FieldRef("flds", "precobil");
 
 		/// <summary>Field : "Currency Decimal" Tipo: "$D" Formula:  ""</summary>
-		public double ValPrecobil
+		public decimal ValPrecobil
 		{
-			get { return (double)returnValueField(FldPrecobil); }
+			get { return (decimal)returnValueField(FldPrecobil); }
 			set { insertNameValueField(FldPrecobil, value); }
 		}
-
 
 		/// <summary>Field : "Date (DD/MM/YY)" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldDate { get { return m_fldDate; } }
@@ -779,7 +1022,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDate, value); }
 		}
 
-
 		/// <summary>Field : "DateTime" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDatetime { get { return m_fldDatetime; } }
 		private static FieldRef m_fldDatetime = new FieldRef("flds", "datetime");
@@ -790,7 +1032,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDatetime); }
 			set { insertNameValueField(FldDatetime, value); }
 		}
-
 
 		/// <summary>Field : "DateSecond" Tipo: "DS" Formula:  ""</summary>
 		public static FieldRef FldDateseco { get { return m_fldDateseco; } }
@@ -803,7 +1044,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDateseco, value); }
 		}
 
-
 		/// <summary>Field : "Time" Tipo: "T" Formula:  ""</summary>
 		public static FieldRef FldTime { get { return m_fldTime; } }
 		private static FieldRef m_fldTime = new FieldRef("flds", "time");
@@ -815,18 +1055,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldTime, value); }
 		}
 
-
 		/// <summary>Field : "Year" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldYear { get { return m_fldYear; } }
 		private static FieldRef m_fldYear = new FieldRef("flds", "year");
 
 		/// <summary>Field : "Year" Tipo: "N" Formula:  ""</summary>
-		public double ValYear
+		public decimal ValYear
 		{
-			get { return (double)returnValueField(FldYear); }
+			get { return (decimal)returnValueField(FldYear); }
 			set { insertNameValueField(FldYear, value); }
 		}
-
 
 		/// <summary>Field : "Logical" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldPrimviag { get { return m_fldPrimviag; } }
@@ -839,18 +1077,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPrimviag, value); }
 		}
 
-
 		/// <summary>Field : "Conditional" Tipo: "IF" Formula:  ""</summary>
 		public static FieldRef FldConditio { get { return m_fldConditio; } }
 		private static FieldRef m_fldConditio = new FieldRef("flds", "conditio");
 
 		/// <summary>Field : "Conditional" Tipo: "IF" Formula:  ""</summary>
-		public double ValConditio
+		public decimal ValConditio
 		{
-			get { return (double)returnValueField(FldConditio); }
+			get { return (decimal)returnValueField(FldConditio); }
 			set { insertNameValueField(FldConditio, value); }
 		}
-
 
 		/// <summary>Field : "Text Enumeration" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldClass { get { return m_fldClass; } }
@@ -863,18 +1099,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldClass, value); }
 		}
 
-
 		/// <summary>Field : "Numeric Enumeration" Tipo: "AN" Formula:  ""</summary>
 		public static FieldRef FldClassnum { get { return m_fldClassnum; } }
 		private static FieldRef m_fldClassnum = new FieldRef("flds", "classnum");
 
 		/// <summary>Field : "Numeric Enumeration" Tipo: "AN" Formula:  ""</summary>
-		public double ValClassnum
+		public decimal ValClassnum
 		{
-			get { return (double)returnValueField(FldClassnum); }
+			get { return (decimal)returnValueField(FldClassnum); }
 			set { insertNameValueField(FldClassnum, value); }
 		}
-
 
 		/// <summary>Field : "Logical Enumeration" Tipo: "AL" Formula:  ""</summary>
 		public static FieldRef FldLogicenu { get { return m_fldLogicenu; } }
@@ -887,7 +1121,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldLogicenu, value); }
 		}
 
-
 		/// <summary>Field : "Logo" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldLogo { get { return m_fldLogo; } }
 		private static FieldRef m_fldLogo = new FieldRef("flds", "logo");
@@ -898,7 +1131,6 @@ namespace CSGenio.business
 			get { return (byte[])returnValueField(FldLogo); }
 			set { insertNameValueField(FldLogo, value); }
 		}
-
 
 		/// <summary>Field : "Document" Tipo: "IB" Formula:  ""</summary>
 		public static FieldRef FldAttach { get { return m_fldAttach; } }
@@ -933,7 +1165,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldLogoexte, value); }
 		}
 
-
 		/// <summary>Field : "Created by" Tipo: "ON" Formula:  ""</summary>
 		public static FieldRef FldCreatuse { get { return m_fldCreatuse; } }
 		private static FieldRef m_fldCreatuse = new FieldRef("flds", "creatuse");
@@ -944,7 +1175,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCreatuse); }
 			set { insertNameValueField(FldCreatuse, value); }
 		}
-
 
 		/// <summary>Field : "Date of Creation (DD/MM/YY)" Tipo: "OD" Formula:  ""</summary>
 		public static FieldRef FldCreatdat { get { return m_fldCreatdat; } }
@@ -957,7 +1187,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCreatdat, value); }
 		}
 
-
 		/// <summary>Field : "Hour of Creation" Tipo: "OT" Formula:  ""</summary>
 		public static FieldRef FldCreathou { get { return m_fldCreathou; } }
 		private static FieldRef m_fldCreathou = new FieldRef("flds", "creathou");
@@ -968,7 +1197,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCreathou); }
 			set { insertNameValueField(FldCreathou, value); }
 		}
-
 
 		/// <summary>Field : "Complete Date of Creation" Tipo: "OI" Formula:  ""</summary>
 		public static FieldRef FldCreatins { get { return m_fldCreatins; } }
@@ -981,7 +1209,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCreatins, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodequip { get { return m_fldCodequip; } }
 		private static FieldRef m_fldCodequip = new FieldRef("flds", "codequip");
@@ -992,7 +1219,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodequip); }
 			set { insertNameValueField(FldCodequip, value); }
 		}
-
 
 		/// <summary>Field : "Text Field" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTxtfield { get { return m_fldTxtfield; } }
@@ -1005,7 +1231,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldTxtfield, value); }
 		}
 
-
 		/// <summary>Field : "Email" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldEmailfld { get { return m_fldEmailfld; } }
 		private static FieldRef m_fldEmailfld = new FieldRef("flds", "emailfld");
@@ -1016,7 +1241,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldEmailfld); }
 			set { insertNameValueField(FldEmailfld, value); }
 		}
-
 
 		/// <summary>Field : "Zipcode" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldZipfield { get { return m_fldZipfield; } }
@@ -1029,7 +1253,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldZipfield, value); }
 		}
 
-
 		/// <summary>Field : "IBAN" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldIbanfiel { get { return m_fldIbanfiel; } }
 		private static FieldRef m_fldIbanfiel = new FieldRef("flds", "ibanfiel");
@@ -1040,7 +1263,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldIbanfiel); }
 			set { insertNameValueField(FldIbanfiel, value); }
 		}
-
 
 		/// <summary>Field : "Social Security No" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSsnumber { get { return m_fldSsnumber; } }
@@ -1053,7 +1275,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSsnumber, value); }
 		}
 
-
 		/// <summary>Field : "Licence plate" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldLicplate { get { return m_fldLicplate; } }
 		private static FieldRef m_fldLicplate = new FieldRef("flds", "licplate");
@@ -1064,7 +1285,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldLicplate); }
 			set { insertNameValueField(FldLicplate, value); }
 		}
-
 
 		/// <summary>Field : "VAT Number" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldVatnumbr { get { return m_fldVatnumbr; } }
@@ -1077,7 +1297,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldVatnumbr, value); }
 		}
 
-
 		/// <summary>Field : "Banking Account Number" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldBanknmbr { get { return m_fldBanknmbr; } }
 		private static FieldRef m_fldBanknmbr = new FieldRef("flds", "banknmbr");
@@ -1088,7 +1307,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldBanknmbr); }
 			set { insertNameValueField(FldBanknmbr, value); }
 		}
-
 
 		/// <summary>Field : "Uppercase" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldUpprtext { get { return m_fldUpprtext; } }
@@ -1101,7 +1319,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldUpprtext, value); }
 		}
 
-
 		/// <summary>Field : "Password" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldPassfld { get { return m_fldPassfld; } }
 		private static FieldRef m_fldPassfld = new FieldRef("flds", "passfld");
@@ -1112,7 +1329,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldPassfld); }
 			set { insertNameValueField(FldPassfld, value); }
 		}
-
 
 		/// <summary>Field : "Colorpicker" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldClrpicke { get { return m_fldClrpicke; } }
@@ -1125,7 +1341,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldClrpicke, value); }
 		}
 
-
 		/// <summary>Field : "Show record" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldShwrc { get { return m_fldShwrc; } }
 		private static FieldRef m_fldShwrc = new FieldRef("flds", "shwrc");
@@ -1136,7 +1351,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldShwrc); }
 			set { insertNameValueField(FldShwrc, value); }
 		}
-
 
 		/// <summary>Field : "Radio Btn" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldRadiob { get { return m_fldRadiob; } }
@@ -1149,6 +1363,137 @@ namespace CSGenio.business
 			set { insertNameValueField(FldRadiob, value); }
 		}
 
+		/// <summary>Field : "Numeric" Tipo: "N" Formula:  ""</summary>
+		public static FieldRef FldNrcntry { get { return m_fldNrcntry; } }
+		private static FieldRef m_fldNrcntry = new FieldRef("flds", "nrcntry");
+
+		/// <summary>Field : "Numeric" Tipo: "N" Formula:  ""</summary>
+		public decimal ValNrcntry
+		{
+			get { return (decimal)returnValueField(FldNrcntry); }
+			set { insertNameValueField(FldNrcntry, value); }
+		}
+
+		/// <summary>Field : "Field state" Tipo: "AC" Formula:  ""</summary>
+		public static FieldRef FldCond { get { return m_fldCond; } }
+		private static FieldRef m_fldCond = new FieldRef("flds", "cond");
+
+		/// <summary>Field : "Field state" Tipo: "AC" Formula:  ""</summary>
+		public string ValCond
+		{
+			get { return (string)returnValueField(FldCond); }
+			set { insertNameValueField(FldCond, value); }
+		}
+
+		/// <summary>Field : "Field with client-side conditions" Tipo: "C" Formula:  ""</summary>
+		public static FieldRef FldFclient1 { get { return m_fldFclient1; } }
+		private static FieldRef m_fldFclient1 = new FieldRef("flds", "fclient1");
+
+		/// <summary>Field : "Field with client-side conditions" Tipo: "C" Formula:  ""</summary>
+		public string ValFclient1
+		{
+			get { return (string)returnValueField(FldFclient1); }
+			set { insertNameValueField(FldFclient1, value); }
+		}
+
+		/// <summary>Field : "Field with server-side conditions" Tipo: "DT" Formula:  ""</summary>
+		public static FieldRef FldFserver1 { get { return m_fldFserver1; } }
+		private static FieldRef m_fldFserver1 = new FieldRef("flds", "fserver1");
+
+		/// <summary>Field : "Field with server-side conditions" Tipo: "DT" Formula:  ""</summary>
+		public DateTime ValFserver1
+		{
+			get { return (DateTime)returnValueField(FldFserver1); }
+			set { insertNameValueField(FldFserver1, value); }
+		}
+
+		/// <summary>Field : "Field with client-side conditions" Tipo: "L" Formula:  ""</summary>
+		public static FieldRef FldFclient2 { get { return m_fldFclient2; } }
+		private static FieldRef m_fldFclient2 = new FieldRef("flds", "fclient2");
+
+		/// <summary>Field : "Field with client-side conditions" Tipo: "L" Formula:  ""</summary>
+		public int ValFclient2
+		{
+			get { return (int)returnValueField(FldFclient2); }
+			set { insertNameValueField(FldFclient2, value); }
+		}
+
+		/// <summary>Field : "Field with server-side conditions" Tipo: "N" Formula:  ""</summary>
+		public static FieldRef FldFserver2 { get { return m_fldFserver2; } }
+		private static FieldRef m_fldFserver2 = new FieldRef("flds", "fserver2");
+
+		/// <summary>Field : "Field with server-side conditions" Tipo: "N" Formula:  ""</summary>
+		public decimal ValFserver2
+		{
+			get { return (decimal)returnValueField(FldFserver2); }
+			set { insertNameValueField(FldFserver2, value); }
+		}
+
+		/// <summary>Field : "Field with client-side conditions" Tipo: "IB" Formula:  ""</summary>
+		public static FieldRef FldFclient3 { get { return m_fldFclient3; } }
+		private static FieldRef m_fldFclient3 = new FieldRef("flds", "fclient3");
+
+		/// <summary>Field : "Field with client-side conditions" Tipo: "IB" Formula:  ""</summary>
+		public string ValFclient3
+		{
+			get { return (string)returnValueField(FldFclient3); }
+			set { insertNameValueField(FldFclient3, value); }
+		}
+
+		/// <summary>Field : "Field with client-side conditions FK" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldFclient3fk { get { return m_fldFclient3fk; } }
+		private static FieldRef m_fldFclient3fk = new FieldRef("flds", "fclient3fk");
+
+		/// <summary>Field : "Field with client-side conditions FK" Tipo: "CE" Formula:  ""</summary>
+		public string ValFclient3fk
+		{
+			get { return (string)returnValueField(FldFclient3fk); }
+			set { insertNameValueField(FldFclient3fk, value); }
+		}
+
+		/// <summary>Field : "Field with server-side conditions" Tipo: "IJ" Formula:  ""</summary>
+		public static FieldRef FldFserver3 { get { return m_fldFserver3; } }
+		private static FieldRef m_fldFserver3 = new FieldRef("flds", "fserver3");
+
+		/// <summary>Field : "Field with server-side conditions" Tipo: "IJ" Formula:  ""</summary>
+		public byte[] ValFserver3
+		{
+			get { return (byte[])returnValueField(FldFserver3); }
+			set { insertNameValueField(FldFserver3, value); }
+		}
+
+		/// <summary>Field : "Enforce table conditions" Tipo: "L" Formula:  ""</summary>
+		public static FieldRef FldTblcond { get { return m_fldTblcond; } }
+		private static FieldRef m_fldTblcond = new FieldRef("flds", "tblcond");
+
+		/// <summary>Field : "Enforce table conditions" Tipo: "L" Formula:  ""</summary>
+		public int ValTblcond
+		{
+			get { return (int)returnValueField(FldTblcond); }
+			set { insertNameValueField(FldTblcond, value); }
+		}
+
+		/// <summary>Field : "Enforce form conditions" Tipo: "L" Formula:  ""</summary>
+		public static FieldRef FldFormcond { get { return m_fldFormcond; } }
+		private static FieldRef m_fldFormcond = new FieldRef("flds", "formcond");
+
+		/// <summary>Field : "Enforce form conditions" Tipo: "L" Formula:  ""</summary>
+		public int ValFormcond
+		{
+			get { return (int)returnValueField(FldFormcond); }
+			set { insertNameValueField(FldFormcond, value); }
+		}
+
+		/// <summary>Field : "Field with Fill when condition" Tipo: "C" Formula:  ""</summary>
+		public static FieldRef FldFfillwhn { get { return m_fldFfillwhn; } }
+		private static FieldRef m_fldFfillwhn = new FieldRef("flds", "ffillwhn");
+
+		/// <summary>Field : "Field with Fill when condition" Tipo: "C" Formula:  ""</summary>
+		public string ValFfillwhn
+		{
+			get { return (string)returnValueField(FldFfillwhn); }
+			set { insertNameValueField(FldFfillwhn, value); }
+		}
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -1191,23 +1536,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAflds> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAflds> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAflds>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -1256,14 +1584,14 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX FLDS]/
 
      
 
-                                       
+                                                  
 
 	}
 }

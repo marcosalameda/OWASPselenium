@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.LDSAI___OUTPTDOCUMENR.handlers"
 							:loading="controls.LDSAI___OUTPTDOCUMENR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.LDSAI___OUTPTDOCUMENR.isVisible"
 								v-bind="controls.LDSAI___OUTPTDOCUMENR.props"
-								:model-value="model.ValCodoutpt.value"
-								v-on="controls.LDSAI___OUTPTDOCUMENR.handlers"
-								@update:model-value="model.ValCodoutpt.fnUpdateValue" />
+								v-on="controls.LDSAI___OUTPTDOCUMENR.handlers" />
 							<q-see-more-ldsai-outptdocumenr
 								v-if="controls.LDSAI___OUTPTDOCUMENR.seeMoreIsVisible"
 								v-bind="controls.LDSAI___OUTPTDOCUMENR.seeMoreParams"
@@ -142,12 +139,10 @@
 										v-on="controls.LDSAI___OUTPULINE____.handlers"
 										:loading="controls.LDSAI___OUTPULINE____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.LDSAI___OUTPULINE____.isVisible"
-											v-bind="controls.LDSAI___OUTPULINE____"
-											:model-value="model.ValLine.value"
+											v-bind="controls.LDSAI___OUTPULINE____.props"
 											@update:model-value="model.ValLine.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -160,14 +155,11 @@
 										v-on="controls.LDSAI___WAREHWAREHDES.handlers"
 										:loading="controls.LDSAI___WAREHWAREHDES.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.LDSAI___WAREHWAREHDES.isVisible"
 											v-bind="controls.LDSAI___WAREHWAREHDES.props"
-											:model-value="model.ValCodwareh.value"
-											v-on="controls.LDSAI___WAREHWAREHDES.handlers"
-											@update:model-value="model.ValCodwareh.fnUpdateValue" />
+											v-on="controls.LDSAI___WAREHWAREHDES.handlers" />
 										<q-see-more-ldsai-warehwarehdes
 											v-if="controls.LDSAI___WAREHWAREHDES.seeMoreIsVisible"
 											v-bind="controls.LDSAI___WAREHWAREHDES.seeMoreParams"
@@ -185,14 +177,11 @@
 										v-on="controls.LDSAI___ITEM_ITEMDES_.handlers"
 										:loading="controls.LDSAI___ITEM_ITEMDES_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.LDSAI___ITEM_ITEMDES_.isVisible"
 											v-bind="controls.LDSAI___ITEM_ITEMDES_.props"
-											:model-value="model.ValCoditem.value"
-											v-on="controls.LDSAI___ITEM_ITEMDES_.handlers"
-											@update:model-value="model.ValCoditem.fnUpdateValue" />
+											v-on="controls.LDSAI___ITEM_ITEMDES_.handlers" />
 										<q-see-more-ldsai-item-itemdes
 											v-if="controls.LDSAI___ITEM_ITEMDES_.seeMoreIsVisible"
 											v-bind="controls.LDSAI___ITEM_ITEMDES_.seeMoreParams"
@@ -210,12 +199,10 @@
 										v-on="controls.LDSAI___OUTPUEXITQNTY.handlers"
 										:loading="controls.LDSAI___OUTPUEXITQNTY.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.LDSAI___OUTPUEXITQNTY.isVisible"
-											v-bind="controls.LDSAI___OUTPUEXITQNTY"
-											:model-value="model.ValExitqnty.value"
+											v-bind="controls.LDSAI___OUTPUEXITQNTY.props"
 											@update:model-value="model.ValExitqnty.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -228,14 +215,11 @@
 										v-on="controls.LDSAI___OUDOCNRDOCSDA.handlers"
 										:loading="controls.LDSAI___OUDOCNRDOCSDA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.LDSAI___OUDOCNRDOCSDA.isVisible"
 											v-bind="controls.LDSAI___OUDOCNRDOCSDA.props"
-											:model-value="model.ValCoddocsd.value"
-											v-on="controls.LDSAI___OUDOCNRDOCSDA.handlers"
-											@update:model-value="model.ValCoddocsd.fnUpdateValue" />
+											v-on="controls.LDSAI___OUDOCNRDOCSDA.handlers" />
 										<q-see-more-ldsai-oudocnrdocsda
 											v-if="controls.LDSAI___OUDOCNRDOCSDA.seeMoreIsVisible"
 											v-bind="controls.LDSAI___OUDOCNRDOCSDA.seeMoreParams"
@@ -332,15 +316,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'LDSAI',
-						location: 'form-LDSAI',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'LDSAI',
+					location: 'form-LDSAI',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -386,6 +368,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -458,8 +442,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -541,7 +526,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -595,21 +580,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -620,26 +590,9 @@
 						id: 'LDSAI___OUTPTDOCUMENR',
 						name: 'DOCUMENR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DOCUMENT_NO_30174),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodoutpt',
-							dependencyEvent: 'fieldChange:outpu.codoutpt'
-						},
-						dependentFields: () => {
-							return {
-								set 'outpt.codoutpt'(value) { vm.model.ValCodoutpt.updateValue(value) },
-								set 'outpt.documenr'(value) { vm.model.TableOutptDocumenr.updateValue(value) },
-								set 'outpt.codwareh'(value) { vm.model.OutptValCodwareh.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -648,17 +601,26 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodoutpt',
+							dependencyEvent: 'fieldChange:outpu.codoutpt'
+						},
+						dependentFields: () => ({
+							set 'outpt.codoutpt'(value) { vm.model.ValCodoutpt.updateValue(value) },
+							set 'outpt.documenr'(value) { vm.model.TableOutptDocumenr.updateValue(value) },
+							set 'outpt.codwareh'(value) { vm.model.OutptValCodwareh.updateValue(value) },
+							set 'ware1.codwareh'(value) { vm.model.OutptValCodwareh.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					LDSAI___PSEUDNOVOGR01: new fieldControlClass.GroupControl({
 						id: 'LDSAI___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: '',
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
 						mustBeFilled: true,
@@ -668,19 +630,16 @@
 					LDSAI___OUTPULINE____: new fieldControlClass.NumberControl({
 						modelField: 'ValLine',
 						valueChangeEvent: 'fieldChange:outpu.line',
-						maxIntegers: 3,
-						maxDecimals: 1,
-						isSequencial: true,
 						id: 'LDSAI___OUTPULINE____',
 						name: 'LINE',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.LINE27983),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LDSAI___PSEUDNOVOGR01',
+						maxIntegers: 3,
+						maxDecimals: 1,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -691,26 +650,10 @@
 						id: 'LDSAI___WAREHWAREHDES',
 						name: 'WAREHDES',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.WAREHOUSE51864),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LDSAI___PSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodwareh',
-							dependencyEvent: 'fieldChange:outpu.codwareh'
-						},
-						dependentFields: () => {
-							return {
-								set 'wareh.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
-								set 'wareh.warehdes'(value) { vm.model.TableWarehWarehdes.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -719,6 +662,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodwareh',
+							dependencyEvent: 'fieldChange:outpu.codwareh'
+						},
+						dependentFields: () => ({
+							set 'wareh.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
+							set 'wareh.warehdes'(value) { vm.model.TableWarehWarehdes.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					LDSAI___ITEM_ITEMDES_: new fieldControlClass.LookupControl({
 						modelField: 'TableItemItemdes',
@@ -726,14 +679,26 @@
 						id: 'LDSAI___ITEM_ITEMDES_',
 						name: 'ITEMDES',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ITEM40802),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LDSAI___PSEUDNOVOGR01',
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCoditem',
+							dependencyEvent: 'fieldChange:outpu.coditem'
+						},
+						dependentFields: () => ({
+							set 'item.coditem'(value) { vm.model.ValCoditem.updateValue(value) },
+							set 'item.itemdes'(value) { vm.model.TableItemItemdes.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: ['wareh', 'outpu.codwareh'],
@@ -742,41 +707,19 @@
 								fnValueSelector: (model) => model.ValCodwareh.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCoditem',
-							dependencyEvent: 'fieldChange:outpu.coditem'
-						},
-						dependentFields: () => {
-							return {
-								set 'item.coditem'(value) { vm.model.ValCoditem.updateValue(value) },
-								set 'item.itemdes'(value) { vm.model.TableItemItemdes.updateValue(value) },
-							}
-						},
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					LDSAI___OUTPUEXITQNTY: new fieldControlClass.NumberControl({
 						modelField: 'ValExitqnty',
 						valueChangeEvent: 'fieldChange:outpu.exitqnty',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'LDSAI___OUTPUEXITQNTY',
 						name: 'EXITQNTY',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.OUTPUT_QUANTITY_59942),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LDSAI___PSEUDNOVOGR01',
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -786,28 +729,10 @@
 						id: 'LDSAI___OUDOCNRDOCSDA',
 						name: 'NRDOCSDA',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.OUTPUT_NO41865),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LDSAI___PSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCoddocsd',
-							dependencyEvent: 'fieldChange:outpu.coddocsd'
-						},
-						dependentFields: () => {
-							return {
-								set 'oudoc.coddocsd'(value) { vm.model.ValCoddocsd.updateValue(value) },
-								set 'oudoc.nrdocsda'(value) { vm.model.TableOudocNrdocsda.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'DOCSD',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -816,6 +741,18 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCoddocsd',
+							dependencyEvent: 'fieldChange:outpu.coddocsd'
+						},
+						dependentFields: () => ({
+							set 'oudoc.coddocsd'(value) { vm.model.ValCoddocsd.updateValue(value) },
+							set 'oudoc.nrdocsda'(value) { vm.model.TableOudocNrdocsda.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'DOCSD',
+						controlLimits: [
+						],
 					}, this),
 				},
 
@@ -884,7 +821,7 @@
 						/** The foreign key to the OUDOC table */
 						get oudoc() { return vm.model.ValCoddocsd },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -980,6 +917,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1019,6 +964,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1145,6 +1098,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR LDSAI]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1160,6 +1129,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS LDSAI]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

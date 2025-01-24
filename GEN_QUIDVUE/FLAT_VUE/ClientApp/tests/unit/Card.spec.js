@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import '@testing-library/jest-dom/extend-expect'
 import { render } from '@testing-library/vue'
 
@@ -42,7 +39,7 @@ test('renders the card size based on the size prop', async () =>
 		},
 	})
 
-	expect(getByTestId('q-card')).toHaveClass(`q-card--size-${size}`)
+	expect(getByTestId('q-card-view')).toHaveClass(`q-card-view--size-${size}`)
 })
 
 test('renders the card content aligned to center when contentAlignment prop is set to center', async () =>
@@ -55,5 +52,5 @@ test('renders the card content aligned to center when contentAlignment prop is s
 		},
 	})
 
-	expect(getByTestId('q-card')).toHaveClass('q-card--centered')
+	expect(getByTestId('q-card-view')).toHaveClass('q-card-view--centered')
 })

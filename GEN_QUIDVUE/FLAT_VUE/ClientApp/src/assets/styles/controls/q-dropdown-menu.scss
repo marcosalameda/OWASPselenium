@@ -20,7 +20,7 @@
 			opacity: 0.65;
 		}
 
-		&:hover:not(#{$this}--disabled) {
+		&:hover:not([disabled]) {
 			background-color: $hover-item;
 			border-color: $hover-item;
 			color: $on-background;

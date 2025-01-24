@@ -11,6 +11,7 @@
 					b-style="secondary"
 					borderless
 					:title="texts.editButtonTitle"
+					:disabled="readonly"
 					@click="edit">
 					<q-icon icon="pencil" />
 				</q-button>
@@ -49,7 +50,7 @@
 					:group="getWidgetGroup(widget)"
 					:config="widgetConfig"
 					:texts="texts"
-					:border-color="widget.ColoredLeftBorder ? 'primary' : ''"
+					:border-color="widget.BorderStyle"
 					v-slot="scopeFromQWidget"
 					v-bind="widget.customProps"
 					@delete-widget="deleteWidget(widget.uuid)"
@@ -181,6 +182,14 @@
 			resourcesPath: {
 				type: String,
 				required: true
+			},
+
+			/**
+			 * Indicates whether the dashboard is in a read-only or interactive state.
+			 */
+			readonly: {
+				type: Boolean,
+				default: false
 			}
 		},
 
@@ -197,27 +206,10 @@
 
 		mounted()
 		{
-			// Init gridstack.
-			this.grid = GridStack.init({
-				float: true,
-				cellHeight: '90px',
-				animate: true,
-				disableResize: true
+			// Wait until DOM is ready to load gridstack
+			this.$nextTick().then(() => {
+				this.init()
 			})
-
-			// Immediately resize the grid to fit the initial window dimension.
-			this.resizeGrid()
-
-			// Adjust when future resizes happen.
-			window.addEventListener('resize', this.resizeGrid)
-
-			// Listen to relevant gridstack events.
-			this.grid.on('added', (_, els) => this.handleChange(els))
-			this.grid.on('change', (_, els) => this.handleChange(els))
-			this.grid.enableMove(false)
-
-			const el = document.querySelector('#widgets-panel')
-			if (el) this.target = el
 		},
 
 		beforeUnmount()
@@ -242,8 +234,9 @@
 			 */
 			visibleWidgets()
 			{
+				// Making a copy because `.sort()` mutates self
 				const widgets = [...this.widgets]
-				return widgets.sort((a, b) => (a.Order > b.Order ? 1 : -1)).filter((w) => w.Visible)
+				return widgets.filter((w) => w.Visible).sort((a, b) => (a.Order > b.Order ? 1 : -1))
 			},
 
 			/**
@@ -251,22 +244,59 @@
 			 */
 			dashboardClasses()
 			{
-				const baseClass = 'q-dashboard'
-				const classes = [baseClass]
+				const isDisabled = !this.inEditMode,
+					isEmpty = !this.visibleWidgets.length && !this.inEditMode
 
-				if (!this.inEditMode)
-					classes.push(`${baseClass}--disabled`)
-
-				if (!this.visibleWidgets.length && !this.inEditMode)
-					classes.push(`${baseClass}--empty`)
-
-				return classes
+				return [
+					'q-dashboard',
+					{
+						'q-dashboard--disabled': isDisabled,
+						'q-dashboard--empty': isEmpty
+					}
+				]
 			}
 		},
 
 		methods: {
 			/**
-			 * Enter edit mode.
+			 * Initializes the gridstack instance with specific options and sets up
+			 * necessary event listeners for resizing and widget management.
+			 */
+			init()
+			{
+				// Init gridstack.
+				this.grid = GridStack.init({
+					float: true,
+					cellHeight: '90px',
+					animate: true,
+					disableResize: true
+				})
+
+				// Immediately resize the grid to fit the initial window dimension.
+				this.resizeGrid()
+
+				// Adjust when future resizes happen.
+				window.addEventListener('resize', this.resizeGrid)
+
+				// Listen to relevant gridstack events.
+				this.grid.on('added', (_, els) => this.handleChange(els))
+				this.grid.on('change', (_, els) => this.handleChange(els))
+				this.grid.enableMove(false)
+
+				// FIXME: change when the RightSideBar is refactored
+				const el = document.querySelector('#widgets-panel')
+				if (el) this.target = el
+
+				// Register the initial position of the widgets
+				// This is necessary because new widgets
+				// are always assigned a default position
+				// ...so we need to update internal position
+				// with the position assigned by gridstack
+				this.updateInternalPosition(this.grid.engine.nodes)
+			},
+
+			/**
+			 * Enters edit mode.
 			 */
 			edit()
 			{
@@ -276,7 +306,7 @@
 			},
 
 			/**
-			 * Compact the grid.
+			 * Compacts the grid.
 			 */
 			compact()
 			{
@@ -284,7 +314,7 @@
 			},
 
 			/**
-			 * Save changes.
+			 * Saves changes.
 			 */
 			save()
 			{
@@ -293,7 +323,7 @@
 			},
 
 			/**
-			 * Cancel edit mode and revert changes.
+			 * Cancels edit mode and revert changes.
 			 */
 			cancel()
 			{
@@ -336,7 +366,7 @@
 			},
 
 			/**
-			 * Export the current grid configuration.
+			 * Exports the current grid configuration.
 			 * @returns {Array} - Cloned array of widgets.
 			 */
 			exportGrid()
@@ -345,7 +375,7 @@
 			},
 
 			/**
-			 * Resize the grid based on the window dimension.
+			 * Resizes the grid based on the window dimension.
 			 */
 			resizeGrid()
 			{
@@ -362,7 +392,7 @@
 			},
 
 			/**
-			 * Enable edit mode.
+			 * Enables edit mode.
 			 */
 			enable()
 			{
@@ -373,7 +403,7 @@
 			},
 
 			/**
-			 * Disable edit mode.
+			 * Disables edit mode.
 			 */
 			disable()
 			{
@@ -384,33 +414,35 @@
 			},
 
 			/**
-			 * Add a widget to the dashboard.
+			 * Adds a widget to the dashboard.
 			 * @param {string} uuid - The UUID of the widget to add.
 			 */
 			addWidget(uuid)
 			{
-				const widget = this.widgets.find((widget) => widget.uuid === uuid)
+				const widget = this.getWidget(uuid)
 
 				if (widget)
 				{
-					// Making the widget visible will add it to the DOM.
+					// Making the widget visible
+					// will make Vue add it to the DOM.
 					widget.Visible = true
 
 					// Wait until the DOM is ready.
 					this.$nextTick().then(() => {
-						// Tell gridstack the widget exists.
+						// Now we just tell gridstack
+						// that the widget exists.
 						this.grid.makeWidget(widget.uuid)
 					})
 				}
 			},
 
 			/**
-			 * Delete a widget from the dashboard.
+			 * Deletes a widget from the dashboard.
 			 * @param {string} uuid - The UUID of the widget to delete.
 			 */
 			deleteWidget(uuid)
 			{
-				const widget = this.widgets.find((widget) => widget.uuid === uuid)
+				const widget = this.getWidget(uuid)
 
 				// Tell gridstack the widget no longer exists.
 				this.grid.removeWidget(widget.uuid)
@@ -423,7 +455,7 @@
 			},
 
 			/**
-			 * Handle the start of a drag operation.
+			 * Handles the start of a drag operation.
 			 * @param {DragEvent} ev - The drag event object.
 			 */
 			onDragStart(ev)
@@ -432,7 +464,7 @@
 			},
 
 			/**
-			 * Handle the drop event.
+			 * Handles the drop event.
 			 * @param {DragEvent} ev - The drop event object.
 			 */
 			onDrop(ev)
@@ -443,29 +475,18 @@
 			},
 
 			/**
-			 * Get the component type for a given widget.
-			 * @param {Object} widget - The widget object.
-			 * @returns {string} - The component type.
+			 * Retrieves a widget from the list of widgets based on its UUID.
+			 *
+			 * @param {string} uuid - The unique identifier of the widget to be retrieved.
+			 * @returns {Object|null} The widget object if found, otherwise null.
 			 */
-			getWidgetComponent(widget)
+			getWidget(uuid)
 			{
-				switch (widget.Type)
-				{
-					case 0: // Alert widget
-						return 'alert-widget'
-					case 1: // Bookmark widget
-					case 4: // Menu widget
-						return 'menu-widget'
-					case 2: // Custom widget
-					case 3: // Custom paginated widget
-						return 'custom-widget'
-					default:
-						return ''
-				}
+				return this.widgets.find((widget) => widget.uuid === uuid)
 			},
 
 			/**
-			 * Get the group of a given widget.
+			 * Gets the group of a given widget.
 			 * @param {Object} widget - The widget object.
 			 * @returns {Object} - The group object.
 			 */
@@ -475,14 +496,24 @@
 			},
 
 			/**
-			 * Handle the change event in gridstack.
+			 * Handles widget position changes made by the user.
 			 * @param {Array} els - Array of grid elements.
 			 */
 			handleChange(els)
 			{
 				this.isDirty = true
 
-				els.forEach((el) => {
+				this.updateInternalPosition(els)
+			},
+
+			/**
+			 * Updates the internal position of the widgets
+			 * that correspond to the provided elements.
+			 * @param {Array} els - Array of grid elements.
+			 */
+			updateInternalPosition(els)
+			{
+				_forEach(els, (el) => {
 					const widget = this.widgets.find((w) => w.uuid === el.id)
 					widget.Hposition = el.x
 					widget.Vposition = el.y
@@ -490,13 +521,14 @@
 			},
 
 			/**
-			 * Handle the record change event for a widget.
+			 * Handles the record change event for a widget.
 			 * @param {string} uuid - The UUID of the widget.
 			 * @param {string} rowKey - The row key.
 			 */
 			onRecordChange(uuid, rowKey)
 			{
-				const widget = this.widgets.find((widget) => widget.uuid === uuid)
+				const widget = this.getWidget(uuid)
+
 				if (widget)
 					widget.Rowkey = rowKey
 
@@ -504,31 +536,16 @@
 			},
 
 			/**
-			 * Set custom properties for a widget.
+			 * Sets custom properties for a widget.
 			 * @param {string} uuid - The UUID of the widget.
 			 * @param {Object} props - The custom properties.
 			 */
 			setCustomProps(uuid, props)
 			{
-				const widget = this.widgets.find((widget) => widget.uuid === uuid)
+				const widget = this.getWidget(uuid)
+
 				if (widget)
 					widget.customProps = props
-			}
-		},
-
-		watch: {
-			widgets(newWidgets, oldWidgets)
-			{
-				// Wait until the DOM is ready.
-				this.$nextTick().then(() => {
-					_forEach(newWidgets, (widget) => {
-						if (widget.Visible && !oldWidgets.some((w) => w.uuid === widget.uuid))
-						{
-							// Tell gridstack the widget exists.
-							this.grid.makeWidget(widget.uuid)
-						}
-					})
-				})
 			}
 		}
 	}

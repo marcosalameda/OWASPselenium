@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Gitem;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ARTGL_CANCEL = new NavigationLocation("GLOBAL_ARTICLE63861", "Artgl_Cancel", "Gitem") { vueRouteName = "form-ARTGL", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ARTGL_SHOW = new NavigationLocation("GLOBAL_ARTICLE63861", "Artgl_Show", "Gitem") { vueRouteName = "form-ARTGL", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ARTGL_NEW = new NavigationLocation("GLOBAL_ARTICLE63861", "Artgl_New", "Gitem") { vueRouteName = "form-ARTGL", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ARTGL_EDIT = new NavigationLocation("GLOBAL_ARTICLE63861", "Artgl_Edit", "Gitem") { vueRouteName = "form-ARTGL", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ARTGL_DUPLICATE = new NavigationLocation("GLOBAL_ARTICLE63861", "Artgl_Duplicate", "Gitem") { vueRouteName = "form-ARTGL", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ARTGL_DELETE = new NavigationLocation("GLOBAL_ARTICLE63861", "Artgl_Delete", "Gitem") { vueRouteName = "form-ARTGL", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ARTGL_CANCEL = new("GLOBAL_ARTICLE63861", "Artgl_Cancel", "Gitem") { vueRouteName = "form-ARTGL", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ARTGL_SHOW = new("GLOBAL_ARTICLE63861", "Artgl_Show", "Gitem") { vueRouteName = "form-ARTGL", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ARTGL_NEW = new("GLOBAL_ARTICLE63861", "Artgl_New", "Gitem") { vueRouteName = "form-ARTGL", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ARTGL_EDIT = new("GLOBAL_ARTICLE63861", "Artgl_Edit", "Gitem") { vueRouteName = "form-ARTGL", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ARTGL_DUPLICATE = new("GLOBAL_ARTICLE63861", "Artgl_Duplicate", "Gitem") { vueRouteName = "form-ARTGL", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ARTGL_DELETE = new("GLOBAL_ARTICLE63861", "Artgl_Delete", "Gitem") { vueRouteName = "form-ARTGL", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Artgl_ModalDBEdit()
-		{
-			Artgl_ViewModel model = new Artgl_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Artgl_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Artgl Multiform actions
 
-		//
-		// GET /Gitem/MFArtgl_New
-		[HttpGet]
-		[ActionName("MFArtgl_New")]
-		public ActionResult MFArtgl_New()
-		{
-			var model = new Artgl_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_ARTGL_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("gitem", model.ValCodgitem);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFArtgl_New_GET()
-		{
-			return MFArtgl_New();
-		}
-
-		//
-		// GET /Gitem/MFArtgl_Edit
-		[HttpGet]
-		[ActionName("MFArtgl_Edit")]
-		public ActionResult MFArtgl_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("ARTGL", "EDIT", new { id = id, partialView = "MFArtgl", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFArtgl_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFArtgl_Edit(requestModel);
-		}
-
-		//
-		// GET /Gitem/MFArtgl_Cancel
-		[ActionName("MFArtgl_Cancel")]
-		public ActionResult MFArtgl_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Gitem(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Gitem/MFArtgl_Save
-		[HttpPost]
-		[ActionName("MFArtgl_Save")]
-		public JsonResult MFArtgl_Save(Artgl_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFArtgl_Save",
-				ViewName = "MFArtgl",
-				AreaName = "gitem"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Gitem/MFArtgl_Delete
-		[HttpPost]
-		[ActionName("MFArtgl_Delete")]
-		public JsonResult MFArtgl_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFArtgl_Delete",
-				ViewName = "MFArtgl",
-				AreaName = "gitem",
-				Location = ACTION_ARTGL_EDIT
-			};
-
-			var model = new Artgl_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Gitem/Artgl_SaveEdit
 		[HttpPost]

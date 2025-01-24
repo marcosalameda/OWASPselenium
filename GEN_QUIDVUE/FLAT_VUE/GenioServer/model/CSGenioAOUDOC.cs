@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Output document
 	/// </summary>
-	public class CSGenioAoudoc : DbArea	{
+	public class CSGenioAoudoc : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -59,6 +60,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "No.";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "NO_14817";
 
             Qfield.NotNull = true;
@@ -253,18 +255,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddocsd, value); }
 		}
 
-
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldNrdocsda { get { return m_fldNrdocsda; } }
 		private static FieldRef m_fldNrdocsda = new FieldRef("oudoc", "nrdocsda");
 
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
-		public double ValNrdocsda
+		public decimal ValNrdocsda
 		{
-			get { return (double)returnValueField(FldNrdocsda); }
+			get { return (decimal)returnValueField(FldNrdocsda); }
 			set { insertNameValueField(FldNrdocsda, value); }
 		}
-
 
 		/// <summary>Field : "Date" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDtdocsda { get { return m_fldDtdocsda; } }
@@ -277,7 +277,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDtdocsda, value); }
 		}
 
-
 		/// <summary>Field : "Title" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTitle { get { return m_fldTitle; } }
 		private static FieldRef m_fldTitle = new FieldRef("oudoc", "title");
@@ -288,7 +287,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldTitle); }
 			set { insertNameValueField(FldTitle, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -331,23 +329,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAoudoc> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAoudoc> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAoudoc>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -396,7 +377,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX OUDOC]/

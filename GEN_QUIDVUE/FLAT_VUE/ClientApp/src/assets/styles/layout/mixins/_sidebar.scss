@@ -20,12 +20,6 @@
 
 // Sidebar Mini Breakpoints
 @mixin sidebar-mini-breakpoint() {
-	// A fix for text overflow while transitioning from sidebar mini to full sidebar
-	.nav-sidebar,
-	.nav-sidebar > .nav-header {
-		white-space: nowrap;
-	}
-
 	// When the sidebar is collapsed...
 	&.sidebar-collapse {
 		.d-hidden-mini {
@@ -49,22 +43,8 @@
 			animation-name: fadeOut;
 			animation-duration: $transition-speed;
 			animation-fill-mode: both;
-			visibility: hidden;
-		}
-
-		.logo-xl {
-			animation-name: fadeOut;
-			animation-duration: $transition-speed;
-			animation-fill-mode: both;
-			visibility: hidden;
-		}
-
-		.logo-xs {
-			display: inline-block;
-			animation-name: fadeIn;
-			animation-duration: $transition-speed;
-			animation-fill-mode: both;
-			visibility: visible;
+			width: 0;
+			overflow: hidden;
 		}
 
 		// Modify the sidebar to shrink instead of disappearing
@@ -104,21 +84,15 @@
 
 				.user-panel > .info,
 				.nav-sidebar .nav-link p,
-				.brand-text,
-				.logo-xl {
+				.brand-text {
 					display: inline-block;
 					margin-left: 0;
 					animation-name: fadeIn;
 					animation-duration: $transition-speed;
 					animation-fill-mode: both;
 					visibility: visible;
-				}
-
-				.logo-xs {
-					animation-name: fadeOut;
-					animation-duration: $transition-speed;
-					animation-fill-mode: both;
-					visibility: hidden;
+					width: auto;
+					overflow: visible;
 				}
 
 				.brand-image {
@@ -131,10 +105,6 @@
 				.user-panel > .info {
 					display: block !important;
 					transform: translateZ(0);
-				}
-
-				.nav-sidebar > .nav-item > .nav-link > span {
-					display: inline-block !important;
 				}
 			}
 		}

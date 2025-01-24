@@ -270,7 +270,7 @@ export class EventTracker
 	{
 		// To facilitate debugging during development, errors will be added to the console
 		// as the debug window will only be accessible if the feature is activated.
-		if (process.env.NODE_ENV === 'development')
+		if (import.meta.env.DEV)
 			// eslint-disable-next-line no-console
 			console.warn('Tracing Warning', options)
 		return this.addEvent(new WarningEvent(options))
@@ -284,7 +284,7 @@ export class EventTracker
 	{
 		// To facilitate debugging during development, warnings will be added to the console
 		// as the debug window will only be accessible if the feature is activated.
-		if (process.env.NODE_ENV === 'development')
+		if (import.meta.env.DEV)
 			// eslint-disable-next-line no-console
 			console.error('Tracing Error', options)
 		return this.addEvent(new ErrorEvent(options))

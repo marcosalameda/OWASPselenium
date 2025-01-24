@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div
 		class="container-fluid"
 		style="flex: 1 1 auto">
@@ -70,12 +70,16 @@
 	import QSeparator from '@/components/rendering/QSeparator.vue'
 
 	export default {
+		name: 'QSeparatorContainer',
+
 		components: {
 			QSeparator
 		},
 
+		expose: [],
+
 		data()
-        {
+		{
 			return {
 				size: 'medium',
 				sepStyle: 'primary',
@@ -87,18 +91,21 @@
 	}
 </script>
 
+<!-- eslint-disable-next-line vue/no-restricted-block -->
 <style scoped>
 	.back-style {
 		background-color: var(--light);
 		width: relative;
 		height: relative;
 	}
+
 	.separator-box {
 		display: flex;
 		flex-direction: row;
 		width: 100%;
 		height: 100%;
 	}
+
 	.separator-filter {
 		display: flex;
 		flex-direction: column;
@@ -106,6 +113,7 @@
 		align-items: center;
 		justify-content: flex-start;
 	}
+
 	.live-tab-sep {
 		width: 1px;
 		background-color: lightgray;
@@ -113,6 +121,7 @@
 		z-index: 5;
 		margin-bottom: 10px;
 	}
+
 	.separator-prop {
 		display: flex;
 		align-items: center;
@@ -120,11 +129,13 @@
 		width: relative;
 		height: relative;
 	}
+
 	.step-column {
 		display: flex;
 		flex-direction: column;
 		width: 100%;
 	}
+
 	.live-tab-sep-bottom {
 		display: flex;
 		flex-direction: row;

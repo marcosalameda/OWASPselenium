@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Cntry;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_PROPPAIS_CANCEL = new NavigationLocation("COUNTRY64133", "Proppais_Cancel", "Cntry") { vueRouteName = "form-PROPPAIS", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_PROPPAIS_SHOW = new NavigationLocation("COUNTRY64133", "Proppais_Show", "Cntry") { vueRouteName = "form-PROPPAIS", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_PROPPAIS_NEW = new NavigationLocation("COUNTRY64133", "Proppais_New", "Cntry") { vueRouteName = "form-PROPPAIS", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_PROPPAIS_EDIT = new NavigationLocation("COUNTRY64133", "Proppais_Edit", "Cntry") { vueRouteName = "form-PROPPAIS", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_PROPPAIS_DUPLICATE = new NavigationLocation("COUNTRY64133", "Proppais_Duplicate", "Cntry") { vueRouteName = "form-PROPPAIS", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_PROPPAIS_DELETE = new NavigationLocation("COUNTRY64133", "Proppais_Delete", "Cntry") { vueRouteName = "form-PROPPAIS", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_PROPPAIS_CANCEL = new("COUNTRY64133", "Proppais_Cancel", "Cntry") { vueRouteName = "form-PROPPAIS", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_PROPPAIS_SHOW = new("COUNTRY64133", "Proppais_Show", "Cntry") { vueRouteName = "form-PROPPAIS", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_PROPPAIS_NEW = new("COUNTRY64133", "Proppais_New", "Cntry") { vueRouteName = "form-PROPPAIS", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_PROPPAIS_EDIT = new("COUNTRY64133", "Proppais_Edit", "Cntry") { vueRouteName = "form-PROPPAIS", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_PROPPAIS_DUPLICATE = new("COUNTRY64133", "Proppais_Duplicate", "Cntry") { vueRouteName = "form-PROPPAIS", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_PROPPAIS_DELETE = new("COUNTRY64133", "Proppais_Delete", "Cntry") { vueRouteName = "form-PROPPAIS", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Proppais_ModalDBEdit()
-		{
-			Proppais_ViewModel model = new Proppais_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Proppais_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Proppais Multiform actions
-
-		//
-		// GET /Cntry/MFProppais_New
-		[HttpGet]
-		[ActionName("MFProppais_New")]
-		public ActionResult MFProppais_New()
-		{
-			var model = new Proppais_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_PROPPAIS_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("cntry", model.ValCodcntry);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFProppais_New_GET()
-		{
-			return MFProppais_New();
-		}
-
-		//
-		// GET /Cntry/MFProppais_Edit
-		[HttpGet]
-		[ActionName("MFProppais_Edit")]
-		public ActionResult MFProppais_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("PROPPAIS", "EDIT", new { id = id, partialView = "MFProppais", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFProppais_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFProppais_Edit(requestModel);
-		}
-
-		//
-		// GET /Cntry/MFProppais_Cancel
-		[ActionName("MFProppais_Cancel")]
-		public ActionResult MFProppais_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Cntry(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Cntry/MFProppais_Save
-		[HttpPost]
-		[ActionName("MFProppais_Save")]
-		public JsonResult MFProppais_Save(Proppais_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFProppais_Save",
-				ViewName = "MFProppais",
-				AreaName = "cntry"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Cntry/MFProppais_Delete
-		[HttpPost]
-		[ActionName("MFProppais_Delete")]
-		public JsonResult MFProppais_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFProppais_Delete",
-				ViewName = "MFProppais",
-				AreaName = "cntry",
-				Location = ACTION_PROPPAIS_EDIT
-			};
-
-			var model = new Proppais_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Cntry/Proppais_ValPropried
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_propr")))
@@ -552,33 +415,45 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
 			Proppais_ValPropried_ViewModel model = new Proppais_ValPropried_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodcntry = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Cntry/Proppais_SaveEdit
 		[HttpPost]

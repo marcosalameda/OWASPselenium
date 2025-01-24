@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Equipment grouping
 	/// </summary>
-	public class CSGenioAlnhag : DbArea	{
+	public class CSGenioAlnhag : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -79,6 +80,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Amount";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 6;
 			Qfield.CavDesignation = "AMOUNT46885";
 
 			Qfield.Dupmsg = "";
@@ -256,7 +258,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodlnhag, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula: ST "[LNHDE->CODPEDID]"</summary>
 		public static FieldRef FldCodpedid { get { return m_fldCodpedid; } }
 		private static FieldRef m_fldCodpedid = new FieldRef("lnhag", "codpedid");
@@ -267,7 +268,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodpedid); }
 			set { insertNameValueField(FldCodpedid, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula: ST "[LNHDE->CODTPEQU]"</summary>
 		public static FieldRef FldCodtpequ { get { return m_fldCodtpequ; } }
@@ -280,18 +280,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodtpequ, value); }
 		}
 
-
 		/// <summary>Field : "Amount" Tipo: "N" Formula: SR "[LNHDE->QUANTIDA]"</summary>
 		public static FieldRef FldQtdtpequ { get { return m_fldQtdtpequ; } }
 		private static FieldRef m_fldQtdtpequ = new FieldRef("lnhag", "qtdtpequ");
 
 		/// <summary>Field : "Amount" Tipo: "N" Formula: SR "[LNHDE->QUANTIDA]"</summary>
-		public double ValQtdtpequ
+		public decimal ValQtdtpequ
 		{
-			get { return (double)returnValueField(FldQtdtpequ); }
+			get { return (decimal)returnValueField(FldQtdtpequ); }
 			set { insertNameValueField(FldQtdtpequ, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -334,23 +332,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAlnhag> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAlnhag> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAlnhag>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -399,7 +380,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX LNHAG]/

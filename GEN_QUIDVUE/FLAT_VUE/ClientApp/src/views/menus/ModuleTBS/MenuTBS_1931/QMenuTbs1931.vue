@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuTBS_1931ViewModel.js'
+
 	const requiredTextResources = ['QMenuTBS_1931', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '1931',
 					isMenuList: true,
+					designation: computed(() => this.Resources.FEEDBACK_CAMPO42437),
 					acronym: 'TBS_1931',
 					name: 'FEECA',
 					route: 'menu-TBS_1931',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'TBS_Menu_1931',
 						controller: 'FEECA',
 						action: 'TBS_Menu_1931',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -160,7 +170,7 @@
 								scrollData: 30,
 								sortable: false,
 								pkColumn: 'ValCodflds',
-								viewType: qEnums.documentViewTypeMode.Print,
+								viewType: qEnums.documentViewTypeMode.print,
 							}),
 						],
 						config: {
@@ -175,7 +185,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -279,6 +289,7 @@
 								id: 'RCA_TBS_19311',
 								name: 'form-FEECA',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -295,23 +306,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: FEECA
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValFeedback',
 							defaultSearchColumnNameOriginal: 'ValFeedback',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValFeedback',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-FLDS', 'changed-FEECA'],
 						uuid: 'bcd28de4-9e50-4d1a-92e0-3c661c0ab999',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -340,6 +345,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS TBS_1931]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS TBS_MENU_1931]/
 // eslint-disable-next-line

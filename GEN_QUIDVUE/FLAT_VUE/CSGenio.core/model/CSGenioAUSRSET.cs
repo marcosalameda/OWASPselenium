@@ -172,7 +172,7 @@ namespace CSGenio.business
         public string[] getModules()
         {
         
-             string[] modulos=new string[7];
+             string[] modulos=new string[8];
             modulos[0]="STY";
             modulos[1]="GQT";
             modulos[2]="PTN";
@@ -180,6 +180,7 @@ namespace CSGenio.business
             modulos[4]="WMS";
             modulos[5]="REG";
             modulos[6]="IMO";
+            modulos[7]="TRN";
             return modulos;
         }
 

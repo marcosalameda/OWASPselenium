@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Rogl1;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ROGL1_CANCEL = new NavigationLocation("ROW_ORDER_GROUP_LEVE17934", "Rogl1_Cancel", "Rogl1") { vueRouteName = "form-ROGL1", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ROGL1_SHOW = new NavigationLocation("ROW_ORDER_GROUP_LEVE17934", "Rogl1_Show", "Rogl1") { vueRouteName = "form-ROGL1", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ROGL1_NEW = new NavigationLocation("ROW_ORDER_GROUP_LEVE17934", "Rogl1_New", "Rogl1") { vueRouteName = "form-ROGL1", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ROGL1_EDIT = new NavigationLocation("ROW_ORDER_GROUP_LEVE17934", "Rogl1_Edit", "Rogl1") { vueRouteName = "form-ROGL1", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ROGL1_DUPLICATE = new NavigationLocation("ROW_ORDER_GROUP_LEVE17934", "Rogl1_Duplicate", "Rogl1") { vueRouteName = "form-ROGL1", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ROGL1_DELETE = new NavigationLocation("ROW_ORDER_GROUP_LEVE17934", "Rogl1_Delete", "Rogl1") { vueRouteName = "form-ROGL1", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ROGL1_CANCEL = new("ROW_ORDER_GROUP_LEVE17934", "Rogl1_Cancel", "Rogl1") { vueRouteName = "form-ROGL1", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ROGL1_SHOW = new("ROW_ORDER_GROUP_LEVE17934", "Rogl1_Show", "Rogl1") { vueRouteName = "form-ROGL1", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ROGL1_NEW = new("ROW_ORDER_GROUP_LEVE17934", "Rogl1_New", "Rogl1") { vueRouteName = "form-ROGL1", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ROGL1_EDIT = new("ROW_ORDER_GROUP_LEVE17934", "Rogl1_Edit", "Rogl1") { vueRouteName = "form-ROGL1", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ROGL1_DUPLICATE = new("ROW_ORDER_GROUP_LEVE17934", "Rogl1_Duplicate", "Rogl1") { vueRouteName = "form-ROGL1", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ROGL1_DELETE = new("ROW_ORDER_GROUP_LEVE17934", "Rogl1_Delete", "Rogl1") { vueRouteName = "form-ROGL1", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Rogl1_ModalDBEdit()
-		{
-			Rogl1_ViewModel model = new Rogl1_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Rogl1_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Rogl1 Multiform actions
 
-		//
-		// GET /Rogl1/MFRogl1_New
-		[HttpGet]
-		[ActionName("MFRogl1_New")]
-		public ActionResult MFRogl1_New()
-		{
-			var model = new Rogl1_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_ROGL1_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("rogl1", model.ValCodrogl1);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFRogl1_New_GET()
-		{
-			return MFRogl1_New();
-		}
-
-		//
-		// GET /Rogl1/MFRogl1_Edit
-		[HttpGet]
-		[ActionName("MFRogl1_Edit")]
-		public ActionResult MFRogl1_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("ROGL1", "EDIT", new { id = id, partialView = "MFRogl1", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFRogl1_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFRogl1_Edit(requestModel);
-		}
-
-		//
-		// GET /Rogl1/MFRogl1_Cancel
-		[ActionName("MFRogl1_Cancel")]
-		public ActionResult MFRogl1_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Rogl1(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Rogl1/MFRogl1_Save
-		[HttpPost]
-		[ActionName("MFRogl1_Save")]
-		public JsonResult MFRogl1_Save(Rogl1_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRogl1_Save",
-				ViewName = "MFRogl1",
-				AreaName = "rogl1"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Rogl1/MFRogl1_Delete
-		[HttpPost]
-		[ActionName("MFRogl1_Delete")]
-		public JsonResult MFRogl1_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFRogl1_Delete",
-				ViewName = "MFRogl1",
-				AreaName = "rogl1",
-				Location = ACTION_ROGL1_EDIT
-			};
-
-			var model = new Rogl1_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Rogl1/Rogl1_SaveEdit
 		[HttpPost]

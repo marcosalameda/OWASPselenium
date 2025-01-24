@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Dispatch
 	/// </summary>
-	public class CSGenioAdispa : DbArea	{
+	public class CSGenioAdispa : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -97,6 +98,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "DISPATCH_NUMBER23616";
 
             Qfield.NotNull = true;
@@ -335,7 +337,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddispa, value); }
 		}
 
-
 		/// <summary>Field : ">>CUSTOMER" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodentit { get { return m_fldCodentit; } }
 		private static FieldRef m_fldCodentit = new FieldRef("dispa", "codentit");
@@ -346,7 +347,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodentit); }
 			set { insertNameValueField(FldCodentit, value); }
 		}
-
 
 		/// <summary>Field : "Is prepared" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldIsprepar { get { return m_fldIsprepar; } }
@@ -359,7 +359,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldIsprepar, value); }
 		}
 
-
 		/// <summary>Field : "Dispatch date" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDispadt { get { return m_fldDispadt; } }
 		private static FieldRef m_fldDispadt = new FieldRef("dispa", "dispadt");
@@ -371,18 +370,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDispadt, value); }
 		}
 
-
 		/// <summary>Field : "Dispatch number" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldDispanr { get { return m_fldDispanr; } }
 		private static FieldRef m_fldDispanr = new FieldRef("dispa", "dispanr");
 
 		/// <summary>Field : "Dispatch number" Tipo: "N" Formula:  ""</summary>
-		public double ValDispanr
+		public decimal ValDispanr
 		{
-			get { return (double)returnValueField(FldDispanr); }
+			get { return (decimal)returnValueField(FldDispanr); }
 			set { insertNameValueField(FldDispanr, value); }
 		}
-
 
 		/// <summary>Field : "Prepared" Tipo: "DT" Formula: DF "iif(emptyL([DISPA->ISPREPAR])==1,[ZEROD],[Today])"</summary>
 		public static FieldRef FldPrepared { get { return m_fldPrepared; } }
@@ -395,7 +392,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPrepared, value); }
 		}
 
-
 		/// <summary>Field : ">>PERSON RESPONSIBLE" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodperso { get { return m_fldCodperso; } }
 		private static FieldRef m_fldCodperso = new FieldRef("dispa", "codperso");
@@ -407,7 +403,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodperso, value); }
 		}
 
-
 		/// <summary>Field : "Status" Tipo: "AC" Formula: + "iif(emptyD([DISPA->DISPADT])==0,"D",iif(emptyD([DISPA->PREPARED])==0,"P","I"))"</summary>
 		public static FieldRef FldStatus { get { return m_fldStatus; } }
 		private static FieldRef m_fldStatus = new FieldRef("dispa", "status");
@@ -418,7 +413,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldStatus); }
 			set { insertNameValueField(FldStatus, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -461,23 +455,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAdispa> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAdispa> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAdispa>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -526,7 +503,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX DISPA]/

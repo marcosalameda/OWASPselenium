@@ -2,13 +2,14 @@
 	<li>
 		<q-icon
 			icon="paired"
-			:class="['paired', { active: ctrl.isActive }]" />
+			:class="{ active: ctrl.isActive }" />
 
-		<span
+		<a
+			href="javascript:void(0)"
 			:class="['anchored', { active: ctrl.isActive }]"
-			@click.stop.prevent="$emit('focus-control', ctrl.id, false, 'start')">
+			@click.stop.prevent="$emit('focus-control', ctrl.id, false, 'start', 'instant')">
 			{{ ctrl.label }}
-		</span>
+		</a>
 
 		<ul v-if="ctrl.anchoredChildren.length > 0">
 			<template

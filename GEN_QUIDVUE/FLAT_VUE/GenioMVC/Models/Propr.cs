@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -43,7 +43,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Estimated price" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Propr.ValPrecoest")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecoest { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecoest, 2)); } set { klass.ValPrecoest = Convert.ToDouble(value); } }
+		public decimal? ValPrecoest { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecoest, 2)); } set { klass.ValPrecoest = Convert.ToDecimal(value); } }
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -52,17 +52,17 @@ namespace GenioMVC.Models
 		private Tppro _tppro;
 		[DisplayName("Tppro")]
 		[ShouldSerialize("Tppro")]
-		public virtual Tppro Tppro { 
-			get { 
+		public virtual Tppro Tppro {
+			get {
 				if (!this.isEmptyModel && (_tppro == null || (!string.IsNullOrEmpty(ValCodtppro) && (_tppro.isEmptyModel || _tppro.klass.QPrimaryKey != ValCodtppro))))
 					_tppro = Models.Tppro.Find(ValCodtppro, m_userContext, Identifier, _fieldsToSerialize);
 				if (_tppro == null)
 					_tppro = new Models.Tppro(m_userContext, true, _fieldsToSerialize);
 				return _tppro;
 			}
-			set { _tppro = value; } 
+			set { _tppro = value; }
 		}
-		
+
 
 		[DisplayName("Address")]
 		/// <summary>Field : "Address" Tipo: "MO" Formula:  ""</summary>
@@ -82,17 +82,17 @@ namespace GenioMVC.Models
 		private Regio _regio;
 		[DisplayName("Regio")]
 		[ShouldSerialize("Regio")]
-		public virtual Regio Regio { 
-			get { 
+		public virtual Regio Regio {
+			get {
 				if (!this.isEmptyModel && (_regio == null || (!string.IsNullOrEmpty(ValCodregia) && (_regio.isEmptyModel || _regio.klass.QPrimaryKey != ValCodregia))))
 					_regio = Models.Regio.Find(ValCodregia, m_userContext, Identifier, _fieldsToSerialize);
 				if (_regio == null)
 					_regio = new Models.Regio(m_userContext, true, _fieldsToSerialize);
 				return _regio;
 			}
-			set { _regio = value; } 
+			set { _regio = value; }
 		}
-		
+
 
 		[DisplayName("Zip code")]
 		/// <summary>Field : "Zip code" Tipo: "C" Formula:  ""</summary>
@@ -111,17 +111,17 @@ namespace GenioMVC.Models
 		private Cntry _cntry;
 		[DisplayName("Cntry")]
 		[ShouldSerialize("Cntry")]
-		public virtual Cntry Cntry { 
-			get { 
+		public virtual Cntry Cntry {
+			get {
 				if (!this.isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodcntry) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodcntry))))
 					_cntry = Models.Cntry.Find(ValCodcntry, m_userContext, Identifier, _fieldsToSerialize);
 				if (_cntry == null)
 					_cntry = new Models.Cntry(m_userContext, true, _fieldsToSerialize);
 				return _cntry;
 			}
-			set { _cntry = value; } 
+			set { _cntry = value; }
 		}
-		
+
 
 		[DisplayName("Furnished")]
 		/// <summary>Field : "Furnished" Tipo: "L" Formula:  ""</summary>
@@ -132,19 +132,19 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Bathrooms" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Propr.ValQtd_wc")]
 		[NumericAttribute(0)]
-		public decimal? ValQtd_wc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtd_wc, 0)); } set { klass.ValQtd_wc = Convert.ToDouble(value); } }
+		public decimal? ValQtd_wc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtd_wc, 0)); } set { klass.ValQtd_wc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Rooms")]
 		/// <summary>Field : "Rooms" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Propr.ValQtdquart")]
 		[NumericAttribute(0)]
-		public decimal? ValQtdquart { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdquart, 0)); } set { klass.ValQtdquart = Convert.ToDouble(value); } }
+		public decimal? ValQtdquart { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdquart, 0)); } set { klass.ValQtdquart = Convert.ToDecimal(value); } }
 
 		[DisplayName("Square meters")]
 		/// <summary>Field : "Square meters" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Propr.ValM2")]
 		[NumericAttribute(0)]
-		public decimal? ValM2 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValM2, 0)); } set { klass.ValM2 = Convert.ToDouble(value); } }
+		public decimal? ValM2 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValM2, 0)); } set { klass.ValM2 = Convert.ToDecimal(value); } }
 
 		[DisplayName("Available from")]
 		/// <summary>Field : "Available from" Tipo: "D" Formula:  ""</summary>
@@ -157,7 +157,9 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Photo" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Propr.ValPhotogra")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValPhotogra { get { return klass.ValPhotogra; } set { klass.ValPhotogra = value; } }
+		public ImageModel ValPhotogra { get { return new ImageModel(klass.ValPhotogra) { Ticket = ValPhotograQTicket }; } set { klass.ValPhotogra = value; } }
+		[JsonIgnore]
+		public string ValPhotograQTicket = null;
 
 		[DisplayName("Description")]
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
@@ -178,17 +180,17 @@ namespace GenioMVC.Models
 		private Pesso _pesso;
 		[DisplayName("Pesso")]
 		[ShouldSerialize("Pesso")]
-		public virtual Pesso Pesso { 
-			get { 
+		public virtual Pesso Pesso {
+			get {
 				if (!this.isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
 					_pesso = Models.Pesso.Find(ValCodpesso, m_userContext, Identifier, _fieldsToSerialize);
 				if (_pesso == null)
 					_pesso = new Models.Pesso(m_userContext, true, _fieldsToSerialize);
 				return _pesso;
 			}
-			set { _pesso = value; } 
+			set { _pesso = value; }
 		}
-		
+
 
 		[DisplayName(">PERSON COUNTRY")]
 		/// <summary>Field : ">PERSON COUNTRY" Tipo: "CE" Formula: ++ "[PESSO->CODCNTRY]"</summary>
@@ -197,17 +199,17 @@ namespace GenioMVC.Models
 		private Pais1 _pais1;
 		[DisplayName("Pais1")]
 		[ShouldSerialize("Pais1")]
-		public virtual Pais1 Pais1 { 
-			get { 
+		public virtual Pais1 Pais1 {
+			get {
 				if (!this.isEmptyModel && (_pais1 == null || (!string.IsNullOrEmpty(ValCodpais1) && (_pais1.isEmptyModel || _pais1.klass.QPrimaryKey != ValCodpais1))))
 					_pais1 = Models.Pais1.Find(ValCodpais1, m_userContext, Identifier, _fieldsToSerialize);
 				if (_pais1 == null)
 					_pais1 = new Models.Pais1(m_userContext, true, _fieldsToSerialize);
 				return _pais1;
 			}
-			set { _pais1 = value; } 
+			set { _pais1 = value; }
 		}
-		
+
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Propr.ValZzstate")]
@@ -217,19 +219,19 @@ namespace GenioMVC.Models
 		public Propr(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioApropr(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Propr(UserContext userContext, CSGenioApropr val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioApropr csgenioa)
@@ -271,7 +273,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

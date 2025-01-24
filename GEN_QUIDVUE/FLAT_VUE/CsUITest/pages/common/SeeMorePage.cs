@@ -13,13 +13,12 @@ public class SeeMorePage: PageObject {
 		ArgumentException.ThrowIfNullOrEmpty(nameof(form));
         ArgumentException.ThrowIfNullOrEmpty(nameof(fieldRef));
 
-		var parts = fieldRef.Split('.',2);
-		this.id = $"q-modal-see-more-{form}-{parts[0]}{parts[1]}".ToLowerInvariant();
+		var hydratedFieldRef = fieldRef.TrimEnd('_').Replace("_","-");
+		this.id = $"q-modal-see-more-{hydratedFieldRef}".ToLowerInvariant();
 		wait.Until(c => page);
 	}
 
 	public void Cancel(){
 		cancel.Click();
 	}
-
 }

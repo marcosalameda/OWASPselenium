@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -117,14 +117,11 @@
 										v-on="controls.RELIN___RECEINUMBER__.handlers"
 										:loading="controls.RELIN___RECEINUMBER__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.RELIN___RECEINUMBER__.isVisible"
 											v-bind="controls.RELIN___RECEINUMBER__.props"
-											:model-value="model.ValCodrecei.value"
-											v-on="controls.RELIN___RECEINUMBER__.handlers"
-											@update:model-value="model.ValCodrecei.fnUpdateValue" />
+											v-on="controls.RELIN___RECEINUMBER__.handlers" />
 										<q-see-more-relin-receinumber
 											v-if="controls.RELIN___RECEINUMBER__.seeMoreIsVisible"
 											v-bind="controls.RELIN___RECEINUMBER__.seeMoreParams"
@@ -140,8 +137,7 @@
 										v-on="controls.RELIN___ENTITNAME____.handlers"
 										:loading="controls.RELIN___ENTITNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.RELIN___ENTITNAME____.props"
 											:model-value="model.EntitValName.value" />
@@ -173,12 +169,10 @@
 										v-on="controls.RELIN___RELINLINENUMB.handlers"
 										:loading="controls.RELIN___RELINLINENUMB.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.RELIN___RELINLINENUMB.isVisible"
-											v-bind="controls.RELIN___RELINLINENUMB"
-											:model-value="model.ValLinenumb.value"
+											v-bind="controls.RELIN___RELINLINENUMB.props"
 											@update:model-value="model.ValLinenumb.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -193,14 +187,11 @@
 										v-on="controls.RELIN___PRODUPRODUCT_.handlers"
 										:loading="controls.RELIN___PRODUPRODUCT_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.RELIN___PRODUPRODUCT_.isVisible"
 											v-bind="controls.RELIN___PRODUPRODUCT_.props"
-											:model-value="model.ValCodprodu.value"
-											v-on="controls.RELIN___PRODUPRODUCT_.handlers"
-											@update:model-value="model.ValCodprodu.fnUpdateValue" />
+											v-on="controls.RELIN___PRODUPRODUCT_.handlers" />
 										<q-see-more-relin-produproduct
 											v-if="controls.RELIN___PRODUPRODUCT_.seeMoreIsVisible"
 											v-bind="controls.RELIN___PRODUPRODUCT_.seeMoreParams"
@@ -218,12 +209,10 @@
 										v-on="controls.RELIN___RELINORDERED_.handlers"
 										:loading="controls.RELIN___RELINORDERED_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.RELIN___RELINORDERED_.isVisible"
-											v-bind="controls.RELIN___RELINORDERED_"
-											:model-value="model.ValOrdered.value"
+											v-bind="controls.RELIN___RELINORDERED_.props"
 											@update:model-value="model.ValOrdered.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -236,12 +225,10 @@
 										v-on="controls.RELIN___RELINRECEIVED.handlers"
 										:loading="controls.RELIN___RELINRECEIVED.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.RELIN___RELINRECEIVED.isVisible"
-											v-bind="controls.RELIN___RELINRECEIVED"
-											:model-value="model.ValReceived.value"
+											v-bind="controls.RELIN___RELINRECEIVED.props"
 											@update:model-value="model.ValReceived.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -254,12 +241,10 @@
 										v-on="controls.RELIN___RELINOUTSTAND.handlers"
 										:loading="controls.RELIN___RELINOUTSTAND.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.RELIN___RELINOUTSTAND.isVisible"
-											v-bind="controls.RELIN___RELINOUTSTAND"
-											:model-value="model.ValOutstand.value"
+											v-bind="controls.RELIN___RELINOUTSTAND.props"
 											@update:model-value="model.ValOutstand.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -351,15 +336,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'RELIN',
-						location: 'form-RELIN',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'RELIN',
+					location: 'form-RELIN',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -405,6 +388,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -477,8 +462,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -560,7 +546,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -614,21 +600,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -637,15 +608,11 @@
 						id: 'RELIN___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.RECEIPT15218),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -655,28 +622,10 @@
 						id: 'RELIN___RECEINUMBER__',
 						name: 'NUMBER',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.RECEIPT_NUMBER31380),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'RELIN___PSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodrecei',
-							dependencyEvent: 'fieldChange:relin.codrecei'
-						},
-						dependentFields: () => {
-							return {
-								set 'recei.codrecei'(value) { vm.model.ValCodrecei.updateValue(value) },
-								set 'recei.number'(value) { vm.model.TableReceiNumber.updateValue(value) },
-								set 'relin.codentit'(value) { vm.model.ValCodentit.updateValue(value) },
-								set 'entit.name'(value) { vm.model.EntitValName.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -685,6 +634,19 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodrecei',
+							dependencyEvent: 'fieldChange:relin.codrecei'
+						},
+						dependentFields: () => ({
+							set 'recei.codrecei'(value) { vm.model.ValCodrecei.updateValue(value) },
+							set 'recei.number'(value) { vm.model.TableReceiNumber.updateValue(value) },
+							set 'relin.codentit'(value) { vm.model.ValCodentit.updateValue(value) },
+							set 'entit.codentit'(value) { vm.model.ValCodentit.updateValue(value) },
+							set 'entit.name'(value) { vm.model.EntitValName.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					RELIN___ENTITNAME____: new fieldControlClass.StringControl({
 						modelField: 'EntitValName',
@@ -694,30 +656,22 @@
 						id: 'RELIN___ENTITNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.LEGAL_NAME42902),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'RELIN___PSEUDNOVOGR01',
 						maxLength: 85,
 						labelId: 'label_RELIN___ENTITNAME____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					RELIN___PSEUDNOVOGR02: new fieldControlClass.GroupControl({
 						id: 'RELIN___PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.RECEIPT_LINE60287),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
 						mustBeFilled: true,
@@ -727,19 +681,16 @@
 					RELIN___RELINLINENUMB: new fieldControlClass.NumberControl({
 						modelField: 'ValLinenumb',
 						valueChangeEvent: 'fieldChange:relin.linenumb',
-						maxIntegers: 6,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'RELIN___RELINLINENUMB',
 						name: 'LINENUMB',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.LINE27983),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'RELIN___PSEUDNOVOGR02',
+						maxIntegers: 6,
+						maxDecimals: 0,
+						isSequencial: true,
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -750,26 +701,10 @@
 						id: 'RELIN___PRODUPRODUCT_',
 						name: 'PRODUCT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRODUCT12880),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'RELIN___PSEUDNOVOGR02',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodprodu',
-							dependencyEvent: 'fieldChange:relin.codprodu'
-						},
-						dependentFields: () => {
-							return {
-								set 'produ.codprodu'(value) { vm.model.ValCodprodu.updateValue(value) },
-								set 'produ.product'(value) { vm.model.TableProduProduct.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -778,65 +713,62 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodprodu',
+							dependencyEvent: 'fieldChange:relin.codprodu'
+						},
+						dependentFields: () => ({
+							set 'produ.codprodu'(value) { vm.model.ValCodprodu.updateValue(value) },
+							set 'produ.product'(value) { vm.model.TableProduProduct.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					RELIN___RELINORDERED_: new fieldControlClass.NumberControl({
 						modelField: 'ValOrdered',
 						valueChangeEvent: 'fieldChange:relin.ordered',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'RELIN___RELINORDERED_',
 						name: 'ORDERED',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ORDERED04034),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'RELIN___PSEUDNOVOGR02',
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					RELIN___RELINRECEIVED: new fieldControlClass.NumberControl({
 						modelField: 'ValReceived',
 						valueChangeEvent: 'fieldChange:relin.received',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'RELIN___RELINRECEIVED',
 						name: 'RECEIVED',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.RECEIVED19242),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'RELIN___PSEUDNOVOGR02',
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					RELIN___RELINOUTSTAND: new fieldControlClass.NumberControl({
 						modelField: 'ValOutstand',
 						valueChangeEvent: 'fieldChange:relin.outstand',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'RELIN___RELINOUTSTAND',
 						name: 'OUTSTAND',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.OUTSTANDING36400),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'RELIN___PSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 				},
 
@@ -900,7 +832,7 @@
 						/** The foreign key to the ENTIT table */
 						get entit() { return vm.model.ValCodentit },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -996,6 +928,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1035,6 +975,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1161,6 +1109,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR RELIN]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1176,6 +1140,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS RELIN]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,12 +106,12 @@
 							v-on="controls.FACTY___FACTYTYPE____.handlers"
 							:loading="controls.FACTY___FACTYTYPE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACTY___FACTYTYPE____.props"
 								:model-value="model.ValType.value"
-								@update:model-value="model.ValType.fnUpdateValue" />
+								@blur="onBlur(controls.FACTY___FACTYTYPE____, model.ValType.value)"
+								@change="model.ValType.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -123,12 +123,12 @@
 							v-on="controls.FACTY___FACTYLAYRNAME.handlers"
 							:loading="controls.FACTY___FACTYLAYRNAME.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACTY___FACTYLAYRNAME.props"
 								:model-value="model.ValLayrname.value"
-								@update:model-value="model.ValLayrname.fnUpdateValue" />
+								@blur="onBlur(controls.FACTY___FACTYLAYRNAME, model.ValLayrname.value)"
+								@change="model.ValLayrname.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -140,12 +140,12 @@
 							v-on="controls.FACTY___FACTYICONURL_.handlers"
 							:loading="controls.FACTY___FACTYICONURL_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACTY___FACTYICONURL_.props"
 								:model-value="model.ValIconurl.value"
-								@update:model-value="model.ValIconurl.fnUpdateValue" />
+								@blur="onBlur(controls.FACTY___FACTYICONURL_, model.ValIconurl.value)"
+								@change="model.ValIconurl.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -157,12 +157,12 @@
 							v-on="controls.FACTY___FACTYSHADOWUR.handlers"
 							:loading="controls.FACTY___FACTYSHADOWUR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACTY___FACTYSHADOWUR.props"
 								:model-value="model.ValShadowur.value"
-								@update:model-value="model.ValShadowur.fnUpdateValue" />
+								@blur="onBlur(controls.FACTY___FACTYSHADOWUR, model.ValShadowur.value)"
+								@change="model.ValShadowur.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -174,12 +174,10 @@
 							v-on="controls.FACTY___FACTYICONANCX.handlers"
 							:loading="controls.FACTY___FACTYICONANCX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYICONANCX.isVisible"
-								v-bind="controls.FACTY___FACTYICONANCX"
-								:model-value="model.ValIconancx.value"
+								v-bind="controls.FACTY___FACTYICONANCX.props"
 								@update:model-value="model.ValIconancx.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -192,12 +190,10 @@
 							v-on="controls.FACTY___FACTYICONANCY.handlers"
 							:loading="controls.FACTY___FACTYICONANCY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYICONANCY.isVisible"
-								v-bind="controls.FACTY___FACTYICONANCY"
-								:model-value="model.ValIconancy.value"
+								v-bind="controls.FACTY___FACTYICONANCY.props"
 								@update:model-value="model.ValIconancy.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -210,12 +206,10 @@
 							v-on="controls.FACTY___FACTYICONHEIG.handlers"
 							:loading="controls.FACTY___FACTYICONHEIG.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYICONHEIG.isVisible"
-								v-bind="controls.FACTY___FACTYICONHEIG"
-								:model-value="model.ValIconheig.value"
+								v-bind="controls.FACTY___FACTYICONHEIG.props"
 								@update:model-value="model.ValIconheig.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -228,12 +222,10 @@
 							v-on="controls.FACTY___FACTYICONWID_.handlers"
 							:loading="controls.FACTY___FACTYICONWID_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYICONWID_.isVisible"
-								v-bind="controls.FACTY___FACTYICONWID_"
-								:model-value="model.ValIconwid.value"
+								v-bind="controls.FACTY___FACTYICONWID_.props"
 								@update:model-value="model.ValIconwid.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -246,12 +238,10 @@
 							v-on="controls.FACTY___FACTYPOPUPANX.handlers"
 							:loading="controls.FACTY___FACTYPOPUPANX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYPOPUPANX.isVisible"
-								v-bind="controls.FACTY___FACTYPOPUPANX"
-								:model-value="model.ValPopupanx.value"
+								v-bind="controls.FACTY___FACTYPOPUPANX.props"
 								@update:model-value="model.ValPopupanx.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -264,12 +254,10 @@
 							v-on="controls.FACTY___FACTYPOPUPANY.handlers"
 							:loading="controls.FACTY___FACTYPOPUPANY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYPOPUPANY.isVisible"
-								v-bind="controls.FACTY___FACTYPOPUPANY"
-								:model-value="model.ValPopupany.value"
+								v-bind="controls.FACTY___FACTYPOPUPANY.props"
 								@update:model-value="model.ValPopupany.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -282,12 +270,10 @@
 							v-on="controls.FACTY___FACTYSHADOWAX.handlers"
 							:loading="controls.FACTY___FACTYSHADOWAX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYSHADOWAX.isVisible"
-								v-bind="controls.FACTY___FACTYSHADOWAX"
-								:model-value="model.ValShadowax.value"
+								v-bind="controls.FACTY___FACTYSHADOWAX.props"
 								@update:model-value="model.ValShadowax.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -300,12 +286,10 @@
 							v-on="controls.FACTY___FACTYSHADOWAY.handlers"
 							:loading="controls.FACTY___FACTYSHADOWAY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYSHADOWAY.isVisible"
-								v-bind="controls.FACTY___FACTYSHADOWAY"
-								:model-value="model.ValShadoway.value"
+								v-bind="controls.FACTY___FACTYSHADOWAY.props"
 								@update:model-value="model.ValShadoway.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -318,12 +302,10 @@
 							v-on="controls.FACTY___FACTYSHADOWHE.handlers"
 							:loading="controls.FACTY___FACTYSHADOWHE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYSHADOWHE.isVisible"
-								v-bind="controls.FACTY___FACTYSHADOWHE"
-								:model-value="model.ValShadowhe.value"
+								v-bind="controls.FACTY___FACTYSHADOWHE.props"
 								@update:model-value="model.ValShadowhe.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -336,12 +318,10 @@
 							v-on="controls.FACTY___FACTYSHADOWWI.handlers"
 							:loading="controls.FACTY___FACTYSHADOWWI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYSHADOWWI.isVisible"
-								v-bind="controls.FACTY___FACTYSHADOWWI"
-								:model-value="model.ValShadowwi.value"
+								v-bind="controls.FACTY___FACTYSHADOWWI.props"
 								@update:model-value="model.ValShadowwi.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -427,15 +407,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'FACTY',
-						location: 'form-FACTY',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'FACTY',
+					location: 'form-FACTY',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -481,6 +459,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -553,8 +533,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -636,7 +617,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -690,21 +671,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -715,15 +681,11 @@
 						id: 'FACTY___FACTYTYPE____',
 						name: 'TYPE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.FACILITY_TYPE44577),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 25,
 						labelId: 'label_FACTY___FACTYTYPE____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -733,15 +695,11 @@
 						id: 'FACTY___FACTYLAYRNAME',
 						name: 'LAYRNAME',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.LAYER_NAME49545),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_FACTY___FACTYLAYRNAME',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -751,15 +709,11 @@
 						id: 'FACTY___FACTYICONURL_',
 						name: 'ICONURL',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ICON_URL07016),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_FACTY___FACTYICONURL_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -769,195 +723,151 @@
 						id: 'FACTY___FACTYSHADOWUR',
 						name: 'SHADOWUR',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.SHADOW_URL57805),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_FACTY___FACTYSHADOWUR',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					FACTY___FACTYICONANCX: new fieldControlClass.NumberControl({
 						modelField: 'ValIconancx',
 						valueChangeEvent: 'fieldChange:facty.iconancx',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'FACTY___FACTYICONANCX',
 						name: 'ICONANCX',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.ICON_ANCHOR__X_AXIS_18664),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					FACTY___FACTYICONANCY: new fieldControlClass.NumberControl({
 						modelField: 'ValIconancy',
 						valueChangeEvent: 'fieldChange:facty.iconancy',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'FACTY___FACTYICONANCY',
 						name: 'ICONANCY',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.ICON_ANCHOR__Y_AXIS_63725),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					FACTY___FACTYICONHEIG: new fieldControlClass.NumberControl({
 						modelField: 'ValIconheig',
 						valueChangeEvent: 'fieldChange:facty.iconheig',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'FACTY___FACTYICONHEIG',
 						name: 'ICONHEIG',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.ICON_HEIGHT61896),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					FACTY___FACTYICONWID_: new fieldControlClass.NumberControl({
 						modelField: 'ValIconwid',
 						valueChangeEvent: 'fieldChange:facty.iconwid',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'FACTY___FACTYICONWID_',
 						name: 'ICONWID',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.ICON_WIDTH02295),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					FACTY___FACTYPOPUPANX: new fieldControlClass.NumberControl({
 						modelField: 'ValPopupanx',
 						valueChangeEvent: 'fieldChange:facty.popupanx',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'FACTY___FACTYPOPUPANX',
 						name: 'POPUPANX',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.POPUP_ANCHOR__X_AXIS15060),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					FACTY___FACTYPOPUPANY: new fieldControlClass.NumberControl({
 						modelField: 'ValPopupany',
 						valueChangeEvent: 'fieldChange:facty.popupany',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'FACTY___FACTYPOPUPANY',
 						name: 'POPUPANY',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.POPUP_ANCHOR__Y_AXIS64670),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					FACTY___FACTYSHADOWAX: new fieldControlClass.NumberControl({
 						modelField: 'ValShadowax',
 						valueChangeEvent: 'fieldChange:facty.shadowax',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'FACTY___FACTYSHADOWAX',
 						name: 'SHADOWAX',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.SHADOW_ANCHOR__X_AXI31230),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					FACTY___FACTYSHADOWAY: new fieldControlClass.NumberControl({
 						modelField: 'ValShadoway',
 						valueChangeEvent: 'fieldChange:facty.shadoway',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'FACTY___FACTYSHADOWAY',
 						name: 'SHADOWAY',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.SHADOW_ANCHOR__Y_AXI51495),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					FACTY___FACTYSHADOWHE: new fieldControlClass.NumberControl({
 						modelField: 'ValShadowhe',
 						valueChangeEvent: 'fieldChange:facty.shadowhe',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'FACTY___FACTYSHADOWHE',
 						name: 'SHADOWHE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.SHADOW_HEIGHT64343),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					FACTY___FACTYSHADOWWI: new fieldControlClass.NumberControl({
 						modelField: 'ValShadowwi',
 						valueChangeEvent: 'fieldChange:facty.shadowwi',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'FACTY___FACTYSHADOWWI',
 						name: 'SHADOWWI',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.SHADOW_WIDTH01769),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -1017,7 +927,7 @@
 						/** The primary key of the FACTY table */
 						get facty() { return vm.model.ValCodfacty },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1113,6 +1023,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1152,6 +1070,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1278,6 +1204,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR FACTY]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1293,6 +1235,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS FACTY]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

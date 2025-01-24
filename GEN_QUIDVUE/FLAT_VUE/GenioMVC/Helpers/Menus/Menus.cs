@@ -434,6 +434,29 @@ namespace GenioMVC.Helpers.Menus
 
 			return m_flatMenus[findKey];
 		}
+		
+		/// <summary>
+		/// Finds a menu and applies the same transformation to the MenuEntry object as in the navigation bar
+		/// </summary>
+		/// <param name="userContext">User context we want to check</param>
+		/// <param name="module">Module the entry is in</param>
+		/// <param name="menuID">ID of the entry</param>
+		/// <param name="count">Whether to count</param>
+		/// <returns></returns>
+		public static MenuEntry FindMenuForUserRec(UserContext userContext, string module, string menuID, bool count = false)
+        {
+            List<MenuEntry> menuListForUserRec;
+			
+			// Find menu and put in a List because MenusForUserRec() takes a List
+            MenuEntry menu = FindMenu(module, menuID);
+            List<MenuEntry> menuList = new List<MenuEntry>();
+            menuList.Add(menu);
+
+			// Apply same transformation to menu entries as in the navigation bar so they are consistent
+            menuListForUserRec = MenusForUserRec(userContext, menuList, module, count);
+
+            return menuListForUserRec.FirstOrDefault();
+        }
 
 		/// <summary>
         /// Checks if the user has access to the menu
@@ -445,7 +468,7 @@ namespace GenioMVC.Helpers.Menus
         private static bool AllowMenu(UserContext userContext, MenuEntry menu, string module)
 		{
 			bool hasUserAcess = (menu.TreeLevel > -1 && menu.Allows(userContext.User, module)) || menu.TreeLevel == -1;
-			bool hideMenu = menu.HasCondition && !Menus.ValidateCondition(userContext, menu);
+			bool hideMenu = menu.HasCondition && !Menus.ValidateCondition(userContext, menu, module);
 
 			return hasUserAcess && !hideMenu;
 		}

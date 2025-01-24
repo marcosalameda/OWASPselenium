@@ -83,16 +83,18 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValProduct))
 		watch(() => this.ValProduct.value, (newValue, oldValue) => this.onUpdate('produ.product', this.ValProduct, newValue, oldValue))
 
-		this.ValIn_use = reactive(new modelFieldType.Boolean({
+		this.ValIn_use = reactive(new modelFieldType.Number({
 			id: 'ValIn_use',
 			originId: 'ValIn_use',
 			area: 'PRODU',
 			field: 'IN_USE',
+			maxDigits: 1,
+			decimalDigits: 0,
 			description: computed(() => this.Resources.IN_USE42606),
 		}).cloneFrom(values?.ValIn_use))
 		watch(() => this.ValIn_use.value, (newValue, oldValue) => this.onUpdate('produ.in_use', this.ValIn_use, newValue, oldValue))
 
-		this.ValDescript = reactive(new modelFieldType.String({
+		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
 			originId: 'ValDescript',
 			area: 'PRODU',
@@ -161,6 +163,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.INPUTS19315),
+			isFixed: true,
 		}).cloneFrom(values?.ValInputs))
 		watch(() => this.ValInputs.value, (newValue, oldValue) => this.onUpdate('produ.inputs', this.ValInputs, newValue, oldValue))
 
@@ -172,6 +175,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.OUTPUTS47833),
+			isFixed: true,
 		}).cloneFrom(values?.ValOutputs))
 		watch(() => this.ValOutputs.value, (newValue, oldValue) => this.onUpdate('produ.outputs', this.ValOutputs, newValue, oldValue))
 
@@ -183,6 +187,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.STOCK37618),
+			isFixed: true,
 		}).cloneFrom(values?.ValStock))
 		watch(() => this.ValStock.value, (newValue, oldValue) => this.onUpdate('produ.stock', this.ValStock, newValue, oldValue))
 
@@ -230,5 +235,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodprodu'
 
 	get QPrimaryKey() { return this.ValCodprodu.value }
-	set QPrimaryKey(value) { this.ValCodprodu.value = value }
+	set QPrimaryKey(value) { this.ValCodprodu.updateValue(value) }
 }

@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Locat _locat;
 		[DisplayName("Locat")]
 		[ShouldSerialize("Locat")]
-		public virtual Locat Locat { 
-			get { 
+		public virtual Locat Locat {
+			get {
 				if (!this.isEmptyModel && (_locat == null || (!string.IsNullOrEmpty(ValCodlocat) && (_locat.isEmptyModel || _locat.klass.QPrimaryKey != ValCodlocat))))
 					_locat = Models.Locat.Find(ValCodlocat, m_userContext, Identifier, _fieldsToSerialize);
 				if (_locat == null)
 					_locat = new Models.Locat(m_userContext, true, _fieldsToSerialize);
 				return _locat;
 			}
-			set { _locat = value; } 
+			set { _locat = value; }
 		}
-		
+
 
 		[DisplayName(">>LOCATION EXTENSION")]
 		/// <summary>Field : ">>LOCATION EXTENSION" Tipo: "CE" Formula:  ""</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Lcext _lcext;
 		[DisplayName("Lcext")]
 		[ShouldSerialize("Lcext")]
-		public virtual Lcext Lcext { 
-			get { 
+		public virtual Lcext Lcext {
+			get {
 				if (!this.isEmptyModel && (_lcext == null || (!string.IsNullOrEmpty(ValCodlcext) && (_lcext.isEmptyModel || _lcext.klass.QPrimaryKey != ValCodlcext))))
 					_lcext = Models.Lcext.Find(ValCodlcext, m_userContext, Identifier, _fieldsToSerialize);
 				if (_lcext == null)
 					_lcext = new Models.Lcext(m_userContext, true, _fieldsToSerialize);
 				return _lcext;
 			}
-			set { _lcext = value; } 
+			set { _lcext = value; }
 		}
-		
+
 
 		[DisplayName("Product")]
 		/// <summary>Field : "Product" Tipo: "C" Formula:  ""</summary>
@@ -102,37 +102,39 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Weight" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Produ.ValWeight")]
 		[NumericAttribute(2)]
-		public decimal? ValWeight { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValWeight, 2)); } set { klass.ValWeight = Convert.ToDouble(value); } }
+		public decimal? ValWeight { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValWeight, 2)); } set { klass.ValWeight = Convert.ToDecimal(value); } }
 
 		[DisplayName("Price")]
 		/// <summary>Field : "Price" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Produ.ValPrice")]
 		[CurrencyAttribute("EUR", 4)]
-		public decimal? ValPrice { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrice, 4)); } set { klass.ValPrice = Convert.ToDouble(value); } }
+		public decimal? ValPrice { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrice, 4)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
 
 		[DisplayName("Inputs")]
 		/// <summary>Field : "Inputs" Tipo: "N" Formula: SR "[RELIN->RECEIVED]"</summary>
 		[ShouldSerialize("Produ.ValInputs")]
 		[NumericAttribute(0)]
-		public decimal? ValInputs { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValInputs, 0)); } set { klass.ValInputs = Convert.ToDouble(value); } }
+		public decimal? ValInputs { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValInputs, 0)); } set { klass.ValInputs = Convert.ToDecimal(value); } }
 
 		[DisplayName("Outputs")]
 		/// <summary>Field : "Outputs" Tipo: "N" Formula: SR "[DILIN->DELIVERE]"</summary>
 		[ShouldSerialize("Produ.ValOutputs")]
 		[NumericAttribute(0)]
-		public decimal? ValOutputs { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutputs, 0)); } set { klass.ValOutputs = Convert.ToDouble(value); } }
+		public decimal? ValOutputs { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutputs, 0)); } set { klass.ValOutputs = Convert.ToDecimal(value); } }
 
 		[DisplayName("Stock")]
 		/// <summary>Field : "Stock" Tipo: "N" Formula: SR "[RELIN->RECEIVED]-[DILIN->DELIVERE]"</summary>
 		[ShouldSerialize("Produ.ValStock")]
 		[NumericAttribute(0)]
-		public decimal? ValStock { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValStock, 0)); } set { klass.ValStock = Convert.ToDouble(value); } }
+		public decimal? ValStock { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValStock, 0)); } set { klass.ValStock = Convert.ToDecimal(value); } }
 
 		[DisplayName("Image")]
 		/// <summary>Field : "Image" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Produ.ValImage")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValImage { get { return klass.ValImage; } set { klass.ValImage = value; } }
+		public ImageModel ValImage { get { return new ImageModel(klass.ValImage) { Ticket = ValImageQTicket }; } set { klass.ValImage = value; } }
+		[JsonIgnore]
+		public string ValImageQTicket = null;
 
 		[DisplayName("In use")]
 		/// <summary>Field : "In use" Tipo: "AL" Formula:  ""</summary>
@@ -150,19 +152,19 @@ namespace GenioMVC.Models
 		public Produ(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAprodu(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Produ(UserContext userContext, CSGenioAprodu val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAprodu csgenioa)
@@ -189,7 +191,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

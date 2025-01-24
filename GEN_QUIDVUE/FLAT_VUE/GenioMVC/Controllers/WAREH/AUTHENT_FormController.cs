@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Wareh;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_AUTHENT_CANCEL = new NavigationLocation("WAREHOUSE51864", "Authent_Cancel", "Wareh") { vueRouteName = "form-AUTHENT", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_AUTHENT_SHOW = new NavigationLocation("WAREHOUSE51864", "Authent_Show", "Wareh") { vueRouteName = "form-AUTHENT", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_AUTHENT_NEW = new NavigationLocation("WAREHOUSE51864", "Authent_New", "Wareh") { vueRouteName = "form-AUTHENT", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_AUTHENT_EDIT = new NavigationLocation("WAREHOUSE51864", "Authent_Edit", "Wareh") { vueRouteName = "form-AUTHENT", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_AUTHENT_DUPLICATE = new NavigationLocation("WAREHOUSE51864", "Authent_Duplicate", "Wareh") { vueRouteName = "form-AUTHENT", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_AUTHENT_DELETE = new NavigationLocation("WAREHOUSE51864", "Authent_Delete", "Wareh") { vueRouteName = "form-AUTHENT", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_AUTHENT_CANCEL = new("WAREHOUSE51864", "Authent_Cancel", "Wareh") { vueRouteName = "form-AUTHENT", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_AUTHENT_SHOW = new("WAREHOUSE51864", "Authent_Show", "Wareh") { vueRouteName = "form-AUTHENT", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_AUTHENT_NEW = new("WAREHOUSE51864", "Authent_New", "Wareh") { vueRouteName = "form-AUTHENT", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_AUTHENT_EDIT = new("WAREHOUSE51864", "Authent_Edit", "Wareh") { vueRouteName = "form-AUTHENT", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_AUTHENT_DUPLICATE = new("WAREHOUSE51864", "Authent_Duplicate", "Wareh") { vueRouteName = "form-AUTHENT", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_AUTHENT_DELETE = new("WAREHOUSE51864", "Authent_Delete", "Wareh") { vueRouteName = "form-AUTHENT", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Authent_ModalDBEdit()
-		{
-			Authent_ViewModel model = new Authent_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Authent_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Authent Multiform actions
 
-		//
-		// GET /Wareh/MFAuthent_New
-		[HttpGet]
-		[ActionName("MFAuthent_New")]
-		public ActionResult MFAuthent_New()
-		{
-			var model = new Authent_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_AUTHENT_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("wareh", model.ValCodwareh);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFAuthent_New_GET()
-		{
-			return MFAuthent_New();
-		}
-
-		//
-		// GET /Wareh/MFAuthent_Edit
-		[HttpGet]
-		[ActionName("MFAuthent_Edit")]
-		public ActionResult MFAuthent_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("AUTHENT", "EDIT", new { id = id, partialView = "MFAuthent", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFAuthent_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFAuthent_Edit(requestModel);
-		}
-
-		//
-		// GET /Wareh/MFAuthent_Cancel
-		[ActionName("MFAuthent_Cancel")]
-		public ActionResult MFAuthent_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Wareh(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Wareh/MFAuthent_Save
-		[HttpPost]
-		[ActionName("MFAuthent_Save")]
-		public JsonResult MFAuthent_Save(Authent_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAuthent_Save",
-				ViewName = "MFAuthent",
-				AreaName = "wareh"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Wareh/MFAuthent_Delete
-		[HttpPost]
-		[ActionName("MFAuthent_Delete")]
-		public JsonResult MFAuthent_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAuthent_Delete",
-				ViewName = "MFAuthent",
-				AreaName = "wareh",
-				Location = ACTION_AUTHENT_EDIT
-			};
-
-			var model = new Authent_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Wareh/Authent_SaveEdit
 		[HttpPost]

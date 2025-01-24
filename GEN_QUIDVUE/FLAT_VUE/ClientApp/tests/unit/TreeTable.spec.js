@@ -1,9 +1,5 @@
-/**
- * @jest-environment jsdom
- */
 import '@testing-library/jest-dom'
-import { nextTick } from 'vue'
-import { mount } from './utils'
+import { mount, render } from './utils'
 import { fireEvent } from '@testing-library/vue'
 import { flushPromises } from '@vue/test-utils'
 import { vi } from 'vitest'
@@ -12,8 +8,6 @@ import listFunctions from '@/mixins/listFunctions'
 import injectFunctions from '../injectFunctions'
 
 import QTreeTableRow from '@/components/table/QTreeTableRow'
-
-// hasChildren: { value: true },   <= is to be a Ref property
 
 let configSimple = {
 	row: {
@@ -449,6 +443,7 @@ let _global = {
 		isExtendedActionsColumn: 	injectFunctions.isExtendedActionsColumn,
 		isChecklistColumn: 			injectFunctions.isChecklistColumn,
 		isDragAndDropColumn: 		injectFunctions.isDragAndDropColumn,
+		isTotalizerColumn:			injectFunctions.isTotalizerColumn,
 		isRowChecked: 				injectFunctions.isRowChecked,
 		getRowClasses: 				injectFunctions.getRowClasses,
 		getRowTitle: 				injectFunctions.getRowTitle,
@@ -505,7 +500,7 @@ describe('TreeList.vue', () => {
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var rows = wrapper.findAll('tr')
+		var rows = await wrapper.findAll('tr')
 		expect(rows.length).toBe(1)
 		expect(rows[0].findAll('td').length).toBe(3)
 	})
@@ -519,17 +514,17 @@ describe('TreeList.vue', () => {
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var rows = wrapper.findAll('tr')
+		var rows = await wrapper.findAll('tr')
 
-		await fireEvent.click(rows[0].find('a[data-testid="tree-action"]').element)
+		await fireEvent.click(rows[0].find('button[data-testid="tree-action"]').element)
 
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		rows = wrapper.findAll('tr')
-		const header = wrapper.findAll('thead')
+		rows = await wrapper.findAll('tr')
+		const header = await wrapper.findAll('thead')
 		var numHeaderRows = 0
-		header.forEach(elem => {
+		await header.forEach(elem => {
 			numHeaderRows += elem.findAll('tr').length
 		})
 
@@ -547,20 +542,24 @@ describe('TreeList.vue', () => {
 
 		var rows = await wrapper.findAll('tr[data-testid="table-row"]')
 
-		await fireEvent.click(rows[0].find('a[data-testid="tree-action"]').element)
+		await fireEvent.click(rows[0].find('button[data-testid="tree-action"]').element)
 
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
 		rows = await wrapper.findAll('tr[data-testid="table-row"]')
-		var header = wrapper.findAll('thead')
+		var header = await wrapper.findAll('thead')
 		var numHeaderRows = 0
 		header.forEach(elem => {
 			numHeaderRows += elem.findAll('tr').length
 		})
 		expect(rows.length - numHeaderRows).toBe(3)
 
-		await fireEvent.click(rows[0].find('a').element)
+		await fireEvent.click(rows[0].find('button').element)
+
+		await flushPromises()
+		await vi.dynamicImportSettled()
+
 
 		await flushPromises()
 		await vi.dynamicImportSettled()
@@ -578,21 +577,21 @@ describe('TreeList.vue', () => {
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var rows = wrapper.findAll('tr')
+		var rows = await wrapper.findAll('tr')
 
-		await fireEvent.click(rows[0].find('a').element)
-
-		await flushPromises()
-		await vi.dynamicImportSettled()
-
-		rows = wrapper.findAll('tr')
-		await fireEvent.click(rows[1].find('a').element)
+		await fireEvent.click(rows[0].find('button').element)
 
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		rows = wrapper.findAll('tr')
-		const header = wrapper.findAll('thead')
+		rows = await wrapper.findAll('tr')
+		await fireEvent.click(rows[1].find('button').element)
+
+		await flushPromises()
+		await vi.dynamicImportSettled()
+
+		rows = await wrapper.findAll('tr')
+		const header = await wrapper.findAll('thead')
 		var numHeaderRows = 0
 		header.forEach(elem => {
 			numHeaderRows += elem.findAll('tr').length
@@ -610,26 +609,26 @@ describe('TreeList.vue', () => {
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var rows = wrapper.findAll('tr')
+		var rows = await wrapper.findAll('tr')
 
-		await fireEvent.click(rows[0].find('a').element)
+		await fireEvent.click(rows[0].find('button').element)
 
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		const header = wrapper.findAll('thead')
-		const titles = header[0].findAll('div.d-flex')
+		const header = await wrapper.findAll('thead')
+		const titles = await header[0].findAll('div.d-flex')
 
 		titles.forEach((title, idx) => {
 			expect(title.text()).toBe(_propsSubTable.columnHierarchy[1][idx].label)
 		})
 
-		rows = wrapper.findAll('tr')
+		rows = await wrapper.findAll('tr')
 		var numHeaderRows = 0
 		header.forEach(elem => {
 			numHeaderRows += elem.findAll('tr').length
 		})
-		var subTables = wrapper.findAll('tr table')
+		var subTables = await wrapper.findAll('tr table')
 		expect(rows.length - numHeaderRows - subTables.length).toBe(3)
 	})
 
@@ -642,23 +641,27 @@ describe('TreeList.vue', () => {
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var rows = wrapper.findAll('tr')
+		var rows = await wrapper.findAll('tr')
 
-		await fireEvent.click(rows[0].find('a').element)
+		await fireEvent.click(rows[0].find('button').element)
 
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var header = wrapper.find('thead')
-		var titles = header.findAll('div.d-flex')
+		var header = await wrapper.find('thead')
+		var titles = await header.findAll('div.d-flex')
 
 		titles.forEach((title, idx) => {
 			expect(title.text()).toBe(_propsSubTable.columnHierarchy[1][idx].label)
 		})
 
-		await fireEvent.click(rows[0].find('a').element)
-		rows = wrapper.findAll('tr')
-		header = wrapper.findAll('thead')
+		await fireEvent.click(rows[0].find('button').element)
+
+		await flushPromises()
+		await vi.dynamicImportSettled()
+
+		rows = await wrapper.findAll('tr')
+		header = await wrapper.findAll('thead')
 
 		expect(header.length).toBe(0)
 		expect(rows.length).toBe(1)
@@ -675,29 +678,90 @@ describe('TreeList.vue', () => {
 
 		var rows = wrapper.findAll('tr[data-testid="table-row"]')
 
-		await fireEvent.click(rows[0].find('a').element)
+		await fireEvent.click(rows[0].find('button').element)
 
-		var header = wrapper.find('thead')
-		var titles = header.findAll('div.d-flex')
+		await flushPromises()
+		await vi.dynamicImportSettled()
+
+		var header = await wrapper.find('thead')
+		var titles = await header.findAll('div.d-flex')
 
 		titles.forEach((title, idx) => {
 			expect(title.text()).toBe(_propsSubTable.columnHierarchy[1][idx].label)
 		})
 
 		rows = await wrapper.findAll('tr[data-testid="table-row"]');
-		await fireEvent.click(rows[1].find('a').element)
+		await fireEvent.click(rows[1].find('button').element)
 
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		rows = wrapper.findAll('tr[data-testid="table-row"]')
-		header = wrapper.findAll('thead')
+		rows = await wrapper.findAll('tr[data-testid="table-row"]')
+		header = await wrapper.findAll('thead')
 		var numHeaderRows = 0
 		header.forEach(elem => {
 			numHeaderRows += elem.findAll('tr[data-testid="table-row"]').length
 		})
 
-		var subTables = wrapper.findAll('tr[data-testid="table-row"] table')
+		var subTables = await wrapper.findAll('tr[data-testid="table-row"] table')
 		expect(rows.length - numHeaderRows - subTables.length).toBe(4)
+	})
+
+	it('Focusing on the row and pressing right shows the sub-rows', async () => {
+		render(QTreeTableRow, {
+			global: _global,
+			props: _propsSubTable
+		})
+
+		await flushPromises()
+		await vi.dynamicImportSettled()
+
+		// Get row element
+		const rowElem = document.getElementsByTagName('TR')[0]
+
+		// Focus on row and press right
+		rowElem.focus()
+		await fireEvent.keyDown(rowElem, { key: 'ArrowRight', keyCode: 39 })
+
+		await flushPromises()
+		await vi.dynamicImportSettled()
+
+		// Get sub-rows
+		let allRowElems = document.querySelectorAll('tr[data-testid="table-row"]')
+		expect(allRowElems.length).toBe(3)
+	})
+
+	it('After showing sub-rows, focusing on the row and pressing left hides the sub-rows', async () => {
+		render(QTreeTableRow, {
+			global: _global,
+			props: _propsSubTable
+		})
+
+		await flushPromises()
+		await vi.dynamicImportSettled()
+
+		// Get row element
+		const rowElem = document.getElementsByTagName('TR')[0]
+
+		// Focus on row and press right
+		rowElem.focus()
+		await fireEvent.keyDown(rowElem, { key: 'ArrowRight', keyCode: 39 })
+
+		await flushPromises()
+		await vi.dynamicImportSettled()
+
+		// Get sub-rows
+		let allRowElems = document.querySelectorAll('tr[data-testid="table-row"]')
+		expect(allRowElems.length).toBe(3)
+
+		// Press left
+		await fireEvent.keyDown(rowElem, { key: 'ArrowLeft', keyCode: 37 })
+
+		await flushPromises()
+		await vi.dynamicImportSettled()
+
+		// Get sub-rows
+		allRowElems = document.querySelectorAll('tr[data-testid="table-row"]')
+		expect(allRowElems.length).toBe(1)
 	})
 })

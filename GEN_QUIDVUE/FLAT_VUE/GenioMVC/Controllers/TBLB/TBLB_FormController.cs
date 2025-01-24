@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Tblb;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_TBLB_CANCEL = new NavigationLocation("TABLE__BASIC_TYPES_42027", "Tblb_Cancel", "Tblb") { vueRouteName = "form-TBLB", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_TBLB_SHOW = new NavigationLocation("TABLE__BASIC_TYPES_42027", "Tblb_Show", "Tblb") { vueRouteName = "form-TBLB", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_TBLB_NEW = new NavigationLocation("TABLE__BASIC_TYPES_42027", "Tblb_New", "Tblb") { vueRouteName = "form-TBLB", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_TBLB_EDIT = new NavigationLocation("TABLE__BASIC_TYPES_42027", "Tblb_Edit", "Tblb") { vueRouteName = "form-TBLB", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_TBLB_DUPLICATE = new NavigationLocation("TABLE__BASIC_TYPES_42027", "Tblb_Duplicate", "Tblb") { vueRouteName = "form-TBLB", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_TBLB_DELETE = new NavigationLocation("TABLE__BASIC_TYPES_42027", "Tblb_Delete", "Tblb") { vueRouteName = "form-TBLB", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_TBLB_CANCEL = new("TABLE__BASIC_TYPES_42027", "Tblb_Cancel", "Tblb") { vueRouteName = "form-TBLB", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_TBLB_SHOW = new("TABLE__BASIC_TYPES_42027", "Tblb_Show", "Tblb") { vueRouteName = "form-TBLB", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_TBLB_NEW = new("TABLE__BASIC_TYPES_42027", "Tblb_New", "Tblb") { vueRouteName = "form-TBLB", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_TBLB_EDIT = new("TABLE__BASIC_TYPES_42027", "Tblb_Edit", "Tblb") { vueRouteName = "form-TBLB", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_TBLB_DUPLICATE = new("TABLE__BASIC_TYPES_42027", "Tblb_Duplicate", "Tblb") { vueRouteName = "form-TBLB", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_TBLB_DELETE = new("TABLE__BASIC_TYPES_42027", "Tblb_Delete", "Tblb") { vueRouteName = "form-TBLB", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Tblb_ModalDBEdit()
-		{
-			Tblb_ViewModel model = new Tblb_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Tblb_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Tblb Multiform actions
 
-		//
-		// GET /Tblb/MFTblb_New
-		[HttpGet]
-		[ActionName("MFTblb_New")]
-		public ActionResult MFTblb_New()
-		{
-			var model = new Tblb_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_TBLB_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("tblb", model.ValCodtblb);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFTblb_New_GET()
-		{
-			return MFTblb_New();
-		}
-
-		//
-		// GET /Tblb/MFTblb_Edit
-		[HttpGet]
-		[ActionName("MFTblb_Edit")]
-		public ActionResult MFTblb_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("TBLB", "EDIT", new { id = id, partialView = "MFTblb", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFTblb_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFTblb_Edit(requestModel);
-		}
-
-		//
-		// GET /Tblb/MFTblb_Cancel
-		[ActionName("MFTblb_Cancel")]
-		public ActionResult MFTblb_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Tblb(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Tblb/MFTblb_Save
-		[HttpPost]
-		[ActionName("MFTblb_Save")]
-		public JsonResult MFTblb_Save(Tblb_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFTblb_Save",
-				ViewName = "MFTblb",
-				AreaName = "tblb"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Tblb/MFTblb_Delete
-		[HttpPost]
-		[ActionName("MFTblb_Delete")]
-		public JsonResult MFTblb_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFTblb_Delete",
-				ViewName = "MFTblb",
-				AreaName = "tblb",
-				Location = ACTION_TBLB_EDIT
-			};
-
-			var model = new Tblb_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Tblb/Tblb_SaveEdit
 		[HttpPost]

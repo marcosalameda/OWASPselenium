@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "No. of the dadato" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Noti1.ValNrcomoda")]
 		[NumericAttribute(0)]
-		public decimal? ValNrcomoda { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrcomoda, 0)); } set { klass.ValNrcomoda = Convert.ToDouble(value); } }
+		public decimal? ValNrcomoda { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrcomoda, 0)); } set { klass.ValNrcomoda = Convert.ToDecimal(value); } }
 
 		[DisplayName("Beginning")]
 		/// <summary>Field : "Beginning" Tipo: "DT" Formula:  ""</summary>
@@ -116,17 +116,17 @@ namespace GenioMVC.Models
 		private Pess2 _pess2;
 		[DisplayName("Pess2")]
 		[ShouldSerialize("Pess2")]
-		public virtual Pess2 Pess2 { 
-			get { 
+		public virtual Pess2 Pess2 {
+			get {
 				if (!this.isEmptyModel && (_pess2 == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pess2.isEmptyModel || _pess2.klass.QPrimaryKey != ValCodpesso))))
 					_pess2 = Models.Pess2.Find(ValCodpesso, m_userContext, Identifier, _fieldsToSerialize);
 				if (_pess2 == null)
 					_pess2 = new Models.Pess2(m_userContext, true, _fieldsToSerialize);
 				return _pess2;
 			}
-			set { _pess2 = value; } 
+			set { _pess2 = value; }
 		}
-		
+
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Noti1.ValZzstate")]
@@ -136,19 +136,19 @@ namespace GenioMVC.Models
 		public Noti1(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAnoti1(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Noti1(UserContext userContext, CSGenioAnoti1 val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAnoti1 csgenioa)
@@ -170,7 +170,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

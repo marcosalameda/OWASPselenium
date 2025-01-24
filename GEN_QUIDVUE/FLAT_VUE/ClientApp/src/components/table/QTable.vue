@@ -2,147 +2,157 @@
 	<!-- TODO configurable header title position -->
 	<div
 		:id="controlId"
-		tabindex="0"
-		:class="['q-table-list', ...classes, $attrs.class]">
+		:class="['q-table-list', ...classes, sizeClass, $attrs.class, isListVisible ? tableModeClasses : null]"
+		:data-loading="!loaded">
 		<div
 			v-show="showHeader"
 			class="page-header row no-gutters justify-content-between">
 			<!-- BEGIN: Table controls -->
 			<div
 				v-if="tableTitle.length > 0 || hasActionBar || $slots.tableTitle"
-				class="col">
-				<div class="c-action-bar">
-					<!-- BEGIN: Table title -->
-					<div class="table-title c-table__title">
-						<component :is="headerTag">
-							<slot
-								name="tableTitle"
-								:table-title="tableTitle">
-								{{ tableTitle }}
-							</slot>
-						</component>
-					</div>
-					<!-- END: Table title -->
-					<!-- BEGIN: Extra menus -->
-					<div
-						v-if="hasActionBar"
-						class="c-action-bar__menu">
-						<!-- BEGIN: Saved views menu -->
-						<q-select
-							v-if="showSavedViews"
-							v-model="selectedViewId"
-							:items="savedViewsOptions"
-							:groups="[
-								{ id: 'user', title: '' },
-								{ id: 'system', title: '' }
-							]"
-							size="small"
-							item-value="id"
-							item-label="text"
-							@update:model-value="confirmAndSetSelectedViewById" />
-						<!-- END: Saved views menu -->
-						<!-- BEGIN: Configuration menu / button -->
-						<q-dropdown-menu
-							v-if="showConfigMenu"
-							:id="configMenuId"
-							icon="table-configuration"
-							:texts="{ title: texts.tableConfig }"
-							:options="configOptions"
-							:button-options="{ borderless: true }"
-							:button-classes="['dropdown-toggle']"
-							@selected="emitConfigAction">
-							<span
-								v-if="confirmChanges"
-								class="e-badge e-badge--highlight">
-								<span aria-hidden="true"></span>
-							</span>
-						</q-dropdown-menu>
-						<!-- END: Configuration menu / button -->
-						<!-- BEGIN: Toggle show/hide filters -->
-						<div
-							v-if="hasFilters"
-							class="flex-align-center">
-							<div class="i-switch">
-								<label class="action-input">
-									<span class="i-switch__label hidden-h-elem"></span>
-									<span class="i-switch__label-text">
-										{{ texts.activeFiltersTitle }}
-									</span>
-								</label>
-							</div>
-
-							<q-toggle-input
-								v-model="filtersVisible"
-								:title="showHideFiltersTitle"
-								:true-label="texts.showText"
-								:false-label="texts.hideText"
-								display-type="label-toggle" />
-						</div>
-						<!-- END: Toggle show/hide filters -->
-						<q-table-view-mode-config
-							:model-value="$props.activeViewModeId"
-							:view-modes="$props.viewModes"
-							:texts="$props.texts"
-							@update:model-value="(newVal) => $emit('update:active-view-mode', newVal)" />
-						<!-- BEGIN: Row reorder toggle -->
-						<q-button
-							v-if="showRowDragAndDropOption"
-							b-style="secondary"
-							borderless
-							:title="texts.rowDragAndDropTitle"
-							@click="toggleShowRowDragAndDrop">
-							<q-icon icon="reorder" />
-						</q-button>
-						<!-- END: Row reorder toggle -->
-						<q-button-group>
-							<!-- BEGIN: Export menu -->
-							<q-table-export
-								v-if="allowFileExport"
-								:options="exportOptions"
-								:texts="texts"
-								@export-data="exportData">
-							</q-table-export>
-							<!-- END: Export menu -->
-							<!-- BEGIN: Import menu -->
-							<q-table-import
-								v-if="allowFileImport"
-								modal-id="data-import"
-								:options="importOptions"
-								:template-options="importTemplateOptions"
-								:data-import-response="dataImportResponse"
-								:server-mode="serverMode"
-								:texts="texts"
-								@import-data="importData"
-								@show-import-popup="$emit('show-popup', importModalProps)"
-								@hide-import-popup="$emit('hide-popup', 'data-import')"
-								@export-template="exportTemplate">
-							</q-table-import>
-							<!-- END: Import menu -->
-						</q-button-group>
-					</div>
-					<!-- END: Extra menus -->
+				class="c-action-bar">
+				<!-- BEGIN: Table title -->
+				<div class="table-title c-table__title">
+					<component
+						v-if="hasLabel"
+						:is="headerTag"
+						:id="labelId">
+						<slot
+							name="tableTitle"
+							:table-title="tableTitle">
+							{{ tableTitle }}
+						</slot>
+					</component>
+					<q-popover-help
+						v-if="popoverText"
+						:help-control="helpControl"
+						:id="id"
+						:label="tableTitle"
+						:texts="texts" />
 				</div>
+				<!-- END: Table title -->
+				<!-- BEGIN: Extra menus -->
+				<div
+					v-if="hasActionBar"
+					class="c-action-bar__menu">
+					<!-- BEGIN: Saved views menu -->
+					<q-select
+						v-if="showSavedViews"
+						:model-value="selectedViewId"
+						:items="savedViewsOptions"
+						:groups="[
+							{ id: 'user', title: '' },
+							{ id: 'system', title: '' }
+						]"
+						size="small"
+						item-value="id"
+						item-label="text"
+						@update:model-value="confirmAndSetSelectedViewById" />
+					<!-- END: Saved views menu -->
+					<!-- BEGIN: Configuration menu / button -->
+					<q-dropdown-menu
+						v-if="showConfigMenu"
+						:id="configMenuId"
+						icon="table-configuration"
+						:texts="{ title: texts.tableConfig }"
+						:options="configOptionsUse"
+						:button-options="{ borderless: true }"
+						:button-classes="['dropdown-toggle']"
+						@selected="emitConfigAction">
+						<span
+							v-if="confirmChanges"
+							class="e-badge e-badge--highlight">
+							<span aria-hidden="true"></span>
+						</span>
+					</q-dropdown-menu>
+					<!-- END: Configuration menu / button -->
+					<!-- BEGIN: Toggle show/hide filters -->
+					<div
+						v-if="hasFilters"
+						class="flex-align-center">
+						<div class="i-switch">
+							<label class="action-input">
+								<span class="i-switch__label hidden-h-elem"></span>
+								<span class="i-switch__label-text">
+									{{ texts.activeFiltersTitle }}
+								</span>
+							</label>
+						</div>
+
+						<q-toggle-input
+							:model-value="filtersVisible"
+							:title="showHideFiltersTitle"
+							:true-label="texts.showText"
+							:false-label="texts.hideText"
+							display-type="label-toggle"
+							@update:model-value="toggleShowFilters" />
+					</div>
+					<!-- END: Toggle show/hide filters -->
+					<q-table-view-mode-config
+						:model-value="$props.activeViewModeId"
+						:view-modes="$props.viewModes"
+						:texts="$props.texts"
+						@update:model-value="(newVal) => $emit('update:active-view-mode', newVal)" />
+					<!-- BEGIN: Row reorder toggle -->
+					<q-button
+						v-if="showRowDragAndDropOption && !readonly"
+						:id="controlId + '-row-reorder-btn'"
+						b-style="secondary"
+						borderless
+						:title="texts.rowDragAndDropTitle"
+						@click="toggleShowRowDragAndDrop">
+						<q-icon icon="reorder" />
+					</q-button>
+					<!-- END: Row reorder toggle -->
+					<q-button-group>
+						<!-- BEGIN: Export menu -->
+						<q-table-export
+							v-if="allowFileExport"
+							:options="exportOptions"
+							:texts="texts"
+							@export-data="exportData">
+						</q-table-export>
+						<!-- END: Export menu -->
+						<!-- BEGIN: Import menu -->
+						<q-table-import
+							v-if="allowFileImport"
+							modal-id="data-import"
+							:options="importOptions"
+							:template-options="importTemplateOptions"
+							:data-import-response="dataImportResponse"
+							:server-mode="serverMode"
+							:texts="texts"
+							@import-data="importData"
+							@show-import-popup="$emit('show-popup', importModalProps)"
+							@hide-import-popup="$emit('hide-popup', 'data-import')"
+							@export-template="exportTemplate">
+						</q-table-import>
+						<!-- END: Import menu -->
+					</q-button-group>
+				</div>
+				<!-- END: Extra menus -->
 			</div>
 			<!-- END: Table controls -->
 			<template v-if="showSearchBar">
 				<!-- BEGIN: Global search text -->
 				<q-table-search
-					v-if="globalSearch.visibility"
+					v-if="searchBarConfig.visibility"
 					:table-title="tableTitle"
 					:searchable-columns="searchableColumns"
 					:placeholder="`${texts.searchText} ${defaultSearchColumnLabel}`"
-					:classes="globalSearch.classes"
-					:case-sensitive="globalSearch.caseSensitive"
-					:search-on-press-enter="globalSearch.searchOnPressEnter"
-					:search-debounce-rate="globalSearch.searchDebounceRate"
-					:show-refresh-button="globalSearch.showRefreshButton"
-					:show-reset-button="globalSearch.showResetButton"
+					:search-prop-value="searchValue"
+					:classes="searchBarConfig.classes"
+					:case-sensitive="searchBarConfig.caseSensitive"
+					:search-on-press-enter="searchBarConfig.searchOnPressEnter"
+					:search-debounce-rate="searchBarConfig.searchDebounceRate"
+					:show-refresh-button="searchBarConfig.showRefreshButton"
+					:show-reset-button="searchBarConfig.showResetButton"
 					:texts="texts"
 					:disabled="!loaded"
+					:message="searchBarConfig.message"
 					:signal="signalSearch"
+					@set-message="(...args) => $emit('set-property', ['config', 'searchBarConfig', 'message'], ...args)"
 					@clear-global-search="clearGlobalSearch"
-					@update-global-search-handler="updateGlobalSearchHandler"
-					@update-global-search="updateGlobalSearch"
 					@search-by-column="searchByColumn"
 					@search-by-all-columns="searchByAllColumns"
 					@emit-search="searchByColumn(this.defaultSearchColumn, $event)"
@@ -150,7 +160,7 @@
 					<template #extra-buttons>
 						<!-- BEGIN: Advanced Filters -->
 						<q-button
-							v-if="config.allowAdvancedFilters"
+							v-if="allowAdvancedFilters"
 							b-style="secondary"
 							:title="texts.advancedFiltersText"
 							:disabled="!loaded"
@@ -164,7 +174,22 @@
 				</q-table-search>
 				<!-- END: Global search text -->
 			</template>
+			<q-tooltip-help
+				v-if="tooltipText"
+				:help-control="helpControl"
+				:anchor="anchorId"
+				:label="tableTitle" />
+
+			<q-info-banner-help
+				v-if="hasInfoBanner"
+				:help-control="helpControl"
+				:id="id" />
 		</div>
+
+		<q-subtitle-help
+			v-if="subtitleText"
+			:help-control="helpControl"
+			:id="id" />
 
 		<component
 			:is="isListVisible && !(rowComponent === 'q-form-container' && formName !== '') ? 'div' : 'v-fragment'"
@@ -174,32 +199,30 @@
 				v-if="hasFilters"
 				v-show="filtersVisible"
 				class="c-table__filter-row">
-				<div class="row no-gutters">
-					<q-table-static-filters
-						v-if="hasStaticFilters"
-						:texts="texts"
-						:menu-name="config.name"
-						:group-filters="groupFilters"
-						:active-filters="activeFilters"
-						@on-update-filter="updateFilters" />
+				<q-table-static-filters
+					v-if="hasStaticFilters"
+					:texts="texts"
+					:menu-name="config.name"
+					:group-filters="groupFilters"
+					:active-filters="activeFilters"
+					@update:active-filters="updateActiveFilters"
+					@update:group-filters="updateGroupFilters" />
 
-					<!-- Condition "searchableColumns.length > 0" needed because of delay in loading columns -->
-					<q-table-active-filters
-						v-if="searchableColumns.length > 0"
-						:searchable-columns="searchableColumns"
-						:advanced-filters="query.advancedFilters"
-						:column-filters="query.columnFilters"
-						:search-bar-filters="query.searchBarFilters"
-						:has-filters-active="hasCustomFilters"
-						:texts="texts"
-						:filter-operators="filterOperators"
-						@set-property="(...args) => $emit('set-property', ...args)"
-						@signal-component="(...args) => $emit('signal-component', ...args)"
-						@show-advanced-filters="(...args) => $emit('show-advanced-filters', ...args)"
-						@remove-column-filter="removeColumnFilter"
-						@remove-search-bar-filter="removeSearchBarFilter"
-						@remove-custom-filters="removeAllCustomFilters" />
-				</div>
+				<!-- Condition "searchableColumns.length > 0" needed because of delay in loading columns -->
+				<q-table-current-filters
+					v-if="searchableColumns.length > 0"
+					:searchable-columns="searchableColumns"
+					:advanced-filters="advancedFilters"
+					:column-filters="columnFilters"
+					:search-bar-filters="searchBarFilters"
+					:has-filters-active="hasCustomFilters"
+					:texts="texts"
+					:filter-operators="filterOperators"
+					@signal-component="(...args) => $emit('signal-component', ...args)"
+					@show-advanced-filters="(...args) => $emit('show-advanced-filters', ...args)"
+					@remove-column-filter="removeColumnFilter"
+					@remove-search-bar-filter="removeSearchBarFilter"
+					@remove-custom-filters="removeAllCustomFilters" />
 			</div>
 			<!-- END: Filters -->
 			<div
@@ -211,6 +234,7 @@
 					class="c-action-bar">
 					<q-table-record-actions-menu
 						:btn-permission="rowSelected?.btnPermission ?? { insertBtnDisabled: !canInsert }"
+						:action-visibility="rowSelected?.actionVisibility ?? {}"
 						:crud-actions="actionsPlacement === 'above' ? crudActions : null"
 						:custom-actions="actionsPlacement === 'above' ? customActions : null"
 						:general-actions="generalActionsPlacement === 'above' ? generalActions : null"
@@ -277,44 +301,56 @@
 				<div
 					v-else
 					:class="['table-responsive', tableContainerClasses]"
-					ref="tableContainerElem">
+					ref="tableContainerElem"
+					tabindex="0"
+					@keydown="tableOnKeyDown"
+					@focusout="tableOnFocusout">
 					<!-- FOR: COLUMN RESIZE, uses ref property -->
 					<table
 						:class="['c-table', tableClasses]"
-						ref="tableElem">
+						ref="tableElem"
+						:aria-label="tableTitle"
+						:role="type === 'TreeList' ? 'treegrid' : null">
 						<!-- BEGIN: Header -->
-						<q-table-header
-							:columns="topLevelColumns"
-							:query="query"
-							:table-name="name"
-							:readonly="tableIsReadonly"
-							:allow-column-filters="allowColumnFilters && !hasRowDragAndDrop"
-							:allow-column-sort="allowColumnSort && !hasRowDragAndDrop"
-							:searchable-columns="searchableColumns"
-							:filters="query.columnFilters"
-							:filter-operators="filterOperators"
-							:table-container-elem="tableContainerElem"
-							:row-count="rowCount"
-							:texts="texts"
-							:disabled="!loaded"
-							@update-sort="updateSortQuery"
-							@check-all-rows="checkAllRows"
-							@check-current-page-rows="checkCurrentPageRows"
-							@check-none-rows="checkNoneRows"
-							@unselect-all-rows="$emit('unselect-all-rows')"
-							@set-dropdown="(...args) => $emit('set-dropdown', ...args)"
-							@set-property="(...args) => $emit('set-property', ...args)"
-							@edit-column-filter="(...args) => editColumnFilter(...args)"
-							@remove-column-filter="(...args) => removeColumnFilter(...args)"
-							@add-advanced-filter="(...args) => $emit('add-advanced-filter', ...args)"
-							@show-advanced-filters="
-								(idx) => {
-									$emit('signal-component', 'config', { show: true, selectedTab: 'advanced-filters' }, true)
-									$emit('signal-component', 'advancedFilters', { selectedFilterIdx: idx }, true)
-								}
-							"
-							@column-resize="onColumnResize()">
-						</q-table-header>
+						<thead class="c-table__head">
+							<q-table-header
+								ref="headerRowElem"
+								:header-row="headerRow"
+								:columns="topLevelColumns"
+								row-index="h"
+								:column-sorting="columnSorting"
+								:table-name="name"
+								:readonly="tableIsReadonly"
+								:allow-column-filters="allowColumnFilters && !hasRowDragAndDrop"
+								:allow-column-sort="allowColumnSort && !hasRowDragAndDrop"
+								:allow-advanced-filters="allowAdvancedFilters"
+								:searchable-columns="searchableColumns"
+								:filters="columnFilters"
+								:filter-operators="filterOperators"
+								:table-container-elem="tableContainerElem"
+								:row-count="rowCount"
+								:texts="texts"
+								:locale="locale"
+								:disabled="!loaded"
+								@update-sort="changeInitialSort"
+								@check-all-rows="checkAllRows"
+								@check-current-page-rows="checkCurrentPageRows"
+								@check-none-rows="checkNoneRows"
+								@unselect-all-rows="$emit('unselect-all-rows')"
+								@edit-column-filter="(...args) => editColumnFilter(...args)"
+								@remove-column-filter="(...args) => removeColumnFilter(...args)"
+								@add-advanced-filter="(...args) => $emit('add-advanced-filter', ...args)"
+								@show-advanced-filters="
+									(idx) => {
+										$emit('signal-component', 'config', { show: true, selectedTab: 'advanced-filters' }, true)
+										$emit('signal-component', 'advancedFilters', { selectedFilterIdx: idx }, true)
+									}
+								"
+								@column-resize="onColumnResize()"
+								@focusin="rowOnFocusin($event)"
+								@focusout="rowOnFocusout($event)">
+							</q-table-header>
+						</thead>
 						<!-- END: Header -->
 						<tbody
 							:class="['c-table__body', { 'c-table__body--loading': !loaded }]"
@@ -336,9 +372,10 @@
 							<!-- BEGIN: data rows -->
 							<template
 								v-for="(row, index) in vbtRows"
-								:key="row.rowKey">
+								:key="row.rowKey + '_' + rowDomKey">
 								<component
 									:is="rowComponent"
+									ref="rowElems"
 									:table-name="name"
 									:id="row.rowKey"
 									:row="row"
@@ -346,6 +383,7 @@
 									:column-hierarchy="columnHierarchy"
 									:row-key-path="[row.rowKey]"
 									:row-index="index"
+									:navigated-row-key-path="navigatedRowKeyPath"
 									:prop-row-classes="getRowClasses(row)"
 									:unique-id="uniqueId"
 									:is-valid="rowIsValid(row)"
@@ -360,7 +398,6 @@
 									:show-general-action-icon="showGeneralActionIcon"
 									:show-row-action-text="showRowActionText"
 									:show-general-action-text="showGeneralActionText"
-									:enable-action-button-base-classes="enableRowActionButtonBaseClasses"
 									:readonly="tableIsReadonly"
 									:text-color="rowTextColor"
 									:bg-color="rowBgColor"
@@ -386,46 +423,36 @@
 									@update="(...args) => updateCell(...args)"
 									@update-external="(...args) => $emit('update-external', ...args)"
 									@toggle-show-children="setChildRowsVisibility"
-									@go-to-row="(...args) => goToRow(...args)" />
+									@go-to-row="(...args) => goToRow(...args)"
+									@navigate-row="(...args) => navigateToRowByMultiIndex(...args)"
+									@focusin="rowOnFocusin($event)"
+									@focusout="rowOnFocusout($event)"
+									@loaded="onRowLoaded"
+									@sub-rows-loaded="onSubRowsLoaded" />
 							</template>
 							<!-- BEGIN: No results row -->
-							<transition name="c-table-transition">
-								<tr
-									v-if="vbtRows.length === 0"
-									:class="['c-table__row--empty', { 'c-table__row--loading': !loaded }]"
-									data-testid="table-row">
-									<td :colspan="headerColSpan">
-										<slot name="empty-results">
-											<template v-if="loaded">
-												<img
-													v-if="emptyRowImgPath"
-													:src="emptyRowImgPath"
-													:alt="texts.emptyText" />
-												{{ texts.emptyText }}
-											</template>
-										</slot>
-									</td>
-								</tr>
-							</transition>
+							<tr
+								v-if="vbtRows.length === 0"
+								:class="['c-table__row--empty', { 'c-table__row--loading': !loaded }]"
+								data-testid="table-row">
+								<td :colspan="headerColSpan">
+									<slot name="empty-results">
+										<template v-if="loaded">
+											<img
+												v-if="emptyRowImgPath"
+												:src="emptyRowImgPath"
+												:alt="texts.emptyText" />
+											{{ texts.emptyText }}
+										</template>
+									</slot>
+								</td>
+							</tr>
 							<!-- END: No results row -->
 							<!-- END: data rows -->
 						</tbody>
-						<!-- BEGIN: Column totalers -->
-						<tfoot v-if="hasColumnTotals">
-							<tr
-								id="columns-sum"
-								class="columns-sum">
-								<template
-									v-for="(column, key) in columnTotals"
-									:key="key">
-									<td :class="getColumnTotalClass(column)">
-										{{ column }}
-									</td>
-								</template>
-							</tr>
-						</tfoot>
-						<tfoot v-else-if="hasNewRecordRow">
+						<tfoot v-if="hasNewRecordRow || hasColumnTotalizers">
 							<q-table-row
+								v-if="hasNewRecordRow"
 								:table-name="name"
 								:key="newRow.Rownum"
 								:row="newRow"
@@ -456,8 +483,21 @@
 									</q-button>
 								</template>
 							</q-table-row>
+
+							<!-- BEGIN: Column totalizers -->
+							<q-table-column-totalizers
+								v-if="hasColumnTotalizers"
+								:class="totalizersClasses"
+								:columns="vbtColumns"
+								:totalizers="columnTotalizers"
+								:multiple-selection="showRowsSelectedTotalizer"
+								:rows="vbtRows"
+								:selected-rows="rowsSelected"
+								:current-page="page"
+								:all-selected="vbtAllSelected"
+							/>
+							<!-- END: Column totalizers -->
 						</tfoot>
-						<!-- END: Column totalers -->
 					</table>
 				</div>
 				<!-- BEGIN: Footer -->
@@ -478,7 +518,7 @@
 						:per-page-options="unselectedPerPageOptions"
 						:has-more="hasMore"
 						:show-rows-selected-count="showRowsSelectedCount"
-						:rows-selected-count="rowsSelectedCount()"
+						:rows-selected-count="rowsSelectedCount"
 						:has-row-select-actions="hasRowSelectActions"
 						:group-actions="groupActions"
 						:show-record-count="showRecordCount"
@@ -487,6 +527,7 @@
 						:num-visibile-pagination-buttons="numVisibilePaginationButtons"
 						:show-limits="showLimits"
 						:table-limits="tableLimits"
+						:table-id="controlId"
 						:table-name-plural="tableNamePlural"
 						:texts="texts"
 						:disabled="!loaded"
@@ -512,11 +553,10 @@
 			</div>
 			<template v-else-if="activeViewMode">
 				<component
-					:is="activeViewMode.componentName"
+					v-if="activeViewMode.props"
+					:is="`q-${activeViewMode.type}`"
 					:texts="texts"
-					:list-config="config"
-					:loading="!loaded"
-					v-bind="activeViewMode"
+					v-bind="activeViewMode.props"
 					v-on="activeViewMode.handlers ?? {}">
 					<template #empty-image>
 						<img
@@ -544,7 +584,7 @@
 						:per-page-options="unselectedPerPageOptions"
 						:has-more="hasMore"
 						:show-rows-selected-count="showRowsSelectedCount"
-						:rows-selected-count="rowsSelectedCount()"
+						:rows-selected-count="rowsSelectedCount"
 						:has-row-select-actions="hasRowSelectActions"
 						:group-actions="groupActions"
 						:show-record-count="showRecordCount"
@@ -553,6 +593,7 @@
 						:num-visibile-pagination-buttons="numVisibilePaginationButtons"
 						:show-limits="showLimits"
 						:table-limits="tableLimits"
+						:table-id="controlId"
 						:table-name-plural="tableNamePlural"
 						:texts="texts"
 						:disabled="!loaded"
@@ -582,27 +623,21 @@
 
 <script>
 	import { markRaw, defineAsyncComponent } from 'vue'
-	import findIndex from 'lodash-es/findIndex'
-	import find from 'lodash-es/find'
+	import cloneDeep from 'lodash-es/cloneDeep'
 	import filter from 'lodash-es/filter'
-	import includes from 'lodash-es/includes'
-	import map from 'lodash-es/map'
+	import find from 'lodash-es/find'
+	import findIndex from 'lodash-es/findIndex'
+	import get from 'lodash-es/get'
 	import has from 'lodash-es/has'
 	import isEmpty from 'lodash-es/isEmpty'
-	import debounce from 'lodash-es/debounce'
-	import cloneDeep from 'lodash-es/cloneDeep'
 	import orderBy from 'lodash-es/orderBy'
-	import get from 'lodash-es/get'
-	import omit from 'lodash-es/omit'
-	import clone from 'lodash-es/clone'
-	import forEach from 'lodash-es/forEach'
+	import mergeWith from 'lodash-es/mergeWith'
 
 	import Sortable from 'sortablejs'
 
-	import { currencyDisplay, numericDisplay, displayMessage, validateTexts } from '@/mixins/genericFunctions.js'
-	import { tableViewManagementModes } from '@/mixins/quidgest.mainEnums.js'
 	import genericFunctions from '@/mixins/genericFunctions.js'
 	import listFunctions from '@/mixins/listFunctions.js'
+	import HelpControl from '@/mixins/helpControls.js'
 
 	import ColumnResizeable from '@/api/genio/columnResizeable.js'
 	import searchFilterData from '@/api/genio/searchFilterData.js'
@@ -619,6 +654,7 @@
 		closeText: 'Close',
 		dropToUpload: 'Drop files here to upload',
 		okText: 'OK',
+		pendingRecords: 'Warning: This record is pending, you must edit or delete it.',
 		saveText: 'Save',
 		viewText: 'View',
 		deleteText: 'Delete',
@@ -646,10 +682,9 @@
 		hideText: 'Hide',
 		filtersText: 'Filters',
 		limitsButtonTitle: 'Limit',
-		limitsListTitle_1: 'The information in the list of',
-		limitsListTitle_2: 'is limited by',
+		limitsListTitlePrepend: 'The information in the list of',
+		limitsListTitleAppend: 'is limited by',
 		textRowsSelected: 'selected record(s)',
-		hasTextWrapText: 'Line break',
 		groupActionsText: 'Group actions',
 		advancedFiltersText: 'Advanced filters',
 		moveToAdvancedFiltersText: 'Move to advanced filters',
@@ -682,6 +717,7 @@
 		inactiveText: 'Inactive',
 		showRecordsWhereText: 'Show records when',
 		visibleColumnsText: 'Visible columns',
+		invisibleColumnsHelpText: 'Invisible columns are not searchable.',
 		saveViewText: 'Save view',
 		viewManagerText: 'View manager',
 		clearResizeText: 'Clear resize',
@@ -699,7 +735,19 @@
 		noneText: 'None',
 		loading: 'Loading data...',
 		onDate: 'On:',
-		state: 'State'
+		state: 'State',
+		first: 'First',
+		last: 'Last',
+		previous: 'Previous',
+		next: 'Next',
+		MoveUp: 'Move up',
+		MoveDown: 'Move down',
+		rowAddNewAfter: 'Add new row after this one',
+		rowDragDropReorder: 'Drag and drop to change row order',
+		rowExpand: 'Expand row',
+		rowCollapse: 'Collapse row',
+		close: 'Close',
+		download: 'Download'
 	}
 
 	export default {
@@ -729,16 +777,16 @@
 			'row-group-action',
 			'row-reorder',
 			'rows-delete',
+			'rows-loaded',
 			'save-view',
 			'go-to-row',
 			'select-row',
 			'select-rows',
 			'set-array-sub-prop-where',
-			'set-dropdown',
 			'set-info-message',
 			'set-property',
 			'set-qtable-all-selected',
-			'set-search-on-next-change',
+			'set-row-index-property',
 			'show-advanced-filters',
 			'show-popup',
 			'signal-component',
@@ -751,13 +799,15 @@
 			'update-external',
 			'update-list-visible',
 			'update:active-view-mode',
+			'update:activeFilters',
+			'update:groupFilters',
 			'view-action'
 		],
 
 		components: {
 			QDropdownMenu: defineAsyncComponent(() => import('@/components/QDropdownMenu.vue')),
 			QTableStaticFilters: defineAsyncComponent(() => import('./QTableStaticFilters.vue')),
-			QTableActiveFilters: defineAsyncComponent(() => import('./QTableActiveFilters.vue')),
+			QTableCurrentFilters: defineAsyncComponent(() => import('./QTableCurrentFilters.vue')),
 			QTableHeader: defineAsyncComponent(() => import('./QTableHeader.vue')),
 			QTableFooter: defineAsyncComponent(() => import('./QTableFooter.vue')),
 			QTableSearch: defineAsyncComponent(() => import('./QTableSearch.vue')),
@@ -766,16 +816,30 @@
 			QTableExport: defineAsyncComponent(() => import('./QTableExport.vue')),
 			QTableImport: defineAsyncComponent(() => import('./QTableImport.vue')),
 			QTableRow: defineAsyncComponent(() => import('./QTableRow.vue')),
-			QTreeTableRow: defineAsyncComponent(() => import('./QTreeTableRow.vue'))
+			QTreeTableRow: defineAsyncComponent(() => import('./QTreeTableRow.vue')),
+			QPopoverHelp: defineAsyncComponent(() => import('@/components/QPopoverHelp.vue')),
+			QTooltipHelp: defineAsyncComponent(() => import('@/components/QTooltipHelp.vue')),
+			QSubtitleHelp: defineAsyncComponent(() => import('@/components/QSubtitleHelp.vue')),
+			QInfoBannerHelp: defineAsyncComponent(() => import('@/components/QInfoBannerHelp.vue'))
 		},
 
 		inheritAttrs: false,
+
+		mixins: [HelpControl],
 
 		props: {
 			/**
 			 * The unique identifier for the table component instance.
 			 */
 			id: String,
+
+			/**
+			 * Flag indicating if the label is to be displayed.
+			 */
+			hasLabel: {
+				type: Boolean,
+				default: true
+			},
 
 			/**
 			 * The array of data objects that represents each row of data in the table.
@@ -791,6 +855,14 @@
 			columns: {
 				type: Array,
 				required: true
+			},
+
+			/**
+			 * The list of column totalizers, identified by the columns's area and field
+			 */
+			columnTotalizers: {
+				type: Array,
+				default: () => []
 			},
 
 			/**
@@ -838,7 +910,7 @@
 			 */
 			texts: {
 				type: Object,
-				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
+				validator: (value) => genericFunctions.validateTexts(DEFAULT_TEXTS, value),
 				default: () => DEFAULT_TEXTS
 			},
 
@@ -854,6 +926,14 @@
 			 * Custom classes added to the table's surrounding container element.
 			 */
 			classes: {
+				type: [Array, String],
+				default: () => []
+			},
+
+			/**
+			 * Custom classes added to the table's surrounding container element, only when in normal table mode.
+			 */
+			tableModeClasses: {
 				type: [Array, String],
 				default: () => []
 			},
@@ -883,6 +963,14 @@
 			},
 
 			/**
+			 * Size of the table.
+			 */
+			size: {
+				type: String,
+				default: ''
+			},
+
+			/**
 			 * An array of actions that can be performed on the entire table, such as adding or exporting rows.
 			 */
 			actions: {
@@ -891,11 +979,11 @@
 			},
 
 			/**
-			 * Tracks the current state to determine if the next data change should trigger a re-fetch.
+			 * Search value to use for searching all columns.
 			 */
-			searchOnNextChange: {
-				type: Object,
-				default: () => ({})
+			searchValue: {
+				type: String,
+				default: ''
 			},
 
 			/**
@@ -915,6 +1003,14 @@
 			},
 
 			/**
+			 * Definition of filters applied to individual table columns from the search bar, often representing a subset of the total filters being used.
+			 */
+			searchBarFilters: {
+				type: Object,
+				default: () => ({})
+			},
+
+			/**
 			 * Definition of global filters that apply generalized filtering criteria outside individual columns.
 			 */
 			groupFilters: {
@@ -926,6 +1022,14 @@
 			 * Object representing filters that are currently active and affecting the table data.
 			 */
 			activeFilters: {
+				type: Object,
+				default: () => ({})
+			},
+
+			/**
+			 * Object representing the column sorting.
+			 */
+			columnSorting: {
 				type: Object,
 				default: () => ({})
 			},
@@ -1059,11 +1163,29 @@
 			},
 
 			/**
+			 * Object with properties for the header row.
+			 */
+			headerRow: {
+				type: Object,
+				default: () => ({
+					isNavigated: false
+				})
+			},
+
+			/**
 			 * Indicates if the component has finished loading necessary data and can be interacted with or not.
 			 */
 			loaded: {
 				type: Boolean,
 				default: true
+			},
+
+			/**
+			 * Current system locale
+			 */
+			locale: {
+				type: String,
+				default: 'en-US'
 			}
 		},
 
@@ -1072,32 +1194,23 @@
 		data()
 		{
 			return {
-				controlId: this.id || `q-table-${this._.uid}`,
+				controlId: this.id || this.config.name || `q-table-${this._.uid}`,
 				vbtRows: [],
 				vbtColumns: [],
 				columnHierarchy: [],
 				name: '',
-				query: {
-					sort: [],
-					advancedFilters: [],
-					columnFilters: {},
-					searchBarFilters: {},
-					groupFilters: [],
-					activeFilters: {},
-					globalSearch: ''
-				},
 				page: 1,
 				perPage: 10,
-				defaultPerPage: 10,
+				perPageDefault: 10,
 				showRecordCount: false,
-				numVisibilePaginationButtons: 5,
+				showRowsSelectedTotalizer: false,
+				numVisibilePaginationButtons: undefined,
 				tempFilteredResults: [],
 				pagination: true,
-				multiColumnSort: false,
 				cardTitle: '',
 				tableTitle: '',
 				tableNamePlural: '',
-				globalSearch: {
+				searchBarConfig: {
 					classes: '',
 					visibility: false,
 					caseSensitive: false,
@@ -1110,8 +1223,10 @@
 						value: ''
 					}
 				},
+				allowColumnSort: false,
 				allowColumnFilters: false,
 				allowColumnResize: true,
+				allowAdvancedFilters: false,
 				perPageOptions: [],
 				serverMode: false,
 				numRows: 0,
@@ -1120,28 +1235,32 @@
 				isResponsive: false,
 				preservePageOnDataChange: false,
 				canEmitQueries: false,
-				emitQueryParamsOnLoad: false,
+				changeQueryOnLoad: false,
 				canInsert: true,
 				crudActions: [],
 				customActions: [],
+				generalActions: [],
+				generalCustomActions: [],
 				addAction: {},
 				rowClickAction: {},
+				rowActionClasses: {},
+				rowActionDisplay: 'dropdown',
+				showRowActionIcon: true,
+				showGeneralActionIcon: true,
+				showRowActionText: true,
+				showGeneralActionText: true,
 				actionsPlacement: 'left',
 				generalActionsPlacement: 'below',
+				rowClickActionInternal: '',
+				extendedActions: [],
 				paginationPlacement: 'left',
 				lcid: 'pt-PT',
 				system: 0,
 				pkColumn: '',
 				menuForJump: '',
 				groupActions: [],
-				showColumnTotals: false,
-				showColumnTotalsSelected: false,
 				showRowsSelectedCount: false,
 				showAlternatePagination: false,
-				numberFormat: {
-					decimalSeparator: ',',
-					groupSeparator: '.'
-				},
 				dateFormats: {
 					date: 'dd/MM/yyyy',
 					dateTime: 'dd/MM/yyyy HH:mm',
@@ -1151,6 +1270,7 @@
 				},
 				rowTextColor: '',
 				rowBgColor: '',
+				rowBgColorSelected: '#E0E0E0',
 				filtersVisible: false,
 				staticFiltersVisible: true,
 				allowFileExport: false,
@@ -1159,7 +1279,6 @@
 				importOptions: [],
 				importTemplateOptions: [],
 				showLimitsInfo: false,
-				viewManagementMode: tableViewManagementModes.disabled,
 				showImportResponsePopup: false,
 				showFooter: true,
 				resizableGrid: null,
@@ -1173,12 +1292,14 @@
 					Fields: {}
 				},
 				rowKeyToScroll: '',
-				UserTableConfigName: '',
-				UserTableConfigNames: [],
-				selectedViewId: 0,
-				initialSortColumnName: '',
-				initialSortColumnOrder: '',
+				userTableConfigName: '',
+				userTableConfigNames: [],
+				defaultColumnSorting: {
+					columnName: '',
+					sortOrder: 'asc'
+				},
 				defaultSearchColumnName: '',
+				columnSizes: [],
 				columnResizeOptions: {},
 				tableContainerElem: {},
 				importModalProps: {
@@ -1189,13 +1310,52 @@
 						closeButtonEnable: true
 					}
 				},
+				configOptions: [],
+				configOptionsUse: [],
+				permissions: {},
 				signalSearch: {},
 
 				// SortableJS plugin instance
 				sortablePlugin: null,
 
 				blockTableCheck: false,
-				vbtAllSelected: this.allSelectedRows === 'true'
+				vbtAllSelected: this.allSelectedRows === 'true',
+				/**
+				 * Row key path of navigated row
+				 */
+				navigatedRowKeyPath: null,
+				/**
+				 * Index of navigated row in the array of all navigable row elements
+				 */
+				navRowIndex: null,
+				/**
+				 * Whether to navigate to the element that should be navigated to when the component is updated
+				 */
+				setNavOnUpdate: false,
+				/**
+				 * Array of all navigable row elements
+				 */
+				navRowElems: [],
+				/**
+				 * Index of the first data row in the array of all navigable row elements.
+				 * Can be 0 or 1 depending on whether the header row has navigable elements.
+				 */
+				firstDataRowIndex: 0,
+				/**
+				 * Number of rows that need to be rendered when the row data changes
+				 */
+				rowsToLoad: 0,
+				/**
+				 * Used to change the key for each row component to cause them to re-render when changing row data.
+				 * All rows are re-rendered so that when the number of rendered rows matches the number of row objects
+				 * loaded, an emit can be done to signal that the rendering is totally done.
+				 * Used by things that depend on certain HTML elements existing.
+				 */
+				rowDomKey: 0,
+				/**
+				 * Whether the rows should be re-rendered when the row data changes.
+				 */
+				rerenderRowsOnNextChange: true
 			}
 		},
 
@@ -1211,6 +1371,8 @@
 				isExtendedActionsColumn: this.isExtendedActionsColumn,
 				isChecklistColumn: this.isChecklistColumn,
 				isDragAndDropColumn: this.isDragAndDropColumn,
+				isTotalizerColumn: this.isTotalizerColumn,
+				isDataColumn: this.isDataColumn,
 				getRowClasses: this.getRowClasses,
 				getRowTitle: this.getRowTitle,
 				rowIsValid: this.rowIsValid,
@@ -1227,7 +1389,6 @@
 		created()
 		{
 			this.initConfig()
-			this.defaultPerPage = this.perPage
 		},
 
 		mounted()
@@ -1240,7 +1401,9 @@
 			*/
 			this.vbtRows = this.rows
 
-			this.updateRows(this.rows)
+			// FOR: GETTING NAVIGABLE ROW ELEMENTS
+			// Track number of rows to render
+			this.setRowsToLoad()
 
 			if (this.showRowDragAndDropOption) this.perPage = -1
 
@@ -1251,10 +1414,7 @@
 			//Must be called when loading or changing columns
 			this.updateColumns()
 
-			if (this.globalSearch.visibility) this.$nextTick().then(() => this.initGlobalSearch())
-
-			this.query.advancedFilters = this.advancedFilters
-			this.query.columnFilters = this.columnFilters
+			if (this.searchBarConfig.visibility) this.$nextTick().then(() => this.initGlobalSearch())
 
 			this.$nextTick().then(() => {
 				if (!this.serverMode)
@@ -1264,7 +1424,7 @@
 				{
 					this.canEmitQueries = true
 
-					if (this.emitQueryParamsOnLoad !== false) this.emitQueryParams()
+					if (this.changeQueryOnLoad !== false) this.changeQuery()
 
 					this.$emit('loaded')
 				}
@@ -1291,10 +1451,7 @@
 
 			this.initRowsDragAndDrop()
 
-			this.selectedViewId = this.getViewIdByName(this.UserTableConfigName)
 
-			// Set static filters in query property since this is what's sent when searching or filtering
-			this.query.groupFilters = this.groupFilters
 		},
 
 		updated()
@@ -1303,25 +1460,31 @@
 			//and so the property can be passed as a prop to other componenents
 			//so they will react to the change (when the DOM element finally exists)
 			this.tableContainerElem = Array.isArray(this.$refs.tableContainerElem) ? this.$refs.tableContainerElem[0] : this.$refs.tableContainerElem
+
+			// Update table navigation properties
+			if(this.setNavOnUpdate)
+			{
+				this.$emit('set-property', ['config', 'setNavOnUpdate'], false)
+
+				this.$nextTick().then(()=> {
+					this.navigateToTableRowAction('first')
+				})
+			}
 		},
 
 		beforeUnmount()
 		{
-			window.removeEventListener('keyup', this._handleShiftKey)
-			window.removeEventListener('keydown', this._handleShiftKey)
-			document.removeEventListener('selectstart', this._documentOnselectstart)
+			window.removeEventListener('keyup', this.handleShiftKeyOnSelectStart)
+			window.removeEventListener('keydown', this.handleShiftKeyOnSelectStart)
+			document.removeEventListener('selectstart', this.documentOnSelectStart)
 
 			this.destroyRowsDragAndDrop()
 
 			if (this.resizableGrid)
 			{
-				this.resizableGrid.Destroy()
+				this.resizableGrid.destroy()
 				this.resizableGrid = null
 			}
-
-			this.vbtColumns.splice(0)
-			this.vbtRows.splice(0)
-			this.tempFilteredResults.splice(0)
 		},
 
 		computed: {
@@ -1352,36 +1515,36 @@
 			},
 
 			/**
-			 * Determine if the columns have totals.
+			 * Determine if there are columns with totalizers.
 			 */
-			hasColumnTotals()
+			hasColumnTotalizers()
 			{
-				if (!this.showColumnTotals && !this.columnTotalRowsSelected) return false
-
-				return Object.values(this.columnTotals).find((e) => e !== '')
+				return this.columns.some(column => column.totalizer && listFunctions.isVisibleColumn(column)) && this.vbtRows.length > 0
 			},
 
 			/**
-			 * Calculate the column totals for display.
+			 * Get CSS classes for the row of totalizers.
+			 * @returns The class list.
 			 */
-			columnTotals()
+			totalizersClasses()
 			{
-				const totals = {}
+				const classes = ['q-table-list__column-totalizers']
 
-				for (let column of this.vbtColumns)
-				{
-					if (this.canShowColumn(column))
-					{
-						let totalVal = ''
+				if (this.hasNewRecordRow)
+					classes.push('q-table-list__column-totalizers--new-record')
 
-						if (this.showColumnTotals) totalVal = this.getColumnTotalValueDisplay(column)
-						else if (this.columnTotalRowsSelected) totalVal = this.getColumnTotalValueDisplay(column, true)
+				return classes
+			},
 
-						totals[column.name] = totalVal
-					}
-				}
+			/**
+			 * Get CSS classes for the table size.
+			 * @returns The class list.
+			 */
+			sizeClass()
+			{
+				const sizes = ['large', 'xlarge', 'xxlarge']
 
-				return totals
+				return sizes.includes(this.size) ? `q-table-list--${this.size}` : ''
 			},
 
 			/**
@@ -1520,7 +1683,7 @@
 			 */
 			showSearchBar()
 			{
-				return this.globalSearch.visibility
+				return this.searchBarConfig.visibility
 			},
 
 			/**
@@ -1568,11 +1731,11 @@
 			},
 
 			/**
-			 * Determine if the column totals row should be visible based on selected rows count.
+			 * Number of rows selected
 			 */
-			columnTotalRowsSelected()
+			rowsSelectedCount()
 			{
-				return this.showColumnTotalsSelected && this.rowsSelectedCount() > 0
+				return Object.keys(this.rowsSelected).length
 			},
 
 			/**
@@ -1589,14 +1752,6 @@
 			sortableColumns()
 			{
 				return listFunctions.getSortableColumns(this.columns)
-			},
-
-			/**
-			 * A debounced function that updates the global search, preventing frequent calls during rapid input.
-			 */
-			updateGlobalSearch()
-			{
-				return debounce(this.updateGlobalSearchHandler, this.globalSearch.searchDebounceRate)
 			},
 
 			/**
@@ -1673,7 +1828,7 @@
 			 */
 			hasAdvancedFilters()
 			{
-				return this.query.advancedFilters.length > 0
+				return this.advancedFilters.length > 0
 			},
 
 			/**
@@ -1691,11 +1846,11 @@
 			{
 				const advancedFiltersActive = []
 
-				for (let idx in this.query.advancedFilters)
+				for (let idx in this.advancedFilters)
 				{
-					const filter = this.query.advancedFilters[idx]
+					const filter = this.advancedFilters[idx]
 
-					if (filter.Active !== false) advancedFiltersActive.push(filter)
+					if (filter.active !== false) advancedFiltersActive.push(filter)
 				}
 
 				return advancedFiltersActive
@@ -1706,7 +1861,7 @@
 			 */
 			hasColumnFilters()
 			{
-				return Object.keys(this.query.columnFilters).length > 0
+				return Object.keys(this.columnFilters).length > 0
 			},
 
 			/**
@@ -1714,7 +1869,7 @@
 			 */
 			hasSearchBarFilters()
 			{
-				return Object.keys(this.query.searchBarFilters).length > 0
+				return Object.keys(this.searchBarFilters).length > 0
 			},
 
 			/**
@@ -1723,9 +1878,9 @@
 			hasTableViewLoaded()
 			{
 				return (
-					this.config.UserTableConfigName !== undefined &&
-					this.config.UserTableConfigName !== null &&
-					this.config.UserTableConfigName !== ''
+					this.config.userTableConfigName !== undefined &&
+					this.config.userTableConfigName !== null &&
+					this.config.userTableConfigName !== ''
 				)
 			},
 
@@ -1842,14 +1997,6 @@
 			},
 
 			/**
-			 * Determine which column is used for initial sorting.
-			 */
-			initialSortColumn()
-			{
-				return find(this.vbtColumns, (col) => col.name === this.initialSortColumnName)
-			},
-
-			/**
 			 * Determine if the list view is enabled.
 			 */
 			isListVisible()
@@ -1916,14 +2063,14 @@
 			 */
 			savedViewsOptions()
 			{
-				if (!this.UserTableConfigNames) return []
+				if (!this.userTableConfigNames) return []
 
 				let viewIdx = 1
 				const savedViewsOptions = []
 
-				for (const idx in this.UserTableConfigNames)
+				for (const idx in this.userTableConfigNames)
 				{
-					const configName = this.UserTableConfigNames[idx]
+					const configName = this.userTableConfigNames[idx]
 					savedViewsOptions.push({
 						id: viewIdx,
 						text: configName,
@@ -1954,12 +2101,20 @@
 			},
 
 			/**
+			 * The ID of the selected table view.
+			 */
+			selectedViewId()
+			{
+				return this.getViewIdByName(this.userTableConfigName)
+			},
+
+			/**
 			 * Determine whether to show table view configuration dropdown menu.
 			 */
 			showConfigMenu()
 			{
 				return (
-					this.config.allowManageViews || (this.config.allowColumnConfiguration && this.isListVisible) || this.config.allowAdvancedFilters
+					this.config.allowManageViews || (this.config.allowColumnConfiguration && this.isListVisible) || (this.config.allowAdvancedFilters && this.hasAdvancedFilters)
 				)
 			},
 
@@ -1968,7 +2123,7 @@
 			 */
 			unselectedPerPageOptions()
 			{
-				const perPageOptions = this.perPageOptions.concat([this.defaultPerPage]).sort((a, b) => a - b)
+				const perPageOptions = this.perPageOptions.concat([this.perPageDefault]).sort((a, b) => a - b)
 				return perPageOptions.filter((item, pos) => item !== this.perPage && perPageOptions.indexOf(item) === pos)
 			},
 
@@ -1979,7 +2134,7 @@
 			{
 				return listFunctions.getPerPageMenuVisible(
 					this.perPageOptions,
-					this.defaultPerPage,
+					this.perPageDefault,
 					this.rowCount,
 					this.page,
 					this.showAlternatePagination,
@@ -1998,7 +2153,16 @@
 				if (resourcesPath[resourcesPath.length - 1] !== '/') resourcesPath += '/'
 
 				return resourcesPath + this.config.emptyRowImg
-			}
+			},
+
+			labelId() {
+				return `label_${this.controlId}`
+			},
+
+			hasInfoBanner() {
+				if(!this.helpControl) return false
+				return this.helpControl.shortHelp.type === 'Info-banner' || this.helpControl.detailedHelp?.type === 'Info-banner'
+			},
 		},
 
 		methods: {
@@ -2009,6 +2173,8 @@
 			isExtendedActionsColumn: listFunctions.isExtendedActionsColumn,
 			isChecklistColumn: listFunctions.isChecklistColumn,
 			isDragAndDropColumn: listFunctions.isDragAndDropColumn,
+			isTotalizerColumn: listFunctions.isTotalizerColumn,
+			isDataColumn: listFunctions.isDataColumn,
 			hasExtendedAction: listFunctions.hasExtendedAction,
 			hasDataAction: listFunctions.hasDataAction,
 			rowWithoutChildren: listFunctions.rowWithoutChildren,
@@ -2018,216 +2184,378 @@
 			 */
 			initConfig()
 			{
-				if (isEmpty(this.config)) return
+				// Merge properties of config prop
+				// Replace arrays with the new values instead of merging
+				mergeWith(this, this.config, (objValue, srcValue) => {
+					if(Array.isArray(objValue) && Array.isArray(srcValue))
+						return srcValue
+				})
+			},
 
-				this.pagination = has(this.config, 'pagination') ? this.config.pagination : true
+			/**
+			 * Get navigation row index from the row's multi-index
+			 * @param multiIndex {string} Row multi-index
+			 */
+			getNavRowIndexFromMultiIndex(multiIndex)
+			{
+				return this.navRowElems.findIndex((elem) => {
+					return elem?.getAttribute('index')?.toString() === multiIndex.toString()
+				})
+			},
 
-				this.numVisibilePaginationButtons = has(this.config, 'numVisibilePaginationButtons') ? this.config.numVisibilePaginationButtons : 5
+			/**
+			 * Get table action sub-elements of a given element
+			 * @param element {DOMElement} DOM element
+			 */
+			getTableRowActionElements(element)
+			{
+				const actionElements = []
 
-				this.perPageOptions = has(this.config, 'perPageOptions') ? this.config.perPageOptions : []
+				// Set main element as first if it has the attribute
+				if(element?.hasAttribute('data-table-action-selected'))
+					actionElements.push(element)
 
-				this.perPage = has(this.config, 'perPage') ? this.config.perPage : 10
+				// Get sub-elements
+				const actionSubElementsNodeList = element?.querySelectorAll("[data-table-action-selected]")
+				if(actionSubElementsNodeList !== undefined && actionSubElementsNodeList !== null)
+					actionElements.push(...Array.from(actionSubElementsNodeList))
 
-				this.page = has(this.config, 'page') ? this.config.page : 1
+				return actionElements
+			},
 
-				this.emitQueryParamsOnLoad = has(this.config, 'emitQueryParamsOnLoad') ? this.config.emitQueryParamsOnLoad : false
+			/**
+			 * Reset table action properties of sub-elements of a given element
+			 * @param rowIndex {number} Row index
+			 */
+			resetTableRowActionProperties(rowIndex)
+			{
+				if(rowIndex === undefined || rowIndex === null)
+					return
 
-				this.showRecordCount = has(this.config, 'showRecordCount') ? this.config.showRecordCount : false
-
-				this.multiColumnSort = has(this.config, 'multiColumnSort') ? this.config.multiColumnSort : false
-
-				this.cardTitle = has(this.config, 'cardTitle') ? this.config.cardTitle : ''
-
-				this.tableTitle = has(this.config, 'tableTitle') ? this.config.tableTitle : ''
-
-				this.tableNamePlural = has(this.config, 'tableNamePlural') ? this.config.tableNamePlural : ''
-
-				if (has(this.config, 'globalSearch'))
+				const rowElems = this.navRowElems
+				if(rowElems.length > 0)
 				{
-					this.globalSearch.visibility = has(this.config.globalSearch, 'visibility') ? this.config.globalSearch.visibility : false
-					this.globalSearch.caseSensitive = has(this.config.globalSearch, 'caseSensitive') ? this.config.globalSearch.caseSensitive : false
-					this.globalSearch.showRefreshButton = has(this.config.globalSearch, 'showRefreshButton')
-						? this.config.globalSearch.showRefreshButton
-						: true
-					this.globalSearch.showResetButton = has(this.config.globalSearch, 'showResetButton')
-						? this.config.globalSearch.showResetButton
-						: false
-					this.globalSearch.showClearButton = has(this.config.globalSearch, 'showClearButton')
-						? this.config.globalSearch.showClearButton
-						: false
-					this.globalSearch.searchOnPressEnter = has(this.config.globalSearch, 'searchOnPressEnter')
-						? this.config.globalSearch.searchOnPressEnter
-						: true
-					this.globalSearch.searchDebounceRate = has(this.config.globalSearch, 'searchDebounceRate')
-						? this.config.globalSearch.searchDebounceRate
-						: 60
-					this.globalSearch.classes = has(this.config.globalSearch, 'classes') ? this.config.globalSearch.classes : ''
-					this.globalSearch.init.value = has(this.config.globalSearch, 'init.value') ? this.config.globalSearch.init.value : ''
+					// Clear the state for all action elements in this row
+					let actionElements = this.getTableRowActionElements(rowElems[rowIndex])
+					actionElements.forEach((actionElement) => {
+						actionElement.setAttribute('data-table-action-selected', 'false')
+					})
 				}
+			},
 
-				this.filtersVisible = has(this.config, 'filtersVisible') ? this.config.filtersVisible : false
+			/**
+			 * Reset table action state
+			 * @param rowIndex {number} Row index
+			 */
+			resetTableRowActionState(rowIndex)
+			{
+				// Reset action element properties
+				this.resetTableRowActionProperties(rowIndex)
 
-				this.allowColumnFilters = has(this.config, 'allowColumnFilters') ? this.config.allowColumnFilters : false
-
-				this.allowColumnSort = has(this.config, 'allowColumnSort') ? this.config.allowColumnSort : false
-
-				this.serverMode = has(this.config, 'serverMode') ? this.config.serverMode : false
-
-				this.cardMode = has(this.config, 'cardMode') ? this.config.cardMode : false
-
-				this.preservePageOnDataChange = has(this.config, 'preservePageOnDataChange') ? this.config.preservePageOnDataChange : false
-
-				this.permissions = has(this.config, 'permissions') ? this.config.permissions : {}
-
-				this.canInsert = get(this.config, 'canInsert', true)
-
-				this.crudActions = has(this.config, 'crudActions') ? this.config.crudActions : []
-
-				this.customActions = has(this.config, 'customActions') ? this.config.customActions : []
-
-				this.generalActions = has(this.config, 'generalActions') ? this.config.generalActions : []
-
-				this.generalCustomActions = has(this.config, 'generalCustomActions') ? this.config.generalCustomActions : []
-
-				this.rowActionDisplay = has(this.config, 'rowActionDisplay') ? this.config.rowActionDisplay : 'dropdown'
-
-				this.rowClickAction = has(this.config, 'rowClickAction') ? this.config.rowClickAction : {}
-
-				this.rowClickActionInternal = has(this.config, 'rowClickActionInternal') ? this.config.rowClickActionInternal : ''
-
-				this.menuForJump = has(this.config, 'menuForJump') ? this.config.menuForJump : ''
-
-				this.groupActions = has(this.config, 'groupActions') ? this.config.groupActions : []
-
-				this.actionsPlacement = has(this.config, 'actionsPlacement') ? this.config.actionsPlacement : 'left'
-
-				this.generalActionsPlacement = has(this.config, 'generalActionsPlacement') ? this.config.generalActionsPlacement : 'below'
-
-				this.rowActionClasses = has(this.config, 'rowActionClasses') ? this.config.rowActionClasses : {}
-
-				this.enableRowActionButtonBaseClasses = has(this.config, 'enableRowActionButtonBaseClasses')
-					? this.config.enableRowActionButtonBaseClasses
-					: true
-
-				this.showRowActionIcon = has(this.config, 'showRowActionIcon') ? this.config.showRowActionIcon : true
-
-				this.showGeneralActionIcon = has(this.config, 'showGeneralActionIcon') ? this.config.showGeneralActionIcon : true
-
-				this.showRowActionText = has(this.config, 'showRowActionText') ? this.config.showRowActionText : true
-
-				this.showGeneralActionText = has(this.config, 'showGeneralActionText') ? this.config.showGeneralActionText : true
-
-				this.paginationPlacement = has(this.config, 'paginationPlacement') ? this.config.paginationPlacement : 'left'
-
-				this.extendedActions = has(this.config, 'extendedActions') ? this.config.extendedActions : []
-
-				this.lcid = has(this.config, 'lcid') ? this.config.lcid : 'pt-PT'
-
-				this.system = has(this.config, 'system') ? this.config.system : 0
-
-				this.name = has(this.config, 'name') ? this.config.name : ''
-
-				this.pkColumn = has(this.config, 'pkColumn') ? this.config.pkColumn : ''
-
-				this.showColumnTotals = has(this.config, 'showColumnTotals') ? this.config.showColumnTotals : false
-
-				this.showColumnTotalsSelected = has(this.config, 'showColumnTotalsSelected') ? this.config.showColumnTotalsSelected : false
-
-				this.showRowsSelectedCount = has(this.config, 'showRowsSelectedCount') ? this.config.showRowsSelectedCount : false
-
-				this.allowFileExport = has(this.config, 'allowFileExport') ? this.config.allowFileExport : false
-
-				this.exportOptions = has(this.config, 'exportOptions') ? this.config.exportOptions : []
-
-				this.allowFileImport = has(this.config, 'allowFileImport') ? this.config.allowFileImport : false
-
-				this.importOptions = has(this.config, 'importOptions') ? this.config.importOptions : []
-
-				this.importTemplateOptions = has(this.config, 'importTemplateOptions') ? this.config.importTemplateOptions : []
-
-				this.showLimitsInfo = has(this.config, 'showLimitsInfo') ? this.config.showLimitsInfo : false
-
-				this.configOptions = has(this.config, 'configOptions') ? this.config.configOptions : []
-
-				this.viewManagementMode = has(this.config, 'viewManagement') ? this.config.viewManagement : 'N'
-
-				this.showFooter = has(this.config, 'showFooter') ? this.config.showFooter : true
-
-				this.showImportResponsePopup = has(this.config, 'showImportResponsePopup') ? this.config.showImportResponsePopup : ''
-
-				this.showAlternatePagination = has(this.config, 'showAlternatePagination') ? this.config.showAlternatePagination : false
-
-				this.hasRowDragAndDrop = has(this.config, 'hasRowDragAndDrop') ? this.config.hasRowDragAndDrop : false
-
-				this.showRowDragAndDropOption = has(this.config, 'showRowDragAndDropOption') ? this.config.showRowDragAndDropOption : false
-
-				if (has(this.config, 'numberFormat'))
+				// If focus is left on an element that is inconsistent with the navigation state
+				// focus on the table container element
+				if(document.activeElement?.getAttribute('data-table-action-selected') === 'false')
 				{
-					this.numberFormat.decimalSeparator = has(this.config.numberFormat, 'decimalSeparator')
-						? this.config.numberFormat.decimalSeparator
-						: ','
-					this.numberFormat.groupSeparator = has(this.config.numberFormat, 'groupSeparator') ? this.config.numberFormat.groupSeparator : '.'
-				} else
-				{
-					this.numberFormat = {
-						decimalSeparator: ',',
-						groupSeparator: '.'
+					const tableContainerElem = this.getTableContainerElement()
+					tableContainerElem?.focus()
+				}
+			},
+
+			/**
+			 * Focus on the next or previous action sub-element of a given element
+			 * @param actionElements {DOMElement} DOM element
+			 * @param direction {string} Direction to move focus ("first", "next" or "previous")
+			 */
+			focusTableRowActionElement(actionElements, direction = "first")
+			{
+				if(actionElements === undefined || actionElements === null || actionElements.length === 0)
+					return
+
+				let isFocused = false
+
+				// Set value to add or subtract from index based on direction value
+				const directionIdx = direction === "next" ? 1 : -1
+
+				// Find focused element and focus on the next one if it exists
+				actionElements.every((actionElement, index, array) => {
+					// If element is focused
+					if(actionElement.getAttribute('data-table-action-selected') === 'true')
+					{
+						// If focusing on the first element, set all others to false
+						if(direction === 'first')
+						{
+							actionElement.setAttribute('data-table-action-selected', 'false')
+							return true
+						}
+
+						isFocused = true
+
+						// Prevent going out of bounds for adjacentActionElement
+						if((directionIdx === 1 && index >= array.length - 1)
+							|| (directionIdx === -1 && index === 0))
+							return false
+
+						const adjacentActionElement = actionElements[index + directionIdx]
+						if(typeof adjacentActionElement.focus === 'function')
+						{
+							actionElement.setAttribute('data-table-action-selected', 'false')
+							adjacentActionElement.setAttribute('data-table-action-selected', 'true')
+							adjacentActionElement.focus()
+							return false
+						}
 					}
+					// If element is not focused go to next iteration
+					return true
+				})
+
+				// None of the elements are focused. Focus on the first one.
+				if(!isFocused && typeof actionElements[0].focus === 'function')
+				{
+					actionElements[0].setAttribute('data-table-action-selected', 'true')
+					actionElements[0].focus()
+				}
+			},
+
+			/**
+			 * Navigate to next or previous row action
+			 * @param direction {string} Direction to move focus ("first", "next" or "previous")
+			 */
+			navigateToTableRowAction(direction)
+			{
+				// Find action elements and focus on adjacent one
+				const rowElems = this.navRowElems
+				if(rowElems.length === 0)
+					return
+				let actionElements = this.getTableRowActionElements(rowElems[this.navRowIndex])
+				this.focusTableRowActionElement(actionElements, direction)
+			},
+
+			/**
+			 * Navigate to row
+			 * @param index {number} Index of row to navigate to
+			 */
+			navigateToRow(index)
+			{
+				const rowElems = this.navRowElems
+
+				// Check index bounds
+				if(index < 0 || index >= rowElems?.length)
+					return
+
+				// Navigate to row
+				if(this.navRowIndex === undefined || this.navRowIndex === null)
+					this.navRowIndex = 0
+
+				if(index !== this.navRowIndex)
+				{
+					// Reset state, including properties, of action elements of current row
+					this.resetTableRowActionState(this.navRowIndex)
 				}
 
-				if (has(this.config, 'dateFormats'))
+				this.navRowIndex = index
+
+				// Find action elements and focus on first one
+				this.$nextTick().then(()=> {
+					this.navigateToTableRowAction('first')
+				})
+			},
+
+			/**
+			 * Navigate to row by multi-index
+			 * @param multiIndex {string} Row multi-index
+			 */
+			navigateToRowByMultiIndex(multiIndex)
+			{
+				this.navigateToRow(this.getNavRowIndexFromMultiIndex(multiIndex))
+			},
+
+			/**
+			 * Reset table navigation state
+			 */
+			resetNavigationState()
+			{
+				// Reset state, including properties, of action elements of current row
+				this.resetTableRowActionState(this.navRowIndex)
+				// Reset row index
+				this.navRowIndex = null
+			},
+
+			/**
+			 * Focusout handler for table
+			 * @param event {object} event object
+			 */
+			tableOnFocusout(event)
+			{
+				const tableContainerElem = this.getTableContainerElement()
+				// If focus is on the table or sub-element of the table
+				// Logically the focus is on the table
+				if(event.relatedTarget === tableContainerElem
+					|| tableContainerElem.contains(event.relatedTarget))
+					return
+
+				this.resetNavigationState()
+			},
+
+			/**
+			 * Keydown handler for table
+			 * FOR: TABLE KEYBOARD OPERATION
+			 * @param event {object} Event object
+			 */
+			tableOnKeyDown(event)
+			{
+				const key = event?.key
+				const tableContainerElem = this.getTableContainerElement()
+
+				switch(key)
 				{
-					this.dateFormats.date = has(this.config.dateFormats, 'date') ? this.config.dateFormats.date : 'dd/MM/yyyy'
-					this.dateFormats.dateTime = has(this.config.dateFormats, 'dateTime') ? this.config.dateFormats.dateTime : 'dd/MM/yyyy HH:mm'
-					this.dateFormats.dateTimeSeconds = has(this.config.dateFormats, 'dateTimeSeconds')
-						? this.config.dateFormats.dateTimeSeconds
-						: 'dd/MM/yyyy HH:mm:ss'
-					this.dateFormats.hours = has(this.config.dateFormats, 'hours') ? this.config.dateFormats.hours : 'HH:mm'
-					this.dateFormats.use12Hour = has(this.config.dateFormats, 'use12Hour') ? this.config.dateFormats.use12Hour : false
-				} else
-				{
-					this.dateFormats = {
-						date: 'dd/MM/yyyy',
-						dateTime: 'dd/MM/yyyy HH:mm',
-						dateTimeSeconds: 'dd/MM/yyyy HH:mm:ss',
-						hours: 'HH:mm',
-						use12Hour: false
-					}
+					case "Tab":
+					case "Escape":
+						this.resetNavigationState()
+						// If the focused element is the table
+						if(event.target === tableContainerElem)
+							return
+						// If the focused element is a sub-element of the table
+						tableContainerElem?.focus()
+						event.preventDefault()
+						break;
+					case "ArrowUp":
+						// Navigate to the previous row
+						this.navigateToRow(this.navRowIndex - 1)
+						event.preventDefault()
+						break;
+					case "ArrowDown":
+						// Navigate to the first row if not navigated to any row, other wise navigate to the next row
+						if(this.navRowIndex === undefined || this.navRowIndex === null || isNaN(this.navRowIndex))
+							this.navigateToRow(this.firstDataRowIndex)
+						else
+							this.navigateToRow(this.navRowIndex + 1)
+						event.preventDefault()
+						break;
+					case "ArrowLeft":
+						// Navigate to the previous action element
+						this.navigateToTableRowAction('previous')
+						event.preventDefault()
+						break;
+					case "ArrowRight":
+						// Navigate to the next action element
+						this.navigateToTableRowAction('next')
+						event.preventDefault()
+						break;
+					case "Home":
+						// Navigate to first data row
+						this.navigateToRow(this.firstDataRowIndex)
+						event.preventDefault()
+						break;
+					case "End":
+						// Navigate to last data row
+						this.navigateToRow(this.navRowElems?.length - 1)
+						event.preventDefault()
+						break;
+					case "Insert":
+						// Insert new record
+						this.$emit('row-action', { id: 'insert' })
+						event.preventDefault()
+						break;
+					case "PageUp":
+						// Go to previous page
+						if(this.page > 1)
+							this.goToPage(this.page - 1)
+						event.preventDefault()
+						break;
+					case "PageDown":
+						// Go to previous page
+						if(this.hasMore)
+							this.goToPage(this.page + 1)
+						event.preventDefault()
+						break;
 				}
+			},
 
-				//FOR: TABLE LIST ROW COLOR
-				this.rowTextColor = has(this.config, 'rowTextColor') ? this.config.rowTextColor : ''
+			/**
+			 * FOR: TABLE KEYBOARD OPERATION
+			 * Focusin handler for table rows
+			 * Used to set keyboard navigation state when focusing on a row or row sub-element
+			 * so keyboard navigation can continue from there
+			 * @param event {object} Event object
+			 */
+			rowOnFocusin(event)
+			{
+				// Actual element mousedown happens on
+				let element = event?.target
 
-				this.rowBgColor = has(this.config, 'rowBgColor') ? this.config.rowBgColor : ''
+				// Get action element that mousedown happened on or propagated to
+				// since mousedown can originate on sub-elements
+				let actionElement = element
+				// If element that get's focused is a parent element of the element
+				while(!actionElement?.hasAttribute('data-table-action-selected') && actionElement?.parentElement)
+					actionElement = actionElement.parentElement
 
-				this.rowBgColorSelected = has(this.config, 'rowBgColorSelected') ? this.config.rowBgColorSelected : '#E0E0E0'
+				// Get row element
+				let rowElement = element
+				while(rowElement?.tagName !== 'TR' && rowElement?.parentElement)
+					rowElement = rowElement.parentElement
 
-				this.hasTextWrap = has(this.config, 'hasTextWrap') ? this.config.hasTextWrap : false
+				// Get multi-index of row
+				let multiIndex = rowElement.getAttribute('index')
 
-				this.fieldsEditable = has(this.config, 'fieldsEditable') ? this.config.fieldsEditable : false
+				// Set row as the current navigated row
+				this.navRowIndex = this.getNavRowIndexFromMultiIndex(multiIndex)
 
-				this.hasNewRecordRow = has(this.config, 'hasNewRecordRow') ? this.config.hasNewRecordRow : false
+				// Reset properties of action elements of current row
+				this.resetTableRowActionProperties(this.navRowIndex)
 
-				this.columnResizeOptions = has(this.config, 'columnResizeOptions') ? this.config.columnResizeOptions : {}
+				// Set navigation state on this element
+				if(actionElement?.hasAttribute('data-table-action-selected'))
+					actionElement.setAttribute('data-table-action-selected', true)
 
-				this.rowKeyToScroll = has(this.config, 'rowKeyToScroll') ? this.config.rowKeyToScroll : ''
+				// Prevent re-rendering rows when changing the row navigated property
+				this.rerenderRowsOnNextChange = false
 
-				//FOR: USER_TABLE_CONFIG
-				this.UserTableConfigName = has(this.config, 'UserTableConfigName') ? this.config.UserTableConfigName : ''
+				// Set the row property that signals if the row is navigated
+				if(multiIndex === 'h')
+					this.$emit('set-property', ['headerRow', 'isNavigated'], true)
+				else
+					this.$emit('set-row-index-property', multiIndex, 'isNavigated', true)
+			},
 
-				this.UserTableConfigNames = has(this.config, 'UserTableConfigNames') ? this.config.UserTableConfigNames : []
+			/**
+			 * FOR: TABLE KEYBOARD OPERATION
+			 * Focusout handler for table rows
+			 * Used to update keyboard navigation state when focusing away from a row or row sub-element
+			 * so keyboard navigation can continue from there
+			 * @param event {object} Event object
+			 */
+			rowOnFocusout(event)
+			{
+				// Actual element focusout happens on
+				let element = event?.target
 
-				this.selectedViewId = this.getViewIdByName(this.UserTableConfigName)
+				// Get row element
+				let rowElement = element
+				while(rowElement?.tagName !== 'TR' && rowElement?.parentElement)
+					rowElement = rowElement.parentElement
 
-				this.defaultSearchColumnName = has(this.config, 'defaultSearchColumnName') ? this.config.defaultSearchColumnName : ''
+				// Element focus went to, if any
+				let elementFocused = event?.relatedTarget
 
-				this.initialSortColumnName = has(this.config, 'initialSortColumnName') ? this.config.initialSortColumnName : ''
+				// If element focus went to is in the row, navigation stays on the row
+				if(rowElement.contains(elementFocused))
+					return
 
-				this.initialSortColumnOrder = has(this.config, 'initialSortColumnOrder') ? this.config.initialSortColumnOrder : ''
+				// Reset properties of action elements
+				this.resetTableRowActionProperties(this.navRowIndex)
 
-				this.columnSizes = has(this.config, 'columnSizes') ? this.config.columnSizes : []
+				//Get multi-index of row
+				let multiIndex = rowElement.getAttribute('index')
 
-				this.allowColumnResize = has(this.config, 'allowColumnResize') ? this.config.allowColumnResize : true
+				// Prevent re-rendering rows when changing the row navigated property
+				this.rerenderRowsOnNextChange = false
+
+				// Set the row property that signals if the row is navigated
+				if(multiIndex === 'h')
+					this.$emit('set-property', ['headerRow', 'isNavigated'], false)
+				else
+					this.$emit('set-row-index-property', multiIndex, 'isNavigated', false)
 			},
 
 			/**
@@ -2239,7 +2567,7 @@
 				this.page = pageNumber
 
 				if (!this.serverMode) this.paginateFilter()
-				else this.emitQueryParams(pageNumber)
+				else this.changeQuery(pageNumber)
 
 				if (!this.readonly && this.rowsSelectableMultiple) this.initHeaderSelector()
 			},
@@ -2252,6 +2580,9 @@
 			{
 				this.perPage = perPage
 
+				// Update property in table model object
+				this.$emit('set-property', ['config', 'perPageSelected'], this.perPage)
+
 				if (!this.serverMode)
 				{
 					let doPaginateFilter = this.page === 1
@@ -2261,46 +2592,9 @@
 					if (doPaginateFilter) this.paginateFilter()
 				} else
 				{
-					this.emitQueryParams()
+					this.changeQuery()
 					this.$emit('update-config')
 				}
-			},
-
-			/**
-			 * Sort when table is first loaded (UNUSED)
-			 */
-			initialSort()
-			{
-				// TODO optimze this with removing this filter
-				let initial_sort_columns = filter(this.vbtColumns, (column) => has(column, 'initialSort') && column.initialSort === true)
-
-				initial_sort_columns.some((initial_sort_column) => {
-					const result = findIndex(this.query.sort, {
-						vbtColId: initial_sort_column.vbtColId
-					})
-
-					if (result === -1)
-					{
-						//BEGIN: initial sort order validation
-						let initialSortOrder = 'asc'
-
-						if (has(initial_sort_column, 'initialSortOrder') && includes(['asc', 'desc'], initial_sort_column.initialSortOrder))
-							initialSortOrder = initial_sort_column.initialSortOrder
-
-						//END: initial sort order validation
-						this.query.sort.push({
-							vbtColId: initial_sort_column.vbtColId,
-							name: initial_sort_column.name,
-							order: initialSortOrder,
-							caseSensitive: this.isSortCaseSensitive(initial_sort_column)
-						})
-					}
-
-					// if multicolum sort sort is false, then consider only first initial sort column
-					if (!this.multiColumnSort) return true
-				})
-
-				this.updateSort()
 			},
 
 			/**
@@ -2309,7 +2603,8 @@
 			 */
 			initGlobalSearch(emitSearch = false)
 			{
-				this.query.globalSearch = this.globalSearch.init.value
+				// Update property in table model object
+				this.$emit('set-property', ['searchValue'], this.searchBarConfig.init.value)
 
 				if (emitSearch) this.updateSearch()
 			},
@@ -2329,103 +2624,45 @@
 				}
 			},
 
-			isSortCaseSensitive(column)
+			/**
+			 * Update sorting data
+			 * @param {string} columnName Column name
+			 * @param {string} sortOrder Sort direction
+			 */
+			updateSortQuery(columnName, sortOrder)
 			{
-				return column.sortCaseSensitive !== undefined ? column.sortCaseSensitive : true
+				this.$emit('set-property', ['columnSorting'], { columnName, sortOrder })
 			},
 
 			/**
-			 * Update sorting (built-in method)
-			 * @param column {Object}
-			 * @param direction {string}
-			 * @param {string} emitSearch
+			 * Change sorting
+			 * @param {string} columnName Column name
+			 * @param {string} sortOrder Sort direction
 			 */
-			updateSortQuery(column, direction, emitSearch = true, emitUpdate = true)
+			changeSort(columnName, sortOrder)
 			{
-				let result = findIndex(this.query.sort, { vbtColId: column.vbtColId })
+				// Change sorting data in the table model object
+				this.updateSortQuery(columnName, sortOrder)
 
-				if (result === -1)
-				{
-					if (!this.multiColumnSort) this.query.sort = []
-
-					this.query.sort.push({
-						vbtColId: column.vbtColId,
-						name: column.name,
-						order: 'asc',
-						caseSensitive: this.isSortCaseSensitive(column)
-					})
-
-					result = this.query.sort.length - 1
-				}
-
-				if (direction !== undefined)
-				{
-					this.query.sort[result].order = direction
-					this.updateInitialSortProperties()
-					if (emitUpdate) this.$emit('update-config')
-					if (emitSearch) this.updateSort()
-				} else
-				{
-					this.query.sort = []
-					this.updateInitialSortProperties()
-					if (emitUpdate) this.$emit('update-config')
-					this.updateSort()
-					this.filter(!this.preservePageOnDataChange)
-				}
+				// Change sorting
+				if (this.serverMode)
+					this.changeQuery()
+				else
+					this.sort()
 			},
 
 			/**
-			 * Update initial sort display in column headers
+			 * Change sorting used when loading the table
+			 * @param {string} columnName Column name
+			 * @param {string} sortOrder Sort direction
 			 */
-			updateInitialSortDisplay()
+			changeInitialSort(columnName, sortOrder)
 			{
-				// FOR: USER INITIAL SORT
-				if (
-					this.initialSortColumn !== undefined &&
-					this.initialSortColumnOrder !== undefined &&
-					this.initialSortColumn !== null &&
-					this.initialSortColumnOrder !== null
-				)
-				{
-					this.updateSortQuery(this.initialSortColumn, this.initialSortColumnOrder, false, false)
-				} else this.query.sort = []
-			},
+				// Change sorting
+				this.changeSort(columnName, sortOrder)
 
-			/**
-			 * Update properties for initial sort to current sort
-			 */
-			updateInitialSortProperties()
-			{
-				let initialSortColumnName = ''
-				let initialSortColumnOrder = ''
-
-				if (this.query.sort.length > 0)
-				{
-					initialSortColumnName = this.query.sort[0].name
-					initialSortColumnOrder = this.query.sort[0].order
-				}
-
-				this.$emit('set-property', 'config', 'initialSortColumnName', initialSortColumnName)
-				this.$emit('set-property', 'config', 'initialSortColumnOrder', initialSortColumnOrder)
-			},
-
-			/**
-			 * Updates to do when rows are changed
-			 * Must be called when loading or changing rows
-			 * @param rows {Object}
-			 */
-			updateRows(rows)
-			{
-				//Set rowKey for each row if it's not set
-				for (let idx in rows)
-				{
-					const curRow = rows[idx]
-
-					if (curRow.rowKey === undefined) curRow.rowKey = this.getRowKey(curRow)
-
-					// Update child rows if they exist
-					if (curRow.children !== undefined && curRow.children.length > 0) this.updateRows(curRow.children)
-				}
+				// Signal that the configuration changed so it will be saved when in auto-save mode
+				this.$emit('update-config')
 			},
 
 			/**
@@ -2458,7 +2695,7 @@
 				if (this.hasRowActions)
 				{
 					const actionsColumn = {
-						label: '',
+						label: this.texts.actionMenuTitle,
 						name: 'actions',
 						slotName: 'actions',
 						dataType: 'Action',
@@ -2481,6 +2718,7 @@
 					slotName: 'checklist',
 					dataType: 'Checkbox',
 					isChecklist: true,
+					columnClasses: 'row-checklist',
 					checkListName: 'CheckList Name',
 					checkListTitle: 'CheckList Title'
 				}
@@ -2505,7 +2743,7 @@
 				//FOR: TABLE LIST ROW DRAG AND DROP
 				//BEGIN: Add drag and drop column
 				const dragColumn = {
-					label: '',
+					label: this.texts.rowDragAndDropTitle,
 					name: 'dragAndDrop',
 					slotName: 'dragAndDrop',
 					isDragAndDrop: true,
@@ -2518,10 +2756,29 @@
 				if (this.showRowDragAndDropOption || this.hasRowDragAndDrop) this.vbtColumns.unshift(dragColumn)
 				//END: Add drag and drop column
 
-				//Add vbt column IDs
-				forEach(this.vbtColumns, (_, index) => {
-					Reflect.set(this.vbtColumns[index], 'vbtColId', index + 1)
-				})
+				//BEGIN: Add totalizer title column (only if all columns in the table are data columns)
+				if (this.columns.some(column => column.totalizer && listFunctions.isVisibleColumn(column))) {
+					if (this.vbtColumns.every(column => this.isDataColumn(column))) {
+						const totalizerColumn = {
+							label: '',
+							name: 'totalizer',
+							slotName: 'totalizer',
+							isTotalizer: true,
+							columnClasses: 'row-orders',
+							columnHeaderClasses: 'thead-actions',
+							rowTextAlignment: 'text-center',
+							columnTextAlignment: 'text-center'
+						}
+
+						this.vbtColumns.unshift(totalizerColumn)
+					}
+
+					// Find first non data column - this is the column that will have the ´Total´ title in the totalizer row
+					const firstNonDataColumnIdx = this.vbtColumns.findIndex(column => !this.isDataColumn(column))
+
+					this.vbtColumns[firstNonDataColumnIdx].isTotalizerTitle = true
+				}
+				//END: Add totalizer column
 
 				// If tree table, create column hierarchy
 				if (this.type === 'TreeList') this.columnHierarchy = listFunctions.getColumnHierarchy(this.vbtColumns)
@@ -2544,6 +2801,9 @@
 			 */
 			applyColumnResizeable()
 			{
+				if (this.resizableGrid)
+					this.resizableGrid.destroy()
+
 				if (this.isListVisible && this.allowColumnResize)
 				{
 					this.resizableGrid = markRaw(
@@ -2556,7 +2816,7 @@
 						)
 					)
 
-					this.resizableGrid.Init()
+					this.resizableGrid.init()
 				}
 			},
 
@@ -2571,41 +2831,19 @@
 			},
 
 			/**
-			 * Call sort function
-			 */
-			updateSort()
-			{
-				//Remove search errors
-				this.signalSearch = { searchError: false }
-
-				if (this.serverMode)
-				{
-					this.emitQueryParams()
-				} else
-				{
-					this.sort()
-				}
-			},
-
-			/**
-			 * Sort by column (built-in method)
+			 * Sort by column
 			 */
 			sort()
 			{
-				if (this.query.sort.length !== 0)
+				if (this.columnSorting.columnName && this.columnSorting.sortOrder)
 				{
-					let orders = this.query.sort.map((sortConfig) => sortConfig.order)
-
 					this.tempFilteredResults = orderBy(
 						this.tempFilteredResults,
-						this.query.sort.map((sortConfig) => {
-							return (row) => {
-								let value = get(row.Fields, sortConfig.name)
-								if (sortConfig.caseSensitive) return value ?? ''
-								return value?.toString().toLowerCase() ?? ''
-							}
-						}),
-						orders
+						(row) => {
+							let value = get(row.Fields, this.columnSorting.columnName)
+							return value?.toString().toLowerCase() ?? ''
+						},
+						[this.columnSorting.sortOrder]
 					)
 				}
 
@@ -2617,10 +2855,7 @@
 			 */
 			updateSearch()
 			{
-				// Remove search errors
-				this.signalSearch = { searchError: false }
-
-				if (this.serverMode) this.emitQueryParams()
+				if (this.serverMode) this.changeQuery()
 				else this.filter(!this.preservePageOnDataChange)
 			},
 
@@ -2638,7 +2873,7 @@
 
 				// Do global search only if global search text is not empty and
 				// filtered results is also not empty
-				if ((this.query.globalSearch !== '' || this.hasSearchBarFilters) && this.rowCount !== 0)
+				if ((this.searchValue !== '' || this.hasSearchBarFilters) && this.rowCount !== 0)
 				{
 					this.tempFilteredResults = this.search(this.tempFilteredResults)
 				}
@@ -2666,16 +2901,16 @@
 
 					this.vbtColumns.some((vbt_column) =>
 					{
-						let searchValue = this.query.globalSearch
+						let searchValue = this.searchValue
 						if (this.hasSearchBarFilters)
 						{
 							//Skip fields that do not have corresponding column filters
-							if (this.query.searchBarFilters[vbt_column.area + '.' + vbt_column.field] === undefined)
+							if (this.searchBarFilters[vbt_column.area + '.' + vbt_column.field] === undefined)
 							{
 								return
 							} else
 							{
-								searchValue = this.query.searchBarFilters[vbt_column.area + '.' + vbt_column.field].Conditions[0].Values[0]
+								searchValue = this.searchBarFilters[vbt_column.area + '.' + vbt_column.field].conditions[0].values[0]
 							}
 						}
 
@@ -2696,7 +2931,7 @@
 							searchValue = searchValue.toString()
 						}
 
-						if (!this.globalSearch.caseSensitive)
+						if (!this.searchBarConfig.caseSensitive)
 						{
 							value = value.toLowerCase()
 							searchValue = searchValue.toLowerCase()
@@ -2762,8 +2997,6 @@
 			 */
 			executeActionCell(row, column)
 			{
-				if (!this.doClickAction(row)) return
-
 				const emitAction = { row: row }
 
 				if (column !== undefined) emitAction['column'] = column
@@ -2792,7 +3025,7 @@
 				{
 					this.checkCurrentPageRows()
 
-					this.$emit('set-qtable-all-selected', { isSelected: true, id: this.id, queryParams: this.getQueryParams() })
+					this.$emit('set-qtable-all-selected', { isSelected: true, id: this.id })
 					this.vbtAllSelected = true
 
 					//Make sure no one can uncheck rows
@@ -2928,8 +3161,8 @@
 				{
 					let column = columns[col]
 
-					if (column.isHtmlField) cellTitles[column.name] = ''
-					else if (this.isDragAndDropColumn(column)) cellTitles[column.name] = this.texts.rowDragAndDropTitle
+					// Columns with multiple values will display a tooltip for each badge instead of a single tooltip for the entire cell.
+					if (column.isHtmlField || column.multipleValues) cellTitles[column.name] = ''
 					else cellTitles[column.name] = listFunctions.getCellValueDisplay(this, row, column, options)
 				}
 
@@ -2983,7 +3216,7 @@
 
 				if (this.hasRowClickAction) rowClasses.push('c-table__row--clickable')
 
-				if (this.rowIsValid(row) === false) rowClasses.push(this.config.rowValidation.class)
+				if (this.rowIsValid(row) === false) rowClasses.push(this.config.rowValidation.class ?? 'c-table__row--pending')
 				else if (columnsLevel > 0) rowClasses.push('q-tree-table-row')
 
 				if (!this.loaded) rowClasses.push('c-table__row--loading')
@@ -3000,7 +3233,7 @@
 			{
 				if (this.rowIsValid(row) === false)
 				{
-					return this.config.rowValidation.message
+					return this.config.rowValidation.message.value
 				}
 				return ''
 			},
@@ -3044,7 +3277,7 @@
 				} else
 				{
 					//Add to selected rows
-                    this.$emit('select-row', { rowKeyPath, multipleSelection: false })
+					this.$emit('select-row', { rowKeyPath, multipleSelection: false })
 				}
 			},
 
@@ -3063,7 +3296,7 @@
 				} else
 				{
 					//If row is not already selected, add to selected rows
-                    this.$emit('select-row', { rowKeyPath, multipleSelection: true })
+					this.$emit('select-row', { rowKeyPath, multipleSelection: true })
 				}
 			},
 
@@ -3136,87 +3369,6 @@
 			},
 
 			/**
-			 * Get sum of values of column in rows and return formatted string of value
-			 * @param column {Object}
-			 * @param selectedOnly {Boolean} total only selected rows
-			 * @returns String
-			 */
-			getColumnTotalValueDisplay(column, selectedOnly)
-			{
-				//Actions column shows text to show this is the totals row
-				if (this.isActionsColumn(column))
-				{
-					return 'Total'
-				}
-				//Column to show total (numeric or currency type)
-				else if (column.showTotal)
-				{
-					var value = 0
-
-					//Determine whether to get all rows or only selected rows
-					if (selectedOnly !== undefined)
-					{
-						value = this.getColumnTotalValue(column, selectedOnly)
-					} else
-					{
-						value = this.getColumnTotalValue(column)
-					}
-
-					//Determine whether to display as currency or plain number
-					if (column.currency !== undefined)
-					{
-						return currencyDisplay(
-							value,
-							this.numberFormat.decimalSeparator,
-							this.numberFormat.groupSeparator,
-							column.decimalPlaces,
-							column.currency,
-							this.lcid,
-							'narrowSymbol'
-						)
-					} else
-					{
-						return numericDisplay(value, this.numberFormat.decimalSeparator, this.numberFormat.groupSeparator, {
-							minimumFractionDigits: column.decimalPlaces,
-							maximumFractionDigits: column.decimalPlaces
-						})
-					}
-				}
-				return ''
-			},
-
-			/**
-			 * Get CSS class for column with sum of values
-			 * @param column {Object}
-			 * @returns String
-			 */
-			getColumnTotalClass(column)
-			{
-				if (this.isActionsColumn(column))
-				{
-					if (this.actionsPlacement === 'right')
-					{
-						return 'columns-sum-total-right'
-					} else
-					{
-						return 'columns-sum-total-left'
-					}
-				} else
-				{
-					return 'c-table__cell-numeric'
-				}
-			},
-
-			/**
-			 * Get number of rows selected
-			 * @returns Number
-			 */
-			rowsSelectedCount()
-			{
-				return Object.keys(this.rowsSelected).length
-			},
-
-			/**
 			 * Submit selected rows
 			 * @param event {String}
 			 * @returns
@@ -3226,19 +3378,8 @@
 				this.$emit('row-group-action', {
 					rowsSelected: this.rowsSelected,
 					allSelected: this.vbtAllSelected,
-					queryParams: this.getQueryParams(),
 					action: event.action
 				})
-			},
-
-			/**
-			 * Update search handler (built-in method)
-			 * @param value {String}
-			 */
-			updateGlobalSearchHandler(value)
-			{
-				this.query.globalSearch = value
-				this.updateSearch()
 			},
 
 			/**
@@ -3246,7 +3387,8 @@
 			 */
 			clearGlobalSearch()
 			{
-				this.query.globalSearch = ''
+				// Update property in table model object
+				this.$emit('set-property', ['searchValue'], '')
 				this.updateSearch()
 			},
 
@@ -3258,10 +3400,10 @@
 				this.clearSearchBarFilters()
 
 				//Clear search bar
-				if (this.query.globalSearch.length > 0)
-				{
-					this.query.globalSearch = ''
-				}
+				if (this.searchValue?.length > 0)
+					// Update property in table model object
+					this.$emit('set-property', ['searchValue'], '')
+
 				this.$emit('reset-query')
 				this.updateSearch()
 			},
@@ -3272,64 +3414,32 @@
 			 */
 			emitSearch(searchValue)
 			{
-				this.query.globalSearch = searchValue
+				// Update property in table model object
+				this.$emit('set-property', ['searchValue'], searchValue)
 				this.updateSearch()
 			},
 
 			/**
-			 * Get search query event with parameters
+			 * Emit search query event (update page if necessary)
 			 * @param page {Number}
 			 */
-			getQueryParams(page = null)
+			changeQuery(page)
 			{
-				let queryParams = cloneDeep(this.query)
-				let sort = map(queryParams.sort, (o) => omit(o, 'vbtColId'))
-				let advancedFilters = queryParams.advancedFilters
-				let columnFilters = queryParams.columnFilters
-				let searchBarFilters = queryParams.searchBarFilters
-				let groupFilters = map(queryParams.groupFilters, (o) => omit(o, 'config'))
-				let activeFilters = queryParams.activeFilters
-				let globalSearch = queryParams.globalSearch
-				let perPage = clone(this.perPage)
-
-				if (page === undefined || page === null)
+				// Update page number
+				if (typeof page === 'undefined')
 				{
-					if (this.preservePageOnDataChange)
-					{
-						page = this.page
-					} else
-					{
-						this.page = 1
+					if (!this.preservePageOnDataChange)
 						page = 1
-					}
+					else
+						page = this.page
 				}
 
-				return {
-					sort: sort,
-					advancedFilters: advancedFilters,
-					columnFilters: columnFilters,
-					searchBarFilters: searchBarFilters,
-					groupFilters: groupFilters,
-					activeFilters: activeFilters,
-					globalSearch: globalSearch,
-					useTableFilters: false, //this.hasSearchBarFilters,
-					perPage: perPage,
-					page: page
-				}
-			},
+				// Update page property in table model object
+				this.$emit('set-property', ['config', 'page'], page)
 
-			/**
-			 * Emit search query event with parameters (built-in method, refactored)
-			 * @param page {Number}
-			 */
-			emitQueryParams(page = null)
-			{
+				// Signal change in query
 				if (this.serverMode && this.canEmitQueries)
-				{
-					let payload = this.getQueryParams(page)
-
-					this.$emit('on-change-query', payload)
-				}
+					this.$emit('on-change-query')
 			},
 
 			/**
@@ -3359,9 +3469,16 @@
 			 */
 			editColumnFilter(fullColumnName, filter)
 			{
-				this.query.columnFilters[fullColumnName] = filter
-				this.$emit('set-property', 'columnFilters', this.query.columnFilters)
+				// Clone column filters and replace the one being edited
+				let columnFilters = cloneDeep(this.columnFilters)
+				columnFilters[fullColumnName] = filter
+
+				// Set property in table model object
+				this.$emit('set-property', ['columnFilters'], columnFilters)
+
+				// Signal that there is an update to save the configuration when in auto-save mode
 				this.$emit('update-config')
+
 				this.updateSearch()
 			},
 
@@ -3371,9 +3488,16 @@
 			 */
 			removeColumnFilter(fullColumnName)
 			{
-				delete this.query.columnFilters[fullColumnName]
-				this.$emit('set-property', 'columnFilters', this.query.columnFilters)
+				// Clone column filters and remove this
+				let columnFilters = cloneDeep(this.columnFilters)
+				delete columnFilters[fullColumnName]
+
+				// Set property in table model object
+				this.$emit('set-property', ['columnFilters'], columnFilters)
+
+				// Signal that there is an update to save the configuration when in auto-save mode
 				this.$emit('update-config')
+
 				this.updateSearch()
 			},
 
@@ -3383,8 +3507,9 @@
 			 */
 			clearColumnFilters(emitSearch = false)
 			{
-				this.query.columnFilters = {}
-				this.$emit('set-property', 'columnFilters', this.query.columnFilters)
+				// Set property in table model object
+				this.$emit('set-property', ['columnFilters'], {})
+
 				if (emitSearch)
 				{
 					this.updateSearch()
@@ -3397,7 +3522,13 @@
 			 */
 			removeSearchBarFilter(fullColumnName)
 			{
-				delete this.query.searchBarFilters[fullColumnName]
+				// Clone search bar filters without this one and set as the new value
+				let searchBarFilters = cloneDeep(this.searchBarFilters)
+				delete searchBarFilters[fullColumnName]
+
+				// Update property in table model object
+				this.$emit('set-property', ['searchBarFilters'], searchBarFilters)
+
 				this.updateSearch()
 				this.signalSearch = { resetQuery: true }
 			},
@@ -3408,7 +3539,8 @@
 			 */
 			clearSearchBarFilters(emitSearch = false)
 			{
-				this.query.searchBarFilters = {}
+				// Update property in table model object
+				this.$emit('set-property', ['searchBarFilters'], {})
 				if (emitSearch)
 				{
 					this.updateSearch()
@@ -3424,11 +3556,17 @@
 			{
 				var columnName = listFunctions.columnFullName(column)
 				var operator = searchFilterData.searchBarOperator(column.searchFieldType, value)
-				this.query.searchBarFilters = {}
-				this.query.searchBarFilters[columnName] = listFunctions.searchFilter('', true, [
+
+				// Create hastable with this column name as the key and the filter as the value
+				let searchBarFilters = {}
+				searchBarFilters[columnName] = listFunctions.searchFilter('', true, [
 					listFunctions.searchFilterCondition('', true, listFunctions.columnFullName(column), operator, [value])
 				])
-				this.query.globalSearch = ''
+
+				// Update properties in table model object
+				this.$emit('set-property', ['searchBarFilters'], searchBarFilters)
+				this.$emit('set-property', ['searchValue'], '')
+
 				this.updateSearch()
 			},
 
@@ -3449,10 +3587,15 @@
 			{
 				this.clearColumnFilters()
 				this.clearSearchBarFilters()
+
+				// Reset sorting to default without triggering a reload
+				// The reload will be triggered by removing the filters
+				this.updateSortQuery(this.defaultColumnSorting.columnName, this.defaultColumnSorting.sortOrder)
+
 				//Also reloads table
 				this.$emit('remove-all-advanced-filters')
+				// Signal that the configuration changed so it will be saved when in auto-save mode
 				this.$emit('update-config')
-				//this.updateSearch();
 			},
 
 			/**
@@ -3500,7 +3643,7 @@
 			 */
 			exportData(format)
 			{
-				var payload = {
+				const payload = {
 					format: format
 				}
 				this.$emit('on-export-data', payload)
@@ -3513,11 +3656,6 @@
 			 */
 			importData(payload)
 			{
-				/*
-				var payload = {
-					format: format
-				}
-				/**/
 				this.$emit('on-import-data', payload)
 			},
 
@@ -3528,83 +3666,28 @@
 			 */
 			exportTemplate(format)
 			{
-				var payload = {
+				const payload = {
 					format: format
 				}
 				this.$emit('on-export-template', payload)
 			},
 
 			/**
-			 * Determine if multiple filters can be selected in group of filters
-			 * @param entry {Object}
-			 * @returns Boolean
+			 * Update the active filters
+			 * @param activeFilters {Object}
 			 */
-			groupFilterIsMultiple(entry)
+			updateActiveFilters(activeFilters)
 			{
-				if (entry.isMultiple === undefined)
-				{
-					return false
-				}
-				return entry.isMultiple
+				this.$emit('update:activeFilters', activeFilters)
 			},
 
 			/**
-			 * Update values for all filters
-			 */
-			updateFilters()
-			{
-				// Calculate filter values for "multiple" type filters
-				this.calcGroupFilterValues(this.groupFilters)
-				this.query.groupFilters = this.groupFilters
-
-				this.query.activeFilters = this.activeFilters
-
-				this.emitQueryParams()
-
-				this.$emit('update-config')
-			},
-
-			/**
-			 * Get value for all radio button groups based on filter model
+			 * Update the group filters
 			 * @param groupFilters {Object}
 			 */
-			calcGroupFilterValues(groupFilters)
+			updateGroupFilters(groupFilters)
 			{
-				for (let idx in groupFilters)
-				{
-					var entry = groupFilters[idx]
-
-					if (this.groupFilterIsMultiple(entry))
-					{
-						entry.value = this.checkboxValue(entry)
-					}
-				}
-			},
-
-			/**
-			 * Get value for radio button group based on filter model
-			 * @param entry {Object}
-			 * @returns String
-			 */
-			checkboxValue(entry)
-			{
-				if (!this.groupFilterIsMultiple(entry))
-				{
-					return ''
-				}
-
-				var multipleFilterValue = ''
-
-				for (let idx in entry.filters)
-				{
-					var filter = entry.filters[idx]
-					if (filter.selected !== false)
-					{
-						multipleFilterValue += filter.key
-					}
-				}
-
-				return multipleFilterValue
+				this.$emit('update:groupFilters', groupFilters)
 			},
 
 			/**
@@ -3614,18 +3697,13 @@
 			 */
 			radioValue(entry)
 			{
-				if (this.groupFilterIsMultiple(entry))
-				{
-					return ''
-				}
-
-				return filter.value
+				return this.groupFilterIsMultiple(entry) ? '' : filter.value
 			},
 
 			/**
 			 * listener for events when shift key is pressed
 			 */
-			_documentOnselectstart(event)
+			documentOnSelectStart(event)
 			{
 				return !(event.key === 'Shift' && event.shiftKey === true)
 			},
@@ -3633,18 +3711,18 @@
 			/**
 			 * listener for events when shift key is pressed
 			 */
-			_handleShiftKey()
+			handleShiftKeyOnSelectStart()
 			{
-				document.addEventListener('selectstart', this._documentOnselectstart)
+				document.addEventListener('selectstart', this.documentOnSelectStart)
 			},
 
 			/**
-			 * Add event listeners for events when shift key is pressed?
+			 * Add event listeners for events when shift key is pressed
 			 */
 			handleShiftKey()
 			{
-				window.addEventListener('keyup', this._handleShiftKey)
-				window.addEventListener('keydown', this._handleShiftKey)
+				window.addEventListener('keyup', this.handleShiftKeyOnSelectStart)
+				window.addEventListener('keydown', this.handleShiftKeyOnSelectStart)
 			},
 
 			/**
@@ -3660,7 +3738,7 @@
 					return false
 				}
 				//For all columns
-				return column.visibility === undefined || column.visibility ? true : false
+				return column.visibility === undefined || column.visibility
 			},
 
 			/**
@@ -3669,6 +3747,7 @@
 			toggleShowFilters()
 			{
 				this.filtersVisible = !this.filtersVisible
+				this.$emit('set-property', ['config', 'filtersVisible'], this.filtersVisible)
 			},
 
 			/**
@@ -3762,6 +3841,12 @@
 			{
 				this.$emit('update-cell', { row: row, column: column, value: event })
 
+				// Optionally prevent rerendering rows when changing cell values
+				if(column.rerenderRowsOnNextChange === false)
+					this.rerenderRowsOnNextChange = false
+				else
+					this.rerenderRows()
+
 				//Set cell value in component data
 				this.setCellValue(row, column, event)
 
@@ -3774,6 +3859,12 @@
 				if (this.fieldsEditable)
 				{
 					this.emitRowEdit(row, column, event)
+				}
+
+				if(this.hasRowDragAndDrop && column.isOrderingColumn)
+				{
+					let index = listFunctions.getCellValue(row, column)
+					this.navigateToRow(parseInt(index) - 1)
 				}
 			},
 
@@ -3792,10 +3883,11 @@
 			{
 				if (!this.hasRowDragAndDrop)
 				{
-					//Sort by the ordering column
+					// Sort by the ordering column
 					if (this.sortOrderColumn !== undefined && this.sortOrderColumn !== null)
 					{
-						this.updateSortQuery(this.sortOrderColumn, 'asc', true, false)
+						// Change sorting without saving to table configuration
+						this.changeSort(this.sortOrderColumn.name, 'asc')
 					}
 				}
 
@@ -3805,6 +3897,10 @@
 				{
 					this.setPerPage(-1)
 				}
+
+				// FOR: GETTING NAVIGABLE ROW ELEMENTS
+				// Rerender rows and re'calculate navigable rows
+				this.rerenderRows()
 			},
 
 			/**
@@ -3852,7 +3948,7 @@
 					return columnHeaderDOMElems
 				}
 				//Add DOM elements to array
-				for (let idx in columnHeaderElems)
+				for (let idx = 0; idx < columnHeaderElems.length; idx++)
 				{
 					columnHeaderDOMElems.push(columnHeaderElems.item(idx))
 				}
@@ -4056,13 +4152,27 @@
 			},
 
 			/**
+			 * Get the header DOM element
+			 * @returns array
+			 */
+			getHeaderRowElement()
+			{
+				const headerRowComponent = this.$refs.headerRowElem
+
+				if (Array.isArray(headerRowComponent) && headerRowComponent.length > 0)
+					return headerRowComponent[0].$el
+
+				return headerRowComponent?.$el
+			},
+
+			/**
 			 * Save current view
 			 * @returns
 			 */
 			saveCurrentView()
 			{
 				this.$emit('save-view', {
-					name: this.config.UserTableConfigName,
+					name: this.config.userTableConfigName,
 					isSelected: false
 				})
 
@@ -4072,7 +4182,7 @@
 					icon: 'ok'
 				}
 				this.$emit('set-info-message', alertProps)
-				this.$emit('set-property', 'confirmChanges', false)
+				this.$emit('set-property', ['confirmChanges'], false)
 				this.$emit('update-config')
 			},
 
@@ -4082,28 +4192,7 @@
 			 */
 			closeCurrentView()
 			{
-				//this.$emit('set-property', 'loadView', false);
-				//this.$emit('set-property', 'loadDefaultView', false);
 				this.$emit('close-view', {})
-			},
-
-			/**
-			 * Check before saving or copying a view
-			 * @returns
-			 */
-			checkSaveCurrentView()
-			{
-				let buttons = {
-					confirm: {
-						label: this.texts.saveText,
-						action: this.saveCurrentView
-					},
-					cancel: {
-						label: this.texts.cancelText
-					}
-				}
-
-				displayMessage(this.texts.wantToSaveChanges, 'warning', null, buttons)
 			},
 
 			/**
@@ -4112,7 +4201,7 @@
 			 */
 			onColumnResize()
 			{
-				this.$emit('set-property', 'config', 'columnSizes', this.getColumnSizes())
+				this.$emit('set-property', ['config', 'columnSizes'], this.getColumnSizes())
 				this.$emit('update-config')
 			},
 
@@ -4145,6 +4234,12 @@
 					currentIndex = findIndex(this.vbtRows, (row) => this.getRowKey(row) === rowKey),
 					index = currentIndex + eventData.shiftValue
 				this.$emit('row-reorder', { rowKey, index })
+				// Set table navigation to the row
+				this.navigateToRow(parseInt(index))
+				this.$emit('set-property', ['config', 'setNavOnUpdate'], true)
+				// FOR: GETTING NAVIGABLE ROW ELEMENTS
+				// Make rows re-mount
+				this.rerenderRows()
 			},
 
 			/**
@@ -4162,7 +4257,18 @@
 						rowKey = row ? row.rowKey : null,
 						index = evt.newIndex
 					if (!rowKey) return
+
+					// Removes the class to prevent the selection of other rows text,
+					// added when starting the drag
+					this.$refs.tableElem.style.userSelect = 'unset'
+
 					this.$emit('row-reorder', { rowKey, index })
+					// Set table navigation to the row
+					this.navigateToRow(parseInt(index))
+					this.$emit('set-property', ['config', 'setNavOnUpdate'], true)
+					// FOR: GETTING NAVIGABLE ROW ELEMENTS
+					// Make rows re-mount
+					this.rerenderRows()
 				}
 			},
 
@@ -4189,9 +4295,12 @@
 							chosenClass: 'row-grabbed',
 							ghostClass: 'row-ghost',
 							dragClass: 'row-drag',
+							handle: '.c-table__drag',
 							animation: 300,
 							forceFallback: true,
 							fallbackClass: 'row-drag',
+							// Adds a class to prevent the selection of other rows text
+							onStart: () => this.$refs.tableElem.style.userSelect = 'none',
 							onEnd: this.onRowDragAndDrop
 						})
 					}
@@ -4237,7 +4346,11 @@
 				let eObj = find(this.configOptions, ['id', id])
 				if (!eObj) return
 
-				if (eObj.elementId)
+				// If saving changes to current table view
+				if (eObj.id === 'viewSaveChanges') this.saveCurrentView()
+				// Other options that open the table configuration pop-up and need an element ID
+				// to signal which tab will be selected in the pop-up
+				else if (eObj.elementId)
 				{
 					if (eObj.elementId === 'advanced-filters') this.showAdvancedFilters()
 					else
@@ -4246,7 +4359,7 @@
 							selectedTab: eObj.elementId,
 							returnElement: this.configMenuId
 						})
-				} else if (eObj.id === 'viewSaveChanges') this.checkSaveCurrentView()
+				}
 			},
 
 			/**
@@ -4275,9 +4388,6 @@
 			 */
 			setSelectedViewById(id)
 			{
-				//Remove search errors
-				this.signalSearch = { searchError: false }
-
 				if (id === 0)
 				{
 					this.closeCurrentView()
@@ -4306,7 +4416,7 @@
 			 */
 			confirmAndSetSelectedViewById(id)
 			{
-				if (this.confirmChanges)
+				if (this.confirmChanges && !this.readonly)
 				{
 					let buttons = {
 						confirm: {
@@ -4329,8 +4439,112 @@
 			{
 				if (eventData.show === true && eventData.row?.alreadyLoaded === false)
 				{
+					// Prevent rows from re-rendering when changing the property to show sub-rows
+					this.$emit('set-property', ['config', 'rerenderRowsOnNextChange'], false)
+
 					this.$emit('tree-load-branch-data', { row: eventData.row })
 				}
+			},
+
+			/**
+			 * Get all navigable row elements
+			 * FOR: GETTING NAVIGABLE ROW ELEMENTS
+			 */
+			getNavRowElements()
+			{
+				// Get main row elements
+				const tableElem = this.getTableElement()
+				const navRowElemsNL = tableElem.querySelectorAll("tr[data-table-action-selected]")
+				const navRowElems = Array.from(navRowElemsNL)
+
+				// Add header row if it has focusable elements
+				const headerRowElement = this.getHeaderRowElement()
+				const headerRowActionElements = this.getTableRowActionElements(headerRowElement)
+				if(headerRowActionElements.length > 0)
+					navRowElems.unshift(headerRowElement)
+
+				return navRowElems
+			},
+
+			/**
+			 * Set all navigable row elements
+			 * FOR: GETTING NAVIGABLE ROW ELEMENTS
+			 */
+			setNavRowElements()
+			{
+				/**
+				 * Check if table element exists first. If not, cancel.
+				 * This can happen if the table is already being unmounted because
+				 * the rows are unmounted and changes to the rows trigger this function.
+				 */
+				const tableElem = this.getTableElement()
+				if(tableElem === undefined || tableElem === null)
+					return
+
+				this.navRowElems = this.getNavRowElements()
+
+				/**
+				 * Set index of first data row.
+				 * An index of 'h' is used for the header row.
+				 * If element 0 of the array is the header row, the first data row is element 1
+				 */
+				if(this.navRowElems.length > 0 && this.navRowElems[0].getAttribute('index') === 'h')
+					this.firstDataRowIndex = 1
+				else
+					this.firstDataRowIndex = 0
+			},
+
+			/**
+			 * Set number of rows to render from row data loaded
+			 * FOR: GETTING NAVIGABLE ROW ELEMENTS
+			 */
+			setRowsToLoad()
+			{
+				// Track number of rows to render
+				this.rowsToLoad = this.vbtRows?.length
+			},
+
+			/**
+			 * Re-render rows
+			 * FOR: GETTING NAVIGABLE ROW ELEMENTS
+			 */
+			rerenderRows()
+			{
+				// Track number of rows to render
+				this.setRowsToLoad()
+				// Make rows re-mount
+				this.rowDomKey++
+			},
+
+			/**
+			 * Called when a row is rendered
+			 * FOR: GETTING NAVIGABLE ROW ELEMENTS
+			 */
+			onRowLoaded()
+			{
+				this.rowsToLoad--
+				if(this.rowsToLoad === 0)
+					this.onRowsLoaded()
+			},
+
+			/**
+			 * Called when rows are rendered
+			 * FOR: GETTING NAVIGABLE ROW ELEMENTS
+			 */
+			onRowsLoaded()
+			{
+				this.$emit('rows-loaded')
+				this.setNavRowElements()
+			},
+
+			/**
+			 * Called when all sub-rows are loaded
+			 * FOR: GETTING NAVIGABLE ROW ELEMENTS
+			 */
+			onSubRowsLoaded()
+			{
+				this.$emit('rows-loaded')
+				this.setNavRowElements()
 			}
 		},
 		//END: methods
@@ -4361,6 +4575,21 @@
 					this.isFirstTime = false
 
 					if (this.vbtAllSelected) this.checkCurrentPageRows(true)
+
+					// Track number of rows to render
+					this.setRowsToLoad()
+
+					if(this.rerenderRowsOnNextChange)
+					{
+						// FOR: GETTING NAVIGABLE ROW ELEMENTS
+						// Rerender rows and re-calculate navigable rows
+						this.rerenderRows()
+					}
+					else
+					{
+						this.rerenderRowsOnNextChange = true
+						this.$emit('set-property', ['config', 'rerenderRowsOnNextChange'], true)
+					}
 				},
 				deep: true
 			},
@@ -4371,46 +4600,6 @@
 					//FOR: ROW ACTIONS, EXTENDED ACTIONS, COLUMN ORDER AND VISIBILITY
 					//Must be called when loading or changing columns
 					this.updateColumns()
-				},
-				deep: true
-			},
-
-			'advancedFilters': {
-				handler()
-				{
-					this.query.advancedFilters = this.advancedFilters
-				},
-				deep: true
-			},
-
-			'query.advancedFilters': {
-				handler()
-				{
-					if (this.serverMode && this.searchOnNextChange.value)
-					{
-						this.updateSearch()
-					}
-					this.$emit('set-search-on-next-change', false)
-				},
-				deep: true
-			},
-
-			'columnFilters': {
-				handler()
-				{
-					this.query.columnFilters = this.columnFilters
-				},
-				deep: true
-			},
-
-			'query.columnFilters': {
-				handler()
-				{
-					if (this.serverMode && this.searchOnNextChange.value)
-					{
-						this.updateSearch()
-					}
-					this.$emit('set-search-on-next-change', false)
 				},
 				deep: true
 			},
@@ -4432,7 +4621,7 @@
 						{
 							if (newVal.success !== false)
 							{
-								this.emitQueryParams()
+								this.changeQuery()
 							}
 						}
 					}
@@ -4480,38 +4669,21 @@
 				deep: true
 			},
 
-			'initialSortColumn': {
-				handler()
-				{
-					this.updateInitialSortDisplay()
-				}
-			},
-
-			'initialSortColumnOrder': {
-				handler()
-				{
-					this.updateInitialSortDisplay()
-				}
-			},
-
-			'config.multiColumnSort': {
-				handler()
-				{
-					this.resetSort()
-				}
-			},
-
-			'config.hasRowDragAndDrop': {
-				handler(newValue)
-				{
-					this.hasRowDragAndDrop = newValue
-				}
-			},
-
 			'hasRowDragAndDrop'(newValue)
 			{
 				if (newValue) this.initRowsDragAndDrop()
 				else this.destroyRowsDragAndDrop()
+			},
+
+			'allSelectedRows': {
+				handler(newValue) {
+					if (newValue === "true")
+						this.checkAllRows()
+					else
+						this.checkNoneRows()
+				},
+				deep: true,
+				immediate: true
 			}
 		}
 	}

@@ -59,11 +59,12 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODFACTY',
 			relatedArea: 'FACTY',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCodfacty))
 		watch(() => this.ValCodfacty.value, (newValue, oldValue) => this.onUpdate('glob.codfacty', this.ValCodfacty, newValue, oldValue))
 
 		/** The remaining form fields. */
-		this.ValHome = reactive(new modelFieldType.String({
+		this.ValHome = reactive(new modelFieldType.MultiLineString({
 			type: 'TextEditor',
 			id: 'ValHome',
 			originId: 'ValHome',
@@ -105,5 +106,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodglob'
 
 	get QPrimaryKey() { return this.ValCodglob.value }
-	set QPrimaryKey(value) { this.ValCodglob.value = value }
+	set QPrimaryKey(value) { this.ValCodglob.updateValue(value) }
 }

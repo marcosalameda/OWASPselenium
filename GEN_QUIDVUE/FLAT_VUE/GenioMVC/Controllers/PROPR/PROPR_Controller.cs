@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Propr;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER PROPR]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Propr row = null;
 
-			try
-			{
-				row = Models.Propr.Find(Navigation.GetStrValue("propr"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model propr");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Propr(UserContext.Current);
+				row = new Models.Propr(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("propr");
 			}
 
@@ -82,8 +75,8 @@ namespace GenioMVC.Controllers
 				{
 					case "PROPR00_TPPROTPPROPRI":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Propr00_tpprotppropri(qs);
 							result = model.TableTpproTppropri;
@@ -91,8 +84,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPR00_PESSONAME____":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Propr00_pessoname____(qs);
 							result = model.TablePessoName;
@@ -100,8 +93,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPR01_CNTRYCOUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Propr01_cntrycountry_(qs);
 							result = model.TableCntryCountry;
@@ -109,8 +102,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPR01_REGIOREGIAO__":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Propr01_regioregiao__(qs);
 							result = model.TableRegioRegiao;
@@ -118,8 +111,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPRALLTPPROTPPROPRI":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Propralltpprotppropri(qs);
 							result = model.TableTpproTppropri;
@@ -127,8 +120,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPRALLCNTRYCOUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Proprallcntrycountry_(qs);
 							result = model.TableCntryCountry;
@@ -136,8 +129,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPRALLREGIOREGIAO__":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Proprallregioregiao__(qs);
 							result = model.TableRegioRegiao;
@@ -145,14 +138,15 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPRALLPESSONAME____":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Proprallpessoname____(qs);
 							result = model.TablePessoName;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -219,11 +213,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -232,36 +227,33 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Propr00" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Propr00([FromBody]Propr00_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Propr00([FromBody]Propr00_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "propr",
+			return GenericRecalculateFormulas(formData, "propr",
 				(primaryKey) => Models.Propr.Find(primaryKey, UserContext.Current, "FPROPR00"),
-				(model) => form_data.MapToModel(model as Models.Propr)
+				(model) => formData.MapToModel(model as Models.Propr)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Proprall" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Proprall([FromBody]Proprall_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Proprall([FromBody]Proprall_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "propr",
+			return GenericRecalculateFormulas(formData, "propr",
 				(primaryKey) => Models.Propr.Find(primaryKey, UserContext.Current, "FPROPRALL"),
-				(model) => form_data.MapToModel(model as Models.Propr)
+				(model) => formData.MapToModel(model as Models.Propr)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -269,7 +261,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

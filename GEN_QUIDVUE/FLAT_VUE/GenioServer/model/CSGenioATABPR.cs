@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Table price
 	/// </summary>
-	public class CSGenioAtabpr : DbArea	{
+	public class CSGenioAtabpr : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -79,6 +80,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Price-by-hour";
 			Qfield.FieldSize =  12;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 9;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "PRICE_BY_HOUR01060";
 
@@ -268,7 +270,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodtabpr, value); }
 		}
 
-
 		/// <summary>Field : ">TYPE OF EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodtpeq1 { get { return m_fldCodtpeq1; } }
 		private static FieldRef m_fldCodtpeq1 = new FieldRef("tabpr", "codtpeq1");
@@ -279,7 +280,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodtpeq1); }
 			set { insertNameValueField(FldCodtpeq1, value); }
 		}
-
 
 		/// <summary>Field : "Since" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldSince { get { return m_fldSince; } }
@@ -292,18 +292,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSince, value); }
 		}
 
-
 		/// <summary>Field : "Price-by-hour" Tipo: "$D" Formula:  ""</summary>
 		public static FieldRef FldPrecohor { get { return m_fldPrecohor; } }
 		private static FieldRef m_fldPrecohor = new FieldRef("tabpr", "precohor");
 
 		/// <summary>Field : "Price-by-hour" Tipo: "$D" Formula:  ""</summary>
-		public double ValPrecohor
+		public decimal ValPrecohor
 		{
-			get { return (double)returnValueField(FldPrecohor); }
+			get { return (decimal)returnValueField(FldPrecohor); }
 			set { insertNameValueField(FldPrecohor, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -346,23 +344,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAtabpr> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAtabpr> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAtabpr>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -411,7 +392,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX TABPR]/

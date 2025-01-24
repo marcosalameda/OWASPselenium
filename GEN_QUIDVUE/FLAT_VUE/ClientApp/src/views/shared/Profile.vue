@@ -11,13 +11,13 @@
 
 	<q-validation-summary
 		v-if="showErrors"
-		:error-data="validationErrors" />
+		:messages="validationErrors" />
 
 	<div class="form-flow">
 		<!-- CHANGE PASSWORD -->
-		<q-row-container 
-			is-large
-			v-if="hasUsernameAuth">
+		<q-row-container
+			v-if="hasUsernameAuth"
+			is-large>
 			<q-control-wrapper class="row-line-group">
 				<q-group-box-container :label="texts.changePassword">
 					<q-row-container is-large>
@@ -34,6 +34,7 @@
 							</base-input-structure>
 						</q-control-wrapper>
 					</q-row-container>
+
 					<q-row-container is-large>
 						<q-control-wrapper class="row-line-group">
 							<base-input-structure
@@ -53,6 +54,7 @@
 							</base-input-structure>
 						</q-control-wrapper>
 					</q-row-container>
+
 					<q-row-container is-large>
 						<q-control-wrapper class="row-line-group">
 							<base-input-structure
@@ -72,6 +74,7 @@
 							</base-input-structure>
 						</q-control-wrapper>
 					</q-row-container>
+
 					<q-row-container is-large>
 						<q-control-wrapper class="row-line-group">
 							<base-input-structure
@@ -91,13 +94,15 @@
 							</base-input-structure>
 						</q-control-wrapper>
 					</q-row-container>
+
 					<q-row-container is-large>
 						<q-control-wrapper class="row-line-group">
-							<q-password-meter 
-								:input-value="this.model.NewPassword.value" 
-								style="width: 300px;" />
+							<q-password-meter
+								style="width: 300px"
+								:input-value="this.model.NewPassword.value" />
 						</q-control-wrapper>
 					</q-row-container>
+
 					<q-row-container is-large>
 						<q-control-wrapper class="row-line-group">
 							<q-button
@@ -110,12 +115,13 @@
 						</q-control-wrapper>
 					</q-row-container>
 				</q-group-box-container>
-			</q-control-wrapper>		
+			</q-control-wrapper>
 		</q-row-container>
+
 		<!-- REGISTER CERTIFICATE -->
-		<q-row-container 
-			is-large
-			v-if="authConfig.useCertificate">
+		<q-row-container
+			v-if="authConfig.useCertificate"
+			is-large>
 			<q-control-wrapper class="row-line-group">
 				<q-group-box-container :label="texts.registerCertificate">
 					<q-row-container is-large>
@@ -132,6 +138,7 @@
 							</base-input-structure>
 						</q-control-wrapper>
 					</q-row-container>
+
 					<q-row-container is-large>
 						<q-control-wrapper class="row-line-group">
 							<base-input-structure
@@ -150,6 +157,7 @@
 							</base-input-structure>
 						</q-control-wrapper>
 					</q-row-container>
+
 					<q-row-container is-large>
 						<q-control-wrapper class="row-line-group">
 							<q-button
@@ -165,32 +173,34 @@
 				</q-group-box-container>
 			</q-control-wrapper>
 		</q-row-container>
+
 		<!-- OPEN ID CONNECT -->
-		<q-row-container 
-			is-large
-			v-if="!isEmpty(model.OpenIdConnAuthMethods)">
+		<q-row-container
+			v-if="!isEmpty(model.AuthRedirectMethods)"
+			is-large>
 			<q-control-wrapper class="row-line-group">
 				<q-group-box-container label="OpenId Connect">
 					<template
-						v-for="idMethod in model.OpenIdConnAuthMethods"
-						:key="idMethod">
+						v-for="idMethod in model.AuthRedirectMethods"
+						:key="idMethod.Id">
 						<q-row-container is-large>
 							<q-control-wrapper class="row-line-group">
 								<q-button
 									b-style="primary"
-									:label="isEmpty(idMethod) ? 'OpenId Connect Auth' : idMethod"
-									:title="isEmpty(idMethod) ? 'OpenId Connect Auth' : idMethod"
-									@click="createOpenIdLoginRedirect(idMethod)" />
+									:label="idMethod.Description || idMethod.Id"
+									:title="idMethod.Description || 'Authentication'"
+									@click="clickRegisterAuth(idMethod)" />
 							</q-control-wrapper>
 						</q-row-container>
 					</template>
 				</q-group-box-container>
 			</q-control-wrapper>
 		</q-row-container>
+
 		<!-- TWO FACTOR AUTHENTICATION -->
-		<q-row-container 
-			is-large
-			v-if="model.Enable2FAOptions">
+		<q-row-container
+			v-if="model.Enable2FAOptions"
+			is-large>
 			<q-control-wrapper class="row-line-group">
 				<q-group-box-container :label="texts.twoFactorAuth">
 					<p>{{ texts.twoFactorAuthHelp }} {{ applicationName }}</p>
@@ -209,6 +219,7 @@
 				</q-group-box-container>
 			</q-control-wrapper>
 		</q-row-container>
+
 		<!-- FORM BUTTONS -->
 		<q-row-container is-large>
 			<q-control-wrapper class="control-join-group">
@@ -271,7 +282,7 @@
 				model: {
 					Enable2FAOptions: false,
 
-					OpenIdConnAuthMethods: null,
+					AuthRedirectMethods: null,
 
 					ValCodpsw: new modelFieldType.PrimaryKey({
 						id: 'ValCodpsw',
@@ -408,11 +419,9 @@
 			this.clearHistory()
 
 			// Load data
-			this.componentOnLoadProc.AddBusy(this.fetchData())
+			this.componentOnLoadProc.addBusy(this.fetchData())
 			// Only after the data is loaded from the server, init captch control
-			this.componentOnLoadProc.Once(() => {
-				this.initFormControls()
-			}, this)
+			this.componentOnLoadProc.once(() => this.initFormControls(), this)
 		},
 
 		beforeUnmount()
@@ -441,7 +450,7 @@
 
 			initFormControls()
 			{
-				_forEach(this.controls, ctrl => ctrl.Init(ctrl.name === 'ValNome' ? false : true))
+				_forEach(this.controls, (ctrl) => ctrl.init(ctrl.name === 'ValNome' ? false : true))
 			},
 
 			destroyFormControls()
@@ -504,12 +513,9 @@
 				})
 			},
 
-			createOpenIdLoginRedirect(/*idMethod*/)
+			clickRegisterAuth(idMethod)
 			{
-				return this.netAPI.postData('Home', 'CreateOpenIdLoginRedirect', null/*{ id: idMethod }*/, async data => {
-					if (data.url)
-						window.location.replace(data.url)
-				})
+				window.location.replace(idMethod.Redirect)
 			},
 
 			changePassword()

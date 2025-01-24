@@ -1,13 +1,14 @@
 ﻿<template>
-	<div
+	<a
+		href="javascript:void(0)"
 		:class="classes"
 		@click.stop="onAlertClick">
 		<q-counter-widget
 			v-if="widget.data"
-			:value="widget.data.count"
+			:value="widgetValue"
 			:title="widget.Title"
 			:icon="icon" />
-	</div>
+	</a>
 </template>
 
 <script>
@@ -71,6 +72,14 @@
 				}
 
 				return ''
+			},
+
+			/**
+			 * A valid value for the counter widget (can be widget.data.count or widget.data.description).
+			 */
+			widgetValue()
+			{
+				return this.widget.data?.count ?? this.widget.data?.description
 			}
 		},
 

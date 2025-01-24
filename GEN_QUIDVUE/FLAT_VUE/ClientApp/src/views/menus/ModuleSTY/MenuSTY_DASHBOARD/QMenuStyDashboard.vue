@@ -1,8 +1,8 @@
 ﻿<template>
 	<q-dashboard
 		v-if="componentOnLoadProc.loaded"
-		v-bind="model.dashboard"
-		v-on="model.dashboard.handlers" />
+		v-bind="controls.dashboard"
+		v-on="controls.dashboard.handlers" />
 </template>
 
 <script>
@@ -60,20 +60,40 @@
 					order: '431'
 				},
 
-				model: {
+				controls: {
 					dashboard: new DashboardControl({
 						action: 'STY_Menu_DASHBOARD',
-						title: computed(() => this.Resources.MY_DASHBOARD19348),
+						title: computed(() => this.Resources.DASHBOARD51597),
 						groups: [
 							{
 								id: 'BOOKMARKS',
-								order: 1,
+								order: 14,
+								hideGroup: false,
 								title: computed(() => vm.Resources.FAVORITOS12992),
 							},
 							{
 								id: '_ALERTS',
-								order: 2,
+								hideGroup: false,
+								order: 6,
 								title: computed(() => vm.Resources.ALERTS30407),
+							},
+							{
+								id: '_MENUS',
+								hideGroup: false,
+								order: 13,
+								title: computed(() => vm.Resources.MENUS09526),
+							},
+							{
+								id: '_GROUP02',
+								hideGroup: false,
+								order: 2,
+								title: computed(() => vm.Resources.LISTS54900),
+							},
+							{
+								id: '_GROUP01',
+								hideGroup: false,
+								order: 1,
+								title: computed(() => vm.Resources.GRAPHS20473),
 							},
 						],
 					}, this)
@@ -92,22 +112,9 @@
 
 		created()
 		{
-			this.componentOnLoadProc.AddImmediateBusy(loadResources(this, requiredTextResources))
-			this.componentOnLoadProc.AddImmediateBusy(this.loadDashboard())
-			this.componentOnLoadProc.Once(() => {
-				this.model.dashboard.Init()
-			}, this)
-		},
-
-		methods: {
-			/**
-			 * Fetches the data of the dashboard from the server.
-			 * @returns A promise to be resolved after the request completes.
-			 */
-			loadDashboard()
-			{
-				return this.fetchDashboardData(this.model.dashboard)
-			}
+			this.componentOnLoadProc.addImmediateBusy(loadResources(this, requiredTextResources))
+			this.componentOnLoadProc.addImmediateBusy(this.fetchDashboardData(this.controls.dashboard))
+			this.componentOnLoadProc.once(() => this.controls.dashboard.init(), this)
 		}
 	}
 </script>

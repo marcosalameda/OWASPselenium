@@ -8,7 +8,7 @@ The tests will establish a browser session to the configured Url. The framework 
 
 ## Configuration
 
-The configuration file __SeleniumWebTest.json__ is located at the root of the test project.
+The configuration file `SeleniumWebTest.json.example` is located at the root of the test project. Rename this file to `SeleniumWebTest.json` before use.
 
 Configuration properties:
 

@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Field feedback
 	/// </summary>
-	public class CSGenioAfeeca : DbArea	{
+	public class CSGenioAfeeca : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -105,13 +106,14 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(14);
+			info.Pathways = new Dictionary<string, string>(15);
 			info.Pathways.Add("flds","flds");
 			info.Pathways.Add("aero","flds");
 			info.Pathways.Add("equip","flds");
 			info.Pathways.Add("decom","flds");
 			info.Pathways.Add("wareh","flds");
 			info.Pathways.Add("tpequ","flds");
+			info.Pathways.Add("room1","flds");
 			info.Pathways.Add("cmpny","flds");
 			info.Pathways.Add("item","flds");
 			info.Pathways.Add("pess1","flds");
@@ -252,7 +254,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodfeeca, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodflds { get { return m_fldCodflds; } }
 		private static FieldRef m_fldCodflds = new FieldRef("feeca", "codflds");
@@ -264,7 +265,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodflds, value); }
 		}
 
-
 		/// <summary>Field : "Feedback" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldFeedback { get { return m_fldFeedback; } }
 		private static FieldRef m_fldFeedback = new FieldRef("feeca", "feedback");
@@ -275,7 +275,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldFeedback); }
 			set { insertNameValueField(FldFeedback, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -318,23 +317,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAfeeca> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAfeeca> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAfeeca>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -383,7 +365,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX FEECA]/

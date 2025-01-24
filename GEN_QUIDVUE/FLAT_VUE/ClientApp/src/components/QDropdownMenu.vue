@@ -9,7 +9,9 @@
 		:title="options[0].text"
 		:label="texts.label"
 		@click="$emit('selected', options[0].id)">
-		<q-icon :icon="icon" />
+		<q-icon
+			v-if="icon"
+			:icon="icon" />
 	</q-button>
 	<div
 		v-else
@@ -24,7 +26,9 @@
 			:class="buttonClasses"
 			:title="texts.title"
 			:label="texts.label">
-			<q-icon :icon="icon" />
+			<q-icon
+				v-if="icon"
+				:icon="icon" />
 			<slot></slot>
 		</q-toggle-dropdown>
 
@@ -45,6 +49,7 @@
 				<hr v-if="option.separatorBefore && index" />
 
 				<q-button
+					:id="option.elementId ? id + '-' + option.elementId : null"
 					role="menuitem"
 					borderless
 					:disabled="disabled || option.active === false"

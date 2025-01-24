@@ -81,6 +81,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 7,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.VALUE10285),
+			isFixed: true,
 		}).cloneFrom(values?.ValValue))
 		watch(() => this.ValValue.value, (newValue, oldValue) => this.onUpdate('year.value', this.ValValue, newValue, oldValue))
 	}
@@ -97,5 +98,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodyear'
 
 	get QPrimaryKey() { return this.ValCodyear.value }
-	set QPrimaryKey(value) { this.ValCodyear.value = value }
+	set QPrimaryKey(value) { this.ValCodyear.updateValue(value) }
 }

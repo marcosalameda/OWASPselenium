@@ -103,9 +103,13 @@
 	import fakeData from './TextareaInput.mock'
 
 	export default {
+		name: 'QTextareaContainer',
+
 		docsfile: './docs/inputs/TextareaInput.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{

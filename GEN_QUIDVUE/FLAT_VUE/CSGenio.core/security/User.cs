@@ -42,7 +42,7 @@ namespace CSGenio.framework
 		public Dictionary<string, List<Role>> ModuleRoles { get; set; } = new Dictionary<string, List<Role>> ();
 
 		/// <summary>
-		/// Entradas Permanentes de Historial a que o user È sujeito.
+		/// Entradas Permanentes de Historial a que o user √© sujeito.
 		/// Tem como identifier um par (moduleName, nomeEPH)
 		/// </summary>
 		public Hashtable Ephs { get; set; }
@@ -54,7 +54,7 @@ namespace CSGenio.framework
 		public Dictionary<string, Dictionary<string, string>> EphValues { get; set; }
 
 		/// <summary>
-		/// Instancias das ·reas (os registos) com Entradas Permanentes de Historial a que o user È sujeito.
+		/// Instancias das √°reas (os registos) com Entradas Permanentes de Historial a que o user √© sujeito.
 		/// Tem como identifier um par (moduleName, registoEPH)
 		/// </summary>	
 		public Dictionary<string, Area> EphsRecords { get; set; }
@@ -103,24 +103,7 @@ namespace CSGenio.framework
 	[Serializable]
 	public class User : ICloneable
 	{
-		private string name; //login do user
-		private double status; //login do user
-		private bool auth2FA; //2FA do user enable/disable
-		private string auth2FATp; //2FA Type do user
-		//private Dictionary<string,LevelAccess> modulosNivel;//to cada mÛdulo o nÌvel do user
-		//private Hashtable ephs; //tem como identifier um par (moduleName,nomeEPH)
-		//private Dictionary<string,Dictionary<string,string>> valoresEphs; //usa o mesmo identifier que as ephs
-		//private Dictionary<string,Area> registosEphs; //usa o mesmo identifier que as ephs
-		private string idSessao; //identifier da sess„o
-		private string Qyear; //Qyear actual
-		private List<string> anos; //lista de anos a que este user tem acesso
-		private bool publico; //se È publico
-		private string moduloActual; //module que est· a ser acedido
-		private string linguagemActual; //linguagem actual da aplicaÁ„o
-		private string location; // localizaÁ„o do user, utilizado to validaÁ„o
-		private string tokenAux; // token to utilizaÁ„o a recursos externos
-		private string code; // code: cÛdigo recebido por recursos externos
-		private bool validated; // validated: par‚metros de recursos externos validados
+		
 
 		///Create by [TMV|PG] (26.08.2020)
 		public EphsToFill EphTofill { get; set; }
@@ -143,23 +126,23 @@ namespace CSGenio.framework
 		/// Constructor da classe
 		/// </summary>
 		/// <param name="nome">Login do user</param>
-		/// <param name="idSessao">ID da sess„o</param>
-		/// <param name="anoAplicacao">Year da aplicaÁ„o</param>
+		/// <param name="idSessao">ID da sess√£o</param>
+		/// <param name="anoAplicacao">Year da aplica√ß√£o</param>
 		public User(string name, string idSessao, string anoAplicacao) : this(name, idSessao, anoAplicacao, "") { }
 
 		/// <summary>
 		/// Constructor da classe
 		/// </summary>
 		/// <param name="nome">Login do user</param>
-		/// <param name="idSessao">ID da sess„o</param>
-		/// <param name="anoAplicacao">Year da aplicaÁ„o</param>
-		/// <param name="localizacao">LocalizaÁ„o do user</param>
+		/// <param name="idSessao">ID da sess√£o</param>
+		/// <param name="anoAplicacao">Year da aplica√ß√£o</param>
+		/// <param name="localizacao">Localiza√ß√£o do user</param>
 		public User(string name, string idSessao, string anoAplicacao, string location)
 		{
-			this.name = name;
-			this.idSessao = idSessao;
+			Name = name;
+			SessionId = idSessao;
 			this.Qyear = anoAplicacao;
-			this.location = location;
+			Location = location;
 
 			userDataPerYear = new Dictionary<string, QUserCfg> ();
 			userDataPerYear.Add(this.Qyear, new QUserCfg(this.Qyear));
@@ -186,22 +169,22 @@ namespace CSGenio.framework
 		/// <param name="validated">Validated external resource parameters</param>
 		/// <param name="ephTofill">Initial PHE to be filled</param>
 		/// <param name="userDataPerYear"></param>
-        public User(string name, double status, bool auth2FA, string auth2FATp, string idSessao, string appYear, List<string> anos, bool publico, string moduloActual, string linguagemActual, string location, string tokenAux, string code, bool validated, EphsToFill ephTofill, Dictionary<string, QUserCfg> userDataPerYear)
+        public User(string name, int status, bool auth2FA, string auth2FATp, string idSessao, string appYear, List<string> anos, bool publico, string moduloActual, string linguagemActual, string location, string tokenAux, string code, bool validated, EphsToFill ephTofill, Dictionary<string, QUserCfg> userDataPerYear)
         {
-            this.name = name;
-            this.status = status;
-            this.auth2FA = auth2FA;
-            this.auth2FATp = auth2FATp;
-            this.idSessao = idSessao;
+            Name = name;
+            Status = status;
+            Auth2FA = auth2FA;
+            Auth2FATp = auth2FATp;
+            SessionId = idSessao;
             Qyear = appYear;
-            this.anos = anos;
-            this.publico = publico;
-            this.moduloActual = moduloActual;
-            this.linguagemActual = linguagemActual;
-            this.location = location;
-            this.tokenAux = tokenAux;
-            this.code = code;
-            this.validated = validated;
+            Years = anos;
+            Public = publico;
+            CurrentModule = moduloActual;
+            Language = linguagemActual;
+            Location = location;
+            TokenAux = tokenAux;
+            Code = code;
+            Validated = validated;
             EphTofill = ephTofill;
             this.userDataPerYear = userDataPerYear ?? new Dictionary<string, QUserCfg>();
 
@@ -213,43 +196,27 @@ namespace CSGenio.framework
         }
 
 		/// <summary>
-		/// MÈtodo que permite colocar ou devolver o login do user
+		/// M√©todo que permite colocar ou devolver o login do user
 		/// </summary>
-		public string Name
-		{
-			get { return name; }
-			set { name = value; }
-		}
+		public string Name { get; set; }
 
 		/// <summary>
-		/// MÈtodo que permite colocar ou devolver o status do user
+		/// M√©todo que permite colocar ou devolver o status do user
 		/// </summary>
-		public double Status
-		{
-			get { return status; }
-			set { status = value; }
-		}
+		public int Status { get; set; }
 
 		/// <summary>
-		/// MÈtodo que permite colocar ou devolver se o user tem 2FA ativado
+		/// M√©todo que permite colocar ou devolver se o user tem 2FA ativado
 		/// </summary>
-		public bool Auth2FA
-		{
-			get { return auth2FA; }
-			set { auth2FA = value; }
-		}
+		public bool Auth2FA { get; set; }
 
 		/// <summary>
-		/// MÈtodo que permite colocar ou devolver qual o tipo de 2FA que o user tem ativado
+		/// M√©todo que permite colocar ou devolver qual o tipo de 2FA que o user tem ativado
 		/// </summary>
-		public string Auth2FATp
-		{
-			get { return auth2FATp; }
-			set { auth2FATp = value; }
-		}
+		public string Auth2FATp { get; set; }
 
 		/// <summary>
-		/// MÈtodo que permite colocar ou devolver a lista de modulos e respectivo level do user
+		/// M√©todo que permite colocar ou devolver a lista de modulos e respectivo level do user
 		/// </summary>
 		[Obsolete]
 		public ReadOnlyDictionary<string, LevelAccess> LevelModules
@@ -272,7 +239,7 @@ namespace CSGenio.framework
 		}
 
 		/// <summary>
-		/// MÈtodo que permite colocar ou devolver a lista de modulos e respectivo level do user
+		/// M√©todo que permite colocar ou devolver a lista de modulos e respectivo level do user
 		/// </summary>
 		private Dictionary<string, List<Role>> ModuleRoles
 		{
@@ -287,7 +254,7 @@ namespace CSGenio.framework
 		}
 
 		/// <summary>
-		/// MÈtodo que permite colocar ou devolver as Entradas Permanentes de Historial a que o user È sujeito
+		/// M√©todo que permite colocar ou devolver as Entradas Permanentes de Historial a que o user √© sujeito
 		/// </summary>
 		public Hashtable Ephs
 		{
@@ -302,7 +269,7 @@ namespace CSGenio.framework
 		}
 
 		/// <summary>
-		/// MÈtodo que permite colocar ou devolver um dicionario com os Qvalues dos fields das ephs
+		/// M√©todo que permite colocar ou devolver um dicionario com os Qvalues dos fields das ephs
 		/// </summary>
 		public Dictionary<string, Dictionary<string, string>> EphValues
 		{
@@ -317,7 +284,7 @@ namespace CSGenio.framework
 		}
 
 		/// <summary>
-		/// MÈtodo que permite colocar ou devolver instancias das ·reas (os registos) com Entradas Permanentes de Historial a que o user È sujeito
+		/// M√©todo que permite colocar ou devolver instancias das √°reas (os registos) com Entradas Permanentes de Historial a que o user √© sujeito
 		/// </summary>
 		public Dictionary<string, Area> EphsRecords
 		{
@@ -345,20 +312,24 @@ namespace CSGenio.framework
 		}
 
 		/// <summary>
-		/// MÈtodo que permite devolver o id da sess„o
+		/// M√©todo que permite devolver o id da sess√£o
 		/// </summary>
-		public string SessionId
-		{
-			get { return idSessao; }
-		}
+		public string SessionId { get; }
 
-		/// <summary>
-		/// MÈtodo que permite devolver o Qyear que est· a aceder
-		/// </summary>
-		public string Year
+
+        private string Qyear; //Qyear actual
+        /// <summary>
+        /// M√©todo que permite devolver o Qyear que est√° a aceder
+        /// </summary>
+        public string Year
 		{
 			get { return Qyear; }
-			set { Qyear = value; if(!userDataPerYear.ContainsKey(Qyear)) userDataPerYear.Add(Qyear, new QUserCfg(Qyear)); }
+			set 
+			{ 
+				Qyear = value;
+				if(!userDataPerYear.ContainsKey(Qyear)) 
+					userDataPerYear.Add(Qyear, new QUserCfg(Qyear)); 
+			}
 		}
 
 		/// <summary>
@@ -375,19 +346,15 @@ namespace CSGenio.framework
 		}
 
 		/// <summary>
-		/// Lista de anos em que o user tem permiss„o de entrar
+		/// Lista de anos em que o user tem permiss√£o de entrar
 		/// </summary>
-		public List<string> Years
-		{
-			get { return anos; }
-			set { anos = value; }
-		}
+		public List<string> Years { get; set; }
 
 		/// <summary>
-		/// MÈtodo que verifica se o user tem level definido to o mÛdulo
+		/// M√©todo que verifica se o user tem level definido to o m√≥dulo
 		/// </summary>
-		/// <param name="modulo">name do mÛdulo</param>
-		/// <returns>true se tem, false caso contr·rio</returns>
+		/// <param name="modulo">name do m√≥dulo</param>
+		/// <returns>true se tem, false caso contr√°rio</returns>
 		[Obsolete]
 		public bool hasLevelModule(string module)
 		{
@@ -400,9 +367,9 @@ namespace CSGenio.framework
 		}
 
 		/// <summary>
-		/// MÈtodo que devolve o level do user to o module
+		/// M√©todo que devolve o level do user to o module
 		/// </summary>
-		/// <param name="modulo">name do mÛdulo</param>
+		/// <param name="modulo">name do m√≥dulo</param>
 		/// <returns>level de acesso</returns>
 		[Obsolete]
 		public int getLevelByModule(string module)
@@ -414,57 +381,45 @@ namespace CSGenio.framework
 		}
 
 		/// <summary>
-		/// MÈtodo que permite preencher e devolver se o user È publico
+		/// M√©todo que permite preencher e devolver se o user √© publico
 		/// </summary>
-		public bool Public
-		{
-			get { return publico; }
-			set { publico = value; }
-		}
+		public bool Public { get; set; }
 
 		/// <summary>
-		/// MÈtodo que permite colocar ou devolver o mÛdulo a que o user est· ligado
+		/// M√©todo que permite colocar ou devolver o m√≥dulo a que o user est√° ligado
 		/// </summary>
-		public string CurrentModule
-		{
-			get { return moduloActual; }
-			set { moduloActual = value; }
-		}
+		public string CurrentModule { get; set; }
 
 		/// <summary>
-		/// MÈtodo que permite colocar ou devolver a linguagem actual da aplicaÁ„o
+		/// M√©todo que permite colocar ou devolver a linguagem actual da aplica√ß√£o
 		/// </summary>
-		public string Language
-		{
-			get { return linguagemActual; }
-			set { linguagemActual = value; }
-		}
+		public string Language { get; set; }
 
 		/// <summary>
 		/// Verifica se o user tem alguma eph definida
 		/// </summary>
-		/// <returns>true se e sÛ se o user tem alguma eph definida</returns>
+		/// <returns>true se e s√≥ se o user tem alguma eph definida</returns>
 		public bool hasEph()
 		{
 			return Ephs != null;
 		}
 
 		/// <summary>
-		/// Verifica se o user tem a EPH da ·rea indicada
+		/// Verifica se o user tem a EPH da √°rea indicada
 		/// </summary>
-		/// <param name="areaEph">Name da ·rea (alias)</param>
-		/// <returns>true se e sÛ se o user tem eph to o presente mÛdulo</returns>
+		/// <param name="areaEph">Name da √°rea (alias)</param>
+		/// <returns>true se e s√≥ se o user tem eph to o presente m√≥dulo</returns>
 		public bool hasEph(string areaEph)
 		{
-			return hasEph(this.CurrentModule, areaEph);
+			return hasEph(CurrentModule, areaEph);
 		}
 
 		/// <summary>
-		/// Verifica se o user tem a EPH da ·rea indicada
+		/// Verifica se o user tem a EPH da √°rea indicada
 		/// </summary>
-		/// <param name="modulo">MÛdulo</param>
-		/// <param name="areaEph">Name da ·rea (alias)</param>
-		/// <returns>true se e sÛ se o user tem eph definida to a area no mÛdulo indicado</returns>
+		/// <param name="modulo">M√≥dulo</param>
+		/// <param name="areaEph">Name da √°rea (alias)</param>
+		/// <returns>true se e s√≥ se o user tem eph definida to a area no m√≥dulo indicado</returns>
 		public bool hasEph(string module, string areaEph)
 		{
 			if(Ephs != null)
@@ -489,7 +444,7 @@ namespace CSGenio.framework
 
 		/// <summary>
 		/// Devolve o dicionario com os Qvalues dos fields da area da eph
-		/// <param name="areaEph">Name da ·rea (alias)</param>
+		/// <param name="areaEph">Name da √°rea (alias)</param>
 		/// </summary>
 		public string[] fieldsEph(string areaEph)
 		{
@@ -528,42 +483,28 @@ namespace CSGenio.framework
         }
 
 		/// <summary>
-		/// LocalizaÁ„o do user, utilizada to validaÁ„o
-		/// Na Web È o endereÁo de IP do cliente do qual estamos a receber os pedidos
+		/// Localiza√ß√£o do user, utilizada to valida√ß√£o
+		/// Na Web √© o endere√ßo de IP do cliente do qual estamos a receber os pedidos
 		/// </summary>
-		public string Location
-		{
-			get { return location; }
-			set { location = value; }
-		}
+		public string Location {  get; set; }
 
 		/// <summary>
-		/// token to utilizaÁ„o a recursos externos
+		/// token to utiliza√ß√£o a recursos externos
 		/// </summary>
-		public string TokenAux
-		{
-			get { return tokenAux; }
-			set { tokenAux = value; }
-		}
+		public string TokenAux { get; set; }
 
 		/// <summary>
-		/// code to utilizaÁ„o a recursos externos
+		/// code to utiliza√ß√£o a recursos externos
 		/// </summary>
-		public string Code
-		{
-			get { return code; }
-			set { code = value; }
-		}
+		public string Code { get; set; }
+
 		/// <summary>
 		/// external code and token validated
 		/// </summary>
-		public bool Validated
-		{
-			get { return validated; }
-			set { validated = value; }
-		}
+		public bool Validated { get; set; }
+
 		/// <summary>
-		/// Verificar se user tem permissıes de acesso ao determinado role (MH: to MVC)
+		/// Verificar se user tem permiss√µes de acesso ao determinado role (MH: to MVC)
 		/// </summary>
 		/// <param name="role">Role that will be checked against user permissions</param>
 		/// <returns></returns>
@@ -599,7 +540,7 @@ namespace CSGenio.framework
 		public bool CheckModuleLevel(int level, string module = null)
 		{
 			if(string.IsNullOrEmpty(module))
-				module = this.moduloActual ?? string.Empty;
+				module = CurrentModule ?? string.Empty;
 			return getLevelByModule(module) == level;
 		}
 
@@ -715,22 +656,23 @@ namespace CSGenio.framework
         public object Clone()
         {
 			return new User(
-				name: name,
-				status: status,
-				auth2FA: auth2FA,
-				auth2FATp: auth2FATp,
-				idSessao: idSessao,
+				name: Name,
+				status: Status,
+				auth2FA: Auth2FA,
+				auth2FATp: Auth2FATp,
+				idSessao: SessionId,
 				appYear: Qyear,
-				anos: new List<string>(anos),
-				publico: publico,
-				moduloActual: moduloActual,
-				linguagemActual: linguagemActual,
-				location: location,
-				tokenAux: tokenAux,
-				code: code,
-				validated: validated,
+				anos: new List<string>(Years),
+				publico: Public,
+				moduloActual: CurrentModule,
+				linguagemActual: Language,
+				location: Location,
+				tokenAux: TokenAux,
+				code: Code,
+				validated: Validated,
 				ephTofill: (EphsToFill)EphTofill?.Clone(),
-				userDataPerYear: userDataPerYear?.ToDictionary(kv => kv.Key, kv => (QUserCfg)kv.Value.Clone()));
+				userDataPerYear: userDataPerYear?.ToDictionary(kv => kv.Key, kv => (QUserCfg)kv.Value.Clone())
+				);
         }
 	}
 

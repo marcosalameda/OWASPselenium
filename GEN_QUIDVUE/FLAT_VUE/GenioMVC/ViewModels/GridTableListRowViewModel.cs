@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 
 using CSGenio.framework;
+using CSGenio.business;
 using GenioMVC.Models;
 using GenioMVC.Models.Navigation;
 
@@ -9,9 +10,9 @@ namespace GenioMVC.ViewModels
 {
 	public abstract class GridTableListRowViewModel<T> : CrudViewModel<T> where T : ModelBase
 	{
-        protected GridTableListRowViewModel(UserContext userContext, string? identifier = null, bool nestedForm = false) : base(userContext, identifier, nestedForm) { }
+		protected GridTableListRowViewModel(UserContext userContext, string? identifier = null, bool nestedForm = false) : base(userContext, identifier, nestedForm) { }
 
-        protected GridTableListRowViewModel(UserContext userContext, string identifier, T row, bool nestedForm = false) : base(userContext, identifier, row, nestedForm) { }
+		protected GridTableListRowViewModel(UserContext userContext, string identifier, T row, bool nestedForm = false) : base(userContext, identifier, row, nestedForm) { }
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -53,24 +54,45 @@ namespace GenioMVC.ViewModels
 			}
 		}
 
-		public override void Apply()
-		{
-			MapFromClientSide();
-			Model.Apply();
-		}
+        public override void Apply()
+        {
+            MapFromClientSide();
 
-		public override void Save()
-		{
-			MapFromClientSide();
-			this.flashMessage = Model.Save();
-		}
+            StatusMessage result = new StatusMessage();
+            result = EvaluateWriteConditions(isApply: false);
+
+            if (result.Status == Status.E)
+                throw new BusinessException(result.Message, "DbArea.alterar", "Error updating record: " + result.Message);
+            else
+                Model.Apply();
+        }
+
+        public override void Save()
+        {
+            MapFromClientSide();
+
+            if (HasWriteConditions)
+            {
+                StatusMessage result = new StatusMessage();
+                result = EvaluateWriteConditions(isApply: false);
+
+                if (result.Status != Status.OK)
+                    this.flashMessage = result;
+                if (result.Status == Status.E)
+                    throw new BusinessException(result.Message, "DbArea.alterar", "Error updating record: " + result.Message);
+                else
+                    this.flashMessage = Model.Save();
+            }
+            else
+                this.flashMessage = Model.Save();
+        }
 
 		// Creates the pseudo-new record in the database (zzstate=1)
 		public override void New()
 		{
 			editable = true;
 			Model = CreateModelBase();
-			Model.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level);
+			Model.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level);
 			Model.New(Identifier);
 		}
 
@@ -79,15 +101,26 @@ namespace GenioMVC.ViewModels
 		{
 			editable = true;
 			Model = CreateModelBase();
-			Model.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level);
+			Model.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level);
 
 			this.LoadPartial(new NameValueCollection());
 
-			// Preencher Qvalues default
-			Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, FunctionType.INS);
+			// Fill default values
+			try
+			{
+				Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, FunctionType.INS);
+			}
+			catch { /* Not all formulas can be calculated without the actual record being in the database. */ }
+
 			LoadDefaultValues();
-			// Preencher operações internas (In records that do not exist in the DB, it is not possible to calculate)
-			//Model.baseklass.fillInternalOperations(m_userContext.PersistentSupport, null);
+
+			// Fill internal operations
+			try
+			{
+				Model.baseklass.fillInternalOperations(m_userContext.PersistentSupport, null);
+			}
+			catch { /* Not all formulas can be calculated without the actual record being in the database. */ }
+
 			MapFromModel(Model);
 		}
 

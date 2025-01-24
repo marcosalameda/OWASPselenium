@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Proje _proje;
 		[DisplayName("Proje")]
 		[ShouldSerialize("Proje")]
-		public virtual Proje Proje { 
-			get { 
+		public virtual Proje Proje {
+			get {
 				if (!this.isEmptyModel && (_proje == null || (!string.IsNullOrEmpty(ValCodproje) && (_proje.isEmptyModel || _proje.klass.QPrimaryKey != ValCodproje))))
 					_proje = Models.Proje.Find(ValCodproje, m_userContext, Identifier, _fieldsToSerialize);
 				if (_proje == null)
 					_proje = new Models.Proje(m_userContext, true, _fieldsToSerialize);
 				return _proje;
 			}
-			set { _proje = value; } 
+			set { _proje = value; }
 		}
-		
+
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula: ST "[EXPEN->CODYEAR]"</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Year _year;
 		[DisplayName("Year")]
 		[ShouldSerialize("Year")]
-		public virtual Year Year { 
-			get { 
+		public virtual Year Year {
+			get {
 				if (!this.isEmptyModel && (_year == null || (!string.IsNullOrEmpty(ValCodyear) && (_year.isEmptyModel || _year.klass.QPrimaryKey != ValCodyear))))
 					_year = Models.Year.Find(ValCodyear, m_userContext, Identifier, _fieldsToSerialize);
 				if (_year == null)
 					_year = new Models.Year(m_userContext, true, _fieldsToSerialize);
 				return _year;
 			}
-			set { _year = value; } 
+			set { _year = value; }
 		}
-		
+
 
 		[DisplayName("Year")]
 		/// <summary>Field : "Year" Tipo: "C" Formula: ++ "[YEAR->YEAR]"</summary>
@@ -81,13 +81,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Value" Tipo: "$D" Formula: SR "[EXPEN->VALUE]"</summary>
 		[ShouldSerialize("Agreg.ValValue")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDouble(value); } }
+		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
 
 		[DisplayName("Year NUMBER")]
 		/// <summary>Field : "Year NUMBER" Tipo: "N" Formula: ++ "[YEAR->YEARNUM]"</summary>
 		[ShouldSerialize("Agreg.ValYearnumb")]
 		[NumericAttribute(0)]
-		public decimal? ValYearnumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDouble(value); } }
+		public decimal? ValYearnumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Agreg.ValZzstate")]
@@ -97,19 +97,19 @@ namespace GenioMVC.Models
 		public Agreg(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAagreg(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Agreg(UserContext userContext, CSGenioAagreg val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAagreg csgenioa)
@@ -136,7 +136,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

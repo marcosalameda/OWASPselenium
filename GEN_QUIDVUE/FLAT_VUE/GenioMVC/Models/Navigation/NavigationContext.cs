@@ -357,34 +357,6 @@ namespace GenioMVC.Models.Navigation
 		public bool CheckKey(string key) { return this.CheckKey(key, CurrentLevel.Level); }
 
 		/// <summary>
-		/// Verify if the key is present in the previous history level.
-		/// Used to validate if a form control was filled by history.
-		/// </summary>
-		/// <param name="key">Key to check</param>
-		/// <returns>True if the key exists and is not nullified at current level.</returns>
-		public bool CheckFilledByHistory(string key)
-		{
-			if (this.PreviousLevel == null)
-				return false;
-
-			// check if key is nullified at current history level
-			if (this.CurrentLevel.CheckEntry(key) && this.CurrentLevel.GetEntry(key) == null)
-				return false;
-
-			bool hasKey = this.CheckKey(key, out object val, this.PreviousLevel.Level);
-
-			// allow overriding existing history key
-			if (val == null)
-				return false;
-
-			// multiple values are not considered
-			if (val is Array)
-				return false;
-
-			return hasKey;
-		}
-
-		/// <summary>
 		/// Obter o Qvalue da key
 		/// </summary>
 		/// <param name="key">Key a procurar</param>
@@ -548,7 +520,7 @@ namespace GenioMVC.Models.Navigation
 		/// <summary>
 		/// Returns a hash table with the list of history entries in all levels
 		/// </summary>
-		/// <param name="OnlyCurrentLevel">Indicates if we want entries, from the current level only</param>
+		/// <param name="onlyCurrentLevel">Indicates if we want entries, from the current level only</param>
 		/// <returns>
 		/// Hashtable containing the list of entries in all levels
 		/// </returns>
@@ -558,7 +530,7 @@ namespace GenioMVC.Models.Navigation
 		/// CÓDIGO ANTIGO - Verificar necesidade desse código, (Usado algures nos documentos)
 		///
 		/// </remarks>
-		public Hashtable GetAllEntries(bool OnlyCurrentLevel = false)
+		public Hashtable GetAllEntries(bool onlyCurrentLevel = false)
 		{
 			Hashtable history = new Hashtable();
 			// History (stack) - The enumerator returns items in LIFO (last-in, first-out) order
@@ -568,8 +540,8 @@ namespace GenioMVC.Models.Navigation
 					if (!history.ContainsKey(key))
 						history.Add(key, hLevel.GetEntry(key));
 
-				//get entries from the parent only in some cases
-				if (OnlyCurrentLevel)
+				// Get entries from the parent only in some cases
+				if (onlyCurrentLevel)
 					break;
 			}
 
@@ -590,12 +562,33 @@ namespace GenioMVC.Models.Navigation
 			public string NavigationId { get; set; }
 		}
 
-		private bool compareEntryValues(object obj1, object obj2)
+		/// <summary>
+		/// Compares two objects for equality, handling JsonElement specially.
+		/// If both objects are JsonElement, it performs a deep comparison.
+		/// If one is JsonElement and the other is not, it attempts to compare them based on their serialized JSON string representation.
+		/// Otherwise, it falls back to standard equality comparison.
+		/// </summary>
+		/// <param name="obj1">The first object to compare.</param>
+		/// <param name="obj2">The second object to compare.</param>
+		/// <returns>True if the objects are considered equal, false otherwise.</returns>
+		private bool CompareEntryValues(object obj1, object obj2)
 		{
-			// The more complex objects (for example the CriteriaSet), when they are deserialized come in JToken format
-			if (obj1 is Newtonsoft.Json.Linq.JToken && obj2 is Newtonsoft.Json.Linq.JToken)
-				return Newtonsoft.Json.Linq.JToken.DeepEquals((Newtonsoft.Json.Linq.JToken)obj1, (Newtonsoft.Json.Linq.JToken)obj2);
-			return object.Equals(obj1, obj2);
+			// Special handling when both objects are JsonElement.
+			if (obj1 is System.Text.Json.JsonElement jsonElement1 && obj2 is System.Text.Json.JsonElement jsonElement2)
+			{
+				// To avoid overloading the server, we will opt for a simplified comparison.
+				return string.Equals(jsonElement1.GetRawText(), jsonElement2.GetRawText(), StringComparison.Ordinal);
+			}
+			// If only one is JsonElement, serialize the other to JSON for comparison.
+			// This ensures a fair comparison by comparing their JSON string representations.
+			else if (obj1 is System.Text.Json.JsonElement || obj2 is System.Text.Json.JsonElement)
+			{
+				var json1 = obj1 is System.Text.Json.JsonElement elem1 ? elem1.GetRawText() : System.Text.Json.JsonSerializer.Serialize(obj1);
+				var json2 = obj2 is System.Text.Json.JsonElement elem2 ? elem2.GetRawText() : System.Text.Json.JsonSerializer.Serialize(obj2);
+				return string.Equals(json1, json2, StringComparison.Ordinal);
+			}
+			// Fallback to standard object equality comparison.
+			return Equals(obj1, obj2);
 		}
 
 		/// <summary>
@@ -631,7 +624,7 @@ namespace GenioMVC.Models.Navigation
 							var currentEntryValue = currentHistory.GetEntry(key);
 							var originalEntryValue = originalHistory.GetEntry(key);
 							// Added and updated keys
-							if (!originalHistory.CheckEntry(key) || !compareEntryValues(currentEntryValue, originalEntryValue))
+							if (!originalHistory.CheckEntry(key) || !CompareEntryValues(currentEntryValue, originalEntryValue))
 								hInfo.set.Add(key, currentEntryValue);
 						}
 					}

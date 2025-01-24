@@ -4,28 +4,29 @@
 		class="i-dbedit">
 		<div
 			:id="`list-${controlId}`"
-			class="input-xlarge check-list-extended">
+			class="input-xlarge q-checklist__extension">
 			<template
 				v-for="option in getComputedRows"
 				:key="option">
-				<check-tag
-					:option="option"
-					:disabled="disabled"
-					:primary-key-column-name="primaryKeyColumnName"
-					:display-column-name="searchColumnName"
-					@remove-label="removeLabel($event)" />
+				<q-badge
+					class="q-checklist__extension-tag"
+					pill
+					:removable="!disabled"
+					@click:remove="removeLabel(option)">
+					{{ getCellNameValue(option,searchColumnName) }}
+				</q-badge>
 			</template>
 
 			<q-button
 				v-if="!disabled"
 				b-style="primary"
-				:class="['checklist--button', { 'disabled__checklist--button': getComputedDisabled }]"
+				:class="['q-checklist__button', { 'q-checklist__button--disabled': getComputedDisabled }]"
 				:title="texts.addButtonTitle"
 				@click="onButtonClick">
 				<q-icon icon="add" />
 			</q-button>
 
-			<span class="checklist__search--input">
+			<span class="q-checklist__search--input">
 				<input
 					:id="`search-${controlId}`"
 					v-show="searchVisible"
@@ -52,8 +53,6 @@
 	import { validateTexts } from '@/mixins/genericFunctions.js'
 	import listFunctions from '@/mixins/listFunctions.js'
 
-	import CheckTag from './CheckTag.vue'
-
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {
 		placeholder: 'Search in',
@@ -68,10 +67,6 @@
 			'remove-label',
 			'on-enter'
 		],
-
-		components: {
-			CheckTag
-		},
 
 		inheritAttrs: false,
 
@@ -255,10 +250,9 @@
 							this.search = ''
 							this.$emit(
 								'on-enter',
-								listFunctions.getCellNameValue(
-									this.results[0],
-									this.primaryKeyColumnName
-								)
+								{
+									rowKeyPath: listFunctions.getCellNameValue(this.results[0], this.primaryKeyColumnName)
+								}
 							)
 						}
 						break
@@ -288,11 +282,11 @@
 
 			/**
 			 * Removes a label associated with a selected option.
-			 * @param {string} primaryKey - The primary key of the option to remove.
+			 * @param {string} primaryKey - The option to remove.
 			 */
-			removeLabel(primaryKey)
+			removeLabel(option)
 			{
-				this.$emit('remove-label', primaryKey)
+				this.$emit('remove-label', option.Fields[this.primaryKeyColumnName])
 			},
 
 			/**
@@ -304,6 +298,16 @@
 				this.$nextTick().then(() => {
 					this.$refs.search.focus()
 				})
+			},
+
+			/**
+			 * Retrieves the display value of a row's column.
+			 * @param {Object} row - The row object containing the columnName.
+			 * @param {String} columnName - The name of the column to retrieve the value from.
+			 * @returns {String} The value of the cell in the specified column of the row.
+			 */
+			getCellNameValue(row, columnName) {
+				return listFunctions.getCellNameValue(row, columnName)
 			}
 		}
 	}

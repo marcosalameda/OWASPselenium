@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -116,14 +116,11 @@
 										v-on="controls.VENDAW01ORGANORGANIZA.handlers"
 										:loading="controls.VENDAW01ORGANORGANIZA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.VENDAW01ORGANORGANIZA.isVisible"
 											v-bind="controls.VENDAW01ORGANORGANIZA.props"
-											:model-value="model.ValCodorgan.value"
-											v-on="controls.VENDAW01ORGANORGANIZA.handlers"
-											@update:model-value="model.ValCodorgan.fnUpdateValue" />
+											v-on="controls.VENDAW01ORGANORGANIZA.handlers" />
 										<q-see-more-vendaw01organorganiza
 											v-if="controls.VENDAW01ORGANORGANIZA.seeMoreIsVisible"
 											v-bind="controls.VENDAW01ORGANORGANIZA.seeMoreParams"
@@ -152,12 +149,12 @@
 													v-on="controls.VENDAW01SALE_IDENTIFI.handlers"
 													:loading="controls.VENDAW01SALE_IDENTIFI.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.VENDAW01SALE_IDENTIFI.props"
 														:model-value="model.ValIdentifi.value"
-														@update:model-value="model.ValIdentifi.fnUpdateValue" />
+														@blur="onBlur(controls.VENDAW01SALE_IDENTIFI, model.ValIdentifi.value)"
+														@change="model.ValIdentifi.fnUpdateValueOnChange" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -171,12 +168,12 @@
 													v-on="controls.VENDAW01SALE_POTCOMPR.handlers"
 													:loading="controls.VENDAW01SALE_POTCOMPR.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.VENDAW01SALE_POTCOMPR.props"
 														:model-value="model.ValPotcompr.value"
-														@update:model-value="model.ValPotcompr.fnUpdateValue" />
+														@blur="onBlur(controls.VENDAW01SALE_POTCOMPR, model.ValPotcompr.value)"
+														@change="model.ValPotcompr.fnUpdateValueOnChange" />
 												</base-input-structure>
 											</q-control-wrapper>
 											<q-control-wrapper
@@ -188,15 +185,11 @@
 													v-on="controls.VENDAW01SALE_PROSPECC.handlers"
 													:loading="controls.VENDAW01SALE_PROSPECC.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<template #label>
 														<q-checkbox-input
 															v-if="controls.VENDAW01SALE_PROSPECC.isVisible"
-															id="VENDAW01SALE_PROSPECC"
-															size="medium"
-															:model-value="model.ValProspecc.value"
-															:readonly="controls.VENDAW01SALE_PROSPECC.readonly"
+															v-bind="controls.VENDAW01SALE_PROSPECC.props"
 															@update:model-value="model.ValProspecc.fnUpdateValue" />
 													</template>
 												</base-input-structure>
@@ -294,15 +287,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'VENDAW01',
-						location: 'form-VENDAWV-VENDAW01',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'VENDAW01',
+					location: 'form-VENDAWV-VENDAW01',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -351,6 +342,8 @@
 					mode: ''
 				},
 
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
+
 				wizardData: readonly({
 					type: qEnums.wizardTypes.vertical,
 					wizardId: 'Vendawv_Fases',
@@ -366,56 +359,56 @@
 							title: computed(() => this.Resources.PROPESCCAO51483),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAWV-VENDAW01',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 2,
 							title: computed(() => this.Resources.QUALIFICACAO07026),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAWV-VENDAW02',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 3,
 							title: computed(() => this.Resources.PRE_ABORDAGEM30870),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAWV-VENDAW03',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 4,
 							title: computed(() => this.Resources.ABORDAGEM05839),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAWV-VENDAW04',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 5,
 							title: computed(() => this.Resources.APRESENTACAO15975),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAWV-VENDAW05',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 6,
 							title: computed(() => this.Resources.SUPERAR_OBJECOES40220),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAWV-VENDAW06',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 7,
 							title: computed(() => this.Resources.FECHO_DE_VENDA55198),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAWV-VENDAW07',
-							isRequired: false
+							isRequired: false,
 						},
 						{
 							order: 8,
 							title: computed(() => this.Resources.ACOMPANHAMENTO53507),
 							caption: computed(() => this.Resources.PHASE_CAPTION_PLACEH06557),
 							route: 'form-VENDAWV-VENDAW08',
-							isRequired: false
+							isRequired: false,
 						}
 					],
 					stepData: {
@@ -425,7 +418,7 @@
 						applyIsOff: false,
 						isFinal: false,
 						backwardIsOff: false,
-						applyOnBackward: false,
+						applyOnBackward: true,
 						clearOnBackward: false
 					},
 					stepFieldIds: [
@@ -508,8 +501,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -643,7 +637,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -697,21 +691,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -722,25 +701,9 @@
 						id: 'VENDAW01ORGANORGANIZA',
 						name: 'ORGANIZA',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.ORGANIZATION64123),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodorgan',
-							dependencyEvent: 'fieldChange:sale.codorgan'
-						},
-						dependentFields: () => {
-							return {
-								set 'organ.codorgan'(value) { vm.model.ValCodorgan.updateValue(value) },
-								set 'organ.organiza'(value) { vm.model.TableOrganOrganiza.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -749,20 +712,26 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodorgan',
+							dependencyEvent: 'fieldChange:sale.codorgan'
+						},
+						dependentFields: () => ({
+							set 'organ.codorgan'(value) { vm.model.ValCodorgan.updateValue(value) },
+							set 'organ.organiza'(value) { vm.model.TableOrganOrganiza.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					VENDAW01PSEUDNOVOGR01: new fieldControlClass.GroupControl({
 						id: 'VENDAW01PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.PROSPECTING26583),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -772,16 +741,12 @@
 						id: 'VENDAW01SALE_IDENTIFI',
 						name: 'IDENTIFI',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.IDENTIFICATION_OF_BU58085),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDAW01PSEUDNOVOGR01',
 						maxLength: 85,
 						labelId: 'label_VENDAW01SALE_IDENTIFI',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -791,16 +756,12 @@
 						id: 'VENDAW01SALE_POTCOMPR',
 						name: 'POTCOMPR',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.POTENTIAL_BUYERS44829),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDAW01PSEUDNOVOGR01',
 						maxLength: 50,
 						labelId: 'label_VENDAW01SALE_POTCOMPR',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -810,14 +771,10 @@
 						id: 'VENDAW01SALE_PROSPECC',
 						name: 'PROSPECC',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PROSPECTING_CARRIED_08979),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'VENDAW01PSEUDNOVOGR01',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -825,13 +782,9 @@
 						id: 'VENDAWV_PSEUDFASES___',
 						name: 'FASES',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHASE_AREA51284),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -878,7 +831,7 @@
 						/** The foreign key to the ORGAN table */
 						get organ() { return vm.model.ValCodorgan },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -978,6 +931,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1017,6 +978,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1143,6 +1112,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR VENDAW01]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1158,6 +1143,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS VENDAW01]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

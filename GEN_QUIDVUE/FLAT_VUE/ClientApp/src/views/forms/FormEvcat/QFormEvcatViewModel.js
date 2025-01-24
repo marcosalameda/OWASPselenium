@@ -110,17 +110,16 @@ export default class ViewModel extends ViewModelBase
 			area: 'EVCAT',
 			field: 'UNTIL',
 			description: computed(() => this.Resources.UNTIL39173),
+			isFixed: true,
 			showWhen: {
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: emptyD([EVCAT->UNTILMAN])==1 && emptyD([EVCAT->UNTIL])==0
-					// eslint-disable-next-line eqeqeq
-					return qApi.emptyD(this.ValUntilman.value)==1&&qApi.emptyD(this.ValUntil.value)==0
+					return qApi.emptyD(this.ValUntilman.value)===1&&qApi.emptyD(this.ValUntil.value)===0
 				},
 				dependencyEvents: ['fieldChange:evcat.untilman'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyD,
 			},
 		}).cloneFrom(values?.ValUntil))
@@ -137,12 +136,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: emptyD([EVCAT->UNTIL])==1
-					// eslint-disable-next-line eqeqeq
-					return qApi.emptyD(this.ValUntil.value)==1
+					return qApi.emptyD(this.ValUntil.value)===1
 				},
 				dependencyEvents: ['fieldChange:evcat.until'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyD,
 			},
 		}).cloneFrom(values?.ValUntilman))
@@ -154,24 +151,23 @@ export default class ViewModel extends ViewModelBase
 			area: 'EVCAT',
 			field: 'FIMPERIO',
 			description: computed(() => this.Resources.END_OF_PERIOD44616),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(emptyD([EVCAT->UNTILMAN])==0,[EVCAT->UNTILMAN],[EVCAT->UNTIL])
-					// eslint-disable-next-line eqeqeq
-					return qApi.iif(qApi.emptyD(this.ValUntilman.value)==0,this.ValUntilman.value,this.ValUntil.value)
+					return qApi.iif(qApi.emptyD(this.ValUntilman.value)===0,this.ValUntilman.value,this.ValUntil.value)
 				},
 				dependencyEvents: ['fieldChange:evcat.untilman', 'fieldChange:evcat.until'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyD,
 			},
 		}).cloneFrom(values?.ValFimperio))
 		watch(() => this.ValFimperio.value, (newValue, oldValue) => this.onUpdate('evcat.fimperio', this.ValFimperio, newValue, oldValue))
 
-		this.ValObservat = reactive(new modelFieldType.String({
+		this.ValObservat = reactive(new modelFieldType.MultiLineString({
 			id: 'ValObservat',
 			originId: 'ValObservat',
 			area: 'EVCAT',
@@ -193,5 +189,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodprogr'
 
 	get QPrimaryKey() { return this.ValCodprogr.value }
-	set QPrimaryKey(value) { this.ValCodprogr.value = value }
+	set QPrimaryKey(value) { this.ValCodprogr.updateValue(value) }
 }

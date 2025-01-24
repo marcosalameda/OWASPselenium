@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuPTN_131ViewModel.js'
+
 	const requiredTextResources = ['QMenuPTN_131', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,84 +117,167 @@
 				menuInfo: {
 					id: '131',
 					isMenuList: true,
+					designation: computed(() => this.Resources.CONDITIONS63260),
 					acronym: 'PTN_131',
-					name: 'ARTIG',
+					name: 'REGRA',
 					route: 'menu-PTN_131',
 					order: '131',
-					controller: 'ITEM',
+					controller: 'RULES',
 					action: 'PTN_Menu_131',
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
-						controller: 'ITEM',
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'PTN_Menu_131',
+						controller: 'RULES',
 						action: 'PTN_Menu_131',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
-							new listColumnTypes.ImageColumn({
+							new listColumnTypes.ArrayColumn({
 								order: 1,
-								name: 'ValImage',
-								area: 'ITEM',
-								field: 'IMAGE',
-								label: computed(() => this.Resources.IMAGE65174),
-								scrollData: 3,
-								sortable: false,
+								name: 'ValTipocond',
+								area: 'RULES',
+								field: 'TIPOCOND',
+								label: computed(() => this.Resources.TIPO_DE_CONDICAO09986),
+								dataLength: 1,
+								scrollData: 1,
+								array: qProjArrays.QArrayTipocond.setResources(vm.$getResource).elements,
+								arrayType: qProjArrays.QArrayTipocond.type,
 							}),
-							new listColumnTypes.DateColumn({
+							new listColumnTypes.TextColumn({
 								order: 2,
-								name: 'ValDate',
-								area: 'ITEM',
-								field: 'DATE',
-								label: computed(() => this.Resources.DATE18475),
-								scrollData: 8,
-								dateTimeType: 'Date',
+								name: 'ValDescript',
+								area: 'RULES',
+								field: 'DESCRIPT',
+								label: computed(() => this.Resources.DESCRIPTION07383),
+								dataLength: 100,
+								scrollData: 30,
 							}),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
-								name: 'ValDisponib',
-								area: 'ITEM',
-								field: 'DISPONIB',
-								label: computed(() => this.Resources.AVAILABILITY56489),
+								name: 'ValLocal',
+								area: 'RULES',
+								field: 'LOCAL',
+								label: computed(() => this.Resources.LOCAL_ONDE_EXECUTA12798),
 								dataLength: 1,
 								scrollData: 1,
-								array: qProjArrays.QArrayDsiponib.setResources(vm.$getResource).elements,
-								arrayType: qProjArrays.QArrayDsiponib.type,
-							}),
-							new listColumnTypes.BooleanColumn({
-								order: 4,
-								name: 'ValValid',
-								area: 'ITEM',
-								field: 'VALID',
-								label: computed(() => this.Resources.IN_USE42606),
-								scrollData: 1,
+								array: qProjArrays.QArrayAlocregr.setResources(vm.$getResource).elements,
+								arrayType: qProjArrays.QArrayAlocregr.type,
 							}),
 						],
 						config: {
 							name: 'PTN_Menu_131',
 							serverMode: true,
-							pkColumn: 'ValCoditem',
-							tableAlias: 'ITEM',
-							tableNamePlural: computed(() => this.Resources.ARTICLES59822),
+							pkColumn: 'ValCodregra',
+							tableAlias: 'RULES',
+							tableNamePlural: computed(() => this.Resources.RULES28427),
 							viewManagement: 'U',
 							showLimitsInfo: true,
-							tableTitle: computed(() => this.Resources.ARTICLES59822),
+							tableTitle: computed(() => this.Resources.CONDITIONS63260),
 							showAlternatePagination: true,
 							permissions: {
-								canView: false,
-								canEdit: false,
-								canDuplicate: false,
-								canDelete: false,
-								canInsert: false
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
+							crudActions: [
+								{
+									id: 'show',
+									name: 'show',
+									title: computed(() => this.Resources.CONSULTAR57388),
+									icon: {
+										icon: 'view'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'REGRA',
+										mode: 'SHOW',
+										isControlled: true
+									}
+								},
+								{
+									id: 'edit',
+									name: 'edit',
+									title: computed(() => this.Resources.EDITAR11616),
+									icon: {
+										icon: 'pencil'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'REGRA',
+										mode: 'EDIT',
+										isControlled: true
+									}
+								},
+								{
+									id: 'duplicate',
+									name: 'duplicate',
+									title: computed(() => this.Resources.DUPLICAR09748),
+									icon: {
+										icon: 'duplicate'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'REGRA',
+										mode: 'DUPLICATE',
+										isControlled: true
+									}
+								},
+								{
+									id: 'delete',
+									name: 'delete',
+									title: computed(() => this.Resources.ELIMINAR21155),
+									icon: {
+										icon: 'delete'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'REGRA',
+										mode: 'DELETE',
+										isControlled: true
+									}
+								}
+							],
+							generalActions: [
+								{
+									id: 'insert',
+									name: 'insert',
+									title: computed(() => this.Resources.INSERIR43365),
+									icon: {
+										icon: 'add'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'REGRA',
+										mode: 'NEW',
+										repeatInsertion: false,
+										isControlled: true
+									}
+								},
+							],
 							generalCustomActions: [
 							],
 							groupActions: [
@@ -201,74 +285,39 @@
 							customActions: [
 							],
 							MCActions: [
-								{
-									id: 'MC_1311',
-									name: 'MC_1311',
-									params: {
-										limits: [
-											{
-												identifier: 'id',
-												fnValueSelector: (row) => row.ValCoditem
-											},
-										],
-										isControlled: true,
-										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARTIGVAL',
-									}
-								},
-								{
-									id: 'MC_1312',
-									name: 'MC_1312',
-									params: {
-										limits: [
-											{
-												identifier: 'id',
-												fnValueSelector: (row) => row.ValCoditem
-											},
-										],
-										isControlled: true,
-										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARTIGINV',
-									}
-								},
 							],
 							rowClickAction: {
 								id: 'RCA_PTN_1311',
-								name: 'PTN_MenuMC_131',
+								name: 'form-REGRA',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
-											fnValueSelector: (row) => row.ValCoditem
+											fnValueSelector: (row) => row.ValCodregra
 										},
 									],
-									action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_131,
+									isControlled: true,
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'REGRA',
 								}
 							},
 							formsDefinition: {
-								'ARTIGVAL': {
-									fnKeySelector: (row) => row.Fields.ValCoditem,
-									isPopup: true
+								'REGRA': {
+									fnKeySelector: (row) => row.Fields.ValCodregra,
+									isPopup: false
 								},
-								'ARTIGINV': {
-									fnKeySelector: (row) => row.Fields.ValCoditem,
-									isPopup: true
-								},
-							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
 							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
-						changeEvents: ['changed-WAREH', 'changed-GITEM', 'changed-ITEM'],
-						uuid: '0095f644-60e2-4281-9381-45308492694e',
+						changeEvents: ['changed-RULES'],
+						uuid: '9b87f9f8-b7d7-4ffb-8bd2-a17a81c9ef71',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -290,33 +339,17 @@
 
 		mounted()
 		{
-			// Listener for MC action in case of redirect by Jump if just one.
-			this.$eventHub.on('EXEC-PTN_MenuMC_131', this.PTN_MenuMC_131)
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PTN_MENU_131]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-			// Listener for MC action in case of redirect by Jump if just one.
-			this.$eventHub.off('EXEC-PTN_MenuMC_131', this.PTN_MenuMC_131)
-		},
-
 		methods: {
-			/**
-			 * Executes the specific paths with condition action.
-			 * @param {string} params The request params
-			 * @returns A promise to be resolved after the request completes
-			 */
-			PTN_MenuMC_131(params)
-			{
-				return netAPI.postData(this.model.menu.controller, 'PTN_MenuMC_131', params, (data) => {
-					if (data.actionName)
-						this.tableListMCAction(this.model.menu, data.actionName, data.id)
-				}, undefined, undefined, this.navigationId)
-			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PTN_131]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_131]/
 // eslint-disable-next-line

@@ -9,14 +9,16 @@
 			:class="['c-modal__dialog', widthClass, classes]"
 			tabindex="0"
 			role="dialog"
-			aria-modal="true">
+			aria-modal="true"
+			:aria-labelledby="popupTitleId">
 			<div class="c-modal__content">
 				<div
 					v-show="!hideHeader"
 					class="c-modal__header">
 					<h5
 						v-if="headerTitle"
-						class="c-modal__header-title">
+						class="c-modal__header-title"
+						:id="popupTitleId">
 						{{ headerTitle }}
 					</h5>
 
@@ -69,6 +71,14 @@
 			 * Unique identifier for the control.
 			 */
 			id: String,
+
+			/**
+			 * Unique identifier for the form.
+			 */
+			formIdentifier: {
+				type: String,
+				default: ''
+			},
 
 			/**
 			 * The title for the modal header.
@@ -203,6 +213,16 @@
 			widthClass()
 			{
 				return `c-modal--${this.modalWidth}`
+			},
+			
+			/**
+			 * A unique id for the popup title
+			 */
+			popupTitleId() {
+				if(this.formIdentifier)
+					return this.formIdentifier + "_title";
+				else
+					return this.id + "_title";
 			}
 		},
 

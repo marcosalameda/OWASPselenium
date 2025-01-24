@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Psw;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER PSW]/
 
@@ -42,16 +44,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER PSW]/
 
 
-
-
-
 		/// <summary>
 		/// Get "See more..." tree structure
 		/// </summary>
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try
@@ -336,12 +335,10 @@ namespace GenioMVC.Controllers
 				Psw psw = Psw.Find(model.ValCodpsw, UserContext.Current);
 				var userFactory = new GenioServer.security.UserFactory(UserContext.Current.PersistentSupport, UserContext.Current.User);
 				if (!string.IsNullOrEmpty(model.ValPassword))
-				{
-					var password = new GenioServer.security.Password(model.ValPassword, model.ValConfirmPassword);
-					userFactory.ChangePassword(psw.klass, password);
-				}
+					userFactory.ChangePassword(psw.klass, model.ValPassword, model.ValConfirmPassword);
 
 				psw.ValNome = model.ValNome;
+				psw.ValEmail = model.ValEmail;
 
 				sp.openTransaction();
 				model.flashMessage = psw.Save(sp);
@@ -378,7 +375,7 @@ namespace GenioMVC.Controllers
 			if (CSGenio.framework.Log.IsDebugEnabled)
 				CSGenio.framework.Log.Debug("Controller success " + (DateTime.Now.Ticks - st) / TimeSpan.TicksPerMillisecond + "ms");
 			if (Request.IsAjaxRequest())
-				return Json(new { Success = true, Operation = "Edit", Message = Resources.Resources.ALTERACOES_EFECTUADA64514 });
+				return Json(new { Success = true, Operation = "Edit", Message = Resources.Resources.ALTERACOES_EFETUADAS10166 });
 
 			return RedirectToLocation(Navigation.CurrentLevel.Location);
 		}

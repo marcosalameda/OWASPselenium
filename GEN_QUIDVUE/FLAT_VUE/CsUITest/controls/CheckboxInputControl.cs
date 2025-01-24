@@ -2,22 +2,21 @@ namespace quidgest.uitests.controls;
 
 public class CheckboxInputControl : ControlObject
 {
-    //the input is hidden and not clickable, but its where we can fetch the value
-    private IWebElement input => m_control.FindElement(By.CssSelector("input"));
+    private IWebElement checkbox => m_control.FindElement(By.CssSelector("[data-testid=checkbox-container]"));
 
-    public CheckboxInputControl(IWebDriver driver, By containerLocator, string css) 
+    public CheckboxInputControl(IWebDriver driver, By containerLocator, string css)
         : base(driver, containerLocator, By.CssSelector(css))
     {
     }
 
     public bool GetValue()
     {
-        return input.Selected;
+        return checkbox.FindElement(By.CssSelector("input")).Selected;
     }
 
     public void Toggle()
     {
-        m_control.Click();
+        checkbox.Click();
     }
 
     public void SetValue(bool val)

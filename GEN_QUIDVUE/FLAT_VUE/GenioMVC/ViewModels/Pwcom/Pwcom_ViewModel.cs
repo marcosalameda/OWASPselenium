@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Pwcom
 {
-	public class Pwcom_ViewModel : FormViewModel<Models.Pwcom>
+	public class Pwcom_ViewModel : FormViewModel<Models.Pwcom>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,21 +29,32 @@ namespace GenioMVC.ViewModels.Pwcom
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Lending:" | Type: "CE"
+		/// </summary>
+		public string ValCodpess1 { get; set; }
+		/// <summary>
+		/// Title: "Login Name" | Type: "CE"
+		/// </summary>
+		public string ValCodpsw { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Login Name" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Psw> TablePswNome { get; set; }
-
 		/// <summary>
 		/// Title: "Lending:" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Pess1> TablePess1Name { get; set; }
-
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
 		[ImageThumbnailJsonConverter(100, 135)]
-		public GenioMVC.ViewModels.ImageModel ValFoto { get; set; }
+		public GenioMVC.Models.ImageModel ValFoto { get; set; }
 
 		#region Navigations
 		#endregion
@@ -52,20 +63,6 @@ namespace GenioMVC.ViewModels.Pwcom
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Lending:" | Type: "CE"
-		/// </summary>
-		public string ValCodpess1 { get; set; }
-
-		/// <summary>
-		/// Title: "Login Name" | Type: "CE"
-		/// </summary>
-		public string ValCodpsw { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -78,15 +75,17 @@ namespace GenioMVC.ViewModels.Pwcom
 
 		// Field for formula
 		/// <summary>Field: "Name" Tipo: "C"</summary>
+		[ValidateSetAccess]
 		public string ValName { get; set; }
 
 		#endregion
 
 		public string ValCodpwcom { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Pwcom_ViewModel() : base(null!) { }
@@ -122,6 +121,15 @@ namespace GenioMVC.ViewModels.Pwcom
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Pwcom model = new Models.Pwcom(userContext) { Identifier = "FPWCOM" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FPWCOM");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -182,9 +190,9 @@ namespace GenioMVC.ViewModels.Pwcom
 
 			try
 			{
-				ValFoto = ViewModelConversion.ToImage(m.ValFoto);
 				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
 				ValCodpsw = ViewModelConversion.ToString(m.ValCodpsw);
+				ValFoto = ViewModelConversion.ToImage(m.ValFoto);
 				ValName = ViewModelConversion.ToString(m.ValName);
 				ValCodpwcom = ViewModelConversion.ToString(m.ValCodpwcom);
 			}
@@ -195,6 +203,20 @@ namespace GenioMVC.ViewModels.Pwcom
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Pwcom m)
 		{
 			if (m == null)
@@ -205,21 +227,80 @@ namespace GenioMVC.ViewModels.Pwcom
 
 			try
 			{
-				m.ValFoto = ViewModelConversion.ToImage(ValFoto);
 				m.ValCodpess1 = ViewModelConversion.ToString(ValCodpess1);
 				m.ValCodpsw = ViewModelConversion.ToString(ValCodpsw);
-				m.ValName = ViewModelConversion.ToString(ValName);
+				if (ValFoto == null || !ValFoto.IsThumbnail)
+					m.ValFoto = ViewModelConversion.ToImage(ValFoto);
 				m.ValCodpwcom = ViewModelConversion.ToString(ValCodpwcom);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValName = ViewModelConversion.ToString(ValName);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Pwcom) to Model (Pwcom) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Pwcom) to Model (Pwcom) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "pwcom.codpess1":
+						this.ValCodpess1 = ViewModelConversion.ToString(_value);
+						break;
+					case "pwcom.codpsw":
+						this.ValCodpsw = ViewModelConversion.ToString(_value);
+						break;
+					case "pwcom.foto":
+						this.ValFoto = ViewModelConversion.ToImage(_value);
+						break;
+					case "pwcom.codpwcom":
+						this.ValCodpwcom = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Pwcom) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Pwcom)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Pwcom.Find(id ?? Navigation.GetStrValue("pwcom"), m_userContext, "FPWCOM"); }
+			finally { Model ??= new Models.Pwcom(m_userContext) { Identifier = "FPWCOM" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -233,20 +314,13 @@ namespace GenioMVC.ViewModels.Pwcom
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FPWCOM";
@@ -256,6 +330,7 @@ namespace GenioMVC.ViewModels.Pwcom
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -319,25 +394,19 @@ namespace GenioMVC.ViewModels.Pwcom
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE PWCOM]/
 		public override void Save()
 		{
 
-			try { Model = Models.Pwcom.Find(Navigation.GetStrValue("pwcom"), m_userContext, "FPWCOM"); }
-			finally { if (Model == null) Model = new Models.Pwcom(m_userContext) { Identifier = "FPWCOM" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY PWCOM]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Pwcom.Find(Navigation.GetStrValue("pwcom"), m_userContext, "FPWCOM"); }
-			finally { if (Model == null) Model = new Models.Pwcom(m_userContext) { Identifier = "FPWCOM" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE PWCOM]/
 
@@ -370,8 +439,8 @@ namespace GenioMVC.ViewModels.Pwcom
 				object hValue = Navigation.GetValue("psw", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					pwcom___psw__nome____Conds.Equal(CSGenioApsw.FldCodpsw, Navigation.GetValue("psw"));
-					this.ValCodpsw = Navigation.GetStrValue("psw");
+					pwcom___psw__nome____Conds.Equal(CSGenioApsw.FldCodpsw, hValue);
+					this.ValCodpsw = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -388,8 +457,6 @@ namespace GenioMVC.ViewModels.Pwcom
 					Navigation.CurrentLevel.SetEntry("RETURN_psw", null);
 				}
 				FillDependant_PwcomTablePswNome(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePswNome.FilledByHistory = Navigation.CheckFilledByHistory("psw");
 				return;
 			}
 
@@ -457,9 +524,6 @@ namespace GenioMVC.ViewModels.Pwcom
 
 				TablePswNome.List = new SelectList(TablePswNome.Elements.ToSelectList(x => x.ValNome, x => x.ValCodpsw,  x => x.ValCodpsw == this.ValCodpsw), "Value", "Text", this.ValCodpsw);
 				FillDependant_PwcomTablePswNome();
-
-				//Check if foreignkey comes from history
-				TablePswNome.FilledByHistory = Navigation.CheckFilledByHistory("psw");
 			}
 		}
 
@@ -565,8 +629,8 @@ namespace GenioMVC.ViewModels.Pwcom
 				object hValue = Navigation.GetValue("pess1", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					pwcom___pess1name____Conds.Equal(CSGenioApess1.FldCodpesso, Navigation.GetValue("pess1"));
-					this.ValCodpess1 = Navigation.GetStrValue("pess1");
+					pwcom___pess1name____Conds.Equal(CSGenioApess1.FldCodpesso, hValue);
+					this.ValCodpess1 = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -583,8 +647,6 @@ namespace GenioMVC.ViewModels.Pwcom
 					Navigation.CurrentLevel.SetEntry("RETURN_pess1", null);
 				}
 				FillDependant_PwcomTablePess1Name(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePess1Name.FilledByHistory = Navigation.CheckFilledByHistory("pess1");
 				return;
 			}
 
@@ -652,9 +714,6 @@ namespace GenioMVC.ViewModels.Pwcom
 
 				TablePess1Name.List = new SelectList(TablePess1Name.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpess1), "Value", "Text", this.ValCodpess1);
 				FillDependant_PwcomTablePess1Name();
-
-				//Check if foreignkey comes from history
-				TablePess1Name.FilledByHistory = Navigation.CheckFilledByHistory("pess1");
 			}
 		}
 
@@ -751,17 +810,25 @@ namespace GenioMVC.ViewModels.Pwcom
 		{
 			return identifier switch
 			{
-				"pwcom.foto" => ViewModelConversion.ToImage(modelValue),
 				"pwcom.codpess1" => ViewModelConversion.ToString(modelValue),
 				"pwcom.codpsw" => ViewModelConversion.ToString(modelValue),
+				"pwcom.foto" => ViewModelConversion.ToImage(modelValue),
 				"pwcom.name" => ViewModelConversion.ToString(modelValue),
 				"pwcom.codpwcom" => ViewModelConversion.ToString(modelValue),
 				"psw.codpsw" => ViewModelConversion.ToString(modelValue),
 				"psw.nome" => ViewModelConversion.ToString(modelValue),
 				"pess1.codpesso" => ViewModelConversion.ToString(modelValue),
 				"pess1.name" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
+		}
+
+
+		/// <inheritdoc/>
+		protected override void SetTicketToImageFields()
+		{
+			if (ValFoto != null)
+				ValFoto.Ticket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaPWCOM, CSGenioApwcom.FldFoto.Field, null, ValCodpwcom);
 		}
 
 		#region Charts

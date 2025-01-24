@@ -37,7 +37,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "0%" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValPzero")]
 		[NumericAttribute(2)]
-		public decimal? ValPzero { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPzero, 2)); } set { klass.ValPzero = Convert.ToDouble(value); } }
+		public decimal? ValPzero { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPzero, 2)); } set { klass.ValPzero = Convert.ToDecimal(value); } }
 
 		[DisplayName("Sender Email")]
 		/// <summary>Field : "Sender Email" Tipo: "C" Formula:  ""</summary>
@@ -73,73 +73,73 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Minimum" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValPvalmin")]
 		[NumericAttribute(2)]
-		public decimal? ValPvalmin { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPvalmin, 2)); } set { klass.ValPvalmin = Convert.ToDouble(value); } }
+		public decimal? ValPvalmin { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPvalmin, 2)); } set { klass.ValPvalmin = Convert.ToDecimal(value); } }
 
 		[DisplayName("Bad")]
 		/// <summary>Field : "Bad" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValPlimmau")]
 		[NumericAttribute(2)]
-		public decimal? ValPlimmau { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimmau, 2)); } set { klass.ValPlimmau = Convert.ToDouble(value); } }
+		public decimal? ValPlimmau { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimmau, 2)); } set { klass.ValPlimmau = Convert.ToDecimal(value); } }
 
 		[DisplayName("Alert")]
 		/// <summary>Field : "Alert" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValPalert")]
 		[NumericAttribute(2)]
-		public decimal? ValPalert { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPalert, 2)); } set { klass.ValPalert = Convert.ToDouble(value); } }
+		public decimal? ValPalert { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPalert, 2)); } set { klass.ValPalert = Convert.ToDecimal(value); } }
 
 		[DisplayName("Good")]
 		/// <summary>Field : "Good" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValPlimbom")]
 		[NumericAttribute(2)]
-		public decimal? ValPlimbom { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimbom, 2)); } set { klass.ValPlimbom = Convert.ToDouble(value); } }
+		public decimal? ValPlimbom { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimbom, 2)); } set { klass.ValPlimbom = Convert.ToDecimal(value); } }
 
 		[DisplayName("Overcome")]
 		/// <summary>Field : "Overcome" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValPlimsup")]
 		[NumericAttribute(2)]
-		public decimal? ValPlimsup { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimsup, 2)); } set { klass.ValPlimsup = Convert.ToDouble(value); } }
+		public decimal? ValPlimsup { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimsup, 2)); } set { klass.ValPlimsup = Convert.ToDecimal(value); } }
 
 		[DisplayName("Maximum")]
 		/// <summary>Field : "Maximum" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValPvalmax")]
 		[NumericAttribute(2)]
-		public decimal? ValPvalmax { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPvalmax, 2)); } set { klass.ValPvalmax = Convert.ToDouble(value); } }
+		public decimal? ValPvalmax { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPvalmax, 2)); } set { klass.ValPvalmax = Convert.ToDecimal(value); } }
 
 		[DisplayName("0%")]
 		/// <summary>Field : "0%" Tipo: "N" Formula: + "100+(100-[GLOB->PZERO])"</summary>
 		[ShouldSerialize("Glob.ValPzerod")]
 		[NumericAttribute(2)]
-		public decimal? ValPzerod { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPzerod, 2)); } set { klass.ValPzerod = Convert.ToDouble(value); } }
+		public decimal? ValPzerod { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPzerod, 2)); } set { klass.ValPzerod = Convert.ToDecimal(value); } }
 
 		[DisplayName("Minimum")]
 		/// <summary>Field : "Minimum" Tipo: "N" Formula: + "100+(100-[GLOB->PVALMAX])"</summary>
 		[ShouldSerialize("Glob.ValPvalmind")]
 		[NumericAttribute(2)]
-		public decimal? ValPvalmind { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPvalmind, 2)); } set { klass.ValPvalmind = Convert.ToDouble(value); } }
+		public decimal? ValPvalmind { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPvalmind, 2)); } set { klass.ValPvalmind = Convert.ToDecimal(value); } }
 
 		[DisplayName("Alert")]
 		/// <summary>Field : "Alert" Tipo: "N" Formula: + "100+(100-[GLOB->PALERT])"</summary>
 		[ShouldSerialize("Glob.ValPalertd")]
 		[NumericAttribute(2)]
-		public decimal? ValPalertd { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPalertd, 2)); } set { klass.ValPalertd = Convert.ToDouble(value); } }
+		public decimal? ValPalertd { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPalertd, 2)); } set { klass.ValPalertd = Convert.ToDecimal(value); } }
 
 		[DisplayName("Good")]
 		/// <summary>Field : "Good" Tipo: "N" Formula: + "100+(100-[GLOB->PLIMBOM])"</summary>
 		[ShouldSerialize("Glob.ValPlimbomd")]
 		[NumericAttribute(2)]
-		public decimal? ValPlimbomd { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimbomd, 2)); } set { klass.ValPlimbomd = Convert.ToDouble(value); } }
+		public decimal? ValPlimbomd { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimbomd, 2)); } set { klass.ValPlimbomd = Convert.ToDecimal(value); } }
 
 		[DisplayName("Overcome")]
 		/// <summary>Field : "Overcome" Tipo: "N" Formula: + "100+(100-[GLOB->PLIMSUP])"</summary>
 		[ShouldSerialize("Glob.ValPlimsupd")]
 		[NumericAttribute(2)]
-		public decimal? ValPlimsupd { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimsupd, 2)); } set { klass.ValPlimsupd = Convert.ToDouble(value); } }
+		public decimal? ValPlimsupd { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimsupd, 2)); } set { klass.ValPlimsupd = Convert.ToDecimal(value); } }
 
 		[DisplayName("Maximum")]
 		/// <summary>Field : "Maximum" Tipo: "N" Formula: + "100+(100-[GLOB->PVALMIN])"</summary>
 		[ShouldSerialize("Glob.ValPvalmaxd")]
 		[NumericAttribute(2)]
-		public decimal? ValPvalmaxd { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPvalmaxd, 2)); } set { klass.ValPvalmaxd = Convert.ToDouble(value); } }
+		public decimal? ValPvalmaxd { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPvalmaxd, 2)); } set { klass.ValPvalmaxd = Convert.ToDecimal(value); } }
 
 		[DisplayName("Beginning of the year")]
 		/// <summary>Field : "Beginning of the year" Tipo: "AC" Formula:  ""</summary>
@@ -153,67 +153,67 @@ namespace GenioMVC.Models
 		/// <summary>Field : "0%" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValPzeroc")]
 		[NumericAttribute(2)]
-		public decimal? ValPzeroc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPzeroc, 2)); } set { klass.ValPzeroc = Convert.ToDouble(value); } }
+		public decimal? ValPzeroc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPzeroc, 2)); } set { klass.ValPzeroc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Minimum")]
 		/// <summary>Field : "Minimum" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValPminc")]
 		[NumericAttribute(2)]
-		public decimal? ValPminc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPminc, 2)); } set { klass.ValPminc = Convert.ToDouble(value); } }
+		public decimal? ValPminc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPminc, 2)); } set { klass.ValPminc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Bad")]
 		/// <summary>Field : "Bad" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValPmauc")]
 		[NumericAttribute(2)]
-		public decimal? ValPmauc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPmauc, 2)); } set { klass.ValPmauc = Convert.ToDouble(value); } }
+		public decimal? ValPmauc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPmauc, 2)); } set { klass.ValPmauc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Alert")]
 		/// <summary>Field : "Alert" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValPalertc")]
 		[NumericAttribute(2)]
-		public decimal? ValPalertc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPalertc, 2)); } set { klass.ValPalertc = Convert.ToDouble(value); } }
+		public decimal? ValPalertc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPalertc, 2)); } set { klass.ValPalertc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Bad")]
 		/// <summary>Field : "Bad" Tipo: "N" Formula: + "100+(100-[GLOB->PLIMMAU])"</summary>
 		[ShouldSerialize("Glob.ValPlimmaud")]
 		[NumericAttribute(2)]
-		public decimal? ValPlimmaud { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimmaud, 2)); } set { klass.ValPlimmaud = Convert.ToDouble(value); } }
+		public decimal? ValPlimmaud { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimmaud, 2)); } set { klass.ValPlimmaud = Convert.ToDecimal(value); } }
 
 		[DisplayName("Good")]
 		/// <summary>Field : "Good" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValPbomc")]
 		[NumericAttribute(2)]
-		public decimal? ValPbomc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPbomc, 2)); } set { klass.ValPbomc = Convert.ToDouble(value); } }
+		public decimal? ValPbomc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPbomc, 2)); } set { klass.ValPbomc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Good sup.")]
 		/// <summary>Field : "Good sup." Tipo: "N" Formula: + "100+(100-[GLOB->PBOMC])"</summary>
 		[ShouldSerialize("Glob.ValPbomsc")]
 		[NumericAttribute(2)]
-		public decimal? ValPbomsc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPbomsc, 2)); } set { klass.ValPbomsc = Convert.ToDouble(value); } }
+		public decimal? ValPbomsc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPbomsc, 2)); } set { klass.ValPbomsc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Alert sup.")]
 		/// <summary>Field : "Alert sup." Tipo: "N" Formula: + "100+(100-[GLOB->PALERTC])"</summary>
 		[ShouldSerialize("Glob.ValPalertsc")]
 		[NumericAttribute(2)]
-		public decimal? ValPalertsc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPalertsc, 2)); } set { klass.ValPalertsc = Convert.ToDouble(value); } }
+		public decimal? ValPalertsc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPalertsc, 2)); } set { klass.ValPalertsc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Bad")]
 		/// <summary>Field : "Bad" Tipo: "N" Formula: + "100+(100-[GLOB->PMAUC])"</summary>
 		[ShouldSerialize("Glob.ValPmausc")]
 		[NumericAttribute(2)]
-		public decimal? ValPmausc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPmausc, 2)); } set { klass.ValPmausc = Convert.ToDouble(value); } }
+		public decimal? ValPmausc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPmausc, 2)); } set { klass.ValPmausc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Maximum Sup.")]
 		/// <summary>Field : "Maximum Sup." Tipo: "N" Formula: + "100+(100-[GLOB->PMINC])"</summary>
 		[ShouldSerialize("Glob.ValPmaxsc")]
 		[NumericAttribute(2)]
-		public decimal? ValPmaxsc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPmaxsc, 2)); } set { klass.ValPmaxsc = Convert.ToDouble(value); } }
+		public decimal? ValPmaxsc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPmaxsc, 2)); } set { klass.ValPmaxsc = Convert.ToDecimal(value); } }
 
 		[DisplayName("100%")]
 		/// <summary>Field : "100%" Tipo: "N" Formula: + "100+(100-[GLOB->PZEROC])"</summary>
 		[ShouldSerialize("Glob.ValPzerosc")]
 		[NumericAttribute(2)]
-		public decimal? ValPzerosc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPzerosc, 2)); } set { klass.ValPzerosc = Convert.ToDouble(value); } }
+		public decimal? ValPzerosc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPzerosc, 2)); } set { klass.ValPzerosc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Scorecard type")]
 		/// <summary>Field : "Scorecard type" Tipo: "AC" Formula:  ""</summary>
@@ -272,37 +272,49 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Header" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValSimbolo")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValSimbolo { get { return klass.ValSimbolo; } set { klass.ValSimbolo = value; } }
+		public ImageModel ValSimbolo { get { return new ImageModel(klass.ValSimbolo) { Ticket = ValSimboloQTicket }; } set { klass.ValSimbolo = value; } }
+		[JsonIgnore]
+		public string ValSimboloQTicket = null;
 
 		[DisplayName("Header")]
 		/// <summary>Field : "Header" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValSimbolol")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValSimbolol { get { return klass.ValSimbolol; } set { klass.ValSimbolol = value; } }
+		public ImageModel ValSimbolol { get { return new ImageModel(klass.ValSimbolol) { Ticket = ValSimbololQTicket }; } set { klass.ValSimbolol = value; } }
+		[JsonIgnore]
+		public string ValSimbololQTicket = null;
 
 		[DisplayName("Footer")]
 		/// <summary>Field : "Footer" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValFooterp")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValFooterp { get { return klass.ValFooterp; } set { klass.ValFooterp = value; } }
+		public ImageModel ValFooterp { get { return new ImageModel(klass.ValFooterp) { Ticket = ValFooterpQTicket }; } set { klass.ValFooterp = value; } }
+		[JsonIgnore]
+		public string ValFooterpQTicket = null;
 
 		[DisplayName("Footer")]
 		/// <summary>Field : "Footer" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValFooterl")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValFooterl { get { return klass.ValFooterl; } set { klass.ValFooterl = value; } }
+		public ImageModel ValFooterl { get { return new ImageModel(klass.ValFooterl) { Ticket = ValFooterlQTicket }; } set { klass.ValFooterl = value; } }
+		[JsonIgnore]
+		public string ValFooterlQTicket = null;
 
 		[DisplayName("Watermark")]
 		/// <summary>Field : "Watermark" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValMarcagua")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValMarcagua { get { return klass.ValMarcagua; } set { klass.ValMarcagua = value; } }
+		public ImageModel ValMarcagua { get { return new ImageModel(klass.ValMarcagua) { Ticket = ValMarcaguaQTicket }; } set { klass.ValMarcagua = value; } }
+		[JsonIgnore]
+		public string ValMarcaguaQTicket = null;
 
 		[DisplayName("Ministry Logo")]
 		/// <summary>Field : "Ministry Logo" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValLogomint")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValLogomint { get { return klass.ValLogomint; } set { klass.ValLogomint = value; } }
+		public ImageModel ValLogomint { get { return new ImageModel(klass.ValLogomint) { Ticket = ValLogomintQTicket }; } set { klass.ValLogomint = value; } }
+		[JsonIgnore]
+		public string ValLogomintQTicket = null;
 
 		[DisplayName("Documents path")]
 		/// <summary>Field : "Documents path" Tipo: "C" Formula:  ""</summary>
@@ -323,7 +335,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "SMTP Port" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValSmtpport")]
 		[NumericAttribute(0)]
-		public decimal? ValSmtpport { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSmtpport, 0)); } set { klass.ValSmtpport = Convert.ToDouble(value); } }
+		public decimal? ValSmtpport { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSmtpport, 0)); } set { klass.ValSmtpport = Convert.ToDecimal(value); } }
 
 		[DisplayName("SSL?")]
 		/// <summary>Field : "SSL?" Tipo: "L" Formula:  ""</summary>
@@ -421,7 +433,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Gantt - Forward" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValGantstep")]
 		[NumericAttribute(0)]
-		public decimal? ValGantstep { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValGantstep, 0)); } set { klass.ValGantstep = Convert.ToDouble(value); } }
+		public decimal? ValGantstep { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValGantstep, 0)); } set { klass.ValGantstep = Convert.ToDecimal(value); } }
 
 		[DisplayName("Migrate status/report on initiatives and tasks")]
 		/// <summary>Field : "Migrate status/report on initiatives and tasks" Tipo: "L" Formula:  ""</summary>
@@ -436,7 +448,7 @@ namespace GenioMVC.Models
 		[DisplayName("Document Path")]
 		/// <summary>Field : "Document Path" Tipo: "IB" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValDocbd")]
-		[Document("ValDocbd", false, true, false, false)]
+		[Document("ValDocbd", true, false, false)]
 		public string ValDocbd { get { return klass.ValDocbd; } set { klass.ValDocbd = value; } }
 		public string ValDocbdfk { get { return klass.ValDocbdfk; } set { klass.ValDocbdfk = value; } }
 
@@ -444,9 +456,9 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Number of weekly hours" Tipo: "AN" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValHorassem")]
 		[DataArray("Ahorasse", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double ValHorassem { get { return klass.ValHorassem; } set { klass.ValHorassem = value; } }
+		public decimal ValHorassem { get { return klass.ValHorassem; } set { klass.ValHorassem = value; } }
 		[JsonIgnore]
-		public SelectList ArrayValhorassem { get { return new SelectList(CSGenio.business.ArrayAhorasse.GetDictionary(), "Key", "Value", ValHorassem); } set { ValHorassem = Convert.ToDouble(value.SelectedValue); } }
+		public SelectList ArrayValhorassem { get { return new SelectList(CSGenio.business.ArrayAhorasse.GetDictionary(), "Key", "Value", ValHorassem); } set { ValHorassem = Convert.ToDecimal(value.SelectedValue); } }
 
 		[DisplayName("Afetação / Contabilidade Custos")]
 		/// <summary>Field : "Afetação / Contabilidade Custos" Tipo: "AC" Formula:  ""</summary>
@@ -492,23 +504,25 @@ namespace GenioMVC.Models
 		private Facty _facty;
 		[DisplayName("Facty")]
 		[ShouldSerialize("Facty")]
-		public virtual Facty Facty { 
-			get { 
+		public virtual Facty Facty {
+			get {
 				if (!this.isEmptyModel && (_facty == null || (!string.IsNullOrEmpty(ValCodfacty) && (_facty.isEmptyModel || _facty.klass.QPrimaryKey != ValCodfacty))))
 					_facty = Models.Facty.Find(ValCodfacty, m_userContext, Identifier, _fieldsToSerialize);
 				if (_facty == null)
 					_facty = new Models.Facty(m_userContext, true, _fieldsToSerialize);
 				return _facty;
 			}
-			set { _facty = value; } 
+			set { _facty = value; }
 		}
-		
+
 
 		[DisplayName("Legend")]
 		/// <summary>Field : "Legend" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValLegend")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValLegend { get { return klass.ValLegend; } set { klass.ValLegend = value; } }
+		public ImageModel ValLegend { get { return new ImageModel(klass.ValLegend) { Ticket = ValLegendQTicket }; } set { klass.ValLegend = value; } }
+		[JsonIgnore]
+		public string ValLegendQTicket = null;
 
 		[DisplayName("External API address")]
 		/// <summary>Field : "External API address" Tipo: "C" Formula:  ""</summary>
@@ -523,19 +537,19 @@ namespace GenioMVC.Models
 		public Glob(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAglob(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Glob(UserContext userContext, CSGenioAglob val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAglob csgenioa)
@@ -557,7 +571,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.
@@ -591,7 +604,7 @@ namespace GenioMVC.Models
 
 			try
 			{
-				globarea = CSGenioAglob.searchGlob(userCtx.PersistentSupport, userCtx.User, true);
+				globarea = CSGenioAglob.searchGlob(userCtx.PersistentSupport, userCtx.User);
 			}
 			catch
 			{

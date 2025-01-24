@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Location
 	/// </summary>
-	public class CSGenioAlocat : DbArea	{
+	public class CSGenioAlocat : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -120,10 +121,11 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(5);
+			info.Pathways = new Dictionary<string, string>(6);
 			info.Pathways.Add("facil","facil");
 			info.Pathways.Add("entit","entit");
 			info.Pathways.Add("facty","facil");
+			info.Pathways.Add("cntry","facil");
 			info.Pathways.Add("faci1","entit");
 			info.Pathways.Add("faci2","entit");
 		}
@@ -258,7 +260,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodlocat, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodentit { get { return m_fldCodentit; } }
 		private static FieldRef m_fldCodentit = new FieldRef("locat", "codentit");
@@ -269,7 +270,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodentit); }
 			set { insertNameValueField(FldCodentit, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodfacil { get { return m_fldCodfacil; } }
@@ -282,7 +282,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodfacil, value); }
 		}
 
-
 		/// <summary>Field : "Global Location Number" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldGln { get { return m_fldGln; } }
 		private static FieldRef m_fldGln = new FieldRef("locat", "gln");
@@ -293,7 +292,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldGln); }
 			set { insertNameValueField(FldGln, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -336,23 +334,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAlocat> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAlocat> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAlocat>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -401,7 +382,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX LOCAT]/

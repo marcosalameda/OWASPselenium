@@ -104,6 +104,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 6,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.AMOUNT46885),
+			isFixed: true,
 		}).cloneFrom(values?.ValQtdtpequ))
 		watch(() => this.ValQtdtpequ.value, (newValue, oldValue) => this.onUpdate('lnhag.qtdtpequ', this.ValQtdtpequ, newValue, oldValue))
 	}
@@ -120,5 +121,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodlnhag'
 
 	get QPrimaryKey() { return this.ValCodlnhag.value }
-	set QPrimaryKey(value) { this.ValCodlnhag.value = value }
+	set QPrimaryKey(value) { this.ValCodlnhag.updateValue(value) }
 }

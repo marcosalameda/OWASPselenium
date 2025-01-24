@@ -1,7 +1,10 @@
 ﻿<template>
 	<menu-action
+		ref="menuItem"
 		:class="classes"
-		:menu="menu">
+		:menu="menu"
+		:show-sub-menu="showSubMenu"
+		:sub-menu-id="subMenuId">
 		<q-icon
 			v-if="menu.Vector"
 			:icon="menu.Vector" />
@@ -71,10 +74,26 @@
 			firstLevel: {
 				type: Boolean,
 				default: true
-			}
+			},
+
+			/**
+			 * Flag indicating if the sub-menu is visible.
+			 */
+			showSubMenu: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
+			 * Sub-menu ID.
+			 */
+			subMenuId: {
+				type: String,
+				default: ''
+			},
 		},
 
-		expose: [],
+		expose: ['focusSubMenuToggle'],
 
 		computed: {
 			/**
@@ -101,6 +120,16 @@
 					classes.push('n-sidebar__nav-link-selected')
 
 				return classes
+			}
+		},
+
+		methods: {
+			/*
+			 * Focus on the menu item element
+			 */
+			focusSubMenuToggle()
+			{
+				this.$refs?.menuItem?.focusSubMenuToggle()
 			}
 		}
 	}

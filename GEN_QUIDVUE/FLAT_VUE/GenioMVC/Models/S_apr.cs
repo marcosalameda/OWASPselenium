@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -111,7 +111,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Percentage" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("S_apr.ValPercenta")]
 		[NumericAttribute(0)]
-		public decimal? ValPercenta { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPercenta, 0)); } set { klass.ValPercenta = Convert.ToDouble(value); } }
+		public decimal? ValPercenta { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPercenta, 0)); } set { klass.ValPercenta = Convert.ToDecimal(value); } }
 
 		[DisplayName("Process mode")]
 		/// <summary>Field : "Process mode" Tipo: "AC" Formula:  ""</summary>
@@ -130,7 +130,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Process ID" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("S_apr.ValId")]
 		[NumericAttribute(0)]
-		public decimal? ValId { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValId, 0)); } set { klass.ValId = Convert.ToDouble(value); } }
+		public decimal? ValId { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValId, 0)); } set { klass.ValId = Convert.ToDecimal(value); } }
 
 		[DisplayName("Entid key")]
 		/// <summary>Field : "Entid key" Tipo: "CF" Formula:  ""</summary>
@@ -192,19 +192,19 @@ namespace GenioMVC.Models
 		public S_apr(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAs_apr(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public S_apr(UserContext userContext, CSGenioAs_apr val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAs_apr csgenioa)
@@ -221,7 +221,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

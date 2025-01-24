@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Tblb
 {
-	public class Tblb_ViewModel : FormViewModel<Models.Tblb>
+	public class Tblb_ViewModel : FormViewModel<Models.Tblb>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,77 +29,71 @@ namespace GenioMVC.ViewModels.Tblb
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValFkey1 { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Text" | Type: "C"
 		/// </summary>
 		public string ValText { get; set; }
-
 		/// <summary>
 		/// Title: "Multiline Text" | Type: "MO"
 		/// </summary>
 		public string ValTextml { get; set; }
-
 		/// <summary>
 		/// Title: "Numeric (Integer)" | Type: "N"
 		/// </summary>
 		public decimal? ValNumint { get; set; }
-
 		/// <summary>
 		/// Title: "Numeric (Decimal)" | Type: "ND"
 		/// </summary>
 		public decimal? ValNumdec { get; set; }
-
 		/// <summary>
 		/// Title: "Currency (Interger)" | Type: "$"
 		/// </summary>
 		public decimal? ValCurint { get; set; }
-
 		/// <summary>
 		/// Title: "Currency (Decimal)" | Type: "$D"
 		/// </summary>
 		public decimal? ValCurdec { get; set; }
-
 		/// <summary>
 		/// Title: "Boolean" | Type: "L"
 		/// </summary>
 		public bool ValBool { get; set; }
-
 		/// <summary>
 		/// Title: "Date" | Type: "D"
 		/// </summary>
 		public DateTime? ValDate { get; set; }
-
 		/// <summary>
 		/// Title: "DateTime (Minutes)" | Type: "DT"
 		/// </summary>
 		public DateTime? ValDatetm { get; set; }
-
 		/// <summary>
 		/// Title: "DateTime (Seconds)" | Type: "DS"
 		/// </summary>
 		public DateTime? ValDatets { get; set; }
-
 		/// <summary>
 		/// Title: "Time (Hours-Minutes)" | Type: "T"
 		/// </summary>
 		public string ValTimehm { get; set; }
-
 		/// <summary>
 		/// Title: "Enumeration (Text)" | Type: "AC"
 		/// </summary>
 		public string ValEnumt { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValEnumt { get; set; }
-
 		/// <summary>
 		/// Title: "Enumeration (Numeric)" | Type: "AN"
 		/// </summary>
-		public double ValEnumn { get; set; }
-
+		public decimal ValEnumn { get; set; }
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
@@ -115,15 +109,6 @@ namespace GenioMVC.ViewModels.Tblb
 
 		#endregion
 
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		public string ValFkey1 { get; set; }
-		#endregion
-
 		#region Extra database fields
 
 
@@ -137,9 +122,10 @@ namespace GenioMVC.ViewModels.Tblb
 
 		public string ValCodtblb { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Tblb_ViewModel() : base(null!) { }
@@ -175,6 +161,15 @@ namespace GenioMVC.ViewModels.Tblb
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Tblb model = new Models.Tblb(userContext) { Identifier = "FTBLB" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FTBLB");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -235,6 +230,7 @@ namespace GenioMVC.ViewModels.Tblb
 
 			try
 			{
+				ValFkey1 = ViewModelConversion.ToString(m.ValFkey1);
 				ValText = ViewModelConversion.ToString(m.ValText);
 				ValTextml = ViewModelConversion.ToString(m.ValTextml);
 				ValNumint = ViewModelConversion.ToNumeric(m.ValNumint);
@@ -247,8 +243,7 @@ namespace GenioMVC.ViewModels.Tblb
 				ValDatets = ViewModelConversion.ToDateTime(m.ValDatets);
 				ValTimehm = ViewModelConversion.ToString(m.ValTimehm);
 				ValEnumt = ViewModelConversion.ToString(m.ValEnumt);
-				ValEnumn = ViewModelConversion.ToDouble(m.ValEnumn);
-				ValFkey1 = ViewModelConversion.ToString(m.ValFkey1);
+				ValEnumn = ViewModelConversion.ToNumeric(m.ValEnumn);
 				ValCodtblb = ViewModelConversion.ToString(m.ValCodtblb);
 			}
 			catch (Exception)
@@ -258,6 +253,20 @@ namespace GenioMVC.ViewModels.Tblb
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Tblb m)
 		{
 			if (m == null)
@@ -280,19 +289,107 @@ namespace GenioMVC.ViewModels.Tblb
 				m.ValDatets = ViewModelConversion.ToDateTime(ValDatets);
 				m.ValTimehm = ViewModelConversion.ToString(ValTimehm);
 				m.ValEnumt = ViewModelConversion.ToString(ValEnumt);
-				m.ValEnumn = ViewModelConversion.ToDouble(ValEnumn);
-				m.ValFkey1 = ViewModelConversion.ToString(ValFkey1);
+				m.ValEnumn = ViewModelConversion.ToNumeric(ValEnumn);
 				m.ValCodtblb = ViewModelConversion.ToString(ValCodtblb);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValFkey1 = ViewModelConversion.ToString(ValFkey1);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Tblb) to Model (Tblb) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Tblb) to Model (Tblb) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "tblb.text":
+						this.ValText = ViewModelConversion.ToString(_value);
+						break;
+					case "tblb.textml":
+						this.ValTextml = ViewModelConversion.ToString(_value);
+						break;
+					case "tblb.numint":
+						this.ValNumint = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "tblb.numdec":
+						this.ValNumdec = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "tblb.curint":
+						this.ValCurint = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "tblb.curdec":
+						this.ValCurdec = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "tblb.bool":
+						this.ValBool = ViewModelConversion.ToLogic(_value);
+						break;
+					case "tblb.date":
+						this.ValDate = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "tblb.datetm":
+						this.ValDatetm = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "tblb.datets":
+						this.ValDatets = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "tblb.timehm":
+						this.ValTimehm = ViewModelConversion.ToString(_value);
+						break;
+					case "tblb.enumt":
+						this.ValEnumt = ViewModelConversion.ToString(_value);
+						break;
+					case "tblb.enumn":
+						this.ValEnumn = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "tblb.codtblb":
+						this.ValCodtblb = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Tblb) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Tblb)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Tblb.Find(id ?? Navigation.GetStrValue("tblb"), m_userContext, "FTBLB"); }
+			finally { Model ??= new Models.Tblb(m_userContext) { Identifier = "FTBLB" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -306,20 +403,13 @@ namespace GenioMVC.ViewModels.Tblb
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FTBLB";
@@ -329,6 +419,7 @@ namespace GenioMVC.ViewModels.Tblb
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -385,32 +476,27 @@ namespace GenioMVC.ViewModels.Tblb
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValText", Resources.Resources.TEXT04938, ValText, 50);
-			validator.Required("ValText", Resources.Resources.TEXT04938, ValText);
+
+			validator.Required("ValText", Resources.Resources.TEXT04938, ViewModelConversion.ToString(ValText), FieldType.TEXTO.Formatting);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE TBLB]/
 		public override void Save()
 		{
 
-			try { Model = Models.Tblb.Find(Navigation.GetStrValue("tblb"), m_userContext, "FTBLB"); }
-			finally { if (Model == null) Model = new Models.Tblb(m_userContext) { Identifier = "FTBLB" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY TBLB]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Tblb.Find(Navigation.GetStrValue("tblb"), m_userContext, "FTBLB"); }
-			finally { if (Model == null) Model = new Models.Tblb(m_userContext) { Identifier = "FTBLB" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE TBLB]/
 
@@ -434,6 +520,7 @@ namespace GenioMVC.ViewModels.Tblb
 		{
 			return identifier switch
 			{
+				"tblb.fkey1" => ViewModelConversion.ToString(modelValue),
 				"tblb.text" => ViewModelConversion.ToString(modelValue),
 				"tblb.textml" => ViewModelConversion.ToString(modelValue),
 				"tblb.numint" => ViewModelConversion.ToNumeric(modelValue),
@@ -446,12 +533,13 @@ namespace GenioMVC.ViewModels.Tblb
 				"tblb.datets" => ViewModelConversion.ToDateTime(modelValue),
 				"tblb.timehm" => ViewModelConversion.ToString(modelValue),
 				"tblb.enumt" => ViewModelConversion.ToString(modelValue),
-				"tblb.enumn" => ViewModelConversion.ToDouble(modelValue),
-				"tblb.fkey1" => ViewModelConversion.ToString(modelValue),
+				"tblb.enumn" => ViewModelConversion.ToNumeric(modelValue),
 				"tblb.codtblb" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

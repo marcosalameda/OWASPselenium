@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Sale;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_VENDAW07_CANCEL = new NavigationLocation("FECHO_DA_VENDA48081", "Vendaw07_Cancel", "Sale") { vueRouteName = "form-VENDAW07", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_VENDAW07_SHOW = new NavigationLocation("FECHO_DA_VENDA48081", "Vendaw07_Show", "Sale") { vueRouteName = "form-VENDAW07", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_VENDAW07_NEW = new NavigationLocation("FECHO_DA_VENDA48081", "Vendaw07_New", "Sale") { vueRouteName = "form-VENDAW07", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_VENDAW07_EDIT = new NavigationLocation("FECHO_DA_VENDA48081", "Vendaw07_Edit", "Sale") { vueRouteName = "form-VENDAW07", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_VENDAW07_DUPLICATE = new NavigationLocation("FECHO_DA_VENDA48081", "Vendaw07_Duplicate", "Sale") { vueRouteName = "form-VENDAW07", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_VENDAW07_DELETE = new NavigationLocation("FECHO_DA_VENDA48081", "Vendaw07_Delete", "Sale") { vueRouteName = "form-VENDAW07", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_VENDAW07_CANCEL = new("FECHO_DA_VENDA48081", "Vendaw07_Cancel", "Sale") { vueRouteName = "form-VENDAW07", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_VENDAW07_SHOW = new("FECHO_DA_VENDA48081", "Vendaw07_Show", "Sale") { vueRouteName = "form-VENDAW07", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_VENDAW07_NEW = new("FECHO_DA_VENDA48081", "Vendaw07_New", "Sale") { vueRouteName = "form-VENDAW07", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_VENDAW07_EDIT = new("FECHO_DA_VENDA48081", "Vendaw07_Edit", "Sale") { vueRouteName = "form-VENDAW07", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_VENDAW07_DUPLICATE = new("FECHO_DA_VENDA48081", "Vendaw07_Duplicate", "Sale") { vueRouteName = "form-VENDAW07", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_VENDAW07_DELETE = new("FECHO_DA_VENDA48081", "Vendaw07_Delete", "Sale") { vueRouteName = "form-VENDAW07", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Vendaw07_ModalDBEdit()
-		{
-			Vendaw07_ViewModel model = new Vendaw07_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Vendaw07_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Vendaw07 Multiform actions
 
-		//
-		// GET /Sale/MFVendaw07_New
-		[HttpGet]
-		[ActionName("MFVendaw07_New")]
-		public ActionResult MFVendaw07_New()
-		{
-			var model = new Vendaw07_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_VENDAW07_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("sale", model.ValCodvenda);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFVendaw07_New_GET()
-		{
-			return MFVendaw07_New();
-		}
-
-		//
-		// GET /Sale/MFVendaw07_Edit
-		[HttpGet]
-		[ActionName("MFVendaw07_Edit")]
-		public ActionResult MFVendaw07_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("VENDAW07", "EDIT", new { id = id, partialView = "MFVendaw07", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFVendaw07_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFVendaw07_Edit(requestModel);
-		}
-
-		//
-		// GET /Sale/MFVendaw07_Cancel
-		[ActionName("MFVendaw07_Cancel")]
-		public ActionResult MFVendaw07_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Sale(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Sale/MFVendaw07_Save
-		[HttpPost]
-		[ActionName("MFVendaw07_Save")]
-		public JsonResult MFVendaw07_Save(Vendaw07_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFVendaw07_Save",
-				ViewName = "MFVendaw07",
-				AreaName = "sale"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Sale/MFVendaw07_Delete
-		[HttpPost]
-		[ActionName("MFVendaw07_Delete")]
-		public JsonResult MFVendaw07_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFVendaw07_Delete",
-				ViewName = "MFVendaw07",
-				AreaName = "sale",
-				Location = ACTION_VENDAW07_EDIT
-			};
-
-			var model = new Vendaw07_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Sale/Vendaw07_SaveEdit
 		[HttpPost]

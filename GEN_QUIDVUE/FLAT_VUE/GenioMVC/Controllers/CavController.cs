@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 using CSGenio.business;
+using CSGenio.framework;
 using GenioMVC;
 using GenioMVC.Helpers.Cav;
 using GenioMVC.Models.Cav;
@@ -17,9 +18,7 @@ namespace GenioMVC.Controllers.Cav
 	{
 		XmlCavService cavServices = XmlCavService.Instance;
 
-        public CavController(UserContextService userContext) : base(userContext)
-        {
-        }
+        public CavController(UserContextService userContext) : base(userContext) { }
 
 		//
 		// GET: /Cav/
@@ -70,7 +69,8 @@ namespace GenioMVC.Controllers.Cav
 				return JsonOK(new { Success = true, Model = model });
 			}
 
-			return Json(new { Success = false, Message = "Não foi possivel criar um novo relatório!" });
+			Log.Error($"CAV - Could not create new report. {area};");
+			return Json(new { Success = false, Message = "Could not create new report!" });
 		}
 
 		private ReportDefinition CreateEmptyQuery(string area)
@@ -170,7 +170,7 @@ namespace GenioMVC.Controllers.Cav
 					{
 						var fieldToAdd = tableId + "." + fieldId;
 
-						Field field = table.Fields.FirstOrDefault(p => p.Id.Equals(fieldToAdd, System.StringComparison.OrdinalIgnoreCase));
+						GenioMVC.Models.Cav.Field field = table.Fields.FirstOrDefault(p => p.Id.Equals(fieldToAdd, System.StringComparison.OrdinalIgnoreCase));
 						if (field != null)
 						{
 							ReportField rptField = new ReportField { FieldId = field.Id, Title = field.Description, TableId = field.TableId };
@@ -204,7 +204,8 @@ namespace GenioMVC.Controllers.Cav
 				}
 			}
 
-			return Json(new { Success = false, Message = "Erro ao adicionar campo. Campo não relacionado!" });
+			Log.Error($"CAV - Error adding field. Unrelated field. table: {tableId}; field: {fieldId};");
+			return Json(new { Success = false, Message = "Error adding field. Unrelated field!" });
 		}
 
 
@@ -266,8 +267,9 @@ namespace GenioMVC.Controllers.Cav
 				if (query.ExtraPaths != null)
 					query.ExtraPaths.RemoveAll(link => !_fields.Any(fld => fld.TableId == link.DestTable));
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				Log.Error($"CAV - Error updating the query. {e.Message}");
 				// se falhou a des-serializar a query é porque não tem campos escolhidos, logo não se grava nada
 				// TODO: melhorar isto (CreateReportDefinition)
 			}
@@ -294,7 +296,10 @@ namespace GenioMVC.Controllers.Cav
 			try
 			{
 				if (cavServices == null)
-					return JsonERROR("Não foi possivel gravar a query!");
+				{
+					Log.Error("CAV - Could not save the query. The 'XMLCavService' needs to be initialized");
+					return JsonERROR("Could not save the query!");
+				}
 
 				if (!queryOverride || (!string.IsNullOrEmpty(id) && id.Equals("new", StringComparison.InvariantCultureIgnoreCase)))
 					id = null;
@@ -309,12 +314,15 @@ namespace GenioMVC.Controllers.Cav
 				}
 
 				if (cavServices.SaveQuery(query, UserContext.Current.User, id))
-					return JsonOK("Query gravada com sucesso!");
-				return JsonERROR("Não foi possivel gravar a query!");
+					return JsonOK("Query saved successfully!");
+
+				Log.Error($"CAV - Error saving the query! id: {id}");
+				return JsonERROR("Could not save the query!");
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
-				return JsonERROR("Erro na gravação da query!");
+				Log.Error($"CAV - Error saving the query! id: {id}; {e.Message}");
+				return JsonERROR("Error saving the query!");
 			}
 		}
 
@@ -370,8 +378,7 @@ namespace GenioMVC.Controllers.Cav
 					catch (Exception e)
 					{
 						// Não foi possível concluir o pedido
-						response.Result = "E";
-						response.ResultMessage = e.Message;
+						throw new FrameworkException("Error processing Advanced Query", "ExecuteQueryNew", e.Message, e);
 					}
 
 					// Construir o modelo de dados para a vista
@@ -379,15 +386,11 @@ namespace GenioMVC.Controllers.Cav
 				}
 
 				if (model_result == null)
-					throw new BusinessException("\"model_result\" object is null", "ExecuteQuery2", "Either queryid isn't null or cavServices is null", new ArgumentNullException());
-
-				// hack para apanhar a excepção correcta
-				if (model_result.Result.Result == "E")
-					throw new Exception(model_result.Result.ResultMessage);
+					throw new FrameworkException("Some problem with the service or the query is not recognized.", "ExecuteQuery2", "Either queryid isn't null or cavServices is null", new ArgumentNullException());
 
 				TempData.SetObject("CavModelResult", model_result.Result);
 				TempData.SetObject("CavModelQuery", model_result.Query);
-				TempData.SetObject("CavQuerySQL", model_result.Result.ResultMessage);
+				TempData.SetObject("CavQuerySQL", model_result.Result.QuerySQL);
 
 
 				List<SpecialList> results = ResultsHelpers.CreateResultsTableFlat(model_result.Result.MainGroup, model_result.Query);
@@ -411,7 +414,7 @@ namespace GenioMVC.Controllers.Cav
 				return JsonOK(new
 				{
 					Success = true,
-					querySQL = model_result.Result.ResultMessage,
+					querySQL = model_result.Result.QuerySQL,
 					record_count = model_result.Result.ResultCount.ToString(),
 					total_pages = results.Count / pageSize, //paged_list.PageCount,
 					current_page = pageNumber, //paged_list.PageNumber,
@@ -426,7 +429,12 @@ namespace GenioMVC.Controllers.Cav
 
 		private ActionResult onErrorExecuteQuery(Exception error)
 		{
-			var errorMessage = Resources.Resources.OCORREU_UM_ERRO_AO_P53091 + " - " + error.Message;
+			var errorMessage = Resources.Resources.OCORREU_UM_ERRO_AO_P53091;
+			if (error is GenioException genioError)
+				errorMessage += " - " + genioError.UserMessage;
+
+			Log.Error($"CAV - onErrorExecuteQuery: {error.Message}");
+
 			TempData.SetObject("CavQuerySQL", errorMessage);
 			return JsonERROR(errorMessage);
 		}
@@ -440,7 +448,10 @@ namespace GenioMVC.Controllers.Cav
 				return Json(result);
 			}
 			else
-				return Json(new { result = "E", message = "É necessário inicializar 'XMLCavService'" });
+			{
+				Log.Error("CAV - The 'XMLCavService' needs to be initialized");
+				return Json(new { result = "E", message = "CAV service is unavailable" });
+			}
 		}
 
 		private static ReportDefinition CreateReportDefinition(string table, Dictionary<string, string> collection)
@@ -485,6 +496,7 @@ namespace GenioMVC.Controllers.Cav
 				return JsonOK(model);
 			}
 
+			Log.Error($"CAV - Error getting query. {queryid}");
 			return JsonOK();
 		}
 
@@ -507,92 +519,6 @@ namespace GenioMVC.Controllers.Cav
 
 			// Write it back to the client
 			//string fileName = "Consulta_" + model.Query.BaseTable + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss");
-			string fileName = model.Query.BaseTable + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss");
-			Response.Headers["content-disposition"] = "attachment;  filename=" + fileName + ".xlsx";
-			return File(exelfile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-		}
-
-		//FIXME Vue functions
-
-		public ActionResult ExecuteQueryNew(string jsonQuery)
-		{
-			try
-			{
-				ReportDefinition query = JsonConvert.DeserializeObject<ReportDefinition>(jsonQuery);
-
-				ResultModel model_result = null;
-				// Construir pedido
-				ReportReply response = new ReportReply();
-				try
-				{
-					CavEngine cavEng = new CavEngine(cavServices);
-					response = cavEng.ExecuteQuery(UserContext.Current.User, query);
-				}
-				catch (Exception e)
-				{
-					// Não foi possível concluir o pedido
-					response.Result = "E";
-					response.ResultMessage = e.Message;
-				}
-
-				// Construir o modelo de dados para a vista
-				model_result = new ResultModel(response, query);
-
-				// hack para apanhar a excepção correcta
-				if (model_result.Result.Result == "E")
-					throw new Exception(model_result.Result.ResultMessage);
-
-				List<SpecialList> results = ResultsHelpers.CreateResultsTableFlat(model_result.Result.MainGroup, model_result.Query);
-
-				List<List<string>> query_results = new List<List<string>>();
-				List<string> headers = new List<string>();
-
-				headers = results[0].GetRange(1, results[0].Count() - 1);
-
-				for (int i = 1; i < results.Count(); i++)
-				{
-					var aux = new List<string>();
-					for (int j = 1; j < results[i].Count(); j++)
-						aux.Add(results[i][j]);
-					query_results.Add(aux);
-				}
-
-				return Json(new { Results = query_results, Headers = headers, Query = model_result.Result.ResultMessage });
-			}
-			catch (Exception)
-			{
-				return Json(new { Results = new List<string>(), Headers = new List<string>(), Query = "Error" });
-			}
-		}
-
-		public FileResult ExcelTest(string jsonQuery)
-		{
-			ReportDefinition query = JsonConvert.DeserializeObject<ReportDefinition>(jsonQuery);
-
-			ResultModel model = null;
-			// Construir pedido
-			ReportReply response = new ReportReply();
-			try
-			{
-				CavEngine cavEng = new CavEngine(cavServices);
-				response = cavEng.ExecuteQuery(UserContext.Current.User, query);
-			}
-			catch (Exception e)
-			{
-				// Não foi possível concluir o pedido
-				response.Result = "E";
-				response.ResultMessage = e.Message;
-			}
-
-			// Construir o modelo de dados para a vista
-			model = new ResultModel(response, query);
-
-			ReportExcel report = new ReportExcel(model);
-
-			// Generate Excel file
-			byte[] exelfile = report.GenerateExcelBytes();
-
-			// Write it back to the client
 			string fileName = model.Query.BaseTable + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss");
 			Response.Headers["content-disposition"] = "attachment;  filename=" + fileName + ".xlsx";
 			return File(exelfile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");

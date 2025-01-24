@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Repar;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER REPAR]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Repar row = null;
 
-			try
-			{
-				row = Models.Repar.Find(Navigation.GetStrValue("repar"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model repar");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Repar(UserContext.Current);
+				row = new Models.Repar(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("repar");
 			}
 
@@ -82,8 +75,8 @@ namespace GenioMVC.Controllers
 				{
 					case "REPAR___EQUIPREGISTNR":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Repar_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Repar_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Repar___equipregistnr(qs);
 							result = model.TableEquipRegistnr;
@@ -91,25 +84,28 @@ namespace GenioMVC.Controllers
 						break;
 					case "REPAR___SPECIESPECIAL":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Repar_ViewModel(UserContext.Current) { editable = false };
-							model.MapFromModel(row);
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Repar_ViewModel(UserContext.Current) { editable = false };							
 							// Map received value to field - The 'field' type limit
-							model.ValTipoarea = Navigation.GetValue<string>("repar.tipoarea");
+#pragma warning disable QUID001 // Direct Property Access to read only fields - Disabled due to cases where the limit is based on a calculated field.
+							row.ValTipoarea = Navigation.GetValue<string>("repar.tipoarea");
+#pragma warning restore QUID001 // Direct Property Access to read only fields
+							model.MapFromModel(row);
 							model.Load_Repar___speciespecial(qs);
 							result = model.TableSpeciEspecial;
 						}
 						break;
 					case "REPAR___PESSONAME____":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Repar_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Repar_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Repar___pessoname____(qs);
 							result = model.TablePessoName;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -161,11 +157,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -174,22 +171,19 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Repar" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Repar([FromBody]Repar_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Repar([FromBody]Repar_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "repar",
+			return GenericRecalculateFormulas(formData, "repar",
 				(primaryKey) => Models.Repar.Find(primaryKey, UserContext.Current, "FREPAR"),
-				(model) => form_data.MapToModel(model as Models.Repar)
+				(model) => formData.MapToModel(model as Models.Repar)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -197,7 +191,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<component
 		:is="options?.component ? options.component : 'base-input-structure'"
 		:id="`${tableName}_${rowIndex}_${columnName}`"
@@ -7,7 +7,7 @@
 		:label-attrs="{ class: 'i-text__label' }"
 		:model-field-ref="modelField"
 		:error-display-type="options?.errorDisplayType">
-		<q-datetime-input
+		<q-date-time-picker
 			:id="`${tableName}_${rowIndex}_${columnName}`"
 			:size="size"
 			:classes="classes"
@@ -15,6 +15,8 @@
 			:disabled="options.disabled"
 			:readonly="options.readonly"
 			:model-value="datetimeValue"
+			:teleport="options?.teleport ?? false"
+			:locale="locale"
 			@update:model-value="update($event)" />
 	</component>
 </template>
@@ -28,7 +30,7 @@
 
 	import BaseInputStructure from '@/components/inputs/BaseInputStructure.vue'
 	import GridBaseInputStructure from '@/components/inputs/GridBaseInputStructure.vue'
-	import QDatetimeInput from '@/components/inputs/DateInput.vue'
+	import QDateTimePicker from '@/components/inputs/QDateTimePicker.vue'
 
 	export default {
 		name: 'QEditDatetime',
@@ -38,7 +40,7 @@
 		components: {
 			BaseInputStructure,
 			GridBaseInputStructure,
-			QDatetimeInput
+			QDateTimePicker
 		},
 
 		props: {
@@ -112,6 +114,14 @@
 			errorMessages: {
 				type: Array,
 				default: () => []
+			},
+
+			/**
+			 * Current system locale
+			 */
+			locale: {
+				type: String,
+				default: 'en-US'
 			}
 		},
 
@@ -135,7 +145,7 @@
 			 */
 			datetimeValue()
 			{
-				if (this.options.dateTimeType === 'Time' && this.value.length === 5)
+				if (this.options.dateTimeType === 'time' && this.value.length === 5)
 				{
 					const units = this.value.split(':')
 					return {
@@ -156,8 +166,14 @@
 			{
 				// If updating time, convert the time object to a string format.
 				let updatedTime = event
-				if (this.options.dateTimeType === 'Time')
+				if (this.options.dateTimeType === 'time')
 					updatedTime = timeToString(event)
+				// If date value is a date object
+				else if(typeof event?.toISOString === 'function')
+					updatedTime = event?.toISOString()
+				// If date value is already a string
+				else
+					updatedTime = event
 
 				this.$emit('update', updatedTime)
 			}

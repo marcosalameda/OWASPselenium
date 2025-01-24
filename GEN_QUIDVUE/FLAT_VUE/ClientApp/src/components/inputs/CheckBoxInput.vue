@@ -1,11 +1,14 @@
 ﻿<template>
-	<label :class="['i-checkbox__container', { 'disabled': disabled || readonly }]">
+	<label
+		data-testid="checkbox-container"
+		:class="['i-checkbox__container', { 'disabled': disabled || readonly }]">
 		<input
+			v-bind="$attrs"
 			:id="controlId"
 			v-model="curValue"
 			type="checkbox"
 			:data-testid="dataTestid"
-			:class="styleClasses"
+			:class="['i-checkbox__field', ...classes]"
 			:disabled="disabled || readonly"
 			@click="inputClicked">
 
@@ -31,12 +34,12 @@
 			id: String,
 
 			/**
-			 * The testing identifier
+			 * The testing identifier.
 			 */
 			dataTestid: String,
 
 			/**
-			 * The string vaue to be edited by the input
+			 * The string vaue to be edited by the input.
 			 */
 			modelValue: [Boolean, Number],
 
@@ -65,7 +68,7 @@
 			},
 
 			/**
-			 * An array of custom classes
+			 * An array of custom classes.
 			 */
 			classes: {
 				type: Array,
@@ -74,16 +77,6 @@
 		},
 
 		expose: [],
-
-		data()
-		{
-			return {
-				/**
-				 * Classes for the html element.
-				 */
-				styleClasses: ['i-checkbox__field', ...this.classes]
-			}
-		},
 
 		computed: {
 			/**
@@ -96,7 +89,7 @@
 				},
 				set(newValue)
 				{
-					var val
+					let val
 					if (typeof this.modelValue === 'number')
 						val = newValue ^ 0
 					else
@@ -119,7 +112,7 @@
 		methods: {
 			inputClicked(eventData)
 			{
-				this.$emit('click', eventData || {})
+				this.$emit('click', eventData)
 			}
 		}
 	}

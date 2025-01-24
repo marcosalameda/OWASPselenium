@@ -11,14 +11,15 @@
 		}
 
 		&__field {
-			position: relative;
+			top: auto;
 		}
 	}
 }
 
 .q-grid-table-list {
 	&:not(.q-grid-table-list--readonly) {
-		.q-field__control {
+		.q-field__control,
+		.i-textarea {
 			background-color: $background;
 		}
 	}
@@ -115,7 +116,7 @@
 						&.grid-table-row__state {
 							border-left: 3px solid $danger;
 
-							.q-icon__svg:not(button .q-icon__svg) {
+							.q-icon__svg {
 								fill: $danger;
 							}
 						}
@@ -125,13 +126,59 @@
 						}
 					}
 
-					.error {
-						color: $danger;
+					.warning .q-field__control {
+						border-color: $warning;
+					}
 
-						.q-field__control {
-							border-color: $danger;
+					.error .q-field__control {
+						border-color: $danger;
+					}
+				}
+
+				&__warnings {
+					td {
+						background-color: rgb($warning-rgb / 0.1);
+
+						&.grid-table-row__state {
+							border-left: 3px solid $warning;
+
+							.q-icon__svg {
+								fill: $warning;
+							}
+						}
+
+						&:last-child {
+							border-right: 3px solid $warning;
 						}
 					}
+
+					.warning .q-field__control {
+						border-color: $warning;
+					}
+				}
+
+				&__info {
+					.grid-table-row__state .q-icon__svg {
+						margin-left: 3px;
+						fill: $gray;
+					}
+
+					.q-badge {
+						margin-left: 3px;
+
+						& .q-badge__underlay {
+							background-color: $gray;
+						}
+					}
+				}
+			}
+
+			td.q-validation-summary-td {
+				padding: 0;
+				background-color: unset;
+
+				& .validation-summary {
+					margin-bottom: 0.2rem;
 				}
 			}
 
@@ -146,11 +193,33 @@
 				}
 			}
 
+			.grid-table-row__messages {
+				font-size: 0.7rem;
+				margin-left: 0.25rem;
+			}
+
 			.btn-popover {
 				margin: 0 0.25rem;
+				color: $neutral;
+
+				&.error {
+					color: $danger-dark;
+
+					.q-icon__svg {
+						fill: $danger;
+					}
+				}
+
+				&.warning {
+					color: $warning-dark;
+
+					.q-icon__svg {
+						fill: $warning;
+					}
+				}
 
 				.q-icon__svg {
-					fill: $danger;
+					fill: $neutral;
 				}
 			}
 
@@ -194,4 +263,33 @@
 			}
 		}
 	}
+
+	&__column-totalizers {
+		background-color: var(--q-theme-primary-light);
+
+		td:first-child {
+			border-radius: $border-radius 0 0 $border-radius;
+		}
+
+		&--field .q-field__control {
+			background-color: transparent;
+
+			input {
+				text-align: end;
+				font-weight: bold;
+			}
+		}
+	}
+
+	// This needs to be outside of .q-grid-table-list__column-totalizers due to specificity requirements
+	&:not(.q-grid-table-list--readonly) .q-grid-table-list__column-totalizers .q-field__control {
+		background-color: transparent;
+	}
+}
+
+// This needs to be outside of .q-grid-table-list due to specificity requirements
+.q-table-list .c-table .q-grid-table-list__column-totalizers td {
+	padding: 0.2rem 0.5rem;
+	vertical-align: unset;
+	font-weight: bold;
 }

@@ -1,16 +1,46 @@
 ﻿<template>
 	<img
 		class="q-render-image__thumbnail"
-		v-bind="imageAttrs" />
+		v-bind="imageAttrs"
+		@click.stop.prevent="openPreview" />
+
+	<q-image-preview
+		v-if="fullSizeImage"
+		:image="fullSizeImage"
+		:data-title="this.options?.dataTitle"
+		:texts="texts"
+		@close-image-preview="closePreview" />
 </template>
 
 <script>
-	import { imageObjToSrc } from '@/mixins/genericFunctions.js'
+	import { defineAsyncComponent } from 'vue'
+	import { imageObjToSrc, validateTexts } from '@/mixins/genericFunctions.js'
+
+	const DEFAULT_TEXTS = {
+		close: 'Close',
+		download: 'Download'
+	}
 
 	export default {
 		name: 'QRenderImage',
 
+		emits: ['execute-action'],
+
+		components: {
+			QImagePreview: defineAsyncComponent(() => import('@/components/QImagePreview.vue'))
+		},
+
 		inheritAttrs: false,
+
+		data()
+		{
+			return {
+				/**
+				 * The full sized image to be displayed in a modal.
+				 */
+				fullSizeImage: null
+			}
+		},
 
 		props: {
 			/**
@@ -26,8 +56,25 @@
 					data: '',
 					dataFormat: 'image/png',
 					fileName: '',
-					encoding: 'base64'
+					encoding: 'base64',
+					isThumbnail: true
 				})
+			},
+
+			/**
+			 * Information about the column of the image
+			 */
+			options: {
+				type: Object,
+				required: true
+			},
+
+			/**
+			 * Information about the row of the image
+			 */
+			row: {
+				type: Object,
+				required: true
 			},
 
 			/**
@@ -36,6 +83,15 @@
 			resourcesPath: {
 				type: String,
 				required: true
+			},
+
+			/**
+			 * Necessary strings to be used in labels and buttons.
+			 */
+			texts: {
+				type: Object,
+				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
+				default: () => DEFAULT_TEXTS
 			}
 		},
 
@@ -52,7 +108,42 @@
 				if (this.value !== null)
 					src = imageObjToSrc(this.value)
 
-				return { src }
+				return { src, alt: this.options?.dataTitle }
+			}
+		},
+
+		methods: {
+			/**
+			 * Emits a request for the full image to preview.
+			 */
+			openPreview()
+			{
+				const ticket = this.row?.Fields[this.options.name]?.ticket
+				if (!ticket)
+					return
+
+				this.$emit('execute-action', {
+					action: 'preview-image',
+					area: this.options.area,
+					ticket,
+					callback: this.receiveImagePreview
+				})
+			},
+
+			/**
+			 * Receives the requested image to preview.
+			 */
+			receiveImagePreview(image)
+			{
+				this.fullSizeImage = image
+			},
+
+			/**
+			 * Closes the image preview.
+			 */
+			closePreview()
+			{
+				this.fullSizeImage = null
 			}
 		}
 	}

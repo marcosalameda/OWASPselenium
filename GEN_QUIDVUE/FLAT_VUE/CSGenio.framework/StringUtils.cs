@@ -121,7 +121,7 @@ namespace CSGenio.framework
         public static string CapFirst(string text)
         {
             if (text == null)
-                throw new FrameworkException("Tem que fornecer um texto.", "StringUtils.CapFirst", "Argument [texto] is null.");
+                throw new ArgumentNullException(nameof(text));
             if (text.Length > 1)
                 return text.Substring(0, 1).ToUpperInvariant() + text.Substring(1).ToLowerInvariant();
             else

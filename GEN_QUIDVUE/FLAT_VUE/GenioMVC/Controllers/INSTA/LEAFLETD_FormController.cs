@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Insta;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_LEAFLETD_CANCEL = new NavigationLocation("CANCELAR49513", "Leafletd_Cancel", "Insta") { vueRouteName = "form-LEAFLETD", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_LEAFLETD_SHOW = new NavigationLocation("CONSULTA40695", "Leafletd_Show", "Insta") { vueRouteName = "form-LEAFLETD", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_LEAFLETD_NEW = new NavigationLocation("INSERIR43365", "Leafletd_New", "Insta") { vueRouteName = "form-LEAFLETD", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_LEAFLETD_EDIT = new NavigationLocation("EDITAR11616", "Leafletd_Edit", "Insta") { vueRouteName = "form-LEAFLETD", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_LEAFLETD_DUPLICATE = new NavigationLocation("DUPLICAR09748", "Leafletd_Duplicate", "Insta") { vueRouteName = "form-LEAFLETD", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_LEAFLETD_DELETE = new NavigationLocation("APAGAR04097", "Leafletd_Delete", "Insta") { vueRouteName = "form-LEAFLETD", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_LEAFLETD_CANCEL = new("CANCELAR49513", "Leafletd_Cancel", "Insta") { vueRouteName = "form-LEAFLETD", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_LEAFLETD_SHOW = new("CONSULTA40695", "Leafletd_Show", "Insta") { vueRouteName = "form-LEAFLETD", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_LEAFLETD_NEW = new("INSERIR43365", "Leafletd_New", "Insta") { vueRouteName = "form-LEAFLETD", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_LEAFLETD_EDIT = new("EDITAR11616", "Leafletd_Edit", "Insta") { vueRouteName = "form-LEAFLETD", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_LEAFLETD_DUPLICATE = new("DUPLICAR09748", "Leafletd_Duplicate", "Insta") { vueRouteName = "form-LEAFLETD", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_LEAFLETD_DELETE = new("APAGAR04097", "Leafletd_Delete", "Insta") { vueRouteName = "form-LEAFLETD", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Leafletd_ModalDBEdit()
-		{
-			Leafletd_ViewModel model = new Leafletd_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Leafletd_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Leafletd Multiform actions
-
-		//
-		// GET /Insta/MFLeafletd_New
-		[HttpGet]
-		[ActionName("MFLeafletd_New")]
-		public ActionResult MFLeafletd_New()
-		{
-			var model = new Leafletd_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_LEAFLETD_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("insta", model.ValCodinsta);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFLeafletd_New_GET()
-		{
-			return MFLeafletd_New();
-		}
-
-		//
-		// GET /Insta/MFLeafletd_Edit
-		[HttpGet]
-		[ActionName("MFLeafletd_Edit")]
-		public ActionResult MFLeafletd_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("LEAFLETD", "EDIT", new { id = id, partialView = "MFLeafletd", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFLeafletd_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFLeafletd_Edit(requestModel);
-		}
-
-		//
-		// GET /Insta/MFLeafletd_Cancel
-		[ActionName("MFLeafletd_Cancel")]
-		public ActionResult MFLeafletd_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Insta(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Insta/MFLeafletd_Save
-		[HttpPost]
-		[ActionName("MFLeafletd_Save")]
-		public JsonResult MFLeafletd_Save(Leafletd_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFLeafletd_Save",
-				ViewName = "MFLeafletd",
-				AreaName = "insta"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Insta/MFLeafletd_Delete
-		[HttpPost]
-		[ActionName("MFLeafletd_Delete")]
-		public JsonResult MFLeafletd_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFLeafletd_Delete",
-				ViewName = "MFLeafletd",
-				AreaName = "insta",
-				Location = ACTION_LEAFLETD_EDIT
-			};
-
-			var model = new Leafletd_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Insta/Leafletd_EquipValRegistnr
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,12 +422,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Leafletd_EquipValRegistnr_ViewModel model = new Leafletd_EquipValRegistnr_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodinsta = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Insta/Leafletd_SaveEdit
 		[HttpPost]

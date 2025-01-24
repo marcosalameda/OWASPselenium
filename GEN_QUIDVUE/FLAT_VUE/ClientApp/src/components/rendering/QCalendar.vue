@@ -757,7 +757,7 @@
 					placement: 'auto',
 					modifiers: {
 						offset: {
-							// adicionando um deslocamento para evitar que o formulário cubra o evento
+							// Added an offset to avoid the calendar from covering the event.
 							enabled: true,
 							offset: '0,10'
 						}
@@ -886,7 +886,7 @@
 			 * Handles the event when the date range or view type changes in the FullCalendar component.
 			 * This method is designed to automatically navigate to the date of the first event
 			 * when the "timeGridWeek" view is activated, under specific conditions.
-			 * It also saves the current view type to the sessionStorage for persistence across 
+			 * It also saves the current view type to the sessionStorage for persistence across
 			 * page reloads when multiple views are used, preventing the calendar from resetting to a default view.
 			 *
 			 * @param {Object} dateInfo - An object containing information about the current date range and view type.
@@ -894,23 +894,23 @@
 			 * @param {Date} dateInfo.end - The end date of the currently visible date range.
 			 * @param {Object} dateInfo.view - An object representing the current view.
 			 * @param {string} dateInfo.view.type - The type of the current view (e.g., "timeGridWeek").
-			 * 
+			 *
 			 * Conditions for navigating to the first event date:
 			 * 1. The view type must be "timeGridWeek".
 			 * 2. The 'noDates' option is true, indicating a preference to focus on events without specific date association.
 			 * 3. There must be at least one event present.
-			 * 
+			 *
 			 * If the first event's date is outside the currently visible date range,
 			 * the calendar will navigate to that date to bring the event into view.
 			 */
-			 handleDatesSet(dateInfo) 
+			handleDatesSet(dateInfo)
 			{
 				// Check if the view needs to be persisted across form reloads and save the current view type.
 				if (this.fullReload)
 					sessionStorage['fcDefaultView' + this.controlId] = dateInfo.view.type
-				
+
 				// Condition to check for 'timeGridWeek' view, 'noDates' option true, and existence of events.
-				if (dateInfo.view.type === 'timeGridWeek' && this.options.noDates && this.options.events?.length > 0) 
+				if (dateInfo.view.type === 'timeGridWeek' && this.options.noDates && this.options.events?.length > 0)
 				{
 					// Extract the start date of the first event.
 					const firstEventDate = this.options.events[0].start
@@ -921,7 +921,7 @@
 
 					// If the event date is not within the currently visible range, navigate to that date.
 					if (eventDate < dateInfo.start || eventDate >= dateInfo.end)
-						calendarApi.gotoDate(firstEventDate);
+						calendarApi.gotoDate(firstEventDate)
 				}
 			},
 
@@ -954,16 +954,16 @@
 
 			/**
 			 * Adjusts the provided locale code to match the format expected by FullCalendar.
-			 * This function maps specific locale codes from your system to the corresponding 
+			 * This function maps specific locale codes from your system to the corresponding
 			 * locale codes supported by FullCalendar.
-			 * 
-			 * @param {string} locale - The locale code as used in your system. These codes typically 
+			 *
+			 * @param {string} locale - The locale code as used in your system. These codes typically
 			 * follow the format of language code followed by a dash and a country code (e.g., 'en-US').
 			 * @returns {string} - The adjusted locale code that matches FullCalendar's expected format.
 			 */
 			fixLocaleCode(locale)
 			{
-				switch(locale)
+				switch (locale)
 				{
 					case 'pt-PT':
 					case 'te-PT': return 'pt'
@@ -976,7 +976,6 @@
 					case 'en-JM': return 'en'
 					case 'pt-BR': return 'pt-br'
 					case 'eu-ES': return 'eu'
-
 					default: return locale
 				}
 			}

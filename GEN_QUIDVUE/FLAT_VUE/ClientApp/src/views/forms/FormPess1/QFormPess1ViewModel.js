@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODCATEG',
 			relatedArea: 'CATE2',
 			description: computed(() => this.Resources._LAST_CATEGORY61019),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodcateg))
 		watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('pess1.codcateg', this.ValCodcateg, newValue, oldValue))
 
@@ -237,5 +238,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodpesso'
 
 	get QPrimaryKey() { return this.ValCodpesso.value }
-	set QPrimaryKey(value) { this.ValCodpesso.value = value }
+	set QPrimaryKey(value) { this.ValCodpesso.updateValue(value) }
 }

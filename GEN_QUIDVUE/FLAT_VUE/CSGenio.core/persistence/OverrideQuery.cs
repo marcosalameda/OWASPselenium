@@ -90,6 +90,21 @@ namespace GenioServer.framework
                 area.insertPseud(sp);
                 rows.Add(area.ValCodua, area.ValModulo, area.ValNivel, area.ValCodpsw);
             }
+            if (!modules.ContainsKey("TRN"))
+            {
+                // must create a user authorization level
+                if (Log.IsDebugEnabled) Log.Debug("Processa pedido INS. [id] APPAUTHORIZATIONLIST [aplicacao] pswuserauthlevels");
+
+                //instanciação da area base
+                CSGenioApswuserauthlevels area = Area.createArea("pswuserauthlevels", user, list.Module) as CSGenioApswuserauthlevels;
+                area.ValNivel = 0;
+                area.ValModulo = "TRN";
+                area.ValSistema = "GQT";
+                // Value da key PSW
+                area.ValCodpsw = condition.SubSets[0].Criterias[0].RightTerm.ToString();
+                area.insertPseud(sp);
+                rows.Add(area.ValCodua, area.ValModulo, area.ValNivel, area.ValCodpsw);
+            }
             if (!modules.ContainsKey("STY"))
             {
                 // must create a user authorization level

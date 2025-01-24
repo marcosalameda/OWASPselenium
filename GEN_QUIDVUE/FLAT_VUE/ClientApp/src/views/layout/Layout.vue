@@ -1,8 +1,17 @@
 ﻿<template>
 	<div
 		:class="['layout-container', ...layoutClasses, ...customClasses]"
-		:data-loading="loadingMenus">
+		:data-loading="loading">
 		<slot name="layout-loading-effect"></slot>
+
+		<div 
+			v-if="this.maintenance.isScheduled || this.maintenance.isActive"
+			class="q-maintenance-container">
+			<span>
+				<q-icon icon="alert" />
+				{{ maintenanceMessage }}
+			</span>
+		</div>
 
 		<div
 			v-if="showContent"
@@ -25,8 +34,10 @@
 </template>
 
 <script>
-	import LayoutHandlers from '@/mixins/layoutHandlers.js'
+	import { computed } from 'vue'
 	import NavigationalBar from './NavigationalBar.vue'
+	import LayoutHandlers from '@/mixins/layoutHandlers.js'
+	import hardcodedTexts from '@/hardcodedTexts.js'
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LAYOUT_INCLUDEJS LAYOUT]/
@@ -46,6 +57,16 @@
 
 		inheritAttrs: false,
 
+		data() {
+			const vm = this
+			return {
+				texts: {
+					maintenanceActive: computed(() => this.Resources[hardcodedTexts.maintenanceActive]),
+					maintenanceScheduled: computed(() => this.Resources[hardcodedTexts.maintenanceScheduled].replace('{0}', vm.maintenanceDate)),
+				},
+			}
+		},
+
 		props: {
 			/**
 			 * Custom classes to apply to the layout container.
@@ -56,7 +77,15 @@
 			},
 
 			/**
-			 * Whether or not the menu structure is loading.
+			 * Whether there's any asynchronous process running.
+			 */
+			loading: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
+			 * Whether the menu structure is loading.
 			 */
 			loadingMenus: {
 				type: Boolean,
@@ -65,17 +94,6 @@
 		},
 
 		expose: [],
-
-		mounted()
-		{
-			if (this.hasMenus)
-				this.expandSidebar()
-			else
-			{
-				this.setSidebarVisibility(false)
-				this.setSidebarCollapseState(true)
-			}
-		},
 
 		computed: {
 			/**
@@ -100,6 +118,9 @@
 				if (this.rightSidebarIsCollapsed)
 					classes.push('right-sidebar-collapse')
 
+				if (this.maintenance.isScheduled || this.maintenance.isActive)
+					classes.push('maintenance')
+
 				return classes
 			},
 
@@ -108,20 +129,29 @@
 			 */
 			showContent()
 			{
-				return this.userIsLoggedIn || !this.isFullScreenPage && (this.isPublicRoute || this.layoutConfig.LoginStyle !== 'single_page')
-			}
+				return !this.isFullScreenPage && (this.userIsLoggedIn || this.isPublicRoute || this.layoutConfig.LoginStyle !== 'single_page')
+			},
+
+			maintenanceMessage() {
+				return this.maintenance.isScheduled ? this.texts.maintenanceScheduled : this.texts.maintenanceActive
+			},
 		},
 
 		watch: {
-			hasMenus(val)
-			{
-				if (val)
-					this.expandSidebar()
-				else
+			hasMenus: {
+				handler(val)
 				{
-					this.setSidebarVisibility(false)
-					this.setSidebarCollapseState(true)
-				}
+					this.setHeaderHeight(50)
+
+					if (val)
+						this.expandSidebar()
+					else
+					{
+						this.setSidebarVisibility(false)
+						this.setSidebarCollapseState(true)
+					}
+				},
+				immediate: true
 			}
 		}
 	}

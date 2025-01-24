@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuSTY_INPTFIELDViewModel.js'
+
 	const requiredTextResources = ['QMenuSTY_INPTFIELD', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: 'INPTFIELD',
 					isMenuList: true,
+					designation: computed(() => this.Resources.LISTA_DE_CAMPOS37609),
 					acronym: 'STY_INPTFIELD',
 					name: 'CAMPO',
 					route: 'menu-STY_INPTFIELD',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'STY_Menu_INPTFIELD',
 						controller: 'FLDS',
 						action: 'STY_Menu_INPTFIELD',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -197,7 +207,7 @@
 								field: 'DATE',
 								label: computed(() => this.Resources.DATA_DE_PARTIDA__DD_26044),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 8,
@@ -206,7 +216,7 @@
 								field: 'DATETIME',
 								label: computed(() => this.Resources.DATA_DE_PARTIDA__HOR47484),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 9,
@@ -215,7 +225,7 @@
 								field: 'DATESECO',
 								label: computed(() => this.Resources.DATA_DE_PARTIDA__SEG38575),
 								scrollData: 19,
-								dateTimeType: 'DateTimeSeconds',
+								dateTimeType: 'dateTimeSeconds',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 10,
@@ -225,7 +235,7 @@
 								label: computed(() => this.Resources.HORA_DE_PARTIDA00929),
 								dataLength: 5,
 								scrollData: 5,
-								dateTimeType: 'Time',
+								dateTimeType: 'time',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 11,
@@ -294,8 +304,10 @@
 								area: 'FLDS',
 								field: 'LOGO',
 								label: computed(() => this.Resources.LOGO62483),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.LOGO62483)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.DocumentColumn({
 								order: 18,
@@ -306,7 +318,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
-								viewType: qEnums.documentViewTypeMode.Print,
+								viewType: qEnums.documentViewTypeMode.print,
 							}),
 							new listColumnTypes.TextColumn({
 								order: 19,
@@ -324,7 +336,7 @@
 								field: 'CREATDAT',
 								label: computed(() => this.Resources.DATA_DE_CRIACAO__DD_33541),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 21,
@@ -334,7 +346,7 @@
 								label: computed(() => this.Resources.HORA_DE_CRIACAO40754),
 								dataLength: 5,
 								scrollData: 5,
-								dateTimeType: 'Time',
+								dateTimeType: 'time',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 22,
@@ -343,7 +355,7 @@
 								field: 'CREATINS',
 								label: computed(() => this.Resources.DATA_DE_CRIACAO_COMP31582),
 								scrollData: 15,
-								dateTimeType: 'DateTimeSeconds',
+								dateTimeType: 'dateTimeSeconds',
 							}),
 						],
 						config: {
@@ -359,7 +371,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -463,6 +475,7 @@
 								id: 'RCA_STY_34111',
 								name: 'form-INFIELDS',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -479,23 +492,21 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: INFIELDS
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValDescrip',
 							defaultSearchColumnNameOriginal: 'ValDescrip',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValDuration',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-EQUIP', 'changed-FLDS', 'changed-AERO'],
 						uuid: '34bdeae6-5f83-4b5b-93b8-a9379f8a8ce5',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
+						/** Menu limits */
+						controlLimits: [
+							/** SC */
+						]
 					}, this)
 				}
 			}
@@ -524,6 +535,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS STY_INPTFIELD]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS STY_MENU_INPTFIELD]/
 // eslint-disable-next-line

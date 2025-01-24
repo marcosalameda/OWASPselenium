@@ -20,7 +20,6 @@ namespace CSGenio.business.async
 
         void SetResponse(Response response);
 
-        void Execute(PersistentSupport sp, User user);
     }
 
     /// <summary>
@@ -39,19 +38,6 @@ namespace CSGenio.business.async
         public void SetResponse(Response response)
         {
             this.response = response;
-        }
-
-        public abstract void Execute(PersistentSupport sp, User user);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sp"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public async virtual Task<string> ExecuteAsync(PersistentSupport sp, User user, Process process)
-        {
-            return await Task.FromResult(""); 
         }
 
         protected Dictionary<Type, PartitionPolicy> specificPolicies = new Dictionary<Type, PartitionPolicy>();
@@ -167,7 +153,7 @@ namespace CSGenio.business.async
             if (type.Equals(typeof(System.Int32)))
                 return Conversion.string2Int(value);
             else if (type == typeof(System.Double) || type == typeof(System.Decimal))
-                return Conversion.string2Double(value);
+                return Conversion.string2Numeric(value);
             else if (type == typeof(System.DateTime))
                 return Conversion.dateTimeString2DateTime(value);
             else if (type == typeof(System.Boolean))
@@ -187,7 +173,7 @@ namespace CSGenio.business.async
             if (type.Equals(typeof(System.Int32)))
                 lista.Add(Conversion.internalInt2String(value));
             else if (type.Equals(typeof(System.Double)) || type.Equals(typeof(System.Decimal)))
-                lista.Add(Conversion.internalDouble2String(value));
+                lista.Add(Conversion.internalNumeric2String(value));
 
             else if (type.Equals(typeof(System.DateTime)))
                 lista.Add(Conversion.internalDateTime2String(value, FieldFormatting.DATASEGUNDO));
@@ -239,10 +225,6 @@ namespace CSGenio.business.async
     public abstract class GenioExternalJob : GenioExecutableJob
     {
 
-        public override void Execute(PersistentSupport sp, User user)
-        {
-            throw new Exception("This job cannot be executed in the server.");
-        }
     }
 
 
@@ -259,6 +241,8 @@ namespace CSGenio.business.async
             this.progress = new ProgressStatus();
         }
 
+        public abstract void Execute(PersistentSupport sp, User user);
+
         public ProgressStatus Progress { get { return progress; } }
     }
 
@@ -269,6 +253,17 @@ namespace CSGenio.business.async
         public GenioServerJobAsync() : base()
         {
             this.progress = new ProgressStatus();
+        }
+
+        [Obsolete]
+        public virtual void Execute(PersistentSupport sp, User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async virtual Task<string> ExecuteAsync(PersistentSupport sp, User user, Process process)
+        {
+            return await Task.FromResult("");
         }
 
         public ProgressStatus Progress { get { return progress; } }

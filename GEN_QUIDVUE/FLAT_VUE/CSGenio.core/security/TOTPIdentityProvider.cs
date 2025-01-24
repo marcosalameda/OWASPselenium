@@ -12,9 +12,10 @@ namespace GenioServer.security
 {
 
     [CredentialProvider(typeof(UserPassCredential))]
-    public class TOTPIdentityProvider : IIdentityProvider
+    public class TOTPIdentityProvider : BaseIdentityProvider
     {
-        public IIdentity Authenticate(Credential credential)
+        /// <inheritdoc/>
+        public override IIdentity Authenticate(Credential credential)
         {
             IList<string> anos = new List<string>(Configuration.Years);
             if (Configuration.Years.Count == 0)
@@ -45,17 +46,6 @@ namespace GenioServer.security
             }
 
             return id;
-        }
-
-        /// <summary>
-        /// Determines whether username and password authentication is enabled.
-        /// </summary>
-        /// <remarks>
-        /// This is used to determine if username and password authentication is enabled.
-        /// </remarks>
-        public bool HasUsernameAuth()
-        {
-            return true;
         }
 
         public bool IsOk(string valPsw2favl, string pass)

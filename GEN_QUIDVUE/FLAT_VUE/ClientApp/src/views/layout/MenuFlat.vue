@@ -1,7 +1,12 @@
 ﻿<template>
 	<aside
 		v-if="moduleCount > 0"
-		:class="['main-sidebar', 'n-menu--sidebar', menuColor]">
+		:class="classes"
+		@transitionend="onTransitionEnd"
+		id="sidebarMenu"
+		ref="sidebarMenu"
+		@focusout="onFocusOut"
+		tabindex="-1">
 		<div class="n-sidebar__brand">
 			<q-router-link link="/">
 				<img
@@ -21,7 +26,9 @@
 			</q-router-link>
 		</div>
 
-		<div class="sidebar n-sidebar">
+		<div
+			class="sidebar n-sidebar"
+			tabindex="-1">
 			<nav>
 				<menu-search-box />
 			</nav>
@@ -52,10 +59,7 @@
 						v-else
 						class="nav-sidebar">
 						<div class="n-sidebar__nav-link--active nav-item active-module">
-							<a
-								href="javascript:void(0)"
-								class="d-flex nav-link"
-								:data-key="system.currentModule">
+							<span class="d-flex nav-link">
 								<q-icon v-bind="currentModuleIcon" />
 
 								<p>
@@ -63,7 +67,7 @@
 										{{ currentModuleTitle }}
 									</span>
 								</p>
-							</a>
+							</span>
 						</div>
 					</div>
 				</template>
@@ -164,6 +168,16 @@
 			{
 				return Object.keys(this.system.availableModules).length
 			},
+
+			classes()
+			{
+				const classes = ['main-sidebar', 'n-menu--sidebar', this.menuColor]
+
+				if(!this.navBarIsVisible)
+					classes.push('invisible')
+
+				return classes
+			}
 		},
 
 		methods: {
@@ -184,7 +198,58 @@
 			getSkeletonLoaderOpacity(order)
 			{
 				return (this.skeletonLoaders - order + 1) / this.skeletonLoaders
-			}
+			},
+
+			/**
+			 * Called when a CSS transition for the nav bar finishes.
+			 * This is called for every element inside the nav bar with a transition as well.
+			 */
+			onTransitionEnd(event)
+			{
+				// Only execute the specific functions for the elements we want
+				if (event?.target?.id === "sidebarMenu")
+					this.handleSidebarTransitionEnd()
+			},
+
+			/**
+			 * Does the required operations to handle the end of the navbar opening or closing transition.
+			 */
+			handleSidebarTransitionEnd()
+			{
+				/**
+				 * If the nav bar is being closed, set the actual value for visibility to false.
+				 * It must be done here, after the transition ends 
+				 * so it doesn't disappear before the transition is done.
+				 */
+				if (!this.sidebarIsVisible)
+					this.setNavBarVisibility(false)
+				else if (!this.sidebarIsCollapsed)
+					//give focus to the sidebar so ensure it is closed if the user clicks outside of it on mobile
+					this.$refs.sidebarMenu.focus();
+			},
+
+			/*
+			 * Called when focus leaves an element in the menu
+			 */
+			onFocusOut(event) {
+				if (this.mobileLayoutActive) {
+					// Main menu element
+					let sidebarMenu = this.$refs?.sidebarMenu
+					// Element that gets focus
+					let focusedElem = event?.relatedTarget
+
+					// If focus goes to an element within the menu, logically the 'focus' is on the menu
+					if (sidebarMenu.contains(focusedElem))
+						return
+
+					// If focus goes to the button to close the menu, let the click event handle it
+					if (event?.relatedTarget?.id === 'main-menu-toggle')
+						return
+
+					// Focus went to an element outside the menu
+					this.collapseSidebar();
+				}
+			},
 		}
 	}
 </script>

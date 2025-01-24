@@ -6,6 +6,9 @@ import _merge from 'lodash-es/merge'
 import { useNavDataStore } from '@/stores/navData.js'
 import { useSystemDataStore } from '@/stores/systemData.js'
 import { useTracingDataStore } from '@/stores/tracingData.js'
+import { displayMessage } from '@/mixins/genericFunctions.js'
+import { documentViewTypeMode } from '@/mixins/quidgest.mainEnums.js'
+import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 import eventBus from '@/api/global/eventBus.js'
 import axios from './axiosInstance'
 
@@ -13,26 +16,27 @@ const MAIN_HISTORY_BRANCH_ID = 'main'
 
 /**
  *
- * @param {Function} fnResolve The «promise resolve» function that will be resolved just after completely executed request
- * @param {*} _value The value to emit in the resolve
+ * @param {function} fnResolve The «promise resolve» function that will be resolved just after completely executed request
+ * @param {any} value The value to emit in the resolve
  */
-function resolvePromise(fnResolve, _value)
+function resolvePromise(fnResolve, value)
 {
 	if (fnResolve)
-		fnResolve(_value)
+		fnResolve(value)
 }
 
 /**
  * Returns a History structure in the format expected by the server
  * @param navigationId The Navigation context Id
+ * @param {string} currentArea The area of the current history level
  * @returns Object with current history
  */
-function getHistoryToSend(navigationId)
+function getHistoryToSend(navigationId, currentArea = '')
 {
 	const navDataStore = useNavDataStore()
 
 	navDataStore.beforeRequestContext(navigationId)
-	return navDataStore.navigation.getHistory(navigationId).historyToSend()
+	return navDataStore.navigation.getHistory(navigationId).historyToSend(currentArea)
 }
 
 /**
@@ -159,11 +163,13 @@ async function processRequest(response, _fnCallback, fnResolve)
 		if (response.status === 200)
 		{
 			const navDataStore = useNavDataStore()
+			const systemDataStore = useSystemDataStore()
 
 			let responseData = (response.data || {}),
 				data = responseData.Data || null,
 				statusCode = responseData.statusCode || 200,
 				srvHistory = responseData.NavigationData || {},
+				maintenance = responseData.Maintenance || {},
 				navigationId = srvHistory.navigationId,
 				history = srvHistory.historyDiff || null,
 				srvEventTracking = responseData.eTracker
@@ -183,6 +189,7 @@ async function processRequest(response, _fnCallback, fnResolve)
 				})
 			}
 
+			systemDataStore.setMaintenanceStatus(maintenance)
 			navDataStore.updateHistoryByServer({ navigationId, srvHistory: history })
 
 			if (statusCode !== 200)
@@ -233,11 +240,14 @@ export function simpleFetch(controller, action, parameter = '')
 {
 	const url = `api/${controller}/${action}/${parameter}`
 
-	return new Promise((fnResolve, fnReject) => {
+	const promise = new Promise((fnResolve, fnReject) => {
 		axios.axiosInstance.get(url)
-			.then(response => fnResolve(response))
-			.catch(error => fnReject(error))
+			.then((response) => fnResolve(response))
+			.catch((error) => fnReject(error))
 	})
+
+	asyncProcM.addProcess(promise)
+	return promise
 }
 
 /**
@@ -269,18 +279,17 @@ export function fetchData(controller, action, params, _fnCallback, _fnErrorCallb
 	The "Promise" that is returned will only be executed after the callback of the processing of data received from the server has been completely executed.
 	The processing of AxiosResponte will be done centrally and the callback (which comes from the interface) will only have to worry about the processing of the received data.
 	*/
-	var url = apiActionURL(controller, action),
+	let url = apiActionURL(controller, action),
 		tokenElements = document.getElementsByName('__RequestVerificationToken'),
 		antiForgeryToken = tokenElements.length > 0 ? tokenElements[0].value : null,
 		axiosOptions = {
 			withCredentials: true,
 			headers: {
 				'__RequestVerificationToken': antiForgeryToken,
-				// for Asp.NET Request.IsAjaxRequest()
+				// For Asp.NET Request.IsAjaxRequest()
 				'X-Requested-With': 'XMLHttpRequest'
 			},
-			meta:
-			{
+			meta: {
 				traceId: uuidv4()
 			}
 		}
@@ -302,11 +311,14 @@ export function fetchData(controller, action, params, _fnCallback, _fnErrorCallb
 		traceId: axiosOptions.meta?.traceId
 	})
 
-	return new Promise((fnResolve) => {
+	const promise = new Promise((fnResolve) => {
 		axios.axiosInstance.get(url, axiosOptions)
 			.then((response) => processRequest(response, _fnCallback, fnResolve))
 			.catch((error) => handleNonOkResponse(error.response, fnResolve, _fnErrorCallback, error))
 	})
+
+	asyncProcM.addProcess(promise)
+	return promise
 }
 
 /**
@@ -338,26 +350,25 @@ export function postData(controller, action, data, _fnCallback, _fnErrorCallback
 	The "Promise" that is returned will only be executed after the callback of the processing of data received from the server has been completely executed.
 	The processing of AxiosResponte will be done centrally and the callback (which comes from the interface) will only have to worry about the processing of the received data.
 	*/
-	var url = apiActionURL(controller, action),
+	let url = apiActionURL(controller, action),
 		tokenElements = document.getElementsByName('__RequestVerificationToken'),
 		antiForgeryToken = tokenElements.length > 0 ? tokenElements[0].value : null,
 		axiosOptions = {
 			withCredentials: true,
 			headers: {
 				'__RequestVerificationToken': antiForgeryToken,
-				// for Asp.NET Request.IsAjaxRequest()
+				// For Asp.NET Request.IsAjaxRequest()
 				'X-Requested-With': 'XMLHttpRequest'
 			},
-			meta:
-			{
+			meta: {
 				traceId: uuidv4()
 			}
 		},
-		navigationData = getHistoryToSend(navigationId),
+		navigationData = getHistoryToSend(navigationId, controller.toLowerCase()),
 		jsonNavigationData = JSON.stringify(navigationData)
 
 	// Set the Navigation/History to the request
-	var requestData = data || {}
+	let requestData = data || {}
 	if (requestData instanceof FormData)
 		requestData.append('jsonNavigationData', new Blob([jsonNavigationData]))
 	else
@@ -382,11 +393,14 @@ export function postData(controller, action, data, _fnCallback, _fnErrorCallback
 		traceId: axiosOptions.meta?.traceId
 	})
 
-	return new Promise((fnResolve) => {
+	const promise = new Promise((fnResolve) => {
 		axios.axiosInstance.post(url, requestData, axiosOptions)
 			.then((response) => processRequest(response, _fnCallback, fnResolve))
 			.catch((error) => handleNonOkResponse(error.response, fnResolve, _fnErrorCallback, error))
 	})
+
+	asyncProcM.addProcess(promise)
+	return promise
 }
 
 /**
@@ -452,7 +466,7 @@ export function postFormData(controller, formName, formMode, params, _fnCallback
 export function fetchFakeData(controller, action, params, mockData, _fnCallback, _fnErrorCallback)
 {
 	return new Promise((fnResolve) => {
-		var url = apiActionURL(controller, action),
+		const url = apiActionURL(controller, action),
 			axiosMockInstance = axios.getAxiosMockInstance(url, params, mockData)
 
 		axiosMockInstance.get(url, params)
@@ -478,7 +492,7 @@ export function fetchFakeData(controller, action, params, mockData, _fnCallback,
 export function postFakeData(controller, action, params, mockData, _fnCallback, _fnErrorCallback)
 {
 	return new Promise((fnResolve) => {
-		var url = apiActionURL(controller, action),
+		const url = apiActionURL(controller, action),
 			axiosMockInstance = axios.getAxiosMockInstance(url, params, mockData)
 
 		axiosMockInstance.post(url, params)
@@ -503,7 +517,11 @@ export function executeServerFunction(func, args)
 		return
 
 	return new Promise((fnResolve) => {
-		postData('Home', 'ExecuteServerFunction', { func, args }, (data) => data.Success ? fnResolve(data.Data) : fnResolve())
+		postData(
+			'Home',
+			'ExecuteServerFunction',
+			{ func, args },
+			(data) => data.Success ? fnResolve(data.Data) : fnResolve())
 	})
 }
 
@@ -539,10 +557,76 @@ export function forceDownload(data, fileName, fileType, newTab = false, createBl
  */
 export function retrieveImage(baseArea, params, callback)
 {
-	return fetchData(baseArea, 'GetImage', params, (data) => {
-		if (typeof callback === 'function')
-			callback(data)
-	})
+	return fetchData(
+		baseArea,
+		'GetImage',
+		params,
+		(data) => {
+			if (typeof callback === 'function')
+				callback(data)
+		})
+}
+
+/**
+ * Gets the desired file from the server.
+ * @param {string} baseArea The area to which the file belongs
+ * @param {string} ticket The file ticket
+ * @param {number} viewType The file view mode
+ * @param {string} navigationId The Navigation context Id
+ */
+export function getFile(baseArea, ticket, viewType, navigationId = MAIN_HISTORY_BRANCH_ID)
+{
+	if (!Object.values(documentViewTypeMode).includes(viewType))
+		viewType = documentViewTypeMode.preview
+
+	const params = {
+		ticket,
+		viewType
+	}
+
+	asyncProcM.addBusy(
+		postData(
+			baseArea,
+			'GetFile',
+			params,
+			async (_, response) => {
+				const fileName = getFileNameFromRequest(response)
+				const fileType = response.headers['content-type']
+
+				// Here we check if there was a server-side error, if so we present an error message and do nothing.
+				if (fileType.includes('application/json'))
+				{
+					// The response content comes as a byte array, so we need to parse it first.
+					const data = new Blob([response.data], { type: fileType })
+					const content = await data.text()
+					const result = JSON.parse(content)
+
+					if (result.Success === false)
+					{
+						displayMessage(result.Message, 'error')
+						return
+					}
+				}
+
+				// Should open in a new tab only if it's defined with "preview" and the file type allows it.
+				const newTab = !fileType.includes('application/octet-stream') && (!fileName || viewType === documentViewTypeMode.preview)
+				forceDownload(response.data, fileName, fileType, newTab)
+			},
+			undefined,
+			{ responseType: 'arraybuffer' },
+			navigationId))
+}
+
+/**
+ * Retrieves the file name from an http file request.
+ * @param {XMLHttpRequest} request The request that brings the file
+ * @returns The name of the file, or null if it couldn't be found.
+ */
+export function getFileNameFromRequest(request)
+{
+	const getFileNameExp = /filename="(?<filename>.*)"/
+	const contentDisposition = request?.headers['content-disposition']
+	return getFileNameExp.exec(contentDisposition)?.groups?.filename ?? null
 }
 
 /**
@@ -555,22 +639,26 @@ export function fetchDynamicArray(array, lang, callback)
 {
 	const result = []
 
-	fetchData('Arrays', array, { lang: lang }, (data) => {
-		let i = 1
+	fetchData(
+		'Arrays',
+		array,
+		{ lang: lang },
+		(data) => {
+			let i = 1
 
-		_forEach(data, el => {
-			result.push({
-				num: i++,
-				key: el.Key,
-				text: el.Text,
-				group: el.Group,
-				get value() { return this.text }
+			_forEach(data, (el) => {
+				result.push({
+					num: i++,
+					key: el.Key,
+					text: el.Text,
+					group: el.Group,
+					get value() { return this.text }
+				})
 			})
-		})
 
-		if (typeof callback === 'function')
-			callback(result)
-	})
+			if (typeof callback === 'function')
+				callback(result)
+		})
 }
 
 /**
@@ -626,5 +714,7 @@ export default {
 	executeServerFunction,
 	forceDownload,
 	retrieveImage,
+	getFile,
+	getFileNameFromRequest,
 	fetchDynamicArray
 }

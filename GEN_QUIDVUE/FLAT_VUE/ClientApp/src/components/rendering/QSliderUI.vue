@@ -46,7 +46,7 @@
 		<div class="slider-container">
 			<input
 				type="range"
-				class="slider"
+				class="q-slider"
 				v-model="sliderValue"
 				role="slider-input"
 				:min="minValue"

@@ -8,9 +8,10 @@
 				:placeholder="texts.menuSearch"
 				@keyup="searchMenu" />
 			<template #append>
-				<q-button
+				<q-button 
 					b-style="primary"
-					:title="texts.search"
+					id="menu-search-btn"
+					:title="texts.search" 
 					@click="searchMenu">
 					<q-icon icon="search" />
 				</q-button>

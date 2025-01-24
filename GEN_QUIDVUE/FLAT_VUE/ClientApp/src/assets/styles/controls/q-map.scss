@@ -111,10 +111,7 @@
 		width: 20rem;
 		min-width: 15rem;
 		max-width: 100%;
-		z-index: 400;
-		position: absolute;
-		left: calc(50% - 10rem);
-		bottom: calc(50% + 25px);
+		z-index: 1000;
 		cursor: default;
 
 		&__close {
@@ -123,22 +120,12 @@
 			top: 0.4rem;
 		}
 
-		&.q-map-shape-info {
-			bottom: calc(50% + 12px);
-		}
-
 		.q-map-marker {
-			&-address {
-				width: 100%;
-				margin-bottom: 0.8rem;
-			}
-
 			&-info {
+				display: flex;
+				flex-direction: column;
+				gap: 0.8rem;
 				width: 100%;
-
-				.q-map-marker-description {
-					margin-top: 0.8rem;
-				}
 			}
 
 			&-btns {
@@ -148,6 +135,21 @@
 				margin-top: 0.8rem;
 			}
 		}
+	}
+
+	.q-map-info-window-static {
+		position: absolute;
+		left: calc(50% - 10rem);
+		bottom: calc(50% + 25px);
+
+		&.q-map-shape-info {
+			bottom: calc(50% + 12px);
+		}
+	}
+
+	.q-map-info-window-dynamic {
+		position: fixed;
+		pointer-events: none;
 	}
 
 	.q-map-popup-tip {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.ComponentModel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 using CSGenio.business;
 using CSGenio.persistence;
@@ -12,19 +6,17 @@ using CSGenio.framework;
 
 namespace WebTest
 {
-
     /// <summary>
     ///This is a test class for Test and is intended
     ///to contain all Test Unit Tests
     ///</summary>
-    [TestClass()]
-    public class TestConversaoBd
+    public class TestConversionDb
     {
 
         /// <summary>
         /// Teste à função ToString
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToString()
         {
             string res = null;
@@ -133,7 +125,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromString
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromString()
         {
             string res = null;
@@ -176,10 +168,10 @@ namespace WebTest
         /// <summary>
         /// Teste às funções FromNumeric e ToNumeric.
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromNumericAndToNumeric()
         {
-            double res = 0.0;
+            decimal res;
 
             // TODO: actualmente tudo o que envolve digits decimais está a falhar
             // Há que ver até que ponto faz sentido o auxFromNumericAndBack,
@@ -196,7 +188,7 @@ namespace WebTest
 
             // empty string --> zero
             res = DBConversion.ToNumeric("");
-            Assert.AreEqual(0.0, res);
+            Assert.AreEqual(0, res);
 
             // "  -8 " --> -8
             res = DBConversion.ToNumeric("  -8 ");
@@ -211,7 +203,7 @@ namespace WebTest
 
             // "4294967296. " --> 4294967296.0  [that's 2^32, since you're wondering]
             res = DBConversion.ToNumeric("4294967296. ");
-            Assert.AreEqual(4294967296.0, res);
+            Assert.AreEqual(4294967296.0m, res);
 
             // "Not a Number" --> exception
             //try
@@ -238,17 +230,17 @@ namespace WebTest
             //catch { }
         }
 
-        private void auxFromNumericAndBack(double original)
+        private void auxFromNumericAndBack(decimal original)
         {
             string dbVal = DBConversion.FromNumeric(original);
-            double result = DBConversion.ToNumeric(dbVal);
+            decimal result = DBConversion.ToNumeric(dbVal);
             Assert.AreEqual(original, result, String.Format("Expected {0} but got {1}. Database value was {2}", original, result, dbVal));
         }
 
         /// <summary>
         /// Teste à função ToInteger
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToInteger()
         {
             int res;
@@ -369,7 +361,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromInteger
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromInteger()
         {
             // Como DBConversion.FromInteger é essencialmente um Convert.ToString(int),
@@ -390,7 +382,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função ToDateTime
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToDateTime()
         {
             DateTime res;
@@ -438,17 +430,17 @@ namespace WebTest
             Assert.AreEqual(DateTime.MaxValue, res);
 
             // a string --> exception
-            Test.AssertThrows<FrameworkException>(() => {
+            Assert.Throws<FrameworkException>(() => {
                 res = DBConversion.ToDateTime(DateTime.Now.ToString());
             });
 
             // empty string --> exception
-            Test.AssertThrows<FrameworkException>(() => {
+            Assert.Throws<FrameworkException>(() => {
                 res = DBConversion.ToDateTime("");
             });
 
             // an integer --> exception
-            Test.AssertThrows<FrameworkException>(() => {
+            Assert.Throws<FrameworkException>(() => {
                 res = DBConversion.ToDateTime(20110411);
             });
         }
@@ -456,15 +448,12 @@ namespace WebTest
         /// <summary>
         ///Teste à função FromDateTime
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromDateTime()
         {
             string res = null;
 
-            res = DBConversion.FromDateTime(DateTime.MinValue);
-            Assert.AreEqual("NULL", res);
-
-            res = DBConversion.FromDateTime(new DateTime(1900, 2, 1), DatabaseType.SQLSERVER2000);
+            res = DBConversion.FromDateTime(new DateTime(1900, 2, 1), DatabaseType.SQLSERVER);
             Assert.AreEqual("convert(datetime, '1/2/1900 00:00:00', 103)", res);
 
             res = DBConversion.FromDateTime(new DateTime(1900, 2, 1), DatabaseType.ORACLE);
@@ -474,7 +463,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função ToLogic
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToLogic()
         {
             int res = -1;
@@ -519,7 +508,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromLogic
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromLogic()
         {
             string res = null;
@@ -543,7 +532,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função ToKey
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToKey()
         {
             string res = null;
@@ -577,7 +566,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromKey
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromKey()
         {
             string res = null;
@@ -607,7 +596,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função ToBinary
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToBinary()
         {
 
@@ -616,7 +605,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromBinary
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromBinary()
         {
         }
@@ -624,7 +613,7 @@ namespace WebTest
         /// <summary>
         /// Teste às funções ToInternal e FromInternal
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToInterno()
         {
             // var value in System.Enum.GetValues(typeof(FieldFormatting)) ){}
@@ -656,12 +645,12 @@ namespace WebTest
 
             // null --> zero-length byte array
             res = DBConversion.ToInternal(null, FieldFormatting.BINARIO);
-            Assert.IsInstanceOfType(res, typeof(byte[]));
+            Assert.IsInstanceOf(typeof(byte[]), res);
             Assert.IsTrue((res as byte[]).Length == 0);
 
             // DBNull --> zero-length byte array
             res = DBConversion.ToInternal(DBNull.Value, FieldFormatting.BINARIO);
-            Assert.IsInstanceOfType(res, typeof(byte[]));
+            Assert.IsInstanceOf(typeof(byte[]), res);
             Assert.IsTrue((res as byte[]).Length == 0);
 
             //
@@ -670,7 +659,7 @@ namespace WebTest
 
             // null --> empty string
             res = DBConversion.ToInternal(null, FieldFormatting.CARACTERES);
-            Assert.IsInstanceOfType(res, typeof(string));
+            Assert.IsInstanceOf(typeof(string), res);
             Assert.AreEqual("", res);
 
             //
@@ -679,17 +668,17 @@ namespace WebTest
 
             // null --> DateTime.MinValue
             res = DBConversion.ToInternal(null, FieldFormatting.DATA);
-            Assert.IsInstanceOfType(res, typeof(DateTime));
+            Assert.IsInstanceOf(typeof(DateTime), res);
             Assert.AreEqual(DateTime.MinValue, res);
 
             // DateTime.MinValue --> DateTime.MinValue
             res = DBConversion.ToInternal(DateTime.MinValue, FieldFormatting.DATA);
-            Assert.IsInstanceOfType(res, typeof(DateTime));
+            Assert.IsInstanceOf(typeof(DateTime), res);
             Assert.AreEqual(DateTime.MinValue, res);
 
             // DBNull --> DateTime.MinValue
             res = DBConversion.ToInternal(DBNull.Value, FieldFormatting.DATA);
-            Assert.IsInstanceOfType(res, typeof(DateTime));
+            Assert.IsInstanceOf(typeof(DateTime), res);
             Assert.AreEqual(DateTime.MinValue, res);
 
             //
@@ -710,22 +699,22 @@ namespace WebTest
 
             // null --> 0.0
             res = DBConversion.ToInternal(null, FieldFormatting.FLOAT);
-            Assert.AreEqual(0.0, res);
+            Assert.AreEqual(0m, res);
 
             // DBNull --> 0.0
             res = DBConversion.ToInternal(DBNull.Value, FieldFormatting.FLOAT);
-            Assert.AreEqual(0.0, res);
+            Assert.AreEqual(0m, res);
 
             // With conversion to String with current culture
             res = DBConversion.ToInternal(0.9464572.ToString(), FieldFormatting.FLOAT);
-            Assert.AreEqual(0.9464572, res);
+            Assert.AreEqual(0.9464572m, res);
 
             // With conversion to string in Invariant culture
             res = DBConversion.ToInternal(0.9464572.ToString(System.Globalization.CultureInfo.InvariantCulture), FieldFormatting.FLOAT); 
-            Assert.AreEqual(0.9464572, res);
+            Assert.AreEqual(0.9464572m, res);
 
             res = DBConversion.ToInternal(0.987654321, FieldFormatting.FLOAT);
-            Assert.AreEqual(0.987654321, res);
+            Assert.AreEqual(0.987654321m, res);
 
             //
             // FieldFormatting.GUID;
@@ -747,7 +736,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromInternal
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromInterno()
         {
             string res = null;
@@ -826,18 +815,14 @@ namespace WebTest
             //
 
             // null --> exception
-            Test.AssertThrows<Exception>(() =>
-                DBConversion.FromInternal(null, FieldFormatting.DATA)
-            );
+            Assert.Throws<FrameworkException>(() => DBConversion.FromInternal(null, FieldFormatting.DATA));
 
             // DateTime.MinValue --> NULL
             res = DBConversion.FromInternal(DateTime.MinValue, FieldFormatting.DATA);
             Assert.AreEqual("NULL", res);
 
             // empty string --> NULL should throw exception
-            Test.AssertThrows<FrameworkException>(() =>
-                DBConversion.FromInternal("", FieldFormatting.DATA)
-            );
+            Assert.Throws<FrameworkException>(() => DBConversion.FromInternal("", FieldFormatting.DATA));
 
             //
             // FieldFormatting.DATAHORA

@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -101,17 +101,17 @@
 						v-show="controls.LISTACAMPSEUDCAMTEXTO.isVisible || controls.LISTACAMPSEUDCAMNUM__.isVisible || controls.LISTACAMPSEUDCAMDATE_.isVisible || controls.LISTACAMPSEUDCAMMASK_.isVisible || controls.LISTACAMPSEUDCAMENUM_.isVisible || controls.LISTACAMPSEUDCAMDOCS_.isVisible || controls.LISTACAMPSEUDCAMAUDIT.isVisible"
 						class="control-join-group">
 						<q-tab-container
-							id="tabs_LISTACAM"
-							align-tabs="left"
-							:tabs-list="controls.formTabs.tabsList"
-							:selected-tab="controls.formTabs.selectedTab"
-							:is-visible="controls.formTabs.isVisible"
-							@tab-changed="controls.formTabs.SelectTab($event)">
+							id="q-tabs-LISTACAM"
+							v-bind="controls.formTabs.props"
+							@tab-changed="controls.formTabs.selectTab($event)">
 							<template #tab-panel>
 								<section
 									v-if="controls.LISTACAMPSEUDCAMTEXTO.isVisible"
 									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMTEXTO'">
-									<div id="LISTACAMPSEUDCAMTEXTO">
+									<div
+										id="LISTACAMPSEUDCAMTEXTO"
+										role="tabpanel"
+										aria-labelledby="tab-container-LISTACAMPSEUDCAMTEXTO">
 										<q-row-container v-show="controls.CAMTEXTOFLDS_TXTFIELD.isVisible">
 											<q-control-wrapper
 												v-show="controls.CAMTEXTOFLDS_TXTFIELD.isVisible"
@@ -122,12 +122,12 @@
 													v-on="controls.CAMTEXTOFLDS_TXTFIELD.handlers"
 													:loading="controls.CAMTEXTOFLDS_TXTFIELD.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.CAMTEXTOFLDS_TXTFIELD.props"
 														:model-value="model.ValTxtfield.value"
-														@update:model-value="model.ValTxtfield.fnUpdateValue" />
+														@blur="onBlur(controls.CAMTEXTOFLDS_TXTFIELD, model.ValTxtfield.value)"
+														@change="model.ValTxtfield.fnUpdateValueOnChange" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -141,18 +141,14 @@
 													v-on="controls.CAMTEXTOFLDS_DESCRIP_.handlers"
 													:loading="controls.CAMTEXTOFLDS_DESCRIP_.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-textarea-input
 														v-if="controls.CAMTEXTOFLDS_DESCRIP_.isVisible"
+														v-bind="controls.CAMTEXTOFLDS_DESCRIP_.props"
 														id="CAMTEXTOFLDS_DESCRIP_"
-														size="large"
 														:model-value="model.ValDescrip.value"
 														:rows="3"
 														:cols="30"
-														:is-required="controls.CAMTEXTOFLDS_DESCRIP_.isRequired"
-														:readonly="controls.CAMTEXTOFLDS_DESCRIP_.readonly"
-														:placeholder="controls.CAMTEXTOFLDS_DESCRIP_.placeholder"
 														@update:model-value="model.ValDescrip.fnUpdateValue" />
 												</base-input-structure>
 											</q-control-wrapper>
@@ -162,7 +158,10 @@
 								<section
 									v-if="controls.LISTACAMPSEUDCAMNUM__.isVisible"
 									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMNUM__'">
-									<div id="LISTACAMPSEUDCAMNUM__">
+									<div
+										id="LISTACAMPSEUDCAMNUM__"
+										role="tabpanel"
+										aria-labelledby="tab-container-LISTACAMPSEUDCAMNUM__">
 										<q-row-container v-show="controls.CAMNUM__FLDS_NPASSAGE.isVisible">
 											<q-control-wrapper
 												v-show="controls.CAMNUM__FLDS_NPASSAGE.isVisible"
@@ -173,12 +172,10 @@
 													v-on="controls.CAMNUM__FLDS_NPASSAGE.handlers"
 													:loading="controls.CAMNUM__FLDS_NPASSAGE.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-numeric-input
 														v-if="controls.CAMNUM__FLDS_NPASSAGE.isVisible"
-														v-bind="controls.CAMNUM__FLDS_NPASSAGE"
-														:model-value="model.ValNpassage.value"
+														v-bind="controls.CAMNUM__FLDS_NPASSAGE.props"
 														@update:model-value="model.ValNpassage.fnUpdateValue" />
 												</base-input-structure>
 											</q-control-wrapper>
@@ -193,12 +190,10 @@
 													v-on="controls.CAMNUM__FLDS_DURATION.handlers"
 													:loading="controls.CAMNUM__FLDS_DURATION.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-numeric-input
 														v-if="controls.CAMNUM__FLDS_DURATION.isVisible"
-														v-bind="controls.CAMNUM__FLDS_DURATION"
-														:model-value="model.ValDuration.value"
+														v-bind="controls.CAMNUM__FLDS_DURATION.props"
 														@update:model-value="model.ValDuration.fnUpdateValue" />
 												</base-input-structure>
 											</q-control-wrapper>
@@ -213,12 +208,10 @@
 													v-on="controls.CAMNUM__FLDS_PRICE___.handlers"
 													:loading="controls.CAMNUM__FLDS_PRICE___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-numeric-input
 														v-if="controls.CAMNUM__FLDS_PRICE___.isVisible"
-														v-bind="controls.CAMNUM__FLDS_PRICE___"
-														:model-value="model.ValPrice.value"
+														v-bind="controls.CAMNUM__FLDS_PRICE___.props"
 														@update:model-value="model.ValPrice.fnUpdateValue" />
 												</base-input-structure>
 											</q-control-wrapper>
@@ -233,12 +226,10 @@
 													v-on="controls.CAMNUM__FLDS_PRECOBIL.handlers"
 													:loading="controls.CAMNUM__FLDS_PRECOBIL.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-numeric-input
 														v-if="controls.CAMNUM__FLDS_PRECOBIL.isVisible"
-														v-bind="controls.CAMNUM__FLDS_PRECOBIL"
-														:model-value="model.ValPrecobil.value"
+														v-bind="controls.CAMNUM__FLDS_PRECOBIL.props"
 														@update:model-value="model.ValPrecobil.fnUpdateValue" />
 												</base-input-structure>
 											</q-control-wrapper>
@@ -248,7 +239,10 @@
 								<section
 									v-if="controls.LISTACAMPSEUDCAMDATE_.isVisible"
 									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMDATE_'">
-									<div id="LISTACAMPSEUDCAMDATE_">
+									<div
+										id="LISTACAMPSEUDCAMDATE_"
+										role="tabpanel"
+										aria-labelledby="tab-container-LISTACAMPSEUDCAMDATE_">
 										<q-row-container v-show="controls.CAMDATE_FLDS_YEAR____.isVisible">
 											<q-control-wrapper
 												v-show="controls.CAMDATE_FLDS_YEAR____.isVisible"
@@ -259,12 +253,10 @@
 													v-on="controls.CAMDATE_FLDS_YEAR____.handlers"
 													:loading="controls.CAMDATE_FLDS_YEAR____.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-numeric-input
 														v-if="controls.CAMDATE_FLDS_YEAR____.isVisible"
-														v-bind="controls.CAMDATE_FLDS_YEAR____"
-														:model-value="model.ValYear.value"
+														v-bind="controls.CAMDATE_FLDS_YEAR____.props"
 														@update:model-value="model.ValYear.fnUpdateValue" />
 												</base-input-structure>
 											</q-control-wrapper>
@@ -279,14 +271,13 @@
 													v-on="controls.CAMDATE_FLDS_DATE____.handlers"
 													:loading="controls.CAMDATE_FLDS_DATE____.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
-													<q-datetime-input
+													:suggestion-mode-on="suggestionModeOn">
+													<q-date-time-picker
 														v-if="controls.CAMDATE_FLDS_DATE____.isVisible"
-														v-bind="controls.CAMDATE_FLDS_DATE____"
-														format="Date"
+														v-bind="controls.CAMDATE_FLDS_DATE____.props"
 														:model-value="model.ValDate.value"
-														@update:model-value="model.ValDate.fnUpdateValue" />
+														@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
+														@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -300,14 +291,13 @@
 													v-on="controls.CAMDATE_FLDS_DATETIME.handlers"
 													:loading="controls.CAMDATE_FLDS_DATETIME.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
-													<q-datetime-input
+													:suggestion-mode-on="suggestionModeOn">
+													<q-date-time-picker
 														v-if="controls.CAMDATE_FLDS_DATETIME.isVisible"
-														v-bind="controls.CAMDATE_FLDS_DATETIME"
-														format="DateTime"
+														v-bind="controls.CAMDATE_FLDS_DATETIME.props"
 														:model-value="model.ValDatetime.value"
-														@update:model-value="model.ValDatetime.fnUpdateValue" />
+														@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
+														@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -321,14 +311,13 @@
 													v-on="controls.CAMDATE_FLDS_DATESECO.handlers"
 													:loading="controls.CAMDATE_FLDS_DATESECO.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
-													<q-datetime-input
+													:suggestion-mode-on="suggestionModeOn">
+													<q-date-time-picker
 														v-if="controls.CAMDATE_FLDS_DATESECO.isVisible"
-														v-bind="controls.CAMDATE_FLDS_DATESECO"
-														format="DateTimeSeconds"
+														v-bind="controls.CAMDATE_FLDS_DATESECO.props"
 														:model-value="model.ValDateseco.value"
-														@update:model-value="model.ValDateseco.fnUpdateValue" />
+														@reset-icon-click="model.ValDateseco.fnUpdateValue(model.ValDateseco.originalValue ?? new Date())"
+														@update:model-value="model.ValDateseco.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -342,14 +331,13 @@
 													v-on="controls.CAMDATE_FLDS_TIME____.handlers"
 													:loading="controls.CAMDATE_FLDS_TIME____.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
-													<q-datetime-input
+													:suggestion-mode-on="suggestionModeOn">
+													<q-date-time-picker
 														v-if="controls.CAMDATE_FLDS_TIME____.isVisible"
-														v-bind="controls.CAMDATE_FLDS_TIME____"
-														format="Time"
+														v-bind="controls.CAMDATE_FLDS_TIME____.props"
 														:model-value="model.ValTime.value"
-														@update:model-value="model.ValTime.fnUpdateValue" />
+														@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
+														@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -358,7 +346,10 @@
 								<section
 									v-if="controls.LISTACAMPSEUDCAMMASK_.isVisible"
 									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMMASK_'">
-									<div id="LISTACAMPSEUDCAMMASK_">
+									<div
+										id="LISTACAMPSEUDCAMMASK_"
+										role="tabpanel"
+										aria-labelledby="tab-container-LISTACAMPSEUDCAMMASK_">
 										<q-row-container v-show="controls.CAMMASK_FLDS_ZIPFIELD.isVisible">
 											<q-control-wrapper
 												v-show="controls.CAMMASK_FLDS_ZIPFIELD.isVisible"
@@ -369,8 +360,7 @@
 													v-on="controls.CAMMASK_FLDS_ZIPFIELD.handlers"
 													:loading="controls.CAMMASK_FLDS_ZIPFIELD.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-mask
 														v-if="controls.CAMMASK_FLDS_ZIPFIELD.isVisible"
 														v-bind="controls.CAMMASK_FLDS_ZIPFIELD"
@@ -389,8 +379,7 @@
 													v-on="controls.CAMMASK_FLDS_VATNUMBR.handlers"
 													:loading="controls.CAMMASK_FLDS_VATNUMBR.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-mask
 														v-if="controls.CAMMASK_FLDS_VATNUMBR.isVisible"
 														v-bind="controls.CAMMASK_FLDS_VATNUMBR"
@@ -409,8 +398,7 @@
 													v-on="controls.CAMMASK_FLDS_LICPLATE.handlers"
 													:loading="controls.CAMMASK_FLDS_LICPLATE.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-mask
 														v-if="controls.CAMMASK_FLDS_LICPLATE.isVisible"
 														v-bind="controls.CAMMASK_FLDS_LICPLATE"
@@ -429,8 +417,7 @@
 													v-on="controls.CAMMASK_FLDS_SSNUMBER.handlers"
 													:loading="controls.CAMMASK_FLDS_SSNUMBER.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-mask
 														v-if="controls.CAMMASK_FLDS_SSNUMBER.isVisible"
 														v-bind="controls.CAMMASK_FLDS_SSNUMBER"
@@ -449,8 +436,7 @@
 													v-on="controls.CAMMASK_FLDS_BANKNMBR.handlers"
 													:loading="controls.CAMMASK_FLDS_BANKNMBR.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-mask
 														v-if="controls.CAMMASK_FLDS_BANKNMBR.isVisible"
 														v-bind="controls.CAMMASK_FLDS_BANKNMBR"
@@ -469,8 +455,7 @@
 													v-on="controls.CAMMASK_FLDS_EMAILFLD.handlers"
 													:loading="controls.CAMMASK_FLDS_EMAILFLD.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-mask
 														v-if="controls.CAMMASK_FLDS_EMAILFLD.isVisible"
 														v-bind="controls.CAMMASK_FLDS_EMAILFLD"
@@ -489,8 +474,7 @@
 													v-on="controls.CAMMASK_FLDS_IBANFIEL.handlers"
 													:loading="controls.CAMMASK_FLDS_IBANFIEL.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-mask
 														v-if="controls.CAMMASK_FLDS_IBANFIEL.isVisible"
 														v-bind="controls.CAMMASK_FLDS_IBANFIEL"
@@ -509,8 +493,7 @@
 													v-on="controls.CAMMASK_FLDS_UPPRTEXT.handlers"
 													:loading="controls.CAMMASK_FLDS_UPPRTEXT.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-mask
 														v-if="controls.CAMMASK_FLDS_UPPRTEXT.isVisible"
 														v-bind="controls.CAMMASK_FLDS_UPPRTEXT"
@@ -524,7 +507,10 @@
 								<section
 									v-if="controls.LISTACAMPSEUDCAMENUM_.isVisible"
 									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMENUM_'">
-									<div id="LISTACAMPSEUDCAMENUM_">
+									<div
+										id="LISTACAMPSEUDCAMENUM_"
+										role="tabpanel"
+										aria-labelledby="tab-container-LISTACAMPSEUDCAMENUM_">
 										<q-row-container v-show="controls.CAMENUM_FLDS_CLASSNUM.isVisible">
 											<q-control-wrapper
 												v-show="controls.CAMENUM_FLDS_CLASSNUM.isVisible"
@@ -536,9 +522,8 @@
 													:label-position="labelAlignment.topleft"
 													:loading="controls.CAMENUM_FLDS_CLASSNUM.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
-													<q-radio-button-input
+													:suggestion-mode-on="suggestionModeOn">
+													<q-radio-group
 														v-if="controls.CAMENUM_FLDS_CLASSNUM.isVisible"
 														id="CAMENUM_FLDS_CLASSNUM"
 														:model-value="model.ValClassnum.value"
@@ -562,8 +547,7 @@
 													v-on="controls.CAMENUM_FLDS_CLASS___.handlers"
 													:loading="controls.CAMENUM_FLDS_CLASS___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-select
 														v-if="controls.CAMENUM_FLDS_CLASS___.isVisible"
 														v-bind="controls.CAMENUM_FLDS_CLASS___.props"
@@ -577,13 +561,12 @@
 												v-show="controls.CAMENUM_FLDS_LOGICENU.isVisible"
 												class="control-join-group">
 												<base-input-structure
-													class="i-checkbox"
+													class="i-text"
 													v-bind="controls.CAMENUM_FLDS_LOGICENU"
 													v-on="controls.CAMENUM_FLDS_LOGICENU.handlers"
 													:loading="controls.CAMENUM_FLDS_LOGICENU.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-toggle-input
 														v-if="controls.CAMENUM_FLDS_LOGICENU.isVisible"
 														id="CAMENUM_FLDS_LOGICENU"
@@ -600,7 +583,10 @@
 								<section
 									v-if="controls.LISTACAMPSEUDCAMDOCS_.isVisible"
 									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMDOCS_'">
-									<div id="LISTACAMPSEUDCAMDOCS_">
+									<div
+										id="LISTACAMPSEUDCAMDOCS_"
+										role="tabpanel"
+										aria-labelledby="tab-container-LISTACAMPSEUDCAMDOCS_">
 										<q-row-container v-show="controls.CAMDOCS_FLDS_LOGO____.isVisible">
 											<q-control-wrapper
 												v-show="controls.CAMDOCS_FLDS_LOGO____.isVisible"
@@ -611,8 +597,7 @@
 													v-on="controls.CAMDOCS_FLDS_LOGO____.handlers"
 													:loading="controls.CAMDOCS_FLDS_LOGO____.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-image
 														v-if="controls.CAMDOCS_FLDS_LOGO____.isVisible"
 														v-bind="controls.CAMDOCS_FLDS_LOGO____.props"
@@ -630,41 +615,11 @@
 													v-on="controls.CAMDOCS_FLDS_ATTACH__.handlers"
 													:loading="controls.CAMDOCS_FLDS_ATTACH__.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-document
 														v-if="controls.CAMDOCS_FLDS_ATTACH__.isVisible"
-														id="CAMDOCS_FLDS_ATTACH__"
-														size="large"
-														:model-value="model.ValAttach.value"
-														versioning-is-on
-														:readonly="controls.CAMDOCS_FLDS_ATTACH__.readonly"
-														:is-in-checkout="controls.CAMDOCS_FLDS_ATTACH__.isInCheckout"
-														:current-version="controls.CAMDOCS_FLDS_ATTACH__.currentVersion"
-														:extensions="controls.CAMDOCS_FLDS_ATTACH__.extensions"
-														:max-file-size="controls.CAMDOCS_FLDS_ATTACH__.maxFileSize"
-														:versions="controls.CAMDOCS_FLDS_ATTACH__.documentVersions"
-														:versions-info="controls.CAMDOCS_FLDS_ATTACH__.versionsInfo"
-														:file-properties="controls.CAMDOCS_FLDS_ATTACH__.fileProperties"
-														:texts="controls.CAMDOCS_FLDS_ATTACH__.texts"
-														:popup-is-visible="controls.CAMDOCS_FLDS_ATTACH__.popupIsVisible"
-														:disallow-removal="controls.CAMDOCS_FLDS_ATTACH__.isRequired"
-														:resources-path="controls.CAMDOCS_FLDS_ATTACH__.resourcesPath"
-														:uses-templates="controls.CAMDOCS_FLDS_ATTACH__.usesTemplates"
-														@file-error="controls.CAMDOCS_FLDS_ATTACH__.HandleFileError($event)"
-														@submit-file="controls.CAMDOCS_FLDS_ATTACH__.SetFile($event)"
-														@edit-file="controls.CAMDOCS_FLDS_ATTACH__.SetCheckoutState()"
-														@get-properties="controls.CAMDOCS_FLDS_ATTACH__.GetFileProperties()"
-														@get-version-history="controls.CAMDOCS_FLDS_ATTACH__.GetVersionsInfo()"
-														@get-file="controls.CAMDOCS_FLDS_ATTACH__.GetFile()"
-														@download-file="controls.CAMDOCS_FLDS_ATTACH__.DownloadFile()"
-														@get-file-version="controls.CAMDOCS_FLDS_ATTACH__.GetFileVersion($event)"
-														@delete-last="controls.CAMDOCS_FLDS_ATTACH__.DeleteFile(0)"
-														@delete-history="controls.CAMDOCS_FLDS_ATTACH__.DeleteFile(1)"
-														@delete-file="controls.CAMDOCS_FLDS_ATTACH__.DeleteFile(2)"
-														@show-popup="controls.CAMDOCS_FLDS_ATTACH__.SetModal($event)"
-														@hide-popup="controls.CAMDOCS_FLDS_ATTACH__.RemoveModal($event)"
-														@show-templates-popup="controls.CAMDOCS_FLDS_ATTACH__.handleDocumentTemplates($event)" />
+														v-bind="controls.CAMDOCS_FLDS_ATTACH__.props"
+														v-on="controls.CAMDOCS_FLDS_ATTACH__.handlers" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -673,7 +628,10 @@
 								<section
 									v-if="controls.LISTACAMPSEUDCAMAUDIT.isVisible"
 									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMAUDIT'">
-									<div id="LISTACAMPSEUDCAMAUDIT">
+									<div
+										id="LISTACAMPSEUDCAMAUDIT"
+										role="tabpanel"
+										aria-labelledby="tab-container-LISTACAMPSEUDCAMAUDIT">
 										<q-row-container v-show="controls.CAMAUDITFLDS_CREATUSE.isVisible">
 											<q-control-wrapper
 												v-show="controls.CAMAUDITFLDS_CREATUSE.isVisible"
@@ -684,8 +642,7 @@
 													v-on="controls.CAMAUDITFLDS_CREATUSE.handlers"
 													:loading="controls.CAMAUDITFLDS_CREATUSE.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.CAMAUDITFLDS_CREATUSE.props"
 														:model-value="model.ValCreatuse.value" />
@@ -702,14 +659,13 @@
 													v-on="controls.CAMAUDITFLDS_CREATDAT.handlers"
 													:loading="controls.CAMAUDITFLDS_CREATDAT.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
-													<q-datetime-input
+													:suggestion-mode-on="suggestionModeOn">
+													<q-date-time-picker
 														v-if="controls.CAMAUDITFLDS_CREATDAT.isVisible"
-														v-bind="controls.CAMAUDITFLDS_CREATDAT"
-														format="Date"
+														v-bind="controls.CAMAUDITFLDS_CREATDAT.props"
 														:model-value="model.ValCreatdat.value"
-														@update:model-value="model.ValCreatdat.fnUpdateValue" />
+														@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
+														@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -723,14 +679,13 @@
 													v-on="controls.CAMAUDITFLDS_CREATHOU.handlers"
 													:loading="controls.CAMAUDITFLDS_CREATHOU.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
-													<q-datetime-input
+													:suggestion-mode-on="suggestionModeOn">
+													<q-date-time-picker
 														v-if="controls.CAMAUDITFLDS_CREATHOU.isVisible"
-														v-bind="controls.CAMAUDITFLDS_CREATHOU"
-														format="Time"
+														v-bind="controls.CAMAUDITFLDS_CREATHOU.props"
 														:model-value="model.ValCreathou.value"
-														@update:model-value="model.ValCreathou.fnUpdateValue" />
+														@reset-icon-click="model.ValCreathou.fnUpdateValue(model.ValCreathou.originalValue ?? new Date())"
+														@update:model-value="model.ValCreathou.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -744,14 +699,13 @@
 													v-on="controls.CAMAUDITFLDS_CREATINS.handlers"
 													:loading="controls.CAMAUDITFLDS_CREATINS.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
-													<q-datetime-input
+													:suggestion-mode-on="suggestionModeOn">
+													<q-date-time-picker
 														v-if="controls.CAMAUDITFLDS_CREATINS.isVisible"
-														v-bind="controls.CAMAUDITFLDS_CREATINS"
-														format="DateTimeSeconds"
+														v-bind="controls.CAMAUDITFLDS_CREATINS.props"
 														:model-value="model.ValCreatins.value"
-														@update:model-value="model.ValCreatins.fnUpdateValue" />
+														@reset-icon-click="model.ValCreatins.fnUpdateValue(model.ValCreatins.originalValue ?? new Date())"
+														@update:model-value="model.ValCreatins.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -842,15 +796,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'LISTACAM',
-						location: 'form-LISTACAM',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'LISTACAM',
+					location: 'form-LISTACAM',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -896,6 +848,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -968,8 +922,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -1051,7 +1006,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -1105,21 +1060,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -1128,14 +1068,10 @@
 						id: 'LISTACAMPSEUDCAMTEXTO',
 						name: 'CAMTEXTO',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TEXT_FIELDS40102),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						openingEvent: 'opened-LISTACAMPSEUDCAMTEXTO',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1143,14 +1079,10 @@
 						id: 'LISTACAMPSEUDCAMNUM__',
 						name: 'CAMNUM',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMERIC_FIELDS45771),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						openingEvent: 'opened-LISTACAMPSEUDCAMNUM__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1158,14 +1090,10 @@
 						id: 'LISTACAMPSEUDCAMDATE_',
 						name: 'CAMDATE',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE_FIELDS55234),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						openingEvent: 'opened-LISTACAMPSEUDCAMDATE_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1173,14 +1101,10 @@
 						id: 'LISTACAMPSEUDCAMMASK_',
 						name: 'CAMMASK',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.INPUTS_WITH_MASKS08900),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						openingEvent: 'opened-LISTACAMPSEUDCAMMASK_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1188,14 +1112,10 @@
 						id: 'LISTACAMPSEUDCAMENUM_',
 						name: 'CAMENUM',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ENUMERATIONS_FIELDS36502),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						openingEvent: 'opened-LISTACAMPSEUDCAMENUM_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1203,14 +1123,10 @@
 						id: 'LISTACAMPSEUDCAMDOCS_',
 						name: 'CAMDOCS',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.EXTERNAL_DOCS_FIELDS46956),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						openingEvent: 'opened-LISTACAMPSEUDCAMDOCS_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1218,14 +1134,10 @@
 						id: 'LISTACAMPSEUDCAMAUDIT',
 						name: 'CAMAUDIT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATA_AUDIT01314),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						openingEvent: 'opened-LISTACAMPSEUDCAMAUDIT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1235,17 +1147,13 @@
 						id: 'CAMTEXTOFLDS_TXTFIELD',
 						name: 'TXTFIELD',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.TEXT_FIELD41810),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMTEXTO',
 						tab: 'LISTACAMPSEUDCAMTEXTO',
 						maxLength: 50,
 						labelId: 'label_CAMTEXTOFLDS_TXTFIELD',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1255,137 +1163,118 @@
 						id: 'CAMTEXTOFLDS_DESCRIP_',
 						name: 'DESCRIP',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESCRIPTION07383),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMTEXTO',
 						tab: 'LISTACAMPSEUDCAMTEXTO',
-						maxLength: 300,
-						labelId: 'label_CAMTEXTOFLDS_DESCRIP_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					CAMNUM__FLDS_NPASSAGE: new fieldControlClass.NumberControl({
 						modelField: 'ValNpassage',
 						valueChangeEvent: 'fieldChange:flds.npassage',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'CAMNUM__FLDS_NPASSAGE',
 						name: 'NPASSAGE',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMERIC19292),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMNUM__',
 						tab: 'LISTACAMPSEUDCAMNUM__',
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					CAMNUM__FLDS_DURATION: new fieldControlClass.NumberControl({
 						modelField: 'ValDuration',
 						valueChangeEvent: 'fieldChange:flds.duration',
-						maxIntegers: 2,
-						maxDecimals: 2,
 						id: 'CAMNUM__FLDS_DURATION',
 						name: 'DURATION',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.NUMERIC_DECIMAL37352),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMNUM__',
 						tab: 'LISTACAMPSEUDCAMNUM__',
-						mustBeFilled: false,
+						maxIntegers: 2,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
 					CAMNUM__FLDS_PRICE___: new fieldControlClass.CurrencyControl({
 						modelField: 'ValPrice',
 						valueChangeEvent: 'fieldChange:flds.price',
-						maxIntegers: 3,
-						maxDecimals: 2,
 						id: 'CAMNUM__FLDS_PRICE___',
 						name: 'PRICE',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.CURRENCY13881),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMNUM__',
 						tab: 'LISTACAMPSEUDCAMNUM__',
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
 					CAMNUM__FLDS_PRECOBIL: new fieldControlClass.CurrencyControl({
 						modelField: 'ValPrecobil',
 						valueChangeEvent: 'fieldChange:flds.precobil',
-						maxIntegers: 3,
-						maxDecimals: 2,
 						id: 'CAMNUM__FLDS_PRECOBIL',
 						name: 'PRECOBIL',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.CURRENCY_DECIMAL48296),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMNUM__',
 						tab: 'LISTACAMPSEUDCAMNUM__',
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
 					CAMDATE_FLDS_YEAR____: new fieldControlClass.NumberControl({
 						modelField: 'ValYear',
 						valueChangeEvent: 'fieldChange:flds.year',
-						maxIntegers: 4,
-						maxDecimals: 0,
 						id: 'CAMDATE_FLDS_YEAR____',
 						name: 'YEAR',
 						size: 'mini',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___3161967),
+							},
+						},
 						label: computed(() => this.Resources.YEAR61794),
-						userHelp: computed(() => this.Resources.___3161967),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDATE_',
 						tab: 'LISTACAMPSEUDCAMDATE_',
-						mustBeFilled: false,
+						maxIntegers: 4,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					CAMDATE_FLDS_DATE____: new fieldControlClass.DateControl({
 						modelField: 'ValDate',
 						valueChangeEvent: 'fieldChange:flds.date',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'CAMDATE_FLDS_DATE____',
 						name: 'DATE',
 						size: 'small',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___3261074),
+							},
+						},
 						label: computed(() => this.Resources.DATE18475),
-						userHelp: computed(() => this.Resources.___3261074),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDATE_',
 						tab: 'LISTACAMPSEUDCAMDATE_',
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1395,15 +1284,18 @@
 						id: 'CAMDATE_FLDS_DATETIME',
 						name: 'DATETIME',
 						size: 'medium',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___3360901),
+							},
+						},
 						label: computed(() => this.Resources.DATE_TIME53960),
-						userHelp: computed(() => this.Resources.___3360901),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDATE_',
 						tab: 'LISTACAMPSEUDCAMDATE_',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1413,35 +1305,39 @@
 						id: 'CAMDATE_FLDS_DATESECO',
 						name: 'DATESECO',
 						size: 'medium',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___3465504),
+							},
+						},
 						label: computed(() => this.Resources.DATE_SECONDS65191),
-						userHelp: computed(() => this.Resources.___3465504),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDATE_',
 						tab: 'LISTACAMPSEUDCAMDATE_',
-						mustBeFilled: false,
+						format: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
 					CAMDATE_FLDS_TIME____: new fieldControlClass.TimeControl({
 						modelField: 'ValTime',
 						valueChangeEvent: 'fieldChange:flds.time',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'CAMDATE_FLDS_TIME____',
 						name: 'TIME',
 						size: 'mini',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___3561555),
+							},
+						},
 						label: computed(() => this.Resources.TIME15328),
-						userHelp: computed(() => this.Resources.___3561555),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDATE_',
 						tab: 'LISTACAMPSEUDCAMDATE_',
-						mustBeFilled: false,
+						format: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1451,17 +1347,13 @@
 						id: 'CAMMASK_FLDS_ZIPFIELD',
 						name: 'ZIPFIELD',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ZIPCODE21021),
-						userHelp: '',
-						description: '',
 						placeholder: computed(() => this.Resources.XXXX_XXX51420),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 8,
 						labelId: 'label_CAMMASK_FLDS_ZIPFIELD',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1471,17 +1363,13 @@
 						id: 'CAMMASK_FLDS_VATNUMBR',
 						name: 'VATNUMBR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.VAT_NUMBER24236),
-						userHelp: '',
-						description: '',
 						placeholder: computed(() => this.Resources._12345678953785),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 9,
 						labelId: 'label_CAMMASK_FLDS_VATNUMBR',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1491,17 +1379,13 @@
 						id: 'CAMMASK_FLDS_LICPLATE',
 						name: 'LICPLATE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.LICENCE_PLATE07627),
-						userHelp: '',
-						description: '',
 						placeholder: computed(() => this.Resources.XX_00_XX10122),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 8,
 						labelId: 'label_CAMMASK_FLDS_LICPLATE',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1511,17 +1395,13 @@
 						id: 'CAMMASK_FLDS_SSNUMBER',
 						name: 'SSNUMBER',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.SOCIAL_SECURITY_NO48150),
-						userHelp: '',
-						description: '',
 						placeholder: computed(() => this.Resources._1234567891237929),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 11,
 						labelId: 'label_CAMMASK_FLDS_SSNUMBER',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1531,17 +1411,13 @@
 						id: 'CAMMASK_FLDS_BANKNMBR',
 						name: 'BANKNMBR',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.BANKING_ACCOUNT_NUMB62548),
-						userHelp: '',
-						description: '',
 						placeholder: computed(() => this.Resources._1234_5678_90123456761043),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 24,
 						labelId: 'label_CAMMASK_FLDS_BANKNMBR',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1551,17 +1427,13 @@
 						id: 'CAMMASK_FLDS_EMAILFLD',
 						name: 'EMAILFLD',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.EMAIL25170),
-						userHelp: '',
-						description: '',
 						placeholder: computed(() => this.Resources.QUIDGESTAT_QUIDGEST_PT47872),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 50,
 						labelId: 'label_CAMMASK_FLDS_EMAILFLD',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1571,17 +1443,13 @@
 						id: 'CAMMASK_FLDS_IBANFIEL',
 						name: 'IBANFIEL',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.IBAN28506),
-						userHelp: '',
-						description: '',
 						placeholder: computed(() => this.Resources.PT12345678901234567820477),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 34,
 						labelId: 'label_CAMMASK_FLDS_IBANFIEL',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1591,39 +1459,37 @@
 						id: 'CAMMASK_FLDS_UPPRTEXT',
 						name: 'UPPRTEXT',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.UPPERCASE48238),
-						userHelp: '',
-						description: '',
 						placeholder: computed(() => this.Resources.QUIDGEST56322),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 50,
 						labelId: 'label_CAMMASK_FLDS_UPPRTEXT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					CAMENUM_FLDS_CLASSNUM: new fieldControlClass.ArrayNumberControl({
 						modelField: 'ValClassnum',
 						valueChangeEvent: 'fieldChange:flds.classnum',
-						maxIntegers: 1,
-						maxDecimals: 0,
 						id: 'CAMENUM_FLDS_CLASSNUM',
 						name: 'CLASSNUM',
 						size: 'small',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___1845555),
+							},
+						},
 						label: computed(() => this.Resources.NUMERIC_ENUMERATION46756),
-						userHelp: computed(() => this.Resources.___1845555),
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMENUM_',
 						tab: 'LISTACAMPSEUDCAMENUM_',
+						maxIntegers: 1,
+						maxDecimals: 0,
 						arrayName: 'CLASSNUM',
 						columnNumber: 3,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1633,10 +1499,13 @@
 						id: 'CAMENUM_FLDS_CLASS___',
 						name: 'CLASS',
 						size: 'medium',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___2712722),
+							},
+						},
 						label: computed(() => this.Resources.TEXT_ENUMERATION45668),
-						userHelp: computed(() => this.Resources.___2712722),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMENUM_',
@@ -1644,7 +1513,8 @@
 						maxLength: 2,
 						labelId: 'label_CAMENUM_FLDS_CLASS___',
 						arrayName: 'CLASS',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -1654,18 +1524,22 @@
 						id: 'CAMENUM_FLDS_LOGICENU',
 						name: 'LOGICENU',
 						size: 'medium',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___2813103),
+							},
+						},
 						label: computed(() => this.Resources.LOGICAL_ENUMERATION30276),
-						userHelp: computed(() => this.Resources.___2813103),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMENUM_',
 						tab: 'LISTACAMPSEUDCAMENUM_',
+						maxIntegers: 1,
+						maxDecimals: 0,
 						arrayName: 'PRIMVIAG',
 						trueLabel: computed(() => this.Resources.YES34196),
 						falseLabel: computed(() => this.Resources.NO57340),
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1675,17 +1549,20 @@
 						id: 'CAMDOCS_FLDS_LOGO____',
 						name: 'LOGO',
 						size: 'medium',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___2916088),
+							},
+						},
 						label: computed(() => this.Resources.LOGO62483),
-						userHelp: computed(() => this.Resources.___2916088),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDOCS_',
 						tab: 'LISTACAMPSEUDCAMDOCS_',
 						height: 50,
 						width: 100,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.LOGO62483)),
 						controlLimits: [
 						],
 					}, this),
@@ -1695,23 +1572,19 @@
 						id: 'CAMDOCS_FLDS_ATTACH__',
 						name: 'ATTACH',
 						size: 'large',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___3061884),
+							},
+						},
 						label: computed(() => this.Resources.ATTACHMENTS19612),
-						userHelp: computed(() => this.Resources.___3061884),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDOCS_',
 						tab: 'LISTACAMPSEUDCAMDOCS_',
-						documentProperties: computed(() => vm.model.ValAttachPropertiesVM),
-						documentFK: computed(() => vm.model.ValAttachfk),
-						documentVersions: computed(() => vm.model.ValAttachPropertiesVM.value ? vm.model.ValAttachPropertiesVM.value.Versions : {}),
-						isInCheckout: computed(() => vm.model.ValAttachPropertiesVM.value ? vm.model.ValAttachPropertiesVM.value.IsCheckout : false),
-						currentVersion: computed(() => vm.model.ValAttachPropertiesVM.value ? vm.model.ValAttachPropertiesVM.value.Version : '1'),
-						usesTemplates: false,
+						versioningIsOn: true,
 						extensions: [],
-						viewType: qEnums.documentViewTypeMode.Preview,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1721,83 +1594,60 @@
 						id: 'CAMAUDITFLDS_CREATUSE',
 						name: 'CREATUSE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CREATED_BY12292),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMAUDIT',
 						tab: 'LISTACAMPSEUDCAMAUDIT',
 						maxLength: 20,
 						labelId: 'label_CAMAUDITFLDS_CREATUSE',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					CAMAUDITFLDS_CREATDAT: new fieldControlClass.DateControl({
 						modelField: 'ValCreatdat',
 						valueChangeEvent: 'fieldChange:flds.creatdat',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'CAMAUDITFLDS_CREATDAT',
 						name: 'CREATDAT',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE_OF_CREATION49487),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMAUDIT',
 						tab: 'LISTACAMPSEUDCAMAUDIT',
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					CAMAUDITFLDS_CREATHOU: new fieldControlClass.TimeControl({
 						modelField: 'ValCreathou',
 						valueChangeEvent: 'fieldChange:flds.creathou',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'CAMAUDITFLDS_CREATHOU',
 						name: 'CREATHOU',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.CREATION_HOUR49876),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMAUDIT',
 						tab: 'LISTACAMPSEUDCAMAUDIT',
-						mustBeFilled: false,
+						format: 'time',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					CAMAUDITFLDS_CREATINS: new fieldControlClass.DateControl({
 						modelField: 'ValCreatins',
 						valueChangeEvent: 'fieldChange:flds.creatins',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'CAMAUDITFLDS_CREATINS',
 						name: 'CREATINS',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPLETE_DATE_OF_CRE57046),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMAUDIT',
 						tab: 'LISTACAMPSEUDCAMAUDIT',
-						mustBeFilled: false,
+						format: 'dateTimeSeconds',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					formTabs: new fieldControlClass.TabsControl({
 						tabControlsIds: readonly([
@@ -1852,6 +1702,8 @@
 						set ValCodaero(value) { vm.model.ValCodaero.updateValue(value) },
 						get ValCodequip() { return vm.model.ValCodequip.value },
 						set ValCodequip(value) { vm.model.ValCodequip.updateValue(value) },
+						get ValCond() { return vm.model.ValCond.value },
+						set ValCond(value) { vm.model.ValCond.updateValue(value) },
 						get ValCreatdat() { return vm.model.ValCreatdat.value },
 						set ValCreatdat(value) { vm.model.ValCreatdat.updateValue(value) },
 						get ValCreathou() { return vm.model.ValCreathou.value },
@@ -1888,6 +1740,8 @@
 						set ValPrice(value) { vm.model.ValPrice.updateValue(value) },
 						get ValSsnumber() { return vm.model.ValSsnumber.value },
 						set ValSsnumber(value) { vm.model.ValSsnumber.updateValue(value) },
+						get ValTblcond() { return vm.model.ValTblcond.value },
+						set ValTblcond(value) { vm.model.ValTblcond.updateValue(value) },
 						get ValTime() { return vm.model.ValTime.value },
 						set ValTime(value) { vm.model.ValTime.updateValue(value) },
 						get ValTxtfield() { return vm.model.ValTxtfield.value },
@@ -1909,7 +1763,7 @@
 						/** The foreign key to the EQUIP table */
 						get equip() { return vm.model.ValCodequip },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -2005,6 +1859,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2044,6 +1906,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -2170,6 +2040,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR LISTACAM]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -2185,6 +2071,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS LISTACAM]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

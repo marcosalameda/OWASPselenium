@@ -204,7 +204,7 @@
 }
 
 /* The slider */
-input[type="range"] {
+.q-slider {
 	-webkit-appearance: none;
 	appearance: none;
 	position: relative;
@@ -220,12 +220,8 @@ input[type="range"] {
 	transition: $transition-speed;
 }
 
-div .q-slider > div > input {
-	text-align: center !important;
-}
-
 /* slider circle */
-.slider::-webkit-slider-thumb {
+.q-slider::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	appearance: none;
 	width: 23px;
@@ -234,12 +230,6 @@ div .q-slider > div > input {
 	border-radius: 50%;
 	background: #fff;
 	cursor: pointer;
-}
-
-.q-slider {
-	display: flex;
-	flex-direction: row;
-	height: 50px;
 }
 
 .slider-container {
@@ -261,25 +251,25 @@ div .slider-container > p.max {
 	color: $on-background;
 }
 
-input:checked + .slider {
+input:checked + .q-slider {
 	background-color: $primary;
 }
 
-input:focus + .slider {
+input:focus + .q-slider {
 	box-shadow: 0 0 1px $primary;
 }
 
-input:checked + .slider:before {
+input:checked + .q-slider:before {
 	-webkit-transform: translateX(13px);
 	-ms-transform: translateX(13px);
 	transform: translateX(13px);
 }
 
 /* Rounded sliders */
-.slider.round {
+.q-slider.round {
 	border-radius: 17px;
 }
 
-.slider.round:before {
+.q-slider.round:before {
 	border-radius: 50%;
 }

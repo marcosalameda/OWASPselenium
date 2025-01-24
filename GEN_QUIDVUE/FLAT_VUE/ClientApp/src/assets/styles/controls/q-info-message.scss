@@ -89,7 +89,7 @@ $c-alert-theme-colors: map-merge( ( "success": $success, "info": $info, "warning
 			opacity: 0.5;
 		}
 
-		&:hover:not(.q-btn--disabled) {
+		&:hover:not([disabled]) {
 			.q-icon__svg {
 				fill: $white;
 				opacity: 1;

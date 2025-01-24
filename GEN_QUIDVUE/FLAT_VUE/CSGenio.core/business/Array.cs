@@ -289,7 +289,7 @@ namespace CSGenio.business
 					break;
 				case ArrayType.NUMERIC:
 					{
-						double val = Double.Parse(elem);
+						decimal val = Decimal.Parse(elem);
 						description = m_classType.InvokeMember("CodToDescricao",
 							System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.InvokeMethod,
 							null,

@@ -1,4 +1,4 @@
-﻿import { computed, isRef, ref, watch, watchEffect, nextTick } from 'vue'
+﻿import { computed, isRef, nextTick, ref, watch, watchEffect } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import _assignIn from 'lodash-es/assignIn'
 import _assignInWith from 'lodash-es/assignInWith'
@@ -20,7 +20,8 @@ import netAPI from '@/api/network'
 import searchFilterData from '@/api/genio/searchFilterData.js'
 import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 import eventBus from '@/api/global/eventBus.js'
-import hardcodedTexts from '@/hardcodedTexts.js'
+import { BlockConditionStack, FillConditionStack, HideConditionStack, RequiredConditionStack } from '@/models/fields/conditionStack.js'
+import { useSystemDataStore } from '@/stores/systemData.js'
 
 import getSpecialRenderingControls from './customControl.js'
 import controlsResources from './controlsResources.js'
@@ -28,6 +29,27 @@ import formFunctions from './formFunctions.js'
 import genericFunctions from './genericFunctions.js'
 import listFunctions from './listFunctions.js'
 import qEnums from './quidgest.mainEnums.js'
+import { cloneDeep } from 'lodash-es'
+
+/**
+ * Runs the specified field formula.
+ * @param {object} formula The formula
+ * @param {object} context The context from where the formula should be invoked
+ * @param {any} params The parameters to pass when calling the formula
+ * @returns A promise with the result of the formula call.
+ */
+function validateFieldFormula(formula, context, params)
+{
+	return new Promise((resolve, reject) => {
+		if (_isEmpty(formula))
+			reject('The specified formula is empty.')
+		else
+		{
+			const evalResult = formula.fnFormula.call(context, params)
+			resolve(evalResult)
+		}
+	})
+}
 
 /**
  * Base form control
@@ -63,16 +85,20 @@ export class BaseControl
 		this.labelId = ''
 		/** Indicates if the field has a label */
 		this.hasLabel = true
-		/** Indicates the parent Zone Id */
+		/** Indicates the parent zone id */
 		this.container = ''
-		/** Indicates the parent Tab Id */
+		/** Indicates the parent tab id */
 		this.tab = ''
+		/** Indicates the parent sub-form id */
+		this.subForm = ''
+		/** The id of the parent control */
+		this.parent = computed(() => this.container || this.tab || this.subForm || '')
 		/** List of sources that hide the control */
-		this.showWhenConditions = []
+		this.showWhenConditions = new HideConditionStack()
 		/** List of sources that block the control */
-		this.blockWhenConditions = []
+		this.blockWhenConditions = new BlockConditionStack()
 		/** List of sources that make the control required */
-		this.fieldRequiredConditions = []
+		this.fieldRequiredConditions = new RequiredConditionStack()
 		/** Whether or not the field is marked as mandatory */
 		this.mustBeFilled = false
 		/** Computed field that returns the result of the evaluation of the showWhenConditions to indicate if the control is visible */
@@ -83,7 +109,7 @@ export class BaseControl
 		this.readonly = true
 		/** Indicates if the field is disabled (cannot be modified nor receive focus) */
 		this.disabled = false
-		/** Computed field that returns the result of the evaluation of the blockWhenConditions to indicate if the control has a formula that needs to be blocked */
+		/** Whether the field is blocked because it's calculated by a formula */
 		this.isFormulaBlocked = false
 		/** Computed field that returns the result of the evaluation of the fieldRequiredConditions to indicate if the control is required */
 		this.isRequired = false
@@ -91,8 +117,6 @@ export class BaseControl
 		this.hiddenInNonEditableMode = false
 		/** List of limits that condition the presented value */
 		this.tableLimits = []
-		/** Indicates if the field is permanently readonly, regardless of form mode */
-		this.isFixed = false
 		/** Whether or not some popup triggered by this control is visible */
 		this.popupIsVisible = false
 		/** Event handlers */
@@ -110,6 +134,8 @@ export class BaseControl
 		this.componentOnLoadProc = asyncProcM.getProcListMonitor(`${options.id || uuidv4()}`, true)
 		/** Whether the control is already loaded */
 		this.loaded = computed(() => this.componentOnLoadProc.loaded)
+		/** Translated texts */
+		this.texts = new controlsResources.BaseResources(vueContext.$getResource)
 
 		_merge(this, options || {})
 	}
@@ -118,90 +144,34 @@ export class BaseControl
 	{
 		return {
 			id: this.id,
-			size: this.size,
 			readonly: this.readonly,
 			loading: !this.loaded,
-			required: this.isRequired
+			required: this.isRequired,
+			texts: this.texts,
+			ariaLabel: this.label
 		}
 	}
 
-	/**
-	 * Runs the specified field formula.
-	 * @param {object} formula The formula
-	 * @param {function} callback The callback formula
-	 */
-	validateFieldFormula(formula, callback, params)
+	get wrapperProps()
 	{
-		if (_isEmpty(formula))
-			return
-
-		if (formula.isServerFormula)
-		{
-			formula.fnFormula.call(this.vueContext.model, params).then((data) => {
-				if (data?.Success)
-					callback(data.Result, params)
-			})
+		return {
+			...this.props,
+			// MTC - there was a problem with the error messages not appearing
+			// in the GridTableList, because it didn't had the modelFieldRef
+			// this is to show the error message of the field
+			modelFieldRef: this.modelFieldRef
 		}
-		else
-		{
-			let formulaValue = formula.fnFormula.call(this.vueContext.model, params)
-			Promise.resolve(formulaValue).then((value) => callback(value, params))
-		}
-	}
-
-	/**
-	 * Adds a value to the field's specified stack of sources
-	 * @param {string} sourceId The id of the source
-	 * @param {array} sourceList The list of sources
-	 * @param {function} checkFunction The function to check if the success event should be emitted
-	 * @param {string} successEvent The event to emit in case there are now sources on the list
-	 */
-	addSource(sourceId, sourceList, checkFunction, successEvent)
-	{
-		if (_isEmpty(sourceId) || !Array.isArray(sourceList) || typeof checkFunction !== 'function')
-			return
-
-		const previousLength = sourceList.length
-		const index = sourceList.indexOf(sourceId)
-
-		if (index === -1)
-			sourceList.push(sourceId)
-
-		// Emit a success event in case the source list is no longer empty.
-		if (!_isEmpty(successEvent) && this.vueContext.internalEvents && previousLength === 0 && !checkFunction())
-			this.vueContext.internalEvents.emit(successEvent, this.id)
-	}
-
-	/**
-	 * Removes a value from the field's specified stack of sources
-	 * @param {string} sourceId The id of the source
-	 * @param {array} sourceList The list of sources
-	 * @param {function} checkFunction The function to check if the success event should be emitted
-	 * @param {string} successEvent The event to emit in case there are no more sources on the list
-	 */
-	removeSource(sourceId, sourceList, checkFunction, successEvent)
-	{
-		if (_isEmpty(sourceId) || !Array.isArray(sourceList) || typeof checkFunction !== 'function')
-			return
-
-		const previousLength = sourceList.length
-		const index = sourceList.indexOf(sourceId)
-
-		if (index > -1)
-			sourceList.splice(index, 1)
-
-		// Emit a success event in case the source list is empty.
-		if (!_isEmpty(successEvent) && this.vueContext.internalEvents && previousLength > 0 && checkFunction())
-			this.vueContext.internalEvents.emit(successEvent, this.id)
 	}
 
 	/**
 	 * Adds a value to the stack of the specified field's hiding sources.
 	 * @param {string} sourceId The id of the hiding source
+	 * @param {function} condition The condition to determine whether the source is active (optional)
+	 * @param {string|array} eventIds An event to listen for, or a list of events (optional)
 	 */
-	addHideSource(sourceId)
+	async addHideSource(sourceId, condition, eventIds)
 	{
-		this.addSource(sourceId, this.showWhenConditions, () => this.checkFieldIsVisible(), 'field-hidden')
+		await this.showWhenConditions.add(sourceId, condition, eventIds)
 	}
 
 	/**
@@ -210,45 +180,18 @@ export class BaseControl
 	 */
 	removeHideSource(sourceId)
 	{
-		this.removeSource(sourceId, this.showWhenConditions, () => this.checkFieldIsVisible(), 'field-shown')
-	}
-
-	/**
-	 * Runs the Show When formula.
-	 * @param {object} showWhenProps The properties of the "show when" formula
-	 * @param {string} source The source of the formula (could be "FORM" or "TABLE")
-	 */
-	validateFieldShowWhen(showWhenProps, source = '')
-	{
-		if (_isEmpty(showWhenProps))
-			return
-
-		const callback = (result) => {
-			if (result)
-				this.removeHideSource('FORMULA_SHOW_WHEN' + source)
-			else
-				this.addHideSource('FORMULA_SHOW_WHEN' + source)
-		}
-
-		this.validateFieldFormula(showWhenProps, callback)
-	}
-
-	/**
-	 * Checks if the specified field is currently visible.
-	 * @returns True if the field is visible, false otherwise
-	 */
-	checkFieldIsVisible()
-	{
-		return this.showWhenConditions.length === 0
+		this.showWhenConditions.remove(sourceId)
 	}
 
 	/**
 	 * Adds a value to the stack of the specified field's blocking sources.
 	 * @param {string} sourceId The id of the blocking source
+	 * @param {function} condition The condition to determine whether the source is active (optional)
+	 * @param {string|array} eventIds An event to listen for, or a list of events (optional)
 	 */
-	addBlockSource(sourceId)
+	async addBlockSource(sourceId, condition, eventIds)
 	{
-		this.addSource(sourceId, this.blockWhenConditions, () => this.checkFieldIsBlocked(), 'field-blocked')
+		await this.blockWhenConditions.add(sourceId, condition, eventIds)
 	}
 
 	/**
@@ -257,45 +200,18 @@ export class BaseControl
 	 */
 	removeBlockSource(sourceId)
 	{
-		this.removeSource(sourceId, this.blockWhenConditions, () => this.checkFieldIsBlocked(), 'field-unblocked')
-	}
-
-	/**
-	 * Runs the Block When formula.
-	 * @param {object} blockWhenProps The properties of the "block when" formula
-	 * @param {string} source The source of the formula (could be "FORM" or "TABLE")
-	 */
-	validateFieldBlockWhen(blockWhenProps, source = '')
-	{
-		if (_isEmpty(blockWhenProps))
-			return
-
-		const callback = (result) => {
-			if (result)
-				this.addBlockSource('FORMULA_BLOCK_WHEN' + source)
-			else
-				this.removeBlockSource('FORMULA_BLOCK_WHEN' + source)
-		}
-
-		this.validateFieldFormula(blockWhenProps, callback)
-	}
-
-	/**
-	 * Checks if the specified field is currently blocked.
-	 * @returns True if the field is blocked, false otherwise
-	 */
-	checkFieldIsBlocked()
-	{
-		return this.blockWhenConditions.length > 0 || this.isFixed || this.isFormulaBlocked
+		this.blockWhenConditions.remove(sourceId)
 	}
 
 	/**
 	 * Adds a value to the stack of the specified field's required sources.
 	 * @param {string} sourceId The id of the required source
+	 * @param {function} condition The condition to determine whether the source is active (optional)
+	 * @param {string|array} eventIds An event to listen for, or a list of events (optional)
 	 */
-	addRequiredSource(sourceId)
+	async addRequiredSource(sourceId, condition, eventIds)
 	{
-		this.addSource(sourceId, this.fieldRequiredConditions, () => this.checkFieldIsRequired(), 'field-required')
+		await this.fieldRequiredConditions.add(sourceId, condition, eventIds)
 	}
 
 	/**
@@ -304,60 +220,15 @@ export class BaseControl
 	 */
 	removeRequiredSource(sourceId)
 	{
-		this.removeSource(sourceId, this.fieldRequiredConditions, () => this.checkFieldIsRequired(), 'field-not-required')
-	}
-
-	/**
-	 * Runs the Required conditions formula.
-	 */
-	validateFieldRequiredConditions()
-	{
-		if (_isEmpty(this.requiredConditions))
-			return
-
-		const callback = (result) => {
-			if (result)
-				this.addRequiredSource('FORMULA_REQUIRED')
-			else
-				this.removeRequiredSource('FORMULA_REQUIRED')
-		}
-
-		this.validateFieldFormula(this.requiredConditions, callback)
-	}
-
-	/**
-	 * Checks if the specified field is currently a required field.
-	 * @returns True if the field is required, false otherwise
-	 */
-	checkFieldIsRequired()
-	{
-		return this.fieldRequiredConditions.length > 0 || this.mustBeFilled
-	}
-
-	/**
-	 * Runs the Fill When formula.
-	 */
-	validateFieldFillWhen()
-	{
-		if (_isEmpty(this.modelFieldRef))
-			return
-
-		const callback = (result) => {
-			if (result)
-				this.removeBlockSource('FORMULA_FILL_WHEN')
-			else
-				this.addBlockSource('FORMULA_FILL_WHEN')
-		}
-
-		this.validateFieldFormula(this.modelFieldRef.fillWhen, callback)
+		this.fieldRequiredConditions.remove(sourceId)
 	}
 
 	/**
 	 * Initialization of formulas that belong only to the control (interface part).
 	 */
-	initControlFormulas()
+	async initControlFormulas()
 	{
-		this.initFormulas(this.modelFieldRef)
+		await this.initFormulas(this.modelFieldRef)
 	}
 
 	/**
@@ -365,94 +236,75 @@ export class BaseControl
 	 * that belong only to the control (interface part).
 	 * @param {object} modelFieldRef «Reference» to Proxy object of model field
 	 */
-	initFormulas(modelFieldRef)
+	async initFormulas(modelFieldRef)
 	{
+		const promises = [],
+			ctx = this.vueContext.model
+
 		// Show when formula of the form
 		if (!_isEmpty(this.showWhen))
 		{
-			if (typeof this.showWhen.runFormula !== 'function')
-			{
-				this.showWhen.runFormula = () => this.validateFieldShowWhen(this.showWhen, 'FORM')
-				this.showWhen.runFormula()
-			}
-
 			const events = _unionWith(this.showWhen.dependencyEvents, ['CALC_SHOW_WHEN_FORMULAS'])
-			this.vueContext.internalEvents.offMany(events, this.showWhen.runFormula)
-			this.vueContext.internalEvents.onMany(events, this.showWhen.runFormula)
+			const res = this.addHideSource('FORMULA_SHOW_WHEN', async () => await validateFieldFormula(this.showWhen, ctx), events)
+			promises.push(res)
 		}
 
 		// Block when formula of the form
 		if (!_isEmpty(this.blockWhen))
 		{
-			if (typeof this.blockWhen.runFormula !== 'function')
-			{
-				this.blockWhen.runFormula = () => this.validateFieldBlockWhen(this.blockWhen, 'FORM')
-				this.blockWhen.runFormula()
-			}
-
 			const events = _unionWith(this.blockWhen.dependencyEvents, ['CALC_BLOCK_WHEN_FORMULAS'])
-			this.vueContext.internalEvents.offMany(events, this.blockWhen.runFormula)
-			this.vueContext.internalEvents.onMany(events, this.blockWhen.runFormula)
+			const res = this.addBlockSource('FORMULA_BLOCK_WHEN', async () => await validateFieldFormula(this.blockWhen, ctx), events)
+			promises.push(res)
 		}
 
 		// Required conditions
 		if (!_isEmpty(this.requiredConditions))
 		{
-			if (typeof this.requiredConditions.runFormula !== 'function')
-			{
-				this.requiredConditions.runFormula = () => this.validateFieldRequiredConditions()
-				this.requiredConditions.runFormula()
-			}
-
 			const events = _unionWith(this.requiredConditions.dependencyEvents, ['CALC_REQUIRED_FORMULAS'])
-			this.vueContext.internalEvents.offMany(events, this.requiredConditions.runFormula)
-			this.vueContext.internalEvents.onMany(events, this.requiredConditions.runFormula)
+			const res = this.addRequiredSource('FORMULA_REQUIRED', async () => await validateFieldFormula(this.requiredConditions, ctx), events)
+			promises.push(res)
 		}
 
-		if (!_isEmpty(modelFieldRef))
+		if (!_isEmpty(modelFieldRef) && !_isEmpty(this.modelFieldRef))
 		{
 			// Fill when formula to block the control
 			if (!_isEmpty(modelFieldRef.fillWhen))
 			{
-				if (typeof modelFieldRef.fillWhen.runFormula !== 'function')
+				const events = _unionWith(modelFieldRef.fillWhen.dependencyEvents, ['CALC_FILL_WHEN_FORMULAS'])
+				const res = this.modelFieldRef.fillWhenConditions.add('FORMULA_FILL_WHEN', async () => await validateFieldFormula(modelFieldRef.fillWhen, ctx), events)
+				promises.push(res)
+
+				if (typeof modelFieldRef.fillWhen.clearValue !== 'function')
 				{
-					modelFieldRef.fillWhen.runFormula = () => this.validateFieldFillWhen()
-					modelFieldRef.fillWhen.runFormula()
+					// If the field becomes blocked by the "Fill when" formula, it should also be cleared.
+					modelFieldRef.fillWhen.clearValue = (fieldId) => {
+						if (this.id === fieldId && this.modelFieldRef.fillWhenConditions.contains('FORMULA_FILL_WHEN'))
+							modelFieldRef.clearValue()
+					}
 				}
 
-				const events = _unionWith(modelFieldRef.fillWhen.dependencyEvents, ['CALC_FILL_WHEN_FORMULAS'])
-				this.vueContext.internalEvents.offMany(events, modelFieldRef.fillWhen.runFormula)
-				this.vueContext.internalEvents.onMany(events, modelFieldRef.fillWhen.runFormula)
+				this.vueContext.internalEvents.off(FillConditionStack.ADD_EVENT, modelFieldRef.fillWhen.clearValue)
+				this.vueContext.internalEvents.on(FillConditionStack.ADD_EVENT, modelFieldRef.fillWhen.clearValue)
 			}
 
 			// Show when formula of the table
 			if (!_isEmpty(modelFieldRef.showWhen))
 			{
-				if (typeof modelFieldRef.showWhen.runFormula !== 'function')
-				{
-					modelFieldRef.showWhen.runFormula = () => this.validateFieldShowWhen(modelFieldRef.showWhen, 'TABLE')
-					modelFieldRef.showWhen.runFormula()
-				}
-
 				const events = _unionWith(modelFieldRef.showWhen.dependencyEvents, ['CALC_SHOW_WHEN_FORMULAS'])
-				this.vueContext.internalEvents.offMany(events, modelFieldRef.showWhen.runFormula)
-				this.vueContext.internalEvents.onMany(events, modelFieldRef.showWhen.runFormula)
+				const res = this.modelFieldRef.showWhenConditions.add('FORMULA_SHOW_WHEN', async () => await validateFieldFormula(modelFieldRef.showWhen, ctx), events)
+				promises.push(res)
 			}
 
 			// Block when formula of the table
 			if (!_isEmpty(modelFieldRef.blockWhen))
 			{
-				if (typeof modelFieldRef.blockWhen.runFormula !== 'function')
-				{
-					modelFieldRef.blockWhen.runFormula = () => this.validateFieldBlockWhen(modelFieldRef.blockWhen, 'TABLE')
-					modelFieldRef.blockWhen.runFormula()
-				}
-
 				const events = _unionWith(modelFieldRef.blockWhen.dependencyEvents, ['CALC_BLOCK_WHEN_FORMULAS'])
-				this.vueContext.internalEvents.offMany(events, modelFieldRef.blockWhen.runFormula)
-				this.vueContext.internalEvents.onMany(events, modelFieldRef.blockWhen.runFormula)
+				const res = this.modelFieldRef.blockWhenConditions.add('FORMULA_BLOCK_WHEN', async () => await validateFieldFormula(modelFieldRef.blockWhen, ctx), events)
+				promises.push(res)
 			}
 		}
+
+		await Promise.all(promises)
 	}
 
 	/**
@@ -460,18 +312,64 @@ export class BaseControl
 	 * In addition to being locked/unlocked, some controls may be invisible in non-editable modes.
 	 * @param {Boolean} isEditableForm
 	 */
-	setFormModeBlockAndVisibility(isEditableForm)
+	async setFormModeBlockAndVisibility(isEditableForm)
 	{
-		if (typeof isEditableForm === 'boolean' && !isEditableForm)
+		if (isEditableForm === false)
 		{
-			this.addBlockSource('NOT_EDITABLE_FORM')
+			await this.addBlockSource('NOT_EDITABLE_FORM')
 			if (this.hiddenInNonEditableMode === true)
-				this.addHideSource('NOT_EDITABLE_FORM')
+				await this.addHideSource('NOT_EDITABLE_FORM')
 		}
 		else
 		{
 			this.removeBlockSource('NOT_EDITABLE_FORM')
 			this.removeHideSource('NOT_EDITABLE_FORM')
+		}
+	}
+
+	/**
+	 * Sets additional properties for the condition stacks.
+	 */
+	async initConditionStacks()
+	{
+		if (this.modelFieldRef?.isFixed)
+			await this.modelFieldRef.blockWhenConditions.add('FIXED_FIELD')
+		if (this.isFormulaBlocked)
+			await this.addBlockSource('FORMULA_FIELD')
+
+		if (this.mustBeFilled)
+			await this.addRequiredSource('REQUIRED_FIELD')
+
+		if (this.modelFieldRef)
+		{
+			this.showWhenConditions.associateStack(this.modelFieldRef.showWhenConditions)
+			this.blockWhenConditions.associateStack(this.modelFieldRef.blockWhenConditions)
+			this.blockWhenConditions.associateStack(this.modelFieldRef.fillWhenConditions)
+		}
+
+		// This condition is needed since some controls might be defined inside components (e.g. QCustomSelection),
+		// making the context different.
+		if (this.vueContext.internalEvents)
+		{
+			// The event emitter needs to be set here, because in the constructor it's not defined yet.
+			this.showWhenConditions.setEventEmitter(this.vueContext.internalEvents)
+			this.blockWhenConditions.setEventEmitter(this.vueContext.internalEvents)
+			this.fieldRequiredConditions.setEventEmitter(this.vueContext.internalEvents)
+
+			// For these stacks we won't specify a field identifier, since we don't want them to emit
+			// anything when adding or removing sources, as they don't know if all conditions are met.
+			this.modelFieldRef?.showWhenConditions.setEventEmitter(this.vueContext.internalEvents)
+			this.modelFieldRef?.blockWhenConditions.setEventEmitter(this.vueContext.internalEvents)
+			this.modelFieldRef?.fillWhenConditions.setEventEmitter(this.vueContext.internalEvents)
+		}
+
+		// Some controls may also not have an identifier.
+		if (this.id)
+		{
+			// The field identifier needs to be set here, because in the constructor it's not defined yet.
+			this.showWhenConditions.setFieldId(this.id)
+			this.blockWhenConditions.setFieldId(this.id)
+			this.fieldRequiredConditions.setFieldId(this.id)
 		}
 	}
 
@@ -493,10 +391,8 @@ export class BaseControl
 	 * Initializes the necessary properties.
 	 * @param {boolean} isEditableForm Whether or not the control is editable
 	 */
-	Init(isEditableForm)
+	async init(isEditableForm)
 	{
-		this.setFormModeBlockAndVisibility(isEditableForm)
-
 		// Set reference to the model field
 		if (!_isEmpty(this.modelField) && this.vueContext.model)
 		{
@@ -513,13 +409,15 @@ export class BaseControl
 			}
 		}
 
-		this.initControlFormulas()
+		await this.setFormModeBlockAndVisibility(isEditableForm)
+		await this.initConditionStacks()
+		await this.initControlFormulas()
 		this.initHandlers()
 
 		// Computed variables should only be initialized after the component's data initialization (when the object becomes reactive)
-		this.isVisible = computed(() => this.checkFieldIsVisible())
-		this.isBlocked = computed(() => this.checkFieldIsBlocked())
-		this.isRequired = computed(() => this.checkFieldIsRequired())
+		this.isVisible = computed(() => !this.showWhenConditions.anyMet)
+		this.isBlocked = computed(() => this.blockWhenConditions.anyMet)
+		this.isRequired = computed(() => this.fieldRequiredConditions.anyMet)
 
 		// Initial step towards separating these concepts
 		this.readonly = computed(() => this.isBlocked)
@@ -531,11 +429,11 @@ export class BaseControl
 	 */
 	getLimitsValues()
 	{
-		var limitsValues = {},
+		const limitsValues = {},
 			model = this.vueContext.model
 
 		/** Dynamic limits (value getter + identifier). Used in requests for the new rows list */
-		if (!_isEmpty(model) && !_isEmpty(this.controlLimits))
+		if (model && !_isEmpty(this.controlLimits))
 		{
 			_forEach(this.controlLimits, (limitInfo) => {
 				let limitValue = limitInfo.fnValueSelector(model)
@@ -568,12 +466,12 @@ export class BaseControl
 	 * Sets a modal with the specified data.
 	 * @param {string|object} modalData The data of the modal (structure: { id: String, props: Object })
 	 */
-	SetModal(modalData)
+	setModal(modalData)
 	{
 		if (_isEmpty(modalData))
 			return
 
-		var properties = {}
+		let properties = {}
 
 		if (typeof modalData === 'object')
 		{
@@ -608,7 +506,7 @@ export class BaseControl
 	 * Removes from the DOM the modal with the specified id.
 	 * @param {string} modalId The id of the modal
 	 */
-	RemoveModal(modalId)
+	removeModal(modalId)
 	{
 		genericFunctions.removeModal(modalId)
 		this.popupIsVisible = false
@@ -617,7 +515,7 @@ export class BaseControl
 	/**
 	 * Reloads the data of the control
 	 */
-	async Reload()
+	async reload()
 	{
 		return this.vueContext.fetchFormField(this.modelField)
 	}
@@ -631,8 +529,7 @@ export class BaseControl
 	 */
 	addLoadingProcToParent(cbPromise, busyStateMessage)
 	{
-		if (this.vueContext && this.vueContext.componentOnLoadProc)
-			return this.vueContext.componentOnLoadProc.AddBusy(cbPromise, busyStateMessage)
+		return this.vueContext.componentOnLoadProc?.addBusy(cbPromise, busyStateMessage)
 	}
 
 	/**
@@ -672,9 +569,30 @@ export class BaseControl
 }
 
 /**
+ * Represents a control type whose size can change.
+ */
+class SizeableControl extends BaseControl
+{
+	constructor(options, _vueContext)
+	{
+		super({}, _vueContext)
+
+		_merge(this, options || {})
+	}
+
+	get props()
+	{
+		return {
+			...super.props,
+			size: this.size
+		}
+	}
+}
+
+/**
  * Represents a control type that shouldn't be blocked just because the form is in "SHOW" mode.
  */
-class NonBlockableControl extends BaseControl
+class NonBlockableControl extends SizeableControl
 {
 	constructor(options, _vueContext)
 	{
@@ -686,16 +604,16 @@ class NonBlockableControl extends BaseControl
 	/**
 	 * Defines if the form is in editable mode
 	 */
-	setFormModeBlockAndVisibility()
+	async setFormModeBlockAndVisibility()
 	{
-		super.setFormModeBlockAndVisibility(true)
+		await super.setFormModeBlockAndVisibility(true)
 	}
 }
 
 /**
  * Form string control
  */
-export class StringControl extends BaseControl
+export class StringControl extends SizeableControl
 {
 	constructor(options, _vueContext)
 	{
@@ -723,25 +641,20 @@ export class TextEditorControl extends StringControl
 {
 	constructor(options, _vueContext)
 	{
+		const systemDataStore = useSystemDataStore()
+
 		super({
-			type: 'TextEditor'
+			type: 'TextEditor',
+			locale: computed(() => systemDataStore.system.currentLang)
 		}, _vueContext)
 
 		_merge(this, options || {})
 	}
 
-	/**
-	 * Initializes the necessary properties.
-	 * @param {boolean} isEditableForm Whether or not the control is editable
-	 */
-	Init(isEditableForm)
-	{
-		super.Init(isEditableForm)
-		this.initHandlers()
-	}
-
 	initHandlers()
 	{
+		super.initHandlers()
+
 		const handlers = {
 			ctrlInitialized: () => this.onCtrlInitializedEvent()
 		}
@@ -774,6 +687,30 @@ export class TextEditorControl extends StringControl
 }
 
 /**
+ * Form code editor control
+ */
+export class CodeEditorControl extends StringControl
+{
+	constructor(options, _vueContext)
+	{
+		super({
+			type: 'CodeEditor',
+			texts: new controlsResources.CodeEditorResources(_vueContext.$getResource)
+		}, _vueContext)
+
+		_merge(this, options || {})
+	}
+
+	get props()
+	{
+		return {
+			...super.props,
+			texts: this.texts
+		}
+	}
+}
+
+/**
  * Password control
  */
 export class PasswordControl extends StringControl
@@ -802,33 +739,62 @@ export class BooleanControl extends BaseControl
 
 		_merge(this, options || {})
 	}
+
+	get props()
+	{
+		return {
+			...super.props,
+			modelValue: this.modelFieldRef?.value
+		}
+	}
 }
 
 /**
  * Form numeric control
  */
-export class NumberControl extends BaseControl
+export class NumberControl extends SizeableControl
 {
 	constructor(options, _vueContext)
 	{
+		const systemDataStore = useSystemDataStore()
+
 		super({
 			type: 'Number',
-			thousandsSep: ' ',
-			decimalSep: ',',
+			thousandsSeparator: systemDataStore.system.numberFormat.thousandsSeparator,
+			decimalPoint: systemDataStore.system.numberFormat.decimalSeparator,
 			maxDigits: 0,
 			decimalDigits: 0,
 			isDecimal: true, /* <= decimalDigits > 0 */
 			isSequencial: false,
 			showEmptyMessage: false,
-			texts: new controlsResources.NumberInputResources(_vueContext.$getResource)
+			currencySymbol: ''
 		}, _vueContext)
 
 		_merge(this, options || {})
 	}
 
-	Init(isEditableForm)
+	get props()
 	{
-		super.Init(isEditableForm)
+		return {
+			...super.props,
+			modelValue: this.modelFieldRef?.value,
+			name: this.name,
+			labelId: this.labelId,
+			disabled: this.disabled,
+			isRequired: this.isRequired,
+			currencySymbol: this.currencySymbol,
+			thousandsSeparator: this.thousandsSeparator,
+			decimalPoint: this.decimalPoint,
+			maxIntegers: this.maxIntegers,
+			maxDecimals: this.maxDecimals,
+			classes: this.classes,
+			showEmptyMessage: this.showEmptyMessage
+		}
+	}
+
+	async init(isEditableForm)
+	{
+		await super.init(isEditableForm)
 
 		if (this.modelFieldRef)
 		{
@@ -846,11 +812,12 @@ export class CurrencyControl extends NumberControl
 {
 	constructor(options, _vueContext)
 	{
+		const systemDataStore = useSystemDataStore()
+
 		super({
 			type: 'Number',
 			dFlexInline: true,
-			isCurrency: true,
-			currencySymbol: computed(() => _vueContext.system?.baseCurrency?.symbol || '€')
+			currencySymbol: computed(() => systemDataStore.system?.baseCurrency?.symbol ?? '€')
 		}, _vueContext)
 
 		_merge(this, options || {})
@@ -860,23 +827,31 @@ export class CurrencyControl extends NumberControl
 /**
  * Form date control
  */
-export class DateControl extends BaseControl
+export class DateControl extends SizeableControl
 {
 	constructor(options, _vueContext)
 	{
+		const systemDataStore = useSystemDataStore()
+
 		super({
 			type: 'Date',
 			dFlexInline: true,
-			locale: 'en-US',
-			dateFormat: {
-				Date: 'dd/MM/yyyy',
-				DateTime: 'dd/MM/yyyy HH:mm',
-				DateTimeSeconds: 'dd/MM/yyyy HH:mm:ss',
-				Time: 'HH:mm'
-			}
+			locale: computed(() => systemDataStore.system.currentLang),
+			texts: new controlsResources.DateTimeResources(_vueContext.$getResource)
 		}, _vueContext)
 
 		_merge(this, options || {})
+	}
+
+	get props()
+	{
+		return {
+			...super.props,
+			type: this.type,
+			locale: this.locale,
+			format: this.format,
+			texts: this.texts,
+		}
 	}
 }
 
@@ -898,7 +873,7 @@ export class TimeControl extends DateControl
 /**
  * The base class for the Array controls
  */
-class BaseArrayControl extends BaseControl
+class BaseArrayControl extends SizeableControl
 {
 	constructor(options, _vueContext)
 	{
@@ -920,6 +895,7 @@ class BaseArrayControl extends BaseControl
 			groups: this.groups,
 			clearable: this.clearable,
 			emptyValue: this.emptyValue,
+			ariaLabel: this.label,
 			texts: this.texts
 		}
 	}
@@ -928,15 +904,18 @@ class BaseArrayControl extends BaseControl
 	 * Initializes the necessary properties.
 	 * @param {boolean} isEditableForm Whether or not the control is editable
 	 */
-	Init(isEditableForm)
+	async init(isEditableForm)
 	{
-		super.Init(isEditableForm)
+		await super.init(isEditableForm)
 
 		this.arrayOptions = computed(() => this.unwrapArrayOptions(this.modelFieldRef?.arrayOptions))
 		// TODO: This is a workaround to hide groups without elements. This code is needed until the component has this part working for itself.
 		this.arrayGroups = this.modelFieldRef?.arrayGroups
 		this.groups = this.modelFieldRef?.arrayGroups
-		watchEffect(() => this.items = this.filterArrayElements(this.arrayOptions, this.arrayGroups) || [])
+		watchEffect(() => {
+			this.filterArray = this.filterArrayElements(this.arrayOptions, this.arrayGroups) || []
+			this.items = this.setShowDescription(this.filterArray)
+		})
 
 		this.emptyValue = this.modelFieldRef?.constructor.EMPTY_VALUE
 		// The array is clearable if its not required, and if the empty value is not an option of the array.
@@ -946,20 +925,35 @@ class BaseArrayControl extends BaseControl
 	}
 
 	/**
-	 * Initialization of formulas that belong only to the control (interface part).
-	 * @override
+	 * Defined if show array item description or not
 	 */
-	initControlFormulas()
+	setShowDescription(array)
 	{
-		super.initControlFormulas()
+		array.forEach((item) => {
+			if (this.helpShortItem === 'None' || this.helpShortItem === '')
+				item.helpResourceId = ''
+			else if (this.helpDetailedItem === 'None' || this.helpShortItem === '')
+				item.helpResourceVerboseId = ''
+		})
 
-		// Array element show when formula
-		if (this.arrayElShowWhen)
-			this.vueContext.internalEvents.onMany(this.arrayElShowWhen.dependencyEvents, () => this.reloadArray())
+		return array
 	}
 
 	/**
-	 * Reloads the array's data
+	 * Initialization of formulas that belong only to the control (interface part).
+	 * @override
+	 */
+	async initControlFormulas()
+	{
+		// Array element show when formula
+		if (this.arrayElShowWhen)
+			this.vueContext.internalEvents.onMany(this.arrayElShowWhen.dependencyEvents, () => this.reloadArray())
+
+		await super.initControlFormulas()
+	}
+
+	/**
+	 * Reloads the array's data.
 	 */
 	reloadArray()
 	{
@@ -984,11 +978,12 @@ class BaseArrayControl extends BaseControl
 					.map((o) => o.el)
 
 				// Update visible options
-				if (allGroups !== undefined) {
+				if (allGroups !== undefined)
+				{
 					// Update visible options for groups
 					watchEffect(() => {
-						this.groups = allGroups.filter(item => filteredOptions.some(option => option.group === item.id));
-					});
+						this.groups = allGroups.filter((item) => filteredOptions.some((option) => option.group === item.id))
+					})
 				}
 				watchEffect(() => (this.items = filteredOptions))
 
@@ -1010,11 +1005,8 @@ class BaseArrayControl extends BaseControl
 		_forEach(allOptions, (arrayEl) => {
 			res.push(
 				new Promise((resolve) => {
-					this.validateFieldFormula(
-						this.arrayElShowWhen,
-						(result) => resolve({ el: arrayEl, show: result }),
-						{ arrayEl }
-					)
+					validateFieldFormula(this.arrayElShowWhen, this.vueContext.model, { arrayEl })
+						.then((result) => resolve({ el: arrayEl, show: result }))
 				})
 			)
 		})
@@ -1058,10 +1050,7 @@ export class ArrayNumberControl extends BaseArrayControl
 	{
 		super({
 			type: 'Number',
-			texts: {
-				...new controlsResources.LookupResources(_vueContext.$getResource),
-				...new controlsResources.NumberInputResources(_vueContext.$getResource)
-			}
+			texts: new controlsResources.LookupResources(_vueContext.$getResource)
 		}, _vueContext)
 
 		_merge(this, options || {})
@@ -1086,7 +1075,7 @@ export class ArrayBooleanControl extends BaseArrayControl
 /**
  * Form Coordinates control
  */
-export class CoordinatesControl extends BaseControl
+export class CoordinatesControl extends SizeableControl
 {
 	constructor(options, _vueContext)
 	{
@@ -1118,9 +1107,9 @@ export class MaskControl extends StringControl
 	 * Initializes the necessary properties.
 	 * @param {boolean} isEditableForm Whether or not the control is editable
 	 */
-	Init(isEditableForm)
+	async init(isEditableForm)
 	{
-		super.Init(isEditableForm)
+		await super.init(isEditableForm)
 
 		if (this.modelFieldRef)
 		{
@@ -1133,7 +1122,7 @@ export class MaskControl extends StringControl
 /**
  * Form List control (DB)
  */
-export class LookupControl extends BaseControl
+export class LookupControl extends SizeableControl
 {
 	constructor(options, _vueContext)
 	{
@@ -1163,14 +1152,15 @@ export class LookupControl extends BaseControl
 			lookupKeyModelFieldRef: null,
 			// Number of last request
 			// The list can make more than one 'simultaneous' request to the server and only the response of the last request is of interest
-			_requestNumberReload: 0,
-			_requestNumberGetDependants: 0,
+			requestNumberReload: 0,
+			requestNumberGetDependants: 0,
 			/** The interface texts */
 			texts: new controlsResources.LookupResources(_vueContext.$getResource),
 			insertEnabled: false,
 			supportForm: undefined,
 			externalCallbacks: {},
-			externalProperties: {}
+			externalProperties: {},
+			isDebounce: false
 		}, _vueContext)
 
 		_merge(this, options || {})
@@ -1180,46 +1170,56 @@ export class LookupControl extends BaseControl
 	{
 		return {
 			...super.props,
+			modelValue: this.lookupKeyModelFieldRef?.value,
 			items: this.modelFieldRef?.options ?? [],
 			itemValue: 'key',
 			itemLabel: 'value',
-			totalRows: this.modelFieldRef.totalRows,
-			emptyValue: this.lookupKeyModelFieldRef.constructor.EMPTY_VALUE,
+			totalRows: this.modelFieldRef?.totalRows,
+			emptyValue: this.lookupKeyModelFieldRef?.constructor.EMPTY_VALUE,
 			filterMode: 'manual',
 			showSeeMore: this.hasMore,
 			showViewDetails: !_isEmpty(this.supportForm),
-			clearable: !this.isRequired,
-			texts: this.texts
+			clearable: true,
+			texts: this.texts,
+			ariaLabel: this.label,
+			debouncing: computed(() => this.isDebounce),
+			id: `${this.id}_lookup`
 		}
 	}
 
-	Init(isEditableForm)
+	get wrapperProps()
+	{
+		return {
+			...super.wrapperProps,
+			// The real field in the case of Lookup is the foreign key.
+			// Used in the Grid control to show errors.
+			modelFieldRef: this.lookupKeyModelFieldRef
+		}
+	}
+
+	async init(isEditableForm)
 	{
 		// Set reference to the model key field
 		if (!_isEmpty(this.lookupKeyModelField.name) && typeof this.externalCallbacks.getModelField === 'function')
 			this.lookupKeyModelFieldRef = this.externalCallbacks.getModelField(this.lookupKeyModelField.name)
 
-		super.Init(isEditableForm)
+		await super.init(isEditableForm)
 
 		this.applyHistoryLimit()
-
-		this.initHandlers()
+		this.initEvents()
 
 		// The search input Id that is sent to the server
 		this.searchId = `qTable${_capitalize(this.dbArea)}${_capitalize(this.dbField)}`
-
 		this.hasMore = computed(() => !this.readonly && this.modelFieldRef?.hasMore !== false)
-
-		this.initEvents()
 	}
 
 	/**
 	 * Initialization of formulas that belong only to the control (interface part).
 	 * @override
 	 */
-	initControlFormulas()
+	async initControlFormulas()
 	{
-		this.initFormulas(this.lookupKeyModelFieldRef)
+		await this.initFormulas(this.lookupKeyModelFieldRef)
 	}
 
 	/**
@@ -1229,8 +1229,14 @@ export class LookupControl extends BaseControl
 	{
 		if (this.modelFieldRef && !_isEmpty(this.modelFieldRef.area))
 		{
-			let lookupArea = this.modelFieldRef.area.toLowerCase()
-			if (this.vueContext.navigation.currentLevel.hasEntry(lookupArea, false, true))
+			const formArea = this.vueContext.formInfo.area.toLowerCase()
+			const lookupArea = this.modelFieldRef.area.toLowerCase()
+			const navigation = this.vueContext.navigation
+
+			// We don't want to add a limit by history if the previous level is for
+			// the same record, of the same area, as the current one, and the lookup
+			// isn't blocked in that level.
+			if (navigation.currentLevel.hasEntry(lookupArea, false, true, formArea))
 				this.addBlockSource('HISTORY')
 		}
 	}
@@ -1240,23 +1246,29 @@ export class LookupControl extends BaseControl
 	 */
 	initHandlers()
 	{
-		this.debouncedSearch = _debounce(this.handleSearch, 500);
+		super.initHandlers()
+
+		this.debouncedSearch = _debounce(this.handleSearch, 500)
 
 		const handlers = {
+			'update:model-value': (eventData) => this.lookupKeyModelFieldRef?.fnUpdateValue(eventData),
 			beforeShow: (eventData) => this.handleBeforeShow(eventData),
-			onSearch: (eventData) => this.debouncedSearch(eventData),
+			onSearch: (eventData) => {
+				this.isDebounce = true
+				this.debouncedSearch(eventData)
+			},
 			seeMore: (eventData) => this.handleSeeMore(eventData),
 			seeMoreChoice: (eventData) => this.handleSeeMoreChoice(eventData),
 			close: (eventData) => this.handleSeeMoreClose(eventData),
 			insert: () => this.handleOnInsert(),
-			viewDetails: (eventData) => this.handleViewDetails(eventData),
+			viewDetails: (eventData) => this.handleViewDetails(eventData)
 		}
 
 		_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
 	}
 
 	/**
-	 * Initiating of listeners for events on which functions such as content reloading depend
+	 * Initializes listeners for events on which functions such as content reloading depend on
 	 */
 	initEvents()
 	{
@@ -1310,6 +1322,9 @@ export class LookupControl extends BaseControl
 		if (!this.vueContext.formInfo || !this.vueContext.authData.isAllowed) // TODO: Change it!
 			return
 
+		// Keep the selected value of the lookup
+		let selectedValue = ''
+
 		const limitValues = {
 				limits: {},
 				queryParams: {},
@@ -1322,10 +1337,7 @@ export class LookupControl extends BaseControl
 
 		// In the case of indirect limitations it was necessary to have all keys (it is necessary to validate)
 		const keys = this.externalProperties.modelKeys
-
-		_forEach(keys, (keyField, keyAreaName) => {
-			Reflect.set(limitValues.limits, keyAreaName, keyField.value)
-		})
+		_forEach(keys, (keyField, keyAreaName) => Reflect.set(limitValues.limits, keyAreaName, keyField.value))
 
 		// Apply search query
 		if (searchQuery !== undefined && searchQuery !== null)
@@ -1334,6 +1346,7 @@ export class LookupControl extends BaseControl
 		{
 			// If it was a reload, we need to remove the option currently selected
 			// so that it is not added to the list when it does not belong
+			selectedValue = limitValues.limits[this.dbArea]
 			Reflect.set(limitValues.limits, this.dbArea, null)
 		}
 
@@ -1368,26 +1381,41 @@ export class LookupControl extends BaseControl
 			Values: limitValues.queryParams
 		}
 
-		this.addLoadingProc(netAPI.postData(baseApiController, 'ReloadDBEdit', params, (data, response) => {
-			const requestNumber = response.headers['reloaddbeditrequestnumber']
-			// The list can make more than one 'simultaneous' request to the server and only the response of the last request is interest
-			if (Number(requestNumber) !== this._requestNumberReload)
-				return
+		this.addLoadingProc(
+			netAPI.postData(
+				baseApiController,
+				'ReloadDBEdit',
+				params,
+				(data, response) => {
+					const requestNumber = response.headers['reloaddbeditrequestnumber']
+					// The list can make more than one 'simultaneous' request to the server and only the response of the last request is interest
+					if (Number(requestNumber) !== this.requestNumberReload) {
+						this.isDebounce = false
+						return
+					}
 
-			// Process the received data
-			if (response.data.Success)
-			{
-				// Update model data
-				this.modelFieldRef?.updateValue(data)
-				// If the user is still searching for the desired record, we don't update the key
-				if (!isSearching)
-					this.lookupKeyModelFieldRef?.updateValue(data.Selected)
-			}
-		}, undefined, {
-			headers: {
-				ReloadDBEditRequestNumber: this._requestNumberReload += 1
-			}
-		}, this.vueContext.navigationId))
+					// Process the received data
+					if (response.data.Success)
+					{
+						// Update model data
+						this.modelFieldRef?.updateValue(data)
+						// If the user is still searching for the desired record, we don't update the key
+						if (!isSearching)
+						{
+							// The key should be updated with the previously selected value, if it's in the list, or an empty string otherwise
+							const selectedValueInList = data.List.some((option) => option.key === selectedValue)
+							this.lookupKeyModelFieldRef?.updateValue(selectedValueInList ? selectedValue : data.Selected)
+						}
+					}
+					this.isDebounce = false
+				},
+				() => this.isDebounce = false,
+				{
+					headers: {
+						ReloadDBEditRequestNumber: this.requestNumberReload += 1
+					}
+				},
+				this.vueContext.navigationId))
 	}
 
 	/**
@@ -1410,7 +1438,7 @@ export class LookupControl extends BaseControl
 		// In the case of indirect limitations it was necessary to have all keys (it is necessary to validate)
 		const keys = this.externalProperties.modelKeys
 
-		_forEach(keys, (keyField, keyAreaName) => Reflect.set(values, keyAreaName, keyField.value))
+		_forEach(keys, (keyField, keyAreaName) => { Reflect.set(values, keyAreaName, keyField.value) })
 
 		// Put the limit values in Navigation (history) before making the request to the server.
 		if (typeof this.vueContext.setEntryValue !== 'function')
@@ -1437,39 +1465,50 @@ export class LookupControl extends BaseControl
 			Selected: this.lookupKeyModelFieldRef.value
 		}
 
-		this.addLoadingProc(netAPI.postData(baseApiController, 'GetDependants', params, (data, response) => {
-			const requestNumber = response.headers['getdependantsrequestnumber']
-			// The list can make more than one 'simultaneous' request to the server and only the response of the last request is interest
-			if (Number(requestNumber) !== this._requestNumberGetDependants)
-				return
+		this.addLoadingProc(
+			netAPI.postData(
+				baseApiController,
+				'GetDependants',
+				params,
+				(data, response) => {
+					const requestNumber = response.headers['getdependantsrequestnumber']
+					// The list can make more than one 'simultaneous' request to the server and only the response of the last request is interest
+					if (Number(requestNumber) !== this.requestNumberGetDependants)
+						return
 
-			// Process the received data
-			if (response.data.Success)
-			{
-				// Update model data (including the Key/Value of the field itself)
-				if (this.dependentFields)
-				{
-					let _depFieldsRef = this.dependentFields.call(this.vueContext)
-					_forEach(data, (depFieldValue, depFieldId) => _depFieldsRef[depFieldId] = depFieldValue)
-				}
+					// Process the received data
+					if (response.data.Success)
+					{
+						// Update model data (including the Key/Value of the field itself)
+						if (this.dependentFields)
+						{
+							let _depFieldsRef = this.dependentFields.call(this.vueContext)
+							// Warning: Never remove the curly braces from the iteration function.
+							// Without the braces, when filling in boolean dependents, assigning "false" will stop the cycle and no further fields will be filled
+							_forEach(data, (depFieldValue, depFieldId) => { _depFieldsRef[depFieldId] = depFieldValue })
+						}
 
-				// Ensure that the chosen option exists
-				if (this.modelFieldRef && this.lookupKeyModelFieldRef)
-				{
-					const selectedOption = {
-						key: this.lookupKeyModelFieldRef.value,
-						value: this.modelFieldRef.value
+						// Ensure that the chosen option exists
+						if (this.modelFieldRef && this.lookupKeyModelFieldRef)
+						{
+							const selectedOption = {
+								key: this.lookupKeyModelFieldRef.value,
+								value: this.modelFieldRef.value
+							}
+
+							if (!_isEmpty(selectedOption.key) && !_isEmpty(selectedOption.value) && !_some(this.modelFieldRef.options, selectedOption))
+								this.modelFieldRef.options.push(selectedOption)
+						}
 					}
-
-					if (!_isEmpty(selectedOption.key) && !_isEmpty(selectedOption.value) && !_some(this.modelFieldRef.options, selectedOption))
-						this.modelFieldRef.options.push(selectedOption)
-				}
-			}
-		}, undefined, {
-			headers: {
-				GetDependantsRequestNumber: this._requestNumberGetDependants += 1
-			}
-		}, this.vueContext.navigationId), true)
+				},
+				undefined,
+				{
+					headers: {
+						GetDependantsRequestNumber: this.requestNumberGetDependants += 1
+					}
+				},
+				this.vueContext.navigationId),
+			true)
 	}
 
 	/**
@@ -1538,20 +1577,26 @@ export class LookupControl extends BaseControl
 	addLoadingProc(cbPromise, affectsParent)
 	{
 		if (affectsParent)
-			this.addLoadingProcToParent(this.componentOnLoadProc.AddWL(cbPromise))
+			this.addLoadingProcToParent(this.componentOnLoadProc.addWL(cbPromise))
 		else
-			this.componentOnLoadProc.AddWL(cbPromise)
+			this.componentOnLoadProc.addWL(cbPromise)
 	}
 }
 
 /**
  * Form Table list control
  */
-export class TableListControl extends BaseControl
+export class TableListControl extends SizeableControl
 {
-	constructor(options, _vueContext)
+	constructor(options, _vueContext, store)
 	{
-		let importExportResources = new controlsResources.ImportExportResources(_vueContext.$getResource)
+		let systemDataStore = store ?? {}
+		if (typeof store === 'undefined')
+			systemDataStore = useSystemDataStore()
+
+		const importExportResources = new controlsResources.ImportExportResources(_vueContext.$getResource)
+		const tableTexts = new controlsResources.TableListMainResources(_vueContext.$getResource)
+
 		// Init default values of control properties
 		super({
 			/** The type of the control class */
@@ -1559,6 +1604,7 @@ export class TableListControl extends BaseControl
 			columns: [],
 			columnsOriginal: [],
 			columnsCustom: [],
+			columnTotalizers: [],
 			rows: [],
 			rowFormProps: [],
 			totalRows: 0,
@@ -1572,19 +1618,19 @@ export class TableListControl extends BaseControl
 			 */
 			fixedControlLimits: undefined,
 			isLoaded: false,
-			loadDefaultView: true,
-			loadView: false,
 			/** Data already requested from the server at least once */
 			dataAlreadyRequested: false,
 			hydrate: listFunctions.hydrateTableData,
 			rowsSelected: {},
 			rowsChecked: {},
 			rowsDirty: {},
-			searchOnNextChange: { value: false },
+			searchValue: '',
 			advancedFilters: [],
 			columnFilters: {},
+			searchBarFilters: {},
 			groupFilters: [],
 			activeFilters: {},
+			columnSorting: {},
 			dataImportResponse: {},
 			rowComponent: 'q-table-row',
 			formName: '',
@@ -1601,13 +1647,20 @@ export class TableListControl extends BaseControl
 			confirmChanges: false,
 			config: {
 				serverMode: computed(() => !!options?.config?.serverMode),
-				perPage: computed(() => _vueContext.system ? _vueContext.system.defaultListRows : options.config !== undefined ? options.config.perPage !== undefined ? options.config.perPage : 10 : 10),
+				perPageDefault: computed(() => systemDataStore.system ? systemDataStore.system.defaultListRows : options.config !== undefined ? options.config.perPage !== undefined ? options.config.perPage : 10 : 10),
+				perPageSelected: null,
+				page: 1,
+				perPage: 10,
 				perPageOptions: [],
 				actionsPlacement: computed(() => _vueContext.layoutConfig ? _vueContext.layoutConfig.DbEditActionPlacement : 'left'),
 				paginationPlacement: computed(() => _vueContext.layoutConfig ? _vueContext.layoutConfig.DbEditPagerPlacement : 'left'),
 				rowActionDisplay: computed(() => _vueContext.layoutConfig ? _vueContext.layoutConfig.RowActionDisplay : 'dropdown'),
 				showRowActionText: computed(() => _vueContext.layoutConfig ? _vueContext.layoutConfig.RowActionDisplay !== 'inline' : true),
 				hasTextWrap: false,
+				rowValidation: {
+					message: computed(() => tableTexts.pendingRecords),
+					fnValidate: (row) => row.Fields.ValZzstate === 0
+				},
 				allowFileExport: false,
 				allowFileImport: false,
 				exportOptions: importExportResources.exportOptions,
@@ -1617,14 +1670,20 @@ export class TableListControl extends BaseControl
 				tableTitle: '',
 				tableNamePlural: '',
 				configOptions: [],
+				configOptionsUse: [],
 				viewManagement: qEnums.tableViewManagementModes.none,
 				hasCustomColumns: false,
-				globalSearch: {
-					visibility: false
+				searchBarConfig: {
+					visibility: false,
+					message: null,
 				},
 				filtersVisible: false,
 				allowColumnFilters: false,
 				allowColumnSort: false,
+				defaultColumnSorting: {
+					columnName: '',
+					sortOrder: 'asc'
+				},
 				showRecordCount: false,
 				showRowsSelectedCount: false,
 				linkRowsSelectedAndChecked: false,
@@ -1645,48 +1704,99 @@ export class TableListControl extends BaseControl
 					view: () => true,
 					update: () => true,
 					delete: () => true,
-					insert: () => true
+					insert: {
+						handler: () => true,
+						dependencyEvents: []
+					}
 				},
-				canInsert: true,
+				canInsert: false,
 				rowActionClasses: {
 					'dropdown-item': true
 				},
-				enableRowActionButtonBaseClasses: false,
 				rowKeyToScroll: '',
-				resourcesPath: computed(() => _vueContext.system?.resourcesPath ?? ''),
+				resourcesPath: computed(() => systemDataStore.system?.resourcesPath ?? ''),
+				navigatedRowKeyPath: null,
 				emptyRowImg: 'empty_card_container.png',
-				onLoadSelectFirst: false
+				onLoadSelectFirst: false,
+				rerenderRowsOnNextChange: false,
+				setNavOnUpdate: false
 			},
-			texts: new controlsResources.TableListMainResources(_vueContext.$getResource),
+			texts: tableTexts,
 			// The translation mechanism for the filter operators arrays
 			filterOperators: searchFilterData.getWithTranslation(_vueContext.$getResource).operators.elements,
-			allSelectedRows: 'false'
+			allSelectedRows: 'false',
+			headerRow: {
+				isNavigated: false
+			},
+			// The custom callback method for hydrate the page view model data
+			fnHydrateViewModel: undefined,
+			linkedForm: undefined,
+			activeViewModeId: 'LIST',
+			locale: computed(() => systemDataStore.system.currentLang)
 		}, _vueContext)
 
 		_merge(this, options || {})
 
+		// Set columns to use custom columns if defined, otherwise original columns (generated)
 		this.columnsCustom = ref(this.columnsCustom)
 		this.columnsOriginal = ref(this.columnsOriginal)
 		this.columns = computed(() => !_isEmpty(this.columnsCustom.value) ? this.columnsCustom.value : this.columnsOriginal.value)
+
+		// Set perPage to use selected value or default if no value was selected
+		this.config.perPageDefault = ref(this.config.perPageDefault)
+		this.config.perPageSelected = ref(this.config.perPageSelected)
+		this.config.perPage = computed(() => this.config.perPageSelected.value ? this.config.perPageSelected.value : this.config.perPageDefault.value)
+
+		// Create reactive copy of configuration options that accounts for whether the table is in readonly mode
+		this.config.configOptions = ref(this.config.configOptions)
+		this.config.configOptionsUse = computed(() => {
+			let configOptions = cloneDeep(this.config.configOptions.value)
+			listFunctions.updateConfigOptions(configOptions, this.config.viewManagement, this.confirmChanges, this.readonly)
+			return configOptions
+		})
 	}
 
 	/**
 	 * Initializes the necessary properties.
 	 * @param {boolean} isEditableForm Whether or not the control is editable
 	 */
-	Init(isEditableForm)
+	async init(isEditableForm)
 	{
-		super.Init(isEditableForm)
-
-		this.config.canInsert = computed(() => this.config.permissions.canInsert && this.config.crudConditions.insert())
-
-		this.initHandlers()
+		await super.init(isEditableForm)
 
 		this.isLoaded = false
 
+		const systemDataStore = useSystemDataStore()
+
+		// In maintenance mode, set server-mode tables to readonly mode
+		this.readonly = computed(() => this.isBlocked || (this.config.serverMode && systemDataStore.maintenance.isActive))
+
 		this.initEvents()
 		this.initUserConfig()
-		this.clearUnsavedConfig()
+	}
+
+	/**
+	 * Performs additional init operations after the table data is ready.
+	 */
+	initData()
+	{
+		if (this.config.permissions.canInsert)
+		{
+			const insertCondition = this.config.crudConditions.insert
+
+			if (typeof insertCondition.runFormula !== 'function')
+			{
+				insertCondition.runFormula = () => {
+					Promise.resolve(insertCondition.handler()).then((result) => {
+						this.config.canInsert = typeof result === 'boolean' ? result : false
+					})
+				}
+				insertCondition.runFormula()
+			}
+
+			this.vueContext.internalEvents?.offMany(insertCondition.dependencyEvents, insertCondition.runFormula)
+			this.vueContext.internalEvents?.onMany(insertCondition.dependencyEvents, insertCondition.runFormula)
+		}
 	}
 
 	/**
@@ -1694,9 +1804,10 @@ export class TableListControl extends BaseControl
 	 */
 	initHandlers()
 	{
+		super.initHandlers()
+
 		const handlers = {
 			onChangeQuery: (eventData) => this.onTableListChangeQuery(eventData),
-			setSearchOnNextChange: (eventData) => this.setSearchOnNextChange(eventData),
 			saveView: (eventData) => this.onTableListSaveView(eventData),
 			copyView: (eventData) => this.onTableListCopyView(eventData),
 			selectView: (eventData) => this.onTableListSelectView(eventData),
@@ -1725,9 +1836,9 @@ export class TableListControl extends BaseControl
 			applyColumnConfig: (eventData) => this.onTableListApplyColumnConfig(eventData),
 			resetColumnConfig: (eventData) => this.onTableListResetColumnConfig(eventData),
 			resetColumnSizes: (eventData) => this.onTableListResetColumnSizes(eventData),
-			showPopup: (eventData) => this.SetModal(eventData),
-			hidePopup: (eventData) => this.RemoveModal(eventData),
-			setDropdown: (eventData) => this.setDropdown(eventData),
+			resetColumnOrdering: () => this.onTableListResetColumnOrdering(),
+			showPopup: (eventData) => this.setModal(eventData),
+			hidePopup: (eventData) => this.removeModal(eventData),
 			setInfoMessage: (eventData) => this.setInfoMessage(eventData),
 			showAdvancedFilters: (eventData) => this.setAdvancedFiltersPopup(eventData),
 			addAdvancedFilter: (eventData) => this.addAdvancedFilter(eventData),
@@ -1737,8 +1848,11 @@ export class TableListControl extends BaseControl
 			setAdvancedFilterStates: (eventData) => this.setAdvancedFilterStates(eventData),
 			removeAllAdvancedFilters: () => this.removeAllAdvancedFilters(),
 			deactivateAllAdvancedFilters: () => this.deactivateAllAdvancedFilters(),
+			'update:activeFilters': (eventData) => this.updateActiveFilters(eventData),
+			'update:groupFilters': (eventData) => this.updateGroupFilters(eventData),
 			updateConfig: () => this.updateConfig(),
 			setProperty: (...args) => this.setProperty(...args),
+			setRowIndexProperty: (...args) => this.setRowIndexProperty(...args),
 			setArraySubPropWhere: (...args) => this.setArraySubPropWhere(...args),
 			insertForm: (...args) => this.onTableListInsertForm(...args),
 			cancelInsert: (...args) => this.onTableListCancelInsertRow(...args),
@@ -1782,12 +1896,14 @@ export class TableListControl extends BaseControl
 		{
 			configOptions.push({
 				id: 'viewSaveChanges',
+				elementId: 'view-save-changes',
 				icon: {
 					icon: 'save'
 				},
 				text: this.texts.saveChanges,
 				active: false,
-				visible: true
+				visible: true,
+				inReadonly: false
 			})
 			configOptions.push({
 				id: 'viewRename',
@@ -1798,11 +1914,12 @@ export class TableListControl extends BaseControl
 				},
 				text: this.texts.saveWithOtherName,
 				active: false,
-				visible: true
+				visible: true,
+				inReadonly: false
 			})
 		}
 
-		if (this.config.allowColumnConfiguration)
+		if (this.config.allowColumnConfiguration && this.activeViewModeId === 'LIST')
 			configOptions.push({
 				id: 'columnConfig',
 				elementId: 'column-config',
@@ -1840,7 +1957,8 @@ export class TableListControl extends BaseControl
 				},
 				text: this.texts.manageViews,
 				active: true,
-				visible: true
+				visible: true,
+				inReadonly: false
 			})
 			configOptions.push({
 				id: 'viewSave',
@@ -1852,23 +1970,22 @@ export class TableListControl extends BaseControl
 				text: this.texts.createView,
 				separatorBefore: true,
 				active: true,
-				visible: true
+				visible: true,
+				inReadonly: false
 			})
 		}
 
 		this.config.configOptions = configOptions
 	}
 
-	clearUnsavedConfig() { this.componentOnLoadProc.AddWL(this.vueContext.clearUnsavedConfig(this)) }
-	onTableListChangeQuery(eventData) { this.componentOnLoadProc.AddWL(this.vueContext.onTableListChangeQuery(this, eventData)) }
-	setSearchOnNextChange(eventData) { this.vueContext.setSearchOnNextChange(this, eventData) }
+	onTableListChangeQuery(eventData) { this.componentOnLoadProc.addWL(this.vueContext.onTableListChangeQuery(this, eventData)) }
 	onTableListSaveView(eventData) { this.vueContext.onTableListSaveView(this, eventData) }
 	onTableListCopyView(eventData) { this.vueContext.onTableListCopyView(this, eventData) }
-	onTableListCloseView(eventData) { this.vueContext.onTableListCloseView(this, eventData) }
-	onTableListSelectView(eventData) { this.vueContext.onTableListSelectView(this, eventData) }
-	onTableListViewAction(eventData) { this.vueContext.onTableListViewAction(this, eventData) }
-	onTableListExportData(eventData, template) { asyncProcM.AddBusy(this.vueContext.onTableListExportData(this, eventData, template), 'Export...') }
-	onTableListImportData(eventData) { asyncProcM.AddBusy(this.vueContext.onTableListImportData(this, eventData), 'Import...') }
+	onTableListCloseView(eventData) { this.componentOnLoadProc.addWL(this.vueContext.onTableListCloseView(this, eventData)) }
+	onTableListSelectView(eventData) { this.componentOnLoadProc.addWL(this.vueContext.onTableListSelectView(this, eventData)) }
+	onTableListViewAction(eventData) { this.componentOnLoadProc.addWL(this.vueContext.onTableListViewAction(this, eventData)) }
+	onTableListExportData(eventData, template) { asyncProcM.addBusy(this.vueContext.onTableListExportData(this, eventData, template), 'Export...') }
+	onTableListImportData(eventData) { asyncProcM.addBusy(this.vueContext.onTableListImportData(this, eventData), 'Import...') }
 	updateActiveViewMode(eventData) { this.vueContext.updateActiveViewMode(this, eventData) }
 	onRemoveRow(eventData) { this.vueContext.onRemoveRow(this, eventData) }
 	onTableListRowAdd(eventData) { this.vueContext.onTableListRowAdd(this, eventData) }
@@ -1888,24 +2005,55 @@ export class TableListControl extends BaseControl
 	onTableListApplyColumnConfig(eventData) { this.vueContext.onTableListApplyColumnConfig(this, eventData) }
 	onTableListResetColumnConfig(eventData) { this.vueContext.onTableListResetColumnConfig(this, eventData) }
 	onTableListResetColumnSizes(eventData) { this.vueContext.onTableListResetColumnSizes(this, eventData) }
-	setDropdown(eventData) { this.vueContext.setDropdown(eventData) }
+	onTableListResetColumnOrdering() { this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this)) }
 	setInfoMessage(eventData) { this.vueContext.setInfoMessage(eventData) }
 	setAdvancedFiltersPopup(eventData) { this.vueContext.setAdvancedFiltersPopup(this, eventData[0], eventData[1]) }
-	addAdvancedFilter(eventData) { this.vueContext.addAdvancedFilter(this, eventData) }
-	editAdvancedFilter(eventData) { this.vueContext.editAdvancedFilter(this, eventData[0], eventData[1]) }
-	removeAdvancedFilter(eventData) { this.vueContext.removeAdvancedFilter(this, eventData) }
-	setAdvancedFilterState(eventData) { this.vueContext.setAdvancedFilterState(this, eventData[0], eventData[1]) }
-	setAdvancedFilterStates(eventData) { this.vueContext.setAdvancedFilterStates(this, eventData[0], eventData[1]) }
-	removeAllAdvancedFilters() { this.vueContext.removeAllAdvancedFilters(this) }
-	deactivateAllAdvancedFilters() { this.vueContext.deactivateAllAdvancedFilters(this) }
+	addAdvancedFilter(eventData) { this.componentOnLoadProc.addWL(this.vueContext.addAdvancedFilter(this, eventData)) }
+	editAdvancedFilter(eventData) { this.componentOnLoadProc.addWL(this.vueContext.editAdvancedFilter(this, eventData[0], eventData[1])) }
+	removeAdvancedFilter(eventData) { this.componentOnLoadProc.addWL(this.vueContext.removeAdvancedFilter(this, eventData)) }
+	setAdvancedFilterState(eventData) { this.componentOnLoadProc.addWL(this.vueContext.setAdvancedFilterState(this, eventData[0], eventData[1])) }
+	setAdvancedFilterStates(eventData) { this.componentOnLoadProc.addWL(this.vueContext.setAdvancedFilterStates(this, eventData[0], eventData[1])) }
+	removeAllAdvancedFilters() { this.componentOnLoadProc.addWL(this.vueContext.removeAllAdvancedFilters(this)) }
+	deactivateAllAdvancedFilters() { this.componentOnLoadProc.addWL(this.vueContext.deactivateAllAdvancedFilters(this)) }
 	updateConfig(...args) { this.vueContext.updateConfig(this, ...args) }
 	setProperty(...args) { this.vueContext.setProperty(this, ...args) }
+	setRowIndexProperty(...args) { listFunctions.setRowIndexProperty(this, ...args) }
 	setArraySubPropWhere(...args) { this.vueContext.setArraySubPropWhere(this, ...args) }
 	onTableListInsertForm(...args) { this.vueContext.onTableListInsertForm(this, ...args) }
 	onTableListCancelInsertRow(...args) { this.vueContext.onTableListCancelInsertRow(this, ...args) }
 	signalComponent(...args) { this.vueContext.signalComponent(this, ...args) }
 	onSetQtableAllSelected(eventData) { this.vueContext.onSetQtableAllSelected(this, eventData) }
 	onFetchQtableAllSelected(eventData) { this.vueContext.onFetchQtableAllSelected(this, eventData) }
+
+	/**
+	 * Sets the value of the active filters
+	 * @param {object} activeFilters The active filters
+	 */
+	updateActiveFilters(activeFilters)
+	{
+		this.activeFilters = activeFilters
+		const params = {
+			tableConfiguration: listFunctions.getTableConfiguration(this)
+		}
+
+		this.vueContext.updateConfig(this)
+		this.vueContext.fetchListData(this, params)
+	}
+
+	/**
+	 * Sets the value of the group filters
+	 * @param {Array} groupFilters The group filters
+	 */
+	updateGroupFilters(groupFilters)
+	{
+		this.groupFilters = groupFilters
+		const params = {
+			tableConfiguration: listFunctions.getTableConfiguration(this)
+		}
+
+		this.vueContext.updateConfig(this)
+		this.vueContext.fetchListData(this, params)
+	}
 
 	/**
 	 * Searches for a row with the specified id
@@ -1968,10 +2116,11 @@ export class TableListControl extends BaseControl
 
 	/**
 	 * Reloads the data of the list
+	 * @param {object} params The parameters for loading the data which are passed to fetchListData()
 	 */
-	Reload()
+	reload(params)
 	{
-		return this.componentOnLoadProc.AddWL(this.vueContext.fetchListData(this))
+		return this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this, params, this.fnHydrateViewModel))
 	}
 }
 
@@ -2025,7 +2174,7 @@ export class TreeTableListControl extends TableListControl
 
 		const handlers = {
 			getInsertFormName: (eventData) => this.getInsertFormName(eventData),
-			treeLoadBranchData: (eventData) => this.treeLoadBranchData(eventData)
+			treeLoadBranchData: (eventData) => this.treeLoadBranchData(this, eventData)
 		}
 
 		// Apply handlers without overriding. The handler can come from outside at initialization.
@@ -2068,23 +2217,28 @@ export class TreeTableListControl extends TableListControl
 
 	/**
 	 * The method responsible for making the server request and loading the children of the branch (if any)
+	 * @param {object} listConf The list configuration
 	 * @param {object} eventData Event object that contains the current parent row
 	 */
-	treeLoadBranchData(eventData)
+	treeLoadBranchData(listConf, eventData)
 	{
 		if (eventData.row?.alreadyLoaded === false)
 		{
-			// Prevent double request
-			eventData.row.alreadyLoaded = true
+			// Set current row as row to navigate to after reloading
+			listConf.config.navigatedRowKeyPath = listFunctions.getRowKeyPath(listConf.rows, eventData.row)
 
-			this.componentOnLoadProc.AddWL(this.vueContext.fetchListData(this, {
+			this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this, {
 				queryParams: {
 					currentBranch: eventData.row?.BranchId + 1,
 					currentSelectedKey: eventData.row?.rowKey
 				}
-			}, (data) => {
+			},
+			this.fnHydrateViewModel,
+			(data) => {
 				const rowKeyToScroll = this.vueContext.currentControl?.data?.rowKey ?? null
 				eventData.row?.hydrateChildrenData(data.Tree, rowKeyToScroll)
+				// Prevent double request
+				eventData.row.alreadyLoaded = true
 			}), 300)
 		}
 	}
@@ -2121,16 +2275,14 @@ export class MultipleValuesControl extends TableListControl
 	 * Initializes the necessary properties.
 	 * @param {boolean} isEditableForm Whether or not the control is editable
 	 */
-	Init(isEditableForm)
+	async init(isEditableForm)
 	{
-		super.Init(isEditableForm)
+		await super.init(isEditableForm)
 
 		// Set reference to the model field that contains the options
 		if (!_isEmpty(this.modelFieldOptions) && this.vueContext.model)
 			if (_has(this.vueContext.model, this.modelFieldOptions))
 				this.modelFieldOptionsRef = _get(this.vueContext.model, this.modelFieldOptions)
-
-		this.initHandlers()
 	}
 
 	/**
@@ -2138,14 +2290,14 @@ export class MultipleValuesControl extends TableListControl
 	 */
 	initHandlers()
 	{
+		super.initHandlers()
+
 		const handlers = {
 			setQtableAllSelected: (eventData) => this.onSetQtableAllSelected(eventData),
 			fetchQtableAllSelected: (eventData) => this.onFetchQtableAllSelected(eventData)
 		}
 
 		_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
-
-		super.initHandlers()
 	}
 
 	onSetQtableAllSelected(eventData)
@@ -2162,7 +2314,7 @@ export class MultipleValuesControl extends TableListControl
 /**
  * Multiple Values extension control
  */
-export class MultipleValuesExtensionControl extends BaseControl
+export class MultipleValuesExtensionControl extends SizeableControl
 {
 	constructor(options, _vueContext)
 	{
@@ -2179,19 +2331,28 @@ export class MultipleValuesExtensionControl extends BaseControl
 /**
  * Document control
  */
-export class DocumentControl extends BaseControl
+export class DocumentControl extends SizeableControl
 {
 	constructor(options, _vueContext)
 	{
+		const systemDataStore = useSystemDataStore()
+
 		// Init default values of control properties
 		super({
 			type: 'Document',
 			versionsInfo: [],
-			fileProperties: {},
 			extensions: [],
 			texts: new controlsResources.DocumentResources(_vueContext.$getResource),
-			resourcesPath: computed(() => _vueContext.system?.resourcesPath ?? ''),
+			resourcesPath: computed(() => systemDataStore.system?.resourcesPath ?? ''),
+			documentProperties: null,
+			documentFK: null,
+			fileProperties: {},
+			documentVersions: {},
+			editing: false,
+			currentVersion: '1',
+			versioningIsOn: false,
 			usesTemplates: false,
+			viewType: qEnums.documentViewTypeMode.preview,
 			documentTemplateAction: undefined,
 			documentTemplatesIsVisible: false,
 			documentTemplatesParams: undefined
@@ -2200,12 +2361,74 @@ export class DocumentControl extends BaseControl
 		_merge(this, options || {})
 	}
 
+	get props()
+	{
+		return {
+			...super.props,
+			modelValue: this.modelFieldRef?.value,
+			versioning: this.versioningIsOn,
+			editing: this.editing,
+			currentVersion: this.currentVersion,
+			extensions: this.extensions,
+			maxFileSize: this.maxFileSize,
+			versions: this.documentVersions,
+			versionsInfo: this.versionsInfo,
+			fileProperties: this.fileProperties,
+			texts: this.texts,
+			popupIsVisible: this.popupIsVisible,
+			resourcesPath: this.resourcesPath,
+			usesTemplates: this.usesTemplates
+		}
+	}
+
 	/**
-	 * Initialize the default handlers for Document component events
+	 * Initializes the necessary properties.
+	 * @param {boolean} isEditableForm Whether or not the control is editable
+	 */
+	async init(isEditableForm)
+	{
+		await super.init(isEditableForm)
+
+		this.setTickets()
+
+		this.documentProperties = computed(() => this.modelFieldRef.properties)
+		this.documentFK = computed(() => this.modelFieldRef.documentFK)
+
+		this.documentVersions = computed(() => this.documentProperties.value?.versions ?? {})
+		this.editing = computed(() => this.documentProperties.value?.editing ?? false)
+		this.currentVersion = computed(() => Object.keys(this.documentVersions).reduce((a, b) => Number(a) < Number(b) ? b : a, '1'))
+
+		if (!_isEmpty(this.valueChangeEvent) && this.vueContext.internalEvents)
+		{
+			// This watcher should only be necessary for dependent document fields.
+			this.vueContext.internalEvents.on(this.valueChangeEvent, () => {
+				if (this.modelFieldRef.isFixed)
+					this.setTickets()
+			})
+		}
+	}
+
+	/**
+	 * Initialize the default handlers for Document component events.
 	 */
 	initHandlers()
 	{
+		super.initHandlers()
+
+		const deleteTypes = this.modelFieldRef.currentDocument.deleteTypes
+
 		const handlers = {
+			fileError: (eventData) => this.handleFileError(eventData),
+			submitFile: (eventData) => this.setFile(eventData),
+			editFile: () => this.setEditingState(),
+			getProperties: () => this.getFileProperties(),
+			getVersionHistory: () => this.getVersionsInfo(),
+			getFile: (eventData) => this.handleGetFile(eventData),
+			deleteLast: () => this.deleteFile(deleteTypes.current),
+			deleteHistory: () => this.deleteFile(deleteTypes.versions),
+			deleteFile: () => this.deleteFile(deleteTypes.all),
+			showPopup: (eventData) => this.setModal(eventData),
+			hidePopup: (eventData) => this.removeModal(eventData),
 			showTemplatesPopup: (eventData) => this.handleDocumentTemplates(eventData),
 			documentTemplatesChoice: (eventData) => this.handleDocumentTemplatesChoice(eventData),
 			documentTemplatesClose: (eventData) => this.handleDocumentTemplatesClose(eventData)
@@ -2214,276 +2437,173 @@ export class DocumentControl extends BaseControl
 		_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
 	}
 
-	Init(isEditableForm)
-	{
-		super.Init(isEditableForm)
-
-		this.SetTickets()
-		this.initHandlers()
-
-		if (!_isEmpty(this.valueChangeEvent) && this.vueContext.internalEvents)
-			this.vueContext.internalEvents.on(this.valueChangeEvent, () => this.SetTickets())
-	}
-
-	SetTickets()
+	/**
+	 * Sets the tickets to retrieve every document version from the server.
+	 */
+	setTickets()
 	{
 		const baseArea = this.modelFieldRef.area
 		const areaKeyField = this.vueContext.dataApi.keys[baseArea.toLowerCase()]
+		const navigationId = this.vueContext.navigationId
 
-		const params = {
-			TableName: baseArea,
-			FieldName: this.modelFieldRef.originId,
-			KeyValue: areaKeyField.value
-		}
-
-		netAPI.postData(baseArea, 'GetDocumsTickets', params, (data, request) => {
-			if (request.data?.Success)
-			{
-				this.tickets = {}
-				for (let i in data.tickets)
-				{
-					let t = data.tickets[i]
-					this.tickets[t.id] = t.ticket
-				}
-
-				this.documentProperties.updateValue(data.properties)
-				this.documentFK.updateValue(data.properties?.DocumId ?? '')
-			}
-			else
-			{
-				this.vueContext.$eventTracker.addError({
-					origin: 'SetTickets (fieldControl)',
-					message: `Error found while trying to retrieve the document tickets for field ${this.modelField}.`
-				})
-			}
-		}, undefined, undefined, this.vueContext.navigationId)
+		this.modelFieldRef.setTickets(areaKeyField.value, navigationId)
 	}
 
-	GetVersionsInfo()
+	/**
+	 * Marks the document as being in editing mode.
+	 */
+	setEditingState()
 	{
-		if (typeof this.tickets !== 'object')
+		if (typeof this.modelFieldRef?.tickets !== 'object' || this.editing)
 			return
 
-		const baseArea = this.modelFieldRef.area
-		const params = {
-			ticket: this.tickets.main
-		}
-
-		netAPI.postData(baseArea, 'GetDocumsVersionsDBEdit', params, (data) => {
-			if (typeof data.Table !== 'object' || data.Table === null)
-				return
-
-			let elements = data.Table.Elements
-			let rows = []
-
-			for (let el of elements)
-			{
-				let createdOn = el.ValDatacria
-				if (createdOn instanceof Date)
-					createdOn = genericFunctions.dateToString(createdOn, this.vueContext.system.currentLang)
-
-				const row = {
-					id: el.ValCoddocums,
-					fileName: el.ValNome,
-					bytes: el.ValTamanho,
-					author: el.ValOpercria,
-					createdOn: createdOn,
-					version: el.ValVersao
-				}
-				rows.push(row)
-			}
-
-			this.versionsInfo = rows
-		}, undefined, undefined, this.vueContext.navigationId)
+		this.documentProperties.value.editing = true
+		this.downloadFile(this.currentVersion)
 	}
 
-	GetFileProperties()
+	/**
+	 * Creates a new version of the document.
+	 * @param {object} fileData The document file's data
+	 */
+	setFile(fileData)
 	{
-		if (typeof this.tickets !== 'object')
+		if (typeof this.modelFieldRef?.tickets !== 'object' || typeof fileData !== 'object')
 			return
 
-		const baseArea = this.modelFieldRef.area
-		const params = {
-			ticket: this.tickets.main
-		}
+		const currentDocument = this.modelFieldRef.currentDocument
+		const versionSubmitAction = currentDocument.versionSubmitAction
+		const hasUnsavedFile = currentDocument.value.fileData !== null
+		const currentVersion = this.currentVersion
 
-		netAPI.postData(baseArea, 'GetFileProperties', params, (data) => {
-			this.fileProperties = {
-				versionId: data.Coddocums,
-				originalId: data.DocumId,
-				author: data.Author,
-				editor: data.CheckoutEditor,
-				name: data.Name,
-				size: data.Size,
-				extension: data.FileType,
-				createdDate: data.CreatedAt,
-				currentVersion: data.Version
-			}
-		}, undefined, undefined, this.vueContext.navigationId)
-	}
-
-	SetFile(fileData)
-	{
-		if (typeof this.tickets !== 'object' || typeof fileData !== 'object')
-			return
-
-		const versionSubmitAction = {
-			insert: 0,
-			submit: 1,
-			unlockFile: 2
-		}
-
-		var submitMode = versionSubmitAction.insert
+		let submitMode = versionSubmitAction.insert
 		if (typeof fileData.isNewVersion === 'boolean')
 		{
 			if (fileData.isNewVersion)
 				submitMode = versionSubmitAction.submit
 			else
-				submitMode = versionSubmitAction.unlockFile
+				submitMode = versionSubmitAction.unlock
 		}
 
-		const baseArea = this.modelFieldRef.area
-		var params = {
-			ticket: this.tickets.main,
-			mode: submitMode,
-			version: fileData.version || '1'
-		}
+		const properties = this.documentProperties.value
 
-		// Adds the binary of the attached document to the request.
-		const fData = new FormData()
-		const fileId = `${this.modelField}_file`
-		fData.append(fileId, fileData.file)
+		if (submitMode !== versionSubmitAction.unlock)
+		{
+			currentDocument.setNewFile(fileData.file, submitMode, fileData.version)
 
-		for (let i in params)
-			fData.append(i, params[i])
+			// Set the uploaded document as the current one.
+			this.modelFieldRef.updateValue(currentDocument.properties.name)
+			this.documentFK.updateValue('')
 
-		params = fData
-
-		asyncProcM.AddBusy(netAPI.postData(baseArea, 'SetFile', params, (data) => {
-			if (data.success)
+			// Set the versions.
+			if (hasUnsavedFile)
 			{
-				this.documentProperties.updateValue(data.properties)
-				this.documentFK.updateValue(data.properties.DocumId)
-				this.modelFieldRef.updateValue(data.properties.Name)
+				if (properties.versions !== null)
+					delete properties.versions[currentVersion]
+				delete this.modelFieldRef.tickets[currentVersion]
 			}
-			else
-				genericFunctions.displayMessage(data.message, 'error')
-		},
-		() => {},
-		{ contentType: 'application/octet-stream' },
-		this.vueContext.navigationId))
-	}
 
-	DeleteFile(deleteType)
-	{
-		if (typeof this.tickets !== 'object' || typeof deleteType !== 'number')
-			return
-
-		/*
-			Delete types:
-				0: Deletes the last version
-				1: Deletes all versions except the last one
-				2: Deletes the document and all it's versions
-		*/
-		if (![0, 1, 2].includes(deleteType))
-			return
-
-		const baseArea = this.modelFieldRef.area
-		const params = {
-			ticket: this.tickets.main,
-			action: deleteType
+			if (properties.versions !== null)
+				properties.versions[fileData.version] = ''
+			this.modelFieldRef.tickets[fileData.version] = ''
 		}
 
-		netAPI.postData(baseArea, 'DeleteFile', params, (data) => {
-			if (data.success)
-			{
-				this.documentProperties.updateValue(data.properties)
-				this.documentFK.updateValue(data.properties.DocumId)
-				this.modelFieldRef.updateValue(data.properties.Name)
-				genericFunctions.displayMessage(this.vueContext.Resources[hardcodedTexts.fileDeleteSuccess], 'info')
-			}
-			else
-				genericFunctions.displayMessage(data.message, 'error')
-		}, undefined, undefined, this.vueContext.navigationId)
-	}
-
-	SetCheckoutState()
-	{
-		if (typeof this.tickets !== 'object')
-			return
-
-		const baseArea = this.modelFieldRef.area
-		const params = {
-			ticket: this.tickets.main
-		}
-
-		netAPI.postData(baseArea, 'CheckoutDocum', params, (data) => {
-			if (data.success)
-			{
-				this.documentProperties.value = { ...this.documentProperties.value }
-				this.documentProperties.value.IsCheckout = true
-				this.DownloadFile()
-			}
-			else
-				genericFunctions.displayMessage(data.message, 'error')
-		}, undefined, undefined, this.vueContext.navigationId)
+		properties.editing = false
 	}
 
 	/**
-	 * This function is responsible for downloading a file.
+	 * Deletes the document.
+	 * @param {number} deleteType The type of delete action
 	 */
-	DownloadFile()
+	deleteFile(deleteType)
 	{
-		// Here we use the GetFile function and specify that we want to download the file (hence viewType: print).
-		this.GetFile({ viewType: qEnums.documentViewTypeMode.print })
+		if (typeof this.modelFieldRef?.tickets !== 'object' || typeof deleteType !== 'number')
+			return
+
+		const currentDocument = this.modelFieldRef.currentDocument
+		const deleteTypes = currentDocument.deleteTypes
+
+		if (!Object.values(deleteTypes).includes(deleteType))
+			return
+
+		const currentVersion = this.currentVersion
+		currentDocument.delete(deleteType)
+
+		if (deleteType === deleteTypes.current)
+		{
+			if (currentDocument.value.fileData !== null)
+			{
+				// If the user had uploaded a new version of the file, we simply reset the field to it's original value.
+				this.documentProperties.resetValue()
+				this.modelFieldRef.resetValue()
+				this.documentFK.resetValue()
+
+				if (this.documentProperties.value.versions !== null)
+					delete this.documentProperties.value.versions[currentVersion]
+			}
+			else
+			{
+				// If the user didn't upload any new file, we set the version before last as the current version.
+				const prevVersion = Object.keys(this.documentVersions).reduce((a, b) => Number(a) < Number(b) && b !== currentVersion ? b : a)
+				this.setFileProperties(prevVersion)
+
+				delete this.modelFieldRef.tickets[currentVersion]
+			}
+		}
+		else if (deleteType === deleteTypes.versions)
+		{
+			const versionTicket = this.modelFieldRef.tickets[currentVersion]
+			const versionKey = this.documentVersions[currentVersion]
+
+			this.documentProperties.value.versions = { [currentVersion]: versionKey }
+			this.modelFieldRef.tickets = {
+				main: this.modelFieldRef.tickets.main,
+				[currentVersion]: versionTicket
+			}
+		}
+		else
+		{
+			const emptyProperties = {
+				...currentDocument.properties,
+				documentId: this.documentFK,
+				versions: []
+			}
+
+			this.documentProperties.updateValue(emptyProperties)
+			this.modelFieldRef.clearValue()
+			this.documentFK.clearValue()
+		}
 	}
 
 	/**
-	 * Get the file from the server and display the file according to file view mode.
-	 * @param {object} customArgs custom arg to override field mode, for example download button instead of clicking in the field
+	 * Gets the properties of the current document and sets "fileProperties" with them.
 	 */
-	GetFile(customArgs)
+	getFileProperties()
 	{
-		if (typeof this.tickets !== 'object')
+		if (typeof this.modelFieldRef?.tickets !== 'object')
 			return
 
-		var viewType = this.viewType
+		const currentDocument = this.modelFieldRef.currentDocument
 
-		// If the customArgs is defined, overrides the current model.
-		if (customArgs?.viewType !== undefined && customArgs?.viewType !== null)
-			viewType = customArgs.viewType
-
-		const baseArea = this.modelFieldRef.area
-
-		const newTab = viewType === qEnums.documentViewTypeMode.preview
-		const params = {
-			ticket: this.tickets.main,
-			viewType
-		}
-
-		asyncProcM.AddBusy(netAPI.postData(baseArea, 'GetFile', params, (_, request) => {
-			const fileName = request.headers.filename
-			const fileType = request.headers.get('Content-Type')
-			if (!fileName)
-				return
-
-			asyncProcM.AddBusy(netAPI.forceDownload(request.data, fileName, fileType, newTab))
-		},
-		() => {},
-		{ responseType: 'arraybuffer' },
-		this.vueContext.navigationId))
+		if (currentDocument.value.fileData !== null)
+			this.fileProperties = currentDocument.properties
+		else
+			this.fileProperties = { ...this.documentProperties.value }
 	}
 
-	GetFileVersion(version)
+	/**
+	 * Fetches, from the server, the properties of the document with the specified version and sets it as the current one.
+	 * @param {string} version The version of the document
+	 * @returns A promise to be resolved when the request completes.
+	 */
+	setFileProperties(version)
 	{
-		if (typeof this.tickets !== 'object' || typeof version !== 'string')
-			return
+		if (typeof this.modelFieldRef?.tickets !== 'object' ||
+			typeof version !== 'string' ||
+			!Object.keys(this.modelFieldRef.tickets).includes(version))
+			return null
 
-		if (!this.documentVersions[version])
-			return
-
-		const versionTicket = this.tickets[version]
-		if (typeof versionTicket !== 'string')
+		const versionTicket = this.modelFieldRef.tickets[version]
+		if (typeof versionTicket !== 'string' || versionTicket.length === 0)
 			return
 
 		const baseArea = this.modelFieldRef.area
@@ -2491,23 +2611,167 @@ export class DocumentControl extends BaseControl
 			ticket: versionTicket
 		}
 
-		asyncProcM.AddBusy(netAPI.postData(baseArea, 'GetSpecificFile', params, (_, request) => {
-			const fileName = request.headers.filename
-			if (!fileName)
+		return netAPI.postData(
+			baseArea,
+			'GetFileProperties',
+			params,
+			(data) => {
+				const versions = { ...this.documentVersions }
+				delete versions[this.currentVersion]
+
+				this.documentProperties.updateValue(data)
+				this.modelFieldRef.updateValue(data?.name ?? '')
+				this.documentFK.updateValue(data?.documentId ?? '')
+
+				this.documentProperties.value.versions = versions
+			},
+			undefined,
+			undefined,
+			this.vueContext.navigationId)
+	}
+
+	/**
+	 * Handles the file get operation, may call either 'getFile' or 'downloadFile'.
+	 * @param {object} data The data with the file version and whether to force the download
+	 */
+	handleGetFile(data)
+	{
+		if (data.download)
+			this.downloadFile(data.version)
+		else
+			this.getFile(data.version)
+	}
+
+	/**
+	 * Downloads the document.
+	 * @param {string} version The desired version
+	 */
+	downloadFile(version)
+	{
+		// Here we use the GetFile function and specify that we want to download the file (hence viewType: print).
+		this.getFile(version, qEnums.documentViewTypeMode.print)
+	}
+
+	/**
+	 * Gets the document from the server and displays it according to the view mode.
+	 * @param {string} version The desired version
+	 * @param {number} fileViewType Overrides the file view mode
+	 */
+	getFile(version, fileViewType)
+	{
+		if (typeof this.modelFieldRef?.tickets !== 'object' ||
+			typeof version !== 'string')
+			return
+
+		const currentDocument = this.modelFieldRef.currentDocument
+		const fileData = currentDocument.value.fileData
+		const viewType = fileViewType ?? this.viewType
+		const newTab = viewType === qEnums.documentViewTypeMode.preview
+
+		// If the file was just uploaded, the server doesn't have it yet.
+		if (fileData !== null && version === this.currentVersion)
+			netAPI.forceDownload(fileData, currentDocument.properties.name, fileData.type, newTab)
+		else
+		{
+			// If there are multiple versions, use the entry for the specified version
+			// If there is only one version, use the main entry (which is always there)
+			const tickets = this.modelFieldRef.tickets
+			const versionKeys = Object.keys(tickets)
+
+			let versionTicket
+
+			if (versionKeys.length > 1)
+			{
+				if (versionKeys.includes(version))
+					versionTicket = tickets[version]
+				else
+					throw new Error(`Version ${version} not found in tickets.`)
+			}
+			else
+				versionTicket = tickets.main
+
+			if (typeof versionTicket !== 'string' || versionTicket.length === 0)
 				return
 
-			asyncProcM.AddBusy(netAPI.forceDownload(request.data, fileName))
-		},
-		() => {},
-		{ responseType: 'arraybuffer' },
-		this.vueContext.navigationId))
+			netAPI.getFile(
+				this.modelFieldRef.area,
+				versionTicket,
+				viewType,
+				this.vueContext.navigationId)
+		}
+	}
+
+	/**
+	 * Fetches a list of all the document versions from the server.
+	 */
+	getVersionsInfo()
+	{
+		if (typeof this.modelFieldRef?.tickets !== 'object')
+			return
+
+		const baseArea = this.modelFieldRef.area
+		const params = {
+			ticket: this.modelFieldRef.tickets.main
+		}
+
+		netAPI.postData(
+			baseArea,
+			'GetFileVersions',
+			params,
+			(data) => {
+				if (typeof data.documentVersions !== 'object' || data.documentVersions === null)
+					return
+
+				const systemDataStore = useSystemDataStore()
+				const elements = data.documentVersions.Elements
+				const rows = []
+
+				// If there's an unsaved new version, adds it to the list.
+				const currentDocument = this.modelFieldRef.currentDocument
+				if (currentDocument.value.fileData !== null)
+				{
+					const properties = currentDocument.properties
+					const createdOn = genericFunctions.dateToString(currentDocument.value.fileData.lastModifiedDate, systemDataStore.system.currentLang)
+
+					rows.push({
+						author: properties.author,
+						bytes: currentDocument.value.fileData.size,
+						createdOn,
+						fileName: properties.name,
+						id: '',
+						version: properties.version
+					})
+				}
+
+				for (let el of elements)
+				{
+					// Exclude versions that were already deleted in the client-side or that are already in the list.
+					if (!Object.keys(this.documentVersions).includes(el.version) ||
+						rows.some((r) => r.version === el.version))
+						continue
+
+					let createdOn = el.createdOn
+					if (createdOn instanceof Date)
+						createdOn = genericFunctions.dateToString(createdOn, systemDataStore.system.currentLang)
+
+					rows.push({
+						...el,
+						createdOn
+					})
+				}
+
+				this.versionsInfo = rows
+			},
+			undefined,
+			undefined,
+			this.vueContext.navigationId)
 	}
 
 	/**
 	 * Handles the error and presents the user with useful information.
 	 * @param {number} errorCode The error code
 	 */
-	HandleFileError(errorCode)
+	handleFileError(errorCode)
 	{
 		const extraInfo = {
 			extensions: this.extensions,
@@ -2517,7 +2781,7 @@ export class DocumentControl extends BaseControl
 	}
 
 	/**
-	 * Handle the modal closing event
+	 * Handle the modal closing event.
 	 */
 	handleDocumentTemplatesClose()
 	{
@@ -2537,44 +2801,47 @@ export class DocumentControl extends BaseControl
 		if (_isEmpty(this.documentTemplateAction) || _isEmpty(selectedItem))
 			return
 
-		asyncProcM.AddBusy(netAPI.postData(baseArea, this.documentTemplateAction, { id: selectedItem }, (_, response) => {
-			const fileName = response.headers.filename
+		asyncProcM.addBusy(
+			netAPI.postData(
+				baseArea,
+				this.documentTemplateAction,
+				{ id: selectedItem },
+				(_, response) => {
+					const fileName = response.headers.filename
 
-			if (!fileName)
-			{
-				const contentType = response.headers['content-type']
-				const erroMsg = this.vueContext.Resources[hardcodedTexts.errorProcessingRequest]
-
-				if (contentType === 'application/json')
-				{
-					try
+					if (!fileName)
 					{
-						// Convert ArrayBuffer to a string
-						const dataString = new TextDecoder().decode(response.data)
-						// Convert string to a JSON
-						const jsonData = JSON.parse(dataString)
-						genericFunctions.displayMessage(jsonData?.Data?.message || erroMsg, 'error')
-					}
-					catch
-					{
-						genericFunctions.displayMessage(erroMsg, 'error')
-					}
-				}
-				else
-					genericFunctions.displayMessage(erroMsg, 'error')
+						const contentType = response.headers['content-type']
+						const erroMsg = this.texts.errorProcessingRequest
 
-				return
-			}
-
-			asyncProcM.AddBusy(netAPI.forceDownload(response.data, fileName))
-		},
-		() => {},
-		{ responseType: 'arraybuffer' },
-		this.vueContext.navigationId))
+						if (contentType === 'application/json')
+						{
+							try
+							{
+								// Convert ArrayBuffer to a string
+								const dataString = new TextDecoder().decode(response.data)
+								// Convert string to a JSON
+								const jsonData = JSON.parse(dataString)
+								genericFunctions.displayMessage(jsonData?.Data?.message ?? erroMsg, 'error')
+							}
+							catch
+							{
+								genericFunctions.displayMessage(erroMsg, 'error')
+							}
+						}
+						else
+							genericFunctions.displayMessage(erroMsg, 'error')
+					}
+					else
+						netAPI.forceDownload(response.data, fileName)
+				},
+				undefined,
+				{ responseType: 'arraybuffer' },
+				this.vueContext.navigationId))
 	}
 
 	/**
-	 * Handle the opening «Document Templates..» event
+	 * Handle the opening «Document Templates..» event.
 	 */
 	handleDocumentTemplates()
 	{
@@ -2590,20 +2857,23 @@ export class DocumentControl extends BaseControl
 /**
  * Image control
  */
-export class ImageControl extends BaseControl
+export class ImageControl extends SizeableControl
 {
 	constructor(options, _vueContext)
 	{
+		const systemDataStore = useSystemDataStore()
+
 		// Init default values of control properties
 		super({
 			type: 'Image',
 			image: null,
 			fullSizeImage: null,
-			defaultImage: computed(() => `${_vueContext.system?.resourcesPath ?? ''}no_img.png`),
+			defaultImage: computed(() => `${systemDataStore.system?.resourcesPath ?? ''}no_img.png`),
 			extensions: ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.bmp'],
 			isStatic: false,
 			texts: new controlsResources.ImageResources(_vueContext.$getResource),
 			isEmptyImage: false,
+			dataTitle: null,
 			imageWatcher: () => {}
 		}, _vueContext)
 
@@ -2619,7 +2889,8 @@ export class ImageControl extends BaseControl
 			width: this.width,
 			image: this.image,
 			fullSizeImage: this.fullSizeImage,
-			isEmptyImage: this.isEmptyImage
+			isEmptyImage: this.isEmptyImage,
+			dataTitle: this.dataTitle
 		}
 
 		if (this.isStatic)
@@ -2639,9 +2910,9 @@ export class ImageControl extends BaseControl
 		}
 	}
 
-	Init(isEditableForm)
+	async init(isEditableForm)
 	{
-		super.Init(isEditableForm)
+		await super.init(isEditableForm)
 
 		if (this.isStatic)
 			this.image = this.icon?.icon
@@ -2660,9 +2931,6 @@ export class ImageControl extends BaseControl
 		// If the field doesn't have an associated image, gets the default image.
 		if (_isEmpty(this.image))
 			this.image = this.defaultImage
-
-		if (!this.isStatic)
-			this.initHandlers()
 	}
 
 	/**
@@ -2670,14 +2938,16 @@ export class ImageControl extends BaseControl
 	 */
 	initHandlers()
 	{
+		super.initHandlers()
+
 		const handlers = {
-			fileError: (event) => this.HandleFileError(event),
-			openImagePreview: () => this.GetImage(),
-			closeImagePreview: () => this.ClearPreview(),
-			submitImage: (event) => this.SetImage(event),
-			deleteImage: () => this.DeleteImage(),
-			showPopup: (event) => this.SetModal(event),
-			hidePopup: (event) => this.RemoveModal(event)
+			fileError: (event) => this.handleFileError(event),
+			openImagePreview: () => this.getImage(),
+			closeImagePreview: () => this.clearPreview(),
+			submitImage: (event) => this.setImage(event),
+			deleteImage: () => this.deleteImage(),
+			showPopup: (event) => this.setModal(event),
+			hidePopup: (event) => this.removeModal(event)
 		}
 
 		// Apply handlers without overriding. The handler can come from outside at initialization.
@@ -2687,7 +2957,7 @@ export class ImageControl extends BaseControl
 	/**
 	 * Clears the image preview.
 	 */
-	ClearPreview()
+	clearPreview()
 	{
 		this.fullSizeImage = null
 	}
@@ -2696,7 +2966,7 @@ export class ImageControl extends BaseControl
 	 * Retrieves the ID of the record, according to the type of the image field.
 	 * @returns The ID of the record to which the image belongs.
 	 */
-	GetId()
+	getId()
 	{
 		if (this.dependentModelField)
 			return this.vueContext.model[this.dependentModelField].value
@@ -2707,35 +2977,26 @@ export class ImageControl extends BaseControl
 	 * Gets the image from the server.
 	 * @param {string} id The ID of the record
 	 * @param {boolean} isPreview If true, it will get full-sized image, otherwise it will be resized to fit the component
-	 * @param {boolean} isGetDefault If true, the model won't be updated (used when to get the default image when the model value is empty)
 	 */
-	GetImage(id, isPreview, isGetDefault)
+	getImage(id, isPreview = true)
 	{
 		// If it's a static image, it will always be in the client-side, the server won't even know of it's existence.
 		// If the field is dirty, it means the full-sized image is already client-side, since it was just uploaded by the user.
-		if (this.isStatic || this.modelFieldRef.isDirty)
+		// When we don't have a ticket to retrieve the image field value, we will not send a request to the server.
+		if (this.isStatic || this.modelFieldRef.isDirty || this.image?.isThumbnail === false || _isEmpty(this.image?.ticket))
 		{
 			this.fullSizeImage = this.image
 			return
 		}
 
 		if (typeof id !== 'string')
-			id = this.GetId()
-
-		if (typeof isPreview !== 'boolean')
-			isPreview = true
-
-		if (typeof isGetDefault !== 'boolean')
-			isGetDefault = false
+			id = this.getId()
 
 		const baseArea = this.modelFieldRef.area
-		const field = this.modelFieldRef.originId
-		const model = _capitalize(this.dbArea)
+		const ticket =  this.image?.ticket
 
 		const params = {
-			id: id,
-			modelname: model,
-			fldname: field,
+			ticket,
 			formIdentifier: `F${this.vueContext.formInfo.name}`,
 			nocache: Math.floor(Math.random() * 100000)
 		}
@@ -2747,23 +3008,22 @@ export class ImageControl extends BaseControl
 			params.width = this.width
 		}
 
-		this.componentOnLoadProc.AddWL(netAPI.retrieveImage(baseArea, params, (data) => {
-			if (isPreview)
-				this.fullSizeImage = data
-			else
-			{
-				this.image = data
-				if (!isGetDefault)
-					this.modelFieldRef.updateValue(data)
-			}
-		}))
+		this.componentOnLoadProc.addWL(
+			netAPI.retrieveImage(
+				baseArea,
+				params,
+				(data) => {
+					if (isPreview)
+						this.fullSizeImage = data
+					this.image = data
+				}))
 	}
 
 	/**
 	 * Sets a new image.
 	 * @param {object} imgData The image file data
 	 */
-	SetImage(imgData)
+	setImage(imgData)
 	{
 		if (typeof imgData !== 'object')
 			return
@@ -2776,7 +3036,7 @@ export class ImageControl extends BaseControl
 	/**
 	 * Deletes the image.
 	 */
-	DeleteImage()
+	deleteImage()
 	{
 		this.modelFieldRef.updateValue(null)
 		this.image = this.defaultImage
@@ -2787,7 +3047,7 @@ export class ImageControl extends BaseControl
 	 * Handles the error and presents the user with useful information.
 	 * @param {number} errorCode The error code
 	 */
-	HandleFileError(errorCode)
+	handleFileError(errorCode)
 	{
 		const extraInfo = {
 			extensions: this.extensions,
@@ -2804,12 +3064,14 @@ export class ManualFillingImageControl extends ImageControl
 {
 	constructor(options, _vueContext)
 	{
+		const systemDataStore = useSystemDataStore()
+
 		// Init default values of control properties
 		super({
 			type: 'ManualFillingImage',
 			image: null,
 			fullSizeImage: null,
-			defaultImage: computed(() => `${_vueContext.system?.resourcesPath ?? ''}no_img.png`),
+			defaultImage: computed(() => `${systemDataStore.system?.resourcesPath ?? ''}no_img.png`),
 			isStatic: true,
 			texts: new controlsResources.ImageResources(_vueContext.$getResource)
 		}, _vueContext)
@@ -2829,18 +3091,15 @@ export class GroupControl extends NonBlockableControl
 		super({
 			type: 'Group',
 			anchoredChildren: [],
-			isInAccordion: false,
-			parent: computed(() => this.container || this.tab)
+			isInAccordion: false
 		}, _vueContext)
 
 		_merge(this, options || {})
 	}
 
-	Init(isEditableForm)
+	async init(isEditableForm)
 	{
-		super.Init(isEditableForm)
-
-		this.initHandlers()
+		await super.init(isEditableForm)
 
 		this.isRequired = computed(() => {
 			if (!this.vueContext.isEditable)
@@ -2878,14 +3137,16 @@ export class GroupControl extends NonBlockableControl
 	 */
 	initHandlers()
 	{
+		super.initHandlers()
+
 		const handlers = {
-			stateChanged: (eventData) => this.SetState(eventData)
+			stateChanged: (eventData) => this.setState(eventData)
 		}
 
 		_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
 	}
 
-	SetState(state)
+	setState(state)
 	{
 		if (!this.isCollapsible || this.isInAccordion || typeof state !== 'boolean')
 			return
@@ -2912,26 +3173,21 @@ export class AccordionControl extends NonBlockableControl
 		_merge(this, options || {})
 	}
 
-	Init(isEditableForm)
-	{
-		super.Init(isEditableForm)
-
-		this.initHandlers()
-	}
-
 	/**
 	 * Initialize the default handlers for List component events
 	 */
 	initHandlers()
 	{
+		super.initHandlers()
+
 		const handlers = {
-			setOpenGroup: (state, groupId) => this.SetOpenGroup(state, groupId)
+			setOpenGroup: (state, groupId) => this.setOpenGroup(state, groupId)
 		}
 
 		_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
 	}
 
-	SetOpenGroup(state, changedGroupId)
+	setOpenGroup(state, changedGroupId)
 	{
 		for (let groupId of this.vueContext.groupFields)
 		{
@@ -2956,6 +3212,8 @@ export class TimelineControl extends TableListControl
 {
 	constructor(options, _vueContext)
 	{
+		const systemDataStore = useSystemDataStore()
+
 		// Init default values of control properties
 		super({
 			type: 'Timeline',
@@ -2965,7 +3223,7 @@ export class TimelineControl extends TableListControl
 			},
 			config: {
 				scale: '',
-				dateTimeFormat: computed(() => _vueContext.system?.dateFormat?.DateTime)
+				dateTimeFormat: computed(() => systemDataStore.system?.dateFormat?.dateTime)
 			},
 			texts: new controlsResources.TimelineResources(_vueContext.$getResource)
 		}, _vueContext)
@@ -2976,9 +3234,9 @@ export class TimelineControl extends TableListControl
 	/**
 	 * Reloads the data of the timeline
 	 */
-	Reload()
+	reload()
 	{
-		return this.componentOnLoadProc.AddWL(this.vueContext.fetchTimelineData(this))
+		return this.componentOnLoadProc.addWL(this.vueContext.fetchTimelineData(this))
 	}
 }
 
@@ -3011,9 +3269,9 @@ export class TabControl extends NonBlockableControl
 		_merge(this, options || {})
 	}
 
-	Init(isEditableForm)
+	async init(isEditableForm)
 	{
-		super.Init(isEditableForm)
+		await super.init(isEditableForm)
 
 		this.isRequired = computed(() => {
 			if (!this.vueContext.isEditable)
@@ -3044,16 +3302,29 @@ export class TabsControl
 
 		// Init default values of control properties
 		this.type = 'Tabs'
+		this.alignTabs = 'left',
 		this.tabControlsIds = []
 		this.tabsList = []
 		this.selectedTab = ''
 		this.isVisible = false
 		this.tabWatcher = () => {}
+		this.texts = new controlsResources.TabsResources(_vueContext.$getResource)
 
 		_merge(this, options || {})
 	}
 
-	Init()
+	get props()
+	{
+		return {
+			isVisible: this.isVisible,
+			alignTabs: this.alignTabs,
+			tabsList: this.tabsList,
+			selectedTab: this.selectedTab,
+			texts: this.texts
+		}
+	}
+
+	init()
 	{
 		this.tabsList.splice(0)
 
@@ -3062,7 +3333,7 @@ export class TabsControl
 			this.tabsList.push(tabControl)
 
 			if (_isEmpty(this.selectedTab) && tabControl.isVisible && !tabControl.isBlocked)
-				this.SelectTab(tabControl.id)
+				this.selectTab(tabControl.id)
 
 			if (typeof tabControl.parentOpeningEvent === 'string')
 			{
@@ -3085,24 +3356,24 @@ export class TabsControl
 			if (!_isEmpty(currentTab) && currentTab.isVisible && !currentTab.isBlocked)
 				return
 
-			this.SelectFirstTab()
+			this.selectFirstTab()
 		},
 		{ deep: true, immediate: true })
 	}
 
-	SelectFirstTab()
+	selectFirstTab()
 	{
 		for (let tab of this.tabsList)
 		{
 			if (!tab.isVisible || tab.isBlocked)
 				continue
 
-			this.SelectTab(tab.id)
+			this.selectTab(tab.id)
 			return
 		}
 	}
 
-	SelectTab(tabId)
+	selectTab(tabId)
 	{
 		this.selectedTab = tabId ?? ''
 
@@ -3113,7 +3384,7 @@ export class TabsControl
 				this.vueContext.internalEvents.emit(tab.openingEvent)
 		}
 		else
-			this.SelectFirstTab()
+			this.selectFirstTab()
 	}
 }
 
@@ -3135,10 +3406,12 @@ export class SubformControl extends NonBlockableControl
 /**
  * Container control for nested forms
  */
-export class FormContainerControl extends BaseControl
+export class FormContainerControl extends SizeableControl
 {
 	constructor(options, _vueContext)
 	{
+		const systemDataStore = useSystemDataStore()
+
 		// Init default values of control properties
 		super({
 			targetTableListId: null,
@@ -3151,7 +3424,12 @@ export class FormContainerControl extends BaseControl
 			formData: null,
 			isDirty: false,
 			fnOnRowChange: undefined,
+			firstLoad: false,
 			nestedFormConfig: new NestedFormConfig({
+				mainForm: undefined,
+				supportFormId: undefined,
+				action: undefined,
+				searchField: false,
 				uiComponents: {
 					header: true
 				}
@@ -3166,34 +3444,50 @@ export class FormContainerControl extends BaseControl
 			rowComponentProps: {
 				formButtonsOverride: null
 			},
-			resourcesPath: computed(() => _vueContext.system?.resourcesPath ?? ''),
+			resourcesPath: computed(() => systemDataStore.system?.resourcesPath ?? ''),
 			texts: new controlsResources.FormContainerResources(_vueContext.$getResource)
 		}, _vueContext)
 
 		_merge(this, options || {})
 
+		if (this.nestedFormConfig.searchField)
+			this.formData = {
+				isNested: true,
+				form: this.supportForm.name,
+				component: this.supportForm.component,
+			}
+
 		this.initHeaderButtons()
 	}
 
-	Init(isEditableForm)
+	async init(isEditableForm)
 	{
-		super.Init(isEditableForm)
+		await super.init(isEditableForm)
 
-		this.initHandlers()
+		if (this.targetTableListId)
+		{
+			if (this.vueContext.controls[this.targetTableListId])
+				this.vueContext.controls[this.targetTableListId].linkedForm = this
 
-		if (this.targetTableListId && this.vueContext.internalEvents)
-			this.vueContext.internalEvents.on('on-table-row-selected', (eventData) => (this.targetTableListId === eventData.tableId) ? this.handleRowSelected(eventData.row) : null)
+			if (this.vueContext.internalEvents)
+				this.vueContext.internalEvents.on('on-table-row-selected', (eventData) => (this.targetTableListId === eventData.tableId) ? this.handleRowSelected(eventData.row) : null)
+		}
 	}
 
 	initHandlers()
 	{
+		super.initHandlers()
+
 		const handlers = {
 			afterSaveForm: (eventData) => this.onAfterSaveForm(eventData),
 			changeFormMode: (eventData) => this.onChangeFormMode(eventData),
+			['update:nested-model']: (eventData) => (eventData.supportFormId === this.id) ? this.handleRowSelected(eventData) : () => {},
 			close: (eventData) => this.onClose(eventData),
 			closedForm: (eventData) => this.onClosedForm(eventData),
 			customEvent: (eventData) => this.onCustomEvent(eventData),
-			isFormDirty: (eventData) => this.onIsFormDirty(eventData)
+			isFormDirty: (eventData) => this.onIsFormDirty(eventData),
+			updateModelId: (eventData) => this.updateModelId(eventData),
+			insertRecord: (eventData) => this.updateFormData({ mode: qEnums.formModes.new, id: eventData })
 		}
 
 		// Apply handlers without overriding. The handler can come from outside at initialization.
@@ -3218,13 +3512,22 @@ export class FormContainerControl extends BaseControl
 
 	onAfterSaveForm()
 	{
-		this.isDirty = false
+		// Reloads the table list linked to this form
 		if (this.vueContext.internalEvents)
 			this.vueContext.internalEvents.emit('reload-list', { controlId: this.targetTableListId })
+
+		this.isDirty = false
 	}
 
 	onChangeFormMode(mode)
 	{
+		if (mode === qEnums.formModes.new)
+		{
+			this.isDirty = true
+			if (this.targetTableListId)
+				this.vueContext.controls[this.targetTableListId].onUnselectAllRows()
+		}
+
 		if (!_isEmpty(this.formData))
 			this.formData.mode = mode
 	}
@@ -3240,6 +3543,13 @@ export class FormContainerControl extends BaseControl
 
 	onClosedForm()
 	{
+		// Resets the form container's dirty state
+		this.isDirty = false
+
+		// Resets the new row id if the form is closed
+		if (this.targetTableListId && this.vueContext.controls[this.targetTableListId])
+			this.vueContext.controls[this.targetTableListId].newRowID = undefined
+
 		if (this.vueContext.internalEvents)
 			this.vueContext.internalEvents.emit('closed-extended-support-form', { controlId: this.targetTableListId })
 	}
@@ -3253,39 +3563,67 @@ export class FormContainerControl extends BaseControl
 	onIsFormDirty(eventData)
 	{
 		this.isDirty = eventData.isDirty
-		if (this.vueContext.internalEvents) {
+
+		if (this.vueContext.internalEvents)
 			this.vueContext.internalEvents.emit('is-table-control-dirty', eventData)
-		}
-		// re-emit through all nested form layers until the main form, except after saving (only the saved nested form is now valid - not the others above)
-		if (this.vueContext.isNested && !eventData.afterFormSave) {
+
+		// Re-emit through all nested form layers until the main form, except after saving (only the saved nested form is now valid - not the others above)
+		if (this.vueContext.isNested && !eventData.afterFormSave)
 			this.vueContext.$emit('is-form-dirty', { isDirty: eventData.isDirty, afterFormSave: eventData.afterFormSave })
-		}
 	}
 
 	async handleRowSelected(row)
 	{
-		if (row)
-		{
-			if (typeof this.fnOnRowChange === 'function')
-				await Promise.resolve(this.fnOnRowChange(row))
+		if (!row)
+			return
 
-			let id = this.supportForm.fnKeySelector(row)
-			if (_isEmpty(id) && this.supportForm.mode !== 'NEW')
-				this.destroy()
-			else
-			{
-				let formData = {
-					historyBranchId: this.vueContext.navigationId,
-					isNested: true,
-					form: this.supportForm.name,
-					mode: this.supportForm.mode,
-					component: this.supportForm.component,
-					modes: '',
-					id
-				}
-				this.setFormData(formData)
-			}
-		}
+		if (typeof this.fnOnRowChange === 'function')
+			await Promise.resolve(this.fnOnRowChange(row))
+
+		let id = (row.rowKey !== null && row.rowKey !== undefined) ? this.supportForm.fnKeySelector(row) : null
+		let formMode = row.formMode ? row.formMode : this.supportForm.mode
+		let prefillValues = row.prefillValues ? row.prefillValues : {}
+
+		if (this.firstLoad) this.nestedFormConfig.recordSelected = true
+
+		if (id || formMode === 'NEW') this.firstLoad = true
+
+		if (_isEmpty(id) && formMode !== 'NEW')
+			this.destroy()
+		else
+			this.updateFormData({ mode: formMode, id, prefillValues })
+	}
+
+	updateFormData({ mode, id, prefillValues })
+	{
+		this.setFormData({
+			historyBranchId: this.vueContext.navigationId,
+			isNested: true,
+			form: this.supportForm.name,
+			mode: mode,
+			component: this.supportForm.component,
+			modes: '',
+			id,
+			prefillValues: prefillValues ?? {}
+		})
+	}
+
+	updateModelId(eventData)
+	{
+		// Since this record doesn't exist yet in the table rows, this need to be called to
+		// set the record as dirty and show the pop up message if leaving without saving
+		// (pop up messages in extended support forms only show if there are dirty rows on the table in the main form)
+		this.onIsFormDirty({ isDirty: true, id: eventData })
+
+		// Sets the new record in the table (as a row being created) to allow listConf actions over it
+		if (this.targetTableListId && this.vueContext.controls[this.targetTableListId])
+			this.vueContext.controls[this.targetTableListId].newRowID = eventData
+	}
+
+	handleLeaveForm(next)
+	{
+		if (this.vueContext.$refs[this.id])
+			this.vueContext.$refs[this.id].handleLeaveForm(next)
 	}
 
 	setFormData(formData)
@@ -3320,10 +3658,12 @@ export class NestedFormConfig
 /**
  * The Grid Table List control
  */
-export class GridTableListControl extends BaseControl
+export class GridTableListControl extends SizeableControl
 {
 	constructor(options, _vueContext)
 	{
+		const systemDataStore = useSystemDataStore()
+
 		// Init default values of control properties
 		super({
 			type: 'GridTableList',
@@ -3331,7 +3671,7 @@ export class GridTableListControl extends BaseControl
 				name: '',
 				tableTitle: undefined,
 				formName: undefined,
-				resourcesPath: computed(() => _vueContext.system?.resourcesPath ?? '')
+				resourcesPath: computed(() => systemDataStore.system?.resourcesPath ?? '')
 			},
 			permissions: {
 				canDelete: true,
@@ -3350,37 +3690,52 @@ export class GridTableListControl extends BaseControl
 		this.config.tableTitle = this.label
 	}
 
-	get EmptyRows()
+	get props()
 	{
-		return this.modelFieldRef.EmptyRows
+		return {
+			...super.props,
+			columns: this.columns
+		}
+	}
+
+	get emptyRows()
+	{
+		return this.modelFieldRef.emptyRows
 	}
 
 	/**
 	 * Initializes the necessary properties.
 	 * @param {boolean} isEditableForm Whether or not the control is editable
 	 */
-	Init(isEditableForm)
+	async init(isEditableForm)
 	{
-		super.Init(isEditableForm)
+		await super.init(isEditableForm)
 
 		this.data = computed(() => this.modelFieldRef.value)
 		const canInsert = this.permissions.canInsert !== false
 
 		// Remove the previous watcher
 		this.gridWatcher()
-		this.gridWatcher = watch([() => this.loaded, () => this.EmptyRows, () => this.readonly], () => {
+		this.gridWatcher = watch([() => this.loaded, () => this.emptyRows, () => this.readonly], () => {
 			// Create an empty row if there is none,
 			// the grid is editable and inserting rows is allowed
-			if (canInsert && !this.EmptyRows.length && !this.readonly)
+			if (canInsert && !this.emptyRows.length && !this.readonly)
 				this.addNewModel()
 			// Ensure editable grids only have one empty row,
 			// and readonly grids display no empty rows
-			else if (this.EmptyRows.length > 0)
+			else if (this.emptyRows.length > 0)
 				this.trimEmptyRows()
 		})
 
-		this.initHandlers()
 		this.initEvents()
+	}
+
+	/**
+	 * Performs additional init operations after the table data is ready.
+	 */
+	initData()
+	{
+		// EMPTY
 	}
 
 	/**
@@ -3388,6 +3743,8 @@ export class GridTableListControl extends BaseControl
 	 */
 	initHandlers()
 	{
+		super.initHandlers()
+
 		const handlers = {
 			addNewRow: () => this.addNewModel(),
 			markForDeletion: (row) => this.markForDeletion(row),
@@ -3408,8 +3765,7 @@ export class GridTableListControl extends BaseControl
 
 	addNewModel()
 	{
-		if (this.modelFieldRef)
-			this.modelFieldRef.addNewModel()
+		this.modelFieldRef?.addNewModel()
 	}
 
 	/**
@@ -3417,36 +3773,32 @@ export class GridTableListControl extends BaseControl
 	 */
 	afterLoaded()
 	{
-		const field = this.modelFieldRef
-		formFunctions.setValuesFromStore(field, this.vueContext)
+		formFunctions.setValuesFromStore(this.modelFieldRef, this.vueContext)
 	}
 
 	trimEmptyRows()
 	{
-		if (this.modelFieldRef)
-			this.modelFieldRef.trimEmptyRows(this.readonly)
+		this.modelFieldRef?.trimEmptyRows(this.readonly)
 	}
 
 	markForDeletion(row)
 	{
-		if (this.modelFieldRef)
-			this.modelFieldRef.markForDeletion(row)
+		this.modelFieldRef?.markForDeletion(row)
 	}
 
 	undoDeletion(row)
 	{
-		if (this.modelFieldRef)
-			this.modelFieldRef.undoDeletion(row)
+		this.modelFieldRef?.undoDeletion(row)
 	}
 
 	hydrate(_, listViewModel)
 	{
-		this.modelFieldRef.hydrate(listViewModel)
+		this.modelFieldRef?.hydrate(listViewModel)
 	}
 
-	Reload()
+	reload()
 	{
-		return this.componentOnLoadProc.AddWL(this.vueContext.fetchListData(this))
+		return this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this))
 	}
 }
 
@@ -3476,8 +3828,10 @@ export class WizardControl extends BaseControl
 	 */
 	initHandlers()
 	{
+		super.initHandlers()
+
 		const handlers = {
-			stepClicked: (...args) => this.vueContext.handleStepChange(...args)
+			stepClicked: (...args) => this.vueContext.stepClicked(...args)
 		}
 
 		_assignInWith(this.handlers, handlers, (objValue, srcValue) =>
@@ -3489,11 +3843,9 @@ export class WizardControl extends BaseControl
 	 * Initializes the necessary properties.
 	 * @param {boolean} isEditableForm Whether or not the control is editable
 	 */
-	Init(isEditableForm)
+	async init(isEditableForm)
 	{
-		super.Init(isEditableForm)
-
-		this.initHandlers()
+		await super.init(isEditableForm)
 
 		this.isRequired = computed(() => {
 			if (!this.vueContext.isEditable)
@@ -3519,10 +3871,236 @@ export class WizardControl extends BaseControl
 	}
 }
 
+export class PropertyListControl extends SizeableControl
+{
+	constructor(options, _vueContext)
+	{
+		const propertyListResources = new controlsResources.PropertyListResources(_vueContext.$getResource)
+
+		super({
+			type: 'PropertyList',
+			config: {
+				fields: [],
+				groups: [],
+				noPanel: false,
+				readonly: false,
+				panelPosition: 'bottom',
+				texts: {
+					emptyMessage: propertyListResources.emptyMessage
+				}
+			}
+		}, _vueContext)
+
+		_merge(this, options || {})
+	}
+
+	initHandlers()
+	{
+		super.initHandlers()
+
+		const handlers = {
+			fieldChange: (field) => this.onFieldChange(field)
+		}
+
+		// Apply handlers without overriding. The handler can come from outside at initialization.
+		_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
+	}
+
+	async init(isEditableForm)
+	{
+		await super.init(isEditableForm)
+
+		this.config.readonly = computed(() => this.readonly)
+	}
+
+	onFieldChange(field)
+	{
+		const fieldData = {
+			rowId: field.rowId ?? '',
+			id: field.id,
+			name: field.name,
+			value: this.parseToServerValue(field.props.modelValue, field.type),
+			type: field.type,
+			isDirty: field.props.modelValue !== field.defaultValue
+		}
+
+		this.modelFieldRef.updateValue(fieldData)
+	}
+
+	parseToServerValue(value, fieldType)
+	{
+		const fieldTypeHandler = {
+			date: (value) => genericFunctions.dateToISOString(value),
+			default: (value) => value.toString()
+		}
+
+		return (fieldTypeHandler[fieldType] || fieldTypeHandler['default'])(value)
+	}
+
+	initData()
+	{
+		// EMPTY
+	}
+
+	hydrate(listControl, viewModel)
+	{
+		this.modelFieldRef.hydrate(listControl, viewModel)
+	}
+
+	afterLoaded()
+	{
+		// EMPTY
+	}
+
+	reload()
+	{
+		return this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this, undefined, this.fnHydrateViewModel))
+	}
+}
+
+export class KanbanControl extends SizeableControl
+{
+	constructor(options, _vueContext)
+	{
+		super({
+			type: 'Kanban',
+			columns: [],
+			cards: [],
+			config: {
+				crudActions: [],
+				generalActions: [],
+				rowClickAction: {},
+				formsDefinition: {},
+				allowColumnEdition: false,
+				rowActionDisplay: computed(() => _vueContext.layoutConfig ? _vueContext.layoutConfig.RowActionDisplay : 'dropdown'),
+			}
+		}, _vueContext)
+
+		_merge(this, options || {})
+	}
+
+	async init(isEditableForm)
+	{
+		await super.init(isEditableForm)
+
+		this.hasClickAction = computed(() => Object.keys(this.config.rowClickAction).length !== 0)
+	}
+
+	initHandlers()
+	{
+		super.initHandlers()
+
+		const handlers = {
+			'click:add': (column) => this.onCardAction({ action: 'insert', column }),
+			'update:position': (eventData) => this.onCardDrag(eventData)
+		}
+
+		this.handlersCard = {
+			'click:action': (eventData) => this.onCardAction(eventData)
+		}
+
+		if (this.hasClickAction)
+			this.handlersCard.click = (eventData) => this.onCardClick({ card: eventData })
+
+		// Apply handlers without overriding. The handler can come from outside at initialization.
+		_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
+	}
+
+	/**
+	 * Performs additional init operations after the table data is ready.
+	 */
+	initData()
+	{
+		// EMPTY
+	}
+
+	/**
+	 * Runs after each time the table finishes loading
+	 */
+	afterLoaded()
+	{
+		// EMPTY
+	}
+
+	/**
+	 * Reloads the data of the list
+	 */
+	async reload()
+	{
+		return this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this, undefined, this.fnHydrateViewModel))
+	}
+
+	onCardDrag(eventData)
+	{
+		netAPI.postData(
+			this.controller,
+			`${this.action}_EventHandler`,
+			{
+				sourceKey: eventData.id,
+				destinationKey: eventData.column,
+				newOrder: 0,
+				eventType: 'DragDrop',
+				elementType: 'Card'
+			})
+	}
+
+	onCardClick(eventData)
+	{
+		this.onCardAction({ action: this.config.rowClickAction.id, card: eventData.card })
+	}
+
+	onCardAction(eventData)
+	{
+		const { action, card, column } = eventData
+
+		const listConf = this
+		const allActions = [ ...listConf.config.crudActions, ...listConf.config.generalActions, listConf.config.rowClickAction ]
+		const actionCfg = allActions.find(a => a.id === action)
+
+		let formName = actionCfg.params.formName,
+			mode = actionCfg.params.mode,
+			id = null,
+			formDef = listConf.config.formsDefinition[formName],
+			options = {
+				isPopup: formDef.isPopup,
+				repeatInsert: actionCfg.params.repeatInsertion,
+				isDuplicate: false,
+				modes: ''
+			},
+			query = {},
+			prefillValues = actionCfg.params.prefillValues || {}
+
+		let tableName = listConf.controller[0] + listConf.controller.substring(1).toLowerCase()
+		let tableViewModelName = listConf.action + '_ViewModel'
+		this.vueContext.setEntryValue({ navigationId: this.navigationId, key: 'TableName', value: tableName })
+		this.vueContext.setEntryValue({ navigationId: this.navigationId, key: 'TableViewModelName', value: tableViewModelName })
+
+		if (mode === 'DUPLICATE')
+			options.isDuplicate = true
+
+		if (mode !== 'NEW')
+			id = formDef.fnKeySelector(card)
+		else
+		{
+			// The the column in each the record is being inserted
+			const entry = {
+				navigationId: this.navigationId,
+				key: 'colum',
+				value: column
+			}
+			this.vueContext.setEntryValue(entry)
+			options.isControlled = true
+		}
+
+		this.vueContext.navigateToForm(formName, mode, id, options, query, prefillValues)
+	}
+}
+
 export default {
 	BaseControl,
 	StringControl,
 	TextEditorControl,
+	CodeEditorControl,
 	PasswordControl,
 	BooleanControl,
 	NumberControl,
@@ -3553,5 +4131,7 @@ export default {
 	NestedFormConfig,
 	GridTableListControl,
 	WizardControl,
+	PropertyListControl,
+	KanbanControl,
 	...getSpecialRenderingControls(BaseControl, TableListControl)
 }

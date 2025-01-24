@@ -1,12 +1,11 @@
 import Cards from './Cards.case.vue'
 
 export default {
-    title: 'Views/Cards',
-    component: Cards,
-    tags: [],
-  };
+	title: 'Views/Cards',
+	component: Cards,
+	tags: []
+}
 
-  export const Simple = {
-    args: {
-    },
-  };
+export const Simple = {
+	args: {}
+}

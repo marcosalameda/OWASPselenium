@@ -64,19 +64,15 @@ export function fieldIsVisible(controls, fieldId, checkCollapsed)
 	if (typeof checkCollapsed !== 'boolean')
 		checkCollapsed = false
 
-	let field = controls[fieldId]
-	if (!field || !field.isVisible ||
+	const field = controls[fieldId]
+	if (!field?.isVisible ||
 		checkCollapsed && field.type === 'Group' && field.isCollapsible && !field.isOpen ||
 		checkCollapsed && field.type === 'Tab' && controls.formTabs.selectedTab !== fieldId)
 		return false
 
-	let containerId = field.container
-	let tabId = field.tab
-
-	if (containerId)
-		return fieldIsVisible(controls, containerId, checkCollapsed)
-	else if (tabId)
-		return fieldIsVisible(controls, tabId, checkCollapsed)
+	const parentId = field.parent
+	if (parentId)
+		return fieldIsVisible(controls, parentId, checkCollapsed)
 	return true
 }
 
@@ -93,40 +89,36 @@ export function makeFieldVisible(controls, fieldId, skipValidation)
 	if (!skipValidation && !fieldIsVisible(controls, fieldId))
 		return
 
-	let field = controls[fieldId]
+	const field = controls[fieldId]
 
 	if (field.type === 'Group' && field.isCollapsible)
-		field.SetState(true)
+		field.setState(true)
 	else if (field.type === 'Tab')
-		controls.formTabs.SelectTab(fieldId)
+		controls.formTabs.selectTab(fieldId)
 
-	let containerId = field.container
-	let tabId = field.tab
-
-	if (containerId)
-		makeFieldVisible(controls, containerId, true)
-	else if (tabId)
-		makeFieldVisible(controls, tabId, true)
+	const parentId = field.parent
+	if (parentId)
+		makeFieldVisible(controls, parentId, true)
 }
 
 /**
  * Executes the action of the specified form trigger.
  * @param {object} trigger The trigger
+ * @returns The result of the trigger execution.
  */
 export async function executeTriggerAction(trigger)
 {
 	if (typeof trigger.execute !== 'function')
-		return
+		return null
 
 	if (typeof trigger.condition !== 'function')
 		return trigger.execute()
-	else
-	{
-		const validation = await trigger.condition()
-		if (typeof validation === 'boolean' && validation ||
-			typeof validation === 'object' && validation.Success && validation.Result)
-			return trigger.execute()
-	}
+
+	const validation = await trigger.condition()
+	if (typeof validation === 'boolean' && validation ||
+		typeof validation === 'object' && validation.Success && validation.Result)
+		return trigger.execute()
+	return null
 }
 
 export default {

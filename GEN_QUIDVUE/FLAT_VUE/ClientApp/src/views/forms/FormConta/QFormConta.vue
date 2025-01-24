@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.CONTA___PESSONAME____.handlers"
 							:loading="controls.CONTA___PESSONAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.CONTA___PESSONAME____.isVisible"
 								v-bind="controls.CONTA___PESSONAME____.props"
-								:model-value="model.ValCodpesso.value"
-								v-on="controls.CONTA___PESSONAME____.handlers"
-								@update:model-value="model.ValCodpesso.fnUpdateValue" />
+								v-on="controls.CONTA___PESSONAME____.handlers" />
 							<q-see-more-conta-pessoname
 								v-if="controls.CONTA___PESSONAME____.seeMoreIsVisible"
 								v-bind="controls.CONTA___PESSONAME____.seeMoreParams"
@@ -129,14 +126,11 @@
 							v-on="controls.CONTA___GENREGENDER__.handlers"
 							:loading="controls.CONTA___GENREGENDER__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.CONTA___GENREGENDER__.isVisible"
 								v-bind="controls.CONTA___GENREGENDER__.props"
-								:model-value="model.ValCodgenre.value"
-								v-on="controls.CONTA___GENREGENDER__.handlers"
-								@update:model-value="model.ValCodgenre.fnUpdateValue" />
+								v-on="controls.CONTA___GENREGENDER__.handlers" />
 							<q-see-more-conta-genregender
 								v-if="controls.CONTA___GENREGENDER__.seeMoreIsVisible"
 								v-bind="controls.CONTA___GENREGENDER__.seeMoreParams"
@@ -152,14 +146,11 @@
 							v-on="controls.CONTA___TPCONTIPOCONT.handlers"
 							:loading="controls.CONTA___TPCONTIPOCONT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.CONTA___TPCONTIPOCONT.isVisible"
 								v-bind="controls.CONTA___TPCONTIPOCONT.props"
-								:model-value="model.ValCodtpcon.value"
-								v-on="controls.CONTA___TPCONTIPOCONT.handlers"
-								@update:model-value="model.ValCodtpcon.fnUpdateValue" />
+								v-on="controls.CONTA___TPCONTIPOCONT.handlers" />
 							<q-see-more-conta-tpcontipocont
 								v-if="controls.CONTA___TPCONTIPOCONT.seeMoreIsVisible"
 								v-bind="controls.CONTA___TPCONTIPOCONT.seeMoreParams"
@@ -177,12 +168,12 @@
 							v-on="controls.CONTA___CONTACONTACTO.handlers"
 							:loading="controls.CONTA___CONTACONTACTO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.CONTA___CONTACONTACTO.props"
 								:model-value="model.ValContacto.value"
-								@update:model-value="model.ValContacto.fnUpdateValue" />
+								@blur="onBlur(controls.CONTA___CONTACONTACTO, model.ValContacto.value)"
+								@change="model.ValContacto.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -270,15 +261,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'CONTA',
-						location: 'form-CONTA',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'CONTA',
+					location: 'form-CONTA',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -324,6 +313,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -396,8 +387,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -479,7 +471,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -533,21 +525,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -558,25 +535,9 @@
 						id: 'CONTA___PESSONAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.NAME_23841),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodpesso',
-							dependencyEvent: 'fieldChange:conta.codpesso'
-						},
-						dependentFields: () => {
-							return {
-								set 'pesso.codpesso'(value) { vm.model.ValCodpesso.updateValue(value) },
-								set 'pesso.name'(value) { vm.model.TablePessoName.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -585,6 +546,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodpesso',
+							dependencyEvent: 'fieldChange:conta.codpesso'
+						},
+						dependentFields: () => ({
+							set 'pesso.codpesso'(value) { vm.model.ValCodpesso.updateValue(value) },
+							set 'pesso.name'(value) { vm.model.TablePessoName.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					CONTA___GENREGENDER__: new fieldControlClass.LookupControl({
 						modelField: 'TableGenreGender',
@@ -592,25 +563,9 @@
 						id: 'CONTA___GENREGENDER__',
 						name: 'GENDER',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.GENRE63303),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodgenre',
-							dependencyEvent: 'fieldChange:conta.codgenre'
-						},
-						dependentFields: () => {
-							return {
-								set 'genre.codgenre'(value) { vm.model.ValCodgenre.updateValue(value) },
-								set 'genre.gender'(value) { vm.model.TableGenreGender.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -619,6 +574,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodgenre',
+							dependencyEvent: 'fieldChange:conta.codgenre'
+						},
+						dependentFields: () => ({
+							set 'genre.codgenre'(value) { vm.model.ValCodgenre.updateValue(value) },
+							set 'genre.gender'(value) { vm.model.TableGenreGender.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					CONTA___TPCONTIPOCONT: new fieldControlClass.LookupControl({
 						modelField: 'TableTpconTipocont',
@@ -626,13 +591,25 @@
 						id: 'CONTA___TPCONTIPOCONT',
 						name: 'TIPOCONT',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.CONTACT_TYPE_27897),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodtpcon',
+							dependencyEvent: 'fieldChange:conta.codtpcon'
+						},
+						dependentFields: () => ({
+							set 'tpcon.codtpcon'(value) { vm.model.ValCodtpcon.updateValue(value) },
+							set 'tpcon.tipocont'(value) { vm.model.TableTpconTipocont.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: ['genre', 'conta.codgenre'],
@@ -641,24 +618,6 @@
 								fnValueSelector: (model) => model.ValCodgenre.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCodtpcon',
-							dependencyEvent: 'fieldChange:conta.codtpcon'
-						},
-						dependentFields: () => {
-							return {
-								set 'tpcon.codtpcon'(value) { vm.model.ValCodtpcon.updateValue(value) },
-								set 'tpcon.tipocont'(value) { vm.model.TableTpconTipocont.updateValue(value) },
-							}
-						},
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					CONTA___CONTACONTACTO: new fieldControlClass.StringControl({
 						modelField: 'ValContacto',
@@ -666,15 +625,11 @@
 						id: 'CONTA___CONTACONTACTO',
 						name: 'CONTACTO',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.CONTACT59247),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 254,
 						labelId: 'label_CONTA___CONTACONTACTO',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -732,7 +687,7 @@
 						/** The foreign key to the TPCON table */
 						get tpcon() { return vm.model.ValCodtpcon },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -830,6 +785,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -869,6 +832,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -995,6 +966,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR CONTA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1010,6 +997,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS CONTA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

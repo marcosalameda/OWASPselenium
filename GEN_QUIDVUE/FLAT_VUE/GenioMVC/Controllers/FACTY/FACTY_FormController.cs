@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Facty;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_FACTY_CANCEL = new NavigationLocation("FACILITY_TYPE44577", "Facty_Cancel", "Facty") { vueRouteName = "form-FACTY", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_FACTY_SHOW = new NavigationLocation("FACILITY_TYPE44577", "Facty_Show", "Facty") { vueRouteName = "form-FACTY", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_FACTY_NEW = new NavigationLocation("FACILITY_TYPE44577", "Facty_New", "Facty") { vueRouteName = "form-FACTY", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_FACTY_EDIT = new NavigationLocation("FACILITY_TYPE44577", "Facty_Edit", "Facty") { vueRouteName = "form-FACTY", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_FACTY_DUPLICATE = new NavigationLocation("FACILITY_TYPE44577", "Facty_Duplicate", "Facty") { vueRouteName = "form-FACTY", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_FACTY_DELETE = new NavigationLocation("FACILITY_TYPE44577", "Facty_Delete", "Facty") { vueRouteName = "form-FACTY", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_FACTY_CANCEL = new("FACILITY_TYPE44577", "Facty_Cancel", "Facty") { vueRouteName = "form-FACTY", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_FACTY_SHOW = new("FACILITY_TYPE44577", "Facty_Show", "Facty") { vueRouteName = "form-FACTY", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_FACTY_NEW = new("FACILITY_TYPE44577", "Facty_New", "Facty") { vueRouteName = "form-FACTY", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_FACTY_EDIT = new("FACILITY_TYPE44577", "Facty_Edit", "Facty") { vueRouteName = "form-FACTY", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_FACTY_DUPLICATE = new("FACILITY_TYPE44577", "Facty_Duplicate", "Facty") { vueRouteName = "form-FACTY", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_FACTY_DELETE = new("FACILITY_TYPE44577", "Facty_Delete", "Facty") { vueRouteName = "form-FACTY", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Facty_ModalDBEdit()
-		{
-			Facty_ViewModel model = new Facty_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Facty_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Facty Multiform actions
 
-		//
-		// GET /Facty/MFFacty_New
-		[HttpGet]
-		[ActionName("MFFacty_New")]
-		public ActionResult MFFacty_New()
-		{
-			var model = new Facty_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_FACTY_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("facty", model.ValCodfacty);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFFacty_New_GET()
-		{
-			return MFFacty_New();
-		}
-
-		//
-		// GET /Facty/MFFacty_Edit
-		[HttpGet]
-		[ActionName("MFFacty_Edit")]
-		public ActionResult MFFacty_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("FACTY", "EDIT", new { id = id, partialView = "MFFacty", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFFacty_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFFacty_Edit(requestModel);
-		}
-
-		//
-		// GET /Facty/MFFacty_Cancel
-		[ActionName("MFFacty_Cancel")]
-		public ActionResult MFFacty_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Facty(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Facty/MFFacty_Save
-		[HttpPost]
-		[ActionName("MFFacty_Save")]
-		public JsonResult MFFacty_Save(Facty_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFFacty_Save",
-				ViewName = "MFFacty",
-				AreaName = "facty"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Facty/MFFacty_Delete
-		[HttpPost]
-		[ActionName("MFFacty_Delete")]
-		public JsonResult MFFacty_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFFacty_Delete",
-				ViewName = "MFFacty",
-				AreaName = "facty",
-				Location = ACTION_FACTY_EDIT
-			};
-
-			var model = new Facty_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Facty/Facty_SaveEdit
 		[HttpPost]

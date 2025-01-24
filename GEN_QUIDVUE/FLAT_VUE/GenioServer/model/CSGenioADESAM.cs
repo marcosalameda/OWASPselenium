@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Deactivation of Evaluation/Monitoring
 	/// </summary>
-	public class CSGenioAdesam : DbArea	{
+	public class CSGenioAdesam : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -292,7 +293,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddesam, value); }
 		}
 
-
 		/// <summary>Field : "Start date" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldDtini { get { return m_fldDtini; } }
 		private static FieldRef m_fldDtini = new FieldRef("desam", "dtini");
@@ -303,7 +303,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDtini); }
 			set { insertNameValueField(FldDtini, value); }
 		}
-
 
 		/// <summary>Field : "End date" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldDtfim { get { return m_fldDtfim; } }
@@ -316,7 +315,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDtfim, value); }
 		}
 
-
 		/// <summary>Field : "Observations" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldObservat { get { return m_fldObservat; } }
 		private static FieldRef m_fldObservat = new FieldRef("desam", "observat");
@@ -327,7 +325,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldObservat); }
 			set { insertNameValueField(FldObservat, value); }
 		}
-
 
 		/// <summary>Field : "Created by" Tipo: "ON" Formula:  ""</summary>
 		public static FieldRef FldCreatope { get { return m_fldCreatope; } }
@@ -340,7 +337,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCreatope, value); }
 		}
 
-
 		/// <summary>Field : "Creation date" Tipo: "OD" Formula:  ""</summary>
 		public static FieldRef FldCreatdat { get { return m_fldCreatdat; } }
 		private static FieldRef m_fldCreatdat = new FieldRef("desam", "creatdat");
@@ -351,7 +347,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldCreatdat); }
 			set { insertNameValueField(FldCreatdat, value); }
 		}
-
 
 		/// <summary>Field : "Changed by" Tipo: "EN" Formula:  ""</summary>
 		public static FieldRef FldOperchng { get { return m_fldOperchng; } }
@@ -364,7 +359,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldOperchng, value); }
 		}
 
-
 		/// <summary>Field : "Changed on" Tipo: "ED" Formula:  ""</summary>
 		public static FieldRef FldChngdate { get { return m_fldChngdate; } }
 		private static FieldRef m_fldChngdate = new FieldRef("desam", "chngdate");
@@ -375,7 +369,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldChngdate); }
 			set { insertNameValueField(FldChngdate, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -418,23 +411,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAdesam> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAdesam> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAdesam>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -483,7 +459,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX DESAM]/

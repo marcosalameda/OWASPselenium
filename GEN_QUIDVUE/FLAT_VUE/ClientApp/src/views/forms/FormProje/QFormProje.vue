@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,12 +106,12 @@
 							v-on="controls.PROJE___PROJEPROJECTO.handlers"
 							:loading="controls.PROJE___PROJEPROJECTO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PROJE___PROJEPROJECTO.props"
 								:model-value="model.ValProjecto.value"
-								@update:model-value="model.ValProjecto.fnUpdateValue" />
+								@blur="onBlur(controls.PROJE___PROJEPROJECTO, model.ValProjecto.value)"
+								@change="model.ValProjecto.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -123,14 +123,11 @@
 							v-on="controls.PROJE___YEAR1YEAR____.handlers"
 							:loading="controls.PROJE___YEAR1YEAR____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.PROJE___YEAR1YEAR____.isVisible"
 								v-bind="controls.PROJE___YEAR1YEAR____.props"
-								:model-value="model.ValCodyear.value"
-								v-on="controls.PROJE___YEAR1YEAR____.handlers"
-								@update:model-value="model.ValCodyear.fnUpdateValue" />
+								v-on="controls.PROJE___YEAR1YEAR____.handlers" />
 							<q-see-more-proje-year1year
 								v-if="controls.PROJE___YEAR1YEAR____.seeMoreIsVisible"
 								v-bind="controls.PROJE___YEAR1YEAR____.seeMoreParams"
@@ -148,12 +145,10 @@
 							v-on="controls.PROJE___PROJEPRIMEIRO.handlers"
 							:loading="controls.PROJE___PROJEPRIMEIRO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.PROJE___PROJEPRIMEIRO.isVisible"
-								v-bind="controls.PROJE___PROJEPRIMEIRO"
-								:model-value="model.ValPrimeiro.value"
+								v-bind="controls.PROJE___PROJEPRIMEIRO.props"
 								@update:model-value="model.ValPrimeiro.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -166,12 +161,10 @@
 							v-on="controls.PROJE___PROJEBEFORE__.handlers"
 							:loading="controls.PROJE___PROJEBEFORE__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.PROJE___PROJEBEFORE__.isVisible"
-								v-bind="controls.PROJE___PROJEBEFORE__"
-								:model-value="model.ValBefore.value"
+								v-bind="controls.PROJE___PROJEBEFORE__.props"
 								@update:model-value="model.ValBefore.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -184,12 +177,10 @@
 							v-on="controls.PROJE___PROJEFOLLOWIN.handlers"
 							:loading="controls.PROJE___PROJEFOLLOWIN.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.PROJE___PROJEFOLLOWIN.isVisible"
-								v-bind="controls.PROJE___PROJEFOLLOWIN"
-								:model-value="model.ValFollowin.value"
+								v-bind="controls.PROJE___PROJEFOLLOWIN.props"
 								@update:model-value="model.ValFollowin.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -202,12 +193,10 @@
 							v-on="controls.PROJE___PROJEULTIMO__.handlers"
 							:loading="controls.PROJE___PROJEULTIMO__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.PROJE___PROJEULTIMO__.isVisible"
-								v-bind="controls.PROJE___PROJEULTIMO__"
-								:model-value="model.ValUltimo.value"
+								v-bind="controls.PROJE___PROJEULTIMO__.props"
 								@update:model-value="model.ValUltimo.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -222,12 +211,10 @@
 							v-on="controls.PROJE___PROJESALDO1__.handlers"
 							:loading="controls.PROJE___PROJESALDO1__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.PROJE___PROJESALDO1__.isVisible"
-								v-bind="controls.PROJE___PROJESALDO1__"
-								:model-value="model.ValSaldo1.value"
+								v-bind="controls.PROJE___PROJESALDO1__.props"
 								@update:model-value="model.ValSaldo1.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -240,12 +227,10 @@
 							v-on="controls.PROJE___PROJESALDO2__.handlers"
 							:loading="controls.PROJE___PROJESALDO2__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.PROJE___PROJESALDO2__.isVisible"
-								v-bind="controls.PROJE___PROJESALDO2__"
-								:model-value="model.ValSaldo2.value"
+								v-bind="controls.PROJE___PROJESALDO2__.props"
 								@update:model-value="model.ValSaldo2.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -257,8 +242,7 @@
 						<q-table
 							v-show="controls.PROJE___PSEUDDESPESAS.isVisible"
 							v-bind="controls.PROJE___PSEUDDESPESAS"
-							v-on="controls.PROJE___PSEUDDESPESAS.handlers">
-						</q-table>
+							v-on="controls.PROJE___PSEUDDESPESAS.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PROJE___PSEUDDESPESAS"
 							v-on="controls.PROJE___PSEUDDESPESAS.handlers" />
@@ -271,8 +255,7 @@
 						<q-table
 							v-show="controls.PROJE___PSEUDAGREGADO.isVisible"
 							v-bind="controls.PROJE___PSEUDAGREGADO"
-							v-on="controls.PROJE___PSEUDAGREGADO.handlers">
-						</q-table>
+							v-on="controls.PROJE___PSEUDAGREGADO.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PROJE___PSEUDAGREGADO"
 							v-on="controls.PROJE___PSEUDAGREGADO.handlers" />
@@ -360,15 +343,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'PROJE',
-						location: 'form-PROJE',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'PROJE',
+					location: 'form-PROJE',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -414,6 +395,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -486,8 +469,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -569,7 +553,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -623,21 +607,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -648,15 +617,11 @@
 						id: 'PROJE___PROJEPROJECTO',
 						name: 'PROJECTO',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PROJECT37121),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_PROJE___PROJEPROJECTO',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -666,25 +631,9 @@
 						id: 'PROJE___YEAR1YEAR____',
 						name: 'YEAR',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.YEAR61794),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodyear',
-							dependencyEvent: 'fieldChange:proje.codyear'
-						},
-						dependentFields: () => {
-							return {
-								set 'year1.codyear'(value) { vm.model.ValCodyear.updateValue(value) },
-								set 'year1.year'(value) { vm.model.TableYear1Year.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -693,135 +642,112 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodyear',
+							dependencyEvent: 'fieldChange:proje.codyear'
+						},
+						dependentFields: () => ({
+							set 'year1.codyear'(value) { vm.model.ValCodyear.updateValue(value) },
+							set 'year1.year'(value) { vm.model.TableYear1Year.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					PROJE___PROJEPRIMEIRO: new fieldControlClass.CurrencyControl({
 						modelField: 'ValPrimeiro',
 						valueChangeEvent: 'fieldChange:proje.primeiro',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'PROJE___PROJEPRIMEIRO',
 						name: 'PRIMEIRO',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.FIRST42972),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					PROJE___PROJEBEFORE__: new fieldControlClass.CurrencyControl({
 						modelField: 'ValBefore',
 						valueChangeEvent: 'fieldChange:proje.before',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'PROJE___PROJEBEFORE__',
 						name: 'BEFORE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.BEFORE60156),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					PROJE___PROJEFOLLOWIN: new fieldControlClass.CurrencyControl({
 						modelField: 'ValFollowin',
 						valueChangeEvent: 'fieldChange:proje.followin',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'PROJE___PROJEFOLLOWIN',
 						name: 'FOLLOWIN',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.FOLLOWING22170),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					PROJE___PROJEULTIMO__: new fieldControlClass.CurrencyControl({
 						modelField: 'ValUltimo',
 						valueChangeEvent: 'fieldChange:proje.ultimo',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'PROJE___PROJEULTIMO__',
 						name: 'ULTIMO',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.LAST49207),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					PROJE___PROJESALDO1__: new fieldControlClass.CurrencyControl({
 						modelField: 'ValSaldo1',
 						valueChangeEvent: 'fieldChange:proje.saldo1',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'PROJE___PROJESALDO1__',
 						name: 'SALDO1',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.NEXT___PREVIOUS__43778),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					PROJE___PROJESALDO2__: new fieldControlClass.CurrencyControl({
 						modelField: 'ValSaldo2',
 						valueChangeEvent: 'fieldChange:proje.saldo2',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'PROJE___PROJESALDO2__',
 						name: 'SALDO2',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.LAST___FIRST__42481),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					PROJE___PSEUDDESPESAS: new fieldControlClass.TableListControl({
 						id: 'PROJE___PSEUDDESPESAS',
 						name: 'DESPESAS',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.EXPENSES11381),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'PROJE',
@@ -871,7 +797,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -977,6 +903,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'DESPE',
@@ -990,18 +917,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: DESPE
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-YEAR', 'changed-PROJE', 'changed-AGREG', 'changed-EXPEN'],
 						uuid: 'Proje_ValDespesas',
@@ -1018,11 +939,8 @@
 					PROJE___PSEUDAGREGADO: new fieldControlClass.TableListControl({
 						id: 'PROJE___PSEUDAGREGADO',
 						name: 'AGREGADO',
-						size: 'medium',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.DECOMISSION_BY_YEAR07152),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'PROJE',
@@ -1063,7 +981,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -1169,6 +1087,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'AGREG',
@@ -1182,18 +1101,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: AGREG
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'Year.ValYear',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-PROJE', 'changed-YEAR', 'changed-AGREG'],
 						uuid: 'Proje_ValAgregado',
@@ -1259,7 +1172,7 @@
 						/** The foreign key to the YEAR1 table */
 						get year1() { return vm.model.ValCodyear },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1355,6 +1268,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1394,6 +1315,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1520,6 +1449,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR PROJE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1535,6 +1480,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PROJE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

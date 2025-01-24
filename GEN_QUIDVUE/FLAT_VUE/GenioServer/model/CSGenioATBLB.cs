@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Table (Basic Types)
 	/// </summary>
-	public class CSGenioAtblb : DbArea	{
+	public class CSGenioAtblb : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -94,6 +95,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "NUMERIC__INTEGER_50289";
 
 			Qfield.Dupmsg = "";
@@ -105,6 +107,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 6;
 			Qfield.Decimals = 3;
 			Qfield.CavDesignation = "NUMERIC__DECIMAL_36157";
 
@@ -117,6 +120,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "CURRENCY__INTERGER_21437";
 
@@ -129,6 +133,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 5;
 			Qfield.Decimals = 4;
 			Qfield.CavDesignation = "CURRENCY__DECIMAL_11718";
 
@@ -379,7 +384,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodtblb, value); }
 		}
 
-
 		/// <summary>Field : "Foreign Key" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldFkey1 { get { return m_fldFkey1; } }
 		private static FieldRef m_fldFkey1 = new FieldRef("tblb", "fkey1");
@@ -390,7 +394,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldFkey1); }
 			set { insertNameValueField(FldFkey1, value); }
 		}
-
 
 		/// <summary>Field : "Text" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldText { get { return m_fldText; } }
@@ -403,7 +406,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldText, value); }
 		}
 
-
 		/// <summary>Field : "Multiline Text" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldTextml { get { return m_fldTextml; } }
 		private static FieldRef m_fldTextml = new FieldRef("tblb", "textml");
@@ -415,54 +417,49 @@ namespace CSGenio.business
 			set { insertNameValueField(FldTextml, value); }
 		}
 
-
 		/// <summary>Field : "Numeric (Integer)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldNumint { get { return m_fldNumint; } }
 		private static FieldRef m_fldNumint = new FieldRef("tblb", "numint");
 
 		/// <summary>Field : "Numeric (Integer)" Tipo: "N" Formula:  ""</summary>
-		public double ValNumint
+		public decimal ValNumint
 		{
-			get { return (double)returnValueField(FldNumint); }
+			get { return (decimal)returnValueField(FldNumint); }
 			set { insertNameValueField(FldNumint, value); }
 		}
-
 
 		/// <summary>Field : "Numeric (Decimal)" Tipo: "ND" Formula:  ""</summary>
 		public static FieldRef FldNumdec { get { return m_fldNumdec; } }
 		private static FieldRef m_fldNumdec = new FieldRef("tblb", "numdec");
 
 		/// <summary>Field : "Numeric (Decimal)" Tipo: "ND" Formula:  ""</summary>
-		public double ValNumdec
+		public decimal ValNumdec
 		{
-			get { return (double)returnValueField(FldNumdec); }
+			get { return (decimal)returnValueField(FldNumdec); }
 			set { insertNameValueField(FldNumdec, value); }
 		}
-
 
 		/// <summary>Field : "Currency (Interger)" Tipo: "$" Formula:  ""</summary>
 		public static FieldRef FldCurint { get { return m_fldCurint; } }
 		private static FieldRef m_fldCurint = new FieldRef("tblb", "curint");
 
 		/// <summary>Field : "Currency (Interger)" Tipo: "$" Formula:  ""</summary>
-		public double ValCurint
+		public decimal ValCurint
 		{
-			get { return (double)returnValueField(FldCurint); }
+			get { return (decimal)returnValueField(FldCurint); }
 			set { insertNameValueField(FldCurint, value); }
 		}
-
 
 		/// <summary>Field : "Currency (Decimal)" Tipo: "$D" Formula:  ""</summary>
 		public static FieldRef FldCurdec { get { return m_fldCurdec; } }
 		private static FieldRef m_fldCurdec = new FieldRef("tblb", "curdec");
 
 		/// <summary>Field : "Currency (Decimal)" Tipo: "$D" Formula:  ""</summary>
-		public double ValCurdec
+		public decimal ValCurdec
 		{
-			get { return (double)returnValueField(FldCurdec); }
+			get { return (decimal)returnValueField(FldCurdec); }
 			set { insertNameValueField(FldCurdec, value); }
 		}
-
 
 		/// <summary>Field : "Boolean" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldBool { get { return m_fldBool; } }
@@ -475,7 +472,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldBool, value); }
 		}
 
-
 		/// <summary>Field : "Date" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldDate { get { return m_fldDate; } }
 		private static FieldRef m_fldDate = new FieldRef("tblb", "date");
@@ -486,7 +482,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDate); }
 			set { insertNameValueField(FldDate, value); }
 		}
-
 
 		/// <summary>Field : "DateTime (Minutes)" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDatetm { get { return m_fldDatetm; } }
@@ -499,7 +494,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDatetm, value); }
 		}
 
-
 		/// <summary>Field : "DateTime (Seconds)" Tipo: "DS" Formula:  ""</summary>
 		public static FieldRef FldDatets { get { return m_fldDatets; } }
 		private static FieldRef m_fldDatets = new FieldRef("tblb", "datets");
@@ -510,7 +504,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDatets); }
 			set { insertNameValueField(FldDatets, value); }
 		}
-
 
 		/// <summary>Field : "Time (Hours-Minutes)" Tipo: "T" Formula:  ""</summary>
 		public static FieldRef FldTimehm { get { return m_fldTimehm; } }
@@ -523,7 +516,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldTimehm, value); }
 		}
 
-
 		/// <summary>Field : "Enumeration (Text)" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldEnumt { get { return m_fldEnumt; } }
 		private static FieldRef m_fldEnumt = new FieldRef("tblb", "enumt");
@@ -535,18 +527,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldEnumt, value); }
 		}
 
-
 		/// <summary>Field : "Enumeration (Numeric)" Tipo: "AN" Formula:  ""</summary>
 		public static FieldRef FldEnumn { get { return m_fldEnumn; } }
 		private static FieldRef m_fldEnumn = new FieldRef("tblb", "enumn");
 
 		/// <summary>Field : "Enumeration (Numeric)" Tipo: "AN" Formula:  ""</summary>
-		public double ValEnumn
+		public decimal ValEnumn
 		{
-			get { return (double)returnValueField(FldEnumn); }
+			get { return (decimal)returnValueField(FldEnumn); }
 			set { insertNameValueField(FldEnumn, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -589,23 +579,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAtblb> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAtblb> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAtblb>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -654,7 +627,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX TBLB]/

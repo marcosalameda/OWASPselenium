@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Kinde _kinde;
 		[DisplayName("Kinde")]
 		[ShouldSerialize("Kinde")]
-		public virtual Kinde Kinde { 
-			get { 
+		public virtual Kinde Kinde {
+			get {
 				if (!this.isEmptyModel && (_kinde == null || (!string.IsNullOrEmpty(ValCodkinde) && (_kinde.isEmptyModel || _kinde.klass.QPrimaryKey != ValCodkinde))))
 					_kinde = Models.Kinde.Find(ValCodkinde, m_userContext, Identifier, _fieldsToSerialize);
 				if (_kinde == null)
 					_kinde = new Models.Kinde(m_userContext, true, _fieldsToSerialize);
 				return _kinde;
 			}
-			set { _kinde = value; } 
+			set { _kinde = value; }
 		}
-		
+
 
 		[DisplayName("Parameter")]
 		/// <summary>Field : "Parameter" Tipo: "C" Formula:  ""</summary>
@@ -70,9 +70,9 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Decimal places" Tipo: "AN" Formula:  ""</summary>
 		[ShouldSerialize("Param.ValDecimalplaces")]
 		[DataArray("Decplace", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double ValDecimalplaces { get { return klass.ValDecimalplaces; } set { klass.ValDecimalplaces = value; } }
+		public decimal ValDecimalplaces { get { return klass.ValDecimalplaces; } set { klass.ValDecimalplaces = value; } }
 		[JsonIgnore]
-		public SelectList ArrayValdecimalplaces { get { return new SelectList(CSGenio.business.ArrayDecplace.GetDictionary(), "Key", "Value", ValDecimalplaces); } set { ValDecimalplaces = Convert.ToDouble(value.SelectedValue); } }
+		public SelectList ArrayValdecimalplaces { get { return new SelectList(CSGenio.business.ArrayDecplace.GetDictionary(), "Key", "Value", ValDecimalplaces); } set { ValDecimalplaces = Convert.ToDecimal(value.SelectedValue); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Param.ValZzstate")]
@@ -82,19 +82,19 @@ namespace GenioMVC.Models
 		public Param(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAparam(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Param(UserContext userContext, CSGenioAparam val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAparam csgenioa)
@@ -116,7 +116,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

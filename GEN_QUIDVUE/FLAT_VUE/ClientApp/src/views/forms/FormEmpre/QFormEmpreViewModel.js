@@ -141,15 +141,15 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NUMBER_OF_PEOPLE08859),
+			isFixed: true,
 		}).cloneFrom(values?.ValQtdpesso))
 		watch(() => this.ValQtdpesso.value, (newValue, oldValue) => this.onUpdate('cmpny.qtdpesso', this.ValQtdpesso, newValue, oldValue))
 
-		this.ValHeadloc = reactive(new modelFieldType.String({
+		this.ValHeadloc = reactive(new modelFieldType.Coordinate({
 			id: 'ValHeadloc',
 			originId: 'ValHeadloc',
 			area: 'CMPNY',
 			field: 'HEADLOC',
-			maxLength: 50,
 			description: computed(() => this.Resources.HEADQUARTER_LOCATION30734),
 		}).cloneFrom(values?.ValHeadloc))
 		watch(() => this.ValHeadloc.value, (newValue, oldValue) => this.onUpdate('cmpny.headloc', this.ValHeadloc, newValue, oldValue))
@@ -167,5 +167,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodempre'
 
 	get QPrimaryKey() { return this.ValCodempre.value }
-	set QPrimaryKey(value) { this.ValCodempre.value = value }
+	set QPrimaryKey(value) { this.ValCodempre.updateValue(value) }
 }

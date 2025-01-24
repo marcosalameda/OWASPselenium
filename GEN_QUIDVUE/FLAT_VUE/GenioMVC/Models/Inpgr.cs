@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -43,7 +43,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "VAT Number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Inpgr.ValNumbgro")]
 		[NumericAttribute(0)]
-		public decimal? ValNumbgro { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumbgro, 0)); } set { klass.ValNumbgro = Convert.ToDouble(value); } }
+		public decimal? ValNumbgro { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumbgro, 0)); } set { klass.ValNumbgro = Convert.ToDecimal(value); } }
 
 		[DisplayName("Text Field")]
 		/// <summary>Field : "Text Field" Tipo: "C" Formula:  ""</summary>
@@ -95,7 +95,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Phone number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Inpgr.ValPhone")]
 		[NumericAttribute(0)]
-		public decimal? ValPhone { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPhone, 0)); } set { klass.ValPhone = Convert.ToDouble(value); } }
+		public decimal? ValPhone { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPhone, 0)); } set { klass.ValPhone = Convert.ToDecimal(value); } }
 
 		[DisplayName("E-mail")]
 		/// <summary>Field : "E-mail" Tipo: "C" Formula:  ""</summary>
@@ -143,19 +143,19 @@ namespace GenioMVC.Models
 		public Inpgr(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAinpgr(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Inpgr(UserContext userContext, CSGenioAinpgr val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAinpgr csgenioa)
@@ -172,7 +172,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

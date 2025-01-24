@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_2911ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_2911', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '2911',
 					isMenuList: true,
+					designation: computed(() => this.Resources.TYPES_OF_EQUIPMENT61264),
 					acronym: 'GQT_2911',
 					name: 'TPEQU',
 					route: 'menu-GQT_2911',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'GQT_Menu_2911',
 						controller: 'TPEQU',
 						action: 'GQT_Menu_2911',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -140,10 +150,10 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 20,
 								scrollData: 20,
-								// eslint-disable-next-line no-unused-vars, eqeqeq
-								textColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValCorletra)==1,qApi.RGB(0,0,0),row.Fields.ValCorletra),
-								// eslint-disable-next-line no-unused-vars, eqeqeq
-								bgColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValBackcolo)==1,qApi.RGB(255,255,255),row.Fields.ValBackcolo),
+								// eslint-disable-next-line no-unused-vars
+								textColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValCorletra)===1,qApi.RGB(0,0,0),row.Fields.ValCorletra),
+								// eslint-disable-next-line no-unused-vars
+								bgColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValBackcolo)===1,qApi.RGB(255,255,255),row.Fields.ValBackcolo),
 							}),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -234,7 +244,7 @@
 								field: 'SINCE',
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 								visibility: false,
 							}),
 							new listColumnTypes.NumericColumn({
@@ -270,7 +280,7 @@
 							showRecordCount: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -374,6 +384,7 @@
 								id: 'RCA_GQT_29111',
 								name: 'form-TPEQU',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -390,23 +401,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: TPEQU
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValTipoequi',
 							defaultSearchColumnNameOriginal: 'ValTipoequi',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValTpequcod',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-FAMIL', 'changed-TPEQU'],
 						uuid: 'ccb896ea-08b1-4f02-afd9-fc6db34c63ef',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -435,6 +440,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS GQT_2911]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_2911]/
 // eslint-disable-next-line

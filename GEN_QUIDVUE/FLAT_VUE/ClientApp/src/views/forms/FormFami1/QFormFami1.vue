@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,12 +106,12 @@
 							v-on="controls.FAMI1___FAMI1FAMILY__.handlers"
 							:loading="controls.FAMI1___FAMI1FAMILY__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FAMI1___FAMI1FAMILY__.props"
 								:model-value="model.ValFamily.value"
-								@update:model-value="model.ValFamily.fnUpdateValue" />
+								@blur="onBlur(controls.FAMI1___FAMI1FAMILY__, model.ValFamily.value)"
+								@change="model.ValFamily.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -122,8 +122,7 @@
 						<q-table
 							v-show="controls.FAMI1___PSEUDTIPOSEQU.isVisible"
 							v-bind="controls.FAMI1___PSEUDTIPOSEQU"
-							v-on="controls.FAMI1___PSEUDTIPOSEQU.handlers">
-						</q-table>
+							v-on="controls.FAMI1___PSEUDTIPOSEQU.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.FAMI1___PSEUDTIPOSEQU"
 							v-on="controls.FAMI1___PSEUDTIPOSEQU.handlers" />
@@ -136,8 +135,7 @@
 						<q-table
 							v-show="controls.FAMI1___PSEUDTIPOSEQ1.isVisible"
 							v-bind="controls.FAMI1___PSEUDTIPOSEQ1"
-							v-on="controls.FAMI1___PSEUDTIPOSEQ1.handlers">
-						</q-table>
+							v-on="controls.FAMI1___PSEUDTIPOSEQ1.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.FAMI1___PSEUDTIPOSEQ1"
 							v-on="controls.FAMI1___PSEUDTIPOSEQ1.handlers" />
@@ -224,15 +222,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'FAMI1',
-						location: 'form-FAMI1',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'FAMI1',
+					location: 'form-FAMI1',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -278,6 +274,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -350,8 +348,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -433,7 +432,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -487,21 +486,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -512,26 +496,19 @@
 						id: 'FAMI1___FAMI1FAMILY__',
 						name: 'FAMILY',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.EQUIPMENT_FAMILY41883),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_FAMI1___FAMI1FAMILY__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					FAMI1___PSEUDTIPOSEQU: new fieldControlClass.TableListControl({
 						id: 'FAMI1___PSEUDTIPOSEQU',
 						name: 'TIPOSEQU',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'FAMI1',
@@ -584,10 +561,10 @@
 								label: computed(() => this.Resources.BACKGROUND_COLOR47883),
 								dataLength: 50,
 								scrollData: 30,
-								// eslint-disable-next-line no-unused-vars, eqeqeq
-								textColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValCorletra)==1,qApi.RGB(0,0,0),row.Fields.ValCorletra),
-								// eslint-disable-next-line no-unused-vars, eqeqeq
-								bgColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValBackcolo)==1,qApi.RGB(255,255,255),row.Fields.ValBackcolo),
+								// eslint-disable-next-line no-unused-vars
+								textColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValCorletra)===1,qApi.RGB(0,0,0),row.Fields.ValCorletra),
+								// eslint-disable-next-line no-unused-vars
+								bgColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValBackcolo)===1,qApi.RGB(255,255,255),row.Fields.ValBackcolo),
 							}),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -625,7 +602,7 @@
 								field: 'SINCE',
 								label: computed(() => this.Resources.IN34902),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 10,
@@ -658,7 +635,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -764,6 +741,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'TPEQ1',
@@ -777,18 +755,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: TPEQ1
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-TPEQ1', 'changed-FAMI1'],
 						uuid: 'Fami1_ValTiposequ',
@@ -805,11 +777,8 @@
 					FAMI1___PSEUDTIPOSEQ1: new fieldControlClass.TreeTableListControl({
 						id: 'FAMI1___PSEUDTIPOSEQ1',
 						name: 'TIPOSEQ1',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'FAMI1',
@@ -829,14 +798,15 @@
 								supportFormIsPopup: false,
 								params: {
 									type: 'form',
+									isRoute: true,
 									formName: 'TPEQ1',
 									mode: 'SHOW'
 								},
 								cellAction: true,
-								// eslint-disable-next-line no-unused-vars, eqeqeq
-								textColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValCorletra)==1,qApi.RGB(0,0,0),row.Fields.ValCorletra),
-								// eslint-disable-next-line no-unused-vars, eqeqeq
-								bgColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValBackcolo)==1,qApi.RGB(255,255,255),row.Fields.ValBackcolo),
+								// eslint-disable-next-line no-unused-vars
+								textColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValCorletra)===1,qApi.RGB(0,0,0),row.Fields.ValCorletra),
+								// eslint-disable-next-line no-unused-vars
+								bgColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValBackcolo)===1,qApi.RGB(255,255,255),row.Fields.ValBackcolo),
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -969,17 +939,12 @@
 									})
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: '',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-TPEQ1', 'changed-FAMI1'],
 						uuid: 'Fami1_ValTiposeq1',
@@ -1025,7 +990,7 @@
 						/** The primary key of the FAMI1 table */
 						get fami1() { return vm.model.ValCodfamil },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1121,6 +1086,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1160,6 +1133,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1286,6 +1267,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR FAMI1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1301,6 +1298,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS FAMI1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

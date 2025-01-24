@@ -150,6 +150,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CREATUSR',
 			maxLength: 20,
 			description: computed(() => this.Resources.CREATED_BY12292),
+			isFixed: true,
 		}).cloneFrom(values?.ValCreatusr))
 		watch(() => this.ValCreatusr.value, (newValue, oldValue) => this.onUpdate('perso.creatusr', this.ValCreatusr, newValue, oldValue))
 
@@ -159,6 +160,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'PERSO',
 			field: 'CREATDAT',
 			description: computed(() => this.Resources.CREATED_ON00051),
+			isFixed: true,
 		}).cloneFrom(values?.ValCreatdat))
 		watch(() => this.ValCreatdat.value, (newValue, oldValue) => this.onUpdate('perso.creatdat', this.ValCreatdat, newValue, oldValue))
 
@@ -169,6 +171,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'MODIFUSR',
 			maxLength: 20,
 			description: computed(() => this.Resources.MODIFIED_BY02094),
+			isFixed: true,
 		}).cloneFrom(values?.ValModifusr))
 		watch(() => this.ValModifusr.value, (newValue, oldValue) => this.onUpdate('perso.modifusr', this.ValModifusr, newValue, oldValue))
 
@@ -178,6 +181,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'PERSO',
 			field: 'MODIFDAT',
 			description: computed(() => this.Resources.MODIFIED_ON31953),
+			isFixed: true,
 		}).cloneFrom(values?.ValModifdat))
 		watch(() => this.ValModifdat.value, (newValue, oldValue) => this.onUpdate('perso.modifdat', this.ValModifdat, newValue, oldValue))
 	}
@@ -194,5 +198,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodperso'
 
 	get QPrimaryKey() { return this.ValCodperso.value }
-	set QPrimaryKey(value) { this.ValCodperso.value = value }
+	set QPrimaryKey(value) { this.ValCodperso.updateValue(value) }
 }

@@ -166,9 +166,9 @@ namespace CSGenio.business
         private static FieldRef m_fldPosicao = new FieldRef("lstren", "posicao");
 
         /// <summary>Field : "Posi��o" Tipo: "N" Formula:  ""</summary>
-        public double ValPosicao
+        public decimal ValPosicao
         {
-            get { return (double)returnValueField(FldPosicao); }
+            get { return (decimal)returnValueField(FldPosicao); }
             set { insertNameValueField(FldPosicao, value); }
         }
 
@@ -178,9 +178,9 @@ namespace CSGenio.business
         private static FieldRef m_fldOperacao = new FieldRef("lstren", "operacao");
 
         /// <summary>Field : "Opera��o" Tipo: "N" Formula:  ""</summary>
-        public double ValOperacao
+        public decimal ValOperacao
         {
-            get { return (double)returnValueField(FldOperacao); }
+            get { return (decimal)returnValueField(FldOperacao); }
             set { insertNameValueField(FldOperacao, value); }
         }
 
@@ -190,9 +190,9 @@ namespace CSGenio.business
         private static FieldRef m_fldTipo = new FieldRef("lstren", "tipo");
 
         /// <summary>Field : "Tipo" Tipo: "N" Formula:  ""</summary>
-        public double ValTipo
+        public decimal ValTipo
         {
-            get { return (double)returnValueField(FldTipo); }
+            get { return (decimal)returnValueField(FldTipo); }
             set { insertNameValueField(FldTipo, value); }
         }
 
@@ -230,18 +230,6 @@ namespace CSGenio.business
 			return null;
         }
 
-        /// <summary>
-        /// Procura todos os registos desta area que obedecem a uma condi��o
-        /// </summary>
-        /// <param name="sp">O suporte persistente de onde obter a lista</param>
-        /// <param name="utilizador">O contexto do user</param>
-        /// <param name="where">A condi��o de procura dos registos. Usar null to obter todos os registos</param>
-        /// <returns>Uma lista de registos da areas com todos os fields preenchidos</returns>
-        [Obsolete("Use List<CSGenioAlstren> searchList(PersistentSupport sp, User utilizador, CriteriaSet where) instead")]
-        public static List<CSGenioAlstren> searchList(PersistentSupport sp, User user, string where)
-        {
-            return sp.searchListWhere<CSGenioAlstren>(where, user, null);
-        }
 
         /// <summary>
         /// Procura todos os registos desta area que obedecem a uma condi��o
@@ -255,20 +243,6 @@ namespace CSGenio.business
             return searchList(sp, user, where, null);
         }
        
-        /// <summary>
-        /// Procura todos os registos desta area que obedecem a uma condi��o
-        /// </summary>
-        /// <param name="sp">O suporte persistente de onde obter a lista</param>
-        /// <param name="utilizador">O contexto do user</param>
-        /// <param name="where">A condi��o de procura dos registos. Usar null to obter todos os registos</param>
-        /// <param name="campos">Os fields a serem preenchidos na area</param>
-        /// <returns>Uma lista de registos da areas com todos os fields preenchidos</returns>
-        /// <remarks>N�o devem ser utilizadas opera��es de persistence sobre um registo parcialmente posicionado</remarks>
-        [Obsolete("Use List<CSGenioAlstren> searchList(PersistentSupport sp, User utilizador, CriteriaSet where, string []campos) instead")]
-        public static List<CSGenioAlstren> searchList(PersistentSupport sp, User user, string where, string []fields)
-        {
-            return sp.searchListWhere<CSGenioAlstren>(where, user, fields);
-        }
        
         /// <summary>
         /// Procura todos os registos desta area que obedecem a uma condi��o

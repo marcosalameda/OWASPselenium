@@ -159,7 +159,7 @@ namespace CSGenio.framework
 		public StatusMessage MergeStatusMessage(StatusMessage messageStatus)
 		{
 			if (messageStatus == null)
-				throw new FrameworkException(null, "MergeStatusMensagem", "Null reference argument");
+				throw new ArgumentNullException(nameof(messageStatus));
 
 			while (messageStatus._statusMessageStack.Count > 1)
 			{
@@ -199,6 +199,17 @@ namespace CSGenio.framework
 			return string.Join(separator, _statusMessageStack
 				.Where(sm => !string.IsNullOrEmpty(sm.Message))
                 .Select(sm => sm.Message) );
+		}
+
+		/// <summary>
+		/// Gets all status messages.
+		/// </summary>
+		/// <returns>Array containing all status messages concatenated</returns>
+		public string[] GetStackMessages()
+		{
+			return _statusMessageStack
+				.Where(sm => !string.IsNullOrEmpty(sm.Message))
+				.Select(sm => sm.Message).ToArray();
 		}
 
 		#region Static functions

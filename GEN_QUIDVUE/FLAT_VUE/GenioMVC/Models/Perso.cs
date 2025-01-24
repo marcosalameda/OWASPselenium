@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -56,7 +56,9 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Photo" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Perso.ValPhoto")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValPhoto { get { return klass.ValPhoto; } set { klass.ValPhoto = value; } }
+		public ImageModel ValPhoto { get { return new ImageModel(klass.ValPhoto) { Ticket = ValPhotoQTicket }; } set { klass.ValPhoto = value; } }
+		[JsonIgnore]
+		public string ValPhotoQTicket = null;
 
 		[DisplayName("E-mail")]
 		/// <summary>Field : "E-mail" Tipo: "C" Formula:  ""</summary>
@@ -67,15 +69,15 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Year" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Perso.ValYear")]
 		[NumericAttribute(0)]
-		public decimal? ValYear { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYear, 0)); } set { klass.ValYear = Convert.ToDouble(value); } }
+		public decimal? ValYear { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYear, 0)); } set { klass.ValYear = Convert.ToDecimal(value); } }
 
 		[DisplayName("Month")]
 		/// <summary>Field : "Month" Tipo: "AN" Formula:  ""</summary>
 		[ShouldSerialize("Perso.ValMonth")]
 		[DataArray("Months", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double ValMonth { get { return klass.ValMonth; } set { klass.ValMonth = value; } }
+		public decimal ValMonth { get { return klass.ValMonth; } set { klass.ValMonth = value; } }
 		[JsonIgnore]
-		public SelectList ArrayValmonth { get { return new SelectList(CSGenio.business.ArrayMonths.GetDictionary(), "Key", "Value", ValMonth); } set { ValMonth = Convert.ToDouble(value.SelectedValue); } }
+		public SelectList ArrayValmonth { get { return new SelectList(CSGenio.business.ArrayMonths.GetDictionary(), "Key", "Value", ValMonth); } set { ValMonth = Convert.ToDecimal(value.SelectedValue); } }
 
 		[DisplayName("Date of birth")]
 		/// <summary>Field : "Date of birth" Tipo: "D" Formula:  ""</summary>
@@ -122,19 +124,19 @@ namespace GenioMVC.Models
 		public Perso(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAperso(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Perso(UserContext userContext, CSGenioAperso val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAperso csgenioa)
@@ -151,7 +153,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

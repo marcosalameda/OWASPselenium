@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.ATTAC___ASSETNAME____.handlers"
 							:loading="controls.ATTAC___ASSETNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.ATTAC___ASSETNAME____.isVisible"
 								v-bind="controls.ATTAC___ASSETNAME____.props"
-								:model-value="model.ValCodasset.value"
-								v-on="controls.ATTAC___ASSETNAME____.handlers"
-								@update:model-value="model.ValCodasset.fnUpdateValue" />
+								v-on="controls.ATTAC___ASSETNAME____.handlers" />
 							<q-see-more-attac-assetname
 								v-if="controls.ATTAC___ASSETNAME____.seeMoreIsVisible"
 								v-bind="controls.ATTAC___ASSETNAME____.seeMoreParams"
@@ -129,14 +126,13 @@
 							v-on="controls.ATTAC___ATTACATTACHED.handlers"
 							:loading="controls.ATTAC___ATTACATTACHED.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.ATTAC___ATTACATTACHED.isVisible"
-								v-bind="controls.ATTAC___ATTACATTACHED"
-								format="DateTime"
+								v-bind="controls.ATTAC___ATTACATTACHED.props"
 								:model-value="model.ValAttached.value"
-								@update:model-value="model.ValAttached.fnUpdateValue" />
+								@reset-icon-click="model.ValAttached.fnUpdateValue(model.ValAttached.originalValue ?? new Date())"
+								@update:model-value="model.ValAttached.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -148,18 +144,14 @@
 							v-on="controls.ATTAC___ATTACNOTE____.handlers"
 							:loading="controls.ATTAC___ATTACNOTE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.ATTAC___ATTACNOTE____.isVisible"
+								v-bind="controls.ATTAC___ATTACNOTE____.props"
 								id="ATTAC___ATTACNOTE____"
-								size="xxlarge"
 								:model-value="model.ValNote.value"
 								:rows="2"
 								:cols="85"
-								:is-required="controls.ATTAC___ATTACNOTE____.isRequired"
-								:readonly="controls.ATTAC___ATTACNOTE____.readonly"
-								:placeholder="controls.ATTAC___ATTACNOTE____.placeholder"
 								@update:model-value="model.ValNote.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -172,41 +164,11 @@
 							v-on="controls.ATTAC___ATTACDOCUMENT.handlers"
 							:loading="controls.ATTAC___ATTACDOCUMENT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-document
 								v-if="controls.ATTAC___ATTACDOCUMENT.isVisible"
-								id="ATTAC___ATTACDOCUMENT"
-								size="xxlarge"
-								:model-value="model.ValDocument.value"
-								versioning-is-on
-								:readonly="controls.ATTAC___ATTACDOCUMENT.readonly"
-								:is-in-checkout="controls.ATTAC___ATTACDOCUMENT.isInCheckout"
-								:current-version="controls.ATTAC___ATTACDOCUMENT.currentVersion"
-								:extensions="controls.ATTAC___ATTACDOCUMENT.extensions"
-								:max-file-size="controls.ATTAC___ATTACDOCUMENT.maxFileSize"
-								:versions="controls.ATTAC___ATTACDOCUMENT.documentVersions"
-								:versions-info="controls.ATTAC___ATTACDOCUMENT.versionsInfo"
-								:file-properties="controls.ATTAC___ATTACDOCUMENT.fileProperties"
-								:texts="controls.ATTAC___ATTACDOCUMENT.texts"
-								:popup-is-visible="controls.ATTAC___ATTACDOCUMENT.popupIsVisible"
-								:disallow-removal="controls.ATTAC___ATTACDOCUMENT.isRequired"
-								:resources-path="controls.ATTAC___ATTACDOCUMENT.resourcesPath"
-								:uses-templates="controls.ATTAC___ATTACDOCUMENT.usesTemplates"
-								@file-error="controls.ATTAC___ATTACDOCUMENT.HandleFileError($event)"
-								@submit-file="controls.ATTAC___ATTACDOCUMENT.SetFile($event)"
-								@edit-file="controls.ATTAC___ATTACDOCUMENT.SetCheckoutState()"
-								@get-properties="controls.ATTAC___ATTACDOCUMENT.GetFileProperties()"
-								@get-version-history="controls.ATTAC___ATTACDOCUMENT.GetVersionsInfo()"
-								@get-file="controls.ATTAC___ATTACDOCUMENT.GetFile()"
-								@download-file="controls.ATTAC___ATTACDOCUMENT.DownloadFile()"
-								@get-file-version="controls.ATTAC___ATTACDOCUMENT.GetFileVersion($event)"
-								@delete-last="controls.ATTAC___ATTACDOCUMENT.DeleteFile(0)"
-								@delete-history="controls.ATTAC___ATTACDOCUMENT.DeleteFile(1)"
-								@delete-file="controls.ATTAC___ATTACDOCUMENT.DeleteFile(2)"
-								@show-popup="controls.ATTAC___ATTACDOCUMENT.SetModal($event)"
-								@hide-popup="controls.ATTAC___ATTACDOCUMENT.RemoveModal($event)"
-								@show-templates-popup="controls.ATTAC___ATTACDOCUMENT.handleDocumentTemplates($event)" />
+								v-bind="controls.ATTAC___ATTACDOCUMENT.props"
+								v-on="controls.ATTAC___ATTACDOCUMENT.handlers" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -292,15 +254,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'ATTAC',
-						location: 'form-ATTAC',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'ATTAC',
+					location: 'form-ATTAC',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -346,6 +306,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -418,8 +380,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -501,7 +464,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -555,21 +518,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -580,25 +528,9 @@
 						id: 'ATTAC___ASSETNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.IDENTIFICATION_NAME16317),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodasset',
-							dependencyEvent: 'fieldChange:attac.codasset'
-						},
-						dependentFields: () => {
-							return {
-								set 'asset.codasset'(value) { vm.model.ValCodasset.updateValue(value) },
-								set 'asset.name'(value) { vm.model.TableAssetName.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -607,6 +539,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodasset',
+							dependencyEvent: 'fieldChange:attac.codasset'
+						},
+						dependentFields: () => ({
+							set 'asset.codasset'(value) { vm.model.ValCodasset.updateValue(value) },
+							set 'asset.name'(value) { vm.model.TableAssetName.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					ATTAC___ATTACATTACHED: new fieldControlClass.DateControl({
 						modelField: 'ValAttached',
@@ -614,13 +556,10 @@
 						id: 'ATTAC___ATTACATTACHED',
 						name: 'ATTACHED',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.ATTACHED26247),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -630,15 +569,9 @@
 						id: 'ATTAC___ATTACNOTE____',
 						name: 'NOTE',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.NOTE54557),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
-						labelId: 'label_ATTAC___ATTACNOTE____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -648,21 +581,12 @@
 						id: 'ATTAC___ATTACDOCUMENT',
 						name: 'DOCUMENT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DOCUMENT00695),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						documentProperties: computed(() => vm.model.ValDocumentPropertiesVM),
-						documentFK: computed(() => vm.model.ValDocumentfk),
-						documentVersions: computed(() => vm.model.ValDocumentPropertiesVM.value ? vm.model.ValDocumentPropertiesVM.value.Versions : {}),
-						isInCheckout: computed(() => vm.model.ValDocumentPropertiesVM.value ? vm.model.ValDocumentPropertiesVM.value.IsCheckout : false),
-						currentVersion: computed(() => vm.model.ValDocumentPropertiesVM.value ? vm.model.ValDocumentPropertiesVM.value.Version : '1'),
-						usesTemplates: false,
+						versioningIsOn: true,
+						viewType: qEnums.documentViewTypeMode.print,
 						extensions: [],
-						viewType: qEnums.documentViewTypeMode.Print,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -708,7 +632,7 @@
 						/** The foreign key to the ASSET table */
 						get asset() { return vm.model.ValCodasset },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -804,6 +728,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -843,6 +775,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -969,6 +909,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR ATTAC]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -984,6 +940,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS ATTAC]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

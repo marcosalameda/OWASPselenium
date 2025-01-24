@@ -1,12 +1,13 @@
 ﻿<template>
 	<div
 		:class="[...classes, $attrs.class]"
-		data-testid="q-card"
+		data-testid="q-card-view"
+		:data-loading="$props.loading"
 		@click.stop="$emit('click', $event)">
-		<div class="q-card__overlay">
+		<div class="q-card-view__overlay">
 			<div
 				v-if="$slots.header || hasHeaderImage"
-				class="q-card__header">
+				class="q-card-view__header">
 				<div
 					v-if="$slots.image && hasHeaderImage && hasImageCropper"
 					:class="imgCropperClasses"
@@ -27,7 +28,7 @@
 					name="header" />
 			</div>
 
-			<div class="q-card__body">
+			<div class="q-card-view__body">
 				<div
 					v-if="$slots.image && hasBodyImage"
 					:class="imgCropperClasses"
@@ -37,12 +38,12 @@
 						v-else
 						name="image" />
 				</div>
-				<div class="q-card__content">
+				<div class="q-card-view__content">
 					<slot name="content.prepend" />
-					
+
 					<h5
 						v-if="$slots.title || $props.title"
-						class="q-card__title"
+						class="q-card-view__title"
 						role="cell">
 						<q-skeleton-loader
 							v-if="$props.loading"
@@ -57,7 +58,7 @@
 
 					<p
 						v-if="$slots.subtitle || $props.subtitle"
-						class="q-card__subtitle"
+						class="q-card-view__subtitle"
 						role="cell">
 						<q-skeleton-loader
 							v-if="$props.loading"
@@ -76,13 +77,13 @@
 
 			<div
 				v-if="$slots.footer"
-				class="q-card__footer">
+				class="q-card-view__footer">
 				<slot name="footer" />
 			</div>
 		</div>
 
 		<div
-			class="q-card__underlay"
+			class="q-card-view__underlay"
 			:style="underlayStyle">
 			<slot name="underlay" />
 			<template v-if="hasUnderlayImage">
@@ -191,7 +192,7 @@
 		computed: {
 			classes()
 			{
-				const baseClass = 'q-card'
+				const baseClass = 'q-card-view'
 				const classes = [baseClass]
 
 				const subtype = this.subtype.replace('card-', '')
@@ -248,7 +249,7 @@
 
 			imgCropperClasses()
 			{
-				const baseClass = 'q-card__img-cropper'
+				const baseClass = 'q-card-view__img-cropper'
 				const classes = [baseClass]
 
 				if (this.imageShape && this.imageShape !== 'rectangular')

@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using GenioMVC.ViewModels;
+using GenioMVC.Models;
 
 namespace GenioMVC;
 
@@ -27,6 +27,8 @@ public class ImageThumbnailJsonConverterAttribute : JsonConverterAttribute
 	{
 		if (typeToConvert == typeof(byte[]))
 			return new ByteImageJsonConverter(width, height, maintainRatio, resizeImage);
+		else if (typeToConvert == typeof(List<byte[]>))
+			return new MultipleByteImageJsonConverter(width, height, maintainRatio, resizeImage);
 		else if (typeToConvert == typeof(ImageModel))
 			return new ImageModelJsonConverter(width, height, maintainRatio, resizeImage);
 
@@ -57,25 +59,31 @@ public abstract class ImageJsonConverter<T> : JsonConverter<T>
 		return typeof(T) == typeToConvert;
 	}
 
-	protected ImageModel GetImageModel(byte[] image)
+	protected ImageModel GetImageModel(byte[] image, string ticket = null)
 	{
 		var imageFormat = ImageResizer.GetImageFormat(image);
+		bool isThumbnail = false;
 
 		// If the image is an svg or gif, doesn't resize it. Otherwise, the svg won't work and the gif will be a static image.
 		// We should think on replacing this "if" by a thumbnail on the database.
 		if (resizeImage
 			&& image != null && image.Length > 0 && width > 0 && height > 0
 			&& !notResizableImageFormats.Contains(imageFormat))
+		{
 			image = ImageResizer.ResizeImage(image, width, height, maintainRatio);
+			isThumbnail = true;
+		}
 
 		ImageModel imageModel = null;
 		if (image?.Length > 0)
 		{
-			imageModel = new()
+			imageModel = new(image)
 			{
 				Data = System.Convert.ToBase64String(image),
 				DataFormat = imageFormat,
-				FileName = "" // TODO: Save the file name and format.
+				FileName = "", // TODO: Save the file name and format.
+				IsThumbnail = isThumbnail,
+				Ticket = ticket
 			};
 		}
 
@@ -99,6 +107,22 @@ public class ByteImageJsonConverter : ImageJsonConverter<byte[]>
 	}
 }
 
+public class MultipleByteImageJsonConverter : ImageJsonConverter<List<byte[]>>
+{
+	public MultipleByteImageJsonConverter(int width, int height, bool maintainRatio, bool resizeImage) : base(width, height, maintainRatio, resizeImage) { }
+
+	public override List<byte[]>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		// We are never supposed to receive images in byte array format here.
+		throw new JsonException("List byte array images are not supported.");
+	}
+
+	public override void Write(Utf8JsonWriter writer, List<byte[]> value, JsonSerializerOptions options)
+	{
+		JsonSerializer.Serialize(writer, value?.Select(val => GetImageModel(val)).ToList(), options);
+	}
+}
+
 public class ImageModelJsonConverter : ImageJsonConverter<ImageModel>
 {
 	public ImageModelJsonConverter(int width, int height, bool maintainRatio, bool resizeImage) : base(width, height, maintainRatio, resizeImage) { }
@@ -118,16 +142,22 @@ public class ImageModelJsonConverter : ImageJsonConverter<ImageModel>
 			if (reader.TokenType == JsonTokenType.PropertyName)
 			{
 				string propertyName = reader.GetString();
-				string propertyValue = JsonSerializer.Deserialize<string>(ref reader, options);
 
-				if (propertyName == "data")
-					imageModel.Data = propertyValue;
-				else if (propertyName == "dataFormat")
-					imageModel.DataFormat = propertyValue;
-				else if (propertyName == "fileName")
-					imageModel.FileName = propertyValue;
-				else if (propertyName == "encoding")
-					imageModel.Encoding = propertyValue;
+				if (propertyName == "isThumbnail")
+					imageModel.IsThumbnail = JsonSerializer.Deserialize<bool>(ref reader, options);
+				else
+				{
+					string propertyValue = JsonSerializer.Deserialize<string>(ref reader, options);
+
+					if (propertyName == "data")
+						imageModel.Data = propertyValue;
+					else if (propertyName == "dataFormat")
+						imageModel.DataFormat = propertyValue;
+					else if (propertyName == "fileName")
+						imageModel.FileName = propertyValue;
+					else if (propertyName == "encoding")
+						imageModel.Encoding = propertyValue;
+				}
 			}
 		}
 
@@ -136,8 +166,8 @@ public class ImageModelJsonConverter : ImageJsonConverter<ImageModel>
 
 	public override void Write(Utf8JsonWriter writer, ImageModel value, JsonSerializerOptions options)
 	{
-		byte[] image = System.Convert.FromBase64String(value.Data);
-		JsonSerializer.Serialize(writer, GetImageModel(image), options);
+		byte[] image = value.OriginalData ?? (value.Data?.Length > 0 ? System.Convert.FromBase64String(value.Data) : []);
+		JsonSerializer.Serialize(writer, GetImageModel(image, value?.Ticket), options);
 	}
 }
 
@@ -145,21 +175,29 @@ public static class ImageResizer
 {
 	public static byte[] ResizeImage(byte[] image, int width, int height, bool maintainRatio)
 	{
-		using System.IO.MemoryStream ms = new(image);
-		using System.Drawing.Image originalImage = System.Drawing.Image.FromStream(ms);
-
-		int scaledWidth = width;
-		int scaledHeight = height;
-
-		if (maintainRatio)
+		try
 		{
-			decimal scale = Math.Min((decimal)width / originalImage.Width, (decimal)height / originalImage.Height);
-			scaledWidth = (int)(originalImage.Width * scale);
-			scaledHeight = (int)(originalImage.Height * scale);
-		}
+			using System.IO.MemoryStream ms = new(image);
+			using System.Drawing.Image originalImage = System.Drawing.Image.FromStream(ms);
 
-		using System.Drawing.Image resizedImage = new System.Drawing.Bitmap(originalImage, new System.Drawing.Size(scaledWidth, scaledHeight));
-		return (byte[])new System.Drawing.ImageConverter().ConvertTo(resizedImage, typeof(byte[]));
+			int scaledWidth = width;
+			int scaledHeight = height;
+
+			if (maintainRatio)
+			{
+				decimal scale = Math.Min((decimal)width / originalImage.Width, (decimal)height / originalImage.Height);
+				scaledWidth = (int)(originalImage.Width * scale);
+				scaledHeight = (int)(originalImage.Height * scale);
+			}
+
+			using System.Drawing.Image resizedImage = new System.Drawing.Bitmap(originalImage, new System.Drawing.Size(scaledWidth, scaledHeight));
+			return (byte[])new System.Drawing.ImageConverter().ConvertTo(resizedImage, typeof(byte[]));
+		}
+		catch
+		{
+			// For other formats (for example: ".webp").
+			return image;
+		}
 	}
 
 	public static string GetImageFormat(byte[]? img)

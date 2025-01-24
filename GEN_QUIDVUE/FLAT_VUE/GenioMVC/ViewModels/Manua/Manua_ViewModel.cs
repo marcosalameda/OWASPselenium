@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Manua
 {
-	public class Manua_ViewModel : FormViewModel<Models.Manua>
+	public class Manua_ViewModel : FormViewModel<Models.Manua>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,32 +29,35 @@ namespace GenioMVC.ViewModels.Manua
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Kind of equipment" | Type: "CE"
+		/// </summary>
+		public string ValCodkinde { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Kind of equipment" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Kinde> TableKindeDesignat { get; set; }
-
 		/// <summary>
 		/// Title: "Manual name" | Type: "C"
 		/// </summary>
 		public string ValName { get; set; }
-
 		/// <summary>
 		/// Title: "Digital document" | Type: "IB"
 		/// </summary>
-		[Document("ValDigdocum", false, true, false, false, DocumentViewTypeMode.Print)]
+		[Document("ValDigdocum", true, false, false, DocumentViewTypeMode.Print)]
 		public string ValDigdocum { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public string ValDigdocumfk { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public DocumsProperties_ViewModel ValDigdocumPropertiesVM { get; set; }
-
 		/// <summary>
 		/// Title: "Notes" | Type: "MO"
 		/// </summary>
@@ -67,15 +70,6 @@ namespace GenioMVC.ViewModels.Manua
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Kind of equipment" | Type: "CE"
-		/// </summary>
-		public string ValCodkinde { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -91,9 +85,10 @@ namespace GenioMVC.ViewModels.Manua
 
 		public string ValCodmanua { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Manua_ViewModel() : base(null!) { }
@@ -129,6 +124,15 @@ namespace GenioMVC.ViewModels.Manua
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Manua model = new Models.Manua(userContext) { Identifier = "FMANUA" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FMANUA");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -189,11 +193,11 @@ namespace GenioMVC.ViewModels.Manua
 
 			try
 			{
+				ValCodkinde = ViewModelConversion.ToString(m.ValCodkinde);
 				ValName = ViewModelConversion.ToString(m.ValName);
 				ValDigdocum = ViewModelConversion.ToString(m.ValDigdocum);
 				ValDigdocumfk = ViewModelConversion.ToString(m.ValDigdocumfk);
 				ValNotes = ViewModelConversion.ToString(m.ValNotes);
-				ValCodkinde = ViewModelConversion.ToString(m.ValCodkinde);
 				ValCodmanua = ViewModelConversion.ToString(m.ValCodmanua);
 			}
 			catch (Exception)
@@ -203,6 +207,20 @@ namespace GenioMVC.ViewModels.Manua
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Manua m)
 		{
 			if (m == null)
@@ -213,22 +231,75 @@ namespace GenioMVC.ViewModels.Manua
 
 			try
 			{
+				m.ValCodkinde = ViewModelConversion.ToString(ValCodkinde);
 				m.ValName = ViewModelConversion.ToString(ValName);
 				m.ValDigdocum = ViewModelConversion.ToString(ValDigdocum);
 				m.ValDigdocumfk = ViewModelConversion.ToString(ValDigdocumfk);
 				m.ValNotes = ViewModelConversion.ToString(ValNotes);
-				m.ValCodkinde = ViewModelConversion.ToString(ValCodkinde);
 				m.ValCodmanua = ViewModelConversion.ToString(ValCodmanua);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Manua) to Model (Manua) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Manua) to Model (Manua) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "manua.codkinde":
+						this.ValCodkinde = ViewModelConversion.ToString(_value);
+						break;
+					case "manua.name":
+						this.ValName = ViewModelConversion.ToString(_value);
+						break;
+					case "manua.digdocum":
+						this.ValDigdocum = ViewModelConversion.ToString(_value);
+						break;
+					case "manua.notes":
+						this.ValNotes = ViewModelConversion.ToString(_value);
+						break;
+					case "manua.codmanua":
+						this.ValCodmanua = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Manua) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Manua)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Manua.Find(id ?? Navigation.GetStrValue("manua"), m_userContext, "FMANUA"); }
+			finally { Model ??= new Models.Manua(m_userContext) { Identifier = "FMANUA" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -242,20 +313,13 @@ namespace GenioMVC.ViewModels.Manua
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FMANUA";
@@ -265,6 +329,7 @@ namespace GenioMVC.ViewModels.Manua
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -330,31 +395,25 @@ namespace GenioMVC.ViewModels.Manua
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValName", Resources.Resources.MANUAL_NAME60077, ValName, 50);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE MANUA]/
 		public override void Save()
 		{
 
-			try { Model = Models.Manua.Find(Navigation.GetStrValue("manua"), m_userContext, "FMANUA"); }
-			finally { if (Model == null) Model = new Models.Manua(m_userContext) { Identifier = "FMANUA" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY MANUA]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Manua.Find(Navigation.GetStrValue("manua"), m_userContext, "FMANUA"); }
-			finally { if (Model == null) Model = new Models.Manua(m_userContext) { Identifier = "FMANUA" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE MANUA]/
 
@@ -387,8 +446,8 @@ namespace GenioMVC.ViewModels.Manua
 				object hValue = Navigation.GetValue("kinde", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					manua___kindedesignatConds.Equal(CSGenioAkinde.FldCodkinde, Navigation.GetValue("kinde"));
-					this.ValCodkinde = Navigation.GetStrValue("kinde");
+					manua___kindedesignatConds.Equal(CSGenioAkinde.FldCodkinde, hValue);
+					this.ValCodkinde = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -405,8 +464,6 @@ namespace GenioMVC.ViewModels.Manua
 					Navigation.CurrentLevel.SetEntry("RETURN_kinde", null);
 				}
 				FillDependant_ManuaTableKindeDesignat(lazyLoad);
-				//Check if foreignkey comes from history
-				TableKindeDesignat.FilledByHistory = Navigation.CheckFilledByHistory("kinde");
 				return;
 			}
 
@@ -474,9 +531,6 @@ namespace GenioMVC.ViewModels.Manua
 
 				TableKindeDesignat.List = new SelectList(TableKindeDesignat.Elements.ToSelectList(x => x.ValDesignat, x => x.ValCodkinde,  x => x.ValCodkinde == this.ValCodkinde), "Value", "Text", this.ValCodkinde);
 				FillDependant_ManuaTableKindeDesignat();
-
-				//Check if foreignkey comes from history
-				TableKindeDesignat.FilledByHistory = Navigation.CheckFilledByHistory("kinde");
 			}
 		}
 
@@ -573,16 +627,18 @@ namespace GenioMVC.ViewModels.Manua
 		{
 			return identifier switch
 			{
+				"manua.codkinde" => ViewModelConversion.ToString(modelValue),
 				"manua.name" => ViewModelConversion.ToString(modelValue),
 				"manua.digdocum" => ViewModelConversion.ToString(modelValue),
 				"manua.notes" => ViewModelConversion.ToString(modelValue),
-				"manua.codkinde" => ViewModelConversion.ToString(modelValue),
 				"manua.codmanua" => ViewModelConversion.ToString(modelValue),
 				"kinde.codkinde" => ViewModelConversion.ToString(modelValue),
 				"kinde.designat" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

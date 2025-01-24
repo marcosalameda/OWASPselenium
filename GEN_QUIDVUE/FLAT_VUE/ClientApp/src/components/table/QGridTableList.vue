@@ -1,7 +1,8 @@
 ﻿<template>
 	<div
 		:id="id"
-		:class="['q-table-list', 'q-grid-table-list', { 'q-grid-table-list--readonly': $props.readonly }]">
+		:class="['q-table-list', 'q-grid-table-list', { 'q-grid-table-list--readonly': $props.readonly }]"
+		:data-loading="!loaded">
 		<div class="page-header row no-gutters justify-content-between">
 			<div class="col">
 				<div class="c-action-bar">
@@ -65,27 +66,75 @@
 								:mode="rowMode(model)"
 								:initial-state="getRowInitialState(model)"
 								:permissions="permissions"
+								:columns="columns"
+								:is-deleted-state="isRowDeletedState(model)"
 								@update:nested-model="rowUpdated(model)"
 								@mark-for-deletion="markForDeletion(model)"
+								@toggle-errors="toggleErrors(model)"
 								@undo-deletion="undoDeletion(model)" />
-						</template>
 
-						<transition name="c-table-transition">
-							<tr
-								v-if="readonly && loaded && viewModels.length === 0"
-								class="c-table__row--empty">
-								<td :colspan="numVisibleColumns">
-									<slot name="empty-results">
-										<img
-											v-if="config.resourcesPath"
-											:src="`${config.resourcesPath}empty_card_container.png`"
-											:alt="texts.noRecordsText" />
-										{{ texts.emptyText }}
-									</slot>
+							<tr v-if="expandedErrors.includes(model.uniqueIdentifier) && hasMessages(model)">
+								<td
+									class="q-validation-summary-td"
+									:colspan="numVisibleColumns">
+									<template
+										v-for="(type, index) in messageTypes"
+										:key="index">
+										<q-validation-summary
+											v-if="getMessagesByType(type, model)"
+											:messages="getMessagesByType(type, model)"
+											:type="type" />
+									</template>
 								</td>
 							</tr>
-						</transition>
+						</template>
+
+						<tr
+							v-if="readonly && loaded && viewModels.length === 0"
+							class="c-table__row--empty">
+							<td :colspan="numVisibleColumns">
+								<slot name="empty-results">
+									<img
+										v-if="config.resourcesPath"
+										:src="`${config.resourcesPath}empty_card_container.png`"
+										:alt="texts.noRecordsText" />
+									{{ texts.emptyText }}
+								</slot>
+							</td>
+						</tr>
 					</tbody>
+
+					<tfoot v-if="hasColumnTotalizers">
+						<tr
+							class="q-grid-table-list__column-totalizers">
+							<!-- Corresponding to checklist column -->
+							<td>
+								<span>
+									{{ texts.total }}
+								</span>
+							</td>
+							<!-- Corresponding to actions column -->
+							<td />
+							<td
+								v-for="column in columnsWithTotalizers"
+								:key="column.name">
+								<q-input-group
+									v-if="column.totalizer"
+									size="block">
+									<template
+										v-if="column.dataType === 'Currency'"
+										#prepend>
+										<span>{{ column.currencySymbol }}</span>
+									</template>
+									<q-text-field
+										class="q-grid-table-list__column-totalizers--field"
+										:model-value="column.total"
+										readonly>
+									</q-text-field>
+								</q-input-group>
+							</td>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>
@@ -93,6 +142,8 @@
 </template>
 
 <script>
+	import { getColumnTotalValueDisplay } from '@/mixins/listFunctions'
+
 	export default {
 		name: 'QGridTableList',
 
@@ -128,9 +179,9 @@
 			data: {
 				type: Object,
 				default: () => ({
-					Elements: [],
-					NewElements: [],
-					RemovedElements: []
+					elements: [],
+					newElements: [],
+					removedElements: []
 				})
 			},
 
@@ -188,6 +239,14 @@
 
 		expose: [],
 
+		data()
+		{
+			return {
+				expandedErrors: [],
+				messageTypes: ['error', 'warning', 'info']
+			}
+		},
+
 		computed: {
 			/**
 			 * Array of classes to be applied to the table element.
@@ -209,8 +268,8 @@
 			{
 				const rows = []
 
-				rows.push(...(this.data?.Elements ?? []))
-				rows.push(...(this.data?.NewElements ?? []))
+				rows.push(...(this.data?.elements ?? []))
+				rows.push(...(this.data?.newElements ?? []))
 
 				return rows
 			},
@@ -231,6 +290,22 @@
 			numVisibleColumns()
 			{
 				return this.visibleColumns.length + 2
+			},
+
+			/**
+			 * True if at least one column has totalizers enabled and rows in the table, false otherwise.
+			 */
+			hasColumnTotalizers()
+			{
+				return this.visibleColumns.some((column) => column.totalizer) && this.viewModels.length > 0
+			},
+
+			/**
+			 * The object with the total values of the columns with totalizers enabled.
+			 */
+			columnsWithTotalizers()
+			{
+				return this.getTotalGridColumnValues()
 			}
 		},
 
@@ -269,7 +344,7 @@
 			 */
 			getRowInitialState(row)
 			{
-				return this.data.NewElements.some((r) => r === row) ? 'NEW' : ''
+				return this.data.newElements.some((r) => r === row) ? 'NEW' : ''
 			},
 
 			/**
@@ -279,9 +354,85 @@
 			 */
 			rowMode(row)
 			{
-				return this.readonly || this.data.RemovedElements.includes(row.QPrimaryKey)
+				return this.readonly || this.data.removedElements.includes(row.QPrimaryKey)
 					? 'SHOW'
 					: 'EDIT'
+			},
+
+			/**
+			 * Checks if the row is in delete mode.
+			 * @param {Object} row - The row object
+			 * @returns {Boolean} True if the row is in delete mode, false otherwise.
+			 */
+			isRowDeletedState(row)
+			{
+				return !this.readonly && this.data.removedElements.includes(row.QPrimaryKey)
+			},
+
+			/**
+			 * Toggles the error messages of the specified model.
+			 * @param {Object} model - The model
+			 */
+			toggleErrors(model)
+			{
+				const id = model.uniqueIdentifier
+
+				if (this.expandedErrors.includes(id))
+					this.expandedErrors = this.expandedErrors.filter((errors) => errors !== id)
+				else
+					this.expandedErrors.push(id)
+			},
+
+			/**
+			 * Indicates if a model has any message to show.
+			 * @param {Object} model - The model to check for messages
+			 * @returns {Boolean} True if the model has any message to show, false otherwise.
+			 */
+			hasMessages(model)
+			{
+				return model.serverErrorMessages?.length > 0 ||
+					model.serverWarningMessages?.length > 0 ||
+					model.serverInfoMessages?.length > 0
+			},
+
+			/**
+			 * Gets the list of messages to show based on a type provided.
+			 * @param {String} type - The type of messages to show
+			 * @param {Object} model - The model with the messages
+			 * @returns {array} The list of messages to show based on the type provided.
+			 */
+			getMessagesByType(type, model)
+			{
+				if (type === 'warning')
+					return model.serverWarningMessages
+				if (type === 'info')
+					return model.serverInfoMessages
+				return model.serverErrorMessages
+			},
+
+			/**
+			 * Returns the total values of every column that has totalizers enabled.
+			 * @returns {Object} A hashmap of the total values for each column.
+			 */
+			getTotalGridColumnValues()
+			{
+				const columnsWithTotal = this.visibleColumns
+
+				columnsWithTotal.forEach((column) => {
+					if (!column.totalizer)
+						return
+
+					const columnTotal = this.viewModels.reduce((sum, viewModel) => {
+						const viewModelField = Object.values(viewModel).find((field) => field.area === column.area && field.field === column.field)
+						const numericValue = parseFloat(viewModelField.value) || 0
+						return sum + numericValue
+					}, 0)
+
+					column.currency = undefined // Must be undefined, since the currency symbol is already presented in the input itself.
+					column.total = getColumnTotalValueDisplay(column, columnTotal)
+				})
+
+				return columnsWithTotal
 			}
 		}
 	}

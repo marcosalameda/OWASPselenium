@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODCATEG',
 			relatedArea: 'CATE1',
 			description: computed(() => this.Resources._CATEGORY37591),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodcateg))
 		watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('repar.codcateg', this.ValCodcateg, newValue, oldValue))
 
@@ -69,6 +70,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODEMPRE',
 			relatedArea: 'CMPNY',
 			description: computed(() => this.Resources._COMPANY02087),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -80,7 +82,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:repar.codequip'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyG,
 			},
 		}).cloneFrom(values?.ValCodempre))
@@ -136,6 +137,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
+			isFixed: true,
 		}).cloneFrom(values?.EquipValDesignat))
 		watch(() => this.EquipValDesignat.value, (newValue, oldValue) => this.onUpdate('equip.designat', this.EquipValDesignat, newValue, oldValue))
 
@@ -145,6 +147,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'EQUIP',
 			field: 'PHOTOGRA',
 			description: computed(() => this.Resources.PHOTO51874),
+			isFixed: true,
 		}).cloneFrom(values?.EquipValPhotogra))
 		watch(() => this.EquipValPhotogra.value, (newValue, oldValue) => this.onUpdate('equip.photogra', this.EquipValPhotogra, newValue, oldValue))
 
@@ -201,7 +204,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.TablePessoName))
 		watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue))
 
-		this.ValDescript = reactive(new modelFieldType.String({
+		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
 			originId: 'ValDescript',
 			area: 'REPAR',
@@ -220,6 +223,19 @@ export default class ViewModel extends ViewModelBase
 			description: computed(() => this.Resources.SPENT_ON_HOURS19285),
 		}).cloneFrom(values?.ValHours))
 		watch(() => this.ValHours.value, (newValue, oldValue) => this.onUpdate('repar.hours', this.ValHours, newValue, oldValue))
+
+		/** The form fields used only in formulas. */
+		this.SpeciValAreatecn = reactive(new modelFieldType.String({
+			id: 'SpeciValAreatecn',
+			originId: 'ValAreatecn',
+			area: 'SPECI',
+			field: 'AREATECN',
+			arrayOptions: qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements,
+			maxLength: 1,
+			description: computed(() => this.Resources.TECHNICAL_AREA50773),
+			isFixed: true,
+		}).cloneFrom(values?.SpeciValAreatecn))
+		watch(() => this.SpeciValAreatecn.value, (newValue, oldValue) => this.onUpdate('speci.areatecn', this.SpeciValAreatecn, newValue, oldValue))
 	}
 
 	/**
@@ -234,5 +250,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodrepar'
 
 	get QPrimaryKey() { return this.ValCodrepar.value }
-	set QPrimaryKey(value) { this.ValCodrepar.value = value }
+	set QPrimaryKey(value) { this.ValCodrepar.updateValue(value) }
 }

@@ -154,18 +154,17 @@ export default class ViewModel extends ViewModelBase
 			field: 'TOSHOW',
 			maxLength: 50,
 			description: computed(() => this.Resources.TO_SHOW13268),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif([ASSPA->DATATYPE]=="T",[ASSPA->TEXT],iif([ASSPA->DATATYPE]=="N",NumericToString([ASSPA->QUANTITY],0),iif([ASSPA->DATATYPE]=="D",NumericToString(Year([ASSPA->DATE]),0)+"-"+RIGHT("00"+NumericToString(Month([ASSPA->DATE]),0),2)+"-"+RIGHT("00"+NumericToString(Day([ASSPA->DATE]),0),2),"") ) )
-					// eslint-disable-next-line eqeqeq
-					return qApi.iif(this.ValDatatype.value=="T",this.ValText.value,qApi.iif(this.ValDatatype.value=="N",qApi.NumericToString(this.ValQuantity.value,0),qApi.iif(this.ValDatatype.value=="D",qApi.NumericToString(qApi.Year(this.ValDate.value),0)+"-"+qApi.RIGHT("00"+qApi.NumericToString(qApi.Month(this.ValDate.value),0),2)+"-"+qApi.RIGHT("00"+qApi.NumericToString(qApi.Day(this.ValDate.value),0),2),"")))
+					return qApi.iif(this.ValDatatype.value==="T",this.ValText.value,qApi.iif(this.ValDatatype.value==="N",qApi.NumericToString(this.ValQuantity.value,0),qApi.iif(this.ValDatatype.value==="D",qApi.NumericToString(qApi.Year(this.ValDate.value),0)+"-"+qApi.RIGHT("00"+qApi.NumericToString(qApi.Month(this.ValDate.value),0),2)+"-"+qApi.RIGHT("00"+qApi.NumericToString(qApi.Day(this.ValDate.value),0),2),"")))
 				},
 				dependencyEvents: ['fieldChange:asspa.datatype', 'fieldChange:asspa.text', 'fieldChange:asspa.quantity', 'fieldChange:asspa.date'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValToshow))
@@ -184,5 +183,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodasspa'
 
 	get QPrimaryKey() { return this.ValCodasspa.value }
-	set QPrimaryKey(value) { this.ValCodasspa.value = value }
+	set QPrimaryKey(value) { this.ValCodasspa.updateValue(value) }
 }

@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.ASSPA___ASSETNAME____.handlers"
 							:loading="controls.ASSPA___ASSETNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.ASSPA___ASSETNAME____.isVisible"
 								v-bind="controls.ASSPA___ASSETNAME____.props"
-								:model-value="model.ValCodasset.value"
-								v-on="controls.ASSPA___ASSETNAME____.handlers"
-								@update:model-value="model.ValCodasset.fnUpdateValue" />
+								v-on="controls.ASSPA___ASSETNAME____.handlers" />
 							<q-see-more-asspa-assetname
 								v-if="controls.ASSPA___ASSETNAME____.seeMoreIsVisible"
 								v-bind="controls.ASSPA___ASSETNAME____.seeMoreParams"
@@ -131,8 +128,7 @@
 							v-on="controls.ASSPA___ASSPADATATYPE.handlers"
 							:loading="controls.ASSPA___ASSPADATATYPE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.ASSPA___ASSPADATATYPE.isVisible"
 								v-bind="controls.ASSPA___ASSPADATATYPE.props"
@@ -149,12 +145,10 @@
 							v-on="controls.ASSPA___ASSPADECPLACE.handlers"
 							:loading="controls.ASSPA___ASSPADECPLACE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.ASSPA___ASSPADECPLACE.isVisible"
-								v-bind="controls.ASSPA___ASSPADECPLACE"
-								:model-value="model.ValDecimalplaces.value"
+								v-bind="controls.ASSPA___ASSPADECPLACE.props"
 								@update:model-value="model.ValDecimalplaces.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -167,14 +161,11 @@
 							v-on="controls.ASSPA___PARAMPARAMETE.handlers"
 							:loading="controls.ASSPA___PARAMPARAMETE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.ASSPA___PARAMPARAMETE.isVisible"
 								v-bind="controls.ASSPA___PARAMPARAMETE.props"
-								:model-value="model.ValCodparam.value"
-								v-on="controls.ASSPA___PARAMPARAMETE.handlers"
-								@update:model-value="model.ValCodparam.fnUpdateValue" />
+								v-on="controls.ASSPA___PARAMPARAMETE.handlers" />
 							<q-see-more-asspa-paramparamete
 								v-if="controls.ASSPA___PARAMPARAMETE.seeMoreIsVisible"
 								v-bind="controls.ASSPA___PARAMPARAMETE.seeMoreParams"
@@ -192,12 +183,12 @@
 							v-on="controls.ASSPA___ASSPATEXT____.handlers"
 							:loading="controls.ASSPA___ASSPATEXT____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ASSPA___ASSPATEXT____.props"
 								:model-value="model.ValText.value"
-								@update:model-value="model.ValText.fnUpdateValue" />
+								@blur="onBlur(controls.ASSPA___ASSPATEXT____, model.ValText.value)"
+								@change="model.ValText.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -211,12 +202,10 @@
 							v-on="controls.ASSPA___ASSPAQUANTITY.handlers"
 							:loading="controls.ASSPA___ASSPAQUANTITY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.ASSPA___ASSPAQUANTITY.isVisible"
-								v-bind="controls.ASSPA___ASSPAQUANTITY"
-								:model-value="model.ValQuantity.value"
+								v-bind="controls.ASSPA___ASSPAQUANTITY.props"
 								@update:model-value="model.ValQuantity.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -231,14 +220,13 @@
 							v-on="controls.ASSPA___ASSPADATE____.handlers"
 							:loading="controls.ASSPA___ASSPADATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.ASSPA___ASSPADATE____.isVisible"
-								v-bind="controls.ASSPA___ASSPADATE____"
-								format="Date"
+								v-bind="controls.ASSPA___ASSPADATE____.props"
 								:model-value="model.ValDate.value"
-								@update:model-value="model.ValDate.fnUpdateValue" />
+								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
+								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -252,8 +240,7 @@
 							v-on="controls.ASSPA___ASSPATOSHOW__.handlers"
 							:loading="controls.ASSPA___ASSPATOSHOW__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ASSPA___ASSPATOSHOW__.props"
 								:model-value="model.ValToshow.value" />
@@ -343,15 +330,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'ASSPA',
-						location: 'form-ASSPA',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'ASSPA',
+					location: 'form-ASSPA',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -397,6 +382,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -469,8 +456,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -552,7 +540,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -606,21 +594,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -631,25 +604,9 @@
 						id: 'ASSPA___ASSETNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.IDENTIFICATION_NAME16317),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodasset',
-							dependencyEvent: 'fieldChange:asspa.codasset'
-						},
-						dependentFields: () => {
-							return {
-								set 'asset.codasset'(value) { vm.model.ValCodasset.updateValue(value) },
-								set 'asset.name'(value) { vm.model.TableAssetName.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -658,6 +615,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodasset',
+							dependencyEvent: 'fieldChange:asspa.codasset'
+						},
+						dependentFields: () => ({
+							set 'asset.codasset'(value) { vm.model.ValCodasset.updateValue(value) },
+							set 'asset.name'(value) { vm.model.TableAssetName.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					ASSPA___ASSPADATATYPE: new fieldControlClass.ArrayStringControl({
 						modelField: 'ValDatatype',
@@ -665,34 +632,29 @@
 						id: 'ASSPA___ASSPADATATYPE',
 						name: 'DATATYPE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATA_TYPE47159),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						labelId: 'label_ASSPA___ASSPADATATYPE',
-						arrayName: 'DataType',
 						mustBeFilled: true,
+						arrayName: 'DataType',
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
 					ASSPA___ASSPADECPLACE: new fieldControlClass.NumberControl({
 						modelField: 'ValDecimalplaces',
 						valueChangeEvent: 'fieldChange:asspa.decimalplaces',
-						maxIntegers: 1,
-						maxDecimals: 0,
 						id: 'ASSPA___ASSPADECPLACE',
 						name: 'DECPLACE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DECIMAL_PLACES62575),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 1,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -702,25 +664,9 @@
 						id: 'ASSPA___PARAMPARAMETE',
 						name: 'PARAMETE',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PARAMETER41976),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodparam',
-							dependencyEvent: 'fieldChange:asspa.codparam'
-						},
-						dependentFields: () => {
-							return {
-								set 'param.codparam'(value) { vm.model.ValCodparam.updateValue(value) },
-								set 'param.parameter'(value) { vm.model.TableParamParamete.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -729,6 +675,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodparam',
+							dependencyEvent: 'fieldChange:asspa.codparam'
+						},
+						dependentFields: () => ({
+							set 'param.codparam'(value) { vm.model.ValCodparam.updateValue(value) },
+							set 'param.parameter'(value) { vm.model.TableParamParamete.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					ASSPA___ASSPATEXT____: new fieldControlClass.StringControl({
 						modelField: 'ValText',
@@ -736,15 +692,11 @@
 						id: 'ASSPA___ASSPATEXT____',
 						name: 'TEXT',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TEXT04938),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_ASSPA___ASSPATEXT____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 						showWhen: {
@@ -752,29 +704,23 @@
 							fnFormula(params)
 							{
 								// Formula: [ASSPA->DATATYPE]=="T"
-								// eslint-disable-next-line eqeqeq
-								return this.ValDatatype.value=="T"
+								return this.ValDatatype.value==="T"
 							},
 							dependencyEvents: ['fieldChange:asspa.datatype'],
 							isServerRecalc: false,
-							isServerFormula: false,
 						},
 					}, this),
 					ASSPA___ASSPAQUANTITY: new fieldControlClass.NumberControl({
 						modelField: 'ValQuantity',
 						valueChangeEvent: 'fieldChange:asspa.quantity',
-						maxIntegers: 7,
-						maxDecimals: 4,
 						id: 'ASSPA___ASSPAQUANTITY',
 						name: 'QUANTITY',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.QUANTITY06415),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 4,
 						controlLimits: [
 						],
 						showWhen: {
@@ -782,29 +728,22 @@
 							fnFormula(params)
 							{
 								// Formula: [ASSPA->DATATYPE]=="N"
-								// eslint-disable-next-line eqeqeq
-								return this.ValDatatype.value=="N"
+								return this.ValDatatype.value==="N"
 							},
 							dependencyEvents: ['fieldChange:asspa.datatype'],
 							isServerRecalc: false,
-							isServerFormula: false,
 						},
 					}, this),
 					ASSPA___ASSPADATE____: new fieldControlClass.DateControl({
 						modelField: 'ValDate',
 						valueChangeEvent: 'fieldChange:asspa.date',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'ASSPA___ASSPADATE____',
 						name: 'DATE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE18475),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 						showWhen: {
@@ -812,12 +751,10 @@
 							fnFormula(params)
 							{
 								// Formula: [ASSPA->DATATYPE]=="D"
-								// eslint-disable-next-line eqeqeq
-								return this.ValDatatype.value=="D"
+								return this.ValDatatype.value==="D"
 							},
 							dependencyEvents: ['fieldChange:asspa.datatype'],
 							isServerRecalc: false,
-							isServerFormula: false,
 						},
 					}, this),
 					ASSPA___ASSPATOSHOW__: new fieldControlClass.StringControl({
@@ -826,19 +763,14 @@
 						id: 'ASSPA___ASSPATOSHOW__',
 						name: 'TOSHOW',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TO_SHOW13268),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
 						maxLength: 50,
 						labelId: 'label_ASSPA___ASSPATOSHOW__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 				},
 
@@ -896,7 +828,7 @@
 						/** The foreign key to the PARAM table */
 						get param() { return vm.model.ValCodparam },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -992,6 +924,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1031,6 +971,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1157,6 +1105,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR ASSPA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1172,6 +1136,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS ASSPA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

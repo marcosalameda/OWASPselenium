@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import '@testing-library/jest-dom'
 import { render } from './utils'
 import userEvent from '@testing-library/user-event'

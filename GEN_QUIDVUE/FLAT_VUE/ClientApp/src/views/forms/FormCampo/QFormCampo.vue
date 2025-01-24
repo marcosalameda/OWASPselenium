@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.CAMPO___AERO_NAME____.handlers"
 							:loading="controls.CAMPO___AERO_NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.CAMPO___AERO_NAME____.isVisible"
 								v-bind="controls.CAMPO___AERO_NAME____.props"
-								:model-value="model.ValCodaero.value"
-								v-on="controls.CAMPO___AERO_NAME____.handlers"
-								@update:model-value="model.ValCodaero.fnUpdateValue" />
+								v-on="controls.CAMPO___AERO_NAME____.handlers" />
 							<q-see-more-campo-aero-name
 								v-if="controls.CAMPO___AERO_NAME____.seeMoreIsVisible"
 								v-bind="controls.CAMPO___AERO_NAME____.seeMoreParams"
@@ -131,18 +128,14 @@
 							v-on="controls.CAMPO___FLDS_DESCRIP_.handlers"
 							:loading="controls.CAMPO___FLDS_DESCRIP_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.CAMPO___FLDS_DESCRIP_.isVisible"
+								v-bind="controls.CAMPO___FLDS_DESCRIP_.props"
 								id="CAMPO___FLDS_DESCRIP_"
-								size="xxlarge"
 								:model-value="model.ValDescrip.value"
 								:rows="1"
 								:cols="99"
-								:is-required="controls.CAMPO___FLDS_DESCRIP_.isRequired"
-								:readonly="controls.CAMPO___FLDS_DESCRIP_.readonly"
-								:placeholder="controls.CAMPO___FLDS_DESCRIP_.placeholder"
 								@update:model-value="model.ValDescrip.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -157,12 +150,10 @@
 							v-on="controls.CAMPO___FLDS_NPASSAGE.handlers"
 							:loading="controls.CAMPO___FLDS_NPASSAGE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.CAMPO___FLDS_NPASSAGE.isVisible"
-								v-bind="controls.CAMPO___FLDS_NPASSAGE"
-								:model-value="model.ValNpassage.value"
+								v-bind="controls.CAMPO___FLDS_NPASSAGE.props"
 								@update:model-value="model.ValNpassage.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -175,12 +166,10 @@
 							v-on="controls.CAMPO___FLDS_DURATION.handlers"
 							:loading="controls.CAMPO___FLDS_DURATION.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.CAMPO___FLDS_DURATION.isVisible"
-								v-bind="controls.CAMPO___FLDS_DURATION"
-								:model-value="model.ValDuration.value"
+								v-bind="controls.CAMPO___FLDS_DURATION.props"
 								@update:model-value="model.ValDuration.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -193,12 +182,10 @@
 							v-on="controls.CAMPO___FLDS_PRICE___.handlers"
 							:loading="controls.CAMPO___FLDS_PRICE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.CAMPO___FLDS_PRICE___.isVisible"
-								v-bind="controls.CAMPO___FLDS_PRICE___"
-								:model-value="model.ValPrice.value"
+								v-bind="controls.CAMPO___FLDS_PRICE___.props"
 								@update:model-value="model.ValPrice.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -211,12 +198,10 @@
 							v-on="controls.CAMPO___FLDS_PRECOBIL.handlers"
 							:loading="controls.CAMPO___FLDS_PRECOBIL.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.CAMPO___FLDS_PRECOBIL.isVisible"
-								v-bind="controls.CAMPO___FLDS_PRECOBIL"
-								:model-value="model.ValPrecobil.value"
+								v-bind="controls.CAMPO___FLDS_PRECOBIL.props"
 								@update:model-value="model.ValPrecobil.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -231,14 +216,13 @@
 							v-on="controls.CAMPO___FLDS_DATE____.handlers"
 							:loading="controls.CAMPO___FLDS_DATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_DATE____.isVisible"
-								v-bind="controls.CAMPO___FLDS_DATE____"
-								format="Date"
+								v-bind="controls.CAMPO___FLDS_DATE____.props"
 								:model-value="model.ValDate.value"
-								@update:model-value="model.ValDate.fnUpdateValue" />
+								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
+								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -252,14 +236,13 @@
 							v-on="controls.CAMPO___FLDS_DATETIME.handlers"
 							:loading="controls.CAMPO___FLDS_DATETIME.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_DATETIME.isVisible"
-								v-bind="controls.CAMPO___FLDS_DATETIME"
-								format="DateTime"
+								v-bind="controls.CAMPO___FLDS_DATETIME.props"
 								:model-value="model.ValDatetime.value"
-								@update:model-value="model.ValDatetime.fnUpdateValue" />
+								@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
+								@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -273,14 +256,13 @@
 							v-on="controls.CAMPO___FLDS_DATESECO.handlers"
 							:loading="controls.CAMPO___FLDS_DATESECO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_DATESECO.isVisible"
-								v-bind="controls.CAMPO___FLDS_DATESECO"
-								format="DateTimeSeconds"
+								v-bind="controls.CAMPO___FLDS_DATESECO.props"
 								:model-value="model.ValDateseco.value"
-								@update:model-value="model.ValDateseco.fnUpdateValue" />
+								@reset-icon-click="model.ValDateseco.fnUpdateValue(model.ValDateseco.originalValue ?? new Date())"
+								@update:model-value="model.ValDateseco.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -294,14 +276,13 @@
 							v-on="controls.CAMPO___FLDS_TIME____.handlers"
 							:loading="controls.CAMPO___FLDS_TIME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_TIME____.isVisible"
-								v-bind="controls.CAMPO___FLDS_TIME____"
-								format="Time"
+								v-bind="controls.CAMPO___FLDS_TIME____.props"
 								:model-value="model.ValTime.value"
-								@update:model-value="model.ValTime.fnUpdateValue" />
+								@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
+								@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -315,12 +296,10 @@
 							v-on="controls.CAMPO___FLDS_YEAR____.handlers"
 							:loading="controls.CAMPO___FLDS_YEAR____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.CAMPO___FLDS_YEAR____.isVisible"
-								v-bind="controls.CAMPO___FLDS_YEAR____"
-								:model-value="model.ValYear.value"
+								v-bind="controls.CAMPO___FLDS_YEAR____.props"
 								@update:model-value="model.ValYear.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -335,15 +314,11 @@
 							v-on="controls.CAMPO___FLDS_PRIMVIAG.handlers"
 							:loading="controls.CAMPO___FLDS_PRIMVIAG.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.CAMPO___FLDS_PRIMVIAG.isVisible"
-									id="CAMPO___FLDS_PRIMVIAG"
-									size="small"
-									:model-value="model.ValPrimviag.value"
-									:readonly="controls.CAMPO___FLDS_PRIMVIAG.readonly"
+									v-bind="controls.CAMPO___FLDS_PRIMVIAG.props"
 									@update:model-value="model.ValPrimviag.fnUpdateValue" />
 							</template>
 						</base-input-structure>
@@ -352,20 +327,16 @@
 						v-show="controls.CAMPO___FLDS_CONDITIO.isVisible"
 						class="control-join-group">
 						<base-input-structure
-							class="i-checkbox"
+							class="i-text"
 							v-bind="controls.CAMPO___FLDS_CONDITIO"
 							v-on="controls.CAMPO___FLDS_CONDITIO.handlers"
 							:loading="controls.CAMPO___FLDS_CONDITIO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.CAMPO___FLDS_CONDITIO.isVisible"
-									id="CAMPO___FLDS_CONDITIO"
-									size="large"
-									:model-value="model.ValConditio.value"
-									:readonly="controls.CAMPO___FLDS_CONDITIO.readonly"
+									v-bind="controls.CAMPO___FLDS_CONDITIO.props"
 									@update:model-value="model.ValConditio.fnUpdateValue" />
 							</template>
 						</base-input-structure>
@@ -381,8 +352,7 @@
 							v-on="controls.CAMPO___FLDS_CLASS___.handlers"
 							:loading="controls.CAMPO___FLDS_CLASS___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.CAMPO___FLDS_CLASS___.isVisible"
 								v-bind="controls.CAMPO___FLDS_CLASS___.props"
@@ -401,8 +371,7 @@
 							v-on="controls.CAMPO___FLDS_CLASSNUM.handlers"
 							:loading="controls.CAMPO___FLDS_CLASSNUM.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.CAMPO___FLDS_CLASSNUM.isVisible"
 								v-bind="controls.CAMPO___FLDS_CLASSNUM.props"
@@ -416,13 +385,12 @@
 						v-show="controls.CAMPO___FLDS_LOGICENU.isVisible"
 						class="control-join-group">
 						<base-input-structure
-							class="i-checkbox"
+							class="i-text"
 							v-bind="controls.CAMPO___FLDS_LOGICENU"
 							v-on="controls.CAMPO___FLDS_LOGICENU.handlers"
 							:loading="controls.CAMPO___FLDS_LOGICENU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-toggle-input
 								v-if="controls.CAMPO___FLDS_LOGICENU.isVisible"
 								id="CAMPO___FLDS_LOGICENU"
@@ -444,8 +412,7 @@
 							v-on="controls.CAMPO___FLDS_LOGO____.handlers"
 							:loading="controls.CAMPO___FLDS_LOGO____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-image
 								v-if="controls.CAMPO___FLDS_LOGO____.isVisible"
 								v-bind="controls.CAMPO___FLDS_LOGO____.props"
@@ -463,41 +430,11 @@
 							v-on="controls.CAMPO___FLDS_ATTACH__.handlers"
 							:loading="controls.CAMPO___FLDS_ATTACH__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-document
 								v-if="controls.CAMPO___FLDS_ATTACH__.isVisible"
-								id="CAMPO___FLDS_ATTACH__"
-								size="xxlarge"
-								:model-value="model.ValAttach.value"
-								versioning-is-on
-								:readonly="controls.CAMPO___FLDS_ATTACH__.readonly"
-								:is-in-checkout="controls.CAMPO___FLDS_ATTACH__.isInCheckout"
-								:current-version="controls.CAMPO___FLDS_ATTACH__.currentVersion"
-								:extensions="controls.CAMPO___FLDS_ATTACH__.extensions"
-								:max-file-size="controls.CAMPO___FLDS_ATTACH__.maxFileSize"
-								:versions="controls.CAMPO___FLDS_ATTACH__.documentVersions"
-								:versions-info="controls.CAMPO___FLDS_ATTACH__.versionsInfo"
-								:file-properties="controls.CAMPO___FLDS_ATTACH__.fileProperties"
-								:texts="controls.CAMPO___FLDS_ATTACH__.texts"
-								:popup-is-visible="controls.CAMPO___FLDS_ATTACH__.popupIsVisible"
-								:disallow-removal="controls.CAMPO___FLDS_ATTACH__.isRequired"
-								:resources-path="controls.CAMPO___FLDS_ATTACH__.resourcesPath"
-								:uses-templates="controls.CAMPO___FLDS_ATTACH__.usesTemplates"
-								@file-error="controls.CAMPO___FLDS_ATTACH__.HandleFileError($event)"
-								@submit-file="controls.CAMPO___FLDS_ATTACH__.SetFile($event)"
-								@edit-file="controls.CAMPO___FLDS_ATTACH__.SetCheckoutState()"
-								@get-properties="controls.CAMPO___FLDS_ATTACH__.GetFileProperties()"
-								@get-version-history="controls.CAMPO___FLDS_ATTACH__.GetVersionsInfo()"
-								@get-file="controls.CAMPO___FLDS_ATTACH__.GetFile()"
-								@download-file="controls.CAMPO___FLDS_ATTACH__.DownloadFile()"
-								@get-file-version="controls.CAMPO___FLDS_ATTACH__.GetFileVersion($event)"
-								@delete-last="controls.CAMPO___FLDS_ATTACH__.DeleteFile(0)"
-								@delete-history="controls.CAMPO___FLDS_ATTACH__.DeleteFile(1)"
-								@delete-file="controls.CAMPO___FLDS_ATTACH__.DeleteFile(2)"
-								@show-popup="controls.CAMPO___FLDS_ATTACH__.SetModal($event)"
-								@hide-popup="controls.CAMPO___FLDS_ATTACH__.RemoveModal($event)"
-								@show-templates-popup="controls.CAMPO___FLDS_ATTACH__.handleDocumentTemplates($event)" />
+								v-bind="controls.CAMPO___FLDS_ATTACH__.props"
+								v-on="controls.CAMPO___FLDS_ATTACH__.handlers" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -511,8 +448,7 @@
 							v-on="controls.CAMPO___FLDS_CREATUSE.handlers"
 							:loading="controls.CAMPO___FLDS_CREATUSE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.CAMPO___FLDS_CREATUSE.props"
 								:model-value="model.ValCreatuse.value" />
@@ -527,14 +463,13 @@
 							v-on="controls.CAMPO___FLDS_CREATDAT.handlers"
 							:loading="controls.CAMPO___FLDS_CREATDAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_CREATDAT.isVisible"
-								v-bind="controls.CAMPO___FLDS_CREATDAT"
-								format="Date"
+								v-bind="controls.CAMPO___FLDS_CREATDAT.props"
 								:model-value="model.ValCreatdat.value"
-								@update:model-value="model.ValCreatdat.fnUpdateValue" />
+								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
+								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -546,14 +481,13 @@
 							v-on="controls.CAMPO___FLDS_CREATHOU.handlers"
 							:loading="controls.CAMPO___FLDS_CREATHOU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_CREATHOU.isVisible"
-								v-bind="controls.CAMPO___FLDS_CREATHOU"
-								format="Time"
+								v-bind="controls.CAMPO___FLDS_CREATHOU.props"
 								:model-value="model.ValCreathou.value"
-								@update:model-value="model.ValCreathou.fnUpdateValue" />
+								@reset-icon-click="model.ValCreathou.fnUpdateValue(model.ValCreathou.originalValue ?? new Date())"
+								@update:model-value="model.ValCreathou.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -567,14 +501,13 @@
 							v-on="controls.CAMPO___FLDS_CREATINS.handlers"
 							:loading="controls.CAMPO___FLDS_CREATINS.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_CREATINS.isVisible"
-								v-bind="controls.CAMPO___FLDS_CREATINS"
-								format="DateTimeSeconds"
+								v-bind="controls.CAMPO___FLDS_CREATINS.props"
 								:model-value="model.ValCreatins.value"
-								@update:model-value="model.ValCreatins.fnUpdateValue" />
+								@reset-icon-click="model.ValCreatins.fnUpdateValue(model.ValCreatins.originalValue ?? new Date())"
+								@update:model-value="model.ValCreatins.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -660,15 +593,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'CAMPO',
-						location: 'form-CAMPO',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'CAMPO',
+					location: 'form-CAMPO',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -714,6 +645,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -786,8 +719,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -869,7 +803,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -923,21 +857,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -948,25 +867,9 @@
 						id: 'CAMPO___AERO_NAME____',
 						name: 'NAME',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.AIRLINE57868),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodaero',
-							dependencyEvent: 'fieldChange:flds.codaero'
-						},
-						dependentFields: () => {
-							return {
-								set 'aero.codaero'(value) { vm.model.ValCodaero.updateValue(value) },
-								set 'aero.name'(value) { vm.model.TableAeroName.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -975,6 +878,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodaero',
+							dependencyEvent: 'fieldChange:flds.codaero'
+						},
+						dependentFields: () => ({
+							set 'aero.codaero'(value) { vm.model.ValCodaero.updateValue(value) },
+							set 'aero.name'(value) { vm.model.TableAeroName.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					CAMPO___FLDS_DESCRIP_: new fieldControlClass.StringControl({
 						modelField: 'ValDescrip',
@@ -982,105 +895,78 @@
 						id: 'CAMPO___FLDS_DESCRIP_',
 						name: 'DESCRIP',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESCRIPTION07383),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 300,
-						labelId: 'label_CAMPO___FLDS_DESCRIP_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					CAMPO___FLDS_NPASSAGE: new fieldControlClass.NumberControl({
 						modelField: 'ValNpassage',
 						valueChangeEvent: 'fieldChange:flds.npassage',
-						maxIntegers: 3,
-						maxDecimals: 0,
 						id: 'CAMPO___FLDS_NPASSAGE',
 						name: 'NPASSAGE',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.PASSENGER_CAPACITY_O45867),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
 					CAMPO___FLDS_DURATION: new fieldControlClass.NumberControl({
 						modelField: 'ValDuration',
 						valueChangeEvent: 'fieldChange:flds.duration',
-						maxIntegers: 2,
-						maxDecimals: 2,
 						id: 'CAMPO___FLDS_DURATION',
 						name: 'DURATION',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.TRIP_DURATION54761),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 2,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
 					CAMPO___FLDS_PRICE___: new fieldControlClass.CurrencyControl({
 						modelField: 'ValPrice',
 						valueChangeEvent: 'fieldChange:flds.price',
-						maxIntegers: 3,
-						maxDecimals: 2,
 						id: 'CAMPO___FLDS_PRICE___',
 						name: 'PRICE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.ROUNDED_TICKET_PRICE02323),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
 					CAMPO___FLDS_PRECOBIL: new fieldControlClass.CurrencyControl({
 						modelField: 'ValPrecobil',
 						valueChangeEvent: 'fieldChange:flds.precobil',
-						maxIntegers: 3,
-						maxDecimals: 2,
 						id: 'CAMPO___FLDS_PRECOBIL',
 						name: 'PRECOBIL',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.TICKET_PRICE_AT_TENT46319),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 3,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
 					CAMPO___FLDS_DATE____: new fieldControlClass.DateControl({
 						modelField: 'ValDate',
 						valueChangeEvent: 'fieldChange:flds.date',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'CAMPO___FLDS_DATE____',
 						name: 'DATE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DEPARTURE_DATE__DD_M27418),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1090,13 +976,10 @@
 						id: 'CAMPO___FLDS_DATETIME',
 						name: 'DATETIME',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.DEPARTURE_DATE__HOUR17284),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1106,49 +989,37 @@
 						id: 'CAMPO___FLDS_DATESECO',
 						name: 'DATESECO',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.DEPARTURE_DATE__SECO42491),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
 					CAMPO___FLDS_TIME____: new fieldControlClass.TimeControl({
 						modelField: 'ValTime',
 						valueChangeEvent: 'fieldChange:flds.time',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'CAMPO___FLDS_TIME____',
 						name: 'TIME',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.DEPARTURE_HOUR28390),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'time',
 						controlLimits: [
 						],
 					}, this),
 					CAMPO___FLDS_YEAR____: new fieldControlClass.NumberControl({
 						modelField: 'ValYear',
 						valueChangeEvent: 'fieldChange:flds.year',
-						maxIntegers: 4,
-						maxDecimals: 0,
 						id: 'CAMPO___FLDS_YEAR____',
 						name: 'YEAR',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CREATION_YEAR_OF_THE06011),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						maxIntegers: 4,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -1158,13 +1029,9 @@
 						id: 'CAMPO___FLDS_PRIMVIAG',
 						name: 'PRIMVIAG',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources._1AVIAGEM10982),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
@@ -1174,13 +1041,11 @@
 						id: 'CAMPO___FLDS_CONDITIO',
 						name: 'CONDITIO',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.HAVE_YOU_TRAVELED_BE53808),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.right),
+						maxIntegers: 1,
+						maxDecimals: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -1190,35 +1055,31 @@
 						id: 'CAMPO___FLDS_CLASS___',
 						name: 'CLASS',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CLASS__ENUMERACAO_DE17340),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 2,
 						labelId: 'label_CAMPO___FLDS_CLASS___',
 						arrayName: 'CLASS',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
 					CAMPO___FLDS_CLASSNUM: new fieldControlClass.ArrayNumberControl({
 						modelField: 'ValClassnum',
 						valueChangeEvent: 'fieldChange:flds.classnum',
-						maxIntegers: 1,
-						maxDecimals: 0,
 						id: 'CAMPO___FLDS_CLASSNUM',
 						name: 'CLASSNUM',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.CLASSE__ENUMERACAO_N29443),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 1,
+						maxDecimals: 0,
 						arrayName: 'CLASSNUM',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -1228,16 +1089,14 @@
 						id: 'CAMPO___FLDS_LOGICENU',
 						name: 'LOGICENU',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources._1ST_TRIP__LOGICAL_E36923),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 1,
+						maxDecimals: 0,
 						arrayName: 'PRIMVIAG',
 						trueLabel: computed(() => this.Resources.YES34196),
 						falseLabel: computed(() => this.Resources.NO57340),
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1247,15 +1106,12 @@
 						id: 'CAMPO___FLDS_LOGO____',
 						name: 'LOGO',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.LOGO62483),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						height: 50,
 						width: 100,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.LOGO62483)),
 						controlLimits: [
 						],
 					}, this),
@@ -1265,21 +1121,12 @@
 						id: 'CAMPO___FLDS_ATTACH__',
 						name: 'ATTACH',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ATTACHMENTS19612),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						documentProperties: computed(() => vm.model.ValAttachPropertiesVM),
-						documentFK: computed(() => vm.model.ValAttachfk),
-						documentVersions: computed(() => vm.model.ValAttachPropertiesVM.value ? vm.model.ValAttachPropertiesVM.value.Versions : {}),
-						isInCheckout: computed(() => vm.model.ValAttachPropertiesVM.value ? vm.model.ValAttachPropertiesVM.value.IsCheckout : false),
-						currentVersion: computed(() => vm.model.ValAttachPropertiesVM.value ? vm.model.ValAttachPropertiesVM.value.Version : '1'),
-						usesTemplates: false,
+						versioningIsOn: true,
+						viewType: qEnums.documentViewTypeMode.print,
 						extensions: [],
-						viewType: qEnums.documentViewTypeMode.Print,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1289,75 +1136,52 @@
 						id: 'CAMPO___FLDS_CREATUSE',
 						name: 'CREATUSE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CREATED_BY12292),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
 						labelId: 'label_CAMPO___FLDS_CREATUSE',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					CAMPO___FLDS_CREATDAT: new fieldControlClass.DateControl({
 						modelField: 'ValCreatdat',
 						valueChangeEvent: 'fieldChange:flds.creatdat',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'CAMPO___FLDS_CREATDAT',
 						name: 'CREATDAT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CREATION_DATE__DD_MM48834),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					CAMPO___FLDS_CREATHOU: new fieldControlClass.TimeControl({
 						modelField: 'ValCreathou',
 						valueChangeEvent: 'fieldChange:flds.creathou',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'CAMPO___FLDS_CREATHOU',
 						name: 'CREATHOU',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.CREATION_DATE32161),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'time',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					CAMPO___FLDS_CREATINS: new fieldControlClass.DateControl({
 						modelField: 'ValCreatins',
 						valueChangeEvent: 'fieldChange:flds.creatins',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'CAMPO___FLDS_CREATINS',
 						name: 'CREATINS',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPLETE_CREATION_DA42963),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTimeSeconds',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 				},
 
@@ -1396,6 +1220,8 @@
 						set ValCodaero(value) { vm.model.ValCodaero.updateValue(value) },
 						get ValCodequip() { return vm.model.ValCodequip.value },
 						set ValCodequip(value) { vm.model.ValCodequip.updateValue(value) },
+						get ValCond() { return vm.model.ValCond.value },
+						set ValCond(value) { vm.model.ValCond.updateValue(value) },
 						get ValConditio() { return vm.model.ValConditio.value },
 						set ValConditio(value) { vm.model.ValConditio.updateValue(value) },
 						get ValCreatdat() { return vm.model.ValCreatdat.value },
@@ -1428,6 +1254,8 @@
 						set ValPrice(value) { vm.model.ValPrice.updateValue(value) },
 						get ValPrimviag() { return vm.model.ValPrimviag.value },
 						set ValPrimviag(value) { vm.model.ValPrimviag.updateValue(value) },
+						get ValTblcond() { return vm.model.ValTblcond.value },
+						set ValTblcond(value) { vm.model.ValTblcond.updateValue(value) },
 						get ValTime() { return vm.model.ValTime.value },
 						set ValTime(value) { vm.model.ValTime.updateValue(value) },
 						get ValYear() { return vm.model.ValYear.value },
@@ -1441,7 +1269,7 @@
 						/** The foreign key to the EQUIP table */
 						get equip() { return vm.model.ValCodequip },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1537,6 +1365,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1576,6 +1412,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1702,6 +1546,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR CAMPO]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1717,6 +1577,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS CAMPO]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

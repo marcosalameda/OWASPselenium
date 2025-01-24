@@ -1,4 +1,6 @@
 ﻿.f-login {
+	position: absolute;
+	width: 100%;
 	height: 100%;
 	align-content: center;
 	background: url('#{$images-path}/f-login__background.png') no-repeat center center fixed;
@@ -21,7 +23,7 @@
 		width: min(400px, 90vw);
 		background-color: rgb($primary-rgb / 0.8);
 		color: $on-primary;
-		padding: 40px 20px;
+		padding: 40px 20px 10px 20px;
 		border-radius: $border-radius;
 
 		&--dark {
@@ -104,18 +106,18 @@
 	}
 
 	&__link {
-		color: $white !important;
+		color: $on-primary;
 		background-color: transparent;
 		font-weight: 400;
-		line-height: 3rem;
+		margin-bottom: 0.25rem;
 		text-decoration: underline;
 
 		&:hover {
-			color: $white;
+			color: $on-primary;
 			text-decoration: underline;
 			background-color: transparent;
 			border-color: transparent;
-			line-height: 3rem;
+
 		}
 
 		&:focus,
@@ -123,7 +125,7 @@
 			text-decoration: underline;
 			border-color: transparent;
 			box-shadow: none;
-			line-height: 3rem;
+
 		}
 	}
 
@@ -148,23 +150,6 @@
 			margin-left: 0.5rem;
 		}
 	}
-
-	//logOn button secondary style
-	.q-btn--secondary {
-		background-color: $white;
-		opacity: 1;
-	}
-}
-
-/* FIX FOR TABBING */
-.c-sidebar__list-item:focus-within {
-	outline: 0;
-	background-color: $light;
-}
-
-/* FIX FOR TABBING */
-.c-sidebar__list-link:focus {
-	outline: 0;
 }
 
 select.f-login__input-field:focus::-ms-value {
@@ -172,31 +157,33 @@ select.f-login__input-field:focus::-ms-value {
 	background-color: rgb($primary-rgb / 0.1);
 }
 
-#login-btn:not(:hover) {
-	background-color: $white;
-}
-
 .q-btn--login {
-	margin-top: 1rem;
 	font-weight: 500;
 }
 
-.c-user__dropdown.dropdown-menu {
+.q-logon-btns-container {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin: 0.5rem 0;
+}
+
+.c-user__dropdown {
 	min-width: 17rem;
 	padding: 0;
 
-	.q-card__content {
+	.q-card-view__content {
 		margin: 0;
 		background-color: $secondary;
 		color: $background;
 		padding: 0.5rem;
 	}
 
-	.q-card__title .n-module__title {
+	.q-card-view__title .n-module__title {
 		color: $background;
 	}
 
-	.q-card__subtitle {
+	.q-card-view__subtitle {
 		color: $primary;
 	}
 
@@ -209,12 +196,20 @@ select.f-login__input-field:focus::-ms-value {
 			display: flex;
 			align-items: center;
 			padding: 0.3rem 0.7rem;
+
+			&:focus {
+				outline: 0;
+			}
 		}
 
 		&-item {
 			display: flex;
 			min-height: 2.6rem;
 			padding: 0;
+
+			&:focus-within {
+				outline: $action-focus-width $action-focus-style $action-focus-color;
+			}
 		}
 
 		&-item:hover {
@@ -257,21 +252,37 @@ select.f-login__input-field:focus::-ms-value {
 	}
 }
 
-button.n-menu__aside-link .q-icon__svg,
-.n-menu__aside-link .q-icon__svg {
-	margin-right: 0.2rem;
-	width: 20px;
-	height: 20px;
+#sidebar-collapse {
+	padding: 0.4rem;
+	margin-right: 0.3rem;
 
-	#main-header-navbar &,
-	.main-header & {
-		fill: rgba(255, 255, 255, 1);
+	.q-btn__content {
+		gap: 0;
 	}
 }
 
-/* FIX FOR TABBING */
-.n-menu__aside-link:focus {
-	outline: $action-focus-width $action-focus-style $action-focus-color;
+button.n-menu__aside-link,
+.n-menu__aside-link {
+	padding: 0.25rem;
+
+	&:focus {
+		outline: $action-focus-width $action-focus-style $action-focus-color;
+
+		.q-icon__svg {
+			fill: $primary;
+		}
+	}
+
+	.q-icon__svg {
+		margin-right: 0.2rem;
+		width: 20px;
+		height: 20px;
+
+		#main-header-navbar &,
+		.main-header & {
+			fill: rgba(255, 255, 255, 1);
+		}
+	}
 }
 
 li.n-menu__aside-item .q-btn--secondary {
@@ -298,32 +309,13 @@ li.n-menu__aside-item .q-btn--secondary {
 }
 
 #register-btn {
-	text-align: center;
-	font-size: 0.9rem;
-	cursor: pointer;
+	margin-top: 0;
+	background: transparent;
+	border-color: $on-primary;
 
-	#link-register {
-		// When UserRegisterStyle is set to button
-		&.q-btn {
-			color: $white;
-			border-color: $white;
-
-			&:hover {
-				background-color: $white;
-				color: $primary;
-			}
-		}
-
-		// When UserRegisterStyle is set to hyperlink
-		&.f-login__link {
-			text-transform: uppercase;
-			text-decoration: none;
-			line-height: 0;
-
-			&:hover {
-				text-decoration: underline;
-			}
-		}
+	&:hover{
+		background-color: $on-primary;
+		color: $primary;
 	}
 }
 
@@ -377,10 +369,10 @@ li.n-menu__aside-item .q-btn--secondary {
 	color: $on-background;
 
 	.q-btn--secondary {
-		background-color: $white;
+		background-color: $on-primary;
 	}
 
-	.q-input-group {
+	.q-input-group, #captcha-field  {
 		&__prepend {
 			border-width: 0;
 
@@ -412,7 +404,6 @@ li.n-menu__aside-item .q-btn--secondary {
 	.f-login {
 		&__background {
 			background-color: $light;
-			padding: 40px 20px;
 		}
 
 		&__brand {
@@ -444,7 +435,7 @@ li.n-menu__aside-item .q-btn--secondary {
 		}
 	}
 
-	#login-btn {
+	.q-btn--login {
 		&:not(:hover) {
 			background-color: $primary;
 		}
@@ -454,18 +445,9 @@ li.n-menu__aside-item .q-btn--secondary {
 		}
 	}
 
-	#register-btn {
-		#link-register {
-			&.q-btn {
-				color: $primary;
-				border-color: $primary;
 
-				&:hover {
-					background-color: $white;
-					color: $primary;
-				}
-			}
-		}
+	.f-login__link, .q-logon-text {
+		color: $primary;
 	}
 
 	#toggle-password {
@@ -478,7 +460,6 @@ li.n-menu__aside-item .q-btn--secondary {
 	.f-login {
 		&__background {
 			background-color: $secondary;
-			padding: 40px 20px;
 		}
 
 		&__brand {
@@ -512,26 +493,7 @@ li.n-menu__aside-item .q-btn--secondary {
 		}
 	}
 
-	.q-btn--secondary {
-		background-color: $primary;
-		border: none;
-
-		&:hover {
-			color: $hover-primary;
-			background-color: transparent;
-			border: none;
-		}
-
-		.q-icon {
-			font-size: 20px;
-		}
-
-		.q-icon__svg {
-			fill: $white;
-		}
-	}
-
-	#login-btn {
+	.q-btn--login {
 		&:not(:hover) {
 			background-color: $primary;
 		}
@@ -541,20 +503,31 @@ li.n-menu__aside-item .q-btn--secondary {
 		}
 	}
 
-	#register-btn {
-		#link-register {
-			&.q-btn {
-				color: $primary;
-				border-color: $primary;
-
-				&:hover {
-					background-color: $white;
-				}
-			}
-		}
-	}
-
 	#toggle-password {
 		border: 1px solid $primary;
 	}
+}
+
+.q-logon-text {
+	color: $on-primary;
+	margin: 0;
+}
+
+.q-logon-links-container {
+	display: flex;
+	justify-content: space-between;
+}
+
+#link-register {
+	cursor: pointer;
+}
+
+.q-successful-registration {
+	font-size: 0.88rem;
+	color: $on-primary;
+	margin: 0.25rem 0 0.5rem 0;
+}
+
+.i-captcha__img_recovery{
+	width:100%
 }

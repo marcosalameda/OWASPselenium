@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODTPEQU',
 			relatedArea: 'TPEQU',
 			description: computed(() => this.Resources._TYPE_OF_EQUIPMENT35057),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodtpequ))
 		watch(() => this.ValCodtpequ.value, (newValue, oldValue) => this.onUpdate('insta.codtpequ', this.ValCodtpequ, newValue, oldValue))
 
@@ -92,10 +93,11 @@ export default class ViewModel extends ViewModelBase
 			field: 'TIPOEQUI',
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
+			isFixed: true,
 		}).cloneFrom(values?.TpequValTipoequi))
 		watch(() => this.TpequValTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.TpequValTipoequi, newValue, oldValue))
 
-		this.ValDescript = reactive(new modelFieldType.String({
+		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
 			originId: 'ValDescript',
 			area: 'INSTA',
@@ -167,18 +169,17 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 7,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.QTD_HOURS28684),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(emptyD([INSTA->SINCE])==1 || emptyD([INSTA->UNTIL])==1,0,Diferenca_entre_Datas([INSTA->SINCE],[INSTA->UNTIL],"H"))
-					// eslint-disable-next-line eqeqeq
-					return qApi.iif(qApi.emptyD(this.ValSince.value)==1||qApi.emptyD(this.ValUntil.value)==1,0,qApi.Diferenca_entre_Datas(this.ValSince.value,this.ValUntil.value,"H"))
+					return qApi.iif(qApi.emptyD(this.ValSince.value)===1||qApi.emptyD(this.ValUntil.value)===1,0,qApi.Diferenca_entre_Datas(this.ValSince.value,this.ValUntil.value,"H"))
 				},
 				dependencyEvents: ['fieldChange:insta.since', 'fieldChange:insta.until'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValHours))
@@ -192,6 +193,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 9,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.HOURLY_PRICE48005),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -203,7 +205,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:insta.since', 'fieldChange:insta.codtpequ'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValPrecohor))
@@ -217,29 +218,27 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 9,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.VALUE10285),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [INSTA->HOURS]*[INSTA->PRECOHOR]
-					// eslint-disable-next-line eqeqeq
 					return this.ValHours.value*this.ValPrecohor.value
 				},
 				dependencyEvents: ['fieldChange:insta.hours', 'fieldChange:insta.precohor'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValValue))
 		watch(() => this.ValValue.value, (newValue, oldValue) => this.onUpdate('insta.value', this.ValValue, newValue, oldValue))
 
-		this.ValCoordgeo = reactive(new modelFieldType.String({
+		this.ValCoordgeo = reactive(new modelFieldType.Coordinate({
 			id: 'ValCoordgeo',
 			originId: 'ValCoordgeo',
 			area: 'INSTA',
 			field: 'COORDGEO',
-			maxLength: 50,
 			description: computed(() => this.Resources.GEOGRAPHIC_COORDINAT21394),
 		}).cloneFrom(values?.ValCoordgeo))
 		watch(() => this.ValCoordgeo.value, (newValue, oldValue) => this.onUpdate('insta.coordgeo', this.ValCoordgeo, newValue, oldValue))
@@ -257,5 +256,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodinsta'
 
 	get QPrimaryKey() { return this.ValCodinsta.value }
-	set QPrimaryKey(value) { this.ValCodinsta.value = value }
+	set QPrimaryKey(value) { this.ValCodinsta.updateValue(value) }
 }

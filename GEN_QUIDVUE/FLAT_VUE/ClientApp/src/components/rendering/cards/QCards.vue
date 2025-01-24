@@ -1,6 +1,6 @@
 ﻿<template>
 	<div
-		:id="controlId"
+		:id="id"
 		class="container-fluid"
 		data-testid="cards"
 		role="rowgroup">
@@ -11,12 +11,14 @@
 			:loading="$props.loading"
 			:container-alignment="styleVariables.containerAlignment?.value">
 			<div
-				v-if="insertAction && hasCustomInsertCard"
+				v-if="hasCustomInsertCard"
 				:class="columnClasses">
 				<q-insert-card
 					:config="cardConfig"
-					:subtype="insertCardStyle"
+					:variant="insertCardStyle"
 					:insert-action="insertAction"
+					:table-name="listConfig.tableNamePlural"
+					:resources-path="listConfig.resourcesPath"
 					:texts="texts"
 					@row-action="rowAction($event)" />
 			</div>
@@ -25,15 +27,15 @@
 				v-for="card in cards"
 				:key="card.id"
 				:class="columnClasses">
-				<q-card
+				<q-card-view
 					v-bind="card"
 					@click.stop="onCardClick(card)">
 					<template #title>
 						<q-render-data
-							:component="card.mappedValue.title.source?.component"
-							:value="card.mappedValue.title.value"
+							:component="card.mappedValue.title?.source?.component"
+							:value="card.mappedValue.title?.value"
 							:background-color="card.mappedValue.title?.bgColor"
-							:options="card.mappedValue.title.source?.componentOptions || card.mappedValue.title.source"
+							:options="card.mappedValue.title?.source?.componentOptions || card.mappedValue.title?.source"
 							:resources-path="listConfig.resourcesPath" />
 					</template>
 
@@ -41,10 +43,10 @@
 						v-if="card.mappedValue.subtitle"
 						#subtitle>
 						<q-render-data
-							:component="card.mappedValue.subtitle.source?.component"
-							:value="card.mappedValue.subtitle.value"
+							:component="card.mappedValue.subtitle?.source?.component"
+							:value="card.mappedValue.subtitle?.value"
 							:background-color="card.mappedValue.subtitle?.bgColor"
-							:options="card.mappedValue.subtitle.source?.componentOptions || card.mappedValue.subtitle.source"
+							:options="card.mappedValue.subtitle?.source?.componentOptions || card.mappedValue.subtitle?.source"
 							:resources-path="listConfig.resourcesPath" />
 					</template>
 
@@ -52,7 +54,8 @@
 						<p
 							v-for="text in card.mappedValue.text"
 							:key="text"
-							class="q-card__text"
+							class="q-card-view__text"
+							:data-field="`${text.source?.area}.${text.source?.field}`"
 							role="cell">
 							<span
 								v-if="showColumnTitles"
@@ -75,7 +78,7 @@
 							loading="lazy"
 							decoding="async"
 							:alt="texts.cardImage"
-							class="q-card__img"
+							class="q-card-view__img"
 							:key="card.domVersionKey"
 							:src="card.mappedValue.image.previewData" />
 					</template>
@@ -89,6 +92,7 @@
 							<q-table-record-actions-menu
 								:texts="texts"
 								:btn-permission="card.mappedValue.btnPermission"
+								:action-visibility="card.mappedValue.actionVisibility"
 								:crud-actions="listConfig.crudActions"
 								:custom-actions="listConfig.customActions"
 								:dropdown-direction="actionsMenuDirection"
@@ -102,7 +106,7 @@
 								@row-action="rowAction($event, card)" />
 						</div>
 					</template>
-				</q-card>
+				</q-card-view>
 			</div>
 		</component>
 		<div
@@ -110,6 +114,7 @@
 			:class="emptyContainerClasses">
 			<div class="q-cards-empty-container">
 				<img
+					v-if="listConfig.resourcesPath"
 					:src="`${listConfig.resourcesPath}empty_card_container.png`"
 					:alt="texts.noRecordsText" />
 				<h5>{{ texts.emptyText }}</h5>
@@ -123,7 +128,7 @@
 
 	import { validateTexts } from '@/mixins/genericFunctions.js'
 
-	import QCard from '@/components/containers/QCard.vue'
+	import QCardView from '@/components/containers/QCard.vue'
 
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {
@@ -137,10 +142,10 @@
 	export default {
 		name: 'QCards',
 
-		emits: ['row-action'],
+		emits: ['update:visible', 'row-action'],
 
 		components: {
-			QCard,
+			QCardView,
 			QTableRecordActionsMenu: defineAsyncComponent(() => import('@/components/table/QTableRecordActionsMenu.vue')),
 			QInsertCard: defineAsyncComponent(() => import('./QInsertCard.vue')),
 			QCardGrid: defineAsyncComponent(() => import('./QCardGrid.vue')),
@@ -153,7 +158,7 @@
 			/**
 			 * The unique identifier for the container.
 			 */
-			containerId: String,
+			id: String,
 
 			/**
 			 * The card type (must match it's vue component's name).
@@ -212,15 +217,6 @@
 
 		expose: [],
 
-		data()
-		{
-			return {
-				controlId: this.containerId || `q-cards-${this._.uid}`,
-				skeletons: [],
-				ongoingLoadingEffectId: null
-			}
-		},
-
 		computed: {
 			cardConfig()
 			{
@@ -247,6 +243,7 @@
 				this.mappedValues.forEach((val) => {
 					_cards.push({
 						id: val.rowKey,
+						image: val.image?.previewData ?? val.image?.value,
 						colorPlaceholder: val.image?.dominantColor,
 						mappedValue: val,
 						...this.cardConfig
@@ -328,6 +325,9 @@
 
 			hasCustomInsertCard()
 			{
+				if (!this.insertAction)
+					return false
+
 				return this.styleVariables.customInsertCard?.value ?? false
 			},
 
@@ -395,6 +395,24 @@
 			rowAction(action, card)
 			{
 				this.$emit('row-action', { ...action, rowKey: card?.id })
+			}
+		},
+
+		watch: {
+			cards: {
+				handler(newVal, oldVal)
+				{
+					// TODO: use lazy: request card image just before it scrolls into view
+					newVal.forEach((card) => {
+						const oldCard = oldVal?.find((s) => s.id === card.id)
+
+						if (!oldCard || (oldCard.image !== card.image))
+							this.$emit('update:visible', card.id)
+					})
+				},
+
+				deep: true,
+				immediate: true
 			}
 		}
 	}

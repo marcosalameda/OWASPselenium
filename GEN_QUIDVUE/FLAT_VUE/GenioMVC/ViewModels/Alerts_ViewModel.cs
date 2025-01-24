@@ -37,17 +37,17 @@ namespace GenioMVC.ViewModels
 			List<Models.Navigation.Alert> alerts = new List<Models.Navigation.Alert>();
 
 			sp.openConnection();
-			alerts.AddRange(GenAlert_NCARDSDANGER(sp, user));
-			alerts.AddRange(GenAlert_NCARDSWARNING(sp, user));
-			alerts.AddRange(GenAlert_NCARDSINFO(sp, user));
-			alerts.AddRange(GenAlert_DEVOLUCAO(sp, user));
-			alerts.AddRange(GenAlert_NCARDSSUCESS(sp, user));
+			alerts.AddRange(GenAlert_NCARDSDANGER(sp, user, false));
+			alerts.AddRange(GenAlert_NCARDSWARNING(sp, user, false));
+			alerts.AddRange(GenAlert_NCARDSINFO(sp, user, false));
+			alerts.AddRange(GenAlert_DEVOLUCAO(sp, user, false));
+			alerts.AddRange(GenAlert_NCARDSSUCESS(sp, user, false));
 			sp.closeConnection();
 
 			return alerts;
 		}
 
-		public List<Models.Navigation.Alert> GenAlert_NCARDSDANGER(PersistentSupport sp, User user)
+		public List<Models.Navigation.Alert> GenAlert_NCARDSDANGER(PersistentSupport sp, User user, bool FromWidget = true)
 		{
 			List<Models.Navigation.Alert> Alert_NCARDSDANGER = new List<Models.Navigation.Alert>();
 			List<Models.Navigation.Alert> Alert_EMPTY = new List<Models.Navigation.Alert>();
@@ -61,12 +61,15 @@ namespace GenioMVC.ViewModels
 
 			Role alertRole = Role.ROLE_1;
 
-			if (!user.VerifyAccess(alertRole))
-				return Alert_EMPTY;
-
 			// Tag processing
 			{ //{STY_OVERVIEW_Count}
 
+				if (!user.VerifyAccess(alertRole, "STY"))
+					return Alert_EMPTY;
+				//alerts from other modules are not supposed to be displayed
+				//unless it comes from widgets
+				if(!FromWidget && user.CurrentModule != "STY")
+					return Alert_EMPTY;
 				// Count menu records
 				ViewModels.Uicom.STY_Menu_OVERVIEW_ViewModel vm = new ViewModels.Uicom.STY_Menu_OVERVIEW_ViewModel(m_userContext);
 				vm.Identifier = "ALERT_NCARDSDANGER";
@@ -106,7 +109,7 @@ namespace GenioMVC.ViewModels
 			return Alert_NCARDSDANGER;
 		}
 
-		public List<Models.Navigation.Alert> GenAlert_NCARDSWARNING(PersistentSupport sp, User user)
+		public List<Models.Navigation.Alert> GenAlert_NCARDSWARNING(PersistentSupport sp, User user, bool FromWidget = true)
 		{
 			List<Models.Navigation.Alert> Alert_NCARDSWARNING = new List<Models.Navigation.Alert>();
 			List<Models.Navigation.Alert> Alert_EMPTY = new List<Models.Navigation.Alert>();
@@ -120,12 +123,15 @@ namespace GenioMVC.ViewModels
 
 			Role alertRole = Role.ROLE_1;
 
-			if (!user.VerifyAccess(alertRole))
-				return Alert_EMPTY;
-
 			// Tag processing
 			{ //{STY_OVERVIEW_Count}
 
+				if (!user.VerifyAccess(alertRole, "STY"))
+					return Alert_EMPTY;
+				//alerts from other modules are not supposed to be displayed
+				//unless it comes from widgets
+				if(!FromWidget && user.CurrentModule != "STY")
+					return Alert_EMPTY;
 				// Count menu records
 				ViewModels.Uicom.STY_Menu_OVERVIEW_ViewModel vm = new ViewModels.Uicom.STY_Menu_OVERVIEW_ViewModel(m_userContext);
 				vm.Identifier = "ALERT_NCARDSWARNING";
@@ -165,7 +171,7 @@ namespace GenioMVC.ViewModels
 			return Alert_NCARDSWARNING;
 		}
 
-		public List<Models.Navigation.Alert> GenAlert_NCARDSINFO(PersistentSupport sp, User user)
+		public List<Models.Navigation.Alert> GenAlert_NCARDSINFO(PersistentSupport sp, User user, bool FromWidget = true)
 		{
 			List<Models.Navigation.Alert> Alert_NCARDSINFO = new List<Models.Navigation.Alert>();
 			List<Models.Navigation.Alert> Alert_EMPTY = new List<Models.Navigation.Alert>();
@@ -179,12 +185,15 @@ namespace GenioMVC.ViewModels
 
 			Role alertRole = Role.ROLE_1;
 
-			if (!user.VerifyAccess(alertRole))
-				return Alert_EMPTY;
-
 			// Tag processing
 			{ //{STY_OVERVIEW_Count}
 
+				if (!user.VerifyAccess(alertRole, "STY"))
+					return Alert_EMPTY;
+				//alerts from other modules are not supposed to be displayed
+				//unless it comes from widgets
+				if(!FromWidget && user.CurrentModule != "STY")
+					return Alert_EMPTY;
 				// Count menu records
 				ViewModels.Uicom.STY_Menu_OVERVIEW_ViewModel vm = new ViewModels.Uicom.STY_Menu_OVERVIEW_ViewModel(m_userContext);
 				vm.Identifier = "ALERT_NCARDSINFO";
@@ -224,7 +233,7 @@ namespace GenioMVC.ViewModels
 			return Alert_NCARDSINFO;
 		}
 
-		public List<Models.Navigation.Alert> GenAlert_DEVOLUCAO(PersistentSupport sp, User user)
+		public List<Models.Navigation.Alert> GenAlert_DEVOLUCAO(PersistentSupport sp, User user, bool FromWidget = true)
 		{
 			List<Models.Navigation.Alert> Alert_DEVOLUCAO = new List<Models.Navigation.Alert>();
 			List<Models.Navigation.Alert> Alert_EMPTY = new List<Models.Navigation.Alert>();
@@ -238,12 +247,15 @@ namespace GenioMVC.ViewModels
 
 			Role alertRole = Role.ROLE_1;
 
-			if (!user.VerifyAccess(alertRole))
-				return Alert_EMPTY;
-
 			// Tag processing
 			{ //{GQT_DEVOL_Count}
 
+				if (!user.VerifyAccess(alertRole, "GQT"))
+					return Alert_EMPTY;
+				//alerts from other modules are not supposed to be displayed
+				//unless it comes from widgets
+				if(!FromWidget && user.CurrentModule != "GQT")
+					return Alert_EMPTY;
 				// Count menu records
 				ViewModels.Lendi.GQT_Menu_DEVOL_ViewModel vm = new ViewModels.Lendi.GQT_Menu_DEVOL_ViewModel(m_userContext);
 				vm.Identifier = "ALERT_DEVOLUCAO";
@@ -297,7 +309,7 @@ namespace GenioMVC.ViewModels
 			return Alert_DEVOLUCAO;
 		}
 
-		public List<Models.Navigation.Alert> GenAlert_NCARDSSUCESS(PersistentSupport sp, User user)
+		public List<Models.Navigation.Alert> GenAlert_NCARDSSUCESS(PersistentSupport sp, User user, bool FromWidget = true)
 		{
 			List<Models.Navigation.Alert> Alert_NCARDSSUCESS = new List<Models.Navigation.Alert>();
 			List<Models.Navigation.Alert> Alert_EMPTY = new List<Models.Navigation.Alert>();
@@ -311,12 +323,15 @@ namespace GenioMVC.ViewModels
 
 			Role alertRole = Role.ROLE_1;
 
-			if (!user.VerifyAccess(alertRole))
-				return Alert_EMPTY;
-
 			// Tag processing
 			{ //{STY_OVERVIEW_Count}
 
+				if (!user.VerifyAccess(alertRole, "STY"))
+					return Alert_EMPTY;
+				//alerts from other modules are not supposed to be displayed
+				//unless it comes from widgets
+				if(!FromWidget && user.CurrentModule != "STY")
+					return Alert_EMPTY;
 				// Count menu records
 				ViewModels.Uicom.STY_Menu_OVERVIEW_ViewModel vm = new ViewModels.Uicom.STY_Menu_OVERVIEW_ViewModel(m_userContext);
 				vm.Identifier = "ALERT_NCARDSSUCESS";

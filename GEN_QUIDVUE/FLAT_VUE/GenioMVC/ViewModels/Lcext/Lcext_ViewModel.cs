@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Lcext
 {
-	public class Lcext_ViewModel : FormViewModel<Models.Lcext>
+	public class Lcext_ViewModel : FormViewModel<Models.Lcext>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,27 +29,31 @@ namespace GenioMVC.ViewModels.Lcext
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Global Location Number" | Type: "CE"
+		/// </summary>
+		public string ValCodlocat { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Global Location Number" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Locat> TableLocatGln { get; set; }
-
 		/// <summary>
 		/// Title: "GLN Extension Component" | Type: "C"
 		/// </summary>
 		public string ValGlnext { get; set; }
-
 		/// <summary>
 		/// Title: "Space type" | Type: "AC"
 		/// </summary>
 		public string ValSpacetyp { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValSpacetyp { get; set; }
-
 		/// <summary>
 		/// Title: "Space" | Type: "C"
 		/// </summary>
@@ -62,15 +66,6 @@ namespace GenioMVC.ViewModels.Lcext
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Global Location Number" | Type: "CE"
-		/// </summary>
-		public string ValCodlocat { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -86,9 +81,10 @@ namespace GenioMVC.ViewModels.Lcext
 
 		public string ValCodlcext { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Lcext_ViewModel() : base(null!) { }
@@ -124,6 +120,15 @@ namespace GenioMVC.ViewModels.Lcext
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Lcext model = new Models.Lcext(userContext) { Identifier = "FLCEXT" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FLCEXT");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -184,10 +189,10 @@ namespace GenioMVC.ViewModels.Lcext
 
 			try
 			{
+				ValCodlocat = ViewModelConversion.ToString(m.ValCodlocat);
 				ValGlnext = ViewModelConversion.ToString(m.ValGlnext);
 				ValSpacetyp = ViewModelConversion.ToString(m.ValSpacetyp);
 				ValSpaceobs = ViewModelConversion.ToString(m.ValSpaceobs);
-				ValCodlocat = ViewModelConversion.ToString(m.ValCodlocat);
 				ValCodlcext = ViewModelConversion.ToString(m.ValCodlcext);
 			}
 			catch (Exception)
@@ -197,6 +202,20 @@ namespace GenioMVC.ViewModels.Lcext
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Lcext m)
 		{
 			if (m == null)
@@ -207,21 +226,74 @@ namespace GenioMVC.ViewModels.Lcext
 
 			try
 			{
+				m.ValCodlocat = ViewModelConversion.ToString(ValCodlocat);
 				m.ValGlnext = ViewModelConversion.ToString(ValGlnext);
 				m.ValSpacetyp = ViewModelConversion.ToString(ValSpacetyp);
 				m.ValSpaceobs = ViewModelConversion.ToString(ValSpaceobs);
-				m.ValCodlocat = ViewModelConversion.ToString(ValCodlocat);
 				m.ValCodlcext = ViewModelConversion.ToString(ValCodlcext);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Lcext) to Model (Lcext) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Lcext) to Model (Lcext) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "lcext.codlocat":
+						this.ValCodlocat = ViewModelConversion.ToString(_value);
+						break;
+					case "lcext.glnext":
+						this.ValGlnext = ViewModelConversion.ToString(_value);
+						break;
+					case "lcext.spacetyp":
+						this.ValSpacetyp = ViewModelConversion.ToString(_value);
+						break;
+					case "lcext.spaceobs":
+						this.ValSpaceobs = ViewModelConversion.ToString(_value);
+						break;
+					case "lcext.codlcext":
+						this.ValCodlcext = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Lcext) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Lcext)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Lcext.Find(id ?? Navigation.GetStrValue("lcext"), m_userContext, "FLCEXT"); }
+			finally { Model ??= new Models.Lcext(m_userContext) { Identifier = "FLCEXT" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -235,20 +307,13 @@ namespace GenioMVC.ViewModels.Lcext
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FLCEXT";
@@ -258,6 +323,7 @@ namespace GenioMVC.ViewModels.Lcext
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -315,32 +381,26 @@ namespace GenioMVC.ViewModels.Lcext
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValGlnext", Resources.Resources.GLN_EXTENSION_COMPON55869, ValGlnext, 50);
 			validator.StringLength("ValSpaceobs", Resources.Resources.SPACE62433, ValSpaceobs, 50);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE LCEXT]/
 		public override void Save()
 		{
 
-			try { Model = Models.Lcext.Find(Navigation.GetStrValue("lcext"), m_userContext, "FLCEXT"); }
-			finally { if (Model == null) Model = new Models.Lcext(m_userContext) { Identifier = "FLCEXT" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY LCEXT]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Lcext.Find(Navigation.GetStrValue("lcext"), m_userContext, "FLCEXT"); }
-			finally { if (Model == null) Model = new Models.Lcext(m_userContext) { Identifier = "FLCEXT" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE LCEXT]/
 
@@ -373,8 +433,8 @@ namespace GenioMVC.ViewModels.Lcext
 				object hValue = Navigation.GetValue("locat", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					lcext___locatgln_____Conds.Equal(CSGenioAlocat.FldCodlocat, Navigation.GetValue("locat"));
-					this.ValCodlocat = Navigation.GetStrValue("locat");
+					lcext___locatgln_____Conds.Equal(CSGenioAlocat.FldCodlocat, hValue);
+					this.ValCodlocat = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -391,8 +451,6 @@ namespace GenioMVC.ViewModels.Lcext
 					Navigation.CurrentLevel.SetEntry("RETURN_locat", null);
 				}
 				FillDependant_LcextTableLocatGln(lazyLoad);
-				//Check if foreignkey comes from history
-				TableLocatGln.FilledByHistory = Navigation.CheckFilledByHistory("locat");
 				return;
 			}
 
@@ -460,9 +518,6 @@ namespace GenioMVC.ViewModels.Lcext
 
 				TableLocatGln.List = new SelectList(TableLocatGln.Elements.ToSelectList(x => x.ValGln, x => x.ValCodlocat,  x => x.ValCodlocat == this.ValCodlocat), "Value", "Text", this.ValCodlocat);
 				FillDependant_LcextTableLocatGln();
-
-				//Check if foreignkey comes from history
-				TableLocatGln.FilledByHistory = Navigation.CheckFilledByHistory("locat");
 			}
 		}
 
@@ -559,16 +614,18 @@ namespace GenioMVC.ViewModels.Lcext
 		{
 			return identifier switch
 			{
+				"lcext.codlocat" => ViewModelConversion.ToString(modelValue),
 				"lcext.glnext" => ViewModelConversion.ToString(modelValue),
 				"lcext.spacetyp" => ViewModelConversion.ToString(modelValue),
 				"lcext.spaceobs" => ViewModelConversion.ToString(modelValue),
-				"lcext.codlocat" => ViewModelConversion.ToString(modelValue),
 				"lcext.codlcext" => ViewModelConversion.ToString(modelValue),
 				"locat.codlocat" => ViewModelConversion.ToString(modelValue),
 				"locat.gln" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

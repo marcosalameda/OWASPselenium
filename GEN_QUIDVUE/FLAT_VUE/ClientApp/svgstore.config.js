@@ -1,6 +1,6 @@
-﻿const svgstore = require('svgstore')
-const fs = require('fs')
-const path = require('path')
+﻿import { readdirSync, readFileSync, writeFileSync } from 'fs'
+import { extname, join, parse } from 'path'
+import svgstore from 'svgstore'
 
 /**
  * Specific bundling setup for this project.
@@ -18,18 +18,18 @@ function ProjectPack()
 function PackSvg(dirname, output)
 {
 	let sprites = svgstore()
-	const files = fs.readdirSync(dirname)
+	const files = readdirSync(dirname)
 
 	files.forEach((file) => {
-		if (path.extname(file) === '.svg')
+		if (extname(file) === '.svg')
 		{
-			let id = path.parse(file).name
-			let content = fs.readFileSync(path.join(dirname, file), 'utf8')
+			let id = parse(file).name
+			let content = readFileSync(join(dirname, file), 'utf8')
 			sprites.add(id, content)
 		}
 	})
 
-	fs.writeFileSync(output, sprites.toString())
+	writeFileSync(output, sprites.toString())
 }
 
-module.exports = ProjectPack
+export default ProjectPack

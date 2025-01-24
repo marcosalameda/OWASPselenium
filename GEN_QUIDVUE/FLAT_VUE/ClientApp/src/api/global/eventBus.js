@@ -12,7 +12,7 @@ export class QEventEmitter extends EventEmitter
 	{
 		if (!events)
 			return false
-		events.forEach(event => this.on.call(this, event, fn, context))
+		events.forEach((event) => this.on.call(this, event, fn, context))
 		return true
 	}
 
@@ -20,11 +20,11 @@ export class QEventEmitter extends EventEmitter
 	{
 		if (!events)
 			return false
-		events.forEach(event => this.off(event, fn, context))
+		events.forEach((event) => this.off(event, fn, context))
 		return true
 	}
 }
 
-const EventBus = new QEventEmitter()
+const eventBus = new QEventEmitter()
 
-export default EventBus
+export default eventBus

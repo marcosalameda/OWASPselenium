@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODREGIA',
 			relatedArea: 'REGI1',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCodregia))
 		watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('pesso.codregia', this.ValCodregia, newValue, oldValue))
 
@@ -69,6 +70,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODPAISE',
 			relatedArea: 'CNTRY',
 			description: computed(() => this.Resources.COMPANY_PARENTS01581),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodpaise))
 		watch(() => this.ValCodpaise.value, (newValue, oldValue) => this.onUpdate('pesso.codpaise', this.ValCodpaise, newValue, oldValue))
 
@@ -79,6 +81,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODCNTRY',
 			relatedArea: 'PAIS1',
 			description: computed(() => this.Resources.PERSON_S_PARENTS05687),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodcntry))
 		watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('pesso.codcntry', this.ValCodcntry, newValue, oldValue))
 
@@ -180,6 +183,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'PESSO',
 			field: 'DTULTCAT',
 			description: computed(() => this.Resources.SINCE47259),
+			isFixed: true,
 		}).cloneFrom(values?.ValDtultcat))
 		watch(() => this.ValDtultcat.value, (newValue, oldValue) => this.onUpdate('pesso.dtultcat', this.ValDtultcat, newValue, oldValue))
 
@@ -222,6 +226,18 @@ export default class ViewModel extends ViewModelBase
 			description: computed(() => this.Resources.PHOTO51874),
 		}).cloneFrom(values?.ValPhotogra))
 		watch(() => this.ValPhotogra.value, (newValue, oldValue) => this.onUpdate('pesso.photogra', this.ValPhotogra, newValue, oldValue))
+
+		/** The form fields used only in formulas. */
+		this.ValEmail2 = reactive(new modelFieldType.String({
+			id: 'ValEmail2',
+			originId: 'ValEmail2',
+			area: 'PESSO',
+			field: 'EMAIL2',
+			maxLength: 254,
+			description: computed(() => this.Resources.EMAIL25170),
+			isFixed: true,
+		}).cloneFrom(values?.ValEmail2))
+		watch(() => this.ValEmail2.value, (newValue, oldValue) => this.onUpdate('pesso.email2', this.ValEmail2, newValue, oldValue))
 	}
 
 	/**
@@ -236,5 +252,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodpesso'
 
 	get QPrimaryKey() { return this.ValCodpesso.value }
-	set QPrimaryKey(value) { this.ValCodpesso.value = value }
+	set QPrimaryKey(value) { this.ValCodpesso.updateValue(value) }
 }

@@ -57,5 +57,13 @@
                 "$msCompile", "$node-sass"
             ]
         },
+        {
+            "label": "vite",
+            "type": "npm",
+            "script": "vite:run",
+            "isBackground": true,
+            "path": "./ClientApp",
+            "problemMatcher": ["$vite"]
+        }
     ]
 }

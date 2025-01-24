@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuPTN_511ViewModel.js'
+
 	const requiredTextResources = ['QMenuPTN_511', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,478 +117,134 @@
 				menuInfo: {
 					id: '511',
 					isMenuList: true,
+					designation: computed(() => this.Resources.COMODANTES42347),
 					acronym: 'PTN_511',
-					name: 'FLDS',
+					name: 'PESS1',
 					route: 'menu-PTN_511',
 					order: '511',
-					controller: 'FLDS',
+					controller: 'PESS1',
 					action: 'PTN_Menu_511',
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
-						controller: 'FLDS',
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'PTN_Menu_511',
+						controller: 'PESS1',
 						action: 'PTN_Menu_511',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
-								name: 'Aero.ValName',
-								area: 'AERO',
+								name: 'ValName',
+								area: 'PESS1',
 								field: 'NAME',
-								label: computed(() => this.Resources.AIRLINE_NAME55130),
-								dataLength: 50,
+								label: computed(() => this.Resources.NAME31974),
+								dataLength: 85,
 								scrollData: 30,
-								pkColumn: 'ValCodaero',
 							}),
-							new listColumnTypes.TextColumn({
+							new listColumnTypes.ArrayColumn({
 								order: 2,
-								name: 'ValDescrip',
-								area: 'FLDS',
-								field: 'DESCRIP',
-								label: computed(() => this.Resources.DESCRIPTION07383),
-								scrollData: 30,
+								name: 'ValGender',
+								area: 'PESS1',
+								field: 'GENDER',
+								label: computed(() => this.Resources.GENUS37471),
+								dataLength: 1,
+								scrollData: 1,
+								array: qProjArrays.QArrayGenero.setResources(vm.$getResource).elements,
+								arrayType: qProjArrays.QArrayGenero.type,
 							}),
-							new listColumnTypes.NumericColumn({
+							new listColumnTypes.DateColumn({
 								order: 3,
-								name: 'ValNpassage',
-								area: 'FLDS',
-								field: 'NPASSAGE',
-								label: computed(() => this.Resources.NUMERIC19292),
-								scrollData: 3,
-								maxDigits: 3,
-								decimalPlaces: 0,
+								name: 'ValDtnascim',
+								area: 'PESS1',
+								field: 'DTNASCIM',
+								label: computed(() => this.Resources.BIRTH21799),
+								scrollData: 8,
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 4,
-								name: 'ValDuration',
-								area: 'FLDS',
-								field: 'DURATION',
-								label: computed(() => this.Resources.NUMERIC_DECIMAL37352),
+								name: 'ValIdade',
+								area: 'PESS1',
+								field: 'IDADE',
+								label: computed(() => this.Resources.AGE28663),
 								scrollData: 5,
-								maxDigits: 2,
-								decimalPlaces: 2,
-							}),
-							new listColumnTypes.CurrencyColumn({
-								order: 5,
-								name: 'ValPrice',
-								area: 'FLDS',
-								field: 'PRICE',
-								label: computed(() => this.Resources.CURRENCY13881),
-								scrollData: 6,
-								maxDigits: 3,
+								maxDigits: 5,
 								decimalPlaces: 0,
-							}),
-							new listColumnTypes.CurrencyColumn({
-								order: 6,
-								name: 'ValPrecobil',
-								area: 'FLDS',
-								field: 'PRECOBIL',
-								label: computed(() => this.Resources.CURRENCY_DECIMAL48296),
-								scrollData: 6,
-								maxDigits: 3,
-								decimalPlaces: 0,
-							}),
-							new listColumnTypes.DateColumn({
-								order: 7,
-								name: 'ValDate',
-								area: 'FLDS',
-								field: 'DATE',
-								label: computed(() => this.Resources.DATE__DD_MM_YY_57869),
-								scrollData: 8,
-								dateTimeType: 'Date',
-							}),
-							new listColumnTypes.DateColumn({
-								order: 8,
-								name: 'ValDatetime',
-								area: 'FLDS',
-								field: 'DATETIME',
-								label: computed(() => this.Resources.DATETIME61308),
-								scrollData: 16,
-								dateTimeType: 'DateTime',
-							}),
-							new listColumnTypes.DateColumn({
-								order: 9,
-								name: 'ValDateseco',
-								area: 'FLDS',
-								field: 'DATESECO',
-								label: computed(() => this.Resources.DATESECOND44557),
-								scrollData: 19,
-								dateTimeType: 'DateTimeSeconds',
-							}),
-							new listColumnTypes.TextColumn({
-								order: 10,
-								name: 'ValTime',
-								area: 'FLDS',
-								field: 'TIME',
-								label: computed(() => this.Resources.TIME15328),
-								dataLength: 5,
-								scrollData: 5,
-								dateTimeType: 'Time',
 							}),
 							new listColumnTypes.NumericColumn({
-								order: 11,
-								name: 'ValYear',
-								area: 'FLDS',
-								field: 'YEAR',
-								label: computed(() => this.Resources.YEAR61794),
-								scrollData: 4,
-								maxDigits: 4,
+								order: 5,
+								name: 'ValIdfuncio',
+								area: 'PESS1',
+								field: 'IDFUNCIO',
+								label: computed(() => this.Resources.OFFICIAL_NO_34819),
+								scrollData: 6,
+								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
-							new listColumnTypes.BooleanColumn({
-								order: 12,
-								name: 'ValPrimviag',
-								area: 'FLDS',
-								field: 'PRIMVIAG',
-								label: computed(() => this.Resources.LOGICAL47485),
-								scrollData: 1,
-							}),
-							new listColumnTypes.BooleanColumn({
-								order: 13,
-								name: 'ValConditio',
-								area: 'FLDS',
-								field: 'CONDITIO',
-								label: computed(() => this.Resources.CONDITIONAL01431),
-								scrollData: 1,
-								maxDigits: 1,
-								decimalPlaces: 0,
-							}),
-							new listColumnTypes.ArrayColumn({
-								order: 14,
-								name: 'ValClass',
-								area: 'FLDS',
-								field: 'CLASS',
-								label: computed(() => this.Resources.TEXT_ENUMERATION45668),
-								dataLength: 2,
-								scrollData: 2,
-								array: qProjArrays.QArrayClass.setResources(vm.$getResource).elements,
-								arrayType: qProjArrays.QArrayClass.type,
-							}),
-							new listColumnTypes.ArrayColumn({
-								order: 15,
-								name: 'ValClassnum',
-								area: 'FLDS',
-								field: 'CLASSNUM',
-								label: computed(() => this.Resources.NUMERIC_ENUMERATION19068),
-								scrollData: 1,
-								maxDigits: 1,
-								decimalPlaces: 0,
-								array: qProjArrays.QArrayClassnum.setResources(vm.$getResource).elements,
-								arrayType: qProjArrays.QArrayClassnum.type,
-							}),
-							new listColumnTypes.ArrayColumn({
-								order: 16,
-								name: 'ValLogicenu',
-								area: 'FLDS',
-								field: 'LOGICENU',
-								label: computed(() => this.Resources.LOGICAL_ENUMERATION30276),
-								scrollData: 1,
-								array: qProjArrays.QArrayPrimviag.setResources(vm.$getResource).elements,
-								arrayType: qProjArrays.QArrayPrimviag.type,
-							}),
-							new listColumnTypes.ImageColumn({
-								order: 17,
-								name: 'ValLogo',
-								area: 'FLDS',
-								field: 'LOGO',
-								label: computed(() => this.Resources.LOGO62483),
-								scrollData: 3,
-								sortable: false,
-							}),
-							new listColumnTypes.DocumentColumn({
-								order: 18,
-								name: 'ValAttach',
-								area: 'FLDS',
-								field: 'ATTACH',
-								label: computed(() => this.Resources.DOCUMENT00695),
-								dataLength: 50,
-								scrollData: 30,
-								sortable: false,
-								viewType: qEnums.documentViewTypeMode.Print,
-							}),
-							new listColumnTypes.ImageColumn({
-								order: 19,
-								name: 'ValLogoexte',
-								area: 'FLDS',
-								field: 'LOGOEXTE',
-								label: computed(() => this.Resources.LOGO__EXTERNAL_FILE_58162),
-								dataLength: 3,
-								scrollData: 3,
-								sortable: false,
 							}),
 							new listColumnTypes.TextColumn({
-								order: 20,
-								name: 'ValCreatuse',
-								area: 'FLDS',
-								field: 'CREATUSE',
-								label: computed(() => this.Resources.CREATED_BY12292),
+								order: 6,
+								name: 'ValTelephon',
+								area: 'PESS1',
+								field: 'TELEPHON',
+								label: computed(() => this.Resources.PHONE56703),
 								dataLength: 20,
 								scrollData: 20,
 							}),
-							new listColumnTypes.DateColumn({
-								order: 21,
-								name: 'ValCreatdat',
-								area: 'FLDS',
-								field: 'CREATDAT',
-								label: computed(() => this.Resources.DATE_OF_CREATION__DD02208),
-								scrollData: 8,
-								dateTimeType: 'Date',
-							}),
 							new listColumnTypes.TextColumn({
-								order: 22,
-								name: 'ValCreathou',
-								area: 'FLDS',
-								field: 'CREATHOU',
-								label: computed(() => this.Resources.HOUR_OF_CREATION33629),
-								dataLength: 5,
-								scrollData: 5,
-								dateTimeType: 'Time',
-							}),
-							new listColumnTypes.DateColumn({
-								order: 23,
-								name: 'ValCreatins',
-								area: 'FLDS',
-								field: 'CREATINS',
-								label: computed(() => this.Resources.COMPLETE_DATE_OF_CRE57046),
-								scrollData: 15,
-								dateTimeType: 'DateTimeSeconds',
-							}),
-							new listColumnTypes.TextColumn({
-								order: 24,
-								name: 'Equip.ValRegistnr',
-								area: 'EQUIP',
-								field: 'REGISTNR',
-								label: computed(() => this.Resources.NO__REGISTER04207),
-								dataLength: 6,
-								scrollData: 6,
-								pkColumn: 'ValCodequip',
-							}),
-							new listColumnTypes.TextColumn({
-								order: 25,
-								name: 'ValTxtfield',
-								area: 'FLDS',
-								field: 'TXTFIELD',
-								label: computed(() => this.Resources.TEXT_FIELD41810),
-								dataLength: 50,
-								scrollData: 30,
-							}),
-							new listColumnTypes.TextColumn({
-								order: 26,
-								name: 'ValEmailfld',
-								area: 'FLDS',
-								field: 'EMAILFLD',
+								order: 7,
+								name: 'ValEmail',
+								area: 'PESS1',
+								field: 'EMAIL',
 								label: computed(() => this.Resources.EMAIL25170),
-								dataLength: 50,
+								dataLength: 254,
 								scrollData: 30,
 							}),
-							new listColumnTypes.TextColumn({
-								order: 27,
-								name: 'ValZipfield',
-								area: 'FLDS',
-								field: 'ZIPFIELD',
-								label: computed(() => this.Resources.ZIPCODE21021),
-								dataLength: 8,
-								scrollData: 8,
-							}),
-							new listColumnTypes.TextColumn({
-								order: 28,
-								name: 'ValIbanfiel',
-								area: 'FLDS',
-								field: 'IBANFIEL',
-								label: computed(() => this.Resources.IBAN28506),
-								dataLength: 34,
-								scrollData: 30,
-							}),
-							new listColumnTypes.TextColumn({
-								order: 29,
-								name: 'ValSsnumber',
-								area: 'FLDS',
-								field: 'SSNUMBER',
-								label: computed(() => this.Resources.SOCIAL_SECURITY_NO48150),
-								dataLength: 11,
-								scrollData: 11,
-							}),
-							new listColumnTypes.TextColumn({
-								order: 30,
-								name: 'ValLicplate',
-								area: 'FLDS',
-								field: 'LICPLATE',
-								label: computed(() => this.Resources.LICENCE_PLATE07627),
-								dataLength: 8,
-								scrollData: 8,
-							}),
-							new listColumnTypes.TextColumn({
-								order: 31,
-								name: 'ValVatnumbr',
-								area: 'FLDS',
-								field: 'VATNUMBR',
-								label: computed(() => this.Resources.VAT_NUMBER24236),
-								dataLength: 9,
-								scrollData: 9,
-							}),
-							new listColumnTypes.TextColumn({
-								order: 32,
-								name: 'ValBanknmbr',
-								area: 'FLDS',
-								field: 'BANKNMBR',
-								label: computed(() => this.Resources.BANKING_ACCOUNT_NUMB62548),
-								dataLength: 24,
-								scrollData: 24,
-							}),
-							new listColumnTypes.TextColumn({
-								order: 33,
-								name: 'ValUpprtext',
-								area: 'FLDS',
-								field: 'UPPRTEXT',
-								label: computed(() => this.Resources.UPPERCASE48238),
-								dataLength: 50,
-								scrollData: 30,
-							}),
-							new listColumnTypes.TextColumn({
-								order: 34,
-								name: 'ValPassfld',
-								area: 'FLDS',
-								field: 'PASSFLD',
-								label: computed(() => this.Resources.PASSWORD09467),
-								dataLength: 50,
-								scrollData: 30,
-							}),
-							new listColumnTypes.TextColumn({
-								order: 35,
-								name: 'ValClrpicke',
-								area: 'FLDS',
-								field: 'CLRPICKE',
-								label: computed(() => this.Resources.COLORPICKER39653),
-								dataLength: 50,
-								scrollData: 30,
-							}),
-							new listColumnTypes.BooleanColumn({
-								order: 36,
-								name: 'ValShwrc',
-								area: 'FLDS',
-								field: 'SHWRC',
-								label: computed(() => this.Resources.SHOW_RECORD53851),
-								scrollData: 1,
-							}),
-							new listColumnTypes.ArrayColumn({
-								order: 37,
-								name: 'ValRadiob',
-								area: 'FLDS',
-								field: 'RADIOB',
-								label: computed(() => this.Resources.RADIO_BTN20980),
-								dataLength: 5,
-								scrollData: 5,
-								array: qProjArrays.QArrayRadiobtn.setResources(vm.$getResource).elements,
-								arrayType: qProjArrays.QArrayRadiobtn.type,
+							new listColumnTypes.ImageColumn({
+								order: 8,
+								name: 'ValPhotogra',
+								area: 'PESS1',
+								field: 'PHOTOGRA',
+								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
+								scrollData: 3,
+								sortable: false,
+								searchable: false,
 							}),
 						],
 						config: {
 							name: 'PTN_Menu_511',
 							serverMode: true,
-							pkColumn: 'ValCodflds',
-							tableAlias: 'FLDS',
-							tableNamePlural: computed(() => this.Resources.FIELD_TYPES49172),
+							pkColumn: 'ValCodpesso',
+							tableAlias: 'PESS1',
+							tableNamePlural: computed(() => this.Resources.COMFORTERS51045),
 							viewManagement: 'U',
 							showLimitsInfo: true,
-							tableTitle: computed(() => this.Resources.FIELD_TYPES49172),
+							tableTitle: computed(() => this.Resources.COMODANTES42347),
 							showAlternatePagination: true,
 							permissions: {
+								canView: false,
+								canEdit: false,
+								canDuplicate: false,
+								canDelete: false,
+								canInsert: false
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
-							crudActions: [
-								{
-									id: 'show',
-									name: 'show',
-									title: computed(() => this.Resources.CONSULTAR57388),
-									icon: {
-										icon: 'view'
-									},
-									isInReadOnly: true,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'FIELDHLP',
-										mode: 'SHOW',
-										isControlled: true
-									}
-								},
-								{
-									id: 'edit',
-									name: 'edit',
-									title: computed(() => this.Resources.EDITAR11616),
-									icon: {
-										icon: 'pencil'
-									},
-									isInReadOnly: true,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'FIELDHLP',
-										mode: 'EDIT',
-										isControlled: true
-									}
-								},
-								{
-									id: 'duplicate',
-									name: 'duplicate',
-									title: computed(() => this.Resources.DUPLICAR09748),
-									icon: {
-										icon: 'duplicate'
-									},
-									isInReadOnly: true,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'FIELDHLP',
-										mode: 'DUPLICATE',
-										isControlled: true
-									}
-								},
-								{
-									id: 'delete',
-									name: 'delete',
-									title: computed(() => this.Resources.ELIMINAR21155),
-									icon: {
-										icon: 'delete'
-									},
-									isInReadOnly: true,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'FIELDHLP',
-										mode: 'DELETE',
-										isControlled: true
-									}
-								}
-							],
-							generalActions: [
-								{
-									id: 'insert',
-									name: 'insert',
-									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
-									isInReadOnly: true,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'FIELDHLP',
-										mode: 'NEW',
-										repeatInsertion: true,
-										isControlled: true
-									}
-								},
-							],
 							generalCustomActions: [
 							],
 							groupActions: [
@@ -598,41 +255,30 @@
 							],
 							rowClickAction: {
 								id: 'RCA_PTN_5111',
-								name: 'form-FIELDHLP',
+								name: 'PTN_Report_5111',
 								params: {
 									limits: [
 										{
-											identifier: 'id',
-											fnValueSelector: (row) => row.ValCodflds
+											identifier: 'pess1',
+											fnValueSelector: (row) => row.ValCodpesso
 										},
 									],
-									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'FIELDHLP',
+									action: vm.openReportAction, name: 'comodatos', preview: false, type: 'ssrsViewer', baseArea: 'Pess1'
 								}
 							},
 							formsDefinition: {
-								'FIELDHLP': {
-									fnKeySelector: (row) => row.Fields.ValCodflds,
-									isPopup: false
-								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: FIELDHLP
-							crudConditions: {
-							},
-							defaultSearchColumnName: 'ValDescrip',
-							defaultSearchColumnNameOriginal: 'ValDescrip',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultSearchColumnName: 'ValName',
+							defaultSearchColumnNameOriginal: 'ValName',
+							defaultColumnSorting: {
+								columnName: 'ValName',
+								sortOrder: 'asc'
+							}
 						},
-						changeEvents: ['changed-EQUIP', 'changed-FLDS', 'changed-AERO'],
-						uuid: '8c79866f-7459-4fd0-8b1b-b5434e42c174',
+						changeEvents: ['changed-PESS1', 'changed-CATE2', 'changed-STAKE', 'changed-CMPNY'],
+						uuid: '1f270728-876d-4479-8410-6d28a97b770a',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -661,6 +307,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS PTN_511]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS PTN_MENU_511]/
 // eslint-disable-next-line

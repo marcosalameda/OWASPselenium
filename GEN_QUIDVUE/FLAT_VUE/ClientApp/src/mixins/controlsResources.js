@@ -1,9 +1,21 @@
 ﻿import { computed } from 'vue'
 
-class TableListMainResources
+class BaseResources
 {
 	constructor(fnGetResource)
 	{
+		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
+		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
+
+		this.showHelp = computed(() => this._fnGetResource('MOSTRAR_AJUDA54733'))
+	}
+}
+
+class TableListMainResources extends BaseResources
+{
+	constructor(fnGetResource)
+	{
+		super (fnGetResource)
 		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
 		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
 
@@ -16,6 +28,7 @@ class TableListMainResources
 		this.applyText = computed(() => this._fnGetResource('APLICAR33981'))
 		this.closeText = computed(() => this._fnGetResource('FECHAR32496'))
 		this.okText = computed(() => this._fnGetResource('OK15819'))
+		this.pendingRecords = computed(() => this._fnGetResource('ATENCAO__ESTA_FICHA_24725'))
 		this.dropToUpload = computed(() => this._fnGetResource('ARRASTE_FICHEIROS_AT59049'))
 		this.saveText = computed(() => this._fnGetResource('GRAVAR45301'))
 		this.viewText = computed(() => this._fnGetResource('CONSULTAR57388'))
@@ -44,7 +57,7 @@ class TableListMainResources
 		this.searchTextTitle = computed(() => this._fnGetResource('CAIXA_DE_PESQUISA53870'))
 		this.searchText = computed(() => this._fnGetResource('PESQUISAR34506'))
 		this.forText = computed(() => this._fnGetResource('POR12741'))
-		this.ofText = computed(() => this._fnGetResource('DE37566'))
+		this.ofText = computed(() => this._fnGetResource('OF21852'))
 		this.allFieldsText = computed(() => this._fnGetResource('TODOS_OS_CAMPOS47279'))
 		this.showText = computed(() => this._fnGetResource('MOSTRAR50268'))
 		this.hideText = computed(() => this._fnGetResource('ESCONDER31385'))
@@ -52,10 +65,9 @@ class TableListMainResources
 		this.fieldIsRequired = computed(() => this._fnGetResource('O_CAMPO__0__E_OBRIGA36687'))
 		this.isRequired = computed(() => this._fnGetResource('E_OBRIGATORIO35368'))
 		this.limitsButtonTitle = computed(() => this._fnGetResource('LIMITE12596'))
-		this.limitsListTitle_1 = computed(() => this._fnGetResource('A_INFORMACAO_NA_LIST25711'))
-		this.limitsListTitle_2 = computed(() => this._fnGetResource('ESTA_LIMITADA_POR50241'))
+		this.limitsListTitlePrepend = computed(() => this._fnGetResource('A_INFORMACAO_NA_LIST25711'))
+		this.limitsListTitleAppend = computed(() => this._fnGetResource('ESTA_LIMITADA_POR50241'))
 		this.textRowsSelected = computed(() => this._fnGetResource('REGISTO_S__SELECIONA64172'))
-		this.hasTextWrapText = computed(() => this._fnGetResource('QUEBRA_DE_LINHA53477'))
 		this.groupActionsText = computed(() => this._fnGetResource('ACOES_COLETIVAS25162'))
 		this.advancedFiltersText = computed(() => this._fnGetResource('FILTROS_AVANCADOS32501'))
 		this.applyFilterText = computed(() => this._fnGetResource('APLICAR_FILTRO50221'))
@@ -91,6 +103,7 @@ class TableListMainResources
 		this.inactiveText = computed(() => this._fnGetResource('INACTIVE23138'))
 		this.showRecordsWhereText = computed(() => this._fnGetResource('MOSTRAR_REGISTOS_QUA55160'))
 		this.visibleColumnsText = computed(() => this._fnGetResource('COLUNAS_VISIVEIS27717'))
+		this.invisibleColumnsHelpText = computed(() => this._fnGetResource('COLUNAS_INVISIVEIS_N46371'))
 		this.selectView = computed(() => this._fnGetResource('SELECIONAR_VISTA16672'))
 		this.saveViewText = computed(() => this._fnGetResource('GUARDAR_VISTA35229'))
 		this.savedView = computed(() => this._fnGetResource('VISTA_GRAVADA55829'))
@@ -99,6 +112,7 @@ class TableListMainResources
 		this.viewExistsText = computed(() => this._fnGetResource('ESSA_VISTA_JA_EXISTE52743'))
 		this.wantToOverwriteText = computed(() => this._fnGetResource('DESEJA_SUBSTITUI_LA_25718'))
 		this.wantToSaveChanges = computed(() => this._fnGetResource('QUER_GRAVAR_AS_ALTER22033'))
+		this.wantToDelete = computed(() => this._fnGetResource('TEM_A_CERTEZA_QUE_QU37043'))
 		this.wantToSaveChangesToView = computed(() => this._fnGetResource('SALVAR_AS_ALTERACOES51739'))
 		this.tableViewSaveSuccess = computed(() => this._fnGetResource('VISUALIZACAO_DE_TABE40128'))
 		this.viewNameText = computed(() => this._fnGetResource('NOME_DA_VISTA31135'))
@@ -115,13 +129,28 @@ class TableListMainResources
 		this.loading = computed(() => this._fnGetResource('A_CARREGAR___34906'))
 		this.onDate = computed(() => this._fnGetResource('EM_32327'))
 		this.state = computed(() => this._fnGetResource('ESTADO07788'))
+		this.first = computed(() => this._fnGetResource('PRIMEIRA43991'))
+		this.last = computed(() => this._fnGetResource('ULTIMA04868'))
+		this.previous = computed(() => this._fnGetResource('ANTERIOR34904'))
+		this.next = computed(() => this._fnGetResource('PROXIMO29858'))
+		this.total = computed(() => this._fnGetResource('TOTAL49307'))
+		this.MoveUp = computed(() => this._fnGetResource('MOVER_PARA_CIMA46136'))
+		this.MoveDown = computed(() => this._fnGetResource('MOVER_PARA_BAIXO46489'))
+		this.rowAddNewAfter = computed(() => this._fnGetResource('ADICIONAR_NOVA_LINHA13110'))
+		this.rowDragDropReorder = computed(() => this._fnGetResource('ARRASTE_E_LARGUE_PAR46711'))
+		this.rowExpand = computed(() => this._fnGetResource('EXPANDIR_LINHA32265'))
+		this.rowCollapse = computed(() => this._fnGetResource('COLAPSAR_LINHA03427'))
+		this.select = computed(() => this._fnGetResource('SELECIONAR08804'))
+		this.close = computed(() => this._fnGetResource('FECHAR32496'))
+		this.download = computed(() => this._fnGetResource('DESCARREGAR58418'))
 	}
 }
 
-class ImportExportResources
+class ImportExportResources extends BaseResources
 {
 	constructor(fnGetResource)
 	{
+		super (fnGetResource)
 		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
 		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
 	}
@@ -152,10 +181,11 @@ class ImportExportResources
 	}
 }
 
-class MultipleValuesExtensionResources
+class MultipleValuesExtensionResources extends BaseResources
 {
 	constructor(fnGetResource)
 	{
+		super (fnGetResource)
 		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
 		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
 
@@ -165,10 +195,11 @@ class MultipleValuesExtensionResources
 	}
 }
 
-class LookupResources
+class LookupResources extends BaseResources
 {
 	constructor(fnGetResource)
 	{
+		super (fnGetResource)
 		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
 		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
 
@@ -176,13 +207,28 @@ class LookupResources
 		this.noData = computed(() => this._fnGetResource('SEM_DADOS_PARA_MOSTR24928'))
 		this.viewDetails = computed(() => this._fnGetResource('VIEW_DETAILS09924'))
 		this.viewMoreOptions = computed(() => this._fnGetResource('VER_MAIS32592'))
+		this.clearValue = computed(() => this._fnGetResource('REMOVER_VALOR43780'))
+		this.showOptions = computed(() => this._fnGetResource('MOSTRAR_OPCOES64064'))
 	}
 }
 
-class DocumentResources
+class DateTimeResources extends BaseResources
 {
 	constructor(fnGetResource)
 	{
+		super (fnGetResource)
+		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
+		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
+
+		this.clearValue = computed(() => this._fnGetResource('REMOVER_VALOR43780'))
+	}
+}
+
+class DocumentResources extends BaseResources
+{
+	constructor(fnGetResource)
+	{
+		super (fnGetResource)
 		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
 		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
 
@@ -223,7 +269,6 @@ class DocumentResources
 		this.bytesLabel = computed(() => this._fnGetResource('BYTES25864'))
 		this.author = computed(() => this._fnGetResource('AUTOR45670'))
 		this.deleteHeaderLabel = computed(() => this._fnGetResource('TEM_A_CERTEZA_QUE_QU37043'))
-		this.attachDocumentPlaceHolder = computed(() => this._fnGetResource('ANEXAR_DOCUMENTO00337'))
 		this.actionLabel = computed(() => this._fnGetResource('ACOES22599'))
 		this.viewAll = computed(() => this._fnGetResource('VER_TODAS10532'))
 		this.closeLabel = computed(() => this._fnGetResource('FECHAR32496'))
@@ -231,13 +276,17 @@ class DocumentResources
 		this.allTheVersionsExceptLastWillEliminate = computed(() => this._fnGetResource('TODAS_AS_VERSOES_EXC52356'))
 		this.uploadDocVersionHeader = computed(() => this._fnGetResource('VERSOES_DO_DOCUMENTO34166'))
 		this.createDocument = computed(() => this._fnGetResource('CRIAR_DOCUMENTO55731'))
+		this.editingDocument = computed(() => this._fnGetResource('ESTE_DOCUMENTO_ENCON39456'))
+		this.pendingDocumentVersion = computed(() => this._fnGetResource('ESTA_VERSAO_DO_DOCUM23227'))
+		this.errorProcessingRequest = computed(() => this._fnGetResource('OCORREU_UM_ERRO_AO_P53091'))
 	}
 }
 
-class ImageResources
+class ImageResources extends BaseResources
 {
 	constructor(fnGetResource)
 	{
+		super (fnGetResource)
 		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
 		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
 
@@ -269,10 +318,11 @@ class ImageResources
 	}
 }
 
-class DashboardResources
+class DashboardResources extends BaseResources
 {
 	constructor(fnGetResource)
 	{
+		super (fnGetResource)
 		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
 		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
 
@@ -292,21 +342,11 @@ class DashboardResources
 	}
 }
 
-class NumberInputResources
+class TimelineResources extends BaseResources
 {
 	constructor(fnGetResource)
 	{
-		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
-		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
-
-		this.emptyText = computed(() => this._fnGetResource('VAZIO58398'))
-	}
-}
-
-class TimelineResources
-{
-	constructor(fnGetResource)
-	{
+		super (fnGetResource)
 		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
 		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
 
@@ -318,10 +358,11 @@ class TimelineResources
 	}
 }
 
-class WizardResources
+class WizardResources extends BaseResources
 {
 	constructor(fnGetResource)
 	{
+		super (fnGetResource)
 		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
 		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
 
@@ -330,27 +371,74 @@ class WizardResources
 	}
 }
 
-class FormContainerResources
+class FormContainerResources extends BaseResources
 {
 	constructor(fnGetResource)
 	{
+		super (fnGetResource)
 		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
 		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
 
 		this.chooseElement = computed(() => this._fnGetResource('ESCOLHA_UM_ELEMENTO_24060'))
+		this.or = computed(() => this._fnGetResource('OU11765'))
+		this.insert = computed(() => this._fnGetResource('INSERIR43365'))
+	}
+}
+
+class CodeEditorResources extends BaseResources
+{
+	constructor(fnGetResource)
+	{
+		super (fnGetResource)
+		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
+		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
+
+		this.showChanges = computed(() => this._fnGetResource('MOSTRAR_ALTERACOES47173'))
+		this.dark = computed(() => this._fnGetResource('ESCURO16457'))
+		this.light = computed(() => this._fnGetResource('CLARO60841'))
+		this.theme = computed(() => this._fnGetResource('TEMA56931'))
+		this.defaultPlaceholder = computed(() => this._fnGetResource('ESCREVA_O_SEU_CODIGO16246'))
+	}
+}
+
+class PropertyListResources extends BaseResources
+{
+	constructor(fnGetResource)
+	{
+		super (fnGetResource)
+		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
+		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
+
+		this.emptyMessage = computed(() => this._fnGetResource('SELECIONE_UM_CAMPO_P10271'))
+	}
+}
+
+class TabsResources extends BaseResources
+{
+	constructor(fnGetResource)
+	{
+		super (fnGetResource)
+		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
+		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
+
+		this.panels = computed(() => this._fnGetResource('PAINEIS13077'))
 	}
 }
 
 export default {
+	BaseResources,
 	TableListMainResources,
 	ImportExportResources,
 	MultipleValuesExtensionResources,
 	LookupResources,
+	DateTimeResources,
 	DocumentResources,
 	ImageResources,
 	DashboardResources,
 	TimelineResources,
-	NumberInputResources,
 	WizardResources,
-	FormContainerResources
+	FormContainerResources,
+	CodeEditorResources,
+	PropertyListResources,
+	TabsResources
 }

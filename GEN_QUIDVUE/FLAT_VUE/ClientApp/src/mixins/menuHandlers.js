@@ -15,11 +15,12 @@ export default {
 
 	created()
 	{
-		this.componentOnLoadProc.AddBusy(loadResources(this, this.interfaceMetadata.requiredTextResources), this.Resources[hardcodedTexts.genericLoad], 300)
-		this.loadList()
-		this.componentOnLoadProc.Once(() => {
+		this.componentOnLoadProc.addBusy(loadResources(this, this.interfaceMetadata.requiredTextResources), this.Resources[hardcodedTexts.genericLoad], 300)
+		this.controls.menu.init()
+		this.componentOnLoadProc.addWL(this.loadList())
+		this.componentOnLoadProc.once(() => {
 			this.setMenuNavProperties()
-			this.model.menu.Init()
+			this.controls.menu.initData()
 		}, this)
 	},
 
@@ -28,14 +29,14 @@ export default {
 		this.$eventTracker.addTrace({ origin: 'mounted (menuHandler)', message: 'Menu is mounted', contextData: { menuInfo: this.menuInfo } })
 
 		// Listens for changes to the DB and updates the list accordingly.
-		this.$eventHub.onMany(this.model.menu.changeEvents, this.loadList)
+		this.$eventHub.onMany(this.controls.menu.changeEvents, this.loadList)
 	},
 
 	beforeUnmount()
 	{
 		this.$eventTracker.addTrace({ origin: 'beforeUnmount (menuHandler)', message: 'Menu will be unmounted', contextData: { menuInfo: this.menuInfo } })
 		// Removes the listeners.
-		this.$eventHub.offMany(this.model.menu.changeEvents, this.loadList)
+		this.$eventHub.offMany(this.controls.menu.changeEvents, this.loadList)
 	},
 
 	computed: {
@@ -44,9 +45,9 @@ export default {
 		 */
 		hasInvalidRows()
 		{
-			if (!Array.isArray(this.model?.menu?.rows))
+			if (!Array.isArray(this.controls?.menu?.rows))
 				return false
-			return this.model.menu.rows.filter((row) => !this.model.menu.config.rowValidation.fnValidate(row)).length !== 0
+			return this.controls.menu.rows.filter((row) => !this.controls.menu.config.rowValidation.fnValidate(row)).length !== 0
 		}
 	},
 
@@ -57,16 +58,16 @@ export default {
 				confirm: {
 					label: this.Resources[hardcodedTexts.save],
 					action: () => {
-						if (this.isEmpty(this.model.menu.config.UserTableConfigName))
+						if (this.isEmpty(this.controls.menu.config.userTableConfigName))
 						{
-							this.model.menu.subSignals.viewSave = { show: true, routeTo: to }
-							this.model.menu.confirmChanges = false
+							this.controls.menu.subSignals.viewSave = { show: true, routeTo: to }
+							this.controls.menu.confirmChanges = false
 							next(false)
 						}
 						else
 						{
-							this.model.menu.signal = { saveCurrentView: true }
-							this.model.menu.confirmChanges = false
+							this.controls.menu.signal = { saveCurrentView: true }
+							this.controls.menu.confirmChanges = false
 							genericFunctions.setNavigationState(false)
 							next()
 						}
@@ -75,14 +76,14 @@ export default {
 				cancel: {
 					label: this.Resources[hardcodedTexts.discard],
 					action: () => {
-						this.model.menu.confirmChanges = false
+						this.controls.menu.confirmChanges = false
 						genericFunctions.setNavigationState(false)
 						next()
 					}
 				}
 			}
 
-			if (this.model.menu.config.allowManageViews && this.model.menu.confirmChanges)
+			if (this.controls.menu.config.allowManageViews && this.controls.menu.confirmChanges && !this.controls.menu.readonly)
 				genericFunctions.displayMessage(this.Resources[hardcodedTexts.tableViewConfirmSaveChanges], 'warning', null, buttons)
 			else
 			{
@@ -97,7 +98,7 @@ export default {
 		 */
 		async loadList()
 		{
-			return this.model.menu.Reload()
+			return this.controls.menu.reload()
 		},
 
 		/**
@@ -105,7 +106,7 @@ export default {
 		 */
 		setMenuNavProperties()
 		{
-			const tableName = this.model.menu.config.tableTitle
+			const tableName = this.menuInfo.designation
 			const navProps = {
 				navigationId: this.navigationId,
 				properties: {
@@ -117,7 +118,7 @@ export default {
 	},
 
 	watch: {
-		'model.menu.config.tableTitle'()
+		'menuInfo.designation'()
 		{
 			this.setMenuNavProperties()
 		},

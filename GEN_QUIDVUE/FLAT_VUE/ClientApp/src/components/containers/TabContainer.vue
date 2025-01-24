@@ -7,7 +7,7 @@
 			role="tablist"
 			:id="controlId"
 			:class="containerClasses"
-			:aria-labelledby="labelId">
+			:aria-label="texts.panels">
 			<template
 				v-for="tab in tabsList"
 				:key="`${controlId}_${tab.id}`">
@@ -58,7 +58,12 @@
 		<div
 			class="c-tab__item-container"
 			tabindex="0">
-			<div class="c-tab__item-content active">
+			<div
+				v-if="activeTab"
+				class="c-tab__item-content active">
+				<q-subtitle-help
+					v-if="activeTab.helpControl"
+					:help-control="activeTab.helpControl" />
 				<slot name="tab-panel"></slot>
 			</div>
 		</div>
@@ -66,6 +71,15 @@
 </template>
 
 <script>
+	import { defineAsyncComponent } from 'vue'
+
+	import genericFunctions from '@/mixins/genericFunctions.js'
+
+	// Default texts
+	const DEFAULT_TEXTS = {
+		panels: 'Panels'
+	}
+
 	export default {
 		name: 'QTabs',
 
@@ -76,6 +90,10 @@
 		],
 
 		inheritAttrs: false,
+
+		components: {
+			QSubtitleHelp: defineAsyncComponent(() => import('@/components/QSubtitleHelp.vue'))
+		},
 
 		props: {
 			/**
@@ -115,6 +133,15 @@
 			isVisible: {
 				type: Boolean,
 				default: true
+			},
+
+			/**
+			 * Localization and customization of textual content.
+			 */
+			texts: {
+				type: Object,
+				validator: (value) => genericFunctions.validateTexts(DEFAULT_TEXTS, value),
+				default: () => DEFAULT_TEXTS
 			}
 		},
 
@@ -138,14 +165,6 @@
 		},
 
 		computed: {
-			/**
-			 * The id of the component's label.
-			 */
-			labelId()
-			{
-				return `label_${this.controlId}`
-			},
-
 			/**
 			 * The selectable tabs.
 			 */
@@ -181,6 +200,14 @@
 					'c-tab__divider',
 					'c-tab__list'
 				]
+			},
+
+			/**
+			 * The index of the active tab for use in components in a simplified form.
+			 */
+			activeTab()
+			{
+				return this.tabsList[this.activeTabIndex]
 			}
 		},
 
@@ -250,7 +277,7 @@
 			},
 
 			/**
-			 * Changes the active tab to the previous one.
+			 * Changes the active tab to the one with the specified ID.
 			 * @param {Number} idx Index in the array of selectable tabs
 			 */
 			selectTabIndex(idx)

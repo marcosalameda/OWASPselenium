@@ -77,7 +77,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'CNTRY',
 			field: 'CODIGONR',
 			maxLength: 3,
-			description: computed(() => this.Resources.NUMERIC19292),
+			description: computed(() => this.Resources.NUMERIC_ISO_316620341),
 		}).cloneFrom(values?.ValCodigonr))
 		watch(() => this.ValCodigonr.value, (newValue, oldValue) => this.onUpdate('cntry.codigonr', this.ValCodigonr, newValue, oldValue))
 
@@ -123,5 +123,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodcntry'
 
 	get QPrimaryKey() { return this.ValCodcntry.value }
-	set QPrimaryKey(value) { this.ValCodcntry.value = value }
+	set QPrimaryKey(value) { this.ValCodcntry.updateValue(value) }
 }

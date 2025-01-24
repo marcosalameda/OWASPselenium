@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import '@testing-library/jest-dom'
 import { render } from '@testing-library/vue'
 
@@ -45,7 +42,7 @@ describe('QStaticText.vue', () => {
 		})
 
 		let text =
-`<div class=\"i-static-text input-xxlarge\">&lt;p class=MsoNormal&gt;
+`<div class="i-static-text input-xxlarge">&lt;p class=MsoNormal&gt;
   &lt;span lang=EN-US style='mso-ansi-language:EN-US'&gt; (&lt;span style='color:red'&gt;*&lt;/span&gt;) Field
   &lt;b style='mso-bidi-font-weight:normal'&gt;
   &lt;i style='mso-bidi-font-style:normal'&gt;

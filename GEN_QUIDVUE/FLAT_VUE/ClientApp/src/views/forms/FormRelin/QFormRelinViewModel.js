@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODENTIT',
 			relatedArea: 'ENTIT',
 			description: computed(() => this.Resources.__SUPPLIER62145),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodentit))
 		watch(() => this.ValCodentit.value, (newValue, oldValue) => this.onUpdate('relin.codentit', this.ValCodentit, newValue, oldValue))
 
@@ -103,6 +104,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.LEGAL_NAME42902),
+			isFixed: true,
 		}).cloneFrom(values?.EntitValName))
 		watch(() => this.EntitValName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.EntitValName, newValue, oldValue))
 
@@ -158,18 +160,17 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.OUTSTANDING36400),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [RELIN->ORDERED]-[RELIN->RECEIVED]
-					// eslint-disable-next-line eqeqeq
 					return this.ValOrdered.value-this.ValReceived.value
 				},
 				dependencyEvents: ['fieldChange:relin.ordered', 'fieldChange:relin.received'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValOutstand))
@@ -188,5 +189,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCoddilin'
 
 	get QPrimaryKey() { return this.ValCoddilin.value }
-	set QPrimaryKey(value) { this.ValCoddilin.value = value }
+	set QPrimaryKey(value) { this.ValCoddilin.updateValue(value) }
 }

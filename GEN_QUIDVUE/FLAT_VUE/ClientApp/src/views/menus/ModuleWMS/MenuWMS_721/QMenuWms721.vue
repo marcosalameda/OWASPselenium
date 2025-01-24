@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuWMS_721ViewModel.js'
+
 	const requiredTextResources = ['QMenuWMS_721', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '721',
 					isMenuList: true,
+					designation: computed(() => this.Resources.ADDRESSES54763),
 					acronym: 'WMS_721',
 					name: 'ADDRE',
 					route: 'menu-WMS_721',
@@ -125,18 +127,26 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'WMS_Menu_721',
 						controller: 'ADDRE',
 						action: 'WMS_Menu_721',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.ArrayColumn({
 								order: 1,
 								name: 'ValAddressuse',
 								area: 'ADDRE',
-								field: 'ADDRUSE',
+								field: 'ADDRESSUSE',
 								label: computed(() => this.Resources.ADDRESS_USE16014),
 								dataLength: 7,
 								scrollData: 7,
@@ -147,7 +157,7 @@
 								order: 2,
 								name: 'ValAddresstype',
 								area: 'ADDRE',
-								field: 'ADDRTYPE',
+								field: 'ADDRESSTYPE',
 								label: computed(() => this.Resources.ADDRESS_TYPE12455),
 								dataLength: 8,
 								scrollData: 8,
@@ -158,7 +168,7 @@
 								order: 3,
 								name: 'ValAddresstext',
 								area: 'ADDRE',
-								field: 'ADDRTEXT',
+								field: 'ADDRESSTEXT',
 								label: computed(() => this.Resources.ENTIRE_ADDRESS64248),
 								scrollData: 30,
 							}),
@@ -166,7 +176,7 @@
 								order: 4,
 								name: 'ValAddresscity',
 								area: 'ADDRE',
-								field: 'ADDRCITY',
+								field: 'ADDRESSCITY',
 								label: computed(() => this.Resources.ADDRESS_CITY41109),
 								dataLength: 50,
 								scrollData: 30,
@@ -175,7 +185,7 @@
 								order: 5,
 								name: 'ValAddressdistrict',
 								area: 'ADDRE',
-								field: 'ADDRDIST',
+								field: 'ADDRESSDISTRICT',
 								label: computed(() => this.Resources.ADDRESS_DISTRICT48524),
 								dataLength: 50,
 								scrollData: 30,
@@ -184,7 +194,7 @@
 								order: 6,
 								name: 'ValAddressstate',
 								area: 'ADDRE',
-								field: 'ADDRSTAT',
+								field: 'ADDRESSSTATE',
 								label: computed(() => this.Resources.ADDRESS_STATE16863),
 								dataLength: 50,
 								scrollData: 30,
@@ -193,7 +203,7 @@
 								order: 7,
 								name: 'ValAddresspostalcode',
 								area: 'ADDRE',
-								field: 'ADDRPCOD',
+								field: 'ADDRESSPOSTALCODE',
 								label: computed(() => this.Resources.ADDRESS_POSTAL_CODE41631),
 								dataLength: 50,
 								scrollData: 30,
@@ -202,7 +212,7 @@
 								order: 8,
 								name: 'ValAddresscountry',
 								area: 'ADDRE',
-								field: 'ADDRCOUN',
+								field: 'ADDRESSCOUNTRY',
 								label: computed(() => this.Resources.ADDRESS_COUNTRY56159),
 								dataLength: 50,
 								scrollData: 30,
@@ -211,19 +221,19 @@
 								order: 9,
 								name: 'ValPeriodstart',
 								area: 'ADDRE',
-								field: 'PERISTAR',
+								field: 'PERIODSTART',
 								label: computed(() => this.Resources.PERIOD_START07901),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 10,
 								name: 'ValPeriodend',
 								area: 'ADDRE',
-								field: 'PERIEND',
+								field: 'PERIODEND',
 								label: computed(() => this.Resources.PERIOD_END31576),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 						],
 						config: {
@@ -238,7 +248,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -342,6 +352,7 @@
 								id: 'RCA_WMS_7211',
 								name: 'form-ADDRE',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -358,23 +369,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: ADDRE
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValAddressuse',
 							defaultSearchColumnNameOriginal: 'ValAddressuse',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValAddresscity',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-ADDRE'],
 						uuid: 'effd297d-4589-4a9c-b1c1-d836902892b1',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -403,6 +408,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS WMS_721]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS WMS_MENU_721]/
 // eslint-disable-next-line

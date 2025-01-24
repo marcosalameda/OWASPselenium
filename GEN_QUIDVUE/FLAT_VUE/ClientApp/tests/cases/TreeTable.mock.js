@@ -5,7 +5,7 @@ import controlClass from '@/mixins/fieldControl'
 export default {
 	simpleUsage() {
 		return {
-			treeTest: new controlClass.TreeTableListControl( {
+			treeTest: new controlClass.TreeTableListControl({
 				rows: [
 					{
 						ParentRownum: 0, //parentID
@@ -298,137 +298,134 @@ export default {
 				],
 				totalRows: 12,
 				columnsOriginal: [
-				{
-					label: "",
-					name: "PrimaryKey",
-					dataType: "Text",
-					visibility: false,
-				},
-				{
-					label: "KEY",//() => vm.$t('KEY01046'),
-					name: "Key",
-					area: "table",
-					field: "key",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-					initialSort: true,
-					initialSortOrder: "asc",
-					bgColor: (row, column) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
-					params: {
-						"type": "form",
-						"formName": "FORMX",
-						"mode": "SHOW",
-						"isPopup": false
+					{
+						label: "",
+						name: "PrimaryKey",
+						dataType: "Text",
+						visibility: false,
 					},
-					//cellAction: true,
-					hasTreeShowHide:true
-
-				},
-				{
-					label: "VALUE",//() => vm.$t('VALUE10285'),
-					name: "Val",
-					area: "table",
-					field: "val",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-					textColor: (row, column) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
-					distinctValues: [],
-				},
-				{
-					label: "Text",
-					name: "Text",
-					area: "table",
-					field: "text",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-				},
-				{
-					label: "Numeric",
-					name: "Numeric",
-					area: "table",
-					field: "numeric",
-					dataType: "Numeric",
-					dataDisplay: listFunctions.numericDisplayCell,
-					dataSearch: listFunctions.numericSearchCell,
-					decimalPlaces: 3,
-					columnClasses: "c-table__cell-numeric row-numeric",
-					columnHeaderClasses: "c-table__head-numeric",
-					sortable: false,
-				},
-				{
-					label: "Date",
-					name: "Date",
-					area: "table",
-					field: "date",
-					dataType: "Date",
-					dataDisplay: listFunctions.dateDisplayCell,
-					dataSearch: listFunctions.dateSearchCell,
-					dateTimeType: "DateTimeSeconds",
-					sortable: false,
-				},
-				{
-					label: "Boolean",
-					name: "Boolean",
-					area: "table",
-					field: "boolean",
-					dataType: "Boolean",
-					dataDisplay: listFunctions.booleanDisplayCell,
-					dataSearch: listFunctions.booleanSearchCell,
-					sortable: false,
-					supportForm: "",
-					component: "q-render-boolean",
-				},
-				{
-					label: "Array",
-					name: "Array",
-					area: "table",
-					field: "array",
-					dataType: "Array",
-					dataDisplay: listFunctions.enumerationDisplayCell,
-					dataSearch: listFunctions.enumerationSearchCell,
-					array: {
-						"1": "Low",
-						"3": "Medium",
-						"5": "High",
+					{
+						label: "KEY",
+						name: "Key",
+						area: "table",
+						field: "key",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+						initialSort: true,
+						initialSortOrder: "asc",
+						bgColor: (row) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
+						params: {
+							"type": "form",
+							"formName": "FORMX",
+							"mode": "SHOW",
+							"isPopup": false
+						},
+						hasTreeShowHide:true
 					},
-					sortable: false,
-				},
-				{
-					label: "Currency",
-					name: "Currency",
-					area: "table",
-					field: "currency",
-					dataType: "Currency",
-					dataDisplay: listFunctions.currencyDisplayCell,
-					dataSearch: listFunctions.currencySearchCell,
-					decimalPlaces: 2,
-					currency: "eur",
-					columnClasses: "c-table__cell-numeric row-numeric",
-					columnHeaderClasses: "c-table__head-numeric",
-					sortable: false,
-				},
-				{
-					label: "HyperLink",
-					name: "HyperLink",
-					area: "table",
-					field: "hyperlink",
-					dataType: "HyperLink",
-					dataDisplay: listFunctions.hyperLinkDisplayCell,
-					dataSearch: listFunctions.hyperLinkSearchCell,
-					component: "q-render-hyperlink",
-				}
+					{
+						label: "VALUE",
+						name: "Val",
+						area: "table",
+						field: "val",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+						textColor: (row) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
+						distinctValues: [],
+					},
+					{
+						label: "Text",
+						name: "Text",
+						area: "table",
+						field: "text",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+					},
+					{
+						label: "Numeric",
+						name: "Numeric",
+						area: "table",
+						field: "numeric",
+						dataType: "Numeric",
+						dataDisplay: listFunctions.numericDisplayCell,
+						dataSearch: listFunctions.numericSearchCell,
+						decimalPlaces: 3,
+						columnClasses: "c-table__cell-numeric row-numeric",
+						columnHeaderClasses: "c-table__head-numeric",
+						sortable: false,
+					},
+					{
+						label: "Date",
+						name: "Date",
+						area: "table",
+						field: "date",
+						dataType: "Date",
+						dataDisplay: listFunctions.dateDisplayCell,
+						dataSearch: listFunctions.dateSearchCell,
+						dateTimeType: "dateTimeSeconds",
+						sortable: false,
+					},
+					{
+						label: "Boolean",
+						name: "Boolean",
+						area: "table",
+						field: "boolean",
+						dataType: "Boolean",
+						dataDisplay: listFunctions.booleanDisplayCell,
+						dataSearch: listFunctions.booleanSearchCell,
+						sortable: false,
+						supportForm: "",
+						component: "q-render-boolean",
+					},
+					{
+						label: "Array",
+						name: "Array",
+						area: "table",
+						field: "array",
+						dataType: "Array",
+						dataDisplay: listFunctions.enumerationDisplayCell,
+						dataSearch: listFunctions.enumerationSearchCell,
+						array: {
+							"1": "Low",
+							"3": "Medium",
+							"5": "High",
+						},
+						sortable: false,
+					},
+					{
+						label: "Currency",
+						name: "Currency",
+						area: "table",
+						field: "currency",
+						dataType: "Currency",
+						dataDisplay: listFunctions.currencyDisplayCell,
+						dataSearch: listFunctions.currencySearchCell,
+						decimalPlaces: 2,
+						currency: "eur",
+						columnClasses: "c-table__cell-numeric row-numeric",
+						columnHeaderClasses: "c-table__head-numeric",
+						sortable: false,
+					},
+					{
+						label: "HyperLink",
+						name: "HyperLink",
+						area: "table",
+						field: "hyperlink",
+						dataType: "HyperLink",
+						dataDisplay: listFunctions.hyperLinkDisplayCell,
+						dataSearch: listFunctions.hyperLinkSearchCell,
+						component: "q-render-hyperlink",
+					}
 				],
 				config: {
-					//columnHierarchy: listFunctions.getColumnHierarchy(this.columns),
 					name: "DFLDS",
 					pkColumn: "PrimaryKey",
-					tableTitle: "Basic Types",//() => vm.$t('MORE_PROPERTIES36834'),
+					tableTitle: "Basic Types",
 					lcid: "pt-PT",
 					numberFormat: {
 						decimalSeparator: ",",
@@ -464,8 +461,7 @@ export default {
 					rowBgColor: (row) => { return qapi.iif(row.Fields.Array === "5", "#E0E0E0", "#FFFFFF"); },
 					rowValidation: {
 						fnValidate: (row) => { return row.Fields.ValZzstate === 0 },
-						message: 'ATENCAO__ESTA_FICHA_24725',
-						class: 'c-table__row--pending'
+						message: 'ATENCAO__ESTA_FICHA_24725'
 					},
 				},
 				readonly: false,
@@ -515,25 +511,25 @@ export default {
 
 					],
 					dateValue: {
-						type: "Date",
+						type: "date",
 						title: "Date",
 						id: "GQT_Menu_111_dataRef",
 						value: ""
 					}
 				},
 				dataImportResponse: {},
-			},this),
+			}, this),
 			// Multilevel tree data without cell action
-			multiLevelTreeData:new controlClass.TreeTableListControl( {
+			multiLevelTreeData: new controlClass.TreeTableListControl({
 				rows: [
 					{
 						ParentRownum: 0, //parentID
-			Rownum: 1,
+						Rownum: 1,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "81cc095a-03f7-43a6-a820-087c8d41a83d",
-				"Key": 'Parent1',
-				"Val": 'level-1',
+							"Key": 'Parent1',
+							"Val": 'level-1',
 							"Text": "Lorem ipsum dolor",
 							"Numeric": 45,
 							"Date": "2021-02-16 23:24:12",
@@ -551,13 +547,13 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 1, //parentID
-			Rownum: 2,
+						ParentRownum: 1, //parentID
+						Rownum: 2,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "e669f856-2ee3-49ee-bf0f-13eaa21c7b18",
-				"Key": 'child1',
-				"Val": 'level-2',
+							"Key": 'child1',
+							"Val": 'level-2',
 							"Text": "sit amet",
 							"Numeric": 260,
 							"Date": "",
@@ -575,13 +571,13 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 2, //parentID
-			Rownum: 3,
+						ParentRownum: 2, //parentID
+						Rownum: 3,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "54420e72-68b4-41c2-a41e-1d7afbcb6924",
 							"Key": 'child1_1',
-				"Val": 'level-3',
+							"Val": 'level-3',
 							"Text": "consectetur adipiscing elit",
 							"Numeric": 2800,
 							"Date": "2021-03-04 07:58:31",
@@ -599,8 +595,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 3, //parentID
-			Rownum: 13,
+						ParentRownum: 3, //parentID
+						Rownum: 13,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "47556088-f88e-47fd-b618-323112f96176",
@@ -623,8 +619,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 13, //parentID
-			Rownum: 15,
+						ParentRownum: 13, //parentID
+						Rownum: 15,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "97c468d4-8b0f-4d8a-b40b-37841684e234",
@@ -648,7 +644,7 @@ export default {
 					},
 					{
 						ParentRownum: 15, //parentID
-			Rownum: 14,
+						Rownum: 14,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "c33510bf-85e1-42c0-b5fe-3ab6d0f1adcf",
@@ -671,8 +667,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 14,
-			Rownum: 4,
+						ParentRownum: 14,
+						Rownum: 4,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "295e851b-f97a-45e7-ac22-4fdedd769e6a",
@@ -695,8 +691,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 4,
-			Rownum: 5,
+						ParentRownum: 4,
+						Rownum: 5,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "ee7ecd97-84fd-4ec8-a780-6f46583a3108",
@@ -719,8 +715,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 5,
-			Rownum: 6,
+						ParentRownum: 5,
+						Rownum: 6,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "557e6424-39da-435b-ae56-895ed932a0b7",
@@ -743,8 +739,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 0,
-			Rownum: 7,
+						ParentRownum: 0,
+						Rownum: 7,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
@@ -769,150 +765,146 @@ export default {
 					{
 						ParentRownum: 0,
 						Rownum: 8,
-									FormMode: "",
-									Fields: {
-										"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
-										"Key": "tefr",
-										"Val": "mkef",
-										"Text": "commodo consequat",
-										"Numeric": 70000000.0456,
-										"Date": "0001-01-01 00:00:00",
-										"Boolean": 0,
-										"Array": "5",
-										"Currency": 8.675,
-										"Checkbox": 0,
-										"HyperLink": "",
-										"Image": "",
-										"Document": "",
-										"Action": "",
-										"Geographic": "",
-										"Unknown": "",
-										"ValZzstate": 0
-									}
-								},
-								{
-									ParentRownum: 0,
-									Rownum: 9,
-												FormMode: "",
-												Fields: {
-													"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
-													"Key": "wefr",
-													"Val": "qkef",
-													"Text": "commodo consequat",
-													"Numeric": 70000000.0456,
-													"Date": "0001-01-01 00:00:00",
-													"Boolean": 0,
-													"Array": "5",
-													"Currency": 8.675,
-													"Checkbox": 0,
-													"HyperLink": "",
-													"Image": "",
-													"Document": "",
-													"Action": "",
-													"Geographic": "",
-													"Unknown": "",
-													"ValZzstate": 0
-												}
-											},
-
+						FormMode: "",
+						Fields: {
+							"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
+							"Key": "tefr",
+							"Val": "mkef",
+							"Text": "commodo consequat",
+							"Numeric": 70000000.0456,
+							"Date": "0001-01-01 00:00:00",
+							"Boolean": 0,
+							"Array": "5",
+							"Currency": 8.675,
+							"Checkbox": 0,
+							"HyperLink": "",
+							"Image": "",
+							"Document": "",
+							"Action": "",
+							"Geographic": "",
+							"Unknown": "",
+							"ValZzstate": 0
+						}
+					},
+					{
+						ParentRownum: 0,
+						Rownum: 9,
+						FormMode: "",
+						Fields: {
+							"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
+							"Key": "wefr",
+							"Val": "qkef",
+							"Text": "commodo consequat",
+							"Numeric": 70000000.0456,
+							"Date": "0001-01-01 00:00:00",
+							"Boolean": 0,
+							"Array": "5",
+							"Currency": 8.675,
+							"Checkbox": 0,
+							"HyperLink": "",
+							"Image": "",
+							"Document": "",
+							"Action": "",
+							"Geographic": "",
+							"Unknown": "",
+							"ValZzstate": 0
+						}
+					},
 				],
 				totalRows: 12,
 				columnsOriginal: [
-				{
-					label: "",
-					name: "PrimaryKey",
-					dataType: "Text",
-					visibility: false,
-				},
-				{
-					label: "KEY",//() => vm.$t('KEY01046'),
-					name: "Key",
-					area: "table",
-					field: "key",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-					initialSort: true,
-					initialSortOrder: "asc",
-					bgColor: (row, column) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
-					params: {
-						"type": "form",
-						"formName": "FORMX",
-						"mode": "SHOW",
-						"isPopup": false
+					{
+						label: "",
+						name: "PrimaryKey",
+						dataType: "Text",
+						visibility: false,
 					},
-					hasTreeShowHide:true
-				},
-				{
-					label: "VALUE",//() => vm.$t('VALUE10285'),
-					name: "Val",
-					area: "table",
-					field: "val",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-					textColor: (row, column) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
-					distinctValues: [],
-				},
-				{
-					label: "Text",
-					name: "Text",
-					area: "table",
-					field: "text",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-				},
-				{
-					label: "Numeric",
-					name: "Numeric",
-					area: "table",
-					field: "numeric",
-					dataType: "Numeric",
-					dataDisplay: listFunctions.numericDisplayCell,
-					dataSearch: listFunctions.numericSearchCell,
-					decimalPlaces: 3,
-					columnClasses: "c-table__cell-numeric row-numeric",
-					columnHeaderClasses: "c-table__head-numeric",
-					sortable: false,
-				},
-
-				{
-					label: "Boolean",
-					name: "Boolean",
-					area: "table",
-					field: "boolean",
-					dataType: "Boolean",
-					dataDisplay: listFunctions.booleanDisplayCell,
-					dataSearch: listFunctions.booleanSearchCell,
-					sortable: false,
-					supportForm: "",
-					component: "q-render-boolean",
-				},
-
-				{
-					label: "Currency",
-					name: "Currency",
-					area: "table",
-					field: "currency",
-					dataType: "Currency",
-					dataDisplay: listFunctions.currencyDisplayCell,
-					dataSearch: listFunctions.currencySearchCell,
-					decimalPlaces: 2,
-					currency: "eur",
-					columnClasses: "c-table__cell-numeric row-numeric",
-					columnHeaderClasses: "c-table__head-numeric",
-					sortable: false,
-				},
-
+					{
+						label: "KEY",
+						name: "Key",
+						area: "table",
+						field: "key",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+						initialSort: true,
+						initialSortOrder: "asc",
+						bgColor: (row) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
+						params: {
+							"type": "form",
+							"formName": "FORMX",
+							"mode": "SHOW",
+							"isPopup": false
+						},
+						hasTreeShowHide:true
+					},
+					{
+						label: "VALUE",
+						name: "Val",
+						area: "table",
+						field: "val",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+						textColor: (row) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
+						distinctValues: [],
+					},
+					{
+						label: "Text",
+						name: "Text",
+						area: "table",
+						field: "text",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+					},
+					{
+						label: "Numeric",
+						name: "Numeric",
+						area: "table",
+						field: "numeric",
+						dataType: "Numeric",
+						dataDisplay: listFunctions.numericDisplayCell,
+						dataSearch: listFunctions.numericSearchCell,
+						decimalPlaces: 3,
+						columnClasses: "c-table__cell-numeric row-numeric",
+						columnHeaderClasses: "c-table__head-numeric",
+						sortable: false,
+					},
+					{
+						label: "Boolean",
+						name: "Boolean",
+						area: "table",
+						field: "boolean",
+						dataType: "Boolean",
+						dataDisplay: listFunctions.booleanDisplayCell,
+						dataSearch: listFunctions.booleanSearchCell,
+						sortable: false,
+						supportForm: "",
+						component: "q-render-boolean",
+					},
+					{
+						label: "Currency",
+						name: "Currency",
+						area: "table",
+						field: "currency",
+						dataType: "Currency",
+						dataDisplay: listFunctions.currencyDisplayCell,
+						dataSearch: listFunctions.currencySearchCell,
+						decimalPlaces: 2,
+						currency: "eur",
+						columnClasses: "c-table__cell-numeric row-numeric",
+						columnHeaderClasses: "c-table__head-numeric",
+						sortable: false,
+					},
 				],
 				config: {
 					name: "MDFLDS",
 					pkColumn: "PrimaryKey",
-					tableTitle: "Multi level Tree",//() => vm.$t('MORE_PROPERTIES36834'),
+					tableTitle: "Multi level Tree",
 					lcid: "pt-PT",
 					numberFormat: {
 						decimalSeparator: ",",
@@ -948,8 +940,7 @@ export default {
 					rowBgColor: (row) => { return qapi.iif(row.Fields.Array === "5", "#E0E0E0", "#FFFFFF"); },
 					rowValidation: {
 						fnValidate: (row) => { return row.Fields.ValZzstate === 0 },
-						message: 'ATENCAO__ESTA_FICHA_24725',
-						class: 'c-table__row--pending'
+						message: 'ATENCAO__ESTA_FICHA_24725'
 					},
 				},
 				readonly: false,
@@ -995,26 +986,25 @@ export default {
 							value: {text: 'FUTURE', selected: true},
 							id: 'filter_GQT_Menu_111_ActiveFilter_F'
 						},
-
 					],
 					dateValue: {
-						type: "Date",
+						type: "date",
 						title: "Date",
 						id: "GQT_Menu_111_dataRef",
 						value: ""
 					}
 				},
-			},this),
-			iconTreeData:new controlClass.TreeTableListControl( {
+			}, this),
+			iconTreeData: new controlClass.TreeTableListControl({
 				rows: [
 					{
 						ParentRownum: 0, //parentID
-			Rownum: 1,
+						Rownum: 1,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "81cc095a-03f7-43a6-a820-087c8d41a83d",
-				"Key": 'Parent1',
-				"Val": 'level-1',
+							"Key": 'Parent1',
+							"Val": 'level-1',
 							"Text": "Lorem ipsum dolor",
 							"Numeric": 45,
 							"Date": "2021-02-16 23:24:12",
@@ -1032,13 +1022,13 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 1, //parentID
-			Rownum: 2,
+						ParentRownum: 1, //parentID
+						Rownum: 2,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "e669f856-2ee3-49ee-bf0f-13eaa21c7b18",
-				"Key": 'child1',
-				"Val": 'level-2',
+							"Key": 'child1',
+							"Val": 'level-2',
 							"Text": "sit amet",
 							"Numeric": 260,
 							"Date": "",
@@ -1056,13 +1046,13 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 2, //parentID
-			Rownum: 3,
+						ParentRownum: 2, //parentID
+						Rownum: 3,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "54420e72-68b4-41c2-a41e-1d7afbcb6924",
 							"Key": 'child1_1',
-				"Val": 'level-3',
+							"Val": 'level-3',
 							"Text": "consectetur adipiscing elit",
 							"Numeric": 2800,
 							"Date": "2021-03-04 07:58:31",
@@ -1080,8 +1070,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 3, //parentID
-			Rownum: 13,
+						ParentRownum: 3, //parentID
+						Rownum: 13,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "47556088-f88e-47fd-b618-323112f96176",
@@ -1104,8 +1094,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 13, //parentID
-			Rownum: 15,
+						ParentRownum: 13, //parentID
+						Rownum: 15,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "97c468d4-8b0f-4d8a-b40b-37841684e234",
@@ -1129,7 +1119,7 @@ export default {
 					},
 					{
 						ParentRownum: 15, //parentID
-			Rownum: 14,
+						Rownum: 14,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "c33510bf-85e1-42c0-b5fe-3ab6d0f1adcf",
@@ -1152,8 +1142,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 14,
-			Rownum: 4,
+						ParentRownum: 14,
+						Rownum: 4,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "295e851b-f97a-45e7-ac22-4fdedd769e6a",
@@ -1176,8 +1166,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 4,
-			Rownum: 5,
+						ParentRownum: 4,
+						Rownum: 5,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "ee7ecd97-84fd-4ec8-a780-6f46583a3108",
@@ -1200,8 +1190,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 5,
-			Rownum: 6,
+						ParentRownum: 5,
+						Rownum: 6,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "557e6424-39da-435b-ae56-895ed932a0b7",
@@ -1224,8 +1214,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 0,
-			Rownum: 7,
+						ParentRownum: 0,
+						Rownum: 7,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
@@ -1250,151 +1240,147 @@ export default {
 					{
 						ParentRownum: 0,
 						Rownum: 8,
-									FormMode: "",
-									Fields: {
-										"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
-										"Key": "tefr",
-										"Val": "mkef",
-										"Text": "commodo consequat",
-										"Numeric": 70000000.0456,
-										"Date": "0001-01-01 00:00:00",
-										"Boolean": 0,
-										"Array": "5",
-										"Currency": 8.675,
-										"Checkbox": 0,
-										"HyperLink": "",
-										"Image": "",
-										"Document": "",
-										"Action": "",
-										"Geographic": "",
-										"Unknown": "",
-										"ValZzstate": 0
-									}
-								},
-								{
-									ParentRownum: 0,
-									Rownum: 9,
-												FormMode: "",
-												Fields: {
-													"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
-													"Key": "wefr",
-													"Val": "qkef",
-													"Text": "commodo consequat",
-													"Numeric": 70000000.0456,
-													"Date": "0001-01-01 00:00:00",
-													"Boolean": 0,
-													"Array": "5",
-													"Currency": 8.675,
-													"Checkbox": 0,
-													"HyperLink": "",
-													"Image": "",
-													"Document": "",
-													"Action": "",
-													"Geographic": "",
-													"Unknown": "",
-													"ValZzstate": 0
-												}
-											},
-
+						FormMode: "",
+						Fields: {
+							"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
+							"Key": "tefr",
+							"Val": "mkef",
+							"Text": "commodo consequat",
+							"Numeric": 70000000.0456,
+							"Date": "0001-01-01 00:00:00",
+							"Boolean": 0,
+							"Array": "5",
+							"Currency": 8.675,
+							"Checkbox": 0,
+							"HyperLink": "",
+							"Image": "",
+							"Document": "",
+							"Action": "",
+							"Geographic": "",
+							"Unknown": "",
+							"ValZzstate": 0
+						}
+					},
+					{
+						ParentRownum: 0,
+						Rownum: 9,
+						FormMode: "",
+						Fields: {
+							"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
+							"Key": "wefr",
+							"Val": "qkef",
+							"Text": "commodo consequat",
+							"Numeric": 70000000.0456,
+							"Date": "0001-01-01 00:00:00",
+							"Boolean": 0,
+							"Array": "5",
+							"Currency": 8.675,
+							"Checkbox": 0,
+							"HyperLink": "",
+							"Image": "",
+							"Document": "",
+							"Action": "",
+							"Geographic": "",
+							"Unknown": "",
+							"ValZzstate": 0
+						}
+					},
 				],
 				totalRows: 12,
 				columnsOriginal: [
-				{
-					label: "",
-					name: "PrimaryKey",
-					dataType: "Text",
-					visibility: false,
-				},
-				{
-					label: "KEY",//() => vm.$t('KEY01046'),
-					name: "Key",
-					area: "table",
-					field: "key",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-					initialSort: true,
-					initialSortOrder: "asc",
-					bgColor: (row, column) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
-					params: {
-						"type": "form",
-						"formName": "FORMX",
-						"mode": "SHOW",
-						"isPopup": false
+					{
+						label: "",
+						name: "PrimaryKey",
+						dataType: "Text",
+						visibility: false,
 					},
-					cellAction: true,
-					hasTreeShowHide:true
-				},
-				{
-					label: "VALUE",//() => vm.$t('VALUE10285'),
-					name: "Val",
-					area: "table",
-					field: "val",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-					textColor: (row, column) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
-					distinctValues: [],
-				},
-				{
-					label: "Text",
-					name: "Text",
-					area: "table",
-					field: "text",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-				},
-				{
-					label: "Numeric",
-					name: "Numeric",
-					area: "table",
-					field: "numeric",
-					dataType: "Numeric",
-					dataDisplay: listFunctions.numericDisplayCell,
-					dataSearch: listFunctions.numericSearchCell,
-					decimalPlaces: 3,
-					columnClasses: "c-table__cell-numeric row-numeric",
-					columnHeaderClasses: "c-table__head-numeric",
-					sortable: false,
-				},
-
-				{
-					label: "Boolean",
-					name: "Boolean",
-					area: "table",
-					field: "boolean",
-					dataType: "Boolean",
-					dataDisplay: listFunctions.booleanDisplayCell,
-					dataSearch: listFunctions.booleanSearchCell,
-					sortable: false,
-					supportForm: "",
-					component: "q-render-boolean",
-				},
-
-				{
-					label: "Currency",
-					name: "Currency",
-					area: "table",
-					field: "currency",
-					dataType: "Currency",
-					dataDisplay: listFunctions.currencyDisplayCell,
-					dataSearch: listFunctions.currencySearchCell,
-					decimalPlaces: 2,
-					currency: "eur",
-					columnClasses: "c-table__cell-numeric row-numeric",
-					columnHeaderClasses: "c-table__head-numeric",
-					sortable: false,
-				},
-
+					{
+						label: "KEY",
+						name: "Key",
+						area: "table",
+						field: "key",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+						initialSort: true,
+						initialSortOrder: "asc",
+						bgColor: (row) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
+						params: {
+							"type": "form",
+							"formName": "FORMX",
+							"mode": "SHOW",
+							"isPopup": false
+						},
+						cellAction: true,
+						hasTreeShowHide:true
+					},
+					{
+						label: "VALUE",
+						name: "Val",
+						area: "table",
+						field: "val",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+						textColor: (row) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
+						distinctValues: [],
+					},
+					{
+						label: "Text",
+						name: "Text",
+						area: "table",
+						field: "text",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+					},
+					{
+						label: "Numeric",
+						name: "Numeric",
+						area: "table",
+						field: "numeric",
+						dataType: "Numeric",
+						dataDisplay: listFunctions.numericDisplayCell,
+						dataSearch: listFunctions.numericSearchCell,
+						decimalPlaces: 3,
+						columnClasses: "c-table__cell-numeric row-numeric",
+						columnHeaderClasses: "c-table__head-numeric",
+						sortable: false,
+					},
+					{
+						label: "Boolean",
+						name: "Boolean",
+						area: "table",
+						field: "boolean",
+						dataType: "Boolean",
+						dataDisplay: listFunctions.booleanDisplayCell,
+						dataSearch: listFunctions.booleanSearchCell,
+						sortable: false,
+						supportForm: "",
+						component: "q-render-boolean",
+					},
+					{
+						label: "Currency",
+						name: "Currency",
+						area: "table",
+						field: "currency",
+						dataType: "Currency",
+						dataDisplay: listFunctions.currencyDisplayCell,
+						dataSearch: listFunctions.currencySearchCell,
+						decimalPlaces: 2,
+						currency: "eur",
+						columnClasses: "c-table__cell-numeric row-numeric",
+						columnHeaderClasses: "c-table__head-numeric",
+						sortable: false,
+					},
 				],
 				config: {
 					name: "IDFLDS",
 					pkColumn: "PrimaryKey",
-					tableTitle: "Customize Icons",//() => vm.$t('MORE_PROPERTIES36834'),
+					tableTitle: "Customize Icons",
 					lcid: "pt-PT",
 					numberFormat: {
 						decimalSeparator: ",",
@@ -1430,8 +1416,7 @@ export default {
 					rowBgColor: (row) => { return qapi.iif(row.Fields.Array === "5", "#E0E0E0", "#FFFFFF"); },
 					rowValidation: {
 						fnValidate: (row) => { return row.Fields.ValZzstate === 0 },
-						message: 'ATENCAO__ESTA_FICHA_24725',
-						class: 'c-table__row--pending'
+						message: 'ATENCAO__ESTA_FICHA_24725'
 					},
 				},
 				readonly: false,
@@ -1446,7 +1431,6 @@ export default {
 								value: {text: 'POR_DEVOLVER13204', selected: false},
 								id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
 							},
-
 							{
 								key: '1',
 								value: {text: 'DEVOLVIDOS52106', selected: false},
@@ -1477,26 +1461,25 @@ export default {
 							value: {text: 'FUTURE', selected: true},
 							id: 'filter_GQT_Menu_111_ActiveFilter_F'
 						},
-
 					],
 					dateValue: {
-						type: "Date",
+						type: "date",
 						title: "Date",
 						id: "GQT_Menu_111_dataRef",
 						value: ""
 					}
 				},
-			},this),
+			}, this),
 			invalidTreeData: new controlClass.TreeTableListControl({
 				rows: [
 					{
 						ParentRownum: 0, //parentID
-			Rownum: 1,
+						Rownum: 1,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "81cc095a-03f7-43a6-a820-087c8d41a83d",
-				"Key": 'Parent1',
-				"Val": 'level-1',
+							"Key": 'Parent1',
+							"Val": 'level-1',
 							"Text": "Lorem ipsum dolor",
 							"Numeric": 45,
 							"Date": "2021-02-16 23:24:12",
@@ -1514,13 +1497,13 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 1, //parentID
-			Rownum: 2,
+						ParentRownum: 1, //parentID
+						Rownum: 2,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "e669f856-2ee3-49ee-bf0f-13eaa21c7b18",
-				"Key": 'child1',
-				"Val": 'level-2',
+							"Key": 'child1',
+							"Val": 'level-2',
 							"Text": "sit amet",
 							"Numeric": 260,
 							"Date": "",
@@ -1538,13 +1521,13 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 2, //parentID
-			Rownum: 0,
+						ParentRownum: 2, //parentID
+						Rownum: 0,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "54420e72-68b4-41c2-a41e-1d7afbcb6924",
 							"Key": 'Invalid Rownum',
-				"Val": 'level-3',
+							"Val": 'level-3',
 							"Text": "consectetur adipiscing elit",
 							"Numeric": 2800,
 							"Date": "2021-03-04 07:58:31",
@@ -1562,8 +1545,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 3, //parentID
-			Rownum: 13,
+						ParentRownum: 3, //parentID
+						Rownum: 13,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "47556088-f88e-47fd-b618-323112f96176",
@@ -1586,8 +1569,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 13, //parentID
-			Rownum: 15,
+						ParentRownum: 13, //parentID
+						Rownum: 15,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "97c468d4-8b0f-4d8a-b40b-37841684e234",
@@ -1611,7 +1594,7 @@ export default {
 					},
 					{
 						ParentRownum: 3, //parentID
-			Rownum: 14,
+						Rownum: 14,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "c33510bf-85e1-42c0-b5fe-3ab6d0f1adcf",
@@ -1634,8 +1617,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 2,
-			Rownum: 4,
+						ParentRownum: 2,
+						Rownum: 4,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "295e851b-f97a-45e7-ac22-4fdedd769e6a",
@@ -1658,8 +1641,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 1,
-			Rownum: 5,
+						ParentRownum: 1,
+						Rownum: 5,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "ee7ecd97-84fd-4ec8-a780-6f46583a3108",
@@ -1682,8 +1665,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 5,
-			Rownum: 6,
+						ParentRownum: 5,
+						Rownum: 6,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "557e6424-39da-435b-ae56-895ed932a0b7",
@@ -1706,8 +1689,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 0,
-			Rownum: 0,
+						ParentRownum: 0,
+						Rownum: 0,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
@@ -1732,203 +1715,202 @@ export default {
 					{
 						ParentRownum: 0,
 						Rownum: 8,
-									FormMode: "",
-									Fields: {
-										"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
-										"Key": "tefr",
-										"Val": "mkef",
-										"Text": "commodo consequat",
-										"Numeric": 70000000.0456,
-										"Date": "0001-01-01 00:00:00",
-										"Boolean": 0,
-										"Array": "5",
-										"Currency": 8.675,
-										"Checkbox": 0,
-										"HyperLink": "",
-										"Image": "",
-										"Document": "",
-										"Action": "",
-										"Geographic": "",
-										"Unknown": "",
-										"ValZzstate": 0
-									}
-								},
-								{
-									ParentRownum: 0,
-									Rownum: 9,
-												FormMode: "",
-												Fields: {
-													"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
-													"Key": "wefr",
-													"Val": "qkef",
-													"Text": "commodo consequat",
-													"Numeric": 70000000.0456,
-													"Date": "0001-01-01 00:00:00",
-													"Boolean": 0,
-													"Array": "5",
-													"Currency": 8.675,
-													"Checkbox": 0,
-													"HyperLink": "",
-													"Image": "",
-													"Document": "",
-													"Action": "",
-													"Geographic": "",
-													"Unknown": "",
-													"ValZzstate": 0
-												}
-											},
-
+						FormMode: "",
+						Fields: {
+							"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
+							"Key": "tefr",
+							"Val": "mkef",
+							"Text": "commodo consequat",
+							"Numeric": 70000000.0456,
+							"Date": "0001-01-01 00:00:00",
+							"Boolean": 0,
+							"Array": "5",
+							"Currency": 8.675,
+							"Checkbox": 0,
+							"HyperLink": "",
+							"Image": "",
+							"Document": "",
+							"Action": "",
+							"Geographic": "",
+							"Unknown": "",
+							"ValZzstate": 0
+						}
+					},
+					{
+						ParentRownum: 0,
+						Rownum: 9,
+						FormMode: "",
+						Fields: {
+							"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
+							"Key": "wefr",
+							"Val": "qkef",
+							"Text": "commodo consequat",
+							"Numeric": 70000000.0456,
+							"Date": "0001-01-01 00:00:00",
+							"Boolean": 0,
+							"Array": "5",
+							"Currency": 8.675,
+							"Checkbox": 0,
+							"HyperLink": "",
+							"Image": "",
+							"Document": "",
+							"Action": "",
+							"Geographic": "",
+							"Unknown": "",
+							"ValZzstate": 0
+						}
+					},
 				],
 				totalRows: 12,
 				columnsOriginal: [
-				{
-					label: "",
-					name: "PrimaryKey",
-					dataType: "Text",
-					visibility: false,
-				},
-				{
-					label: "KEY",//() => vm.$t('KEY01046'),
-					name: "Key",
-					area: "table",
-					field: "key",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataDisplayText: listFunctions.textTextCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-					initialSort: true,
-					initialSortOrder: "asc",
-					bgColor: (row, column) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
-					supportForm: {
-						"type": "form",
-						"formName": "FORMX",
-						"mode": "SHOW",
-						"isPopup": false
-					},
-					globalSearch: {
+					{
+						label: "",
+						name: "PrimaryKey",
+						dataType: "Text",
 						visibility: false,
 					},
-					cellAction: true,
-					hasTreeShowHide:true,
-					scrollData: 5,
-				},
-				{
-					label: "VALUE",//() => vm.$t('VALUE10285'),
-					name: "Val",
-					area: "table",
-					field: "val",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataDisplayText: listFunctions.textTextCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-					textColor: (row, column) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
-					scrollData: 5,
-				},
-				{
-					label: "Text",
-					name: "Text",
-					area: "table",
-					field: "text",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataDisplayText: listFunctions.textTextCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-					scrollData: 5,
-				},
-				{
-					label: "Numeric",
-					name: "Numeric",
-					area: "table",
-					field: "numeric",
-					dataType: "Numeric",
-					dataDisplay: listFunctions.numericDisplayCell,
-					dataDisplayText: listFunctions.numericTextCell,
-					dataSearch: listFunctions.numericSearchCell,
-					decimalPlaces: 3,
-					columnClasses: "c-table__cell-numeric row-numeric",
-					columnHeaderClasses: "c-table__head-numeric",
-					sortable: false,
-					scrollData: 5,
-				},
-				{
-					label: "Date",
-					name: "Date",
-					area: "table",
-					field: "date",
-					dataType: "Date",
-					dataDisplay: listFunctions.dateDisplayCell,
-					dataDisplayText: listFunctions.dateTextCell,
-					dataSearch: listFunctions.dateSearchCell,
-					dateTimeType: "DateTimeSeconds",
-					sortable: false,
-					scrollData: 5,
-				},
-				{
-					label: "Boolean",
-					name: "Boolean",
-					area: "table",
-					field: "boolean",
-					dataType: "Boolean",
-					dataDisplay: listFunctions.booleanDisplayCell,
-					dataDisplayText: listFunctions.booleanTextCell,
-					dataSearch: listFunctions.booleanSearchCell,
-					component: "q-render-boolean",
-					sortable: false,
-					scrollData: 2,
-				},
-				{
-					label: "Array",
-					name: "Array",
-					area: "table",
-					field: "array",
-					dataType: "Array",
-					dataDisplay: listFunctions.enumerationDisplayCell,
-					dataDisplayText: listFunctions.enumerationTextCell,
-					dataSearch: listFunctions.enumerationSearchCell,
-					array: {
-						"1": "Low",
-						"3": "Medium",
-						"5": "High",
+					{
+						label: "KEY",
+						name: "Key",
+						area: "table",
+						field: "key",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataDisplayText: listFunctions.textTextCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+						initialSort: true,
+						initialSortOrder: "asc",
+						bgColor: (row) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
+						supportForm: {
+							"type": "form",
+							"formName": "FORMX",
+							"mode": "SHOW",
+							"isPopup": false
+						},
+						globalSearch: {
+							visibility: false,
+						},
+						cellAction: true,
+						hasTreeShowHide:true,
+						scrollData: 5,
 					},
-					sortable: false,
-					scrollData: 5,
-				},
-				{
-					label: "Currency",
-					name: "Currency",
-					area: "table",
-					field: "currency",
-					dataType: "Currency",
-					dataDisplay: listFunctions.currencyDisplayCell,
-					dataDisplayText: listFunctions.currencyTextCell,
-					dataSearch: listFunctions.currencySearchCell,
-					decimalPlaces: 2,
-					currency: "eur",
-					columnClasses: "c-table__cell-numeric row-numeric",
-					columnHeaderClasses: "c-table__head-numeric",
-					sortable: false,
-					scrollData: 5,
-				},
-				{
-					label: "HyperLink",
-					name: "HyperLink",
-					area: "table",
-					field: "hyperlink",
-					dataType: "HyperLink",
-					dataDisplay: listFunctions.hyperLinkDisplayCell,
-					dataDisplayText: listFunctions.hyperLinkTextCell,
-					dataSearch: listFunctions.hyperLinkSearchCell,
-					component: "q-render-hyperlink",
-					scrollData: 5,
-				}
+					{
+						label: "VALUE",
+						name: "Val",
+						area: "table",
+						field: "val",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataDisplayText: listFunctions.textTextCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+						textColor: (row) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
+						scrollData: 5,
+					},
+					{
+						label: "Text",
+						name: "Text",
+						area: "table",
+						field: "text",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataDisplayText: listFunctions.textTextCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+						scrollData: 5,
+					},
+					{
+						label: "Numeric",
+						name: "Numeric",
+						area: "table",
+						field: "numeric",
+						dataType: "Numeric",
+						dataDisplay: listFunctions.numericDisplayCell,
+						dataDisplayText: listFunctions.numericTextCell,
+						dataSearch: listFunctions.numericSearchCell,
+						decimalPlaces: 3,
+						columnClasses: "c-table__cell-numeric row-numeric",
+						columnHeaderClasses: "c-table__head-numeric",
+						sortable: false,
+						scrollData: 5,
+					},
+					{
+						label: "Date",
+						name: "Date",
+						area: "table",
+						field: "date",
+						dataType: "Date",
+						dataDisplay: listFunctions.dateDisplayCell,
+						dataDisplayText: listFunctions.dateTextCell,
+						dataSearch: listFunctions.dateSearchCell,
+						dateTimeType: "dateTimeSeconds",
+						sortable: false,
+						scrollData: 5,
+					},
+					{
+						label: "Boolean",
+						name: "Boolean",
+						area: "table",
+						field: "boolean",
+						dataType: "Boolean",
+						dataDisplay: listFunctions.booleanDisplayCell,
+						dataDisplayText: listFunctions.booleanTextCell,
+						dataSearch: listFunctions.booleanSearchCell,
+						component: "q-render-boolean",
+						sortable: false,
+						scrollData: 2,
+					},
+					{
+						label: "Array",
+						name: "Array",
+						area: "table",
+						field: "array",
+						dataType: "Array",
+						dataDisplay: listFunctions.enumerationDisplayCell,
+						dataDisplayText: listFunctions.enumerationTextCell,
+						dataSearch: listFunctions.enumerationSearchCell,
+						array: {
+							"1": "Low",
+							"3": "Medium",
+							"5": "High",
+						},
+						sortable: false,
+						scrollData: 5,
+					},
+					{
+						label: "Currency",
+						name: "Currency",
+						area: "table",
+						field: "currency",
+						dataType: "Currency",
+						dataDisplay: listFunctions.currencyDisplayCell,
+						dataDisplayText: listFunctions.currencyTextCell,
+						dataSearch: listFunctions.currencySearchCell,
+						decimalPlaces: 2,
+						currency: "eur",
+						columnClasses: "c-table__cell-numeric row-numeric",
+						columnHeaderClasses: "c-table__head-numeric",
+						sortable: false,
+						scrollData: 5,
+					},
+					{
+						label: "HyperLink",
+						name: "HyperLink",
+						area: "table",
+						field: "hyperlink",
+						dataType: "HyperLink",
+						dataDisplay: listFunctions.hyperLinkDisplayCell,
+						dataDisplayText: listFunctions.hyperLinkTextCell,
+						dataSearch: listFunctions.hyperLinkSearchCell,
+						component: "q-render-hyperlink",
+						scrollData: 5,
+					}
 				],
 				config: {
 					name: "NDFLDS",
 					pkColumn: "PrimaryKey",
-					tableTitle: "Invalid Tree Data",//() => vm.$t('MORE_PROPERTIES36834'),
+					tableTitle: "Invalid Tree Data",
 					lcid: "pt-PT",
 					numberFormat: {
 						decimalSeparator: ",",
@@ -1964,21 +1946,20 @@ export default {
 					rowBgColor: (row) => { return qapi.iif(row.Fields.Array === "5", "#E0E0E0", "#FFFFFF"); },
 					rowValidation: {
 						fnValidate: (row) => { return row.Fields.ValZzstate === 0 },
-						message: 'ATENCAO__ESTA_FICHA_24725',
-						class: 'c-table__row--pending'
+						message: 'ATENCAO__ESTA_FICHA_24725'
 					}
 				}
 			}, this),
-			longTreeData:new controlClass.TreeTableListControl( {
+			longTreeData: new controlClass.TreeTableListControl({
 				rows: [
 					{
 						ParentRownum: 0, //parentID
-			Rownum: 1,
+						Rownum: 1,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "81cc095a-03f7-43a6-a820-087c8d41a83d",
-				"Key": 'This is Rownum:1 & ParentRownum:0',
-				"Val": 'level-1',
+							"Key": 'This is Rownum:1 & ParentRownum:0',
+							"Val": 'level-1',
 							"Text": "Lorem ipsum dolor",
 							"Numeric": 45,
 							"Date": "2021-02-16 23:24:12",
@@ -1996,13 +1977,13 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 1, //parentID
-			Rownum: 2,
+						ParentRownum: 1, //parentID
+						Rownum: 2,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "e669f856-2ee3-49ee-bf0f-13eaa21c7b18",
 							"Key": 'This is Rownum:2 & ParentRownum:1',
-				"Val": 'level-2',
+							"Val": 'level-2',
 							"Text": "sit amet",
 							"Numeric": 260,
 							"Date": "2021-01-14 13:57:43",
@@ -2020,13 +2001,13 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 2, //parentID
-			Rownum: 3,
+						ParentRownum: 2, //parentID
+						Rownum: 3,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "54420e72-68b4-41c2-a41e-1d7afbcb6924",
 							"Key": 'This is Rownum:2 & ParentRownum:2',
-				"Val": 'level-3',
+							"Val": 'level-3',
 							"Text": "consectetur adipiscing elit",
 							"Numeric": 2800,
 							"Date": "2021-03-04 07:58:31",
@@ -2044,8 +2025,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 3, //parentID
-			Rownum: 13,
+						ParentRownum: 3, //parentID
+						Rownum: 13,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "47556088-f88e-47fd-b618-323112f96176",
@@ -2068,8 +2049,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 13, //parentID
-			Rownum: 15,
+						ParentRownum: 13, //parentID
+						Rownum: 15,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "97c468d4-8b0f-4d8a-b40b-37841684e234",
@@ -2093,7 +2074,7 @@ export default {
 					},
 					{
 						ParentRownum: 15, //parentID
-			Rownum: 14,
+						Rownum: 14,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "c33510bf-85e1-42c0-b5fe-3ab6d0f1adcf",
@@ -2116,8 +2097,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 14,
-			Rownum: 4,
+						ParentRownum: 14,
+						Rownum: 4,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "295e851b-f97a-45e7-ac22-4fdedd769e6a",
@@ -2140,8 +2121,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 4,
-			Rownum: 5,
+						ParentRownum: 4,
+						Rownum: 5,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "ee7ecd97-84fd-4ec8-a780-6f46583a3108",
@@ -2164,8 +2145,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 5,
-			Rownum: 6,
+						ParentRownum: 5,
+						Rownum: 6,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "557e6424-39da-435b-ae56-895ed932a0b7",
@@ -2188,8 +2169,8 @@ export default {
 						}
 					},
 					{
-			ParentRownum: 0,
-			Rownum: 7,
+						ParentRownum: 0,
+						Rownum: 7,
 						FormMode: "",
 						Fields: {
 							"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
@@ -2214,151 +2195,147 @@ export default {
 					{
 						ParentRownum: 0,
 						Rownum: 8,
-									FormMode: "",
-									Fields: {
-										"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
-										"Key": 'This is Rownum: 8 & ParentRownum: 0',
-										"Val": "mkef",
-										"Text": "commodo consequat",
-										"Numeric": 70000000.0456,
-										"Date": "0001-01-01 00:00:00",
-										"Boolean": 0,
-										"Array": "5",
-										"Currency": 8.675,
-										"Checkbox": 0,
-										"HyperLink": "",
-										"Image": "",
-										"Document": "",
-										"Action": "",
-										"Geographic": "",
-										"Unknown": "",
-										"ValZzstate": 0
-									}
-								},
-								{
-									ParentRownum: 0,
-									Rownum: 9,
-												FormMode: "",
-												Fields: {
-													"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
-													"Key": 'This is Rownum: 9 & ParentRownum: 0',
-													"Val": "qkef",
-													"Text": "commodo consequat",
-													"Numeric": 70000000.0456,
-													"Date": "0001-01-01 00:00:00",
-													"Boolean": 0,
-													"Array": "5",
-													"Currency": 8.675,
-													"Checkbox": 0,
-													"HyperLink": "",
-													"Image": "",
-													"Document": "",
-													"Action": "",
-													"Geographic": "",
-													"Unknown": "",
-													"ValZzstate": 0
-												}
-											},
-
+						FormMode: "",
+						Fields: {
+							"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
+							"Key": 'This is Rownum: 8 & ParentRownum: 0',
+							"Val": "mkef",
+							"Text": "commodo consequat",
+							"Numeric": 70000000.0456,
+							"Date": "0001-01-01 00:00:00",
+							"Boolean": 0,
+							"Array": "5",
+							"Currency": 8.675,
+							"Checkbox": 0,
+							"HyperLink": "",
+							"Image": "",
+							"Document": "",
+							"Action": "",
+							"Geographic": "",
+							"Unknown": "",
+							"ValZzstate": 0
+						}
+					},
+					{
+						ParentRownum: 0,
+						Rownum: 9,
+						FormMode: "",
+						Fields: {
+							"PrimaryKey": "92bb35d5-b86c-4f33-935f-9cbd3f261777",
+							"Key": 'This is Rownum: 9 & ParentRownum: 0',
+							"Val": "qkef",
+							"Text": "commodo consequat",
+							"Numeric": 70000000.0456,
+							"Date": "0001-01-01 00:00:00",
+							"Boolean": 0,
+							"Array": "5",
+							"Currency": 8.675,
+							"Checkbox": 0,
+							"HyperLink": "",
+							"Image": "",
+							"Document": "",
+							"Action": "",
+							"Geographic": "",
+							"Unknown": "",
+							"ValZzstate": 0
+						}
+					},
 				],
 				totalRows: 12,
 				columnsOriginal: [
-				{
-					label: "",
-					name: "PrimaryKey",
-					dataType: "Text",
-					visibility: false,
-				},
-				{
-					label: "KEY",//() => vm.$t('KEY01046'),
-					name: "Key",
-					area: "table",
-					field: "key",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-					initialSort: true,
-					initialSortOrder: "asc",
-					bgColor: (row) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
-					params: {
-						"type": "form",
-						"formName": "FORMX",
-						"mode": "SHOW",
-						"isPopup": false
+					{
+						label: "",
+						name: "PrimaryKey",
+						dataType: "Text",
+						visibility: false,
 					},
-					cellAction: true,
-					hasTreeShowHide:true
-				},
-				{
-					label: "VALUE",//() => vm.$t('VALUE10285'),
-					name: "Val",
-					area: "table",
-					field: "val",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-					textColor: (row) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
-					distinctValues: [],
-				},
-				{
-					label: "Text",
-					name: "Text",
-					area: "table",
-					field: "text",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-				},
-				{
-					label: "Numeric",
-					name: "Numeric",
-					area: "table",
-					field: "numeric",
-					dataType: "Numeric",
-					dataDisplay: listFunctions.numericDisplayCell,
-					dataSearch: listFunctions.numericSearchCell,
-					decimalPlaces: 3,
-					columnClasses: "c-table__cell-numeric row-numeric",
-					columnHeaderClasses: "c-table__head-numeric",
-					sortable: false,
-				},
-
-				{
-					label: "Boolean",
-					name: "Boolean",
-					area: "table",
-					field: "boolean",
-					dataType: "Boolean",
-					dataDisplay: listFunctions.booleanDisplayCell,
-					dataSearch: listFunctions.booleanSearchCell,
-					sortable: false,
-					supportForm: "",
-					component: "q-render-boolean",
-				},
-
-				{
-					label: "Currency",
-					name: "Currency",
-					area: "table",
-					field: "currency",
-					dataType: "Currency",
-					dataDisplay: listFunctions.currencyDisplayCell,
-					dataSearch: listFunctions.currencySearchCell,
-					decimalPlaces: 2,
-					currency: "eur",
-					columnClasses: "c-table__cell-numeric row-numeric",
-					columnHeaderClasses: "c-table__head-numeric",
-					sortable: false,
-				},
-
+					{
+						label: "KEY",
+						name: "Key",
+						area: "table",
+						field: "key",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+						initialSort: true,
+						initialSortOrder: "asc",
+						bgColor: (row) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
+						params: {
+							"type": "form",
+							"formName": "FORMX",
+							"mode": "SHOW",
+							"isPopup": false
+						},
+						cellAction: true,
+						hasTreeShowHide:true
+					},
+					{
+						label: "VALUE",
+						name: "Val",
+						area: "table",
+						field: "val",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+						textColor: (row) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
+						distinctValues: [],
+					},
+					{
+						label: "Text",
+						name: "Text",
+						area: "table",
+						field: "text",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+					},
+					{
+						label: "Numeric",
+						name: "Numeric",
+						area: "table",
+						field: "numeric",
+						dataType: "Numeric",
+						dataDisplay: listFunctions.numericDisplayCell,
+						dataSearch: listFunctions.numericSearchCell,
+						decimalPlaces: 3,
+						columnClasses: "c-table__cell-numeric row-numeric",
+						columnHeaderClasses: "c-table__head-numeric",
+						sortable: false,
+					},
+					{
+						label: "Boolean",
+						name: "Boolean",
+						area: "table",
+						field: "boolean",
+						dataType: "Boolean",
+						dataDisplay: listFunctions.booleanDisplayCell,
+						dataSearch: listFunctions.booleanSearchCell,
+						sortable: false,
+						supportForm: "",
+						component: "q-render-boolean",
+					},
+					{
+						label: "Currency",
+						name: "Currency",
+						area: "table",
+						field: "currency",
+						dataType: "Currency",
+						dataDisplay: listFunctions.currencyDisplayCell,
+						dataSearch: listFunctions.currencySearchCell,
+						decimalPlaces: 2,
+						currency: "eur",
+						columnClasses: "c-table__cell-numeric row-numeric",
+						columnHeaderClasses: "c-table__head-numeric",
+						sortable: false,
+					},
 				],
 				config: {
 					name: "LDFLD",
 					pkColumn: "PrimaryKey",
-					tableTitle: "Large Tree Cells",//() => vm.$t('MORE_PROPERTIES36834'),
+					tableTitle: "Large Tree Cells",
 					lcid: "pt-PT",
 					numberFormat: {
 						decimalSeparator: ",",
@@ -2394,8 +2371,7 @@ export default {
 					rowBgColor: (row) => { return qapi.iif(row.Fields.Array === "5", "#E0E0E0", "#FFFFFF"); },
 					rowValidation: {
 						fnValidate: (row) => { return row.Fields.ValZzstate === 0 },
-						message: 'ATENCAO__ESTA_FICHA_24725',
-						class: 'c-table__row--pending'
+						message: 'ATENCAO__ESTA_FICHA_24725'
 					},
 				},
 				readonly: false,
@@ -2410,7 +2386,6 @@ export default {
 								value: {text: 'POR_DEVOLVER13204', selected: false},
 								id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
 							},
-
 							{
 								key: '1',
 								value: {text: 'DEVOLVIDOS52106', selected: false},
@@ -2444,13 +2419,13 @@ export default {
 
 					],
 					dateValue: {
-						type: "Date",
+						type: "date",
 						title: "Date",
 						id: "GQT_Menu_111_dataRef",
 						value: ""
 					}
 				},
-			},this),
+			}, this),
 			tableTestRemoveRows: new controlClass.TreeTableListControl({
 				rows: [
 					{
@@ -2616,119 +2591,119 @@ export default {
 				],
 				totalRows: 10,
 				columnsOriginal: [
-				{
-					label: "",
-					name: "PrimaryKey",
-					dataType: "Text",
-					visibility: false,
-				},
-				{
-					label: "KEY",//() => vm.$t('KEY01046'),
-					name: "Key",
-					area: "table",
-					field: "key",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-					initialSort: true,
-					initialSortOrder: "asc",
-				},
-				{
-					label: "VALUE",//() => vm.$t('VALUE10285'),
-					name: "Val",
-					area: "table",
-					field: "val",
-					dataType: "Text",
-					dataDisplay: listFunctions.textDisplayCell,
-					dataSearch: listFunctions.textSearchCell,
-					sortable: false,
-					distinctValues: [],
-				},
-				{
-					label: "Numeric1",
-					name: "Numeric1",
-					area: "table",
-					field: "numeric1",
-					dataType: "Numeric",
-					dataDisplay: listFunctions.numericDisplayCell,
-					dataSearch: listFunctions.numericSearchCell,
-					decimalPlaces: 3,
-					sortable: false,
-					showTotal: true,
-					visibility: false,
-				},
-				{
-					label: "Numeric2",
-					name: "Numeric2",
-					area: "table",
-					field: "numeric2",
-					dataType: "Numeric",
-					dataDisplay: listFunctions.numericDisplayCell,
-					dataSearch: listFunctions.numericSearchCell,
-					decimalPlaces: 2,
-					sortable: false,
-					showTotal: true,
-					visibility: false,
-				},
-				{
-					label: "Numeric3",
-					name: "Numeric3",
-					area: "table",
-					field: "numeric3",
-					dataType: "Numeric",
-					dataDisplay: listFunctions.numericDisplayCell,
-					dataSearch: listFunctions.numericSearchCell,
-					decimalPlaces: 0,
-					sortable: false,
-					visibility: false,
-				},
-				{
-					label: "Currency1",
-					name: "Currency1",
-					area: "table",
-					field: "currency1",
-					dataType: "Currency",
-					dataDisplay: listFunctions.currencyDisplayCell,
-					dataSearch: listFunctions.currencySearchCell,
-					decimalPlaces: 2,
-					currency: "eur",
-					sortable: false,
-					showTotal: true,
-					visibility: false,
-				},
-				{
-					label: "Currency2",
-					name: "Currency2",
-					area: "table",
-					field: "currency2",
-					dataType: "Currency",
-					dataDisplay: listFunctions.currencyDisplayCell,
-					dataSearch: listFunctions.currencySearchCell,
-					decimalPlaces: 2,
-					currency: "eur",
-					sortable: false,
-					showTotal: true,
-					visibility: false,
-				},
-				{
-					label: "Currency3",
-					name: "Currency3",
-					area: "table",
-					field: "currency3",
-					dataType: "Currency",
-					dataDisplay: listFunctions.currencyDisplayCell,
-					dataSearch: listFunctions.currencySearchCell,
-					decimalPlaces: 2,
-					currency: "eur",
-					sortable: false,
-					visibility: false,
-				},
+					{
+						label: "",
+						name: "PrimaryKey",
+						dataType: "Text",
+						visibility: false,
+					},
+					{
+						label: "KEY",
+						name: "Key",
+						area: "table",
+						field: "key",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+						initialSort: true,
+						initialSortOrder: "asc",
+					},
+					{
+						label: "VALUE",
+						name: "Val",
+						area: "table",
+						field: "val",
+						dataType: "Text",
+						dataDisplay: listFunctions.textDisplayCell,
+						dataSearch: listFunctions.textSearchCell,
+						sortable: false,
+						distinctValues: [],
+					},
+					{
+						label: "Numeric1",
+						name: "Numeric1",
+						area: "table",
+						field: "numeric1",
+						dataType: "Numeric",
+						dataDisplay: listFunctions.numericDisplayCell,
+						dataSearch: listFunctions.numericSearchCell,
+						decimalPlaces: 3,
+						sortable: false,
+						showTotal: true,
+						visibility: false,
+					},
+					{
+						label: "Numeric2",
+						name: "Numeric2",
+						area: "table",
+						field: "numeric2",
+						dataType: "Numeric",
+						dataDisplay: listFunctions.numericDisplayCell,
+						dataSearch: listFunctions.numericSearchCell,
+						decimalPlaces: 2,
+						sortable: false,
+						showTotal: true,
+						visibility: false,
+					},
+					{
+						label: "Numeric3",
+						name: "Numeric3",
+						area: "table",
+						field: "numeric3",
+						dataType: "Numeric",
+						dataDisplay: listFunctions.numericDisplayCell,
+						dataSearch: listFunctions.numericSearchCell,
+						decimalPlaces: 0,
+						sortable: false,
+						visibility: false,
+					},
+					{
+						label: "Currency1",
+						name: "Currency1",
+						area: "table",
+						field: "currency1",
+						dataType: "Currency",
+						dataDisplay: listFunctions.currencyDisplayCell,
+						dataSearch: listFunctions.currencySearchCell,
+						decimalPlaces: 2,
+						currency: "eur",
+						sortable: false,
+						showTotal: true,
+						visibility: false,
+					},
+					{
+						label: "Currency2",
+						name: "Currency2",
+						area: "table",
+						field: "currency2",
+						dataType: "Currency",
+						dataDisplay: listFunctions.currencyDisplayCell,
+						dataSearch: listFunctions.currencySearchCell,
+						decimalPlaces: 2,
+						currency: "eur",
+						sortable: false,
+						showTotal: true,
+						visibility: false,
+					},
+					{
+						label: "Currency3",
+						name: "Currency3",
+						area: "table",
+						field: "currency3",
+						dataType: "Currency",
+						dataDisplay: listFunctions.currencyDisplayCell,
+						dataSearch: listFunctions.currencySearchCell,
+						decimalPlaces: 2,
+						currency: "eur",
+						sortable: false,
+						visibility: false,
+					},
 				],
 				config: {
 					name: "RDFLDS",
 					pkColumn: "PrimaryKey",
-					tableTitle: "Remove Rows",//() => vm.$t('MORE_PROPERTIES36834'),
+					tableTitle: "Remove Rows",
 					lcid: "pt-PT",
 					numberFormat: {
 						decimalSeparator: ",",
@@ -2753,7 +2728,6 @@ export default {
 					actionsPlacement: "left",
 					rowClickActionInternal: "",
 					rowBgColorSelected: "#e0e0e0",
-					showColumnTotalsSelected: false,
 					showSelectedForGroupCount: false,
 					extendedActions: [
 						"remove",
@@ -2761,24 +2735,10 @@ export default {
 					perPage: 5,
 				}
 			}, this),
-
 		}
 	},
 	simpleUsageMethods: {
 		runAction(eventName, emittedAction) {
-			/*
-			var str = eventName + ":\n [" + emittedAction.name;
-			if(emittedAction.row !== undefined){
-				str += ", \n" + JSON.stringify(emittedAction.row);
-			}
-			if(emittedAction.column !== undefined){
-				str += ", \n" + JSON.stringify(emittedAction.column);
-			}
-			if(emittedAction.params !== undefined){
-				str += ", \n" + JSON.stringify(emittedAction.params);
-			}
-			str += "]";
-			*/
 			var str = eventName + ":\n" + JSON.stringify(emittedAction);
 			alert(str);
 		},
@@ -2825,29 +2785,28 @@ export default {
 
 			let allNodes = {};
 			rows.forEach((row) => {
-			//	Rownum should not be equal to 0.
-
-			if (row.Rownum === 0) {
-				console.error("Row has invalid Rownum");
-			}
-			allNodes[row.Rownum] = { ...row, children: [] };
+				//	Rownum should not be equal to 0.
+				if (row.Rownum === 0) {
+					// eslint-disable-next-line no-console
+					console.error("Row has invalid Rownum");
+				}
+				allNodes[row.Rownum] = { ...row, children: [] };
 			});
 
 			let treeDataRows = [];
 			rows.forEach((row) => {
-			if (row.ParentRownum) {
+				if (row.ParentRownum) {
 				// It's a child Node.
 				// push it to parent Node.
-				if (allNodes[row.ParentRownum])
-				allNodes[row.ParentRownum].children.push(allNodes[row.Rownum]);
-			} else {
+					if (allNodes[row.ParentRownum])
+						allNodes[row.ParentRownum].children.push(allNodes[row.Rownum]);
+				} else {
 				// Root Nodes
 				// push row to treeDataRows
-				treeDataRows.push(allNodes[row.Rownum]);
-			}
+					treeDataRows.push(allNodes[row.Rownum]);
+				}
 			});
 			return treeDataRows;
-			// console.log(this.treeDataRows);
 		},
 		getColumnHierarchy(columns) {
 			return listFunctions.getColumnHierarchy(columns);

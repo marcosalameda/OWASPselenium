@@ -7,28 +7,22 @@
 
 		<slot />
 
-		<template v-if="hasErrorMessages">
-			<button
-				v-if="hasPopover"
-				type="button"
-				ref="popover"
-				class="btn-popover"
-				@click.stop.prevent="togglePopover">
-				<q-icon icon="exclamation-sign" />
-			</button>
-			<div
-				v-else
-				class="btn-popover">
-				<q-icon icon="exclamation-sign" />
-				{{ popoverDescription }}
-			</div>
+		<template v-if="hasMessages">
+			<template
+				v-for="(type, index) in messageTypes"
+				:key="index">
+				<div
+					v-if="messageDescription[type]"
+					:class="['btn-popover', type]">
+					<q-icon icon="exclamation-sign" />
+					{{ messageDescription[type] }}
+				</div>
+			</template>
 		</template>
 	</div>
 </template>
 
 <script>
-	import $ from 'jquery'
-
 	export default {
 		name: 'QGridBaseInputStructure',
 
@@ -46,23 +40,10 @@
 			isVisible: {
 				type: Boolean,
 				default: true
-			},
-
-			/**
-			 * Defines the error message display type, with valid options being 'text', 'popover', or 'both'.
-			 */
-			errorDisplayType: {
-				type: String,
-				default: 'text'
 			}
 		},
 
 		expose: [],
-
-		beforeUnmount()
-		{
-			$(this.$refs.popover).popover('dispose')
-		},
 
 		computed: {
 			/**
@@ -72,8 +53,14 @@
 			{
 				const classes = ['grid-base-input-structure', this.$attrs.class]
 
-				if (this.modelFieldRef?.hasServerErrorMessages())
+				if (this.hasErrorMessages)
 					classes.push('error')
+
+				else if (this.hasWarningMessages)
+					classes.push('warning')
+
+				else if (this.hasInfoMessages)
+					classes.push('info')
 
 				return classes
 			},
@@ -83,48 +70,59 @@
 			 */
 			hasErrorMessages()
 			{
-				return this.modelFieldRef?.hasServerErrorMessages()
+				return this.modelFieldRef?.hasServerErrorMessages
 			},
 
 			/**
-			 * Concatenated string of error messages.
+			 * Indicates if there are any server warning messages.
 			 */
-			popoverDescription()
+			hasWarningMessages()
 			{
-				return this.modelFieldRef?.serverErrorMessages.join('\n')
+				return this.modelFieldRef?.hasServerWarningMessages
 			},
 
 			/**
-			 * Determines if a popover should be used to display errors.
+			 * Indicates if there are any server info messages.
 			 */
-			hasPopover()
+			hasInfoMessages()
 			{
-				return this.errorDisplayType === 'popover' || this.errorDisplayType === 'both'
-			}
-		},
+				return this.modelFieldRef?.serverInfoMessages?.length > 0
+			},
 
-		methods: {
 			/**
-			 * Toggles the display of the popover showing error messages.
+			 * Indicates if there are any messages.
 			 */
-			togglePopover()
+			hasMessages()
 			{
-				$(this.$refs.popover).popover('toggle')
-			}
-		},
+				return this.hasErrorMessages || this.hasWarningMessages || this.hasInfoMessages
+			},
 
-		watch: {
-			'modelFieldRef.serverErrorMessages'()
+			/**
+			 * Gets the types of messages to be displayed in this input
+			 */
+			messageTypes()
 			{
-				$(this.$refs.popover).popover('dispose')
+				const types = []
 
-				if (this.popoverDescription !== '')
-				{
-					$(this.$refs.popover).popover({
-						html: true,
-						trigger: 'focus',
-						content: this.popoverDescription
-					})
+				if (this.hasErrorMessages)
+					types.push('error')
+				if (this.hasWarningMessages)
+					types.push('warning')
+				if (this.hasInfoMessages)
+					types.push('info')
+
+				return types
+			},
+
+			/**
+			 * Concatenated object of error messages.
+			 */
+			messageDescription()
+			{
+				return {
+					error: this.modelFieldRef?.serverErrorMessages?.join('\n'),
+					warning: this.modelFieldRef?.serverWarningMessages?.join('\n'),
+					info: this.modelFieldRef?.serverInfoMessages?.join('\n')
 				}
 			}
 		}

@@ -17,8 +17,8 @@ namespace GenioMVC.Models.Navigation
 	{
 		private readonly object m_lock = new object();
 
-        [JsonInclude]
-        public string uniqueIdentifier { get; private set; }
+		[JsonInclude]
+		public string uniqueIdentifier { get; private set; }
 
 		[JsonInclude]
 		public int Level { get; private set; }
@@ -31,7 +31,7 @@ namespace GenioMVC.Models.Navigation
 
 		/*
 			TODO:
-			If we are going to refactor things it would be better than we never allowed the Entries to be iterated directly.
+			If we are going to refactor things it would be better that we never allowed the Entries to be iterated directly.
 			We should have methods to search for an entry that avoid this need.
 			For example, in this case we could have a method for CheckEntryByPrefix("_filtro") that would return a list of those keys.
 			This would increase isolation of the History objects and centralize control over their access.
@@ -73,22 +73,15 @@ namespace GenioMVC.Models.Navigation
 		/// </summary>
 		public string HumanRoutingDescriptionCache { get; set; }
 
-		/// <summary>
-		/// Is a nested context?
-		/// </summary>
-		[JsonInclude]
-		public bool IsNestedContext { get; private set; }
-
 		public HistoryLevel()
 		{
 			Entries = new ConcurrentDictionary<string, object>();
 		}
 
-		public HistoryLevel(NavigationLocation location, FormMode formMode, bool nestedContext = false, int level = 0) : this()
+		public HistoryLevel(NavigationLocation location, FormMode formMode, int level = 0) : this()
 		{
 			Location = location;
 			FormMode = formMode;
-			IsNestedContext = nestedContext;
 			Entries = new ConcurrentDictionary<string, object>();
 			Level = level;
 		}
@@ -192,32 +185,32 @@ namespace GenioMVC.Models.Navigation
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns>return null if not contains key</returns>
-        public T GetEntry<T>(string key)
-        {
-            object hValue = GetEntry(key);
+		public T GetEntry<T>(string key)
+		{
+			object hValue = GetEntry(key);
 			var outType = typeof(T);
 
-            if (hValue is JsonElement jObjValue)
-            {
-                // The «NameValueCollection» needs a special conversion from the JObject.
-                if (outType == typeof(System.Collections.Specialized.NameValueCollection))
-                {
-                    try
-                    {
-                        var result = new System.Collections.Specialized.NameValueCollection();
-                        var jObj = jObjValue.Deserialize<Dictionary<string, string[]>>();
+			if (hValue is JsonElement jObjValue)
+			{
+				// The «NameValueCollection» needs a special conversion from the JObject.
+				if (outType == typeof(System.Collections.Specialized.NameValueCollection))
+				{
+					try
+					{
+						var result = new System.Collections.Specialized.NameValueCollection();
+						var jObj = jObjValue.Deserialize<Dictionary<string, string[]>>();
 
-                        foreach (var item in jObj)
-                            foreach (var itemValue in item.Value)
-                                result.Add(item.Key, itemValue);
+						foreach (var item in jObj)
+							foreach (var itemValue in item.Value)
+								result.Add(item.Key, itemValue);
 
-                        return (T)(result as object);
-                    }
-                    catch
-                    {
-                        return (T)(null as object);
-                    }
-                }
+						return (T)(result as object);
+					}
+					catch
+					{
+						return (T)(null as object);
+					}
+				}
 
 				// Check if the requested type is DateTime or DateTime? and the JsonElement is a string (assumed to be in ISO format)
 				else if ((outType == typeof(DateTime) || outType == typeof(DateTime?)) && jObjValue.ValueKind == JsonValueKind.String)
@@ -236,51 +229,51 @@ namespace GenioMVC.Models.Navigation
 					return (T)(parseResult as object);
 				}
 
-                // Check if the requested type is a boolean
-                else if (outType == typeof(bool))
+				// Check if the requested type is a boolean
+				else if (outType == typeof(bool))
 				{
-                    // Directly return the boolean value if the JsonElement is of boolean type
-                    if (jObjValue.ValueKind == JsonValueKind.True || jObjValue.ValueKind == JsonValueKind.False)
+					// Directly return the boolean value if the JsonElement is of boolean type
+					if (jObjValue.ValueKind == JsonValueKind.True || jObjValue.ValueKind == JsonValueKind.False)
 						return (T)(jObjValue.GetBoolean() as object);
-                    // If the JsonElement is a number, consider it true if it's equal to 1
-                    else if (jObjValue.ValueKind == JsonValueKind.Number)
+					// If the JsonElement is a number, consider it true if it's equal to 1
+					else if (jObjValue.ValueKind == JsonValueKind.Number)
 						return (T)((jObjValue.GetDouble() == 1) as object);
-                    // If the JsonElement is a string, consider it true if it's equal to "1"
-                    else if (jObjValue.ValueKind == JsonValueKind.String)
+					// If the JsonElement is a string, consider it true if it's equal to "1"
+					else if (jObjValue.ValueKind == JsonValueKind.String)
 						return (T)((jObjValue.GetString() == "1") as object);
 					else return (T)(false as object);
-                }
+				}
 
-                // Handling when the method is called with a generic object type.
-                //	most of the time this method gets called with T == object
-                //	which makes it impossible to extract the actual value just by casting it to T
-                // This code uses the ValueKind of the underlying JsonElement to retrieve
-                //	a compatible object type with what the framework expects
-                else if (outType == typeof(object))
+				// Handling when the method is called with a generic object type.
+				//	most of the time this method gets called with T == object
+				//	which makes it impossible to extract the actual value just by casting it to T
+				// This code uses the ValueKind of the underlying JsonElement to retrieve
+				//	a compatible object type with what the framework expects
+				else if (outType == typeof(object))
 				{
-                    // Convert JsonElement to the appropriate type based on its ValueKind
-                    if (jObjValue.ValueKind == JsonValueKind.String)
+					// Convert JsonElement to the appropriate type based on its ValueKind
+					if (jObjValue.ValueKind == JsonValueKind.String)
 						return (T)(jObjValue.GetString() as object);
-                    else if (jObjValue.ValueKind == JsonValueKind.Number)
-                        return (T)(jObjValue.GetDouble() as object);
-                    else if (jObjValue.ValueKind == JsonValueKind.True)
-                        return (T)(true as object);
-                    else if (jObjValue.ValueKind == JsonValueKind.False)
-                        return (T)(false as object);
-                }
+					else if (jObjValue.ValueKind == JsonValueKind.Number)
+						return (T)(jObjValue.GetDecimal() as object);
+					else if (jObjValue.ValueKind == JsonValueKind.True)
+						return (T)(true as object);
+					else if (jObjValue.ValueKind == JsonValueKind.False)
+						return (T)(false as object);
+				}
 
-                // Default deserialization for other types
-                return jObjValue.Deserialize<T>();
-            }
-            else if (hValue is JsonObject jTokenValue)
-                return jTokenValue.Deserialize<T>();
-            // Avoid casting errors when an array is expected but a different type is provided
-            else if (hValue?.GetType() == typeof(object[]) && outType != typeof(object[]) && outType.IsArray)
-                return (T)hValue;
+				// Default deserialization for other types
+				return jObjValue.Deserialize<T>();
+			}
+			else if (hValue is JsonObject jTokenValue)
+				return jTokenValue.Deserialize<T>();
+			// Avoid casting errors when an array is expected but a different type is provided
+			else if (hValue?.GetType() == typeof(object[]) && outType != typeof(object[]) && outType.IsArray)
+				return (T)hValue;
 
-            // Default case to return the value as is
-            return (T)hValue;
-        }
+			// Default case to return the value as is
+			return (T)hValue;
+		}
 
 		/// <summary>
 		/// Remove Entry by key

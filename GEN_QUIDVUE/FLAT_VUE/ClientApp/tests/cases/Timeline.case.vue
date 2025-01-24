@@ -51,13 +51,16 @@
 </template>
 
 <script>
-
 	import fakeData from './Timeline.mock'
 
 	export default {
-		docsfile: "./docs/timeline/QTimeline.md",
+		name: 'QTimelineContainer',
+
+		docsfile: './docs/timeline/QTimeline.md',
 
 		inheritAttrs: false,
+
+		expose: [],
 
 		data()
 		{
@@ -70,8 +73,6 @@
 			}
 		},
 
-		methods: {
-			...fakeData.simpleUsageMethods
-		}
+		methods: fakeData.simpleUsageMethods
 	}
 </script>

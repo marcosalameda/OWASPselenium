@@ -19,7 +19,11 @@
 	import QInfoMessage from '@/components/QInfoMessage.vue'
 
 	export default {
+		name: 'QInfoMessageContainer',
+
 		inheritAttrs: false,
+
+		expose: [],
 
 		components: {
 			QInfoMessage

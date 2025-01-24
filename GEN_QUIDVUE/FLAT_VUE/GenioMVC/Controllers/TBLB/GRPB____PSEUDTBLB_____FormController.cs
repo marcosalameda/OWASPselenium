@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Tblb;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_GRPB____PSEUDTBLB_____CANCEL = new NavigationLocation("CANCELAR49513", "Grpb____pseudtblb_____Cancel", "Tblb") { vueRouteName = "form-GRPB____PSEUDTBLB____", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_GRPB____PSEUDTBLB_____SHOW = new NavigationLocation("CONSULTA40695", "Grpb____pseudtblb_____Show", "Tblb") { vueRouteName = "form-GRPB____PSEUDTBLB____", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_GRPB____PSEUDTBLB_____NEW = new NavigationLocation("INSERIR43365", "Grpb____pseudtblb_____New", "Tblb") { vueRouteName = "form-GRPB____PSEUDTBLB____", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_GRPB____PSEUDTBLB_____EDIT = new NavigationLocation("EDITAR11616", "Grpb____pseudtblb_____Edit", "Tblb") { vueRouteName = "form-GRPB____PSEUDTBLB____", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_GRPB____PSEUDTBLB_____DUPLICATE = new NavigationLocation("DUPLICAR09748", "Grpb____pseudtblb_____Duplicate", "Tblb") { vueRouteName = "form-GRPB____PSEUDTBLB____", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_GRPB____PSEUDTBLB_____DELETE = new NavigationLocation("APAGAR04097", "Grpb____pseudtblb_____Delete", "Tblb") { vueRouteName = "form-GRPB____PSEUDTBLB____", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_GRPB____PSEUDTBLB_____CANCEL = new("CANCELAR49513", "Grpb____pseudtblb_____Cancel", "Tblb") { vueRouteName = "form-GRPB____PSEUDTBLB____", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_GRPB____PSEUDTBLB_____SHOW = new("CONSULTA40695", "Grpb____pseudtblb_____Show", "Tblb") { vueRouteName = "form-GRPB____PSEUDTBLB____", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_GRPB____PSEUDTBLB_____NEW = new("INSERIR43365", "Grpb____pseudtblb_____New", "Tblb") { vueRouteName = "form-GRPB____PSEUDTBLB____", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_GRPB____PSEUDTBLB_____EDIT = new("EDITAR11616", "Grpb____pseudtblb_____Edit", "Tblb") { vueRouteName = "form-GRPB____PSEUDTBLB____", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_GRPB____PSEUDTBLB_____DUPLICATE = new("DUPLICAR09748", "Grpb____pseudtblb_____Duplicate", "Tblb") { vueRouteName = "form-GRPB____PSEUDTBLB____", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_GRPB____PSEUDTBLB_____DELETE = new("APAGAR04097", "Grpb____pseudtblb_____Delete", "Tblb") { vueRouteName = "form-GRPB____PSEUDTBLB____", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Grpb____pseudtblb_____ModalDBEdit()
-		{
-			Grpb____pseudtblb_____ViewModel model = new Grpb____pseudtblb_____ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Grpb____pseudtblb_____Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Grpb____pseudtblb____ Multiform actions
 
-		//
-		// GET /Tblb/MFGrpb____pseudtblb_____New
-		[HttpGet]
-		[ActionName("MFGrpb____pseudtblb_____New")]
-		public ActionResult MFGrpb____pseudtblb_____New()
-		{
-			var model = new Grpb____pseudtblb_____ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_GRPB____PSEUDTBLB_____NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("tblb", model.ValCodtblb);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFGrpb____pseudtblb_____New_GET()
-		{
-			return MFGrpb____pseudtblb_____New();
-		}
-
-		//
-		// GET /Tblb/MFGrpb____pseudtblb_____Edit
-		[HttpGet]
-		[ActionName("MFGrpb____pseudtblb_____Edit")]
-		public ActionResult MFGrpb____pseudtblb_____Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("GRPB____PSEUDTBLB____", "EDIT", new { id = id, partialView = "MFGrpb____pseudtblb____", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFGrpb____pseudtblb_____Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFGrpb____pseudtblb_____Edit(requestModel);
-		}
-
-		//
-		// GET /Tblb/MFGrpb____pseudtblb_____Cancel
-		[ActionName("MFGrpb____pseudtblb_____Cancel")]
-		public ActionResult MFGrpb____pseudtblb_____Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Tblb(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Tblb/MFGrpb____pseudtblb_____Save
-		[HttpPost]
-		[ActionName("MFGrpb____pseudtblb_____Save")]
-		public JsonResult MFGrpb____pseudtblb_____Save(Grpb____pseudtblb_____ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFGrpb____pseudtblb_____Save",
-				ViewName = "MFGrpb____pseudtblb____",
-				AreaName = "tblb"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Tblb/MFGrpb____pseudtblb_____Delete
-		[HttpPost]
-		[ActionName("MFGrpb____pseudtblb_____Delete")]
-		public JsonResult MFGrpb____pseudtblb_____Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFGrpb____pseudtblb_____Delete",
-				ViewName = "MFGrpb____pseudtblb____",
-				AreaName = "tblb",
-				Location = ACTION_GRPB____PSEUDTBLB_____EDIT
-			};
-
-			var model = new Grpb____pseudtblb_____ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Tblb/Grpb____pseudtblb_____SaveEdit
 		[HttpPost]

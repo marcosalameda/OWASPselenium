@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODPAISE',
 			relatedArea: 'CNTRY',
 			description: computed(() => this.Resources.COMPANY_PARENTS01581),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodpaise))
 		watch(() => this.ValCodpaise.value, (newValue, oldValue) => this.onUpdate('pesso.codpaise', this.ValCodpaise, newValue, oldValue))
 
@@ -69,6 +70,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODCNTRY',
 			relatedArea: 'PAIS1',
 			description: computed(() => this.Resources.PERSON_S_PARENTS05687),
+			isFixed: true,
 		}).cloneFrom(values?.ValCodcntry))
 		watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('pesso.codcntry', this.ValCodcntry, newValue, oldValue))
 
@@ -151,18 +153,17 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 5,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.AGE28663),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: Idade([PESSO->DTNASCIM],[Today])
-					// eslint-disable-next-line eqeqeq
 					return qFunctions.Idade(this.ValDtnascim.value,qApi.Hoje())
 				},
 				dependencyEvents: ['fieldChange:pesso.dtnascim'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValIdade))
@@ -214,6 +215,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'PESSO',
 			field: 'DTULTCAT',
 			description: computed(() => this.Resources.SINCE47259),
+			isFixed: true,
 		}).cloneFrom(values?.ValDtultcat))
 		watch(() => this.ValDtultcat.value, (newValue, oldValue) => this.onUpdate('pesso.dtultcat', this.ValDtultcat, newValue, oldValue))
 
@@ -255,6 +257,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'COUNTRY',
 			maxLength: 90,
 			description: computed(() => this.Resources.COUNTRY64133),
+			isFixed: true,
 		}).cloneFrom(values?.CntryValCountry))
 		watch(() => this.CntryValCountry.value, (newValue, oldValue) => this.onUpdate('cntry.country', this.CntryValCountry, newValue, oldValue))
 
@@ -276,8 +279,21 @@ export default class ViewModel extends ViewModelBase
 			field: 'COUNTRY',
 			maxLength: 90,
 			description: computed(() => this.Resources.COUNTRY64133),
+			isFixed: true,
 		}).cloneFrom(values?.Pais1ValCountry))
 		watch(() => this.Pais1ValCountry.value, (newValue, oldValue) => this.onUpdate('pais1.country', this.Pais1ValCountry, newValue, oldValue))
+
+		/** The form fields used only in formulas. */
+		this.ValEmail2 = reactive(new modelFieldType.String({
+			id: 'ValEmail2',
+			originId: 'ValEmail2',
+			area: 'PESSO',
+			field: 'EMAIL2',
+			maxLength: 254,
+			description: computed(() => this.Resources.EMAIL25170),
+			isFixed: true,
+		}).cloneFrom(values?.ValEmail2))
+		watch(() => this.ValEmail2.value, (newValue, oldValue) => this.onUpdate('pesso.email2', this.ValEmail2, newValue, oldValue))
 	}
 
 	/**
@@ -292,5 +308,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodpesso'
 
 	get QPrimaryKey() { return this.ValCodpesso.value }
-	set QPrimaryKey(value) { this.ValCodpesso.value = value }
+	set QPrimaryKey(value) { this.ValCodpesso.updateValue(value) }
 }

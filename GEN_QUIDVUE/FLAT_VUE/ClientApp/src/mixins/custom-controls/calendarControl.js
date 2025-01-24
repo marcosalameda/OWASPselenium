@@ -1,4 +1,4 @@
-﻿import { computed } from 'vue'
+﻿import { computed, unref } from 'vue'
 import _find from 'lodash-es/find'
 import _forEach from 'lodash-es/forEach'
 import _some from 'lodash-es/some'
@@ -41,6 +41,28 @@ export default class CalendarControl extends CustomControl
 
 		// Calendar language
 		this.controlContext.config.locale = computed(() => systemDataStore.system.currentLang)
+	}
+
+	/**
+	 * Get the properties for configuring the calendar component.
+	 * @param {object} viewMode - The current view mode of the calendar.
+	 * @returns {object} - An object containing calendar properties.
+	 */
+	getProps(viewMode)
+	{
+		return {
+			id: viewMode.containerId,
+			readonly: computed(() => viewMode.readonly),
+			/*
+			 * The FullCalendar control are poorly represented if the initial rendering was when that control was invisible.
+			 * The 'isVisible' flag is needed to know that the control needs to be re-rendered.
+			 */
+			isVisible: computed(() => this.controlContext.isVisible),
+			mappedValues: viewMode.mappedValues,
+			styleVariables: viewMode.styleVariables,
+			mappingVariables: viewMode.mappingVariables,
+			listConfig: this.controlContext.config
+		}
 	}
 
 	/**
@@ -103,7 +125,7 @@ export default class CalendarControl extends CustomControl
 		}
 
 		// Insert action
-		if (this.controlContext.readonly === false
+		if (unref(this.controlContext.readonly) === false
 			&& typeof this.controlContext.onTableListExecuteAction === 'function'
 			&& _some(this.controlContext.config.generalActions, { name: 'insert' }))
 		{

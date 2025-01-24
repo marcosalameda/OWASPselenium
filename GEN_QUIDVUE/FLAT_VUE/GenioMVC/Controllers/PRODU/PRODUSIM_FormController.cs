@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Produ;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_PRODUSIM_CANCEL = new NavigationLocation("PRODUCT12880", "Produsim_Cancel", "Produ") { vueRouteName = "form-PRODUSIM", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_PRODUSIM_SHOW = new NavigationLocation("PRODUCT12880", "Produsim_Show", "Produ") { vueRouteName = "form-PRODUSIM", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_PRODUSIM_NEW = new NavigationLocation("PRODUCT12880", "Produsim_New", "Produ") { vueRouteName = "form-PRODUSIM", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_PRODUSIM_EDIT = new NavigationLocation("PRODUCT12880", "Produsim_Edit", "Produ") { vueRouteName = "form-PRODUSIM", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_PRODUSIM_DUPLICATE = new NavigationLocation("PRODUCT12880", "Produsim_Duplicate", "Produ") { vueRouteName = "form-PRODUSIM", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_PRODUSIM_DELETE = new NavigationLocation("PRODUCT12880", "Produsim_Delete", "Produ") { vueRouteName = "form-PRODUSIM", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_PRODUSIM_CANCEL = new("PRODUCT12880", "Produsim_Cancel", "Produ") { vueRouteName = "form-PRODUSIM", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_PRODUSIM_SHOW = new("PRODUCT12880", "Produsim_Show", "Produ") { vueRouteName = "form-PRODUSIM", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_PRODUSIM_NEW = new("PRODUCT12880", "Produsim_New", "Produ") { vueRouteName = "form-PRODUSIM", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_PRODUSIM_EDIT = new("PRODUCT12880", "Produsim_Edit", "Produ") { vueRouteName = "form-PRODUSIM", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_PRODUSIM_DUPLICATE = new("PRODUCT12880", "Produsim_Duplicate", "Produ") { vueRouteName = "form-PRODUSIM", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_PRODUSIM_DELETE = new("PRODUCT12880", "Produsim_Delete", "Produ") { vueRouteName = "form-PRODUSIM", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Produsim_ModalDBEdit()
-		{
-			Produsim_ViewModel model = new Produsim_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Produsim_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Produsim Multiform actions
-
-		//
-		// GET /Produ/MFProdusim_New
-		[HttpGet]
-		[ActionName("MFProdusim_New")]
-		public ActionResult MFProdusim_New()
-		{
-			var model = new Produsim_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_PRODUSIM_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("produ", model.ValCodprodu);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFProdusim_New_GET()
-		{
-			return MFProdusim_New();
-		}
-
-		//
-		// GET /Produ/MFProdusim_Edit
-		[HttpGet]
-		[ActionName("MFProdusim_Edit")]
-		public ActionResult MFProdusim_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("PRODUSIM", "EDIT", new { id = id, partialView = "MFProdusim", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFProdusim_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFProdusim_Edit(requestModel);
-		}
-
-		//
-		// GET /Produ/MFProdusim_Cancel
-		[ActionName("MFProdusim_Cancel")]
-		public ActionResult MFProdusim_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Produ(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Produ/MFProdusim_Save
-		[HttpPost]
-		[ActionName("MFProdusim_Save")]
-		public JsonResult MFProdusim_Save(Produsim_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFProdusim_Save",
-				ViewName = "MFProdusim",
-				AreaName = "produ"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Produ/MFProdusim_Delete
-		[HttpPost]
-		[ActionName("MFProdusim_Delete")]
-		public JsonResult MFProdusim_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFProdusim_Delete",
-				ViewName = "MFProdusim",
-				AreaName = "produ",
-				Location = ACTION_PRODUSIM_EDIT
-			};
-
-			var model = new Produsim_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Produ/Produsim_LocatValGln
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_locat")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,9 +422,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Produsim_LocatValGln_ViewModel model = new Produsim_LocatValGln_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodprodu = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
@@ -590,6 +464,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_lcext")))
@@ -603,21 +478,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -625,12 +485,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Produsim_LcextValGlnext_ViewModel model = new Produsim_LcextValGlnext_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodprodu = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Produ/Produsim_SaveEdit
 		[HttpPost]

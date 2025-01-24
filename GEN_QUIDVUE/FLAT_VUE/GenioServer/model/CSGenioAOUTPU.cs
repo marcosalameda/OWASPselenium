@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Output
 	/// </summary>
-	public class CSGenioAoutpu : DbArea	{
+	public class CSGenioAoutpu : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -62,6 +63,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
+            Qfield.SufNDup = "line";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -69,6 +71,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Line";
 			Qfield.FieldSize =  5;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 1;
 			Qfield.CavDesignation = "LINE27983";
 
@@ -131,6 +134,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Qtd output";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "QTD_OUTPUT12876";
 
 			Qfield.Dupmsg = "";
@@ -324,7 +328,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodoutpu, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodoutpt { get { return m_fldCodoutpt; } }
 		private static FieldRef m_fldCodoutpt = new FieldRef("outpu", "codoutpt");
@@ -336,18 +339,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodoutpt, value); }
 		}
 
-
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldLine { get { return m_fldLine; } }
 		private static FieldRef m_fldLine = new FieldRef("outpu", "line");
 
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
-		public double ValLine
+		public decimal ValLine
 		{
-			get { return (double)returnValueField(FldLine); }
+			get { return (decimal)returnValueField(FldLine); }
 			set { insertNameValueField(FldLine, value); }
 		}
-
 
 		/// <summary>Field : ">WAREHOUSE" Tipo: "CE" Formula: DF "[OUTPT->CODWAREH]"</summary>
 		public static FieldRef FldCodwareh { get { return m_fldCodwareh; } }
@@ -360,7 +361,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodwareh, value); }
 		}
 
-
 		/// <summary>Field : ">ARTICLE" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCoditem { get { return m_fldCoditem; } }
 		private static FieldRef m_fldCoditem = new FieldRef("outpu", "coditem");
@@ -371,7 +371,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCoditem); }
 			set { insertNameValueField(FldCoditem, value); }
 		}
-
 
 		/// <summary>Field : "Exit instant" Tipo: "DT" Formula: ++ "[OUTPT->DHDOCUME]"</summary>
 		public static FieldRef FldExitdt { get { return m_fldExitdt; } }
@@ -384,7 +383,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldExitdt, value); }
 		}
 
-
 		/// <summary>Field : ">EXIT DOCUMENT" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCoddocsd { get { return m_fldCoddocsd; } }
 		private static FieldRef m_fldCoddocsd = new FieldRef("outpu", "coddocsd");
@@ -396,18 +394,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddocsd, value); }
 		}
 
-
 		/// <summary>Field : "Qtd output" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldExitqnty { get { return m_fldExitqnty; } }
 		private static FieldRef m_fldExitqnty = new FieldRef("outpu", "exitqnty");
 
 		/// <summary>Field : "Qtd output" Tipo: "N" Formula:  ""</summary>
-		public double ValExitqnty
+		public decimal ValExitqnty
 		{
-			get { return (double)returnValueField(FldExitqnty); }
+			get { return (decimal)returnValueField(FldExitqnty); }
 			set { insertNameValueField(FldExitqnty, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -450,23 +446,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAoutpu> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAoutpu> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAoutpu>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -515,43 +494,27 @@ namespace CSGenio.business
 
 
 
+ 		//To usar routine manual no pedido eliminate
+		public override StatusMessage eliminate(PersistentSupport sp)
+		{
+			StatusMessage msg = base.eliminate(sp);
 
+			// ROW_REORDERING
+			CriteriaSet criteria = CriteriaSet.And();
+			criteria.Equal(CSGenioAoutpu.FldCodoutpt, ValCodoutpt);
+			sp.ReorderSequence(Area.AreaOUTPU, CSGenioAoutpu.FldLine, criteria);
+
+            return msg;
+		}
+
+ 
 
 
 		// USE /[MANUAL GQT TABAUX OUTPU]/
 
      
 
-  /*
-        /// <summary>
-        /// Reorders the values of the ordering field along a subset so that the current record moves in that order to the specified position
-        /// </summary>
-        /// <param name="sp">The current PersistentSupport</param>
-        /// <param name="position">The position to where the record will be moved</param>
-        /// <param name="condition">The subset to be reordered</param>
-        public void Reorder_Line(PersistentSupport sp, int position, CriteriaSet condition, List<Relation> relations = null)
-        {
-            double posactual = ValLine;
-            double posnova = position + 1;
-            ValLine = posnova;
-
-            double middle = posnova;
-            if (posnova > posactual)
-                middle += 0.5;
-            else
-                middle -= 0.5;
-
-            UpdateQuery up = new UpdateQuery()
-                        .Update(Area.AreaOUTPU)
-                        .Set(CSGenioAoutpu.FldLine, middle)
-                        .Where(CriteriaSet.And().Equal(CSGenioAoutpu.FldCodoutpu, QPrimaryKey));
-            sp.Execute(up);
-
-            sp.ReorderSequence(Area.AreaOUTPU, CSGenioAoutpu.FldLine, condition, relations);
-
-			OnReorder_Line(sp, posactual, condition, relations);
-        }
-		/**/
+  
 		/// <summary>
         /// Reorders the values of the ordering field along a subset so that the current record moves in that order to the specified position
         /// </summary>
@@ -560,12 +523,12 @@ namespace CSGenio.business
         /// <param name="condition">The subset to be reordered</param>
         public void Reorder_Line(PersistentSupport sp, int position, CriteriaSet condition, List<Relation> relations = null, bool moveRow = true)
         {
-            double posactual = ValLine;
-            double posnova = position + 1;
+            int posactual = (int)ValLine;
+            int posnova = position + 1;
             ValLine = posnova;
 
 			//Get highest value for ordering field
-			int maxOrder = 0;
+			int maxOrder;
 
             try
 			{
@@ -601,19 +564,19 @@ namespace CSGenio.business
 			}
 
 			//Set new positions of records in the range from the previous position to the new position
-			int posLow = 0;
-			int posHigh = 0;
-            int difference = 0;
+			int posLow;
+			int posHigh;
+            int difference;
 			//If new position is greater than previous position
 			if (posnova > posactual) {
-				posLow = (int)posactual + 1;
-				posHigh = (int)posnova;
+				posLow = posactual + 1;
+				posHigh = posnova;
                 difference = -1;
 			}
 			//If new position is less than previous position
 			else {
-				posLow = (int)posnova;
-				posHigh = (int)posactual - 1;
+				posLow = posnova;
+				posHigh = posactual - 1;
                 difference = 1;
             }
 			CriteriaSet range_condition = CriteriaSet.And();
@@ -635,7 +598,7 @@ namespace CSGenio.business
 			OnReorder_Line(sp, posactual, condition, relations);
         }
 
-        private void OnReorder_Line(PersistentSupport sp, double oldpos, CriteriaSet condition, List<Relation> relations)
+        private void OnReorder_Line(PersistentSupport sp, int oldpos, CriteriaSet condition, List<Relation> relations)
         {
 // USE /[MANUAL GQT ONREORDER OUTPU.LINE]/
         }

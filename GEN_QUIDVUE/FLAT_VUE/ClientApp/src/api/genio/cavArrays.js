@@ -5,8 +5,9 @@
 		this.fnResources = fnResources
 		return this
 	},
-	get elements() {
-		var _this = this
+	get elements()
+	{
+		const _this = this
 		return [
 			{
 				key: 'EQ',
@@ -69,12 +70,14 @@
 
 export const logical = {
 	fnResources: null,
-	setResources(fnResources) {
+	setResources(fnResources)
+	{
 		this.fnResources = fnResources
 		return this
 	},
-	get elements() {
-		var _this = this
+	get elements()
+	{
+		const _this = this
 		return [
 			{
 				key: 0,
@@ -99,7 +102,7 @@ export const totals = {
 	},
 	get elements()
 	{
-		var _this = this
+		const _this = this
 		return [
 			{
 				key: 'COUNT',
@@ -139,9 +142,8 @@ export const accessType = {
 	},
 	get elements()
 	{
-		var _this = this
+		const _this = this
 		return [
-
 			{
 				key: 'PUB',
 				resourceId: 'PUBLICA03827',

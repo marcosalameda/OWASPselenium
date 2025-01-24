@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Asset Manual
 	/// </summary>
-	public class CSGenioAassma : DbArea	{
+	public class CSGenioAassma : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -273,7 +274,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodassma, value); }
 		}
 
-
 		/// <summary>Field : ">>Asset" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodasset { get { return m_fldCodasset; } }
 		private static FieldRef m_fldCodasset = new FieldRef("assma", "codasset");
@@ -285,7 +285,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodasset, value); }
 		}
 
-
 		/// <summary>Field : "Manual name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("assma", "name");
@@ -296,7 +295,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldName); }
 			set { insertNameValueField(FldName, value); }
 		}
-
 
 		/// <summary>Field : "Digital document" Tipo: "IB" Formula:  ""</summary>
 		public static FieldRef FldDigdocum { get { return m_fldDigdocum; } }
@@ -330,7 +328,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldNotes); }
 			set { insertNameValueField(FldNotes, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -373,23 +370,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAassma> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAassma> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAassma>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -438,7 +418,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX ASSMA]/

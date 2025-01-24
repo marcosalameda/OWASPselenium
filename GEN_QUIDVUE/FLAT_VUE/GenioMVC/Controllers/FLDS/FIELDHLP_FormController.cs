@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Flds;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_FIELDHLP_CANCEL = new NavigationLocation("FIELD_TYPE57098", "Fieldhlp_Cancel", "Flds") { vueRouteName = "form-FIELDHLP", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_FIELDHLP_SHOW = new NavigationLocation("FIELD_TYPE57098", "Fieldhlp_Show", "Flds") { vueRouteName = "form-FIELDHLP", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_FIELDHLP_NEW = new NavigationLocation("FIELD_TYPE57098", "Fieldhlp_New", "Flds") { vueRouteName = "form-FIELDHLP", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_FIELDHLP_EDIT = new NavigationLocation("FIELD_TYPE57098", "Fieldhlp_Edit", "Flds") { vueRouteName = "form-FIELDHLP", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_FIELDHLP_DUPLICATE = new NavigationLocation("FIELD_TYPE57098", "Fieldhlp_Duplicate", "Flds") { vueRouteName = "form-FIELDHLP", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_FIELDHLP_DELETE = new NavigationLocation("FIELD_TYPE57098", "Fieldhlp_Delete", "Flds") { vueRouteName = "form-FIELDHLP", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_FIELDHLP_CANCEL = new("FIELD_TYPE57098", "Fieldhlp_Cancel", "Flds") { vueRouteName = "form-FIELDHLP", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_FIELDHLP_SHOW = new("FIELD_TYPE57098", "Fieldhlp_Show", "Flds") { vueRouteName = "form-FIELDHLP", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_FIELDHLP_NEW = new("FIELD_TYPE57098", "Fieldhlp_New", "Flds") { vueRouteName = "form-FIELDHLP", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_FIELDHLP_EDIT = new("FIELD_TYPE57098", "Fieldhlp_Edit", "Flds") { vueRouteName = "form-FIELDHLP", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_FIELDHLP_DUPLICATE = new("FIELD_TYPE57098", "Fieldhlp_Duplicate", "Flds") { vueRouteName = "form-FIELDHLP", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_FIELDHLP_DELETE = new("FIELD_TYPE57098", "Fieldhlp_Delete", "Flds") { vueRouteName = "form-FIELDHLP", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Fieldhlp_ModalDBEdit()
-		{
-			Fieldhlp_ViewModel model = new Fieldhlp_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Fieldhlp_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Fieldhlp Multiform actions
-
-		//
-		// GET /Flds/MFFieldhlp_New
-		[HttpGet]
-		[ActionName("MFFieldhlp_New")]
-		public ActionResult MFFieldhlp_New()
-		{
-			var model = new Fieldhlp_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_FIELDHLP_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("flds", model.ValCodflds);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFFieldhlp_New_GET()
-		{
-			return MFFieldhlp_New();
-		}
-
-		//
-		// GET /Flds/MFFieldhlp_Edit
-		[HttpGet]
-		[ActionName("MFFieldhlp_Edit")]
-		public ActionResult MFFieldhlp_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("FIELDHLP", "EDIT", new { id = id, partialView = "MFFieldhlp", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFFieldhlp_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFFieldhlp_Edit(requestModel);
-		}
-
-		//
-		// GET /Flds/MFFieldhlp_Cancel
-		[ActionName("MFFieldhlp_Cancel")]
-		public ActionResult MFFieldhlp_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Flds(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Flds/MFFieldhlp_Save
-		[HttpPost]
-		[ActionName("MFFieldhlp_Save")]
-		public JsonResult MFFieldhlp_Save(Fieldhlp_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFFieldhlp_Save",
-				ViewName = "MFFieldhlp",
-				AreaName = "flds"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Flds/MFFieldhlp_Delete
-		[HttpPost]
-		[ActionName("MFFieldhlp_Delete")]
-		public JsonResult MFFieldhlp_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFFieldhlp_Delete",
-				ViewName = "MFFieldhlp",
-				AreaName = "flds",
-				Location = ACTION_FIELDHLP_EDIT
-			};
-
-			var model = new Fieldhlp_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Flds/Fieldhlp_AeroValName
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_aero")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,63 +422,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Fieldhlp_AeroValName_ViewModel model = new Fieldhlp_AeroValName_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodflds = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
 
-		//
-		// GET: /Flds/Fieldhlp_EquipValRegistnr
-		// POST: /Flds/Fieldhlp_EquipValRegistnr
-		[ActionName("Fieldhlp_EquipValRegistnr")]
-		public ActionResult Fieldhlp_EquipValRegistnr([FromBody]RequestLookupModel requestModel)
-		{
-			var queryParams = requestModel.QueryParams;
-
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
-				UserContext.Current.SetPersistenceReadOnly(true);
-			else
-			{
-				Navigation.DestroyEntry("ForcePrimaryRead_equip");
-				UserContext.Current.SetPersistenceReadOnly(false);
-			}
-
-			var requestValues = new NameValueCollection();
-			if (queryParams != null)
-			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
-				// Add to request values
-				foreach (var kv in queryParams)
-					requestValues.Add(kv.Key, kv.Value);
-			}
-
-			IsStateReadonly = true;
-			Fieldhlp_EquipValRegistnr_ViewModel model = new Fieldhlp_EquipValRegistnr_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			model.ValCodflds = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		// POST: /Flds/Fieldhlp_SaveEdit
 		[HttpPost]

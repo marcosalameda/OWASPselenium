@@ -1,53 +1,32 @@
-namespace quidgest.uitests.pages;
+﻿using quidgest.uitests.pages.forms.core;
+
+#nullable enable
+
+namespace quidgest.uitests.pages.forms;
 
 [System.CodeDom.Compiler.GeneratedCode("Genio", "")]
-public class CfaqsForm: PageObject {
-
-	private By formLocator = By.CssSelector("#form-container");
-	private IWebElement form => driver.FindElement(formLocator);
-
+public class CfaqsForm : Form
+{
 	/// <summary>
 	/// Icon
 	/// </summary>
-	public BaseInputControl CfaqsIcon => new BaseInputControl(driver, formLocator, "#CFAQS___CFAQSICON____");
+	public BaseInputControl CfaqsIcon => new BaseInputControl(driver, ContainerLocator, "#CFAQS___CFAQSICON____");
+
 	/// <summary>
 	/// Category
 	/// </summary>
-	public BaseInputControl CfaqsCategory => new BaseInputControl(driver, formLocator, "#CFAQS___CFAQSCATEGORY");
+	public BaseInputControl CfaqsCategory => new BaseInputControl(driver, ContainerLocator, "#CFAQS___CFAQSCATEGORY");
+
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl CfaqsDescript => new BaseInputControl(driver, formLocator, "#CFAQS___CFAQSDESCRIPT");
+	public BaseInputControl CfaqsDescript => new BaseInputControl(driver, ContainerLocator, "#CFAQS___CFAQSDESCRIPT");
+
 	/// <summary>
 	/// FAQS
 	/// </summary>
-	public ListControl PseudExpfaqs => new ListControl(driver, formLocator, "#CFAQS___PSEUDEXPFAQS_");
+	public ListControl PseudExpfaqs => new ListControl(driver, ContainerLocator, "#CFAQS___PSEUDEXPFAQS_");
 
-	private IWebElement saveBtn => form.FindElement(By.CssSelector("#bottom-save-btn"));
-	private IWebElement cancelBtn => form.FindElement(By.CssSelector("#bottom-cancel-btn"));
-	public FORM_MODE mode {get; private set;}
-
-	public CfaqsForm(IWebDriver driver, FORM_MODE mode, By subformLocator=null): base(driver) {
-		this.mode = mode;
-		formLocator = subformLocator ?? formLocator;
-
-		wait.Until(c => form);
-		WaitForLoading();
-	}
-
-	public void WaitForLoading()
-	{
-        wait.Until(c => form.FindElement(ByData.Key("CFAQS")).GetAttribute("data-loading") != "true");
-    }
-
-	public void Save() {
-		WaitForLoading();
-		saveBtn.Click();
-	}
-
-	public void Cancel() {
-		WaitForLoading();
-		cancelBtn.Click();
-	}
-
+	public CfaqsForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "CFAQS", containerLocator: containerLocator) { }
 }

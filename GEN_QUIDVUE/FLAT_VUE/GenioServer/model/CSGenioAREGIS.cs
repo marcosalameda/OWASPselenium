@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Registration
 	/// </summary>
-	public class CSGenioAregis : DbArea	{
+	public class CSGenioAregis : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -284,7 +285,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodregis, value); }
 		}
 
-
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("regis", "name");
@@ -295,7 +295,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldName); }
 			set { insertNameValueField(FldName, value); }
 		}
-
 
 		/// <summary>Field : "Tax identification no." Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldNif { get { return m_fldNif; } }
@@ -308,7 +307,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldNif, value); }
 		}
 
-
 		/// <summary>Field : "Email" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldEmail1 { get { return m_fldEmail1; } }
 		private static FieldRef m_fldEmail1 = new FieldRef("regis", "email1");
@@ -319,7 +317,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldEmail1); }
 			set { insertNameValueField(FldEmail1, value); }
 		}
-
 
 		/// <summary>Field : "Email" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldEmail2 { get { return m_fldEmail2; } }
@@ -332,7 +329,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldEmail2, value); }
 		}
 
-
 		/// <summary>Field : "Phone" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTelephon { get { return m_fldTelephon; } }
 		private static FieldRef m_fldTelephon = new FieldRef("regis", "telephon");
@@ -343,7 +339,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldTelephon); }
 			set { insertNameValueField(FldTelephon, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -386,23 +381,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAregis> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAregis> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAregis>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -451,7 +429,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX REGIS]/

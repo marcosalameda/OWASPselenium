@@ -10,30 +10,35 @@
 		<div
 			style="align-items: center"
 			:class="[classObject.labelContainerFlex, ...classes]">
+			<slot
+				v-if="labelPosition !== labelAlignment.left"
+				name="label" />
+
 			<label
 				v-if="hasLabel && !isEmpty(label)"
 				:id="labelId"
 				v-bind="labelAttrs"
 				:for="id"
 				:data-val-required="isRequired && !(readonly || disabled)"
-				:style="{ 'padding-right': '5px' }"
 				:class="[{ disabled: disabled }, ...(classObject.labelClass || [])]">
-				<slot
-					v-if="labelPosition !== labelAlignment.left"
-					name="label" />
-
 				{{ label }}
-
-				<slot
-					v-if="labelPosition === labelAlignment.left"
-					name="label" />
 			</label>
 
-			<q-tooltip
-				v-if="hasTooltip"
-				:id="`tooltip_${this.id}`"
-				:anchor="`#${this.labelId}`"
-				:text="tooltipTitle" />
+			<slot
+				v-if="labelPosition === labelAlignment.left"
+				name="label" />
+
+			<q-popover-help
+				v-if="popoverText && !isEmpty(label)"
+				:help-control="helpControl"
+				:id="id"
+				:label="label"
+				:texts="texts" />
+
+			<q-tooltip-help
+				v-if="tooltipText && !isEmpty(label)"
+				:help-control="helpControl"
+				:anchor="anchorId" />
 
 			<a
 				v-if="reportingModeOn"
@@ -44,46 +49,38 @@
 			</a>
 
 			<a
-				v-if="hasSuggestions && suggestionModeOn"
+				v-if="hasSuggestions && suggestionModeOn && !isEmpty(label)"
 				href="javascript:void(0)"
 				class="suggest suggest-mode"
 				@click.stop.prevent="openSuggestionMode">
 				<q-icon icon="new-suggestion" />
 			</a>
-
-			<button
-				v-if="showPopoverBtn"
-				:id="`popover_${id}`"
-				type="button"
-				class="btn-popover"
-				:title="label">
-				<q-icon icon="help" />
-			</button>
-
-			<q-popover
-				v-if="showPopoverBtn"
-				:anchor="`#popover_${id}`"
-				:title="label"
-				:text="popoverDescription" />
 		</div>
 
 		<component
-			v-if="viewMode"
-			:is="viewMode.componentName"
+			v-if="viewMode?.props"
+			:is="`q-${viewMode.type}`"
 			:texts="texts"
-			v-bind="viewMode"
+			v-bind="viewMode.props"
 			v-on="viewMode.handlers" />
 		<slot v-else />
+
+		<q-subtext-help
+			v-if="hasSubtext && !isEmpty(label)"
+			:help-control="helpControl"
+			:label="label" />
 	</div>
 </template>
 
 <script>
+	import { defineAsyncComponent } from 'vue'
 	import _isEmpty from 'lodash-es/isEmpty'
 
 	// Core SortableJS (without default plugins)
 	import Sortable from 'sortablejs/modular/sortable.core.esm.js'
 
 	import { labelAlignment } from '@/mixins/quidgest.mainEnums.js'
+	import HelpControl from '@/mixins/helpControls.js'
 
 	export default {
 		name: 'QBaseInputStructure',
@@ -91,6 +88,14 @@
 		emits: ['show-suggestion-popup'],
 
 		inheritAttrs: false,
+
+		mixins: [HelpControl],
+
+		components: {
+			QPopoverHelp: defineAsyncComponent(() => import('@/components/QPopoverHelp.vue')),
+			QTooltipHelp: defineAsyncComponent(() => import('@/components/QTooltipHelp.vue')),
+			QSubtextHelp: defineAsyncComponent(() => import('@/components/QSubtextHelp.vue'))
+		},
 
 		props: {
 			/**
@@ -102,24 +107,9 @@
 			},
 
 			/**
-			 * Helper object which might contain contextual information for the input.
-			 */
-			help: Object,
-
-			/**
 			 * Text strings which might be used to override default texts within the component.
 			 */
 			texts: Object,
-
-			/**
-			 * User help text that can be displayed as a tooltip or a popover.
-			 */
-			userHelp: String,
-
-			/**
-			 * Detailed description for the control which can be shown on demand.
-			 */
-			description: String,
 
 			/**
 			 * The label text for the input field.
@@ -244,14 +234,6 @@
 			},
 
 			/**
-			 * The style of help to be displayed, which can be a 'tooltip' or 'popover'.
-			 */
-			helpStyle: {
-				type: String,
-				default: 'tooltip'
-			},
-
-			/**
 			 * Whether the control is currently loading.
 			 */
 			loading: {
@@ -274,14 +256,14 @@
 						_isEmpty(this.label) || _isEmpty(this.labelPosition)
 							? ''
 							: `label${this.labelPosition}`,
-					labelContainerFlex: this.dFlexInline ? 'd-inline-flex' : 'd-flex'
+					labelContainerFlex: this.dFlexInline ? 'label-container--inline' : 'label-container'
 				},
 
 				wrapperAttrs: {
 					class: this.$attrs.class ?? ''
 				},
 
-				labelAttrs: this.$attrs.labelAttrs ?? {},
+				labelAttrs: this.$attrs.labelAttrs ?? this.$attrs['label-attrs'] ?? {},
 
 				sortablePlugin: null
 			}
@@ -319,50 +301,10 @@
 			},
 
 			/**
-			 * Indicates if a tooltip should be displayed based on the applied help style and content.
+			 * Verified if the help has a subtext.
 			 */
-			hasTooltip()
-			{
-				return this.helpStyle === 'tooltip' && this.tooltipTitle !== '' && !this.showPopoverBtn
-			},
-
-			/**
-			 * The title to be shown in the tooltip.
-			 */
-			tooltipTitle()
-			{
-				return !_isEmpty(this.userHelp) ? this.userHelp : ''
-			},
-
-			/**
-			 * The description to be used in the popover, constructed from user help and description details.
-			 */
-			popoverDescription()
-			{
-				if (!_isEmpty(this.userHelp) && !_isEmpty(this.description))
-					return this.description
-				else if (
-					!_isEmpty(this.userHelp) &&
-					_isEmpty(this.description) &&
-					this.helpStyle === 'popover'
-				)
-					return this.userHelp
-				return ''
-			},
-
-			/**
-			 * Determines if the popover button should be displayed, based on help style, user help, and label.
-			 */
-			showPopoverBtn()
-			{
-				return (
-					(this.helpStyle === 'tooltip' &&
-						!_isEmpty(this.description) &&
-						!_isEmpty(this.label)) ||
-					(this.helpStyle === 'popover' &&
-						!_isEmpty(this.userHelp) &&
-						!_isEmpty(this.label))
-				)
+			hasSubtext() {
+				return this.helpControl?.shortHelp.type === 'Subtext'
 			}
 		},
 
@@ -385,8 +327,8 @@
 				const params = {
 					id: this.id,
 					label: this.label,
-					help: this.userHelp,
-					description: this.description,
+					help: this.shortHelp,
+					detailHelp: this.detailHelp,
 					arrayName: this.arrayName
 				}
 

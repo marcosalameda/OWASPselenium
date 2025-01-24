@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Faqs;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_FAQS_CANCEL = new NavigationLocation("FAQS53959", "Faqs_Cancel", "Faqs") { vueRouteName = "form-FAQS", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_FAQS_SHOW = new NavigationLocation("FAQS53959", "Faqs_Show", "Faqs") { vueRouteName = "form-FAQS", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_FAQS_NEW = new NavigationLocation("FAQS53959", "Faqs_New", "Faqs") { vueRouteName = "form-FAQS", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_FAQS_EDIT = new NavigationLocation("FAQS53959", "Faqs_Edit", "Faqs") { vueRouteName = "form-FAQS", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_FAQS_DUPLICATE = new NavigationLocation("FAQS53959", "Faqs_Duplicate", "Faqs") { vueRouteName = "form-FAQS", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_FAQS_DELETE = new NavigationLocation("FAQS53959", "Faqs_Delete", "Faqs") { vueRouteName = "form-FAQS", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_FAQS_CANCEL = new("FAQS53959", "Faqs_Cancel", "Faqs") { vueRouteName = "form-FAQS", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_FAQS_SHOW = new("FAQS53959", "Faqs_Show", "Faqs") { vueRouteName = "form-FAQS", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_FAQS_NEW = new("FAQS53959", "Faqs_New", "Faqs") { vueRouteName = "form-FAQS", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_FAQS_EDIT = new("FAQS53959", "Faqs_Edit", "Faqs") { vueRouteName = "form-FAQS", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_FAQS_DUPLICATE = new("FAQS53959", "Faqs_Duplicate", "Faqs") { vueRouteName = "form-FAQS", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_FAQS_DELETE = new("FAQS53959", "Faqs_Delete", "Faqs") { vueRouteName = "form-FAQS", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Faqs_ModalDBEdit()
-		{
-			Faqs_ViewModel model = new Faqs_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Faqs_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Faqs Multiform actions
 
-		//
-		// GET /Faqs/MFFaqs_New
-		[HttpGet]
-		[ActionName("MFFaqs_New")]
-		public ActionResult MFFaqs_New()
-		{
-			var model = new Faqs_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_FAQS_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("faqs", model.ValCodfaqs);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFFaqs_New_GET()
-		{
-			return MFFaqs_New();
-		}
-
-		//
-		// GET /Faqs/MFFaqs_Edit
-		[HttpGet]
-		[ActionName("MFFaqs_Edit")]
-		public ActionResult MFFaqs_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("FAQS", "EDIT", new { id = id, partialView = "MFFaqs", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFFaqs_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFFaqs_Edit(requestModel);
-		}
-
-		//
-		// GET /Faqs/MFFaqs_Cancel
-		[ActionName("MFFaqs_Cancel")]
-		public ActionResult MFFaqs_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Faqs(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Faqs/MFFaqs_Save
-		[HttpPost]
-		[ActionName("MFFaqs_Save")]
-		public JsonResult MFFaqs_Save(Faqs_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFFaqs_Save",
-				ViewName = "MFFaqs",
-				AreaName = "faqs"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Faqs/MFFaqs_Delete
-		[HttpPost]
-		[ActionName("MFFaqs_Delete")]
-		public JsonResult MFFaqs_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFFaqs_Delete",
-				ViewName = "MFFaqs",
-				AreaName = "faqs",
-				Location = ACTION_FAQS_EDIT
-			};
-
-			var model = new Faqs_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Faqs/Faqs_SaveEdit
 		[HttpPost]

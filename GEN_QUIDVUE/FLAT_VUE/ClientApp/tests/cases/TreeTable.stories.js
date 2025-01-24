@@ -1,12 +1,11 @@
 import TreeTable from './TreeTable.case.vue'
 
 export default {
-    title: 'Views/TreeTable',
-    component: TreeTable,
-    tags: [],
-  };
+	title: 'Views/TreeTable',
+	component: TreeTable,
+	tags: []
+}
 
-  export const Simple = {
-    args: {
-    },
-  };
+export const Simple = {
+	args: {}
+}

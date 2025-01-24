@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Asspa
 {
-	public class Asspa_ViewModel : FormViewModel<Models.Asspa>
+	public class Asspa_ViewModel : FormViewModel<Models.Asspa>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,50 +29,56 @@ namespace GenioMVC.ViewModels.Asspa
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Identification name" | Type: "CE"
+		/// </summary>
+		public string ValCodasset { get; set; }
+		/// <summary>
+		/// Title: "Parameter" | Type: "CE"
+		/// </summary>
+		public string ValCodparam { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Identification name" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Asset> TableAssetName { get; set; }
-
 		/// <summary>
 		/// Title: "Data type" | Type: "AC"
 		/// </summary>
 		public string ValDatatype { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValDatatype { get; set; }
-
 		/// <summary>
 		/// Title: "Decimal places" | Type: "N"
 		/// </summary>
 		public decimal? ValDecimalplaces { get; set; }
-
 		/// <summary>
 		/// Title: "Parameter" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Param> TableParamParamete { get; set; }
-
 		/// <summary>
 		/// Title: "Text" | Type: "C"
 		/// </summary>
 		public string ValText { get; set; }
-
 		/// <summary>
 		/// Title: "Quantity" | Type: "N"
 		/// </summary>
 		public decimal? ValQuantity { get; set; }
-
 		/// <summary>
 		/// Title: "Date" | Type: "D"
 		/// </summary>
 		public DateTime? ValDate { get; set; }
-
 		/// <summary>
 		/// Title: "To show" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValToshow { get; set; }
 
 		#region Navigations
@@ -82,20 +88,6 @@ namespace GenioMVC.ViewModels.Asspa
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Identification name" | Type: "CE"
-		/// </summary>
-		public string ValCodasset { get; set; }
-
-		/// <summary>
-		/// Title: "Parameter" | Type: "CE"
-		/// </summary>
-		public string ValCodparam { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -111,9 +103,10 @@ namespace GenioMVC.ViewModels.Asspa
 
 		public string ValCodasspa { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Asspa_ViewModel() : base(null!) { }
@@ -149,6 +142,15 @@ namespace GenioMVC.ViewModels.Asspa
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Asspa model = new Models.Asspa(userContext) { Identifier = "FASSPA" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FASSPA");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -209,14 +211,14 @@ namespace GenioMVC.ViewModels.Asspa
 
 			try
 			{
+				ValCodasset = ViewModelConversion.ToString(m.ValCodasset);
+				ValCodparam = ViewModelConversion.ToString(m.ValCodparam);
 				ValDatatype = ViewModelConversion.ToString(m.ValDatatype);
 				ValDecimalplaces = ViewModelConversion.ToNumeric(m.ValDecimalplaces);
 				ValText = ViewModelConversion.ToString(m.ValText);
 				ValQuantity = ViewModelConversion.ToNumeric(m.ValQuantity);
 				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
 				ValToshow = ViewModelConversion.ToString(m.ValToshow);
-				ValCodasset = ViewModelConversion.ToString(m.ValCodasset);
-				ValCodparam = ViewModelConversion.ToString(m.ValCodparam);
 				ValCodasspa = ViewModelConversion.ToString(m.ValCodasspa);
 			}
 			catch (Exception)
@@ -226,6 +228,20 @@ namespace GenioMVC.ViewModels.Asspa
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Asspa m)
 		{
 			if (m == null)
@@ -236,25 +252,95 @@ namespace GenioMVC.ViewModels.Asspa
 
 			try
 			{
+				m.ValCodasset = ViewModelConversion.ToString(ValCodasset);
+				m.ValCodparam = ViewModelConversion.ToString(ValCodparam);
 				m.ValDatatype = ViewModelConversion.ToString(ValDatatype);
 				m.ValDecimalplaces = ViewModelConversion.ToNumeric(ValDecimalplaces);
 				m.ValText = ViewModelConversion.ToString(ValText);
 				m.ValQuantity = ViewModelConversion.ToNumeric(ValQuantity);
 				m.ValDate = ViewModelConversion.ToDateTime(ValDate);
-				m.ValToshow = ViewModelConversion.ToString(ValToshow);
-				m.ValCodasset = ViewModelConversion.ToString(ValCodasset);
-				m.ValCodparam = ViewModelConversion.ToString(ValCodparam);
 				m.ValCodasspa = ViewModelConversion.ToString(ValCodasspa);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValToshow = ViewModelConversion.ToString(ValToshow);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Asspa) to Model (Asspa) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Asspa) to Model (Asspa) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "asspa.codasset":
+						this.ValCodasset = ViewModelConversion.ToString(_value);
+						break;
+					case "asspa.codparam":
+						this.ValCodparam = ViewModelConversion.ToString(_value);
+						break;
+					case "asspa.datatype":
+						this.ValDatatype = ViewModelConversion.ToString(_value);
+						break;
+					case "asspa.decimalplaces":
+						this.ValDecimalplaces = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "asspa.text":
+						this.ValText = ViewModelConversion.ToString(_value);
+						break;
+					case "asspa.quantity":
+						this.ValQuantity = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "asspa.date":
+						this.ValDate = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "asspa.codasspa":
+						this.ValCodasspa = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Asspa) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Asspa)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Asspa.Find(id ?? Navigation.GetStrValue("asspa"), m_userContext, "FASSPA"); }
+			finally { Model ??= new Models.Asspa(m_userContext) { Identifier = "FASSPA" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -268,20 +354,13 @@ namespace GenioMVC.ViewModels.Asspa
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FASSPA";
@@ -291,6 +370,7 @@ namespace GenioMVC.ViewModels.Asspa
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -350,31 +430,27 @@ namespace GenioMVC.ViewModels.Asspa
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
+			validator.Required("ValDatatype", Resources.Resources.DATA_TYPE47159, ViewModelConversion.ToString(ValDatatype), FieldType.ARRAY_COD_TEXTO.Formatting);
 			validator.StringLength("ValText", Resources.Resources.TEXT04938, ValText, 50);
 			validator.StringLength("ValToshow", Resources.Resources.TO_SHOW13268, ValToshow, 50);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE ASSPA]/
 		public override void Save()
 		{
 
-			try { Model = Models.Asspa.Find(Navigation.GetStrValue("asspa"), m_userContext, "FASSPA"); }
-			finally { if (Model == null) Model = new Models.Asspa(m_userContext) { Identifier = "FASSPA" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY ASSPA]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Asspa.Find(Navigation.GetStrValue("asspa"), m_userContext, "FASSPA"); }
-			finally { if (Model == null) Model = new Models.Asspa(m_userContext) { Identifier = "FASSPA" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE ASSPA]/
 
@@ -407,8 +483,8 @@ namespace GenioMVC.ViewModels.Asspa
 				object hValue = Navigation.GetValue("asset", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					asspa___assetname____Conds.Equal(CSGenioAasset.FldCodasset, Navigation.GetValue("asset"));
-					this.ValCodasset = Navigation.GetStrValue("asset");
+					asspa___assetname____Conds.Equal(CSGenioAasset.FldCodasset, hValue);
+					this.ValCodasset = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -425,8 +501,6 @@ namespace GenioMVC.ViewModels.Asspa
 					Navigation.CurrentLevel.SetEntry("RETURN_asset", null);
 				}
 				FillDependant_AsspaTableAssetName(lazyLoad);
-				//Check if foreignkey comes from history
-				TableAssetName.FilledByHistory = Navigation.CheckFilledByHistory("asset");
 				return;
 			}
 
@@ -494,9 +568,6 @@ namespace GenioMVC.ViewModels.Asspa
 
 				TableAssetName.List = new SelectList(TableAssetName.Elements.ToSelectList(x => x.ValName, x => x.ValCodasset,  x => x.ValCodasset == this.ValCodasset), "Value", "Text", this.ValCodasset);
 				FillDependant_AsspaTableAssetName();
-
-				//Check if foreignkey comes from history
-				TableAssetName.FilledByHistory = Navigation.CheckFilledByHistory("asset");
 			}
 		}
 
@@ -602,8 +673,8 @@ namespace GenioMVC.ViewModels.Asspa
 				object hValue = Navigation.GetValue("param", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					asspa___paramparameteConds.Equal(CSGenioAparam.FldCodparam, Navigation.GetValue("param"));
-					this.ValCodparam = Navigation.GetStrValue("param");
+					asspa___paramparameteConds.Equal(CSGenioAparam.FldCodparam, hValue);
+					this.ValCodparam = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -620,8 +691,6 @@ namespace GenioMVC.ViewModels.Asspa
 					Navigation.CurrentLevel.SetEntry("RETURN_param", null);
 				}
 				FillDependant_AsspaTableParamParamete(lazyLoad);
-				//Check if foreignkey comes from history
-				TableParamParamete.FilledByHistory = Navigation.CheckFilledByHistory("param");
 				return;
 			}
 
@@ -689,9 +758,6 @@ namespace GenioMVC.ViewModels.Asspa
 
 				TableParamParamete.List = new SelectList(TableParamParamete.Elements.ToSelectList(x => x.ValParameter, x => x.ValCodparam,  x => x.ValCodparam == this.ValCodparam), "Value", "Text", this.ValCodparam);
 				FillDependant_AsspaTableParamParamete();
-
-				//Check if foreignkey comes from history
-				TableParamParamete.FilledByHistory = Navigation.CheckFilledByHistory("param");
 			}
 		}
 
@@ -788,22 +854,24 @@ namespace GenioMVC.ViewModels.Asspa
 		{
 			return identifier switch
 			{
+				"asspa.codasset" => ViewModelConversion.ToString(modelValue),
+				"asspa.codparam" => ViewModelConversion.ToString(modelValue),
 				"asspa.datatype" => ViewModelConversion.ToString(modelValue),
 				"asspa.decimalplaces" => ViewModelConversion.ToNumeric(modelValue),
 				"asspa.text" => ViewModelConversion.ToString(modelValue),
 				"asspa.quantity" => ViewModelConversion.ToNumeric(modelValue),
 				"asspa.date" => ViewModelConversion.ToDateTime(modelValue),
 				"asspa.toshow" => ViewModelConversion.ToString(modelValue),
-				"asspa.codasset" => ViewModelConversion.ToString(modelValue),
-				"asspa.codparam" => ViewModelConversion.ToString(modelValue),
 				"asspa.codasspa" => ViewModelConversion.ToString(modelValue),
 				"asset.codasset" => ViewModelConversion.ToString(modelValue),
 				"asset.name" => ViewModelConversion.ToString(modelValue),
 				"param.codparam" => ViewModelConversion.ToString(modelValue),
 				"param.parameter" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

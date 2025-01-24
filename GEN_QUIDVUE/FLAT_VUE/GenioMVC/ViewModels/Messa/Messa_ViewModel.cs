@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Messa
 {
-	public class Messa_ViewModel : FormViewModel<Models.Messa>
+	public class Messa_ViewModel : FormViewModel<Models.Messa>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,64 +29,68 @@ namespace GenioMVC.ViewModels.Messa
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Entity name" | Type: "CE"
+		/// </summary>
+		public string ValCodentit { get; set; }
+		/// <summary>
+		/// Title: "Person name" | Type: "CE"
+		/// </summary>
+		public string ValCodperso { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Notification ID" | Type: "C"
 		/// </summary>
 		public string ValIdnotif { get; set; }
-
 		/// <summary>
 		/// Title: "Message ID" | Type: "C"
 		/// </summary>
 		public string ValIdmsg { get; set; }
-
 		/// <summary>
 		/// Title: "E-mail sent" | Type: "L"
 		/// </summary>
 		public bool ValMailsent { get; set; }
-
 		/// <summary>
 		/// Title: "Error sending mail" | Type: "C"
 		/// </summary>
 		public string ValMailerr { get; set; }
-
 		/// <summary>
 		/// Title: "Entity name" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Entit> TableEntitName { get; set; }
-
 		/// <summary>
 		/// Title: "Person name" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Perso> TablePersoName { get; set; }
-
 		/// <summary>
 		/// Title: "Document number" | Type: "N"
 		/// </summary>
 		public decimal? ValDocum_nr { get; set; }
-
 		/// <summary>
 		/// Title: "To whom the message was sent" | Type: "C"
 		/// </summary>
 		public string ValDesignat { get; set; }
-
 		/// <summary>
 		/// Title: "E-mail to whom the message was sent" | Type: "C"
 		/// </summary>
 		public string ValEmail { get; set; }
-
 		/// <summary>
 		/// Title: "Message" | Type: "MO"
 		/// </summary>
 		public string ValMessage { get; set; }
-
 		/// <summary>
 		/// Title: "Created by" | Type: "ON"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValCreatope { get; set; }
-
 		/// <summary>
 		/// Title: "Created on" | Type: "OD"
 		/// </summary>
+		[ValidateSetAccess]
 		public DateTime? ValCreatdat { get; set; }
 
 		#region Navigations
@@ -96,20 +100,6 @@ namespace GenioMVC.ViewModels.Messa
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Entity name" | Type: "CE"
-		/// </summary>
-		public string ValCodentit { get; set; }
-
-		/// <summary>
-		/// Title: "Person name" | Type: "CE"
-		/// </summary>
-		public string ValCodperso { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -125,9 +115,10 @@ namespace GenioMVC.ViewModels.Messa
 
 		public string ValCodmessa { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Messa_ViewModel() : base(null!) { }
@@ -163,6 +154,15 @@ namespace GenioMVC.ViewModels.Messa
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Messa model = new Models.Messa(userContext) { Identifier = "FMESSA" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FMESSA");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -223,6 +223,8 @@ namespace GenioMVC.ViewModels.Messa
 
 			try
 			{
+				ValCodentit = ViewModelConversion.ToString(m.ValCodentit);
+				ValCodperso = ViewModelConversion.ToString(m.ValCodperso);
 				ValIdnotif = ViewModelConversion.ToString(m.ValIdnotif);
 				ValIdmsg = ViewModelConversion.ToString(m.ValIdmsg);
 				ValMailsent = ViewModelConversion.ToLogic(m.ValMailsent);
@@ -233,8 +235,6 @@ namespace GenioMVC.ViewModels.Messa
 				ValMessage = ViewModelConversion.ToString(m.ValMessage);
 				ValCreatope = ViewModelConversion.ToString(m.ValCreatope);
 				ValCreatdat = ViewModelConversion.ToDateTime(m.ValCreatdat);
-				ValCodentit = ViewModelConversion.ToString(m.ValCodentit);
-				ValCodperso = ViewModelConversion.ToString(m.ValCodperso);
 				ValCodmessa = ViewModelConversion.ToString(m.ValCodmessa);
 			}
 			catch (Exception)
@@ -244,6 +244,20 @@ namespace GenioMVC.ViewModels.Messa
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Messa m)
 		{
 			if (m == null)
@@ -254,6 +268,8 @@ namespace GenioMVC.ViewModels.Messa
 
 			try
 			{
+				m.ValCodentit = ViewModelConversion.ToString(ValCodentit);
+				m.ValCodperso = ViewModelConversion.ToString(ValCodperso);
 				m.ValIdnotif = ViewModelConversion.ToString(ValIdnotif);
 				m.ValIdmsg = ViewModelConversion.ToString(ValIdmsg);
 				m.ValMailsent = ViewModelConversion.ToLogic(ValMailsent);
@@ -262,21 +278,98 @@ namespace GenioMVC.ViewModels.Messa
 				m.ValDesignat = ViewModelConversion.ToString(ValDesignat);
 				m.ValEmail = ViewModelConversion.ToString(ValEmail);
 				m.ValMessage = ViewModelConversion.ToString(ValMessage);
+				m.ValCodmessa = ViewModelConversion.ToString(ValCodmessa);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
 				m.ValCreatope = ViewModelConversion.ToString(ValCreatope);
 				m.ValCreatdat = ViewModelConversion.ToDateTime(ValCreatdat);
-				m.ValCodentit = ViewModelConversion.ToString(ValCodentit);
-				m.ValCodperso = ViewModelConversion.ToString(ValCodperso);
-				m.ValCodmessa = ViewModelConversion.ToString(ValCodmessa);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Messa) to Model (Messa) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Messa) to Model (Messa) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "messa.codentit":
+						this.ValCodentit = ViewModelConversion.ToString(_value);
+						break;
+					case "messa.codperso":
+						this.ValCodperso = ViewModelConversion.ToString(_value);
+						break;
+					case "messa.idnotif":
+						this.ValIdnotif = ViewModelConversion.ToString(_value);
+						break;
+					case "messa.idmsg":
+						this.ValIdmsg = ViewModelConversion.ToString(_value);
+						break;
+					case "messa.mailsent":
+						this.ValMailsent = ViewModelConversion.ToLogic(_value);
+						break;
+					case "messa.mailerr":
+						this.ValMailerr = ViewModelConversion.ToString(_value);
+						break;
+					case "messa.docum_nr":
+						this.ValDocum_nr = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "messa.designat":
+						this.ValDesignat = ViewModelConversion.ToString(_value);
+						break;
+					case "messa.email":
+						this.ValEmail = ViewModelConversion.ToString(_value);
+						break;
+					case "messa.message":
+						this.ValMessage = ViewModelConversion.ToString(_value);
+						break;
+					case "messa.codmessa":
+						this.ValCodmessa = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Messa) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Messa)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Messa.Find(id ?? Navigation.GetStrValue("messa"), m_userContext, "FMESSA"); }
+			finally { Model ??= new Models.Messa(m_userContext) { Identifier = "FMESSA" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -290,20 +383,13 @@ namespace GenioMVC.ViewModels.Messa
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FMESSA";
@@ -313,6 +399,7 @@ namespace GenioMVC.ViewModels.Messa
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -371,35 +458,29 @@ namespace GenioMVC.ViewModels.Messa
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValIdnotif", Resources.Resources.NOTIFICATION_ID25507, ValIdnotif, 50);
 			validator.StringLength("ValIdmsg", Resources.Resources.MESSAGE_ID37133, ValIdmsg, 50);
 			validator.StringLength("ValMailerr", Resources.Resources.ERROR_SENDING_MAIL44674, ValMailerr, 300);
 			validator.StringLength("ValDesignat", Resources.Resources.TO_WHOM_THE_MESSAGE_02337, ValDesignat, 50);
 			validator.StringLength("ValEmail", Resources.Resources.E_MAIL_TO_WHOM_THE_M37668, ValEmail, 254);
 
+
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE MESSA]/
 		public override void Save()
 		{
 
-			try { Model = Models.Messa.Find(Navigation.GetStrValue("messa"), m_userContext, "FMESSA"); }
-			finally { if (Model == null) Model = new Models.Messa(m_userContext) { Identifier = "FMESSA" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY MESSA]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Messa.Find(Navigation.GetStrValue("messa"), m_userContext, "FMESSA"); }
-			finally { if (Model == null) Model = new Models.Messa(m_userContext) { Identifier = "FMESSA" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE MESSA]/
 
@@ -432,8 +513,8 @@ namespace GenioMVC.ViewModels.Messa
 				object hValue = Navigation.GetValue("entit", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					messa___entitname____Conds.Equal(CSGenioAentit.FldCodentit, Navigation.GetValue("entit"));
-					this.ValCodentit = Navigation.GetStrValue("entit");
+					messa___entitname____Conds.Equal(CSGenioAentit.FldCodentit, hValue);
+					this.ValCodentit = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -450,8 +531,6 @@ namespace GenioMVC.ViewModels.Messa
 					Navigation.CurrentLevel.SetEntry("RETURN_entit", null);
 				}
 				FillDependant_MessaTableEntitName(lazyLoad);
-				//Check if foreignkey comes from history
-				TableEntitName.FilledByHistory = Navigation.CheckFilledByHistory("entit");
 				return;
 			}
 
@@ -519,9 +598,6 @@ namespace GenioMVC.ViewModels.Messa
 
 				TableEntitName.List = new SelectList(TableEntitName.Elements.ToSelectList(x => x.ValName, x => x.ValCodentit,  x => x.ValCodentit == this.ValCodentit), "Value", "Text", this.ValCodentit);
 				FillDependant_MessaTableEntitName();
-
-				//Check if foreignkey comes from history
-				TableEntitName.FilledByHistory = Navigation.CheckFilledByHistory("entit");
 			}
 		}
 
@@ -627,8 +703,8 @@ namespace GenioMVC.ViewModels.Messa
 				object hValue = Navigation.GetValue("perso", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					messa___personame____Conds.Equal(CSGenioAperso.FldCodperso, Navigation.GetValue("perso"));
-					this.ValCodperso = Navigation.GetStrValue("perso");
+					messa___personame____Conds.Equal(CSGenioAperso.FldCodperso, hValue);
+					this.ValCodperso = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -645,8 +721,6 @@ namespace GenioMVC.ViewModels.Messa
 					Navigation.CurrentLevel.SetEntry("RETURN_perso", null);
 				}
 				FillDependant_MessaTablePersoName(lazyLoad);
-				//Check if foreignkey comes from history
-				TablePersoName.FilledByHistory = Navigation.CheckFilledByHistory("perso");
 				return;
 			}
 
@@ -714,9 +788,6 @@ namespace GenioMVC.ViewModels.Messa
 
 				TablePersoName.List = new SelectList(TablePersoName.Elements.ToSelectList(x => x.ValName, x => x.ValCodperso,  x => x.ValCodperso == this.ValCodperso), "Value", "Text", this.ValCodperso);
 				FillDependant_MessaTablePersoName();
-
-				//Check if foreignkey comes from history
-				TablePersoName.FilledByHistory = Navigation.CheckFilledByHistory("perso");
 			}
 		}
 
@@ -813,6 +884,8 @@ namespace GenioMVC.ViewModels.Messa
 		{
 			return identifier switch
 			{
+				"messa.codentit" => ViewModelConversion.ToString(modelValue),
+				"messa.codperso" => ViewModelConversion.ToString(modelValue),
 				"messa.idnotif" => ViewModelConversion.ToString(modelValue),
 				"messa.idmsg" => ViewModelConversion.ToString(modelValue),
 				"messa.mailsent" => ViewModelConversion.ToLogic(modelValue),
@@ -823,16 +896,16 @@ namespace GenioMVC.ViewModels.Messa
 				"messa.message" => ViewModelConversion.ToString(modelValue),
 				"messa.creatope" => ViewModelConversion.ToString(modelValue),
 				"messa.creatdat" => ViewModelConversion.ToDateTime(modelValue),
-				"messa.codentit" => ViewModelConversion.ToString(modelValue),
-				"messa.codperso" => ViewModelConversion.ToString(modelValue),
 				"messa.codmessa" => ViewModelConversion.ToString(modelValue),
 				"entit.codentit" => ViewModelConversion.ToString(modelValue),
 				"entit.name" => ViewModelConversion.ToString(modelValue),
 				"perso.codperso" => ViewModelConversion.ToString(modelValue),
 				"perso.name" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

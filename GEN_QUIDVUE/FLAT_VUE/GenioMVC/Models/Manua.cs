@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Kinde _kinde;
 		[DisplayName("Kinde")]
 		[ShouldSerialize("Kinde")]
-		public virtual Kinde Kinde { 
-			get { 
+		public virtual Kinde Kinde {
+			get {
 				if (!this.isEmptyModel && (_kinde == null || (!string.IsNullOrEmpty(ValCodkinde) && (_kinde.isEmptyModel || _kinde.klass.QPrimaryKey != ValCodkinde))))
 					_kinde = Models.Kinde.Find(ValCodkinde, m_userContext, Identifier, _fieldsToSerialize);
 				if (_kinde == null)
 					_kinde = new Models.Kinde(m_userContext, true, _fieldsToSerialize);
 				return _kinde;
 			}
-			set { _kinde = value; } 
+			set { _kinde = value; }
 		}
-		
+
 
 		[DisplayName("Manual name")]
 		/// <summary>Field : "Manual name" Tipo: "C" Formula:  ""</summary>
@@ -61,7 +61,7 @@ namespace GenioMVC.Models
 		[DisplayName("Digital document")]
 		/// <summary>Field : "Digital document" Tipo: "IB" Formula:  ""</summary>
 		[ShouldSerialize("Manua.ValDigdocum")]
-		[Document("ValDigdocum", false, true, false, false)]
+		[Document("ValDigdocum", true, false, false)]
 		public string ValDigdocum { get { return klass.ValDigdocum; } set { klass.ValDigdocum = value; } }
 		public string ValDigdocumfk { get { return klass.ValDigdocumfk; } set { klass.ValDigdocumfk = value; } }
 
@@ -79,19 +79,19 @@ namespace GenioMVC.Models
 		public Manua(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAmanua(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Manua(UserContext userContext, CSGenioAmanua val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAmanua csgenioa)
@@ -113,7 +113,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

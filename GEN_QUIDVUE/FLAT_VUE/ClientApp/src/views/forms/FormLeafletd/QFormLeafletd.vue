@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.LEAFLETDEQUIPREGISTNR.handlers"
 							:loading="controls.LEAFLETDEQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.LEAFLETDEQUIPREGISTNR.isVisible"
 								v-bind="controls.LEAFLETDEQUIPREGISTNR.props"
-								:model-value="model.ValCodequip.value"
-								v-on="controls.LEAFLETDEQUIPREGISTNR.handlers"
-								@update:model-value="model.ValCodequip.fnUpdateValue" />
+								v-on="controls.LEAFLETDEQUIPREGISTNR.handlers" />
 							<q-see-more-leafletdequipregistnr
 								v-if="controls.LEAFLETDEQUIPREGISTNR.seeMoreIsVisible"
 								v-bind="controls.LEAFLETDEQUIPREGISTNR.seeMoreParams"
@@ -129,8 +126,7 @@
 							v-on="controls.LEAFLETDTPEQUTIPOEQUI.handlers"
 							:loading="controls.LEAFLETDTPEQUTIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.LEAFLETDTPEQUTIPOEQUI.props"
 								:model-value="model.TpequValTipoequi.value" />
@@ -147,12 +143,12 @@
 							v-on="controls.LEAFLETDINSTADESIGNAT.handlers"
 							:loading="controls.LEAFLETDINSTADESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.LEAFLETDINSTADESIGNAT.props"
 								:model-value="model.ValDesignat.value"
-								@update:model-value="model.ValDesignat.fnUpdateValue" />
+								@blur="onBlur(controls.LEAFLETDINSTADESIGNAT, model.ValDesignat.value)"
+								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -164,14 +160,13 @@
 							v-on="controls.LEAFLETDINSTADTINIAGE.handlers"
 							:loading="controls.LEAFLETDINSTADTINIAGE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.LEAFLETDINSTADTINIAGE.isVisible"
-								v-bind="controls.LEAFLETDINSTADTINIAGE"
-								format="DateTime"
+								v-bind="controls.LEAFLETDINSTADTINIAGE.props"
 								:model-value="model.ValDtiniage.value"
-								@update:model-value="model.ValDtiniage.fnUpdateValue" />
+								@reset-icon-click="model.ValDtiniage.fnUpdateValue(model.ValDtiniage.originalValue ?? new Date())"
+								@update:model-value="model.ValDtiniage.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -183,14 +178,13 @@
 							v-on="controls.LEAFLETDINSTADTFIMAGE.handlers"
 							:loading="controls.LEAFLETDINSTADTFIMAGE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.LEAFLETDINSTADTFIMAGE.isVisible"
-								v-bind="controls.LEAFLETDINSTADTFIMAGE"
-								format="DateTime"
+								v-bind="controls.LEAFLETDINSTADTFIMAGE.props"
 								:model-value="model.ValDtfimage.value"
-								@update:model-value="model.ValDtfimage.fnUpdateValue" />
+								@reset-icon-click="model.ValDtfimage.fnUpdateValue(model.ValDtfimage.originalValue ?? new Date())"
+								@update:model-value="model.ValDtfimage.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -204,18 +198,14 @@
 							v-on="controls.LEAFLETDINSTADESCRIPT.handlers"
 							:loading="controls.LEAFLETDINSTADESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.LEAFLETDINSTADESCRIPT.isVisible"
+								v-bind="controls.LEAFLETDINSTADESCRIPT.props"
 								id="LEAFLETDINSTADESCRIPT"
-								size="xxlarge"
 								:model-value="model.ValDescript.value"
 								:rows="3"
 								:cols="85"
-								:is-required="controls.LEAFLETDINSTADESCRIPT.isRequired"
-								:readonly="controls.LEAFLETDINSTADESCRIPT.readonly"
-								:placeholder="controls.LEAFLETDINSTADESCRIPT.placeholder"
 								@update:model-value="model.ValDescript.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -230,15 +220,11 @@
 							v-on="controls.LEAFLETDINSTAALLDAY__.handlers"
 							:loading="controls.LEAFLETDINSTAALLDAY__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
 								<q-checkbox-input
 									v-if="controls.LEAFLETDINSTAALLDAY__.isVisible"
-									id="LEAFLETDINSTAALLDAY__"
-									size="small"
-									:model-value="model.ValAllday.value"
-									:readonly="controls.LEAFLETDINSTAALLDAY__.readonly"
+									v-bind="controls.LEAFLETDINSTAALLDAY__.props"
 									@update:model-value="model.ValAllday.fnUpdateValue" />
 							</template>
 						</base-input-structure>
@@ -252,14 +238,13 @@
 							v-on="controls.LEAFLETDINSTASINCE___.handlers"
 							:loading="controls.LEAFLETDINSTASINCE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.LEAFLETDINSTASINCE___.isVisible"
-								v-bind="controls.LEAFLETDINSTASINCE___"
-								format="DateTime"
+								v-bind="controls.LEAFLETDINSTASINCE___.props"
 								:model-value="model.ValSince.value"
-								@update:model-value="model.ValSince.fnUpdateValue" />
+								@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
+								@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -271,14 +256,13 @@
 							v-on="controls.LEAFLETDINSTAUNTIL___.handlers"
 							:loading="controls.LEAFLETDINSTAUNTIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.LEAFLETDINSTAUNTIL___.isVisible"
-								v-bind="controls.LEAFLETDINSTAUNTIL___"
-								format="DateTime"
+								v-bind="controls.LEAFLETDINSTAUNTIL___.props"
 								:model-value="model.ValUntil.value"
-								@update:model-value="model.ValUntil.fnUpdateValue" />
+								@reset-icon-click="model.ValUntil.fnUpdateValue(model.ValUntil.originalValue ?? new Date())"
+								@update:model-value="model.ValUntil.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -290,12 +274,10 @@
 							v-on="controls.LEAFLETDINSTAHOURS___.handlers"
 							:loading="controls.LEAFLETDINSTAHOURS___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.LEAFLETDINSTAHOURS___.isVisible"
-								v-bind="controls.LEAFLETDINSTAHOURS___"
-								:model-value="model.ValHours.value"
+								v-bind="controls.LEAFLETDINSTAHOURS___.props"
 								@update:model-value="model.ValHours.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -310,12 +292,10 @@
 							v-on="controls.LEAFLETDINSTAPRECOHOR.handlers"
 							:loading="controls.LEAFLETDINSTAPRECOHOR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.LEAFLETDINSTAPRECOHOR.isVisible"
-								v-bind="controls.LEAFLETDINSTAPRECOHOR"
-								:model-value="model.ValPrecohor.value"
+								v-bind="controls.LEAFLETDINSTAPRECOHOR.props"
 								@update:model-value="model.ValPrecohor.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -328,12 +308,10 @@
 							v-on="controls.LEAFLETDINSTAVALUE___.handlers"
 							:loading="controls.LEAFLETDINSTAVALUE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-numeric-input
 								v-if="controls.LEAFLETDINSTAVALUE___.isVisible"
-								v-bind="controls.LEAFLETDINSTAVALUE___"
-								:model-value="model.ValValue.value"
+								v-bind="controls.LEAFLETDINSTAVALUE___.props"
 								@update:model-value="model.ValValue.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -346,12 +324,12 @@
 							v-on="controls.LEAFLETDINSTACOORDGEO.handlers"
 							:loading="controls.LEAFLETDINSTACOORDGEO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.LEAFLETDINSTACOORDGEO.props"
 								:model-value="model.ValCoordgeo.value"
-								@update:model-value="model.ValCoordgeo.fnUpdateValue" />
+								@blur="onBlur(controls.LEAFLETDINSTACOORDGEO, model.ValCoordgeo.value)"
+								@change="model.ValCoordgeo.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -437,15 +415,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'LEAFLETD',
-						location: 'form-LEAFLETD',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'LEAFLETD',
+					location: 'form-LEAFLETD',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -491,6 +467,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -563,8 +541,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -646,7 +625,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -700,21 +679,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -725,33 +689,9 @@
 						id: 'LEAFLETDEQUIPREGISTNR',
 						name: 'REGISTNR',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.REGISTRATION_NO_06209),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-							{
-								identifier: ['tpequ', 'insta.codtpequ'],
-								dependencyEvents: ['fieldChange:insta.codtpequ'],
-								dependencyField: 'INSTA.CODTPEQU',
-								fnValueSelector: (model) => model.ValCodtpequ.value
-							},
-						],
-						lookupKeyModelField: {
-							name: 'ValCodequip',
-							dependencyEvent: 'fieldChange:insta.codequip'
-						},
-						dependentFields: () => {
-							return {
-								set 'equip.codequip'(value) { vm.model.ValCodequip.updateValue(value) },
-								set 'equip.registnr'(value) { vm.model.TableEquipRegistnr.updateValue(value) },
-								set 'insta.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
-								set 'tpequ.tipoequi'(value) { vm.model.TpequValTipoequi.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -760,6 +700,25 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodequip',
+							dependencyEvent: 'fieldChange:insta.codequip'
+						},
+						dependentFields: () => ({
+							set 'equip.codequip'(value) { vm.model.ValCodequip.updateValue(value) },
+							set 'equip.registnr'(value) { vm.model.TableEquipRegistnr.updateValue(value) },
+							set 'insta.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
+							set 'tpequ.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
+							set 'tpequ.tipoequi'(value) { vm.model.TpequValTipoequi.updateValue(value) },
+						}),
+						controlLimits: [
+							{
+								identifier: ['tpequ', 'insta.codtpequ'],
+								dependencyEvents: ['fieldChange:insta.codtpequ'],
+								dependencyField: 'INSTA.CODTPEQU',
+								fnValueSelector: (model) => model.ValCodtpequ.value
+							},
+						],
 					}, this),
 					LEAFLETDTPEQUTIPOEQUI: new fieldControlClass.StringControl({
 						modelField: 'TpequValTipoequi',
@@ -769,18 +728,13 @@
 						id: 'LEAFLETDTPEQUTIPOEQUI',
 						name: 'TIPOEQUI',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
 						labelId: 'label_LEAFLETDTPEQUTIPOEQUI',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					LEAFLETDINSTADESIGNAT: new fieldControlClass.StringControl({
 						modelField: 'ValDesignat',
@@ -788,15 +742,11 @@
 						id: 'LEAFLETDINSTADESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.SCHEDULING24801),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
 						labelId: 'label_LEAFLETDINSTADESIGNAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -806,13 +756,10 @@
 						id: 'LEAFLETDINSTADTINIAGE',
 						name: 'DTINIAGE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.START00919),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -822,13 +769,10 @@
 						id: 'LEAFLETDINSTADTFIMAGE',
 						name: 'DTFIMAGE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.END47577),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -838,15 +782,9 @@
 						id: 'LEAFLETDINSTADESCRIPT',
 						name: 'DESCRIPT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESCRIPTION07383),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
-						labelId: 'label_LEAFLETDINSTADESCRIPT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -856,13 +794,9 @@
 						id: 'LEAFLETDINSTAALLDAY__',
 						name: 'ALLDAY',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ALL_DAY18496),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
-						mustBeFilled: false,
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
@@ -872,13 +806,10 @@
 						id: 'LEAFLETDINSTASINCE___',
 						name: 'SINCE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.SINCE47259),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -888,75 +819,57 @@
 						id: 'LEAFLETDINSTAUNTIL___',
 						name: 'UNTIL',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.UNTIL39173),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
 					LEAFLETDINSTAHOURS___: new fieldControlClass.NumberControl({
 						modelField: 'ValHours',
 						valueChangeEvent: 'fieldChange:insta.hours',
-						maxIntegers: 7,
-						maxDecimals: 2,
 						id: 'LEAFLETDINSTAHOURS___',
 						name: 'HOURS',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.QUANTITY_OF_HOURS_61426),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 7,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					LEAFLETDINSTAPRECOHOR: new fieldControlClass.CurrencyControl({
 						modelField: 'ValPrecohor',
 						valueChangeEvent: 'fieldChange:insta.precohor',
-						maxIntegers: 9,
-						maxDecimals: 2,
 						id: 'LEAFLETDINSTAPRECOHOR',
 						name: 'PRECOHOR',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRICE_PER_HOUR_37472),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 9,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					LEAFLETDINSTAVALUE___: new fieldControlClass.CurrencyControl({
 						modelField: 'ValValue',
 						valueChangeEvent: 'fieldChange:insta.value',
-						maxIntegers: 9,
-						maxDecimals: 2,
 						id: 'LEAFLETDINSTAVALUE___',
 						name: 'VALUE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.VALUE10285),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 9,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					LEAFLETDINSTACOORDGEO: new fieldControlClass.BaseControl({
 						modelField: 'ValCoordgeo',
@@ -966,15 +879,9 @@
 						id: 'LEAFLETDINSTACOORDGEO',
 						name: 'COORDGEO',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.GEOGRAPHIC_COORDINAT42880),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
-						labelId: 'label_LEAFLETDINSTACOORDGEO',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1044,7 +951,7 @@
 						/** The foreign key to the EQUIP table */
 						get equip() { return vm.model.ValCodequip },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1140,6 +1047,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1179,6 +1094,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1305,6 +1228,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR LEAFLETD]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1320,6 +1259,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS LEAFLETD]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

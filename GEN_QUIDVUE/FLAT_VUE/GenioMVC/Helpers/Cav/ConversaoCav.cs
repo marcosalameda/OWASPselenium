@@ -33,7 +33,7 @@ namespace GenioMVC.Helpers.Cav
 				case FieldFormatting.LOGICO:
 					return Int32.Parse(value);
 				case FieldFormatting.FLOAT:
-					return double.Parse(value, provider);
+					return Decimal.Parse(value, provider);
 				case FieldFormatting.DATAHORA:
 				case FieldFormatting.DATA:
 				case FieldFormatting.DATASEGUNDO:
@@ -104,9 +104,9 @@ namespace GenioMVC.Helpers.Cav
 		public static string FromDouble(object value)
 		{
 			if (value == null || value == DBNull.Value)
-				value = 0.0;
+				value = 0m;
 
-			return Convert.ToDouble(value).ToString(provider);
+			return Convert.ToDecimal(value).ToString(provider);
 		}
 
 		public static string FromInteger(object value)

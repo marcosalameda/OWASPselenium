@@ -2,7 +2,6 @@
 import _forEach from 'lodash-es/forEach'
 import _isEmpty from 'lodash-es/isEmpty'
 
-import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 import { postData } from '@/api/network'
 import { hydrateDashboardData, hydrateWidgetData } from './dashboardFunctions.js'
 
@@ -13,11 +12,11 @@ export default {
 	methods: {
 		/**
 		 * Fetches the data from the server and loads the dashboard.
-		 * @param {object} dashboardControl The dashboard control object
-		 * @param {object} params The necessary parameters
-		 * @returns A promise with the response from the server.
+		 * @param {object} dashboardControl - The dashboard control object.
+		 * @param {object} params - The necessary parameters for the request.
+		 * @returns {Promise} A promise that resolves once the dashboard data is fetched and loaded.
 		 */
-		fetchDashboardData(dashboardControl, params)
+		async fetchDashboardData(dashboardControl, params)
 		{
 			if (_isEmpty(params))
 				params = {}
@@ -28,23 +27,38 @@ export default {
 			if (!Reflect.has(params, 'queryParams'))
 				Reflect.set(params, 'queryParams', { ...params })
 
-			return asyncProcM.AddBusy(postData(
-				'Dashboard',
-				dashboardControl.action,
-				params,
-				(data) => {
-					hydrateDashboardData(dashboardControl, data)
-					dashboardControl.isLoaded = true
-
-					_forEach(dashboardControl.widgets, (widget) => {
-						if (widget.requiresAdditionalData)
+			return new Promise((resolve, reject) => {
+				postData(
+					'Dashboard',
+					dashboardControl.action,
+					params,
+					(data) => {
+						try
 						{
-							widget.data = null
-							this.fetchWidgetData(dashboardControl, widget)
+							hydrateDashboardData(dashboardControl, data)
+							dashboardControl.isLoaded = true
+
+							_forEach(dashboardControl.widgets, (widget) => {
+								if (widget.requiresAdditionalData)
+								{
+									widget.data = null
+
+									// This will fire async requests for additional widget data
+									// We don't need to wait for that here,
+									// widget will have dedicated loader in that case
+									this.fetchWidgetData(dashboardControl, widget)
+								}
+							})
+							
+							resolve(true)
 						}
-					})
-				}
-			))
+						catch (error)
+						{
+							reject(error)
+						}
+					}
+				)
+			})
 		},
 
 		/**

@@ -2,14 +2,18 @@ using CSGenio.business;
 using CSGenio.framework;
 using CSGenio.persistence;
 
+
 #if NETFRAMEWORK
 using Microsoft.Reporting.WebForms;
+using System.Security;
+using System.Security.Permissions;
 #else
 using Microsoft.Reporting.NETCore;
 #endif
 using Quidgest.Persistence.GenericQuery;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -74,9 +78,9 @@ namespace CSGenio.reporting
 
         private void reportsContructor(string reportPath, string downloadFileName, string fullReportPath, ServerReport srvReport = null, LocalReport lclReport = null)
         {
-			//Added to support RS over HTTPS
+            //Added to support RS over HTTPS
             System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls12;
-			
+
             reportParameters = new List<ReportParameter>();
             this.downloadFileName = downloadFileName;
             if (!this.isServerReport)
@@ -96,7 +100,25 @@ namespace CSGenio.reporting
                 serverReportInstance.DisplayName = this.downloadFileName;
                 serverReportInstance.ReportServerUrl = new Uri(Configuration.SSRSServer.url);
                 serverReportInstance.ReportPath = reportPath;
-				serverReportInstance.Timeout = 6000000; //Default 600000ms = 10minutes. Increased to 100minutes
+                serverReportInstance.Timeout = 6000000; //Default 600000ms = 10minutes. Increased to 100minutes
+            }
+        }
+
+        /// <summary>
+        /// Get the report export type, based on a given file extension.
+        /// </summary>
+        /// <param name="fileType">PDF | XLSX | DOC | ...</param>
+        /// <returns>The SRSS export type corresponding to the given file extension.</returns>
+        public static string GetExportType(string fileType)
+        {
+            switch (fileType)
+            {
+                case "XLSX":
+                    return "EXCELOPENXML";
+                case "DOC":
+                    return "WORDOPENXML";
+                default:
+                    return "PDF";
             }
         }
 
@@ -104,7 +126,7 @@ namespace CSGenio.reporting
         {
             var parameters = new Dictionary<string, string>();
 
-            foreach(var param in reportParameters)
+            foreach (var param in reportParameters)
                 parameters.Add(param.Name, param.Values[0]);// TODO: Multiple values ???
 
             return parameters;
@@ -136,16 +158,46 @@ namespace CSGenio.reporting
             }
             localReportInstance.Refresh();
         }
-
-        public void ConstructReport(User user, string areaBase, string[] historicFieldNames, string[] historicFieldValues, string[] globFields, string[] areaReports, ReportLimitParameter[] limitSelectionFields = null, string[] specialFormulasFields = null)
+		
+		private void ProcessSubReportDataSources(object sender, SubreportProcessingEventArgs e)
         {
-			List<ReportParameterInfo> loadedReportParams = this.isServerReport ? this.ServerReportInstance.GetParameters().ToList() : this.localReportInstance.GetParameters().ToList();
+            var subReportDef = CSGenio.reporting.serialization.Report.GetReportFromFile(Configuration.PathReports+ "\\" + e.ReportPath+".rdlc");
+
+            var subReportParameters = e.Parameters.ToDictionary(p => p.Name, p => p.Values[0]);
+
+            foreach (var ds in subReportDef.DataSets)
+            {
+                ds.AssignParameters(subReportParameters);
+
+                ReportDataSource rds = new ReportDataSource();
+                rds.Name = ds.Name;
+                rds.Value = sp.getDataSourceForLocalSSRS(ds);
+
+                e.DataSources.Add(rds);
+                
+            }
+
+
+        }
+
+
+        public void ConstructReport(User user,
+            string areaBase,
+            string[] historicFieldNames,
+            string[] historicFieldValues,
+            string[] globFields,
+            string[] areaReports,
+            ReportLimitParameter[] limitSelectionFields = null,
+            string[] specialFormulasFields = null,
+            List<ReportParameter> listReportParameters = null)
+        {
+            List<ReportParameterInfo> loadedReportParams = this.isServerReport ? this.ServerReportInstance.GetParameters().ToList() : this.localReportInstance.GetParameters().ToList();
             string[] reportNames = null;
             if (loadedReportParams != null && loadedReportParams.Count != 0)
                 reportNames = loadedReportParams.Select(x => x.Name).ToArray();
 
-			string module = user.CurrentModule;
-			
+            string module = user.CurrentModule;
+
             //parametro database, caso o relat�rio fa�a uso de datasources com connection string din�micas
             if (loadedReportParams.Any(prm => prm.Name == "Database"))
             {
@@ -153,16 +205,29 @@ namespace CSGenio.reporting
                 reportParameters.Add(new ReportParameter("Database", new string[] { ds.Schemas[0].Schema }));
             }
 
-            reportParameters.AddRange(getGlobFields(user, module, globFields).Where(x => loadedReportParams.Any(y => y.Name == x.Name)));
-            reportParameters.AddRange(getSpecialFormulas(reportNames, specialFormulasFields, user, module).Where(x => loadedReportParams.Any(y => y.Name == x.Name)));
-            reportParameters.AddRange(getHistoricFields(historicFieldNames, historicFieldValues, areaReports, user, module, areaBase).Where(x => loadedReportParams.Any(y => y.Name == x.Name)));
-            reportParameters.AddRange(getEphParameters(user, module, areaBase).Where(x => loadedReportParams.Any(y => y.Name == x.Name)));
+            if (globFields != null)
+                reportParameters.AddRange(getGlobFields(user, module, globFields).Where(x => loadedReportParams.Any(y => y.Name == x.Name)));
+
+            if (specialFormulasFields != null)
+                reportParameters.AddRange(getSpecialFormulas(reportNames, specialFormulasFields, user, module).Where(x => loadedReportParams.Any(y => y.Name == x.Name)));
+
+            if (historicFieldValues != null)
+                reportParameters.AddRange(getHistoricFields(historicFieldNames, historicFieldValues, areaReports, user, module, areaBase).Where(x => loadedReportParams.Any(y => y.Name == x.Name)));
+
+
+            if(listReportParameters != null)
+                reportParameters.AddRange(listReportParameters);
+
+            if(areaBase != null)
+                reportParameters.AddRange(getEphParameters(user, module, areaBase).Where(x => loadedReportParams.Any(y => y.Name == x.Name)));
+
             reportParameters.AddRange(getFillLimits(reportNames, limitSelectionFields).Where(x => loadedReportParams.Any(y => y.Name == x.Name)));
 
             if (!this.isServerReport)// Local report
             {
                 //Using the method presented in the article: https://www.codeproject.com/Articles/607382/Running-a-RDL-RDLC-SQL-Report-in-ASP-NET-without-S
                 ProcessDataSources();
+				localReportInstance.SubreportProcessing += new SubreportProcessingEventHandler(ProcessSubReportDataSources);
             }
 
             if (this.isServerReport)
@@ -170,8 +235,24 @@ namespace CSGenio.reporting
             else
                 this.LocalReportInstance.SetParameters(reportParameters);
         }
-		
-		#region QWeb Functions Call
+
+
+        public void ConstructReport(User user, string[] historicFieldNames, string[] historicFieldValues)
+        {
+            List<ReportParameter> result = new List<ReportParameter>();
+
+            if (historicFieldValues.Length > 0)
+            {
+               
+                for (int i = 0; historicFieldNames.Length > i; i++)
+                    result.Add(new ReportParameter(historicFieldNames[i].ToString(), historicFieldValues[i].ToString()));
+            }
+
+
+            ConstructReport(user, null, null, null, null, null, null, null, result);
+        }
+
+        #region QWeb Functions Call
         public string GetReportInvokeUrl()
         {
             StringBuilder ReportUrl = new StringBuilder();
@@ -201,8 +282,8 @@ namespace CSGenio.reporting
         {
             return this.isServerReport ? serverReportInstance.ReportPath : "/" + downloadFileName;
         }
-		
-		public Dictionary<string, List<string>> GetParamValues()
+
+        public Dictionary<string, List<string>> GetParamValues()
         {
             Dictionary<string, List<string>> valuesConv = null;
             try
@@ -246,13 +327,31 @@ namespace CSGenio.reporting
         /// <summary>
         /// Render the SSRS report
         /// </summary>
-        /// <param name="exportType">PDF | EXCEL | WORD | EXCELOPENXML | ...</param>
+        /// <param name="exportType">PDF | EXCEL | WORDOPENXML | EXCELOPENXML | ...</param>
         /// <returns></returns>
         public ReportSSRS_Result Render(string exportType)
         {
             var result = new ReportSSRS_Result();
             if (!this.isServerReport)
+            {
+#if NETFRAMEWORK
+                PermissionSet permissionSet = new PermissionSet(PermissionState.None);
+                permissionSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
+                /*
+                * Starting from log4net version 2.0.10, where the 'Improper Restriction of XML External Entity Reference (XXE) (CWE ID 611)' vulnerability was fixed, 
+                * local reports that initialize an AppDomain for sandboxing started to throw security errors because they internally use Serialization.
+                */
+                permissionSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.SerializationFormatter));
+
+                /*
+                * https://learn.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2010/ee344968(v=vs.100)
+                * The default base permission is Execution.
+                * If any additional error appears, we can evaluate whether we can use: AppDomain.CurrentDomain.PermissionSet.Copy()
+                */
+                localReportInstance.SetBasePermissionsForSandboxAppDomain(permissionSet);
+#endif
                 result.File = localReportInstance.Render(exportType, null, out result.MimeType, out result.Encoding, out result.FileNameExtension, out result.Streams, out result.Warnings);
+            }
             else
                 result.File = serverReportInstance.Render(exportType, null, out result.MimeType, out result.Encoding, out result.FileNameExtension, out result.Streams, out result.Warnings);
             return result;
@@ -303,6 +402,9 @@ namespace CSGenio.reporting
                                 //RMR(2019-12-10) - Option to include the current language selected by the user, into the report
                                 case "language":
                                     val = user.Language;
+                                    break;
+                                case "module":
+                                    val = user.CurrentModule;
                                     break;
                                 default: key = null; break;
                             }
@@ -593,7 +695,7 @@ namespace CSGenio.reporting
                         .Select("glob", nomeCampoSemGlob)
                         .From(Configuration.Program + "glob", "glob");
 
-                    result.Add(new ReportParameter("g_" + nomeCampoSemGlob, new List<string>() { sp.ExecuteScalar(qs) as string }.ToArray()));
+                    result.Add(new ReportParameter("g_" + nomeCampoSemGlob, new List<string>() { Convert.ToString(sp.ExecuteScalar(qs)) }.ToArray()));
                 }
             }
             catch (GenioException ex)

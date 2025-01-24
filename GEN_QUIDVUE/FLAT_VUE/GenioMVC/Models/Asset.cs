@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -43,7 +43,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Asset number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Asset.ValAssetnum")]
 		[NumericAttribute(0)]
-		public decimal? ValAssetnum { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAssetnum, 0)); } set { klass.ValAssetnum = Convert.ToDouble(value); } }
+		public decimal? ValAssetnum { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAssetnum, 0)); } set { klass.ValAssetnum = Convert.ToDecimal(value); } }
 
 		[DisplayName("Asset type")]
 		/// <summary>Field : "Asset type" Tipo: "AC" Formula:  ""</summary>
@@ -75,26 +75,9 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Photo" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Asset.ValPhoto")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValPhoto { get { return klass.ValPhoto; } set { klass.ValPhoto = value; } }
-
-		[DisplayName(">>Manufacturer")]
-		/// <summary>Field : ">>Manufacturer" Tipo: "CE" Formula:  ""</summary>
-		[ShouldSerialize("Asset.ValCodmanuf")]
-		public string ValCodmanuf { get { return klass.ValCodmanuf; } set { klass.ValCodmanuf = value; } }
-		private Manuf _manuf;
-		[DisplayName("Manuf")]
-		[ShouldSerialize("Manuf")]
-		public virtual Manuf Manuf { 
-			get { 
-				if (!this.isEmptyModel && (_manuf == null || (!string.IsNullOrEmpty(ValCodmanuf) && (_manuf.isEmptyModel || _manuf.klass.QPrimaryKey != ValCodmanuf))))
-					_manuf = Models.Manuf.Find(ValCodmanuf, m_userContext, Identifier, _fieldsToSerialize);
-				if (_manuf == null)
-					_manuf = new Models.Manuf(m_userContext, true, _fieldsToSerialize);
-				return _manuf;
-			}
-			set { _manuf = value; } 
-		}
-		
+		public ImageModel ValPhoto { get { return new ImageModel(klass.ValPhoto) { Ticket = ValPhotoQTicket }; } set { klass.ValPhoto = value; } }
+		[JsonIgnore]
+		public string ValPhotoQTicket = null;
 
 		[DisplayName(">>Kind of equipment")]
 		/// <summary>Field : ">>Kind of equipment" Tipo: "CE" Formula:  ""</summary>
@@ -103,17 +86,36 @@ namespace GenioMVC.Models
 		private Kinde _kinde;
 		[DisplayName("Kinde")]
 		[ShouldSerialize("Kinde")]
-		public virtual Kinde Kinde { 
-			get { 
+		public virtual Kinde Kinde {
+			get {
 				if (!this.isEmptyModel && (_kinde == null || (!string.IsNullOrEmpty(ValCodkinde) && (_kinde.isEmptyModel || _kinde.klass.QPrimaryKey != ValCodkinde))))
 					_kinde = Models.Kinde.Find(ValCodkinde, m_userContext, Identifier, _fieldsToSerialize);
 				if (_kinde == null)
 					_kinde = new Models.Kinde(m_userContext, true, _fieldsToSerialize);
 				return _kinde;
 			}
-			set { _kinde = value; } 
+			set { _kinde = value; }
 		}
-		
+
+
+		[DisplayName("")]
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		[ShouldSerialize("Asset.ValCodmanuf")]
+		public string ValCodmanuf { get { return klass.ValCodmanuf; } set { klass.ValCodmanuf = value; } }
+		private Manuf _manuf;
+		[DisplayName("Manuf")]
+		[ShouldSerialize("Manuf")]
+		public virtual Manuf Manuf {
+			get {
+				if (!this.isEmptyModel && (_manuf == null || (!string.IsNullOrEmpty(ValCodmanuf) && (_manuf.isEmptyModel || _manuf.klass.QPrimaryKey != ValCodmanuf))))
+					_manuf = Models.Manuf.Find(ValCodmanuf, m_userContext, Identifier, _fieldsToSerialize);
+				if (_manuf == null)
+					_manuf = new Models.Manuf(m_userContext, true, _fieldsToSerialize);
+				return _manuf;
+			}
+			set { _manuf = value; }
+		}
+
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Asset.ValZzstate")]
@@ -123,19 +125,19 @@ namespace GenioMVC.Models
 		public Asset(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAasset(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Asset(UserContext userContext, CSGenioAasset val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAasset csgenioa)
@@ -147,22 +149,21 @@ namespace GenioMVC.Models
 			{
 				switch (Qfield.Area)
 				{
-					case "manuf":
-						if (_manuf == null)
-							_manuf = new Manuf(m_userContext, true, _fieldsToSerialize);
-						_manuf.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
-						break;
 					case "kinde":
 						if (_kinde == null)
 							_kinde = new Kinde(m_userContext, true, _fieldsToSerialize);
 						_kinde.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
+						break;
+					case "manuf":
+						if (_manuf == null)
+							_manuf = new Manuf(m_userContext, true, _fieldsToSerialize);
+						_manuf.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:
 						break;
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

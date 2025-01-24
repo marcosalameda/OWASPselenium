@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -115,12 +115,10 @@
 										v-on="controls.GROUPBX_EQUIPSEQUENNR.handlers"
 										:loading="controls.GROUPBX_EQUIPSEQUENNR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.GROUPBX_EQUIPSEQUENNR.isVisible"
-											v-bind="controls.GROUPBX_EQUIPSEQUENNR"
-											:model-value="model.ValSequennr.value"
+											v-bind="controls.GROUPBX_EQUIPSEQUENNR.props"
 											@update:model-value="model.ValSequennr.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -133,8 +131,7 @@
 										v-on="controls.GROUPBX_EQUIPREGISTNR.handlers"
 										:loading="controls.GROUPBX_EQUIPREGISTNR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.GROUPBX_EQUIPREGISTNR.props"
 											:model-value="model.ValRegistnr.value" />
@@ -151,14 +148,11 @@
 										v-on="controls.GROUPBX_TPEQUTIPOEQUI.handlers"
 										:loading="controls.GROUPBX_TPEQUTIPOEQUI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.GROUPBX_TPEQUTIPOEQUI.isVisible"
 											v-bind="controls.GROUPBX_TPEQUTIPOEQUI.props"
-											:model-value="model.ValCodtpequ.value"
-											v-on="controls.GROUPBX_TPEQUTIPOEQUI.handlers"
-											@update:model-value="model.ValCodtpequ.fnUpdateValue" />
+											v-on="controls.GROUPBX_TPEQUTIPOEQUI.handlers" />
 										<q-see-more-groupbx-tpequtipoequi
 											v-if="controls.GROUPBX_TPEQUTIPOEQUI.seeMoreIsVisible"
 											v-bind="controls.GROUPBX_TPEQUTIPOEQUI.seeMoreParams"
@@ -176,12 +170,12 @@
 										v-on="controls.GROUPBX_EQUIPSITEFABR.handlers"
 										:loading="controls.GROUPBX_EQUIPSITEFABR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.GROUPBX_EQUIPSITEFABR.props"
 											:model-value="model.ValSitefabr.value"
-											@update:model-value="model.ValSitefabr.fnUpdateValue" />
+											@blur="onBlur(controls.GROUPBX_EQUIPSITEFABR, model.ValSitefabr.value)"
+											@change="model.ValSitefabr.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -195,14 +189,11 @@
 										v-on="controls.GROUPBX_WAREHWAREHDES.handlers"
 										:loading="controls.GROUPBX_WAREHWAREHDES.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.GROUPBX_WAREHWAREHDES.isVisible"
 											v-bind="controls.GROUPBX_WAREHWAREHDES.props"
-											:model-value="model.ValCodwareh.value"
-											v-on="controls.GROUPBX_WAREHWAREHDES.handlers"
-											@update:model-value="model.ValCodwareh.fnUpdateValue" />
+											v-on="controls.GROUPBX_WAREHWAREHDES.handlers" />
 										<q-see-more-groupbx-warehwarehdes
 											v-if="controls.GROUPBX_WAREHWAREHDES.seeMoreIsVisible"
 											v-bind="controls.GROUPBX_WAREHWAREHDES.seeMoreParams"
@@ -220,14 +211,11 @@
 										v-on="controls.GROUPBX_ITEM_ITEMDES_.handlers"
 										:loading="controls.GROUPBX_ITEM_ITEMDES_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.GROUPBX_ITEM_ITEMDES_.isVisible"
 											v-bind="controls.GROUPBX_ITEM_ITEMDES_.props"
-											:model-value="model.ValCoditem.value"
-											v-on="controls.GROUPBX_ITEM_ITEMDES_.handlers"
-											@update:model-value="model.ValCoditem.fnUpdateValue" />
+											v-on="controls.GROUPBX_ITEM_ITEMDES_.handlers" />
 										<q-see-more-groupbx-item-itemdes
 											v-if="controls.GROUPBX_ITEM_ITEMDES_.seeMoreIsVisible"
 											v-bind="controls.GROUPBX_ITEM_ITEMDES_.seeMoreParams"
@@ -260,14 +248,13 @@
 										v-on="controls.GROUPBX_EQUIPDTDECO__.handlers"
 										:loading="controls.GROUPBX_EQUIPDTDECO__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.GROUPBX_EQUIPDTDECO__.isVisible"
-											v-bind="controls.GROUPBX_EQUIPDTDECO__"
-											format="Date"
+											v-bind="controls.GROUPBX_EQUIPDTDECO__.props"
 											:model-value="model.ValDtdeco.value"
-											@update:model-value="model.ValDtdeco.fnUpdateValue" />
+											@reset-icon-click="model.ValDtdeco.fnUpdateValue(model.ValDtdeco.originalValue ?? new Date())"
+											@update:model-value="model.ValDtdeco.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -279,14 +266,11 @@
 										v-on="controls.GROUPBX_ROOM1ROOMNR__.handlers"
 										:loading="controls.GROUPBX_ROOM1ROOMNR__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.GROUPBX_ROOM1ROOMNR__.isVisible"
 											v-bind="controls.GROUPBX_ROOM1ROOMNR__.props"
-											:model-value="model.ValCodrooms.value"
-											v-on="controls.GROUPBX_ROOM1ROOMNR__.handlers"
-											@update:model-value="model.ValCodrooms.fnUpdateValue" />
+											v-on="controls.GROUPBX_ROOM1ROOMNR__.handlers" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -300,8 +284,7 @@
 										v-on="controls.GROUPBX_ROOM1DESIGNAT.handlers"
 										:loading="controls.GROUPBX_ROOM1DESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.GROUPBX_ROOM1DESIGNAT.props"
 											:model-value="model.Room1ValDesignat.value" />
@@ -318,12 +301,12 @@
 										v-on="controls.GROUPBX_EQUIPDESIGNAT.handlers"
 										:loading="controls.GROUPBX_EQUIPDESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.GROUPBX_EQUIPDESIGNAT.props"
 											:model-value="model.ValDesignat.value"
-											@update:model-value="model.ValDesignat.fnUpdateValue" />
+											@blur="onBlur(controls.GROUPBX_EQUIPDESIGNAT, model.ValDesignat.value)"
+											@change="model.ValDesignat.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -337,14 +320,13 @@
 										v-on="controls.GROUPBX_EQUIPDTAQUISI.handlers"
 										:loading="controls.GROUPBX_EQUIPDTAQUISI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.GROUPBX_EQUIPDTAQUISI.isVisible"
-											v-bind="controls.GROUPBX_EQUIPDTAQUISI"
-											format="Date"
+											v-bind="controls.GROUPBX_EQUIPDTAQUISI.props"
 											:model-value="model.ValDtaquisi.value"
-											@update:model-value="model.ValDtaquisi.fnUpdateValue" />
+											@reset-icon-click="model.ValDtaquisi.fnUpdateValue(model.ValDtaquisi.originalValue ?? new Date())"
+											@update:model-value="model.ValDtaquisi.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -356,12 +338,10 @@
 										v-on="controls.GROUPBX_EQUIPVALORTOT.handlers"
 										:loading="controls.GROUPBX_EQUIPVALORTOT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.GROUPBX_EQUIPVALORTOT.isVisible"
-											v-bind="controls.GROUPBX_EQUIPVALORTOT"
-											:model-value="model.ValValortot.value"
+											v-bind="controls.GROUPBX_EQUIPVALORTOT.props"
 											@update:model-value="model.ValValortot.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -374,8 +354,7 @@
 										v-on="controls.GROUPBX_EQUIPFREQUENC.handlers"
 										:loading="controls.GROUPBX_EQUIPFREQUENC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-select
 											v-if="controls.GROUPBX_EQUIPFREQUENC.isVisible"
 											v-bind="controls.GROUPBX_EQUIPFREQUENC.props"
@@ -394,14 +373,13 @@
 										v-on="controls.GROUPBX_EQUIPDTREFERE.handlers"
 										:loading="controls.GROUPBX_EQUIPDTREFERE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.GROUPBX_EQUIPDTREFERE.isVisible"
-											v-bind="controls.GROUPBX_EQUIPDTREFERE"
-											format="DateTime"
+											v-bind="controls.GROUPBX_EQUIPDTREFERE.props"
 											:model-value="model.ValDtrefere.value"
-											@update:model-value="model.ValDtrefere.fnUpdateValue" />
+											@reset-icon-click="model.ValDtrefere.fnUpdateValue(model.ValDtrefere.originalValue ?? new Date())"
+											@update:model-value="model.ValDtrefere.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -413,8 +391,7 @@
 										v-on="controls.GROUPBX_EQUIPFIRST___.handlers"
 										:loading="controls.GROUPBX_EQUIPFIRST___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.GROUPBX_EQUIPFIRST___.props"
 											:model-value="model.ValFirst.value" />
@@ -429,8 +406,7 @@
 										v-on="controls.GROUPBX_EQUIPBEFORE__.handlers"
 										:loading="controls.GROUPBX_EQUIPBEFORE__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.GROUPBX_EQUIPBEFORE__.props"
 											:model-value="model.ValBefore.value" />
@@ -447,15 +423,11 @@
 										v-on="controls.GROUPBX_EQUIPBOUGHT__.handlers"
 										:loading="controls.GROUPBX_EQUIPBOUGHT__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.GROUPBX_EQUIPBOUGHT__.isVisible"
-												id="GROUPBX_EQUIPBOUGHT__"
-												size="mini"
-												:model-value="model.ValBought.value"
-												:readonly="controls.GROUPBX_EQUIPBOUGHT__.readonly"
+												v-bind="controls.GROUPBX_EQUIPBOUGHT__.props"
 												@update:model-value="model.ValBought.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -549,15 +521,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'GROUPBX',
-						location: 'form-GROUPBX',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'GROUPBX',
+					location: 'form-GROUPBX',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -603,6 +573,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -675,8 +647,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -758,7 +731,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -812,21 +785,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -835,35 +793,27 @@
 						id: 'GROUPBX_PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.WHOLE_LINE_OFF30708),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					GROUPBX_EQUIPSEQUENNR: new fieldControlClass.NumberControl({
 						modelField: 'ValSequennr',
 						valueChangeEvent: 'fieldChange:equip.sequennr',
-						maxIntegers: 6,
-						maxDecimals: 0,
-						isSequencial: true,
 						id: 'GROUPBX_EQUIPSEQUENNR',
 						name: 'SEQUENNR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.SEQUENTIAL_NO__11610),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR01',
-						mustBeFilled: false,
+						maxIntegers: 6,
+						maxDecimals: 0,
+						isSequencial: true,
 						controlLimits: [
 						],
 					}, this),
@@ -873,20 +823,15 @@
 						id: 'GROUPBX_EQUIPREGISTNR',
 						name: 'REGISTNR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.REGISTRATION_NO_06209),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR01',
 						isFormulaBlocked: true,
 						maxLength: 6,
 						labelId: 'label_GROUPBX_EQUIPREGISTNR',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					GROUPBX_TPEQUTIPOEQUI: new fieldControlClass.LookupControl({
 						modelField: 'TableTpequTipoequi',
@@ -894,28 +839,10 @@
 						id: 'GROUPBX_TPEQUTIPOEQUI',
 						name: 'TIPOEQUI',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodtpequ',
-							dependencyEvent: 'fieldChange:equip.codtpequ'
-						},
-						dependentFields: () => {
-							return {
-								set 'tpequ.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
-								set 'tpequ.tipoequi'(value) { vm.model.TableTpequTipoequi.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'TPEQU',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -924,6 +851,18 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodtpequ',
+							dependencyEvent: 'fieldChange:equip.codtpequ'
+						},
+						dependentFields: () => ({
+							set 'tpequ.codtpequ'(value) { vm.model.ValCodtpequ.updateValue(value) },
+							set 'tpequ.tipoequi'(value) { vm.model.TableTpequTipoequi.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'TPEQU',
+						controlLimits: [
+						],
 					}, this),
 					GROUPBX_EQUIPSITEFABR: new fieldControlClass.StringControl({
 						modelField: 'ValSitefabr',
@@ -931,16 +870,12 @@
 						id: 'GROUPBX_EQUIPSITEFABR',
 						name: 'SITEFABR',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.MANUFACTURER_S_WEBSI12156),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR01',
 						maxLength: 256,
 						labelId: 'label_GROUPBX_EQUIPSITEFABR',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -950,26 +885,10 @@
 						id: 'GROUPBX_WAREHWAREHDES',
 						name: 'WAREHDES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.WAREHOUSE51864),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodwareh',
-							dependencyEvent: 'fieldChange:equip.codwareh'
-						},
-						dependentFields: () => {
-							return {
-								set 'wareh.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
-								set 'wareh.warehdes'(value) { vm.model.TableWarehWarehdes.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -978,6 +897,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodwareh',
+							dependencyEvent: 'fieldChange:equip.codwareh'
+						},
+						dependentFields: () => ({
+							set 'wareh.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
+							set 'wareh.warehdes'(value) { vm.model.TableWarehWarehdes.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					GROUPBX_ITEM_ITEMDES_: new fieldControlClass.LookupControl({
 						modelField: 'TableItemItemdes',
@@ -985,14 +914,26 @@
 						id: 'GROUPBX_ITEM_ITEMDES_',
 						name: 'ITEMDES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ITEM_31041),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR01',
-						mustBeFilled: false,
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCoditem',
+							dependencyEvent: 'fieldChange:equip.coditem'
+						},
+						dependentFields: () => ({
+							set 'item.coditem'(value) { vm.model.ValCoditem.updateValue(value) },
+							set 'item.itemdes'(value) { vm.model.TableItemItemdes.updateValue(value) },
+						}),
 						controlLimits: [
 							{
 								identifier: ['wareh', 'equip.codwareh'],
@@ -1001,61 +942,33 @@
 								fnValueSelector: (model) => model.ValCodwareh.value
 							},
 						],
-						lookupKeyModelField: {
-							name: 'ValCoditem',
-							dependencyEvent: 'fieldChange:equip.coditem'
-						},
-						dependentFields: () => {
-							return {
-								set 'item.coditem'(value) { vm.model.ValCoditem.updateValue(value) },
-								set 'item.itemdes'(value) { vm.model.TableItemItemdes.updateValue(value) },
-							}
-						},
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
 					}, this),
 					GROUPBX_PSEUDNOVOGR02: new fieldControlClass.GroupControl({
 						id: 'GROUPBX_PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.WHOLE_LINE_ON08702),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					GROUPBX_EQUIPDTDECO__: new fieldControlClass.DateControl({
 						modelField: 'ValDtdeco',
 						valueChangeEvent: 'fieldChange:equip.dtdeco',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'GROUPBX_EQUIPDTDECO__',
 						name: 'DTDECO',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DECOMISSION_04392),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					GROUPBX_ROOM1ROOMNR__: new fieldControlClass.LookupControl({
 						modelField: 'TableRoom1Roomnr',
@@ -1063,29 +976,11 @@
 						id: 'GROUPBX_ROOM1ROOMNR__',
 						name: 'ROOMNR',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ROOM_NO_08024),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodrooms',
-							dependencyEvent: 'fieldChange:equip.codrooms'
-						},
-						dependentFields: () => {
-							return {
-								set 'room1.codrooms'(value) { vm.model.ValCodrooms.updateValue(value) },
-								set 'room1.roomnr'(value) { vm.model.TableRoom1Roomnr.updateValue(value) },
-								set 'room1.designat'(value) { vm.model.Room1ValDesignat.updateValue(value) },
-							}
-						},
-						isFixed: true,
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1094,6 +989,17 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodrooms',
+							dependencyEvent: 'fieldChange:equip.codrooms'
+						},
+						dependentFields: () => ({
+							set 'room1.codrooms'(value) { vm.model.ValCodrooms.updateValue(value) },
+							set 'room1.roomnr'(value) { vm.model.TableRoom1Roomnr.updateValue(value) },
+							set 'room1.designat'(value) { vm.model.Room1ValDesignat.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					GROUPBX_ROOM1DESIGNAT: new fieldControlClass.StringControl({
 						modelField: 'Room1ValDesignat',
@@ -1103,20 +1009,15 @@
 						id: 'GROUPBX_ROOM1DESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ROOM_DESIGNATION35483),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						isFormulaBlocked: true,
 						maxLength: 50,
 						labelId: 'label_GROUPBX_ROOM1DESIGNAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					GROUPBX_EQUIPDESIGNAT: new fieldControlClass.StringControl({
 						modelField: 'ValDesignat',
@@ -1124,76 +1025,66 @@
 						id: 'GROUPBX_EQUIPDESIGNAT',
 						name: 'DESIGNAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESIGNATION_35800),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						maxLength: 85,
 						labelId: 'label_GROUPBX_EQUIPDESIGNAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					GROUPBX_EQUIPDTAQUISI: new fieldControlClass.DateControl({
 						modelField: 'ValDtaquisi',
 						valueChangeEvent: 'fieldChange:equip.dtaquisi',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'GROUPBX_EQUIPDTAQUISI',
 						name: 'DTAQUISI',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACQUISITION_53832),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR02',
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
 					GROUPBX_EQUIPVALORTOT: new fieldControlClass.CurrencyControl({
 						modelField: 'ValValortot',
 						valueChangeEvent: 'fieldChange:equip.valortot',
-						maxIntegers: 9,
-						maxDecimals: 2,
 						id: 'GROUPBX_EQUIPVALORTOT',
 						name: 'VALORTOT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.TOTAL_VALUE_07456),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 9,
+						maxDecimals: 2,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					GROUPBX_EQUIPFREQUENC: new fieldControlClass.ArrayNumberControl({
 						modelField: 'ValFrequenc',
 						valueChangeEvent: 'fieldChange:equip.frequenc',
-						maxIntegers: 1,
-						maxDecimals: 0,
 						id: 'GROUPBX_EQUIPFREQUENC',
 						name: 'FREQUENC',
 						size: 'small',
-						hasLabel: true,
+						helpControl: {
+							shortHelp: {
+								type: 'Subtext',
+								text: computed(() => this.Resources.___1438719),
+							},
+						},
 						label: computed(() => this.Resources.LOAN_FREQUENCY00930),
-						userHelp: computed(() => this.Resources.___1438719),
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR02',
+						maxIntegers: 2,
+						maxDecimals: 0,
 						arrayName: 'FreqEmpr',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
@@ -1203,14 +1094,11 @@
 						id: 'GROUPBX_EQUIPDTREFERE',
 						name: 'DTREFERE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.REFERENCE28402),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR02',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1220,20 +1108,15 @@
 						id: 'GROUPBX_EQUIPFIRST___',
 						name: 'FIRST',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.FIRST42972),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						isFormulaBlocked: true,
 						maxLength: 10,
 						labelId: 'label_GROUPBX_EQUIPFIRST___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					GROUPBX_EQUIPBEFORE__: new fieldControlClass.StringControl({
 						modelField: 'ValBefore',
@@ -1241,20 +1124,15 @@
 						id: 'GROUPBX_EQUIPBEFORE__',
 						name: 'BEFORE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.BEFORE60156),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						isFormulaBlocked: true,
 						maxLength: 10,
 						labelId: 'label_GROUPBX_EQUIPBEFORE__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					GROUPBX_EQUIPBOUGHT__: new fieldControlClass.BooleanControl({
 						modelField: 'ValBought',
@@ -1262,18 +1140,13 @@
 						id: 'GROUPBX_EQUIPBOUGHT__',
 						name: 'BOUGHT',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.BOUGHT32044),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 				},
 
@@ -1375,7 +1248,7 @@
 						/** The foreign key to the ROOM1 table */
 						get room1() { return vm.model.ValCodrooms },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -1471,6 +1344,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1510,6 +1391,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1636,6 +1525,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR GROUPBX]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1651,6 +1556,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS GROUPBX]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

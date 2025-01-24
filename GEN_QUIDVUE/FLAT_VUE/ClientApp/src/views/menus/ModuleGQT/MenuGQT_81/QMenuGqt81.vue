@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuGQT_81ViewModel.js'
+
 	const requiredTextResources = ['QMenuGQT_81', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '81',
 					isMenuList: true,
+					designation: computed(() => this.Resources.NOTIFICATIONS08466),
 					acronym: 'GQT_81',
 					name: 'NOTIF',
 					route: 'menu-GQT_81',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'GQT_Menu_81',
 						controller: 'NOTIF',
 						action: 'GQT_Menu_81',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.NumericColumn({
 								order: 1,
@@ -149,7 +159,7 @@
 								field: 'BEGIN',
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.DateColumn({
 								order: 3,
@@ -158,7 +168,7 @@
 								field: 'END',
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -220,7 +230,7 @@
 								field: 'CREATDAT',
 								label: computed(() => this.Resources.CREATION__DATE13180),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 11,
@@ -246,7 +256,7 @@
 								field: 'DTDEVOLU',
 								label: computed(() => this.Resources.RETURN32222),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 14,
@@ -271,7 +281,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -375,6 +385,7 @@
 								id: 'RCA_GQT_811',
 								name: 'form-NOTIF',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -391,23 +402,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: NOTIF
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValNrcomoda',
 							defaultSearchColumnNameOriginal: 'ValNrcomoda',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValBegin',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-PESS2', 'changed-NOTIF'],
 						uuid: '8a24817a-f3db-4158-821e-86bf9df25ea0',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -436,6 +441,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS GQT_81]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_81]/
 // eslint-disable-next-line

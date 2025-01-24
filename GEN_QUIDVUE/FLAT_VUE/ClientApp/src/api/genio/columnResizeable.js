@@ -66,7 +66,7 @@
 		this.documentEventListeners = []
 	}
 
-	Destroy()
+	destroy()
 	{
 		// Remove events from div's
 		try
@@ -99,7 +99,7 @@
 		}
 	}
 
-	Init()
+	init()
 	{
 		let row = this.table.getElementsByTagName('tr')[0]
 		this.cols = row ? row.children : undefined
@@ -304,7 +304,5 @@
 		return (parseInt(padLeft) + parseInt(padRight))
 	}
 }
-
-// --------------------------------------------------------
 
 export default ColumnResizeable

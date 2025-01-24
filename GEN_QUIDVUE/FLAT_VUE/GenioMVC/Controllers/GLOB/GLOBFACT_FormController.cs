@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Glob;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_GLOBFACT_CANCEL = new NavigationLocation("GLOBAL_PARAMETER43021", "Globfact_Cancel", "Glob") { vueRouteName = "form-GLOBFACT", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_GLOBFACT_SHOW = new NavigationLocation("GLOBAL_PARAMETER43021", "Globfact_Show", "Glob") { vueRouteName = "form-GLOBFACT", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_GLOBFACT_NEW = new NavigationLocation("GLOBAL_PARAMETER43021", "Globfact_New", "Glob") { vueRouteName = "form-GLOBFACT", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_GLOBFACT_EDIT = new NavigationLocation("GLOBAL_PARAMETER43021", "Globfact_Edit", "Glob") { vueRouteName = "form-GLOBFACT", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_GLOBFACT_DUPLICATE = new NavigationLocation("GLOBAL_PARAMETER43021", "Globfact_Duplicate", "Glob") { vueRouteName = "form-GLOBFACT", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_GLOBFACT_DELETE = new NavigationLocation("GLOBAL_PARAMETER43021", "Globfact_Delete", "Glob") { vueRouteName = "form-GLOBFACT", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_GLOBFACT_CANCEL = new("GLOBAL_PARAMETER43021", "Globfact_Cancel", "Glob") { vueRouteName = "form-GLOBFACT", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_GLOBFACT_SHOW = new("GLOBAL_PARAMETER43021", "Globfact_Show", "Glob") { vueRouteName = "form-GLOBFACT", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_GLOBFACT_NEW = new("GLOBAL_PARAMETER43021", "Globfact_New", "Glob") { vueRouteName = "form-GLOBFACT", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_GLOBFACT_EDIT = new("GLOBAL_PARAMETER43021", "Globfact_Edit", "Glob") { vueRouteName = "form-GLOBFACT", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_GLOBFACT_DUPLICATE = new("GLOBAL_PARAMETER43021", "Globfact_Duplicate", "Glob") { vueRouteName = "form-GLOBFACT", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_GLOBFACT_DELETE = new("GLOBAL_PARAMETER43021", "Globfact_Delete", "Glob") { vueRouteName = "form-GLOBFACT", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Globfact_ModalDBEdit()
-		{
-			Globfact_ViewModel model = new Globfact_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Globfact_Show
 
@@ -400,135 +391,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Globfact Multiform actions
-
-		//
-		// GET /Glob/MFGlobfact_New
-		[HttpGet]
-		[ActionName("MFGlobfact_New")]
-		public ActionResult MFGlobfact_New()
-		{
-			var model = new Globfact_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_GLOBFACT_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("glob", model.ValCodglob);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFGlobfact_New_GET()
-		{
-			return MFGlobfact_New();
-		}
-
-		//
-		// GET /Glob/MFGlobfact_Edit
-		[HttpGet]
-		[ActionName("MFGlobfact_Edit")]
-		public ActionResult MFGlobfact_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("GLOBFACT", "EDIT", new { id = id, partialView = "MFGlobfact", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFGlobfact_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFGlobfact_Edit(requestModel);
-		}
-
-		//
-		// GET /Glob/MFGlobfact_Cancel
-		[ActionName("MFGlobfact_Cancel")]
-		public ActionResult MFGlobfact_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Glob(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Glob/MFGlobfact_Save
-		[HttpPost]
-		[ActionName("MFGlobfact_Save")]
-		public JsonResult MFGlobfact_Save(Globfact_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFGlobfact_Save",
-				ViewName = "MFGlobfact",
-				AreaName = "glob"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Glob/MFGlobfact_Delete
-		[HttpPost]
-		[ActionName("MFGlobfact_Delete")]
-		public JsonResult MFGlobfact_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFGlobfact_Delete",
-				ViewName = "MFGlobfact",
-				AreaName = "glob",
-				Location = ACTION_GLOBFACT_EDIT
-			};
-
-			var model = new Globfact_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		//
 		// GET: /Glob/Globfact_FactyValType
@@ -539,6 +401,7 @@ namespace GenioMVC.Controllers
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_facty")))
@@ -552,21 +415,6 @@ namespace GenioMVC.Controllers
 			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
-				// Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				// Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-
 				// Add to request values
 				foreach (var kv in queryParams)
 					requestValues.Add(kv.Key, kv.Value);
@@ -574,12 +422,39 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 			Globfact_FactyValType_ViewModel model = new Globfact_FactyValType_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport, 
+				model.Uuid, 
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodglob = requestModel.Id;
-			model.Load(perPage, requestValues, Request.IsAjaxRequest());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
 		}
+
 
 		// POST: /Glob/Globfact_SaveEdit
 		[HttpPost]

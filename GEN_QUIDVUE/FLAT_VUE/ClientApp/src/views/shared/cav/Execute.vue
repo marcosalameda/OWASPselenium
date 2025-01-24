@@ -69,62 +69,42 @@
 											</span>
 										</div>
 
-										<ul class="e-pagination">
-											<li
-												v-if="data.current_page > 2"
-												class="e-pagination__item">
-												<button
-													type="button"
-													class="e-pagination__link"
-													:title="texts.firstPage"
-													@click="executeQuery(1)">
-													&lt;&lt;
-												</button>
-											</li>
+										<q-button-group>
+											<q-button
+												:title="texts.firstPage"
+												label="<<"
+												:disabled="data.current_page <= 2"
+												@click="executeQuery(1)">
+											</q-button>
 
-											<li
-												v-if="data.current_page > 1"
-												class="e-pagination__item">
-												<button
-													type="button"
-													class="e-pagination__link"
-													:title="texts.previousPage"
-													@click="executeQuery(data.current_page - 1)">
-													&lt;
-												</button>
-											</li>
+											<q-button
+												:title="texts.previousPage"
+												label="<"
+												:disabled="data.current_page <= 1"
+												@click="executeQuery(data.current_page - 1)">
+											</q-button>
 
-											<li class="e-pagination__item">
-												<span class="e-pagination__info">
+											<span class="e-pagination__info">
+												<span>
 													{{ data.current_page }} /
 													{{ data.total_pages }}
 												</span>
-											</li>
+											</span>
 
-											<li
-												v-if="data.current_page < data.total_pages"
-												class="e-pagination__item">
-												<button
-													type="button"
-													class="e-pagination__link"
-													:title="texts.nextPage"
-													@click="executeQuery(data.current_page + 1)">
-													&gt;
-												</button>
-											</li>
+											<q-button
+												:title="texts.nextPage"
+												label=">"
+												:disabled="data.current_page >= data.total_pages"
+												@click="executeQuery(data.current_page + 1)">
+											</q-button>
 
-											<li
-												v-if="data.current_page < data.total_pages - 1"
-												class="e-pagination__item">
-												<button
-													type="button"
-													class="e-pagination__link"
-													:title="texts.lastPage"
-													@click="executeQuery(data.total_pages)">
-													&gt;&gt;
-												</button>
-											</li>
-										</ul>
+											<q-button
+												:title="texts.lastPage"
+												label=">>"
+												:disabled="data.current_page >= data.total_pages - 1"
+												@click="executeQuery(data.total_pages)">
+											</q-button>
+										</q-button-group>
 									</div>
 								</div>
 							</div>

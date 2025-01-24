@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Glob;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_HOMEG_CANCEL = new NavigationLocation("CANCELAR49513", "Homeg_Cancel", "Glob") { vueRouteName = "form-HOMEG", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_HOMEG_SHOW = new NavigationLocation("CONSULTA40695", "Homeg_Show", "Glob") { vueRouteName = "form-HOMEG", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_HOMEG_NEW = new NavigationLocation("INSERIR43365", "Homeg_New", "Glob") { vueRouteName = "form-HOMEG", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_HOMEG_EDIT = new NavigationLocation("EDITAR11616", "Homeg_Edit", "Glob") { vueRouteName = "form-HOMEG", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_HOMEG_DUPLICATE = new NavigationLocation("DUPLICAR09748", "Homeg_Duplicate", "Glob") { vueRouteName = "form-HOMEG", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_HOMEG_DELETE = new NavigationLocation("APAGAR04097", "Homeg_Delete", "Glob") { vueRouteName = "form-HOMEG", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_HOMEG_CANCEL = new("CANCELAR49513", "Homeg_Cancel", "Glob") { vueRouteName = "form-HOMEG", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_HOMEG_SHOW = new("CONSULTA40695", "Homeg_Show", "Glob") { vueRouteName = "form-HOMEG", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_HOMEG_NEW = new("INSERIR43365", "Homeg_New", "Glob") { vueRouteName = "form-HOMEG", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_HOMEG_EDIT = new("EDITAR11616", "Homeg_Edit", "Glob") { vueRouteName = "form-HOMEG", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_HOMEG_DUPLICATE = new("DUPLICAR09748", "Homeg_Duplicate", "Glob") { vueRouteName = "form-HOMEG", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_HOMEG_DELETE = new("APAGAR04097", "Homeg_Delete", "Glob") { vueRouteName = "form-HOMEG", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Homeg_ModalDBEdit()
-		{
-			Homeg_ViewModel model = new Homeg_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Homeg_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Homeg Multiform actions
 
-		//
-		// GET /Glob/MFHomeg_New
-		[HttpGet]
-		[ActionName("MFHomeg_New")]
-		public ActionResult MFHomeg_New()
-		{
-			var model = new Homeg_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_HOMEG_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("glob", model.ValCodglob);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFHomeg_New_GET()
-		{
-			return MFHomeg_New();
-		}
-
-		//
-		// GET /Glob/MFHomeg_Edit
-		[HttpGet]
-		[ActionName("MFHomeg_Edit")]
-		public ActionResult MFHomeg_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("HOMEG", "EDIT", new { id = id, partialView = "MFHomeg", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFHomeg_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFHomeg_Edit(requestModel);
-		}
-
-		//
-		// GET /Glob/MFHomeg_Cancel
-		[ActionName("MFHomeg_Cancel")]
-		public ActionResult MFHomeg_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Glob(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Glob/MFHomeg_Save
-		[HttpPost]
-		[ActionName("MFHomeg_Save")]
-		public JsonResult MFHomeg_Save(Homeg_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFHomeg_Save",
-				ViewName = "MFHomeg",
-				AreaName = "glob"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Glob/MFHomeg_Delete
-		[HttpPost]
-		[ActionName("MFHomeg_Delete")]
-		public JsonResult MFHomeg_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFHomeg_Delete",
-				ViewName = "MFHomeg",
-				AreaName = "glob",
-				Location = ACTION_HOMEG_EDIT
-			};
-
-			var model = new Homeg_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Glob/Homeg_SaveEdit
 		[HttpPost]

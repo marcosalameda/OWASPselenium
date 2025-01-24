@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Asset
 	/// </summary>
-	public class CSGenioAasset : DbArea	{
+	public class CSGenioAasset : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -71,6 +72,8 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
+			Qfield.CriaLog = true;
 			Qfield.CavDesignation = "ASSET_NUMBER52372";
 
             Qfield.NotNull = true;
@@ -89,7 +92,6 @@ namespace CSGenio.business
 
             Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
-            Qfield.NotDup = true;
             Qfield.ArrayName = "dbo.GetValArrayCassettyp";
             Qfield.ArrayClassName = "Assettyp";
 			info.RegisterFieldDB(Qfield);
@@ -162,23 +164,23 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codmanuf", FieldType.CHAVE_ESTRANGEIRA_GUID);
-			Qfield.FieldDescription = ">>Manufacturer";
-			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
-			Qfield.MQueue = false;
-			Qfield.CavDesignation = "__MANUFACTURER02870";
-
-			Qfield.Dupmsg = "";
-			info.RegisterFieldDB(Qfield);
-
-			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("codkinde", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">>Kind of equipment";
 			Qfield.FieldSize =  36;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "__KIND_OF_EQUIPMENT01899";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("codmanuf", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield.FieldDescription = "";
+			Qfield.FieldSize =  36;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -355,7 +357,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodasset, value); }
 		}
 
-
 		/// <summary>Field : "Identification name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("asset", "name");
@@ -367,18 +368,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldName, value); }
 		}
 
-
 		/// <summary>Field : "Asset number" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldAssetnum { get { return m_fldAssetnum; } }
 		private static FieldRef m_fldAssetnum = new FieldRef("asset", "assetnum");
 
 		/// <summary>Field : "Asset number" Tipo: "N" Formula:  ""</summary>
-		public double ValAssetnum
+		public decimal ValAssetnum
 		{
-			get { return (double)returnValueField(FldAssetnum); }
+			get { return (decimal)returnValueField(FldAssetnum); }
 			set { insertNameValueField(FldAssetnum, value); }
 		}
-
 
 		/// <summary>Field : "Asset type" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldAssettyp { get { return m_fldAssettyp; } }
@@ -391,7 +390,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldAssettyp, value); }
 		}
 
-
 		/// <summary>Field : "Identifier type" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldIdenttyp { get { return m_fldIdenttyp; } }
 		private static FieldRef m_fldIdenttyp = new FieldRef("asset", "identtyp");
@@ -402,7 +400,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldIdenttyp); }
 			set { insertNameValueField(FldIdenttyp, value); }
 		}
-
 
 		/// <summary>Field : "GRAI – Global Returnable Asset Identifier" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldGrai { get { return m_fldGrai; } }
@@ -415,7 +412,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGrai, value); }
 		}
 
-
 		/// <summary>Field : "GIAI – Global Individual Asset Identifier" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldGiai { get { return m_fldGiai; } }
 		private static FieldRef m_fldGiai = new FieldRef("asset", "giai");
@@ -426,7 +422,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldGiai); }
 			set { insertNameValueField(FldGiai, value); }
 		}
-
 
 		/// <summary>Field : "Photo" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldPhoto { get { return m_fldPhoto; } }
@@ -439,19 +434,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPhoto, value); }
 		}
 
-
-		/// <summary>Field : ">>Manufacturer" Tipo: "CE" Formula:  ""</summary>
-		public static FieldRef FldCodmanuf { get { return m_fldCodmanuf; } }
-		private static FieldRef m_fldCodmanuf = new FieldRef("asset", "codmanuf");
-
-		/// <summary>Field : ">>Manufacturer" Tipo: "CE" Formula:  ""</summary>
-		public string ValCodmanuf
-		{
-			get { return (string)returnValueField(FldCodmanuf); }
-			set { insertNameValueField(FldCodmanuf, value); }
-		}
-
-
 		/// <summary>Field : ">>Kind of equipment" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodkinde { get { return m_fldCodkinde; } }
 		private static FieldRef m_fldCodkinde = new FieldRef("asset", "codkinde");
@@ -463,6 +445,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodkinde, value); }
 		}
 
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldCodmanuf { get { return m_fldCodmanuf; } }
+		private static FieldRef m_fldCodmanuf = new FieldRef("asset", "codmanuf");
+
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public string ValCodmanuf
+		{
+			get { return (string)returnValueField(FldCodmanuf); }
+			set { insertNameValueField(FldCodmanuf, value); }
+		}
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -505,23 +497,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAasset> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAasset> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAasset>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -570,7 +545,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX ASSET]/
@@ -637,7 +612,7 @@ namespace CSGenio.business
 				asspa.ValText = ((string)args[0]);
 				args = new object[1];
 				args[0] = row.ValDecimalplaces;
-				asspa.ValDecimalplaces = ((double)args[0]);
+				asspa.ValDecimalplaces = ((decimal)args[0]);
 				args = new object[1];
 				args[0] = row.ValDatatype;
 				asspa.ValDatatype = ((string)args[0]);

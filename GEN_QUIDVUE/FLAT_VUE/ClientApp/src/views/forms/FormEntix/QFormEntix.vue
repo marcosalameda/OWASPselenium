@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -117,12 +117,12 @@
 										v-on="controls.ENTIX___ENTITNAME____.handlers"
 										:loading="controls.ENTIX___ENTITNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITNAME____.props"
 											:model-value="model.ValName.value"
-											@update:model-value="model.ValName.fnUpdateValue" />
+											@blur="onBlur(controls.ENTIX___ENTITNAME____, model.ValName.value)"
+											@change="model.ValName.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -136,14 +136,13 @@
 										v-on="controls.ENTIX___ENTITFOUNDED_.handlers"
 										:loading="controls.ENTIX___ENTITFOUNDED_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.ENTIX___ENTITFOUNDED_.isVisible"
-											v-bind="controls.ENTIX___ENTITFOUNDED_"
-											format="Date"
+											v-bind="controls.ENTIX___ENTITFOUNDED_.props"
 											:model-value="model.ValFounded.value"
-											@update:model-value="model.ValFounded.fnUpdateValue" />
+											@reset-icon-click="model.ValFounded.fnUpdateValue(model.ValFounded.originalValue ?? new Date())"
+											@update:model-value="model.ValFounded.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -155,12 +154,12 @@
 										v-on="controls.ENTIX___ENTITINITIALS.handlers"
 										:loading="controls.ENTIX___ENTITINITIALS.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITINITIALS.props"
 											:model-value="model.ValInitials.value"
-											@update:model-value="model.ValInitials.fnUpdateValue" />
+											@blur="onBlur(controls.ENTIX___ENTITINITIALS, model.ValInitials.value)"
+											@change="model.ValInitials.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -172,12 +171,12 @@
 										v-on="controls.ENTIX___ENTITREGISTRA.handlers"
 										:loading="controls.ENTIX___ENTITREGISTRA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITREGISTRA.props"
 											:model-value="model.ValRegistra.value"
-											@update:model-value="model.ValRegistra.fnUpdateValue" />
+											@blur="onBlur(controls.ENTIX___ENTITREGISTRA, model.ValRegistra.value)"
+											@change="model.ValRegistra.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -189,12 +188,12 @@
 										v-on="controls.ENTIX___ENTITTAXNUMBE.handlers"
 										:loading="controls.ENTIX___ENTITTAXNUMBE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITTAXNUMBE.props"
 											:model-value="model.ValTaxnumbe.value"
-											@update:model-value="model.ValTaxnumbe.fnUpdateValue" />
+											@blur="onBlur(controls.ENTIX___ENTITTAXNUMBE, model.ValTaxnumbe.value)"
+											@change="model.ValTaxnumbe.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -208,12 +207,12 @@
 										v-on="controls.ENTIX___ENTITIBAN____.handlers"
 										:loading="controls.ENTIX___ENTITIBAN____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITIBAN____.props"
 											:model-value="model.ValIban.value"
-											@update:model-value="model.ValIban.fnUpdateValue" />
+											@blur="onBlur(controls.ENTIX___ENTITIBAN____, model.ValIban.value)"
+											@change="model.ValIban.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -225,12 +224,12 @@
 										v-on="controls.ENTIX___ENTITPHONENUM.handlers"
 										:loading="controls.ENTIX___ENTITPHONENUM.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITPHONENUM.props"
 											:model-value="model.ValPhonenum.value"
-											@update:model-value="model.ValPhonenum.fnUpdateValue" />
+											@blur="onBlur(controls.ENTIX___ENTITPHONENUM, model.ValPhonenum.value)"
+											@change="model.ValPhonenum.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -239,22 +238,17 @@
 									v-show="controls.ENTIX___ENTITOWNER___.isVisible"
 									class="control-join-group">
 									<base-input-structure
-										class="i-checkbox"
+										class="i-text"
 										v-bind="controls.ENTIX___ENTITOWNER___"
 										v-on="controls.ENTIX___ENTITOWNER___.handlers"
 										:loading="controls.ENTIX___ENTITOWNER___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<template #label>
-											<q-checkbox-input
-												v-if="controls.ENTIX___ENTITOWNER___.isVisible"
-												id="ENTIX___ENTITOWNER___"
-												size="mini"
-												:model-value="model.ValOwner.value"
-												:readonly="controls.ENTIX___ENTITOWNER___.readonly"
-												@update:model-value="model.ValOwner.fnUpdateValue" />
-										</template>
+										:suggestion-mode-on="suggestionModeOn">
+										<q-text-field
+											v-bind="controls.ENTIX___ENTITOWNER___.props"
+											:model-value="model.ValOwner.value"
+											@blur="onBlur(controls.ENTIX___ENTITOWNER___, model.ValOwner.value)"
+											@change="model.ValOwner.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -266,15 +260,11 @@
 										v-on="controls.ENTIX___ENTITCARRIER_.handlers"
 										:loading="controls.ENTIX___ENTITCARRIER_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.ENTIX___ENTITCARRIER_.isVisible"
-												id="ENTIX___ENTITCARRIER_"
-												size="mini"
-												:model-value="model.ValCarrier.value"
-												:readonly="controls.ENTIX___ENTITCARRIER_.readonly"
+												v-bind="controls.ENTIX___ENTITCARRIER_.props"
 												@update:model-value="model.ValCarrier.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -288,15 +278,11 @@
 										v-on="controls.ENTIX___ENTITSUPPLIER.handlers"
 										:loading="controls.ENTIX___ENTITSUPPLIER.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.ENTIX___ENTITSUPPLIER.isVisible"
-												id="ENTIX___ENTITSUPPLIER"
-												size="small"
-												:model-value="model.ValSupplier.value"
-												:readonly="controls.ENTIX___ENTITSUPPLIER.readonly"
+												v-bind="controls.ENTIX___ENTITSUPPLIER.props"
 												@update:model-value="model.ValSupplier.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -310,15 +296,11 @@
 										v-on="controls.ENTIX___ENTITMANUFACT.handlers"
 										:loading="controls.ENTIX___ENTITMANUFACT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.ENTIX___ENTITMANUFACT.isVisible"
-												id="ENTIX___ENTITMANUFACT"
-												size="small"
-												:model-value="model.ValManufact.value"
-												:readonly="controls.ENTIX___ENTITMANUFACT.readonly"
+												v-bind="controls.ENTIX___ENTITMANUFACT.props"
 												@update:model-value="model.ValManufact.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -328,10 +310,12 @@
 						</q-group-box-container>
 					</q-control-wrapper>
 				</q-row-container>
-				<q-row-container v-show="controls.ENTIX___PSEUDNOVOGR05.isVisible || controls.ENTIX___PSEUDNOVOGR06.isVisible">
+				<q-row-container
+					v-show="controls.ENTIX___PSEUDNOVOGR05.isVisible || controls.ENTIX___PSEUDNOVOGR06.isVisible"
+					is-large>
 					<q-control-wrapper
 						v-show="controls.ENTIX___PSEUDNOVOGR05.isVisible"
-						class="control-join-group">
+						class="row-line-group">
 						<q-accordion-container
 							id="ENTIX___PSEUDNOVOGR05"
 							v-bind="controls.ENTIX___PSEUDNOVOGR05"
@@ -339,6 +323,7 @@
 							v-slot="{ onStateChanged }">
 							<!-- Start ENTIX___PSEUDNOVOGR05 -->
 							<q-group-collapsible
+								id="ENTIX___PSEUDNOVOGR02"
 								v-bind="controls.ENTIX___PSEUDNOVOGR02"
 								v-on="controls.ENTIX___PSEUDNOVOGR02.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -353,12 +338,12 @@
 											v-on="controls.ENTIX___ENTITTELEPHON.handlers"
 											:loading="controls.ENTIX___ENTITTELEPHON.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITTELEPHON.props"
 												:model-value="model.ValTelephon.value"
-												@update:model-value="model.ValTelephon.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITTELEPHON, model.ValTelephon.value)"
+												@change="model.ValTelephon.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 									<q-control-wrapper
@@ -370,12 +355,12 @@
 											v-on="controls.ENTIX___ENTITFAX_____.handlers"
 											:loading="controls.ENTIX___ENTITFAX_____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITFAX_____.props"
 												:model-value="model.ValFax.value"
-												@update:model-value="model.ValFax.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITFAX_____, model.ValFax.value)"
+												@change="model.ValFax.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -389,12 +374,12 @@
 											v-on="controls.ENTIX___ENTITEMAIL___.handlers"
 											:loading="controls.ENTIX___ENTITEMAIL___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITEMAIL___.props"
 												:model-value="model.ValEmail.value"
-												@update:model-value="model.ValEmail.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITEMAIL___, model.ValEmail.value)"
+												@change="model.ValEmail.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -408,12 +393,12 @@
 											v-on="controls.ENTIX___ENTITWEBSITE_.handlers"
 											:loading="controls.ENTIX___ENTITWEBSITE_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITWEBSITE_.props"
 												:model-value="model.ValWebsite.value"
-												@update:model-value="model.ValWebsite.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITWEBSITE_, model.ValWebsite.value)"
+												@change="model.ValWebsite.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -427,12 +412,12 @@
 											v-on="controls.ENTIX___ENTITPERSON__.handlers"
 											:loading="controls.ENTIX___ENTITPERSON__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITPERSON__.props"
 												:model-value="model.ValPerson.value"
-												@update:model-value="model.ValPerson.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITPERSON__, model.ValPerson.value)"
+												@change="model.ValPerson.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -446,12 +431,12 @@
 											v-on="controls.ENTIX___ENTITCONTACT_.handlers"
 											:loading="controls.ENTIX___ENTITCONTACT_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITCONTACT_.props"
 												:model-value="model.ValContact.value"
-												@update:model-value="model.ValContact.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITCONTACT_, model.ValContact.value)"
+												@change="model.ValContact.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 									<q-control-wrapper
@@ -463,12 +448,12 @@
 											v-on="controls.ENTIX___ENTITLANGUAGE.handlers"
 											:loading="controls.ENTIX___ENTITLANGUAGE.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITLANGUAGE.props"
 												:model-value="model.ValLanguage.value"
-												@update:model-value="model.ValLanguage.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITLANGUAGE, model.ValLanguage.value)"
+												@change="model.ValLanguage.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 									<q-control-wrapper
@@ -480,18 +465,19 @@
 											v-on="controls.ENTIX___ENTITCURRENCY.handlers"
 											:loading="controls.ENTIX___ENTITCURRENCY.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITCURRENCY.props"
 												:model-value="model.ValCurrency.value"
-												@update:model-value="model.ValCurrency.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITCURRENCY, model.ValCurrency.value)"
+												@change="model.ValCurrency.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End ENTIX___PSEUDNOVOGR02 -->
 							</q-group-collapsible>
 							<q-group-collapsible
+								id="ENTIX___PSEUDNOVOGR03"
 								v-bind="controls.ENTIX___PSEUDNOVOGR03"
 								v-on="controls.ENTIX___PSEUDNOVOGR03.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -506,12 +492,12 @@
 											v-on="controls.ENTIX___ENTITBUILDING.handlers"
 											:loading="controls.ENTIX___ENTITBUILDING.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITBUILDING.props"
 												:model-value="model.ValBuilding.value"
-												@update:model-value="model.ValBuilding.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITBUILDING, model.ValBuilding.value)"
+												@change="model.ValBuilding.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -525,12 +511,12 @@
 											v-on="controls.ENTIX___ENTITSTREET__.handlers"
 											:loading="controls.ENTIX___ENTITSTREET__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITSTREET__.props"
 												:model-value="model.ValStreet.value"
-												@update:model-value="model.ValStreet.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITSTREET__, model.ValStreet.value)"
+												@change="model.ValStreet.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -544,12 +530,12 @@
 											v-on="controls.ENTIX___ENTITTOWN____.handlers"
 											:loading="controls.ENTIX___ENTITTOWN____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITTOWN____.props"
 												:model-value="model.ValTown.value"
-												@update:model-value="model.ValTown.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITTOWN____, model.ValTown.value)"
+												@change="model.ValTown.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -563,12 +549,12 @@
 											v-on="controls.ENTIX___ENTITCOUNTY__.handlers"
 											:loading="controls.ENTIX___ENTITCOUNTY__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITCOUNTY__.props"
 												:model-value="model.ValCounty.value"
-												@update:model-value="model.ValCounty.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITCOUNTY__, model.ValCounty.value)"
+												@change="model.ValCounty.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -582,12 +568,12 @@
 											v-on="controls.ENTIX___ENTITSTATE___.handlers"
 											:loading="controls.ENTIX___ENTITSTATE___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITSTATE___.props"
 												:model-value="model.ValState.value"
-												@update:model-value="model.ValState.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITSTATE___, model.ValState.value)"
+												@change="model.ValState.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -601,12 +587,12 @@
 											v-on="controls.ENTIX___ENTITPOSTALCO.handlers"
 											:loading="controls.ENTIX___ENTITPOSTALCO.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITPOSTALCO.props"
 												:model-value="model.ValPostalco.value"
-												@update:model-value="model.ValPostalco.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITPOSTALCO, model.ValPostalco.value)"
+												@change="model.ValPostalco.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -620,18 +606,19 @@
 											v-on="controls.ENTIX___ENTITPOBOX___.handlers"
 											:loading="controls.ENTIX___ENTITPOBOX___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITPOBOX___.props"
 												:model-value="model.ValPobox.value"
-												@update:model-value="model.ValPobox.fnUpdateValue" />
+												@blur="onBlur(controls.ENTIX___ENTITPOBOX___, model.ValPobox.value)"
+												@change="model.ValPobox.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End ENTIX___PSEUDNOVOGR03 -->
 							</q-group-collapsible>
 							<q-group-collapsible
+								id="ENTIX___PSEUDNOVOGR04"
 								v-bind="controls.ENTIX___PSEUDNOVOGR04"
 								v-on="controls.ENTIX___PSEUDNOVOGR04.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -646,14 +633,11 @@
 											v-on="controls.ENTIX___FACI1NAME____.handlers"
 											:loading="controls.ENTIX___FACI1NAME____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-lookup
 												v-if="controls.ENTIX___FACI1NAME____.isVisible"
 												v-bind="controls.ENTIX___FACI1NAME____.props"
-												:model-value="model.ValFirstfacilitie.value"
-												v-on="controls.ENTIX___FACI1NAME____.handlers"
-												@update:model-value="model.ValFirstfacilitie.fnUpdateValue" />
+												v-on="controls.ENTIX___FACI1NAME____.handlers" />
 										</base-input-structure>
 									</q-control-wrapper>
 									<q-control-wrapper
@@ -665,14 +649,11 @@
 											v-on="controls.ENTIX___FACI2NAME____.handlers"
 											:loading="controls.ENTIX___FACI2NAME____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
-											:suggestion-mode-on="suggestionModeOn"
-											:help-style="layoutConfig.HelpStyle">
+											:suggestion-mode-on="suggestionModeOn">
 											<q-lookup
 												v-if="controls.ENTIX___FACI2NAME____.isVisible"
 												v-bind="controls.ENTIX___FACI2NAME____.props"
-												:model-value="model.ValLastfacilitie.value"
-												v-on="controls.ENTIX___FACI2NAME____.handlers"
-												@update:model-value="model.ValLastfacilitie.fnUpdateValue" />
+												v-on="controls.ENTIX___FACI2NAME____.handlers" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -697,8 +678,7 @@
 									<q-table
 										v-show="controls.ENTIX___PSEUDFACILITE.isVisible"
 										v-bind="controls.ENTIX___PSEUDFACILITE"
-										v-on="controls.ENTIX___PSEUDFACILITE.handlers">
-									</q-table>
+										v-on="controls.ENTIX___PSEUDFACILITE.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.ENTIX___PSEUDFACILITE"
 										v-on="controls.ENTIX___PSEUDFACILITE.handlers" />
@@ -789,15 +769,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'ENTIX',
-						location: 'form-ENTIX',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'ENTIX',
+					location: 'form-ENTIX',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -843,6 +821,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -915,8 +895,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -998,7 +979,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -1052,21 +1033,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -1075,12 +1041,9 @@
 						id: 'ENTIX___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY_IDENTIFICATI44986),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
 						mustBeFilled: true,
@@ -1093,10 +1056,7 @@
 						id: 'ENTIX___ENTITNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.LEGAL_NAME42902),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
@@ -1109,19 +1069,14 @@
 					ENTIX___ENTITFOUNDED_: new fieldControlClass.DateControl({
 						modelField: 'ValFounded',
 						valueChangeEvent: 'fieldChange:entit.founded',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'ENTIX___ENTITFOUNDED_',
 						name: 'FOUNDED',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.FOUNDED_IN54120),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1131,16 +1086,12 @@
 						id: 'ENTIX___ENTITINITIALS',
 						name: 'INITIALS',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.COMPANY_INITIALS56204),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						maxLength: 10,
 						labelId: 'label_ENTIX___ENTITINITIALS',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1150,16 +1101,12 @@
 						id: 'ENTIX___ENTITREGISTRA',
 						name: 'REGISTRA',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.LEGAL_REGISTRATION04413),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						maxLength: 20,
+						maxLength: 30,
 						labelId: 'label_ENTIX___ENTITREGISTRA',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1169,16 +1116,12 @@
 						id: 'ENTIX___ENTITTAXNUMBE',
 						name: 'TAXNUMBE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.VAT_NUMBER24236),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						maxLength: 20,
+						maxLength: 30,
 						labelId: 'label_ENTIX___ENTITTAXNUMBE',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1188,16 +1131,12 @@
 						id: 'ENTIX___ENTITIBAN____',
 						name: 'IBAN',
 						size: 'large',
-						hasLabel: true,
 						label: computed(() => this.Resources.IBAN__INTERNATIONAL_45066),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						maxLength: 25,
+						maxLength: 33,
 						labelId: 'label_ENTIX___ENTITIBAN____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1207,33 +1146,27 @@
 						id: 'ENTIX___ENTITPHONENUM',
 						name: 'PHONENUM',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PHONE_NUMBER20774),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						maxLength: 20,
 						labelId: 'label_ENTIX___ENTITPHONENUM',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
-					ENTIX___ENTITOWNER___: new fieldControlClass.BooleanControl({
+					ENTIX___ENTITOWNER___: new fieldControlClass.StringControl({
 						modelField: 'ValOwner',
 						valueChangeEvent: 'fieldChange:entit.owner',
 						id: 'ENTIX___ENTITOWNER___',
 						name: 'OWNER',
-						size: 'mini',
-						hasLabel: true,
+						size: 'medium',
 						label: computed(() => this.Resources.OWNER09558),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						mustBeFilled: false,
+						maxLength: 50,
+						labelId: 'label_ENTIX___ENTITOWNER___',
 						controlLimits: [
 						],
 					}, this),
@@ -1243,14 +1176,10 @@
 						id: 'ENTIX___ENTITCARRIER_',
 						name: 'CARRIER',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.CARRIER64855),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.layoutConfig.CheckboxLabelAlignment),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1260,14 +1189,10 @@
 						id: 'ENTIX___ENTITSUPPLIER',
 						name: 'SUPPLIER',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.SUPPLIER17230),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.layoutConfig.CheckboxLabelAlignment),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1277,30 +1202,22 @@
 						id: 'ENTIX___ENTITMANUFACT',
 						name: 'MANUFACT',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.MANUFACTURER50759),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.layoutConfig.CheckboxLabelAlignment),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					ENTIX___PSEUDNOVOGR05: new fieldControlClass.AccordionControl({
 						id: 'ENTIX___PSEUDNOVOGR05',
 						name: 'NOVOGR05',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: 'block',
 						label: computed(() => this.Resources.ACCORDION01950),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1308,18 +1225,14 @@
 						id: 'ENTIX___PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.CONTACT59247),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1329,17 +1242,13 @@
 						id: 'ENTIX___ENTITTELEPHON',
 						name: 'TELEPHON',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.TELEPHONE28697),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 20,
 						labelId: 'label_ENTIX___ENTITTELEPHON',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1349,17 +1258,13 @@
 						id: 'ENTIX___ENTITFAX_____',
 						name: 'FAX',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.FAX08532),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 20,
 						labelId: 'label_ENTIX___ENTITFAX_____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1369,17 +1274,13 @@
 						id: 'ENTIX___ENTITEMAIL___',
 						name: 'EMAIL',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.EMAIL25170),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 254,
 						labelId: 'label_ENTIX___ENTITEMAIL___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1389,17 +1290,13 @@
 						id: 'ENTIX___ENTITWEBSITE_',
 						name: 'WEBSITE',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.WEB_SITE06263),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 254,
 						labelId: 'label_ENTIX___ENTITWEBSITE_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1409,17 +1306,13 @@
 						id: 'ENTIX___ENTITPERSON__',
 						name: 'PERSON',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.PERSON_DEPARTMENT_TO28777),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 85,
 						labelId: 'label_ENTIX___ENTITPERSON__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1429,17 +1322,13 @@
 						id: 'ENTIX___ENTITCONTACT_',
 						name: 'CONTACT',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CONTACT_TELEPHONE_NU12694),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
-						maxLength: 20,
+						maxLength: 30,
 						labelId: 'label_ENTIX___ENTITCONTACT_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1449,17 +1338,13 @@
 						id: 'ENTIX___ENTITLANGUAGE',
 						name: 'LANGUAGE',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.LANGUAGE16872),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 2,
 						labelId: 'label_ENTIX___ENTITLANGUAGE',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1469,17 +1354,13 @@
 						id: 'ENTIX___ENTITCURRENCY',
 						name: 'CURRENCY',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.CURRENCY13881),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 3,
 						labelId: 'label_ENTIX___ENTITCURRENCY',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1487,18 +1368,14 @@
 						id: 'ENTIX___PSEUDNOVOGR03',
 						name: 'NOVOGR03',
 						size: 'block',
-						hasLabel: true,
 						label: '',
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1508,17 +1385,13 @@
 						id: 'ENTIX___ENTITBUILDING',
 						name: 'BUILDING',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.BUILDING_HOUSE_NUMBE20738),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 10,
+						maxLength: 25,
 						labelId: 'label_ENTIX___ENTITBUILDING',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1528,17 +1401,13 @@
 						id: 'ENTIX___ENTITSTREET__',
 						name: 'STREET',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.STREET44324),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 85,
+						maxLength: 50,
 						labelId: 'label_ENTIX___ENTITSTREET__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1548,17 +1417,13 @@
 						id: 'ENTIX___ENTITTOWN____',
 						name: 'TOWN',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TOWN_CITY16259),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 85,
+						maxLength: 50,
 						labelId: 'label_ENTIX___ENTITTOWN____',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1568,17 +1433,13 @@
 						id: 'ENTIX___ENTITCOUNTY__',
 						name: 'COUNTY',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.COUNTY_PROVINCE34285),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 85,
+						maxLength: 50,
 						labelId: 'label_ENTIX___ENTITCOUNTY__',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1588,17 +1449,13 @@
 						id: 'ENTIX___ENTITSTATE___',
 						name: 'STATE',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.STATE_PROVINCE28516),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 85,
+						maxLength: 50,
 						labelId: 'label_ENTIX___ENTITSTATE___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1608,17 +1465,13 @@
 						id: 'ENTIX___ENTITPOSTALCO',
 						name: 'POSTALCO',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ZIP_POSTAL_CODE55613),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 50,
+						maxLength: 10,
 						labelId: 'label_ENTIX___ENTITPOSTALCO',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1628,17 +1481,13 @@
 						id: 'ENTIX___ENTITPOBOX___',
 						name: 'POBOX',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.POST_OFFICE_BOX06223),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 5,
 						labelId: 'label_ENTIX___ENTITPOBOX___',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1646,18 +1495,14 @@
 						id: 'ENTIX___PSEUDNOVOGR04',
 						name: 'NOVOGR04',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.FACILITIES08876),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-ENTIX___PSEUDNOVOGR04',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1666,30 +1511,13 @@
 						valueChangeEvent: 'fieldChange:faci1.name',
 						id: 'ENTIX___FACI1NAME____',
 						name: 'NAME',
-						size: 'xlarge',
-						hasLabel: true,
+						size: 'mini',
 						label: computed(() => this.Resources.FACILITY_NAME19514),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR04',
 						container: 'ENTIX___PSEUDNOVOGR04',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValFirstfacilitie',
-							dependencyEvent: 'fieldChange:entit.firstfacilitie'
-						},
-						dependentFields: () => {
-							return {
-								set 'faci1.codfacil'(value) { vm.model.ValFirstfacilitie.updateValue(value) },
-								set 'faci1.name'(value) { vm.model.TableFaci1Name.updateValue(value) },
-							}
-						},
-						isFixed: true,
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1698,6 +1526,16 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValFirstfacilitie',
+							dependencyEvent: 'fieldChange:entit.firstfacilitie'
+						},
+						dependentFields: () => ({
+							set 'faci1.codfacil'(value) { vm.model.ValFirstfacilitie.updateValue(value) },
+							set 'faci1.name'(value) { vm.model.TableFaci1Name.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					ENTIX___FACI2NAME____: new fieldControlClass.LookupControl({
 						modelField: 'TableFaci2Name',
@@ -1705,29 +1543,12 @@
 						id: 'ENTIX___FACI2NAME____',
 						name: 'NAME',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.FACILITY_NAME19514),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR04',
 						container: 'ENTIX___PSEUDNOVOGR04',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValLastfacilitie',
-							dependencyEvent: 'fieldChange:entit.lastfacilitie'
-						},
-						dependentFields: () => {
-							return {
-								set 'faci2.codfacil'(value) { vm.model.ValLastfacilitie.updateValue(value) },
-								set 'faci2.name'(value) { vm.model.TableFaci2Name.updateValue(value) },
-							}
-						},
-						isFixed: true,
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1736,31 +1557,34 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValLastfacilitie',
+							dependencyEvent: 'fieldChange:entit.lastfacilitie'
+						},
+						dependentFields: () => ({
+							set 'faci2.codfacil'(value) { vm.model.ValLastfacilitie.updateValue(value) },
+							set 'faci2.name'(value) { vm.model.TableFaci2Name.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					ENTIX___PSEUDNOVOGR06: new fieldControlClass.GroupControl({
 						id: 'ENTIX___PSEUDNOVOGR06',
 						name: 'NOVOGR06',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: '',
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					ENTIX___PSEUDFACILITE: new fieldControlClass.TableListControl({
 						id: 'ENTIX___PSEUDFACILITE',
 						name: 'FACILITE',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.FACILITIES08876),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR06',
@@ -1776,7 +1600,7 @@
 								field: 'INCORPOR',
 								label: computed(() => this.Resources.INCORPORATION10135),
 								scrollData: 8,
-								dateTimeType: 'Date',
+								dateTimeType: 'date',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -1826,6 +1650,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
+								searchable: false,
 							}),
 							new listColumnTypes.ImageColumn({
 								order: 7,
@@ -1833,8 +1658,10 @@
 								area: 'FACIL',
 								field: 'IMAGE',
 								label: computed(() => this.Resources.IMAGE65174),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.IMAGE65174)),
 								scrollData: 3,
 								sortable: false,
+								searchable: false,
 							}),
 						],
 						config: {
@@ -1849,7 +1676,7 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: false,
 								searchOnPressEnter: true
 							},
@@ -1955,6 +1782,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'FACILFEX',
@@ -1968,20 +1796,14 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: FACILFEX
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValName',
 							defaultSearchColumnNameOriginal: 'ValName',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValIncorpor',
+								sortOrder: 'asc'
+							}
 						},
-						changeEvents: ['changed-FACTY', 'changed-FACIL', 'changed-ENTIT'],
+						changeEvents: ['changed-FACTY', 'changed-CNTRY', 'changed-FACIL', 'changed-ENTIT'],
 						uuid: 'Entix_ValFacilite',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -2096,7 +1918,7 @@
 						/** The foreign key to the FACI2 table */
 						get faci2() { return vm.model.ValLastfacilitie },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -2192,6 +2014,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2231,6 +2061,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -2357,6 +2195,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR ENTIX]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -2372,6 +2226,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS ENTIX]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

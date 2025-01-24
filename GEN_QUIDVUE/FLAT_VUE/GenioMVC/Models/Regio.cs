@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Cntry _cntry;
 		[DisplayName("Cntry")]
 		[ShouldSerialize("Cntry")]
-		public virtual Cntry Cntry { 
-			get { 
+		public virtual Cntry Cntry {
+			get {
 				if (!this.isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodcntry) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodcntry))))
 					_cntry = Models.Cntry.Find(ValCodcntry, m_userContext, Identifier, _fieldsToSerialize);
 				if (_cntry == null)
 					_cntry = new Models.Cntry(m_userContext, true, _fieldsToSerialize);
 				return _cntry;
 			}
-			set { _cntry = value; } 
+			set { _cntry = value; }
 		}
-		
+
 
 		[DisplayName("Region")]
 		/// <summary>Field : "Region" Tipo: "C" Formula:  ""</summary>
@@ -65,17 +65,17 @@ namespace GenioMVC.Models
 		private Pais1 _pais1;
 		[DisplayName("Pais1")]
 		[ShouldSerialize("Pais1")]
-		public virtual Pais1 Pais1 { 
-			get { 
+		public virtual Pais1 Pais1 {
+			get {
 				if (!this.isEmptyModel && (_pais1 == null || (!string.IsNullOrEmpty(ValCodpais1) && (_pais1.isEmptyModel || _pais1.klass.QPrimaryKey != ValCodpais1))))
 					_pais1 = Models.Pais1.Find(ValCodpais1, m_userContext, Identifier, _fieldsToSerialize);
 				if (_pais1 == null)
 					_pais1 = new Models.Pais1(m_userContext, true, _fieldsToSerialize);
 				return _pais1;
 			}
-			set { _pais1 = value; } 
+			set { _pais1 = value; }
 		}
-		
+
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Regio.ValZzstate")]
@@ -85,19 +85,19 @@ namespace GenioMVC.Models
 		public Regio(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAregio(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Regio(UserContext userContext, CSGenioAregio val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAregio csgenioa)
@@ -124,7 +124,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Item
 {
-	public class Artig_ViewModel : FormViewModel<Models.Item>
+	public class Artig_ViewModel : FormViewModel<Models.Item>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,19 +29,30 @@ namespace GenioMVC.ViewModels.Item
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Designation:" | Type: "CE"
+		/// </summary>
+		public string ValCodgitem { get; set; }
+		/// <summary>
+		/// Title: "Warehouse" | Type: "CE"
+		/// </summary>
+		public string ValCodwareh { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Code" | Type: "C"
 		/// </summary>
 		public string ValItemcod { get; set; }
-
 		/// <summary>
 		/// Title: "Warehouse" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Wareh> TableWarehWarehdes { get; set; }
-
 		/// <summary>
 		/// Title: "Code" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public string GitemValItemgcod 
 		{
 			get
@@ -55,110 +66,97 @@ namespace GenioMVC.ViewModels.Item
 		public Func<string> funcGitemValItemgcod { get; set; }
 
 		private string _auxGitemValItemgcod { get; set; }
-
 		/// <summary>
 		/// Title: "Designation:" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Gitem> TableGitemItemdes { get; set; }
-
 		/// <summary>
 		/// Title: "Item" | Type: "C"
 		/// </summary>
 		public string ValItemdes { get; set; }
-
 		/// <summary>
 		/// Title: "In use" | Type: "L"
 		/// </summary>
 		public bool ValValid { get; set; }
-
 		/// <summary>
 		/// Title: "Tipo" | Type: "AC"
 		/// </summary>
 		public string ValItemtype { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValItemtype { get; set; }
-
 		/// <summary>
 		/// Title: "Entries:" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValEntries { get; set; }
-
 		/// <summary>
 		/// Title: "Output:" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValExits { get; set; }
-
 		/// <summary>
 		/// Title: "Image" | Type: "IJ"
 		/// </summary>
 		[ImageThumbnailJsonConverter(100, 50)]
-		public GenioMVC.ViewModels.ImageModel ValImage { get; set; }
-
+		public GenioMVC.Models.ImageModel ValImage { get; set; }
 		/// <summary>
 		/// Title: "Categorization" | Type: "PSEUD"
 		/// </summary>
+		[ValidateSetAccess]
 		public List<GenioMVC.Models.Cattp> List_Categori { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public List<GenioMVC.Models.Cattp> List_CategoriSelected { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public string[] List_Categori_SelectedIds { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public string List_Categori_Area { get; set; }
-
 		/// <summary>
 		/// Title: "Filtered Checklist" | Type: "PSEUD"
 		/// </summary>
+		[ValidateSetAccess]
 		public List<GenioMVC.Models.Cattp> List_Categor { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public List<GenioMVC.Models.Cattp> List_CategorSelected { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public string[] List_Categor_SelectedIds { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		public string List_Categor_Area { get; set; }
-
 		/// <summary>
 		/// Title: "Categorization" | Type: "MO"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValCategory { get; set; }
-
 		/// <summary>
 		/// Title: "Existence" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValExistenc { get; set; }
-
 		/// <summary>
 		/// Title: "Availability" | Type: "AC"
 		/// </summary>
+		[ValidateSetAccess]
 		public string ValDisponib { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValDisponib { get; set; }
-
 		/// <summary>
 		/// Title: "Date" | Type: "D"
 		/// </summary>
@@ -171,20 +169,6 @@ namespace GenioMVC.ViewModels.Item
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Designation:" | Type: "CE"
-		/// </summary>
-		public string ValCodgitem { get; set; }
-
-		/// <summary>
-		/// Title: "Warehouse" | Type: "CE"
-		/// </summary>
-		public string ValCodwareh { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -200,9 +184,10 @@ namespace GenioMVC.ViewModels.Item
 
 		public string ValCoditem { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Artig_ViewModel() : base(null!) { }
@@ -238,6 +223,15 @@ namespace GenioMVC.ViewModels.Item
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Item model = new Models.Item(userContext) { Identifier = "FARTIG" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FARTIG");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -298,6 +292,8 @@ namespace GenioMVC.ViewModels.Item
 
 			try
 			{
+				ValCodgitem = ViewModelConversion.ToString(m.ValCodgitem);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
 				ValItemcod = ViewModelConversion.ToString(m.ValItemcod);
 				funcGitemValItemgcod = () => ViewModelConversion.ToString(m.Gitem.ValItemgcod);
 				ValItemdes = ViewModelConversion.ToString(m.ValItemdes);
@@ -310,8 +306,6 @@ namespace GenioMVC.ViewModels.Item
 				ValExistenc = ViewModelConversion.ToNumeric(m.ValExistenc);
 				ValDisponib = ViewModelConversion.ToString(m.ValDisponib);
 				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
-				ValCodgitem = ViewModelConversion.ToString(m.ValCodgitem);
-				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
 			}
 			catch (Exception)
@@ -321,6 +315,20 @@ namespace GenioMVC.ViewModels.Item
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Item m)
 		{
 			if (m == null)
@@ -331,30 +339,104 @@ namespace GenioMVC.ViewModels.Item
 
 			try
 			{
+				m.ValCodgitem = ViewModelConversion.ToString(ValCodgitem);
+				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
 				m.ValItemcod = ViewModelConversion.ToString(ValItemcod);
 				m.ValItemdes = ViewModelConversion.ToString(ValItemdes);
 				m.ValValid = ViewModelConversion.ToLogic(ValValid);
 				m.ValItemtype = ViewModelConversion.ToString(ValItemtype);
+				if (ValImage == null || !ValImage.IsThumbnail)
+					m.ValImage = ViewModelConversion.ToImage(ValImage);
+				m.ValDate = ViewModelConversion.ToDateTime(ValDate);
+				m.ValCoditem = ViewModelConversion.ToString(ValCoditem);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
 				m.ValEntries = ViewModelConversion.ToNumeric(ValEntries);
 				m.ValExits = ViewModelConversion.ToNumeric(ValExits);
-				m.ValImage = ViewModelConversion.ToImage(ValImage);
 				m.ValCategory = ViewModelConversion.ToString(ValCategory);
 				m.ValExistenc = ViewModelConversion.ToNumeric(ValExistenc);
 				m.ValDisponib = ViewModelConversion.ToString(ValDisponib);
-				m.ValDate = ViewModelConversion.ToDateTime(ValDate);
-				m.ValCodgitem = ViewModelConversion.ToString(ValCodgitem);
-				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
-				m.ValCoditem = ViewModelConversion.ToString(ValCoditem);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Artig) to Model (Item) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Artig) to Model (Item) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "item.codgitem":
+						this.ValCodgitem = ViewModelConversion.ToString(_value);
+						break;
+					case "item.codwareh":
+						this.ValCodwareh = ViewModelConversion.ToString(_value);
+						break;
+					case "item.itemcod":
+						this.ValItemcod = ViewModelConversion.ToString(_value);
+						break;
+					case "item.itemdes":
+						this.ValItemdes = ViewModelConversion.ToString(_value);
+						break;
+					case "item.valid":
+						this.ValValid = ViewModelConversion.ToLogic(_value);
+						break;
+					case "item.itemtype":
+						this.ValItemtype = ViewModelConversion.ToString(_value);
+						break;
+					case "item.image":
+						this.ValImage = ViewModelConversion.ToImage(_value);
+						break;
+					case "item.date":
+						this.ValDate = ViewModelConversion.ToDateTime(_value);
+						break;
+					case "item.coditem":
+						this.ValCoditem = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Artig) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Artig)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Item.Find(id ?? Navigation.GetStrValue("item"), m_userContext, "FARTIG"); }
+			finally { Model ??= new Models.Item(m_userContext) { Identifier = "FARTIG" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -368,20 +450,13 @@ namespace GenioMVC.ViewModels.Item
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FARTIG";
@@ -391,6 +466,7 @@ namespace GenioMVC.ViewModels.Item
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -450,34 +526,30 @@ namespace GenioMVC.ViewModels.Item
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
+			validator.Required("ValCodwareh", Resources.Resources.WAREHOUSE51864, ViewModelConversion.ToString(ValCodwareh), FieldType.CHAVE_ESTRANGEIRA_GUID.Formatting);
 			validator.StringLength("ValItemcod", Resources.Resources.CODE49225, ValItemcod, 15);
 			validator.StringLength("GitemValItemgcod", Resources.Resources.CODE49225, GitemValItemgcod, 15);
 			validator.StringLength("ValItemdes", Resources.Resources.ITEM40802, ValItemdes, 85);
-			validator.Required("ValItemdes", Resources.Resources.ITEM40802, ValItemdes);
-			validator.Required("ValCodwareh", Resources.Resources.WAREHOUSE51864, ValCodwareh);
+
+			validator.Required("ValItemdes", Resources.Resources.ITEM40802, ViewModelConversion.ToString(ValItemdes), FieldType.TEXTO.Formatting);
+
 
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE ARTIG]/
 		public override void Save()
 		{
 
-			try { Model = Models.Item.Find(Navigation.GetStrValue("item"), m_userContext, "FARTIG"); }
-			finally { if (Model == null) Model = new Models.Item(m_userContext) { Identifier = "FARTIG" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY ARTIG]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Item.Find(Navigation.GetStrValue("item"), m_userContext, "FARTIG"); }
-			finally { if (Model == null) Model = new Models.Item(m_userContext) { Identifier = "FARTIG" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE ARTIG]/
 
@@ -512,8 +584,8 @@ namespace GenioMVC.ViewModels.Item
 				object hValue = Navigation.GetValue("wareh", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					artig___warehwarehdesConds.Equal(CSGenioAwareh.FldCodwareh, Navigation.GetValue("wareh"));
-					this.ValCodwareh = Navigation.GetStrValue("wareh");
+					artig___warehwarehdesConds.Equal(CSGenioAwareh.FldCodwareh, hValue);
+					this.ValCodwareh = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -530,8 +602,6 @@ namespace GenioMVC.ViewModels.Item
 					Navigation.CurrentLevel.SetEntry("RETURN_wareh", null);
 				}
 				FillDependant_ArtigTableWarehWarehdes(lazyLoad);
-				//Check if foreignkey comes from history
-				TableWarehWarehdes.FilledByHistory = Navigation.CheckFilledByHistory("wareh");
 				return;
 			}
 
@@ -604,9 +674,6 @@ namespace GenioMVC.ViewModels.Item
 					Navigation.SetValue("wareh", this.ValCodwareh);
 				}
 				FillDependant_ArtigTableWarehWarehdes();
-
-				//Check if foreignkey comes from history
-				TableWarehWarehdes.FilledByHistory = Navigation.CheckFilledByHistory("wareh");
 			}
 		}
 
@@ -712,8 +779,8 @@ namespace GenioMVC.ViewModels.Item
 				object hValue = Navigation.GetValue("gitem", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					artig___gitemitemdes_Conds.Equal(CSGenioAgitem.FldCodgitem, Navigation.GetValue("gitem"));
-					this.ValCodgitem = Navigation.GetStrValue("gitem");
+					artig___gitemitemdes_Conds.Equal(CSGenioAgitem.FldCodgitem, hValue);
+					this.ValCodgitem = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -730,8 +797,6 @@ namespace GenioMVC.ViewModels.Item
 					Navigation.CurrentLevel.SetEntry("RETURN_gitem", null);
 				}
 				FillDependant_ArtigTableGitemItemdes(lazyLoad);
-				//Check if foreignkey comes from history
-				TableGitemItemdes.FilledByHistory = Navigation.CheckFilledByHistory("gitem");
 				return;
 			}
 
@@ -799,9 +864,6 @@ namespace GenioMVC.ViewModels.Item
 
 				TableGitemItemdes.List = new SelectList(TableGitemItemdes.Elements.ToSelectList(x => x.ValItemdes, x => x.ValCodgitem,  x => x.ValCodgitem == this.ValCodgitem), "Value", "Text", this.ValCodgitem);
 				FillDependant_ArtigTableGitemItemdes();
-
-				//Check if foreignkey comes from history
-				TableGitemItemdes.FilledByHistory = Navigation.CheckFilledByHistory("gitem");
 			}
 		}
 
@@ -1009,6 +1071,8 @@ namespace GenioMVC.ViewModels.Item
 		{
 			return identifier switch
 			{
+				"item.codgitem" => ViewModelConversion.ToString(modelValue),
+				"item.codwareh" => ViewModelConversion.ToString(modelValue),
 				"item.itemcod" => ViewModelConversion.ToString(modelValue),
 				"gitem.itemgcod" => ViewModelConversion.ToString(modelValue),
 				"item.itemdes" => ViewModelConversion.ToString(modelValue),
@@ -1021,15 +1085,21 @@ namespace GenioMVC.ViewModels.Item
 				"item.existenc" => ViewModelConversion.ToNumeric(modelValue),
 				"item.disponib" => ViewModelConversion.ToString(modelValue),
 				"item.date" => ViewModelConversion.ToDateTime(modelValue),
-				"item.codgitem" => ViewModelConversion.ToString(modelValue),
-				"item.codwareh" => ViewModelConversion.ToString(modelValue),
 				"item.coditem" => ViewModelConversion.ToString(modelValue),
 				"wareh.codwareh" => ViewModelConversion.ToString(modelValue),
 				"wareh.warehdes" => ViewModelConversion.ToString(modelValue),
 				"gitem.codgitem" => ViewModelConversion.ToString(modelValue),
 				"gitem.itemdes" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
+		}
+
+
+		/// <inheritdoc/>
+		protected override void SetTicketToImageFields()
+		{
+			if (ValImage != null)
+				ValImage.Ticket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaITEM, CSGenioAitem.FldImage.Field, null, ValCoditem);
 		}
 
 		#region Charts

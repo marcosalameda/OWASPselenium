@@ -21,6 +21,8 @@ namespace GenioMVC.ViewModels.Equip
 
 		public string ValCodequip { get; set; }
 
+		public string Uuid { get => "Equip_ValTlequipa"; }
+		
 		public Equip_ValTlequipa_ViewModel(UserContext userContext) : base(userContext) { }
 
 		public void Load(int numberListItems, bool ajaxRequest = false)
@@ -34,11 +36,27 @@ namespace GenioMVC.ViewModels.Equip
 			CriteriaSet conditions = null;
 			Load(numberListItems, requestValues, ajaxRequest, false, ref listing, ref conditions);
 		}
+		
+		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref List<Models.TimelineItem> Qlisting, ref CriteriaSet conditions)
+		{
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
+			
+			tableConfig.RowsPerPage = numberListItems;
+
+			Load(tableConfig, requestValues, ajaxRequest, isToExport, ref Qlisting, ref conditions);
+		}
+		
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
+		{
+			List<Models.TimelineItem> listing = null;
+			CriteriaSet conditions = null;
+			Load(tableConfig, requestValues, ajaxRequest, false, ref listing, ref conditions);
+		}
 
 		public static Expression<Func<CSGenioAvisit, string>> backgroundColorconditionVISITAS = p => "RGB(0,255,0)";
 		Func<CSGenioAvisit, string> backgroundColorVISITAS = backgroundColorconditionVISITAS.Compile();
 
-		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref List<Models.TimelineItem> Qlisting, ref CriteriaSet conditions)
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref List<Models.TimelineItem> Qlisting, ref CriteriaSet conditions)
 		{
 			if (ajaxRequest)
 				this.Navigation.SetValue("requestValues" + "Equip_ValTlequipa", requestValues);
@@ -46,8 +64,9 @@ namespace GenioMVC.ViewModels.Equip
 				requestValues = this.Navigation.GetValue<NameValueCollection>("requestValues" + "Equip_ValTlequipa");
 
 			Menu = new TablePartial<Models.TimelineItem>();
+			this.ValCodequip = this.Navigation.GetValue("equip").ToString();
 			List<Models.TimelineItem> datalist = new List<Models.TimelineItem>();
-			int totalrecords = numberListItems;
+			int totalrecords = tableConfig.RowsPerPage;
 			totalrecords = 5;
 
 			// VISITAS
@@ -127,7 +146,7 @@ namespace GenioMVC.ViewModels.Equip
 					var fieldType = FieldType.TEXTO;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Título", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 1, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-				
+
 				}
 
 				if (Qfield.FullName.Equals("visit.observat"))
@@ -135,7 +154,7 @@ namespace GenioMVC.ViewModels.Equip
 					var fieldType = FieldType.TEXTO;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Observações", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 2, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-				
+
 				}
 			}
 
@@ -196,7 +215,7 @@ namespace GenioMVC.ViewModels.Equip
 					var fieldType = FieldType.NUMERO;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "N.º reparação na Empresa", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 3, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-				
+
 				}
 
 				if (Qfield.FullName.Equals("repar.descript"))
@@ -204,7 +223,7 @@ namespace GenioMVC.ViewModels.Equip
 					var fieldType = FieldType.MEMO;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Descrição da reparação", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 4, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-				
+
 				}
 
 				if (Qfield.FullName.Equals("pesso.name"))
@@ -212,7 +231,7 @@ namespace GenioMVC.ViewModels.Equip
 					var fieldType = FieldType.TEXTO;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Nome", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 5, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-				
+
 				}
 
 				if (Qfield.FullName.Equals("speci.especial"))
@@ -220,7 +239,7 @@ namespace GenioMVC.ViewModels.Equip
 					var fieldType = FieldType.TEXTO;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Especialidade", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 6, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-				
+
 				}
 			}
 

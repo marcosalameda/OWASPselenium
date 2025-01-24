@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Inpgr;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_INGROUPS_CANCEL = new NavigationLocation("INPUT_GROUP17182", "Ingroups_Cancel", "Inpgr") { vueRouteName = "form-INGROUPS", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_INGROUPS_SHOW = new NavigationLocation("INPUT_GROUP17182", "Ingroups_Show", "Inpgr") { vueRouteName = "form-INGROUPS", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_INGROUPS_NEW = new NavigationLocation("INPUT_GROUP17182", "Ingroups_New", "Inpgr") { vueRouteName = "form-INGROUPS", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_INGROUPS_EDIT = new NavigationLocation("INPUT_GROUP17182", "Ingroups_Edit", "Inpgr") { vueRouteName = "form-INGROUPS", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_INGROUPS_DUPLICATE = new NavigationLocation("INPUT_GROUP17182", "Ingroups_Duplicate", "Inpgr") { vueRouteName = "form-INGROUPS", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_INGROUPS_DELETE = new NavigationLocation("INPUT_GROUP17182", "Ingroups_Delete", "Inpgr") { vueRouteName = "form-INGROUPS", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_INGROUPS_CANCEL = new("INPUT_GROUP17182", "Ingroups_Cancel", "Inpgr") { vueRouteName = "form-INGROUPS", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_INGROUPS_SHOW = new("INPUT_GROUP17182", "Ingroups_Show", "Inpgr") { vueRouteName = "form-INGROUPS", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_INGROUPS_NEW = new("INPUT_GROUP17182", "Ingroups_New", "Inpgr") { vueRouteName = "form-INGROUPS", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_INGROUPS_EDIT = new("INPUT_GROUP17182", "Ingroups_Edit", "Inpgr") { vueRouteName = "form-INGROUPS", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_INGROUPS_DUPLICATE = new("INPUT_GROUP17182", "Ingroups_Duplicate", "Inpgr") { vueRouteName = "form-INGROUPS", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_INGROUPS_DELETE = new("INPUT_GROUP17182", "Ingroups_Delete", "Inpgr") { vueRouteName = "form-INGROUPS", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Ingroups_ModalDBEdit()
-		{
-			Ingroups_ViewModel model = new Ingroups_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Ingroups_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Ingroups Multiform actions
 
-		//
-		// GET /Inpgr/MFIngroups_New
-		[HttpGet]
-		[ActionName("MFIngroups_New")]
-		public ActionResult MFIngroups_New()
-		{
-			var model = new Ingroups_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_INGROUPS_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("inpgr", model.ValCodinpgr);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFIngroups_New_GET()
-		{
-			return MFIngroups_New();
-		}
-
-		//
-		// GET /Inpgr/MFIngroups_Edit
-		[HttpGet]
-		[ActionName("MFIngroups_Edit")]
-		public ActionResult MFIngroups_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("INGROUPS", "EDIT", new { id = id, partialView = "MFIngroups", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFIngroups_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFIngroups_Edit(requestModel);
-		}
-
-		//
-		// GET /Inpgr/MFIngroups_Cancel
-		[ActionName("MFIngroups_Cancel")]
-		public ActionResult MFIngroups_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Inpgr(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Inpgr/MFIngroups_Save
-		[HttpPost]
-		[ActionName("MFIngroups_Save")]
-		public JsonResult MFIngroups_Save(Ingroups_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFIngroups_Save",
-				ViewName = "MFIngroups",
-				AreaName = "inpgr"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Inpgr/MFIngroups_Delete
-		[HttpPost]
-		[ActionName("MFIngroups_Delete")]
-		public JsonResult MFIngroups_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFIngroups_Delete",
-				ViewName = "MFIngroups",
-				AreaName = "inpgr",
-				Location = ACTION_INGROUPS_EDIT
-			};
-
-			var model = new Ingroups_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Inpgr/Ingroups_SaveEdit
 		[HttpPost]

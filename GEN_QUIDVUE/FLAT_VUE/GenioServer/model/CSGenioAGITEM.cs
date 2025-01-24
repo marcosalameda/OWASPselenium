@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Global article
 	/// </summary>
-	public class CSGenioAgitem : DbArea	{
+	public class CSGenioAgitem : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -257,7 +258,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodgitem, value); }
 		}
 
-
 		/// <summary>Field : "Global article" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldItemdes { get { return m_fldItemdes; } }
 		private static FieldRef m_fldItemdes = new FieldRef("gitem", "itemdes");
@@ -269,7 +269,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldItemdes, value); }
 		}
 
-
 		/// <summary>Field : "Code" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldItemgcod { get { return m_fldItemgcod; } }
 		private static FieldRef m_fldItemgcod = new FieldRef("gitem", "itemgcod");
@@ -280,7 +279,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldItemgcod); }
 			set { insertNameValueField(FldItemgcod, value); }
 		}
-
 
 		/// <summary>Field : "Document" Tipo: "IB" Formula:  ""</summary>
 		public static FieldRef FldDocument { get { return m_fldDocument; } }
@@ -347,23 +345,6 @@ namespace CSGenio.business
 		}
 
 
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAgitem> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAgitem> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAgitem>(where, user, fields);
-        }
-
-
         /// <summary>
         /// Search for all records of this area that comply with a condition
         /// </summary>
@@ -410,7 +391,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX GITEM]/

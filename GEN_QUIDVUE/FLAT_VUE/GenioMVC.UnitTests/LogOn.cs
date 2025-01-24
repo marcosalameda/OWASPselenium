@@ -35,8 +35,7 @@ public class LogOn : NoUserTestFixture
         Assert.IsInstanceOf<JsonResult>(result);
         var json = result as JsonResult;
         Assert.IsNotNull(json);
-        var data = JsonUtils.GetPropertyObject("Data", json.Value);
-        var success = JsonUtils.GetPropertyObject("Success", data);
+        var success = JsonUtils.GetPropertyObject("Success", json.Value);
         Assert.That(success, Is.EqualTo(false));
     }
 }

@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -48,13 +48,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Year" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Expe1.ValYearnumb")]
 		[NumericAttribute(0)]
-		public decimal? ValYearnumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDouble(value); } }
+		public decimal? ValYearnumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDecimal(value); } }
 
 		[DisplayName("Previous year")]
 		/// <summary>Field : "Previous year" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Expe1.ValYearprev")]
 		[NumericAttribute(0)]
-		public decimal? ValYearprev { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearprev, 0)); } set { klass.ValYearprev = Convert.ToDouble(value); } }
+		public decimal? ValYearprev { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearprev, 0)); } set { klass.ValYearprev = Convert.ToDecimal(value); } }
 
 		[DisplayName(">AGGREGATOR")]
 		/// <summary>Field : ">AGGREGATOR" Tipo: "CF" Formula:  ""</summary>
@@ -70,13 +70,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Value" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Expe1.ValValue")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDouble(value); } }
+		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
 
 		[DisplayName("Previous value")]
 		/// <summary>Field : "Previous value" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Expe1.ValPrevval")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrevval { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrevval, 2)); } set { klass.ValPrevval = Convert.ToDouble(value); } }
+		public decimal? ValPrevval { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrevval, 2)); } set { klass.ValPrevval = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Expe1.ValZzstate")]
@@ -86,19 +86,19 @@ namespace GenioMVC.Models
 		public Expe1(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAexpe1(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Expe1(UserContext userContext, CSGenioAexpe1 val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAexpe1 csgenioa)
@@ -115,7 +115,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

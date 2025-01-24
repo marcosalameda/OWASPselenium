@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Perso;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_PERSO_CANCEL = new NavigationLocation("PERSON10446", "Perso_Cancel", "Perso") { vueRouteName = "form-PERSO", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_PERSO_SHOW = new NavigationLocation("PERSON10446", "Perso_Show", "Perso") { vueRouteName = "form-PERSO", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_PERSO_NEW = new NavigationLocation("PERSON10446", "Perso_New", "Perso") { vueRouteName = "form-PERSO", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_PERSO_EDIT = new NavigationLocation("PERSON10446", "Perso_Edit", "Perso") { vueRouteName = "form-PERSO", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_PERSO_DUPLICATE = new NavigationLocation("PERSON10446", "Perso_Duplicate", "Perso") { vueRouteName = "form-PERSO", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_PERSO_DELETE = new NavigationLocation("PERSON10446", "Perso_Delete", "Perso") { vueRouteName = "form-PERSO", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_PERSO_CANCEL = new("PERSON10446", "Perso_Cancel", "Perso") { vueRouteName = "form-PERSO", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_PERSO_SHOW = new("PERSON10446", "Perso_Show", "Perso") { vueRouteName = "form-PERSO", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_PERSO_NEW = new("PERSON10446", "Perso_New", "Perso") { vueRouteName = "form-PERSO", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_PERSO_EDIT = new("PERSON10446", "Perso_Edit", "Perso") { vueRouteName = "form-PERSO", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_PERSO_DUPLICATE = new("PERSON10446", "Perso_Duplicate", "Perso") { vueRouteName = "form-PERSO", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_PERSO_DELETE = new("PERSON10446", "Perso_Delete", "Perso") { vueRouteName = "form-PERSO", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Perso_ModalDBEdit()
-		{
-			Perso_ViewModel model = new Perso_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Perso_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Perso Multiform actions
 
-		//
-		// GET /Perso/MFPerso_New
-		[HttpGet]
-		[ActionName("MFPerso_New")]
-		public ActionResult MFPerso_New()
-		{
-			var model = new Perso_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_PERSO_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("perso", model.ValCodperso);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFPerso_New_GET()
-		{
-			return MFPerso_New();
-		}
-
-		//
-		// GET /Perso/MFPerso_Edit
-		[HttpGet]
-		[ActionName("MFPerso_Edit")]
-		public ActionResult MFPerso_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("PERSO", "EDIT", new { id = id, partialView = "MFPerso", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFPerso_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFPerso_Edit(requestModel);
-		}
-
-		//
-		// GET /Perso/MFPerso_Cancel
-		[ActionName("MFPerso_Cancel")]
-		public ActionResult MFPerso_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Perso(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Perso/MFPerso_Save
-		[HttpPost]
-		[ActionName("MFPerso_Save")]
-		public JsonResult MFPerso_Save(Perso_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFPerso_Save",
-				ViewName = "MFPerso",
-				AreaName = "perso"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Perso/MFPerso_Delete
-		[HttpPost]
-		[ActionName("MFPerso_Delete")]
-		public JsonResult MFPerso_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFPerso_Delete",
-				ViewName = "MFPerso",
-				AreaName = "perso",
-				Location = ACTION_PERSO_EDIT
-			};
-
-			var model = new Perso_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Perso/Perso_SaveEdit
 		[HttpPost]

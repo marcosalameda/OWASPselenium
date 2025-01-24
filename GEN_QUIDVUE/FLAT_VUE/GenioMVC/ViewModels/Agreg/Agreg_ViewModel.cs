@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Agreg
 {
-	public class Agreg_ViewModel : FormViewModel<Models.Agreg>
+	public class Agreg_ViewModel : FormViewModel<Models.Agreg>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,19 +29,33 @@ namespace GenioMVC.ViewModels.Agreg
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Project" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodproje { get; set; }
+		/// <summary>
+		/// Title: "Year" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodyear { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Project" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Proje> TableProjeProjecto { get; set; }
-
 		/// <summary>
 		/// Title: "Year" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Year> TableYearYear { get; set; }
-
 		/// <summary>
 		/// Title: "Value" | Type: "$D"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValValue { get; set; }
 
 		#region Navigations
@@ -51,20 +65,6 @@ namespace GenioMVC.ViewModels.Agreg
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Project" | Type: "CE"
-		/// </summary>
-		public string ValCodproje { get; set; }
-
-		/// <summary>
-		/// Title: "Year" | Type: "CE"
-		/// </summary>
-		public string ValCodyear { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -80,9 +80,10 @@ namespace GenioMVC.ViewModels.Agreg
 
 		public string ValCodaggre { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Agreg_ViewModel() : base(null!) { }
@@ -118,6 +119,15 @@ namespace GenioMVC.ViewModels.Agreg
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Agreg model = new Models.Agreg(userContext) { Identifier = "FAGREG" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FAGREG");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -178,9 +188,9 @@ namespace GenioMVC.ViewModels.Agreg
 
 			try
 			{
-				ValValue = ViewModelConversion.ToNumeric(m.ValValue);
 				ValCodproje = ViewModelConversion.ToString(m.ValCodproje);
 				ValCodyear = ViewModelConversion.ToString(m.ValCodyear);
+				ValValue = ViewModelConversion.ToNumeric(m.ValValue);
 				ValCodaggre = ViewModelConversion.ToString(m.ValCodaggre);
 			}
 			catch (Exception)
@@ -190,6 +200,20 @@ namespace GenioMVC.ViewModels.Agreg
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Agreg m)
 		{
 			if (m == null)
@@ -200,20 +224,69 @@ namespace GenioMVC.ViewModels.Agreg
 
 			try
 			{
-				m.ValValue = ViewModelConversion.ToNumeric(ValValue);
+				m.ValCodaggre = ViewModelConversion.ToString(ValCodaggre);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
 				m.ValCodproje = ViewModelConversion.ToString(ValCodproje);
 				m.ValCodyear = ViewModelConversion.ToString(ValCodyear);
-				m.ValCodaggre = ViewModelConversion.ToString(ValCodaggre);
+				m.ValValue = ViewModelConversion.ToNumeric(ValValue);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Agreg) to Model (Agreg) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Agreg) to Model (Agreg) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "agreg.codaggre":
+						this.ValCodaggre = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Agreg) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Agreg)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Agreg.Find(id ?? Navigation.GetStrValue("agreg"), m_userContext, "FAGREG"); }
+			finally { Model ??= new Models.Agreg(m_userContext) { Identifier = "FAGREG" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -227,20 +300,13 @@ namespace GenioMVC.ViewModels.Agreg
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FAGREG";
@@ -250,6 +316,7 @@ namespace GenioMVC.ViewModels.Agreg
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -313,25 +380,19 @@ namespace GenioMVC.ViewModels.Agreg
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE AGREG]/
 		public override void Save()
 		{
 
-			try { Model = Models.Agreg.Find(Navigation.GetStrValue("agreg"), m_userContext, "FAGREG"); }
-			finally { if (Model == null) Model = new Models.Agreg(m_userContext) { Identifier = "FAGREG" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY AGREG]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Agreg.Find(Navigation.GetStrValue("agreg"), m_userContext, "FAGREG"); }
-			finally { if (Model == null) Model = new Models.Agreg(m_userContext) { Identifier = "FAGREG" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE AGREG]/
 
@@ -364,8 +425,8 @@ namespace GenioMVC.ViewModels.Agreg
 				object hValue = Navigation.GetValue("proje", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					agreg___projeprojectoConds.Equal(CSGenioAproje.FldCodproje, Navigation.GetValue("proje"));
-					this.ValCodproje = Navigation.GetStrValue("proje");
+					agreg___projeprojectoConds.Equal(CSGenioAproje.FldCodproje, hValue);
+					this.ValCodproje = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -382,8 +443,6 @@ namespace GenioMVC.ViewModels.Agreg
 					Navigation.CurrentLevel.SetEntry("RETURN_proje", null);
 				}
 				FillDependant_AgregTableProjeProjecto(lazyLoad);
-				//Check if foreignkey comes from history
-				TableProjeProjecto.FilledByHistory = Navigation.CheckFilledByHistory("proje");
 				return;
 			}
 
@@ -451,9 +510,6 @@ namespace GenioMVC.ViewModels.Agreg
 
 				TableProjeProjecto.List = new SelectList(TableProjeProjecto.Elements.ToSelectList(x => x.ValProjecto, x => x.ValCodproje,  x => x.ValCodproje == this.ValCodproje), "Value", "Text", this.ValCodproje);
 				FillDependant_AgregTableProjeProjecto();
-
-				//Check if foreignkey comes from history
-				TableProjeProjecto.FilledByHistory = Navigation.CheckFilledByHistory("proje");
 			}
 		}
 
@@ -559,8 +615,8 @@ namespace GenioMVC.ViewModels.Agreg
 				object hValue = Navigation.GetValue("year", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					agreg___year_year____Conds.Equal(CSGenioAyear.FldCodyear, Navigation.GetValue("year"));
-					this.ValCodyear = Navigation.GetStrValue("year");
+					agreg___year_year____Conds.Equal(CSGenioAyear.FldCodyear, hValue);
+					this.ValCodyear = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -577,8 +633,6 @@ namespace GenioMVC.ViewModels.Agreg
 					Navigation.CurrentLevel.SetEntry("RETURN_year", null);
 				}
 				FillDependant_AgregTableYearYear(lazyLoad);
-				//Check if foreignkey comes from history
-				TableYearYear.FilledByHistory = Navigation.CheckFilledByHistory("year");
 				return;
 			}
 
@@ -646,9 +700,6 @@ namespace GenioMVC.ViewModels.Agreg
 
 				TableYearYear.List = new SelectList(TableYearYear.Elements.ToSelectList(x => x.ValYear, x => x.ValCodyear,  x => x.ValCodyear == this.ValCodyear), "Value", "Text", this.ValCodyear);
 				FillDependant_AgregTableYearYear();
-
-				//Check if foreignkey comes from history
-				TableYearYear.FilledByHistory = Navigation.CheckFilledByHistory("year");
 			}
 		}
 
@@ -745,17 +796,19 @@ namespace GenioMVC.ViewModels.Agreg
 		{
 			return identifier switch
 			{
-				"agreg.value" => ViewModelConversion.ToNumeric(modelValue),
 				"agreg.codproje" => ViewModelConversion.ToString(modelValue),
 				"agreg.codyear" => ViewModelConversion.ToString(modelValue),
+				"agreg.value" => ViewModelConversion.ToNumeric(modelValue),
 				"agreg.codaggre" => ViewModelConversion.ToString(modelValue),
 				"proje.codproje" => ViewModelConversion.ToString(modelValue),
 				"proje.projecto" => ViewModelConversion.ToString(modelValue),
 				"year.codyear" => ViewModelConversion.ToString(modelValue),
 				"year.year" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

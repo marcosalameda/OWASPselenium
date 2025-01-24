@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -115,14 +115,11 @@
 										v-on="controls.ARTIG___WAREHWAREHDES.handlers"
 										:loading="controls.ARTIG___WAREHWAREHDES.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.ARTIG___WAREHWAREHDES.isVisible"
 											v-bind="controls.ARTIG___WAREHWAREHDES.props"
-											:model-value="model.ValCodwareh.value"
-											v-on="controls.ARTIG___WAREHWAREHDES.handlers"
-											@update:model-value="model.ValCodwareh.fnUpdateValue" />
+											v-on="controls.ARTIG___WAREHWAREHDES.handlers" />
 										<q-see-more-artig-warehwarehdes
 											v-if="controls.ARTIG___WAREHWAREHDES.seeMoreIsVisible"
 											v-bind="controls.ARTIG___WAREHWAREHDES.seeMoreParams"
@@ -155,8 +152,7 @@
 										v-on="controls.ARTIG___GITEMITEMGCOD.handlers"
 										:loading="controls.ARTIG___GITEMITEMGCOD.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ARTIG___GITEMITEMGCOD.props"
 											:model-value="model.GitemValItemgcod.value" />
@@ -171,14 +167,11 @@
 										v-on="controls.ARTIG___GITEMITEMDES_.handlers"
 										:loading="controls.ARTIG___GITEMITEMDES_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.ARTIG___GITEMITEMDES_.isVisible"
 											v-bind="controls.ARTIG___GITEMITEMDES_.props"
-											:model-value="model.ValCodgitem.value"
-											v-on="controls.ARTIG___GITEMITEMDES_.handlers"
-											@update:model-value="model.ValCodgitem.fnUpdateValue" />
+											v-on="controls.ARTIG___GITEMITEMDES_.handlers" />
 										<q-see-more-artig-gitemitemdes
 											v-if="controls.ARTIG___GITEMITEMDES_.seeMoreIsVisible"
 											v-bind="controls.ARTIG___GITEMITEMDES_.seeMoreParams"
@@ -211,12 +204,12 @@
 										v-on="controls.ARTIG___ITEM_ITEMCOD_.handlers"
 										:loading="controls.ARTIG___ITEM_ITEMCOD_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ARTIG___ITEM_ITEMCOD_.props"
 											:model-value="model.ValItemcod.value"
-											@update:model-value="model.ValItemcod.fnUpdateValue" />
+											@blur="onBlur(controls.ARTIG___ITEM_ITEMCOD_, model.ValItemcod.value)"
+											@change="model.ValItemcod.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -228,12 +221,12 @@
 										v-on="controls.ARTIG___ITEM_ITEMDES_.handlers"
 										:loading="controls.ARTIG___ITEM_ITEMDES_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ARTIG___ITEM_ITEMDES_.props"
 											:model-value="model.ValItemdes.value"
-											@update:model-value="model.ValItemdes.fnUpdateValue" />
+											@blur="onBlur(controls.ARTIG___ITEM_ITEMDES_, model.ValItemdes.value)"
+											@change="model.ValItemdes.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -245,15 +238,11 @@
 										v-on="controls.ARTIG___ITEM_VALID___.handlers"
 										:loading="controls.ARTIG___ITEM_VALID___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
 											<q-checkbox-input
 												v-if="controls.ARTIG___ITEM_VALID___.isVisible"
-												id="ARTIG___ITEM_VALID___"
-												size="mini"
-												:model-value="model.ValValid.value"
-												:readonly="controls.ARTIG___ITEM_VALID___.readonly"
+												v-bind="controls.ARTIG___ITEM_VALID___.props"
 												@update:model-value="model.ValValid.fnUpdateValue" />
 										</template>
 									</base-input-structure>
@@ -269,8 +258,7 @@
 										v-on="controls.ARTIG___ITEM_ITEMTYPE.handlers"
 										:loading="controls.ARTIG___ITEM_ITEMTYPE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-select
 											v-if="controls.ARTIG___ITEM_ITEMTYPE.isVisible"
 											v-bind="controls.ARTIG___ITEM_ITEMTYPE.props"
@@ -289,12 +277,10 @@
 										v-on="controls.ARTIG___ITEM_ENTRIES_.handlers"
 										:loading="controls.ARTIG___ITEM_ENTRIES_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.ARTIG___ITEM_ENTRIES_.isVisible"
-											v-bind="controls.ARTIG___ITEM_ENTRIES_"
-											:model-value="model.ValEntries.value"
+											v-bind="controls.ARTIG___ITEM_ENTRIES_.props"
 											@update:model-value="model.ValEntries.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -307,12 +293,10 @@
 										v-on="controls.ARTIG___ITEM_EXITS___.handlers"
 										:loading="controls.ARTIG___ITEM_EXITS___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.ARTIG___ITEM_EXITS___.isVisible"
-											v-bind="controls.ARTIG___ITEM_EXITS___"
-											:model-value="model.ValExits.value"
+											v-bind="controls.ARTIG___ITEM_EXITS___.props"
 											@update:model-value="model.ValExits.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -325,12 +309,10 @@
 										v-on="controls.ARTIG___ITEM_EXISTENC.handlers"
 										:loading="controls.ARTIG___ITEM_EXISTENC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.ARTIG___ITEM_EXISTENC.isVisible"
-											v-bind="controls.ARTIG___ITEM_EXISTENC"
-											:model-value="model.ValExistenc.value"
+											v-bind="controls.ARTIG___ITEM_EXISTENC.props"
 											@update:model-value="model.ValExistenc.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -343,8 +325,7 @@
 										v-on="controls.ARTIG___ITEM_DISPONIB.handlers"
 										:loading="controls.ARTIG___ITEM_DISPONIB.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-select
 											v-if="controls.ARTIG___ITEM_DISPONIB.isVisible"
 											v-bind="controls.ARTIG___ITEM_DISPONIB.props"
@@ -359,6 +340,7 @@
 									v-show="controls.ARTIG___PSEUDNOVOGR08.isVisible"
 									class="row-line-group">
 									<q-group-collapsible
+										id="ARTIG___PSEUDNOVOGR08"
 										v-bind="controls.ARTIG___PSEUDNOVOGR08"
 										v-on="controls.ARTIG___PSEUDNOVOGR08.handlers">
 										<!-- Start ARTIG___PSEUDNOVOGR08 -->
@@ -372,8 +354,7 @@
 													v-on="controls.ARTIG___ITEM_IMAGE___.handlers"
 													:loading="controls.ARTIG___ITEM_IMAGE___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn"
-													:help-style="layoutConfig.HelpStyle">
+													:suggestion-mode-on="suggestionModeOn">
 													<q-image
 														v-if="controls.ARTIG___ITEM_IMAGE___.isVisible"
 														v-bind="controls.ARTIG___ITEM_IMAGE___.props"
@@ -402,6 +383,7 @@
 							v-slot="{ onStateChanged }">
 							<!-- Start ARTIG___PSEUDNOVOGR05 -->
 							<q-group-collapsible
+								id="ARTIG___PSEUDNOVOGR03"
 								v-bind="controls.ARTIG___PSEUDNOVOGR03"
 								v-on="controls.ARTIG___PSEUDNOVOGR03.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -413,8 +395,7 @@
 										<q-table
 											v-show="controls.ARTIG___PSEUDCONTACOR.isVisible"
 											v-bind="controls.ARTIG___PSEUDCONTACOR"
-											v-on="controls.ARTIG___PSEUDCONTACOR.handlers">
-										</q-table>
+											v-on="controls.ARTIG___PSEUDCONTACOR.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.ARTIG___PSEUDCONTACOR"
 											v-on="controls.ARTIG___PSEUDCONTACOR.handlers" />
@@ -423,6 +404,7 @@
 								<!-- End ARTIG___PSEUDNOVOGR03 -->
 							</q-group-collapsible>
 							<q-group-collapsible
+								id="ARTIG___PSEUDNOVOGR04"
 								v-bind="controls.ARTIG___PSEUDNOVOGR04"
 								v-on="controls.ARTIG___PSEUDNOVOGR04.handlers"
 								@state-changed="(state, groupId) => onStateChanged(state, groupId)">
@@ -434,8 +416,7 @@
 										<q-table
 											v-show="controls.ARTIG___PSEUDLENTRADA.isVisible"
 											v-bind="controls.ARTIG___PSEUDLENTRADA"
-											v-on="controls.ARTIG___PSEUDLENTRADA.handlers">
-										</q-table>
+											v-on="controls.ARTIG___PSEUDLENTRADA.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.ARTIG___PSEUDLENTRADA"
 											v-on="controls.ARTIG___PSEUDLENTRADA.handlers" />
@@ -448,8 +429,7 @@
 										<q-table
 											v-show="controls.ARTIG___PSEUDLSAIDAS_.isVisible"
 											v-bind="controls.ARTIG___PSEUDLSAIDAS_"
-											v-on="controls.ARTIG___PSEUDLSAIDAS_.handlers">
-										</q-table>
+											v-on="controls.ARTIG___PSEUDLSAIDAS_.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.ARTIG___PSEUDLSAIDAS_"
 											v-on="controls.ARTIG___PSEUDLSAIDAS_.handlers" />
@@ -464,6 +444,7 @@
 						v-show="controls.ARTIG___PSEUDNOVOGR06.isVisible"
 						class="control-join-group">
 						<q-group-collapsible
+							id="ARTIG___PSEUDNOVOGR06"
 							v-bind="controls.ARTIG___PSEUDNOVOGR06"
 							v-on="controls.ARTIG___PSEUDNOVOGR06.handlers">
 							<!-- Start ARTIG___PSEUDNOVOGR06 -->
@@ -474,8 +455,7 @@
 									<q-table
 										v-show="controls.ARTIG___PSEUDCATEGORI.isVisible"
 										v-bind="controls.ARTIG___PSEUDCATEGORI"
-										v-on="controls.ARTIG___PSEUDCATEGORI.handlers">
-									</q-table>
+										v-on="controls.ARTIG___PSEUDCATEGORI.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.ARTIG___PSEUDCATEGORI"
 										v-on="controls.ARTIG___PSEUDCATEGORI.handlers" />
@@ -485,8 +465,7 @@
 										v-on="controls.ARTIG___PSEUDESCCATEG.handlers"
 										:loading="controls.ARTIG___PSEUDESCCATEG.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-check-list-extension
 											v-if="controls.ARTIG___PSEUDESCCATEG.isVisible"
 											id="ARTIG___PSEUDESCCATEG"
@@ -509,8 +488,7 @@
 									<q-table
 										v-show="controls.ARTIG___PSEUDCATEGOR_.isVisible"
 										v-bind="controls.ARTIG___PSEUDCATEGOR_"
-										v-on="controls.ARTIG___PSEUDCATEGOR_.handlers">
-									</q-table>
+										v-on="controls.ARTIG___PSEUDCATEGOR_.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.ARTIG___PSEUDCATEGOR_"
 										v-on="controls.ARTIG___PSEUDCATEGOR_.handlers" />
@@ -526,18 +504,14 @@
 										v-on="controls.ARTIG___ITEM_CATEGORY.handlers"
 										:loading="controls.ARTIG___ITEM_CATEGORY.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-textarea-input
 											v-if="controls.ARTIG___ITEM_CATEGORY.isVisible"
+											v-bind="controls.ARTIG___ITEM_CATEGORY.props"
 											id="ARTIG___ITEM_CATEGORY"
-											size="xlarge"
 											:model-value="model.ValCategory.value"
 											:rows="2"
 											:cols="50"
-											:is-required="controls.ARTIG___ITEM_CATEGORY.isRequired"
-											:readonly="controls.ARTIG___ITEM_CATEGORY.readonly"
-											:placeholder="controls.ARTIG___ITEM_CATEGORY.placeholder"
 											@update:model-value="model.ValCategory.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -556,14 +530,13 @@
 							v-on="controls.ARTIG___ITEM_DATE____.handlers"
 							:loading="controls.ARTIG___ITEM_DATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.ARTIG___ITEM_DATE____.isVisible"
-								v-bind="controls.ARTIG___ITEM_DATE____"
-								format="Date"
+								v-bind="controls.ARTIG___ITEM_DATE____.props"
 								:model-value="model.ValDate.value"
-								@update:model-value="model.ValDate.fnUpdateValue" />
+								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
+								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -650,15 +623,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'ARTIG',
-						location: 'form-ARTIG',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'ARTIG',
+					location: 'form-ARTIG',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -704,6 +675,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -776,8 +749,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -859,7 +833,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -913,21 +887,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -938,16 +897,12 @@
 						id: 'ARTIG___ITEM_ITEMCOD_',
 						name: 'ITEMCOD',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CODE49225),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR07',
 						maxLength: 15,
 						labelId: 'label_ARTIG___ITEM_ITEMCOD_',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -957,28 +912,10 @@
 						id: 'ARTIG___WAREHWAREHDES',
 						name: 'WAREHDES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.WAREHOUSE51864),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR02',
-						mustBeFilled: true,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodwareh',
-							dependencyEvent: 'fieldChange:item.codwareh'
-						},
-						dependentFields: () => {
-							return {
-								set 'wareh.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
-								set 'wareh.warehdes'(value) { vm.model.TableWarehWarehdes.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'ARMAZ',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -987,6 +924,19 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodwareh',
+							dependencyEvent: 'fieldChange:item.codwareh'
+						},
+						dependentFields: () => ({
+							set 'wareh.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
+							set 'wareh.warehdes'(value) { vm.model.TableWarehWarehdes.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'ARMAZ',
+						mustBeFilled: true,
+						controlLimits: [
+						],
 					}, this),
 					ARTIG___GITEMITEMGCOD: new fieldControlClass.StringControl({
 						modelField: 'GitemValItemgcod',
@@ -996,19 +946,14 @@
 						id: 'ARTIG___GITEMITEMGCOD',
 						name: 'ITEMGCOD',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.CODE49225),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR01',
 						maxLength: 15,
 						labelId: 'label_ARTIG___GITEMITEMGCOD',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					ARTIG___GITEMITEMDES_: new fieldControlClass.LookupControl({
 						modelField: 'TableGitemItemdes',
@@ -1016,29 +961,10 @@
 						id: 'ARTIG___GITEMITEMDES_',
 						name: 'ITEMDES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.DESIGNATION_35800),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodgitem',
-							dependencyEvent: 'fieldChange:item.codgitem'
-						},
-						dependentFields: () => {
-							return {
-								set 'gitem.codgitem'(value) { vm.model.ValCodgitem.updateValue(value) },
-								set 'gitem.itemdes'(value) { vm.model.TableGitemItemdes.updateValue(value) },
-								set 'gitem.itemgcod'(value) { vm.model.GitemValItemgcod.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'ARTGL',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -1047,17 +973,27 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodgitem',
+							dependencyEvent: 'fieldChange:item.codgitem'
+						},
+						dependentFields: () => ({
+							set 'gitem.codgitem'(value) { vm.model.ValCodgitem.updateValue(value) },
+							set 'gitem.itemdes'(value) { vm.model.TableGitemItemdes.updateValue(value) },
+							set 'gitem.itemgcod'(value) { vm.model.GitemValItemgcod.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'ARTGL',
+						controlLimits: [
+						],
 					}, this),
 					ARTIG___PSEUDNOVOGR02: new fieldControlClass.GroupControl({
 						id: 'ARTIG___PSEUDNOVOGR02',
 						name: 'NOVOGR02',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.WAREHOUSE51864),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
 						mustBeFilled: true,
@@ -1068,15 +1004,11 @@
 						id: 'ARTIG___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.GLOBAL_ITEM49586),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1086,10 +1018,7 @@
 						id: 'ARTIG___ITEM_ITEMDES_',
 						name: 'ITEMDES',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.ITEM40802),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR07',
@@ -1105,14 +1034,10 @@
 						id: 'ARTIG___ITEM_VALID___',
 						name: 'VALID',
 						size: 'mini',
-						hasLabel: true,
 						label: computed(() => this.Resources.IN_USE42606),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'ARTIG___PSEUDNOVOGR07',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -1122,61 +1047,49 @@
 						id: 'ARTIG___ITEM_ITEMTYPE',
 						name: 'ITEMTYPE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.TIPO55111),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR07',
 						maxLength: 1,
 						labelId: 'label_ARTIG___ITEM_ITEMTYPE',
 						arrayName: 'TipoArti',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
 					}, this),
 					ARTIG___ITEM_ENTRIES_: new fieldControlClass.NumberControl({
 						modelField: 'ValEntries',
 						valueChangeEvent: 'fieldChange:item.entries',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'ARTIG___ITEM_ENTRIES_',
 						name: 'ENTRIES',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.ENTRIES_07375),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR07',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					ARTIG___ITEM_EXITS___: new fieldControlClass.NumberControl({
 						modelField: 'ValExits',
 						valueChangeEvent: 'fieldChange:item.exits',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'ARTIG___ITEM_EXITS___',
 						name: 'EXITS',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.OUTPUT_10769),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR07',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					ARTIG___ITEM_IMAGE___: new fieldControlClass.ImageControl({
 						modelField: 'ValImage',
@@ -1184,17 +1097,14 @@
 						id: 'ARTIG___ITEM_IMAGE___',
 						name: 'IMAGE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.IMAGE65174),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR08',
 						container: 'ARTIG___PSEUDNOVOGR08',
 						height: 50,
 						width: 100,
-						mustBeFilled: false,
+						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.IMAGE65174)),
 						controlLimits: [
 						],
 					}, this),
@@ -1202,12 +1112,9 @@
 						id: 'ARTIG___PSEUDNOVOGR07',
 						name: 'NOVOGR07',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.ITEM40802),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
 						mustBeFilled: true,
@@ -1218,29 +1125,32 @@
 						id: 'ARTIG___PSEUDNOVOGR03',
 						name: 'NOVOGR03',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.SEQUENTIAL_MOVEMENTS40923),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-ARTIG___PSEUDNOVOGR03',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					ARTIG___PSEUDCONTACOR: new fieldControlClass.TableListControl({
 						id: 'ARTIG___PSEUDCONTACOR',
 						name: 'CONTACOR',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
+						helpControl: {
+							shortHelp: {
+								type: 'Subtitle',
+								text: computed(() => this.Resources._112319369),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1123_VERBOSE50467),
+							}
+						},
 						label: computed(() => this.Resources.MOVEMENTS47007),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR03',
@@ -1267,7 +1177,7 @@
 								field: 'DATE',
 								label: computed(() => this.Resources.INSTANT35907),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -1320,15 +1230,15 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
-							// eslint-disable-next-line no-unused-vars, eqeqeq
-							rowBgColor: (row) => qApi.iif(row.Fields.ValType=="Entrada",qApi.RGB(207,255,158),qApi.iif(row.Fields.ValType=="Saída",qApi.RGB(255,190,158),qApi.RGB(255,255,255))),
+							// eslint-disable-next-line no-unused-vars
+							rowBgColor: (row) => qApi.iif(row.Fields.ValType==="Entrada",qApi.RGB(207,255,158),qApi.iif(row.Fields.ValType==="Saída",qApi.RGB(255,190,158),qApi.RGB(255,255,255))),
 							generalCustomActions: [
 							],
 							groupActions: [
@@ -1341,17 +1251,12 @@
 							},
 							formsDefinition: {
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValNorder',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-CCORR', 'changed-INDOC', 'changed-ITEM'],
 						uuid: 'Artig_ValContacor',
@@ -1369,29 +1274,22 @@
 						id: 'ARTIG___PSEUDNOVOGR04',
 						name: 'NOVOGR04',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.MOVEMENTS_BY_TYPE14801),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-ARTIG___PSEUDNOVOGR04',
 						isInAccordion: true,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					ARTIG___PSEUDLENTRADA: new fieldControlClass.TableListControl({
 						id: 'ARTIG___PSEUDLENTRADA',
 						name: 'LENTRADA',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.ENTRIES32319),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR04',
@@ -1408,7 +1306,7 @@
 								field: 'DHENTRA',
 								label: computed(() => this.Resources.INSTANT_ENTRANCE27379),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -1421,6 +1319,7 @@
 								supportFormIsPopup: false,
 								params: {
 									type: 'form',
+									isRoute: true,
 									formName: 'DENTR',
 									mode: 'SHOW'
 								},
@@ -1438,7 +1337,6 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
-								isOrderingColumn: true,
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -1463,14 +1361,14 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
-							// eslint-disable-next-line no-unused-vars, eqeqeq
+							// eslint-disable-next-line no-unused-vars
 							rowTextColor: (row) => qApi.RGB(207,255,158),
 							crudActions: [
 								{
@@ -1571,6 +1469,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'LDENT',
@@ -1588,18 +1487,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: LDENT
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: 'ValLine',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValDhentra',
+								sortOrder: 'desc'
+							}
 						},
 						changeEvents: ['changed-WAREH', 'changed-LDENT', 'changed-ITEM', 'changed-INDOC', 'changed-WARE1', 'changed-PESSO', 'changed-CMPNY', 'changed-CNTRY'],
 						uuid: 'Artig_ValLentrada',
@@ -1616,11 +1509,8 @@
 					ARTIG___PSEUDLSAIDAS_: new fieldControlClass.TableListControl({
 						id: 'ARTIG___PSEUDLSAIDAS_',
 						name: 'LSAIDAS',
-						size: 'xxlarge',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.OUTPUT_10769),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR04',
@@ -1637,7 +1527,7 @@
 								field: 'EXITDT',
 								label: computed(() => this.Resources.EXIT_INSTANT27038),
 								scrollData: 16,
-								dateTimeType: 'DateTime',
+								dateTimeType: 'dateTime',
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -1650,6 +1540,7 @@
 								supportFormIsPopup: false,
 								params: {
 									type: 'form',
+									isRoute: true,
 									formName: 'DSAID',
 									mode: 'SHOW'
 								},
@@ -1667,7 +1558,6 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
-								isOrderingColumn: true,
 							}),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -1692,14 +1582,14 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
-							// eslint-disable-next-line no-unused-vars, eqeqeq
+							// eslint-disable-next-line no-unused-vars
 							rowTextColor: (row) => qApi.RGB(255,190,158),
 							crudActions: [
 								{
@@ -1800,6 +1690,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									action: vm.openFormAction,
 									type: 'form',
 									formName: 'LDSAI',
@@ -1817,18 +1708,12 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: LDSAI
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: 'ValLine',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValExitdt',
+								sortOrder: 'desc'
+							}
 						},
 						changeEvents: ['changed-ITEM', 'changed-OUTPU', 'changed-OUTPT', 'changed-OUDOC', 'changed-WAREH', 'changed-WARE1'],
 						uuid: 'Artig_ValLsaidas',
@@ -1846,29 +1731,19 @@
 						id: 'ARTIG___PSEUDNOVOGR05',
 						name: 'NOVOGR05',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.ACCORDION01950),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					ARTIG___PSEUDCATEGORI: new fieldControlClass.MultipleValuesControl({
-						modelField: 'List_Categori_SelectedIds',
-						valueChangeEvent: 'fieldChange:pseud.List_Categori_SelectedIds',
-						modelFieldOptions: 'List_Categori',
 						id: 'ARTIG___PSEUDCATEGORI',
 						name: 'CATEGORI',
-						size: 'large',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.CATEGORIZATION17554),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR06',
@@ -1909,6 +1784,7 @@
 							tableTitle: computed(() => this.Resources.CATEGORIZATION17554),
 							showAlternatePagination: true,
 							rowClickActionInternal: 'selectMultiple',
+							showRowsSelectedTotalizer: true,
 							permissions: {
 							},
 							generalCustomActions: [
@@ -1921,6 +1797,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									canExecuteAction: vm.applyChanges,
 									action: vm.openFormAction,
 									type: 'form',
@@ -1935,22 +1812,19 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: CATAR
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'Sbcat.ValSubcateg',
 							defaultSearchColumnNameOriginal: 'Sbcat.ValSubcateg',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValTpcatego',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-CATTP', 'changed-SBCAT', 'changed-ITEMC', 'changed-ITEM'],
 						uuid: 'Artig_ValCategori',
 						allSelectedRows: 'false',
+						modelField: 'List_Categori_SelectedIds',
+						valueChangeEvent: 'fieldChange:pseud.List_Categori_SelectedIds',
+						modelFieldOptions: 'List_Categori',
 						controlLimits: [
 						],
 					}, this),
@@ -1958,29 +1832,19 @@
 						id: 'ARTIG___PSEUDESCCATEG',
 						name: 'ESCCATEG',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.CHOSEN_CATEGORIES47546),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR06',
 						container: 'ARTIG___PSEUDNOVOGR06',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					ARTIG___PSEUDCATEGOR_: new fieldControlClass.MultipleValuesControl({
-						modelField: 'List_Categor_SelectedIds',
-						valueChangeEvent: 'fieldChange:pseud.List_Categor_SelectedIds',
-						modelFieldOptions: 'List_Categor',
 						id: 'ARTIG___PSEUDCATEGOR_',
 						name: 'CATEGOR',
-						size: 'large',
-						hasLabel: true,
+						size: '',
 						label: computed(() => this.Resources.FILTERED_CHECKLIST06261),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR06',
@@ -2021,6 +1885,7 @@
 							tableTitle: computed(() => this.Resources.FILTERED_CHECKLIST06261),
 							showAlternatePagination: true,
 							rowClickActionInternal: 'selectMultiple',
+							showRowsSelectedTotalizer: true,
 							permissions: {
 							},
 							generalCustomActions: [
@@ -2033,6 +1898,7 @@
 								title: '',
 								isInReadOnly: true,
 								params: {
+									isRoute: true,
 									canExecuteAction: vm.applyChanges,
 									action: vm.openFormAction,
 									type: 'form',
@@ -2047,22 +1913,19 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: CATAR
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'Sbcat.ValSubcateg',
 							defaultSearchColumnNameOriginal: 'Sbcat.ValSubcateg',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValTpcatego',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-CATTP', 'changed-SBCAT', 'changed-ITEMC', 'changed-ITEM'],
 						uuid: 'Artig_ValCategor',
 						allSelectedRows: 'false',
+						modelField: 'List_Categor_SelectedIds',
+						valueChangeEvent: 'fieldChange:pseud.List_Categor_SelectedIds',
+						modelFieldOptions: 'List_Categor',
 						controlLimits: [
 							{
 								identifier: ['id', 'item'],
@@ -2078,59 +1941,43 @@
 						id: 'ARTIG___ITEM_CATEGORY',
 						name: 'CATEGORY',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.CATEGORIZATION17554),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR06',
 						container: 'ARTIG___PSEUDNOVOGR06',
 						isFormulaBlocked: true,
-						maxLength: 85,
-						labelId: 'label_ARTIG___ITEM_CATEGORY',
-						mustBeFilled: false,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					ARTIG___PSEUDNOVOGR06: new fieldControlClass.GroupControl({
 						id: 'ARTIG___PSEUDNOVOGR06',
 						name: 'NOVOGR06',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.CATEGORIZATION17554),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-ARTIG___PSEUDNOVOGR06',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					ARTIG___ITEM_EXISTENC: new fieldControlClass.NumberControl({
 						modelField: 'ValExistenc',
 						valueChangeEvent: 'fieldChange:item.existenc',
-						maxIntegers: 10,
-						maxDecimals: 0,
 						id: 'ARTIG___ITEM_EXISTENC',
 						name: 'EXISTENC',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.EXISTENCE30081),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR07',
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						maxIntegers: 10,
+						maxDecimals: 0,
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					ARTIG___ITEM_DISPONIB: new fieldControlClass.ArrayStringControl({
 						modelField: 'ValDisponib',
@@ -2138,10 +1985,7 @@
 						id: 'ARTIG___ITEM_DISPONIB',
 						name: 'DISPONIB',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.AVAILABILITY56489),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR07',
@@ -2149,44 +1993,35 @@
 						maxLength: 1,
 						labelId: 'label_ARTIG___ITEM_DISPONIB',
 						arrayName: 'dsiponib',
-						mustBeFilled: false,
+						helpShortItem: '',
+						helpDetailedItem: '',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					ARTIG___PSEUDNOVOGR08: new fieldControlClass.GroupControl({
 						id: 'ARTIG___PSEUDNOVOGR08',
 						name: 'NOVOGR08',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.IMAGE65174),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR07',
 						isCollapsible: true,
 						anchored: false,
 						openingEvent: 'opened-ARTIG___PSEUDNOVOGR08',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
 					ARTIG___ITEM_DATE____: new fieldControlClass.DateControl({
 						modelField: 'ValDate',
 						valueChangeEvent: 'fieldChange:item.date',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'ARTIG___ITEM_DATE____',
 						name: 'DATE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.DATE18475),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -2271,7 +2106,7 @@
 						/** The foreign key to the WAREH table */
 						get wareh() { return vm.model.ValCodwareh },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -2367,6 +2202,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2406,6 +2249,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -2532,6 +2383,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR ARTIG]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -2547,20 +2414,26 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS ARTIG]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {
 			'controls.ARTIG___PSEUDCATEGORI.rowsSelected': {
 				handler()
 				{
-					this.model.List_Categori_SelectedIds.value = this.rowKeyHashTableToArray(this.controls.ARTIG___PSEUDCATEGORI.rowsSelected)
+					const value = this.rowKeyHashTableToArray(this.controls.ARTIG___PSEUDCATEGORI.rowsSelected)
+					this.model.List_Categori_SelectedIds.updateValue(value)
 				},
 				deep: true
 			},
 			'controls.ARTIG___PSEUDCATEGOR_.rowsSelected': {
 				handler()
 				{
-					this.model.List_Categor_SelectedIds.value = this.rowKeyHashTableToArray(this.controls.ARTIG___PSEUDCATEGOR_.rowsSelected)
+					const value = this.rowKeyHashTableToArray(this.controls.ARTIG___PSEUDCATEGOR_.rowsSelected)
+					this.model.List_Categor_SelectedIds.updateValue(value)
 				},
 				deep: true
 			},

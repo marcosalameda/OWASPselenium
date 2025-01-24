@@ -1,178 +1,69 @@
 ﻿<template>
 	<teleport :to="`#q-modal-submit-file-${controlId}-body`">
-		<div class="content">
-			<div class="form-flow">
-				<div class="row no-gutters">
-					<div class="col-12">
-						<q-row-container>
-							<label
-								class="flow-label"
-								:for="`file-submit-${controlId}`">
-								{{ texts.submitHeaderLabel }}
-							</label>
-						</q-row-container>
+		<q-row-container>
+			<q-input-group :label="texts.submitHeaderLabel">
+				<q-text-field
+					:model-value="submittedFileName"
+					readonly
+					size="large"
+					:class="fileInputClass"
+					@click="handleFileUpload" />
 
-						<q-row-container>
-							<div class="control-join-group">
-								<q-input-group>
-									<q-text-field
-										:model-value="submittedFileName"
-										readonly
-										:placeholder="texts.attachDocumentPlaceHolder"
-										@click.stop.prevent="handleFileUpload" />
-									<template #append>
-										<q-button
-											b-style="secondary"
-											:label="texts.chooseFileLabel"
-											:title="texts.chooseFileLabel"
-											@click="handleFileUpload">
-											<q-icon icon="choose-file" />
-										</q-button>
-									</template>
-								</q-input-group>
-								<input
-									:id="`doc-file-${controlId}`"
-									class="d-none"
-									ref="fileInput"
-									name="doc-file"
-									type="file"
-									:aria-labelledby="labelId"
-									:accept="extensions"
-									@change="attachFileVersion" />
-							</div>
-						</q-row-container>
-					</div>
-				</div>
+				<template #append>
+					<q-button
+						b-style="secondary"
+						:label="texts.chooseFileLabel"
+						:title="texts.chooseFileLabel"
+						:disabled="versionSubmitMode === versionSubmitModes.unlock"
+						@click="handleFileUpload">
+						<q-icon icon="choose-file" />
+					</q-button>
+				</template>
+			</q-input-group>
 
-				<hr />
+			<input
+				v-if="versionSubmitMode !== versionSubmitModes.unlock"
+				:id="`q-document-version-${controlId}`"
+				class="d-none"
+				ref="fileInput"
+				name="doc-file"
+				type="file"
+				:aria-labelledby="labelId"
+				:accept="extensions"
+				@change="attachFileVersion" />
+		</q-row-container>
 
-				<!-- Unlock radio option -->
-				<div class="row no-gutters">
-					<div class="col-12">
-						<div class="row-large-control">
-							<div class="row-line-group">
-								<label
-									class="i-radio version-option"
-									:for="`unlock-${controlId}`">
-									{{ texts.unlockHeaderLabel }}
+		<hr />
 
-									<input
-										:id="`unlock-${controlId}`"
-										class="i-radio"
-										type="radio"
-										v-model="versionSubmitMode"
-										:value="versionSubmitModes.unlock"
-										:name="`unlock-${controlId}`" />
+		<!-- Unlock radio option -->
+		<q-radio-group
+			id="`q-document-submit-options-${controlId}`"
+			v-model="versionSubmitMode"
+			:options-list="submitModeOptions" />
 
-									<span class="i-radio__field"></span>
-								</label>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Submit radio option -->
-				<div class="row no-gutters">
-					<div class="col-12">
-						<div class="row-large-control">
-							<div class="row-line-group">
-								<label
-									class="i-radio version-option"
-									:for="`submit-${controlId}`">
-									{{ texts.submitFilesHeaderLabel }}
-
-									<input
-										:id="`submit-${controlId}`"
-										class="i-radio"
-										type="radio"
-										v-model="versionSubmitMode"
-										:value="versionSubmitModes.submit"
-										:name="`submit-${controlId}`" />
-
-									<span class="i-radio__field"></span>
-								</label>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="row no-gutters">
-					<div class="col-11 offset-1">
-						<div class="version-type-options">
-							<!-- Major version input -->
-							<div class="version-option">
-								<div class="version-option-content">
-									<label
-										:class="[
-											{ 'i-radio--disabled': versionSubmitMode === versionSubmitModes.unlock },
-											'i-radio',
-											'i-radio__label',
-											'i-radio--inline'
-										]"
-										:for="`major-version-check-${controlId}`">
-										{{ texts.majorVersionLabel }}
-
-										<input
-											:id="`major-version-check-${controlId}`"
-											class="i-radio"
-											type="radio"
-											v-model="versionType"
-											:value="versionTypes.major"
-											:disabled="versionSubmitMode === versionSubmitModes.unlock"
-											:name="`major-version-check-${controlId}`" />
-
-										<span class="i-radio__field"></span>
-									</label>
-
-									<q-text-field 
-										:model-value="majorVersionValue"
-										size="small"
-										:readonly="versionSubmitMode === versionSubmitModes.unlock"
-										@update:model-value="setMajorVersion" />
-								</div>
-							</div>
-
-							<!-- Minor version input -->
-							<div class="version-option">
-								<div class="version-option-content">
-									<label
-										:class="[
-											{ 'i-radio--disabled': versionSubmitMode === versionSubmitModes.unlock },
-											'i-radio',
-											'i-radio__label',
-											'i-radio--inline'
-										]"
-										:for="`minor-version-check-${controlId}`">
-										{{ texts.minorVersionLabel }}
-
-										<input
-											:id="`minor-version-check-${controlId}`"
-											class="i-radio"
-											type="radio"
-											v-model="versionType"
-											:value="versionTypes.minor"
-											:disabled="versionSubmitMode === versionSubmitModes.unlock"
-											:name="`minor-version-check-${controlId}`" />
-
-										<span class="i-radio__field"></span>
-									</label>
-
-									<q-text-field
-										:model-value="minorVersionValue"
-										size="small"
-										:readonly="versionSubmitMode === versionSubmitModes.unlock"
-										@update:model-value="setMinorVersion" />
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+		<div
+			v-if="majorVersionValue !== minorVersionValue"
+			class="q-document__version-options">
+			<q-radio-group
+				:id="`q-document-version-options-${controlId}`"
+				v-model="versionType"
+				:options-list="versionOptions"
+				:disabled="versionSubmitMode === versionSubmitModes.unlock">
+				<template
+					v-for="version in versionNumbers"
+					:key="version.value"
+					#[`${version.key}.append`]>
+					<q-text-field
+						size="small"
+						readonly
+						:model-value="version.value" />
+				</template>
+			</q-radio-group>
 		</div>
 	</teleport>
 
 	<teleport :to="`#q-modal-submit-file-${controlId}-footer`">
-		<div class="actions float-right">
+		<div class="actions">
 			<q-button
 				b-style="primary"
 				:label="texts.submitLabel"
@@ -198,12 +89,10 @@
 	export default {
 		name: 'QDocumentSubmit',
 
-		emits: [
-			'set-minor-version',
-			'set-major-version',
-			'submit-file',
-			'hide-popup'
-		],
+		emits: {
+			'hide-popup': () => true,
+			'submit-file': (payload) => typeof payload === 'object'
+		},
 
 		inheritAttrs: false,
 
@@ -232,14 +121,6 @@
 			extensions: {
 				type: Array,
 				default: () => []
-			},
-
-			/**
-			 * The current version of the document.
-			 */
-			currentVersion: {
-				type: String,
-				default: '1'
 			},
 
 			/**
@@ -293,39 +174,81 @@
 
 		computed: {
 			/**
+			 * The class to apply to the file input.
+			 */
+			fileInputClass()
+			{
+				const isEditable = this.versionSubmitMode !== this.versionSubmitModes.unlock
+				return `q-document__field${isEditable ? '' : '-empty'}`
+			},
+
+			/**
 			 * The name of the newly submitted version of the document.
 			 */
 			submittedFileName()
 			{
 				return this.submittedFileData ? this.submittedFileData.name : ''
+			},
+
+			/**
+			 * A list with the possible submit mode options.
+			 */
+			submitModeOptions()
+			{
+				return [
+					{
+						key: this.versionSubmitModes.unlock,
+						value: this.texts.unlockHeaderLabel
+					},
+					{
+						key: this.versionSubmitModes.submit,
+						value: this.texts.submitFilesHeaderLabel
+					}
+				]
+			},
+
+			/**
+			 * A list with the possible version options.
+			 */
+			versionOptions()
+			{
+				return [
+					{
+						key: this.versionTypes.major,
+						value: this.texts.majorVersionLabel
+					},
+					{
+						key: this.versionTypes.minor,
+						value: this.texts.minorVersionLabel
+					}
+				]
+			},
+
+			/**
+			 * A list with the possible version numbers.
+			 */
+			versionNumbers()
+			{
+				return [
+					{
+						key: this.versionTypes.major,
+						value: this.majorVersionValue
+					},
+					{
+						key: this.versionTypes.minor,
+						value: this.minorVersionValue
+					}
+				]
 			}
 		},
 
 		methods: {
 			/**
-			 * Emits the event to set the minor version.
-			 * @param {object} newVal The new value of the minor version
-			 */
-			setMinorVersion(newVal)
-			{
-				this.$emit('set-minor-version', newVal)
-			},
-
-			/**
-			 * Emits the event to set the major version.
-			 * @param {object} newVal The new value of the major version
-			 */
-			setMajorVersion(newVal)
-			{
-				this.$emit('set-major-version', newVal)
-			},
-
-			/**
 			 * Triggers the click event on the file input.
 			 */
 			handleFileUpload()
 			{
-				this.$refs.fileInput.click()
+				this.$refs.fileInput?.click()
 			},
 
 			/**
@@ -346,7 +269,7 @@
 			 */
 			submitFileVersion()
 			{
-				var version = this.minorVersionValue
+				let version = this.minorVersionValue
 				if (this.versionType === this.versionTypes.major)
 					version = this.majorVersionValue
 
@@ -364,6 +287,14 @@
 					this.$emit('submit-file', { isNewVersion: false, version })
 
 				this.submittedFileData = null
+			}
+		},
+
+		watch: {
+			versionSubmitMode(val)
+			{
+				if (val === this.versionSubmitModes.unlock)
+					this.submittedFileData = null
 			}
 		}
 	}

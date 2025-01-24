@@ -117,6 +117,17 @@ export default class ViewModel extends ViewModelBase
 			description: computed(() => this.Resources.AMOUNT46885),
 		}).cloneFrom(values?.ValQuantida))
 		watch(() => this.ValQuantida.value, (newValue, oldValue) => this.onUpdate('lnhpd.quantida', this.ValQuantida, newValue, oldValue))
+
+		this.ValQuantdec = reactive(new modelFieldType.Number({
+			id: 'ValQuantdec',
+			originId: 'ValQuantdec',
+			area: 'LNHPD',
+			field: 'QUANTDEC',
+			maxDigits: 7,
+			decimalDigits: 2,
+			description: computed(() => this.Resources.AMOUNT46885),
+		}).cloneFrom(values?.ValQuantdec))
+		watch(() => this.ValQuantdec.value, (newValue, oldValue) => this.onUpdate('lnhpd.quantdec', this.ValQuantdec, newValue, oldValue))
 	}
 
 	/**
@@ -131,5 +142,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodlnhpd'
 
 	get QPrimaryKey() { return this.ValCodlnhpd.value }
-	set QPrimaryKey(value) { this.ValCodlnhpd.value = value }
+	set QPrimaryKey(value) { this.ValCodlnhpd.updateValue(value) }
 }

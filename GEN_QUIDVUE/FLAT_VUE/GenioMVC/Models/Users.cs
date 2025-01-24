@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,17 +41,17 @@ namespace GenioMVC.Models
 		private Psw _psw;
 		[DisplayName("Psw")]
 		[ShouldSerialize("Psw")]
-		public virtual Psw Psw { 
-			get { 
+		public virtual Psw Psw {
+			get {
 				if (!this.isEmptyModel && (_psw == null || (!string.IsNullOrEmpty(ValCodpsw) && (_psw.isEmptyModel || _psw.klass.QPrimaryKey != ValCodpsw))))
 					_psw = Models.Psw.Find(ValCodpsw, m_userContext, Identifier, _fieldsToSerialize);
 				if (_psw == null)
 					_psw = new Models.Psw(m_userContext, true, _fieldsToSerialize);
 				return _psw;
 			}
-			set { _psw = value; } 
+			set { _psw = value; }
 		}
-		
+
 
 		[DisplayName(">>PERSON")]
 		/// <summary>Field : ">>PERSON" Tipo: "CE" Formula:  ""</summary>
@@ -60,17 +60,17 @@ namespace GenioMVC.Models
 		private Perso _perso;
 		[DisplayName("Perso")]
 		[ShouldSerialize("Perso")]
-		public virtual Perso Perso { 
-			get { 
+		public virtual Perso Perso {
+			get {
 				if (!this.isEmptyModel && (_perso == null || (!string.IsNullOrEmpty(ValCodperso) && (_perso.isEmptyModel || _perso.klass.QPrimaryKey != ValCodperso))))
 					_perso = Models.Perso.Find(ValCodperso, m_userContext, Identifier, _fieldsToSerialize);
 				if (_perso == null)
 					_perso = new Models.Perso(m_userContext, true, _fieldsToSerialize);
 				return _perso;
 			}
-			set { _perso = value; } 
+			set { _perso = value; }
 		}
-		
+
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Users.ValZzstate")]
@@ -80,19 +80,19 @@ namespace GenioMVC.Models
 		public Users(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAusers(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Users(UserContext userContext, CSGenioAusers val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAusers csgenioa)
@@ -119,7 +119,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

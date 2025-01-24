@@ -27,18 +27,20 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
 		[ShouldSerialize("Ftgri.ValCodphoto")]
 		public string ValCodphoto { get { return klass.ValCodphoto; } set { klass.ValCodphoto = value; } }
 
-		[DisplayName("Fotos")]
+		[DisplayName("Photos")]
 		/// <summary>Field : "Fotos" Tipo: "IJ" Formula:  ""</summary>
 		[ShouldSerialize("Ftgri.ValFoto")]
 		[ImageThumbnailJsonConverter(75, 75)]
-		public byte[] ValFoto { get { return klass.ValFoto; } set { klass.ValFoto = value; } }
+		public ImageModel ValFoto { get { return new ImageModel(klass.ValFoto) { Ticket = ValFotoQTicket }; } set { klass.ValFoto = value; } }
+		[JsonIgnore]
+		public string ValFotoQTicket = null;
 
 		[DisplayName("Legenda")]
 		/// <summary>Field : "Legenda" Tipo: "C" Formula:  ""</summary>
@@ -53,19 +55,19 @@ namespace GenioMVC.Models
 		public Ftgri(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAftgri(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Ftgri(UserContext userContext, CSGenioAftgri val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAftgri csgenioa)
@@ -82,7 +84,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

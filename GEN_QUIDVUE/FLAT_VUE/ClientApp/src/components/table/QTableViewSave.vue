@@ -3,7 +3,11 @@
 		v-if="(showPopup || showInline) && showHeader"
 		:to="`#q-modal-${modalId}-header`"
 		:key="domKey">
-		<h2 class="c-modal__header-title">{{ texts.saveViewText }}</h2>
+		<h2
+			class="c-modal__header-title"
+			:id="`q-modal-${modalId}_title`">
+			{{ texts.saveViewText }}
+		</h2>
 	</teleport>
 
 	<teleport
@@ -170,7 +174,7 @@
 					this.fnHidePopup()
 				}
 
-				this.$emit('set-property', 'confirmChanges', false)
+				this.$emit('set-property', ['confirmChanges'], false)
 
 				// Used when confirming changes when navigating to another page.
 				if (this.signal.routeTo !== undefined && this.signal.routeTo !== null) this.$router.push(this.signal.routeTo)

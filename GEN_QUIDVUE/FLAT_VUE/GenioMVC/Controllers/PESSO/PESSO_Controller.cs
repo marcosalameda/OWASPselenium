@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,12 +19,10 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Pesso;
 using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Primitives;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER PESSO]/
 
@@ -56,18 +58,9 @@ namespace GenioMVC.Controllers
 			dynamic result = null;
 			Models.Pesso row = null;
 
-			try
-			{
-				row = Models.Pesso.Find(Navigation.GetStrValue("pesso"), UserContext.Current);
-			}
-			catch (Exception)
-			{
-				CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model pesso");
-			}
-
 			if (row == null)
 			{
-				row = new Models.Pesso(UserContext.Current);
+				row = new Models.Pesso(UserContext.Current, isEmpty: true);
 				row.klass.QPrimaryKey = Navigation.GetStrValue("pesso");
 			}
 
@@ -82,8 +75,8 @@ namespace GenioMVC.Controllers
 				{
 					case "EXTERNO_CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Externo_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Externo_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Externo_cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
@@ -91,8 +84,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO___CATEGCATEGORY":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Pesso___categcategory(qs);
 							result = model.TableCategCategory;
@@ -100,8 +93,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO___PAIS1COUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Pesso___pais1country_(qs);
 							result = model.TablePais1Country;
@@ -109,8 +102,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO___CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Pesso___cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
@@ -118,8 +111,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO___REGI1REGIAO__":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Pesso___regi1regiao__(qs);
 							result = model.TableRegi1Regiao;
@@ -127,8 +120,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO1__CATEGCATEGORY":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso1_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Pesso1_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Pesso1__categcategory(qs);
 							result = model.TableCategCategory;
@@ -136,8 +129,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO1__CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso1_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Pesso1_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Pesso1__cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
@@ -145,8 +138,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO1__REGI1REGIAO__":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso1_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Pesso1_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Pesso1__regi1regiao__(qs);
 							result = model.TableRegi1Regiao;
@@ -154,8 +147,8 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSOSEPCATEGCATEGORY":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pessosep_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Pessosep_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Pessosepcategcategory(qs);
 							result = model.TableCategCategory;
@@ -163,14 +156,15 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSOS00CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pessosep_ViewModel(UserContext.Current) { editable = false };
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Pessosep_ViewModel(UserContext.Current) { editable = false };							
 							model.MapFromModel(row);
 							model.Load_Pessos00cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
 						}
 						break;
-					default: break;
+					default:
+						break;
 				}
 			}
 			catch (Exception)
@@ -243,11 +237,12 @@ namespace GenioMVC.Controllers
 					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
 						values.TryUpdate(field.Key, "", DateTime.MinValue);
 
+				// TODO: Sanitize HTML content
 				return JsonOK(values);
 			}
 			catch (Exception)
 			{
-				return JsonERROR("On Get Dependants - " + Identifier );
+				return JsonERROR("On Get Dependants - " + Identifier);
 			}
 			finally
 			{
@@ -256,64 +251,75 @@ namespace GenioMVC.Controllers
 		}
 
 
-
 		/// <summary>
 		/// Recalculate formulas of the "Externo" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Externo([FromBody]Externo_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Externo([FromBody]Externo_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "pesso",
+			return GenericRecalculateFormulas(formData, "pesso",
 				(primaryKey) => Models.Pesso.Find(primaryKey, UserContext.Current, "FEXTERNO"),
-				(model) => form_data.MapToModel(model as Models.Pesso)
+				(model) => formData.MapToModel(model as Models.Pesso)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Pesso" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Pesso([FromBody]Pesso_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Pesso([FromBody]Pesso_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "pesso",
+			return GenericRecalculateFormulas(formData, "pesso",
 				(primaryKey) => Models.Pesso.Find(primaryKey, UserContext.Current, "FPESSO"),
-				(model) => form_data.MapToModel(model as Models.Pesso)
+				(model) => formData.MapToModel(model as Models.Pesso)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Pesso1" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Pesso1([FromBody]Pesso1_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Pesso1([FromBody]Pesso1_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "pesso",
+			return GenericRecalculateFormulas(formData, "pesso",
 				(primaryKey) => Models.Pesso.Find(primaryKey, UserContext.Current, "FPESSO1"),
-				(model) => form_data.MapToModel(model as Models.Pesso)
+				(model) => formData.MapToModel(model as Models.Pesso)
+			);
+		}
+
+		/// <summary>
+		/// Recalculate formulas of the "Pessohis" form. (++, CT, SR, CL and U1)
+		/// </summary>
+		/// <param name="formData">Current form data</param>
+		/// <returns></returns>
+		[HttpPost]
+		public JsonResult RecalculateFormulas_Pessohis([FromBody]Pessohis_ViewModel formData)
+		{
+			return GenericRecalculateFormulas(formData, "pesso",
+				(primaryKey) => Models.Pesso.Find(primaryKey, UserContext.Current, "FPESSOHIS"),
+				(model) => formData.MapToModel(model as Models.Pesso)
 			);
 		}
 
 		/// <summary>
 		/// Recalculate formulas of the "Pessosep" form. (++, CT, SR, CL and U1)
 		/// </summary>
-		/// <param name="form_data">Current form data</param>
+		/// <param name="formData">Current form data</param>
 		/// <returns></returns>
 		[HttpPost]
-		public JsonResult RecalculateFormulas_Pessosep([FromBody]Pessosep_ViewModel form_data)
+		public JsonResult RecalculateFormulas_Pessosep([FromBody]Pessosep_ViewModel formData)
 		{
-			return GenericRecalculateFormulas(form_data, "pesso",
+			return GenericRecalculateFormulas(formData, "pesso",
 				(primaryKey) => Models.Pesso.Find(primaryKey, UserContext.Current, "FPESSOSEP"),
-				(model) => form_data.MapToModel(model as Models.Pesso)
+				(model) => formData.MapToModel(model as Models.Pesso)
 			);
 		}
-
-
 
 		/// <summary>
 		/// Get "See more..." tree structure
@@ -321,7 +327,7 @@ namespace GenioMVC.Controllers
 		/// <returns></returns>
 		public JsonResult GetTreeSeeMore([FromBody]RequestLookupModel requestModel)
 		{
-			var Identifier = requestModel.Id;
+			var Identifier = requestModel.Identifier;
 			var queryParams = requestModel.QueryParams;
 
 			try

@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,23 +41,23 @@ namespace GenioMVC.Models
 		private Dispa _dispa;
 		[DisplayName("Dispa")]
 		[ShouldSerialize("Dispa")]
-		public virtual Dispa Dispa { 
-			get { 
+		public virtual Dispa Dispa {
+			get {
 				if (!this.isEmptyModel && (_dispa == null || (!string.IsNullOrEmpty(ValCoddispa) && (_dispa.isEmptyModel || _dispa.klass.QPrimaryKey != ValCoddispa))))
 					_dispa = Models.Dispa.Find(ValCoddispa, m_userContext, Identifier, _fieldsToSerialize);
 				if (_dispa == null)
 					_dispa = new Models.Dispa(m_userContext, true, _fieldsToSerialize);
 				return _dispa;
 			}
-			set { _dispa = value; } 
+			set { _dispa = value; }
 		}
-		
+
 
 		[DisplayName("Line")]
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dilin.ValLinenumb")]
 		[NumericAttribute(0)]
-		public decimal? ValLinenumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLinenumb, 0)); } set { klass.ValLinenumb = Convert.ToDouble(value); } }
+		public decimal? ValLinenumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLinenumb, 0)); } set { klass.ValLinenumb = Convert.ToDecimal(value); } }
 
 		[DisplayName(">>PRODUCT")]
 		/// <summary>Field : ">>PRODUCT" Tipo: "CE" Formula:  ""</summary>
@@ -66,35 +66,35 @@ namespace GenioMVC.Models
 		private Produ _produ;
 		[DisplayName("Produ")]
 		[ShouldSerialize("Produ")]
-		public virtual Produ Produ { 
-			get { 
+		public virtual Produ Produ {
+			get {
 				if (!this.isEmptyModel && (_produ == null || (!string.IsNullOrEmpty(ValCodprodu) && (_produ.isEmptyModel || _produ.klass.QPrimaryKey != ValCodprodu))))
 					_produ = Models.Produ.Find(ValCodprodu, m_userContext, Identifier, _fieldsToSerialize);
 				if (_produ == null)
 					_produ = new Models.Produ(m_userContext, true, _fieldsToSerialize);
 				return _produ;
 			}
-			set { _produ = value; } 
+			set { _produ = value; }
 		}
-		
+
 
 		[DisplayName("Ordered")]
 		/// <summary>Field : "Ordered" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dilin.ValOrdered")]
 		[NumericAttribute(0)]
-		public decimal? ValOrdered { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrdered, 0)); } set { klass.ValOrdered = Convert.ToDouble(value); } }
+		public decimal? ValOrdered { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrdered, 0)); } set { klass.ValOrdered = Convert.ToDecimal(value); } }
 
 		[DisplayName("Delivered")]
 		/// <summary>Field : "Delivered" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dilin.ValDelivere")]
 		[NumericAttribute(0)]
-		public decimal? ValDelivere { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDelivere, 0)); } set { klass.ValDelivere = Convert.ToDouble(value); } }
+		public decimal? ValDelivere { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDelivere, 0)); } set { klass.ValDelivere = Convert.ToDecimal(value); } }
 
 		[DisplayName("Outstanding")]
 		/// <summary>Field : "Outstanding" Tipo: "N" Formula: + "[DILIN->ORDERED]-[DILIN->DELIVERE]"</summary>
 		[ShouldSerialize("Dilin.ValOutstand")]
 		[NumericAttribute(0)]
-		public decimal? ValOutstand { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutstand, 0)); } set { klass.ValOutstand = Convert.ToDouble(value); } }
+		public decimal? ValOutstand { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutstand, 0)); } set { klass.ValOutstand = Convert.ToDecimal(value); } }
 
 		[DisplayName("Instant")]
 		/// <summary>Field : "Instant" Tipo: "DT" Formula: ++ "[DISPA->DISPADT]"</summary>
@@ -111,19 +111,19 @@ namespace GenioMVC.Models
 		public Dilin(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAdilin(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Dilin(UserContext userContext, CSGenioAdilin val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAdilin csgenioa)
@@ -150,7 +150,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

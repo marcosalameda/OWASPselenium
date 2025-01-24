@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Manufacturer
 	/// </summary>
-	public class CSGenioAmanuf : DbArea	{
+	public class CSGenioAmanuf : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -79,7 +80,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("registra", FieldType.TEXTO);
 			Qfield.FieldDescription = "Legal registration";
-			Qfield.FieldSize =  20;
+			Qfield.FieldSize =  30;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "LEGAL_REGISTRATION04413";
@@ -90,7 +91,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("taxnumbe", FieldType.TEXTO);
 			Qfield.FieldDescription = "VAT Number";
-			Qfield.FieldSize =  20;
+			Qfield.FieldSize =  30;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "VAT_NUMBER24236";
@@ -123,7 +124,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("iban", FieldType.TEXTO);
 			Qfield.FieldDescription = "IBAN (International Bank Account Number)";
-			Qfield.FieldSize =  25;
+			Qfield.FieldSize =  33;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "IBAN__INTERNATIONAL_45066";
@@ -134,7 +135,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("building", FieldType.TEXTO);
 			Qfield.FieldDescription = "Building/house number";
-			Qfield.FieldSize =  10;
+			Qfield.FieldSize =  25;
 			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "BUILDING_HOUSE_NUMBE20738";
 
@@ -144,7 +145,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("street", FieldType.TEXTO);
 			Qfield.FieldDescription = "Street";
-			Qfield.FieldSize =  85;
+			Qfield.FieldSize =  50;
 			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "STREET44324";
 
@@ -154,7 +155,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("town", FieldType.TEXTO);
 			Qfield.FieldDescription = "Town/City";
-			Qfield.FieldSize =  85;
+			Qfield.FieldSize =  50;
 			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "TOWN_CITY16259";
 
@@ -164,7 +165,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("county", FieldType.TEXTO);
 			Qfield.FieldDescription = "County/Province";
-			Qfield.FieldSize =  85;
+			Qfield.FieldSize =  50;
 			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "COUNTY_PROVINCE34285";
 
@@ -174,7 +175,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("state", FieldType.TEXTO);
 			Qfield.FieldDescription = "State/Province";
-			Qfield.FieldSize =  85;
+			Qfield.FieldSize =  50;
 			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "STATE_PROVINCE28516";
 
@@ -194,7 +195,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("postalco", FieldType.TEXTO);
 			Qfield.FieldDescription = "ZIP/Popstal code";
-			Qfield.FieldSize =  50;
+			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ZIP_POPSTAL_CODE65164";
 
@@ -244,7 +245,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("contact", FieldType.TEXTO);
 			Qfield.FieldDescription = "Contact telephone number";
-			Qfield.FieldSize =  20;
+			Qfield.FieldSize =  30;
 			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CONTACT_TELEPHONE_NU12694";
 
@@ -252,9 +253,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("owner", FieldType.LOGICO);
+			Qfield = new Field("owner", FieldType.TEXTO);
 			Qfield.FieldDescription = "Owner";
-			Qfield.FieldSize =  1;
+			Qfield.FieldSize =  50;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "OWNER09558";
@@ -514,7 +515,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodentit, value); }
 		}
 
-
 		/// <summary>Field : "Legal name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("manuf", "name");
@@ -525,7 +525,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldName); }
 			set { insertNameValueField(FldName, value); }
 		}
-
 
 		/// <summary>Field : "Company initials" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldInitials { get { return m_fldInitials; } }
@@ -538,7 +537,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldInitials, value); }
 		}
 
-
 		/// <summary>Field : "Legal registration" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldRegistra { get { return m_fldRegistra; } }
 		private static FieldRef m_fldRegistra = new FieldRef("manuf", "registra");
@@ -549,7 +547,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldRegistra); }
 			set { insertNameValueField(FldRegistra, value); }
 		}
-
 
 		/// <summary>Field : "VAT Number" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTaxnumbe { get { return m_fldTaxnumbe; } }
@@ -562,7 +559,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldTaxnumbe, value); }
 		}
 
-
 		/// <summary>Field : "Email" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldEmail { get { return m_fldEmail; } }
 		private static FieldRef m_fldEmail = new FieldRef("manuf", "email");
@@ -573,7 +569,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldEmail); }
 			set { insertNameValueField(FldEmail, value); }
 		}
-
 
 		/// <summary>Field : "Phone number" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldPhonenum { get { return m_fldPhonenum; } }
@@ -586,7 +581,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPhonenum, value); }
 		}
 
-
 		/// <summary>Field : "IBAN (International Bank Account Number)" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldIban { get { return m_fldIban; } }
 		private static FieldRef m_fldIban = new FieldRef("manuf", "iban");
@@ -597,7 +591,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldIban); }
 			set { insertNameValueField(FldIban, value); }
 		}
-
 
 		/// <summary>Field : "Building/house number" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldBuilding { get { return m_fldBuilding; } }
@@ -610,7 +603,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldBuilding, value); }
 		}
 
-
 		/// <summary>Field : "Street" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldStreet { get { return m_fldStreet; } }
 		private static FieldRef m_fldStreet = new FieldRef("manuf", "street");
@@ -621,7 +613,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldStreet); }
 			set { insertNameValueField(FldStreet, value); }
 		}
-
 
 		/// <summary>Field : "Town/City" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTown { get { return m_fldTown; } }
@@ -634,7 +625,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldTown, value); }
 		}
 
-
 		/// <summary>Field : "County/Province" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldCounty { get { return m_fldCounty; } }
 		private static FieldRef m_fldCounty = new FieldRef("manuf", "county");
@@ -645,7 +635,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCounty); }
 			set { insertNameValueField(FldCounty, value); }
 		}
-
 
 		/// <summary>Field : "State/Province" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldState { get { return m_fldState; } }
@@ -658,7 +647,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldState, value); }
 		}
 
-
 		/// <summary>Field : "Post office box" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldPobox { get { return m_fldPobox; } }
 		private static FieldRef m_fldPobox = new FieldRef("manuf", "pobox");
@@ -669,7 +657,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldPobox); }
 			set { insertNameValueField(FldPobox, value); }
 		}
-
 
 		/// <summary>Field : "ZIP/Popstal code" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldPostalco { get { return m_fldPostalco; } }
@@ -682,7 +669,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPostalco, value); }
 		}
 
-
 		/// <summary>Field : "Telephone" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTelephon { get { return m_fldTelephon; } }
 		private static FieldRef m_fldTelephon = new FieldRef("manuf", "telephon");
@@ -693,7 +679,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldTelephon); }
 			set { insertNameValueField(FldTelephon, value); }
 		}
-
 
 		/// <summary>Field : "Fax" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldFax { get { return m_fldFax; } }
@@ -706,7 +691,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldFax, value); }
 		}
 
-
 		/// <summary>Field : "Web site" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldWebsite { get { return m_fldWebsite; } }
 		private static FieldRef m_fldWebsite = new FieldRef("manuf", "website");
@@ -717,7 +701,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldWebsite); }
 			set { insertNameValueField(FldWebsite, value); }
 		}
-
 
 		/// <summary>Field : "Person/Department to contact" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldPerson { get { return m_fldPerson; } }
@@ -730,7 +713,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPerson, value); }
 		}
 
-
 		/// <summary>Field : "Contact telephone number" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldContact { get { return m_fldContact; } }
 		private static FieldRef m_fldContact = new FieldRef("manuf", "contact");
@@ -742,18 +724,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldContact, value); }
 		}
 
-
-		/// <summary>Field : "Owner" Tipo: "L" Formula:  ""</summary>
+		/// <summary>Field : "Owner" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldOwner { get { return m_fldOwner; } }
 		private static FieldRef m_fldOwner = new FieldRef("manuf", "owner");
 
-		/// <summary>Field : "Owner" Tipo: "L" Formula:  ""</summary>
-		public int ValOwner
+		/// <summary>Field : "Owner" Tipo: "C" Formula:  ""</summary>
+		public string ValOwner
 		{
-			get { return (int)returnValueField(FldOwner); }
+			get { return (string)returnValueField(FldOwner); }
 			set { insertNameValueField(FldOwner, value); }
 		}
-
 
 		/// <summary>Field : "Carrier" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldCarrier { get { return m_fldCarrier; } }
@@ -766,7 +746,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCarrier, value); }
 		}
 
-
 		/// <summary>Field : "Supplier" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldSupplier { get { return m_fldSupplier; } }
 		private static FieldRef m_fldSupplier = new FieldRef("manuf", "supplier");
@@ -777,7 +756,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldSupplier); }
 			set { insertNameValueField(FldSupplier, value); }
 		}
-
 
 		/// <summary>Field : "Manufacturer" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldManufact { get { return m_fldManufact; } }
@@ -790,7 +768,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldManufact, value); }
 		}
 
-
 		/// <summary>Field : "Founded in" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldFounded { get { return m_fldFounded; } }
 		private static FieldRef m_fldFounded = new FieldRef("manuf", "founded");
@@ -801,7 +778,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldFounded); }
 			set { insertNameValueField(FldFounded, value); }
 		}
-
 
 		/// <summary>Field : "First incorporated facility" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldFirstfacilitie { get { return m_fldFirstfacilitie; } }
@@ -814,7 +790,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldFirstfacilitie, value); }
 		}
 
-
 		/// <summary>Field : "Last incorporated facility" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldLastfacilitie { get { return m_fldLastfacilitie; } }
 		private static FieldRef m_fldLastfacilitie = new FieldRef("manuf", "lastfacilitie");
@@ -825,7 +800,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldLastfacilitie); }
 			set { insertNameValueField(FldLastfacilitie, value); }
 		}
-
 
 		/// <summary>Field : "Language" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldLanguage { get { return m_fldLanguage; } }
@@ -838,7 +812,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldLanguage, value); }
 		}
 
-
 		/// <summary>Field : "Currency" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldCurrency { get { return m_fldCurrency; } }
 		private static FieldRef m_fldCurrency = new FieldRef("manuf", "currency");
@@ -849,7 +822,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCurrency); }
 			set { insertNameValueField(FldCurrency, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -892,23 +864,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAmanuf> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAmanuf> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAmanuf>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -957,7 +912,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX MANUF]/

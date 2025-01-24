@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Outpu
 {
-	public class Ldsai_ViewModel : FormViewModel<Models.Outpu>
+	public class Ldsai_ViewModel : FormViewModel<Models.Outpu>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,14 +29,34 @@ namespace GenioMVC.ViewModels.Outpu
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Item" | Type: "CE"
+		/// </summary>
+		public string ValCoditem { get; set; }
+		/// <summary>
+		/// Title: "Output No" | Type: "CE"
+		/// </summary>
+		public string ValCoddocsd { get; set; }
+		/// <summary>
+		/// Title: "Document No." | Type: "CE"
+		/// </summary>
+		public string ValCodoutpt { get; set; }
+		/// <summary>
+		/// Title: "Warehouse" | Type: "CE"
+		/// </summary>
+		public string ValCodwareh { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Document No." | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Outpt> TableOutptDocumenr { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "CE"
 		/// </summary>
+		[ValidateSetAccess]
 		public string OutptValCodwareh 
 		{
 			get
@@ -50,30 +70,28 @@ namespace GenioMVC.ViewModels.Outpu
 		public Func<string> funcOutptValCodwareh { get; set; }
 
 		private string _auxOutptValCodwareh { get; set; }
-
 		/// <summary>
 		/// Title: "Line" | Type: "N"
 		/// </summary>
 		public decimal? ValLine { get; set; }
-
 		/// <summary>
 		/// Title: "Warehouse" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Wareh> TableWarehWarehdes { get; set; }
-
 		/// <summary>
 		/// Title: "Item" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Item> TableItemItemdes { get; set; }
-
 		/// <summary>
 		/// Title: "Output quantity:" | Type: "N"
 		/// </summary>
 		public decimal? ValExitqnty { get; set; }
-
 		/// <summary>
 		/// Title: "Output No" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Oudoc> TableOudocNrdocsda { get; set; }
 
 		#region Navigations
@@ -83,30 +101,6 @@ namespace GenioMVC.ViewModels.Outpu
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Item" | Type: "CE"
-		/// </summary>
-		public string ValCoditem { get; set; }
-
-		/// <summary>
-		/// Title: "Output No" | Type: "CE"
-		/// </summary>
-		public string ValCoddocsd { get; set; }
-
-		/// <summary>
-		/// Title: "Document No." | Type: "CE"
-		/// </summary>
-		public string ValCodoutpt { get; set; }
-
-		/// <summary>
-		/// Title: "Warehouse" | Type: "CE"
-		/// </summary>
-		public string ValCodwareh { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -122,9 +116,10 @@ namespace GenioMVC.ViewModels.Outpu
 
 		public string ValCodoutpu { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Ldsai_ViewModel() : base(null!) { }
@@ -160,6 +155,15 @@ namespace GenioMVC.ViewModels.Outpu
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Outpu model = new Models.Outpu(userContext) { Identifier = "FLDSAI" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FLDSAI");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -220,13 +224,13 @@ namespace GenioMVC.ViewModels.Outpu
 
 			try
 			{
-				funcOutptValCodwareh = () => ViewModelConversion.ToString(m.Outpt.ValCodwareh);
-				ValLine = ViewModelConversion.ToNumeric(m.ValLine);
-				ValExitqnty = ViewModelConversion.ToNumeric(m.ValExitqnty);
 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
 				ValCoddocsd = ViewModelConversion.ToString(m.ValCoddocsd);
 				ValCodoutpt = ViewModelConversion.ToString(m.ValCodoutpt);
 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				funcOutptValCodwareh = () => ViewModelConversion.ToString(m.Outpt.ValCodwareh);
+				ValLine = ViewModelConversion.ToNumeric(m.ValLine);
+				ValExitqnty = ViewModelConversion.ToNumeric(m.ValExitqnty);
 				ValCodoutpu = ViewModelConversion.ToString(m.ValCodoutpu);
 			}
 			catch (Exception)
@@ -236,6 +240,20 @@ namespace GenioMVC.ViewModels.Outpu
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Outpu m)
 		{
 			if (m == null)
@@ -246,23 +264,90 @@ namespace GenioMVC.ViewModels.Outpu
 
 			try
 			{
-				m.ValLine = ViewModelConversion.ToNumeric(ValLine);
-				m.ValExitqnty = ViewModelConversion.ToNumeric(ValExitqnty);
 				m.ValCoditem = ViewModelConversion.ToString(ValCoditem);
 				m.ValCoddocsd = ViewModelConversion.ToString(ValCoddocsd);
 				m.ValCodoutpt = ViewModelConversion.ToString(ValCodoutpt);
 				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
+				m.ValLine = ViewModelConversion.ToNumeric(ValLine);
+				m.ValExitqnty = ViewModelConversion.ToNumeric(ValExitqnty);
 				m.ValCodoutpu = ViewModelConversion.ToString(ValCodoutpu);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Ldsai) to Model (Outpu) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Ldsai) to Model (Outpu) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "outpu.coditem":
+						this.ValCoditem = ViewModelConversion.ToString(_value);
+						break;
+					case "outpu.coddocsd":
+						this.ValCoddocsd = ViewModelConversion.ToString(_value);
+						break;
+					case "outpu.codoutpt":
+						this.ValCodoutpt = ViewModelConversion.ToString(_value);
+						break;
+					case "outpu.codwareh":
+						this.ValCodwareh = ViewModelConversion.ToString(_value);
+						break;
+					case "outpu.line":
+						this.ValLine = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "outpu.exitqnty":
+						this.ValExitqnty = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "outpu.codoutpu":
+						this.ValCodoutpu = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Ldsai) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Ldsai)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Outpu.Find(id ?? Navigation.GetStrValue("outpu"), m_userContext, "FLDSAI"); }
+			finally { Model ??= new Models.Outpu(m_userContext) { Identifier = "FLDSAI" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -276,20 +361,13 @@ namespace GenioMVC.ViewModels.Outpu
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FLDSAI";
@@ -299,6 +377,7 @@ namespace GenioMVC.ViewModels.Outpu
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -364,25 +443,19 @@ namespace GenioMVC.ViewModels.Outpu
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE LDSAI]/
 		public override void Save()
 		{
 
-			try { Model = Models.Outpu.Find(Navigation.GetStrValue("outpu"), m_userContext, "FLDSAI"); }
-			finally { if (Model == null) Model = new Models.Outpu(m_userContext) { Identifier = "FLDSAI" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY LDSAI]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Outpu.Find(Navigation.GetStrValue("outpu"), m_userContext, "FLDSAI"); }
-			finally { if (Model == null) Model = new Models.Outpu(m_userContext) { Identifier = "FLDSAI" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE LDSAI]/
 
@@ -415,8 +488,8 @@ namespace GenioMVC.ViewModels.Outpu
 				object hValue = Navigation.GetValue("outpt", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					ldsai___outptdocumenrConds.Equal(CSGenioAoutpt.FldCodoutpt, Navigation.GetValue("outpt"));
-					this.ValCodoutpt = Navigation.GetStrValue("outpt");
+					ldsai___outptdocumenrConds.Equal(CSGenioAoutpt.FldCodoutpt, hValue);
+					this.ValCodoutpt = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -433,8 +506,6 @@ namespace GenioMVC.ViewModels.Outpu
 					Navigation.CurrentLevel.SetEntry("RETURN_outpt", null);
 				}
 				FillDependant_LdsaiTableOutptDocumenr(lazyLoad);
-				//Check if foreignkey comes from history
-				TableOutptDocumenr.FilledByHistory = Navigation.CheckFilledByHistory("outpt");
 				return;
 			}
 
@@ -502,9 +573,6 @@ namespace GenioMVC.ViewModels.Outpu
 
 				TableOutptDocumenr.List = new SelectList(TableOutptDocumenr.Elements.ToSelectList(x => x.ValDocumenr, x => x.ValCodoutpt,  x => x.ValCodoutpt == this.ValCodoutpt), "Value", "Text", this.ValCodoutpt);
 				FillDependant_LdsaiTableOutptDocumenr();
-
-				//Check if foreignkey comes from history
-				TableOutptDocumenr.FilledByHistory = Navigation.CheckFilledByHistory("outpt");
 			}
 		}
 
@@ -571,7 +639,7 @@ namespace GenioMVC.ViewModels.Outpu
 				if (GlobalFunctions.emptyG(this.ValCodoutpt) == 1)
 				{
 					this.ValCodoutpt = "";
-					TableOutptDocumenr.Value = 0;
+					TableOutptDocumenr.Value = 0m;
 					Navigation.ClearValue("outpt");
 				}
 				else if (lazyLoad)
@@ -611,8 +679,8 @@ namespace GenioMVC.ViewModels.Outpu
 				object hValue = Navigation.GetValue("wareh", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					ldsai___warehwarehdesConds.Equal(CSGenioAwareh.FldCodwareh, Navigation.GetValue("wareh"));
-					this.ValCodwareh = Navigation.GetStrValue("wareh");
+					ldsai___warehwarehdesConds.Equal(CSGenioAwareh.FldCodwareh, hValue);
+					this.ValCodwareh = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -629,8 +697,6 @@ namespace GenioMVC.ViewModels.Outpu
 					Navigation.CurrentLevel.SetEntry("RETURN_wareh", null);
 				}
 				FillDependant_LdsaiTableWarehWarehdes(lazyLoad);
-				//Check if foreignkey comes from history
-				TableWarehWarehdes.FilledByHistory = Navigation.CheckFilledByHistory("wareh");
 				return;
 			}
 
@@ -698,9 +764,6 @@ namespace GenioMVC.ViewModels.Outpu
 
 				TableWarehWarehdes.List = new SelectList(TableWarehWarehdes.Elements.ToSelectList(x => x.ValWarehdes, x => x.ValCodwareh,  x => x.ValCodwareh == this.ValCodwareh), "Value", "Text", this.ValCodwareh);
 				FillDependant_LdsaiTableWarehWarehdes();
-
-				//Check if foreignkey comes from history
-				TableWarehWarehdes.FilledByHistory = Navigation.CheckFilledByHistory("wareh");
 			}
 		}
 
@@ -806,14 +869,14 @@ namespace GenioMVC.ViewModels.Outpu
 				object hValue = Navigation.GetValue("item", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					ldsai___item_itemdes_Conds.Equal(CSGenioAitem.FldCoditem, Navigation.GetValue("item"));
-					this.ValCoditem = Navigation.GetStrValue("item");
+					ldsai___item_itemdes_Conds.Equal(CSGenioAitem.FldCoditem, hValue);
+					this.ValCoditem = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
 
 			// Area limit
-			ldsai___item_itemdes_DoLoad &= AddCriteriaAreaLimit(ldsai___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, false);
+			ldsai___item_itemdes_DoLoad &= AddCriteriaAreaLimit(ldsai___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, true);
 
 			TableItemItemdes = new TableDBEdit<Models.Item>
 			{
@@ -828,8 +891,6 @@ namespace GenioMVC.ViewModels.Outpu
 					Navigation.CurrentLevel.SetEntry("RETURN_item", null);
 				}
 				FillDependant_LdsaiTableItemItemdes(lazyLoad);
-				//Check if foreignkey comes from history
-				TableItemItemdes.FilledByHistory = Navigation.CheckFilledByHistory("item");
 				return;
 			}
 
@@ -900,9 +961,6 @@ namespace GenioMVC.ViewModels.Outpu
 
 				TableItemItemdes.List = new SelectList(TableItemItemdes.Elements.ToSelectList(x => x.ValItemdes, x => x.ValCoditem,  x => x.ValCoditem == this.ValCoditem), "Value", "Text", this.ValCoditem);
 				FillDependant_LdsaiTableItemItemdes();
-
-				//Check if foreignkey comes from history
-				TableItemItemdes.FilledByHistory = Navigation.CheckFilledByHistory("item");
 			}
 		}
 
@@ -1017,8 +1075,8 @@ namespace GenioMVC.ViewModels.Outpu
 				object hValue = Navigation.GetValue("oudoc", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					ldsai___oudocnrdocsdaConds.Equal(CSGenioAoudoc.FldCoddocsd, Navigation.GetValue("oudoc"));
-					this.ValCoddocsd = Navigation.GetStrValue("oudoc");
+					ldsai___oudocnrdocsdaConds.Equal(CSGenioAoudoc.FldCoddocsd, hValue);
+					this.ValCoddocsd = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -1035,8 +1093,6 @@ namespace GenioMVC.ViewModels.Outpu
 					Navigation.CurrentLevel.SetEntry("RETURN_oudoc", null);
 				}
 				FillDependant_LdsaiTableOudocNrdocsda(lazyLoad);
-				//Check if foreignkey comes from history
-				TableOudocNrdocsda.FilledByHistory = Navigation.CheckFilledByHistory("oudoc");
 				return;
 			}
 
@@ -1104,9 +1160,6 @@ namespace GenioMVC.ViewModels.Outpu
 
 				TableOudocNrdocsda.List = new SelectList(TableOudocNrdocsda.Elements.ToSelectList(x => x.ValNrdocsda, x => x.ValCoddocsd,  x => x.ValCoddocsd == this.ValCoddocsd), "Value", "Text", this.ValCoddocsd);
 				FillDependant_LdsaiTableOudocNrdocsda();
-
-				//Check if foreignkey comes from history
-				TableOudocNrdocsda.FilledByHistory = Navigation.CheckFilledByHistory("oudoc");
 			}
 		}
 
@@ -1172,7 +1225,7 @@ namespace GenioMVC.ViewModels.Outpu
 				if (GlobalFunctions.emptyG(this.ValCoddocsd) == 1)
 				{
 					this.ValCoddocsd = "";
-					TableOudocNrdocsda.Value = 0;
+					TableOudocNrdocsda.Value = 0m;
 					Navigation.ClearValue("oudoc");
 				}
 				else if (lazyLoad)
@@ -1203,13 +1256,13 @@ namespace GenioMVC.ViewModels.Outpu
 		{
 			return identifier switch
 			{
-				"outpt.codwareh" => ViewModelConversion.ToString(modelValue),
-				"outpu.line" => ViewModelConversion.ToNumeric(modelValue),
-				"outpu.exitqnty" => ViewModelConversion.ToNumeric(modelValue),
 				"outpu.coditem" => ViewModelConversion.ToString(modelValue),
 				"outpu.coddocsd" => ViewModelConversion.ToString(modelValue),
 				"outpu.codoutpt" => ViewModelConversion.ToString(modelValue),
 				"outpu.codwareh" => ViewModelConversion.ToString(modelValue),
+				"outpt.codwareh" => ViewModelConversion.ToString(modelValue),
+				"outpu.line" => ViewModelConversion.ToNumeric(modelValue),
+				"outpu.exitqnty" => ViewModelConversion.ToNumeric(modelValue),
 				"outpu.codoutpu" => ViewModelConversion.ToString(modelValue),
 				"outpt.codoutpt" => ViewModelConversion.ToString(modelValue),
 				"outpt.documenr" => ViewModelConversion.ToNumeric(modelValue),
@@ -1219,9 +1272,11 @@ namespace GenioMVC.ViewModels.Outpu
 				"item.itemdes" => ViewModelConversion.ToString(modelValue),
 				"oudoc.coddocsd" => ViewModelConversion.ToString(modelValue),
 				"oudoc.nrdocsda" => ViewModelConversion.ToNumeric(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

@@ -83,7 +83,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValProduct))
 		watch(() => this.ValProduct.value, (newValue, oldValue) => this.onUpdate('produ.product', this.ValProduct, newValue, oldValue))
 
-		this.ValDescript = reactive(new modelFieldType.String({
+		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
 			originId: 'ValDescript',
 			area: 'PRODU',
@@ -168,5 +168,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodprodu'
 
 	get QPrimaryKey() { return this.ValCodprodu.value }
-	set QPrimaryKey(value) { this.ValCodprodu.value = value }
+	set QPrimaryKey(value) { this.ValCodprodu.updateValue(value) }
 }

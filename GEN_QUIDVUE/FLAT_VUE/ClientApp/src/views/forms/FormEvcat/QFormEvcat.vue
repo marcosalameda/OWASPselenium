@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -106,14 +106,11 @@
 							v-on="controls.EVCAT___PESSONAME____.handlers"
 							:loading="controls.EVCAT___PESSONAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.EVCAT___PESSONAME____.isVisible"
 								v-bind="controls.EVCAT___PESSONAME____.props"
-								:model-value="model.ValCodpesso.value"
-								v-on="controls.EVCAT___PESSONAME____.handlers"
-								@update:model-value="model.ValCodpesso.fnUpdateValue" />
+								v-on="controls.EVCAT___PESSONAME____.handlers" />
 							<q-see-more-evcat-pessoname
 								v-if="controls.EVCAT___PESSONAME____.seeMoreIsVisible"
 								v-bind="controls.EVCAT___PESSONAME____.seeMoreParams"
@@ -129,14 +126,11 @@
 							v-on="controls.EVCAT___CATE1CATEGORY.handlers"
 							:loading="controls.EVCAT___CATE1CATEGORY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-lookup
 								v-if="controls.EVCAT___CATE1CATEGORY.isVisible"
 								v-bind="controls.EVCAT___CATE1CATEGORY.props"
-								:model-value="model.ValCodcateg.value"
-								v-on="controls.EVCAT___CATE1CATEGORY.handlers"
-								@update:model-value="model.ValCodcateg.fnUpdateValue" />
+								v-on="controls.EVCAT___CATE1CATEGORY.handlers" />
 							<q-see-more-evcat-cate1category
 								v-if="controls.EVCAT___CATE1CATEGORY.seeMoreIsVisible"
 								v-bind="controls.EVCAT___CATE1CATEGORY.seeMoreParams"
@@ -152,14 +146,13 @@
 							v-on="controls.EVCAT___EVCATSINCE___.handlers"
 							:loading="controls.EVCAT___EVCATSINCE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.EVCAT___EVCATSINCE___.isVisible"
-								v-bind="controls.EVCAT___EVCATSINCE___"
-								format="Date"
+								v-bind="controls.EVCAT___EVCATSINCE___.props"
 								:model-value="model.ValSince.value"
-								@update:model-value="model.ValSince.fnUpdateValue" />
+								@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
+								@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -171,14 +164,13 @@
 							v-on="controls.EVCAT___EVCATUNTIL___.handlers"
 							:loading="controls.EVCAT___EVCATUNTIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.EVCAT___EVCATUNTIL___.isVisible"
-								v-bind="controls.EVCAT___EVCATUNTIL___"
-								format="Date"
+								v-bind="controls.EVCAT___EVCATUNTIL___.props"
 								:model-value="model.ValUntil.value"
-								@update:model-value="model.ValUntil.fnUpdateValue" />
+								@reset-icon-click="model.ValUntil.fnUpdateValue(model.ValUntil.originalValue ?? new Date())"
+								@update:model-value="model.ValUntil.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -190,14 +182,13 @@
 							v-on="controls.EVCAT___EVCATUNTILMAN.handlers"
 							:loading="controls.EVCAT___EVCATUNTILMAN.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.EVCAT___EVCATUNTILMAN.isVisible"
-								v-bind="controls.EVCAT___EVCATUNTILMAN"
-								format="Date"
+								v-bind="controls.EVCAT___EVCATUNTILMAN.props"
 								:model-value="model.ValUntilman.value"
-								@update:model-value="model.ValUntilman.fnUpdateValue" />
+								@reset-icon-click="model.ValUntilman.fnUpdateValue(model.ValUntilman.originalValue ?? new Date())"
+								@update:model-value="model.ValUntilman.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -209,14 +200,13 @@
 							v-on="controls.EVCAT___EVCATFIMPERIO.handlers"
 							:loading="controls.EVCAT___EVCATFIMPERIO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
-							<q-datetime-input
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
 								v-if="controls.EVCAT___EVCATFIMPERIO.isVisible"
-								v-bind="controls.EVCAT___EVCATFIMPERIO"
-								format="Date"
+								v-bind="controls.EVCAT___EVCATFIMPERIO.props"
 								:model-value="model.ValFimperio.value"
-								@update:model-value="model.ValFimperio.fnUpdateValue" />
+								@reset-icon-click="model.ValFimperio.fnUpdateValue(model.ValFimperio.originalValue ?? new Date())"
+								@update:model-value="model.ValFimperio.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -230,18 +220,14 @@
 							v-on="controls.EVCAT___EVCATOBSERVAT.handlers"
 							:loading="controls.EVCAT___EVCATOBSERVAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn"
-							:help-style="layoutConfig.HelpStyle">
+							:suggestion-mode-on="suggestionModeOn">
 							<q-textarea-input
 								v-if="controls.EVCAT___EVCATOBSERVAT.isVisible"
+								v-bind="controls.EVCAT___EVCATOBSERVAT.props"
 								id="EVCAT___EVCATOBSERVAT"
-								size="xxlarge"
 								:model-value="model.ValObservat.value"
 								:rows="2"
 								:cols="85"
-								:is-required="controls.EVCAT___EVCATOBSERVAT.isRequired"
-								:readonly="controls.EVCAT___EVCATOBSERVAT.readonly"
-								:placeholder="controls.EVCAT___EVCATOBSERVAT.placeholder"
 								@update:model-value="model.ValObservat.fnUpdateValue" />
 						</base-input-structure>
 					</q-control-wrapper>
@@ -329,15 +315,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'EVCAT',
-						location: 'form-EVCAT',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'EVCAT',
+					location: 'form-EVCAT',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -383,6 +367,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -455,8 +441,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -538,7 +525,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -592,21 +579,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -617,27 +589,9 @@
 						id: 'EVCAT___PESSONAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.NAME31974),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodpesso',
-							dependencyEvent: 'fieldChange:evcat.codpesso'
-						},
-						dependentFields: () => {
-							return {
-								set 'pesso.codpesso'(value) { vm.model.ValCodpesso.updateValue(value) },
-								set 'pesso.name'(value) { vm.model.TablePessoName.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'PESSO',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -646,6 +600,18 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodpesso',
+							dependencyEvent: 'fieldChange:evcat.codpesso'
+						},
+						dependentFields: () => ({
+							set 'pesso.codpesso'(value) { vm.model.ValCodpesso.updateValue(value) },
+							set 'pesso.name'(value) { vm.model.TablePessoName.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'PESSO',
+						controlLimits: [
+						],
 					}, this),
 					EVCAT___CATE1CATEGORY: new fieldControlClass.LookupControl({
 						modelField: 'TableCate1Category',
@@ -653,25 +619,9 @@
 						id: 'EVCAT___CATE1CATEGORY',
 						name: 'CATEGORY',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.CATEGORY18978),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodcateg',
-							dependencyEvent: 'fieldChange:evcat.codcateg'
-						},
-						dependentFields: () => {
-							return {
-								set 'cate1.codcateg'(value) { vm.model.ValCodcateg.updateValue(value) },
-								set 'cate1.categoria'(value) { vm.model.TableCate1Category.updateValue(value) },
-							}
-						},
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -680,82 +630,70 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodcateg',
+							dependencyEvent: 'fieldChange:evcat.codcateg'
+						},
+						dependentFields: () => ({
+							set 'cate1.codcateg'(value) { vm.model.ValCodcateg.updateValue(value) },
+							set 'cate1.categoria'(value) { vm.model.TableCate1Category.updateValue(value) },
+						}),
+						controlLimits: [
+						],
 					}, this),
 					EVCAT___EVCATSINCE___: new fieldControlClass.DateControl({
 						modelField: 'ValSince',
 						valueChangeEvent: 'fieldChange:evcat.since',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'EVCAT___EVCATSINCE___',
 						name: 'SINCE',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.SINCE_26335),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
 					EVCAT___EVCATUNTIL___: new fieldControlClass.DateControl({
 						modelField: 'ValUntil',
 						valueChangeEvent: 'fieldChange:evcat.until',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'EVCAT___EVCATUNTIL___',
 						name: 'UNTIL',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.UNTIL39173),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EVCAT___EVCATUNTILMAN: new fieldControlClass.DateControl({
 						modelField: 'ValUntilman',
 						valueChangeEvent: 'fieldChange:evcat.untilman',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'EVCAT___EVCATUNTILMAN',
 						name: 'UNTILMAN',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.END47577),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
 					EVCAT___EVCATFIMPERIO: new fieldControlClass.DateControl({
 						modelField: 'ValFimperio',
 						valueChangeEvent: 'fieldChange:evcat.fimperio',
-						locale: computed(() => vm.system.currentLang),
-						dateFormat: computed(() => vm.system.dateFormat),
 						id: 'EVCAT___EVCATFIMPERIO',
 						name: 'FIMPERIO',
 						size: 'small',
-						hasLabel: true,
 						label: computed(() => this.Resources.END_OF_PERIOD31332),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						mustBeFilled: false,
+						format: 'date',
 						controlLimits: [
 						],
-						isFixed: true,
 					}, this),
 					EVCAT___EVCATOBSERVAT: new fieldControlClass.StringControl({
 						modelField: 'ValObservat',
@@ -763,15 +701,9 @@
 						id: 'EVCAT___EVCATOBSERVAT',
 						name: 'OBSERVAT',
 						size: 'xxlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.OBSERVATION37880),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 85,
-						labelId: 'label_EVCAT___EVCATOBSERVAT',
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -829,7 +761,7 @@
 						/** The foreign key to the CATE1 table */
 						get cate1() { return vm.model.ValCodcateg },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -925,6 +857,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -964,6 +904,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -1090,6 +1038,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR EVCAT]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -1105,6 +1069,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS EVCAT]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

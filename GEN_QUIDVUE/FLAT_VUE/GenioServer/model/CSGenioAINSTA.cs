@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Installation
 	/// </summary>
-	public class CSGenioAinsta : DbArea	{
+	public class CSGenioAinsta : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -150,6 +151,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Qtd hours";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "QTD_HOURS28684";
 
@@ -166,6 +168,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Hourly price";
 			Qfield.FieldSize =  12;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 9;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "HOURLY_PRICE48005";
 
@@ -178,6 +181,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Value";
 			Qfield.FieldSize =  12;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 9;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "VALUE10285";
 
@@ -185,7 +189,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"hours","precohor"}, new int[] {0,1}, "insta", "codinsta"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((double)args[0])*((double)args[1]);
+				return ((decimal)args[0])*((decimal)args[1]);
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -229,12 +233,13 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(12);
+			info.Pathways = new Dictionary<string, string>(13);
 			info.Pathways.Add("tpequ","tpequ");
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("famil","tpequ");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
+			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
@@ -385,7 +390,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodinsta, value); }
 		}
 
-
 		/// <summary>Field : ">TYPE OF EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodtpequ { get { return m_fldCodtpequ; } }
 		private static FieldRef m_fldCodtpequ = new FieldRef("insta", "codtpequ");
@@ -396,7 +400,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodtpequ); }
 			set { insertNameValueField(FldCodtpequ, value); }
 		}
-
 
 		/// <summary>Field : ">EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodequip { get { return m_fldCodequip; } }
@@ -409,7 +412,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodequip, value); }
 		}
 
-
 		/// <summary>Field : "Scheduling" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldDesignat { get { return m_fldDesignat; } }
 		private static FieldRef m_fldDesignat = new FieldRef("insta", "designat");
@@ -420,7 +422,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldDesignat); }
 			set { insertNameValueField(FldDesignat, value); }
 		}
-
 
 		/// <summary>Field : "Beginning" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDtiniage { get { return m_fldDtiniage; } }
@@ -433,7 +434,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDtiniage, value); }
 		}
 
-
 		/// <summary>Field : "End" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDtfimage { get { return m_fldDtfimage; } }
 		private static FieldRef m_fldDtfimage = new FieldRef("insta", "dtfimage");
@@ -444,7 +444,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDtfimage); }
 			set { insertNameValueField(FldDtfimage, value); }
 		}
-
 
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldDescript { get { return m_fldDescript; } }
@@ -457,7 +456,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDescript, value); }
 		}
 
-
 		/// <summary>Field : "All day" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldAllday { get { return m_fldAllday; } }
 		private static FieldRef m_fldAllday = new FieldRef("insta", "allday");
@@ -468,7 +466,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldAllday); }
 			set { insertNameValueField(FldAllday, value); }
 		}
-
 
 		/// <summary>Field : "Since" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldSince { get { return m_fldSince; } }
@@ -481,7 +478,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSince, value); }
 		}
 
-
 		/// <summary>Field : "Until" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldUntil { get { return m_fldUntil; } }
 		private static FieldRef m_fldUntil = new FieldRef("insta", "until");
@@ -493,42 +489,38 @@ namespace CSGenio.business
 			set { insertNameValueField(FldUntil, value); }
 		}
 
-
 		/// <summary>Field : "Qtd hours" Tipo: "N" Formula: + "iif(emptyD([INSTA->SINCE])==1 || emptyD([INSTA->UNTIL])==1,0,Diferenca_entre_Datas([INSTA->SINCE],[INSTA->UNTIL],"H"))"</summary>
 		public static FieldRef FldHours { get { return m_fldHours; } }
 		private static FieldRef m_fldHours = new FieldRef("insta", "hours");
 
 		/// <summary>Field : "Qtd hours" Tipo: "N" Formula: + "iif(emptyD([INSTA->SINCE])==1 || emptyD([INSTA->UNTIL])==1,0,Diferenca_entre_Datas([INSTA->SINCE],[INSTA->UNTIL],"H"))"</summary>
-		public double ValHours
+		public decimal ValHours
 		{
-			get { return (double)returnValueField(FldHours); }
+			get { return (decimal)returnValueField(FldHours); }
 			set { insertNameValueField(FldHours, value); }
 		}
-
 
 		/// <summary>Field : "Hourly price" Tipo: "$D" Formula: CT "TABPR[INSTA->SINCE][TABPR->SINCE][TABPR->PRECOHOR][INSTA->CODTPEQU][TABPR->CODTPEQ1](DESC)"</summary>
 		public static FieldRef FldPrecohor { get { return m_fldPrecohor; } }
 		private static FieldRef m_fldPrecohor = new FieldRef("insta", "precohor");
 
 		/// <summary>Field : "Hourly price" Tipo: "$D" Formula: CT "TABPR[INSTA->SINCE][TABPR->SINCE][TABPR->PRECOHOR][INSTA->CODTPEQU][TABPR->CODTPEQ1](DESC)"</summary>
-		public double ValPrecohor
+		public decimal ValPrecohor
 		{
-			get { return (double)returnValueField(FldPrecohor); }
+			get { return (decimal)returnValueField(FldPrecohor); }
 			set { insertNameValueField(FldPrecohor, value); }
 		}
-
 
 		/// <summary>Field : "Value" Tipo: "$D" Formula: + "[INSTA->HOURS]*[INSTA->PRECOHOR]"</summary>
 		public static FieldRef FldValue { get { return m_fldValue; } }
 		private static FieldRef m_fldValue = new FieldRef("insta", "value");
 
 		/// <summary>Field : "Value" Tipo: "$D" Formula: + "[INSTA->HOURS]*[INSTA->PRECOHOR]"</summary>
-		public double ValValue
+		public decimal ValValue
 		{
-			get { return (double)returnValueField(FldValue); }
+			get { return (decimal)returnValueField(FldValue); }
 			set { insertNameValueField(FldValue, value); }
 		}
-
 
 		/// <summary>Field : "Geographic coordinate" Tipo: "GG" Formula:  ""</summary>
 		public static FieldRef FldCoordgeo { get { return m_fldCoordgeo; } }
@@ -540,7 +532,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCoordgeo); }
 			set { insertNameValueField(FldCoordgeo, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -583,23 +574,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAinsta> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAinsta> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAinsta>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -648,7 +622,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX INSTA]/

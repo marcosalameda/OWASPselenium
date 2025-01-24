@@ -11,6 +11,7 @@ using CSGenio.business;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
+using CSGenio.core.persistence;
 using GenioMVC.Helpers;
 using GenioMVC.Models;
 using GenioMVC.Models.Exception;
@@ -27,10 +28,94 @@ namespace GenioMVC.Controllers
 {
 	public partial class CntryController : ControllerBase
 	{
+		private static readonly NavigationLocation ACTION_WMS_MENU_4271 = new NavigationLocation("COUNTRIES64527", "WMS_Menu_4271", "Cntry") { vueRouteName = "menu-WMS_4271" };
 		private static readonly NavigationLocation ACTION_IMO_MENU_131 = new NavigationLocation("COUNTRIES64527", "IMO_Menu_131", "Cntry") { vueRouteName = "menu-IMO_131" };
 		private static readonly NavigationLocation ACTION_IMO_MENU_211 = new NavigationLocation("COUNTRIES64527", "IMO_Menu_211", "Cntry") { vueRouteName = "menu-IMO_211" };
 		private static readonly NavigationLocation ACTION_IMO_MENU_231 = new NavigationLocation("COUNTRIES64527", "IMO_Menu_231", "Cntry") { vueRouteName = "menu-IMO_231" };
 
+
+		//
+		// GET: /Cntry/WMS_Menu_4271
+		[ActionName("WMS_Menu_4271")]
+		[HttpPost]
+		public ActionResult WMS_Menu_4271([FromBody]RequestMenuModel requestModel)
+		{
+			var queryParams = requestModel.QueryParams;
+
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
+			WMS_Menu_4271_ViewModel model = new WMS_Menu_4271_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "WMS_Menu_4271");
+
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_cntry")))
+				UserContext.Current.SetPersistenceReadOnly(true);
+			else
+			{
+				Navigation.DestroyEntry("ForcePrimaryRead_cntry");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+			CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
+			if (result.Status.Equals(CSGenio.framework.Status.E))
+				return PermissionError(result.Message);
+
+			NameValueCollection querystring = new NameValueCollection();
+			if (queryParams != null && queryParams.Count > 0)
+				querystring.AddRange(queryParams);
+
+			if (!isHomePage &&
+				(Navigation.CurrentLevel == null || !ACTION_WMS_MENU_4271.IsSameAction(Navigation.CurrentLevel.Location)) &&
+				Navigation.CurrentLevel.Location.Action != ACTION_WMS_MENU_4271.Action)
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
+			else if (isHomePage)
+			{
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_WMS_MENU_4271.ShortDescription());
+				Navigation.SetValue("HomePageContainsList", true);
+			}
+
+
+
+// USE /[MANUAL WMS MENU_GET 4271]/
+
+
+			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+
+			if (model.CheckForZzstate())
+				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
+
+
+			return JsonOK(model);
+		}
 
 		//
 		// GET: /Cntry/IMO_Menu_131
@@ -39,29 +124,38 @@ namespace GenioMVC.Controllers
 		public ActionResult IMO_Menu_131([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
-			var allSelected = requestModel.AllSelected;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-
-			if (queryParams != null)
-			{
-				//Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				//Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-			}
+			string rowsPerPageOptionsString = "";
 
 			IMO_Menu_131_ViewModel model = new IMO_Menu_131_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "IMO_Menu_131");
@@ -104,7 +198,7 @@ namespace GenioMVC.Controllers
 				ListingMVC<CSGenioAcntry> listing = null;
 				CriteriaSet conditions = null;
 				List<CSGenio.framework.Exports.QColumn> columns = null;
-				model.LoadToExport(out listing, out conditions, out columns, querystring, Request.IsAjaxRequest());
+				model.LoadToExport(out listing, out conditions, out columns, tableConfig, querystring, Request.IsAjaxRequest());
 
 				// Validate export format
 				if (querystring["ExportValidate"] == "true")
@@ -118,7 +212,7 @@ namespace GenioMVC.Controllers
 				fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportList(listing, conditions, columns, exportType, file,ACTION_IMO_MENU_131.Name);
 
 				QCache.Instance.ExportFiles.Put(file, fileBytes);
-				return Json(getJsonForDownloadExportFile(file, querystring["ExportType"]));
+				return Json(GetJsonForDownloadExportFile(file, querystring["ExportType"]));
 			}
 			if (querystring["ImportList"] != null && Convert.ToBoolean(querystring["ImportList"]) && querystring["ImportType"] != null)
 			{
@@ -131,10 +225,10 @@ namespace GenioMVC.Controllers
 				fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportTemplate(columns, importType, file,ACTION_IMO_MENU_131.Name);
 
 				QCache.Instance.ExportFiles.Put(file, fileBytes);
-				return Json(getJsonForDownloadExportFile(file, importType));
+				return Json(GetJsonForDownloadExportFile(file, importType));
 			}
 
-			model.Load(perPage, querystring, Request.IsAjaxRequest());
+			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
 			if (model.CheckForZzstate())
 				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
@@ -144,9 +238,12 @@ namespace GenioMVC.Controllers
 
 			// jumps if only one
 			var curRowsCount = model.Menu.Pagination.HasTotal ? model.Menu.Pagination.TotalRows : model.Menu.Elements.Count();
-			var isFirstDataLoad = querystring.AllKeys.Contains("isFirstLoad") && Boolean.Parse(querystring["isFirstLoad"]);
+			// only allow the jump if there are no filters
+			bool hasNoFilters = tableConfig.SearchFilters.Count == 0 && tableConfig.StaticFilters.Count == 0 && tableConfig.ActiveFilter == null;
+			bool isFirstDataLoad = (bool)requestModel?.IsFirstLoad;
+			bool isNoRedirect = (bool)requestModel?.noRedirect;
 
-			if (isFirstDataLoad && curRowsCount == 1 && model.Menu.Filters.FiltersValues.Count == 0 && model.Menu.Elements.First().ValZzstate == 0 && AllowSkipIfOnlyOne)
+			if (isFirstDataLoad && curRowsCount == 1 && hasNoFilters && model.Menu.Elements.First().ValZzstate == 0 && AllowSkipIfOnlyOne)
 			{
 				// needs the routevalue for the primary key, because a get request to a get form action expects so
 				var primaryKey = model.Menu.Elements.First().ValCodcntry;
@@ -154,9 +251,9 @@ namespace GenioMVC.Controllers
 				Navigation.SetValue(navKey, primaryKey);
 				Navigation.SetValue("SkipIfJustOne", true);
 				var isPopup = querystring.Get("isPopup") ?? "false";
-				var noRedirect = querystring.Get("noRedirect") ?? "false";
+				var noRedirect = isNoRedirect;
 
-				return RedirectToMenuAction("IMO_1311", new { id = primaryKey, nav = Navigation.NavigationId, isHomePage, isPopup, noRedirect, skipLastMenu = true });
+				return RedirectToMenuAction("IMO_1311", new { id = primaryKey, nav = Navigation.NavigationId, isHomePage, isPopup, noRedirect, skipLastMenu = true, cntry = primaryKey });
 			}
 
 			return JsonOK(model);
@@ -206,7 +303,7 @@ namespace GenioMVC.Controllers
 
 				results.Add(string.Format(Resources.Resources._0__LINHAS_IMPORTADA15937, rows.Count));
 
-				return Json(new { success = true, lines = results, msg = Resources.Resources.FICHEIRO_IMPORTADO_C51013 }, "application/json");
+				return Json(new { success = true, lines = results, msg = Resources.Resources.FICHEIRO_IMPORTADO_C51013 });
 			}
 			catch (GenioException e)
 			{
@@ -215,7 +312,7 @@ namespace GenioMVC.Controllers
 				CSGenio.framework.Log.Error(e.Message);
 				results.Add(e.UserMessage);
 
-				return Json(new { success = false, errors = results, msg = Resources.Resources.ERROR_IMPORTING_FILE09339 }, "application/json");
+				return Json(new { success = false, errors = results, msg = Resources.Resources.ERROR_IMPORTING_FILE09339 });
 			}
 		}
 
@@ -226,29 +323,43 @@ namespace GenioMVC.Controllers
 		public ActionResult IMO_Menu_211([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
-			var allSelected = requestModel.AllSelected;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-
-			if (queryParams != null)
-			{
-				//Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				//Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-			}
+			string rowsPerPageOptionsString = "";
 
 			IMO_Menu_211_ViewModel model = new IMO_Menu_211_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+			// Static filter "order" fields that have changed
+			tableConfigOptions.StaticFiltersKeyShiftValues = new Dictionary<string, int>
+			{
+				{ "filter_IMO_Menu_211_ACTIVO", 0 }
+ 			};
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "IMO_Menu_211");
@@ -291,7 +402,7 @@ namespace GenioMVC.Controllers
 				ListingMVC<CSGenioAcntry> listing = null;
 				CriteriaSet conditions = null;
 				List<CSGenio.framework.Exports.QColumn> columns = null;
-				model.LoadToExport(out listing, out conditions, out columns, querystring, Request.IsAjaxRequest());
+				model.LoadToExport(out listing, out conditions, out columns, tableConfig, querystring, Request.IsAjaxRequest());
 
 				// Validate export format
 				if (querystring["ExportValidate"] == "true")
@@ -305,7 +416,7 @@ namespace GenioMVC.Controllers
 				fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportList(listing, conditions, columns, exportType, file,ACTION_IMO_MENU_211.Name);
 
 				QCache.Instance.ExportFiles.Put(file, fileBytes);
-				return Json(getJsonForDownloadExportFile(file, querystring["ExportType"]));
+				return Json(GetJsonForDownloadExportFile(file, querystring["ExportType"]));
 			}
 			if (querystring["ImportList"] != null && Convert.ToBoolean(querystring["ImportList"]) && querystring["ImportType"] != null)
 			{
@@ -318,10 +429,10 @@ namespace GenioMVC.Controllers
 				fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportTemplate(columns, importType, file,ACTION_IMO_MENU_211.Name);
 
 				QCache.Instance.ExportFiles.Put(file, fileBytes);
-				return Json(getJsonForDownloadExportFile(file, importType));
+				return Json(GetJsonForDownloadExportFile(file, importType));
 			}
 
-			model.Load(perPage, querystring, Request.IsAjaxRequest());
+			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
 			if (model.CheckForZzstate())
 				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
@@ -374,7 +485,7 @@ namespace GenioMVC.Controllers
 
 				results.Add(string.Format(Resources.Resources._0__LINHAS_IMPORTADA15937, rows.Count));
 
-				return Json(new { success = true, lines = results, msg = Resources.Resources.FICHEIRO_IMPORTADO_C51013 }, "application/json");
+				return Json(new { success = true, lines = results, msg = Resources.Resources.FICHEIRO_IMPORTADO_C51013 });
 			}
 			catch (GenioException e)
 			{
@@ -383,7 +494,7 @@ namespace GenioMVC.Controllers
 				CSGenio.framework.Log.Error(e.Message);
 				results.Add(e.UserMessage);
 
-				return Json(new { success = false, errors = results, msg = Resources.Resources.ERROR_IMPORTING_FILE09339 }, "application/json");
+				return Json(new { success = false, errors = results, msg = Resources.Resources.ERROR_IMPORTING_FILE09339 });
 			}
 		}
 
@@ -394,29 +505,38 @@ namespace GenioMVC.Controllers
 		public ActionResult IMO_Menu_231([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
-			var allSelected = requestModel.AllSelected;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-
-			if (queryParams != null)
-			{
-				//Set configuration name to use in view model
-				if (queryParams.ContainsKey("UserTableConfigName"))
-				{
-					if (!string.IsNullOrEmpty(queryParams["UserTableConfigName"]))
-						Navigation.SetValue("UserTableConfigName", queryParams["UserTableConfigName"]);
-					else
-						Navigation.SetValue("UserTableConfigName", "");
-				}
-				else
-					Navigation.SetValue("UserTableConfigName", "");
-
-				//Set rows per page
-				if (queryParams.ContainsKey("perPage") && !string.IsNullOrEmpty(queryParams["perPage"]))
-					perPage = Convert.ToInt32(queryParams["perPage"]);
-			}
+			string rowsPerPageOptionsString = "";
 
 			IMO_Menu_231_ViewModel model = new IMO_Menu_231_ViewModel(UserContext.Current);
+			
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+			
+ 
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "IMO_Menu_231");
@@ -459,7 +579,7 @@ namespace GenioMVC.Controllers
 				ListingMVC<CSGenioAcntry> listing = null;
 				CriteriaSet conditions = null;
 				List<CSGenio.framework.Exports.QColumn> columns = null;
-				model.LoadToExport(out listing, out conditions, out columns, querystring, Request.IsAjaxRequest());
+				model.LoadToExport(out listing, out conditions, out columns, tableConfig, querystring, Request.IsAjaxRequest());
 
 				// Validate export format
 				if (querystring["ExportValidate"] == "true")
@@ -473,7 +593,7 @@ namespace GenioMVC.Controllers
 				fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportList(listing, conditions, columns, exportType, file,ACTION_IMO_MENU_231.Name);
 
 				QCache.Instance.ExportFiles.Put(file, fileBytes);
-				return Json(getJsonForDownloadExportFile(file, querystring["ExportType"]));
+				return Json(GetJsonForDownloadExportFile(file, querystring["ExportType"]));
 			}
 			if (querystring["ImportList"] != null && Convert.ToBoolean(querystring["ImportList"]) && querystring["ImportType"] != null)
 			{
@@ -486,10 +606,10 @@ namespace GenioMVC.Controllers
 				fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportTemplate(columns, importType, file,ACTION_IMO_MENU_231.Name);
 
 				QCache.Instance.ExportFiles.Put(file, fileBytes);
-				return Json(getJsonForDownloadExportFile(file, importType));
+				return Json(GetJsonForDownloadExportFile(file, importType));
 			}
 
-			model.Load(perPage, querystring, Request.IsAjaxRequest());
+			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
 			if (model.CheckForZzstate())
 				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
@@ -542,7 +662,7 @@ namespace GenioMVC.Controllers
 
 				results.Add(string.Format(Resources.Resources._0__LINHAS_IMPORTADA15937, rows.Count));
 
-				return Json(new { success = true, lines = results, msg = Resources.Resources.FICHEIRO_IMPORTADO_C51013 }, "application/json");
+				return Json(new { success = true, lines = results, msg = Resources.Resources.FICHEIRO_IMPORTADO_C51013 });
 			}
 			catch (GenioException e)
 			{
@@ -551,7 +671,7 @@ namespace GenioMVC.Controllers
 				CSGenio.framework.Log.Error(e.Message);
 				results.Add(e.UserMessage);
 
-				return Json(new { success = false, errors = results, msg = Resources.Resources.ERROR_IMPORTING_FILE09339 }, "application/json");
+				return Json(new { success = false, errors = results, msg = Resources.Resources.ERROR_IMPORTING_FILE09339 });
 			}
 		}
 

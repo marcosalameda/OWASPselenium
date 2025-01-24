@@ -122,6 +122,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 9,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.MAXIMUM_PRICE55489),
+			isFixed: true,
 		}).cloneFrom(values?.ValPrecomax))
 		watch(() => this.ValPrecomax.value, (newValue, oldValue) => this.onUpdate('tpequ.precomax', this.ValPrecomax, newValue, oldValue))
 
@@ -163,6 +164,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 9,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.LAST_PRICE25852),
+			isFixed: true,
 		}).cloneFrom(values?.ValPrecoult))
 		watch(() => this.ValPrecoult.value, (newValue, oldValue) => this.onUpdate('tpequ.precoult', this.ValPrecoult, newValue, oldValue))
 
@@ -172,6 +174,7 @@ export default class ViewModel extends ViewModelBase
 			area: 'TPEQU',
 			field: 'SINCE',
 			description: computed(() => this.Resources.SINCE47259),
+			isFixed: true,
 		}).cloneFrom(values?.ValSince))
 		watch(() => this.ValSince.value, (newValue, oldValue) => this.onUpdate('tpequ.since', this.ValSince, newValue, oldValue))
 
@@ -183,6 +186,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 6,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.AMOUNT46885),
+			isFixed: true,
 		}).cloneFrom(values?.ValQtdequip))
 		watch(() => this.ValQtdequip.value, (newValue, oldValue) => this.onUpdate('tpequ.qtdequip', this.ValQtdequip, newValue, oldValue))
 	}
@@ -199,5 +203,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodtpequ'
 
 	get QPrimaryKey() { return this.ValCodtpequ.value }
-	set QPrimaryKey(value) { this.ValCodtpequ.value = value }
+	set QPrimaryKey(value) { this.ValCodtpequ.updateValue(value) }
 }

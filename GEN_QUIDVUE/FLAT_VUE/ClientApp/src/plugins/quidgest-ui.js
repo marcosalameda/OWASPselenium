@@ -20,6 +20,9 @@ const framework = createFramework({
 			icons: {
 				check: {
 					icon: 'ok'
+				},
+				description: {
+					icon: 'help'
 				}
 			}
 		},
@@ -46,6 +49,16 @@ const framework = createFramework({
 					icon: 'expand'
 				}
 			}
+		},
+		QPropertyList: {
+			icons: {
+				open: {
+					icon: 'square-minus',
+				},
+				close: {
+					icon: 'square-plus',
+				},
+			},
 		}
 	}
 })

@@ -5,7 +5,11 @@
 		:to="`#q-modal-${modalId}-header`"
 		:key="domKey">
 		<div>
-			<h2 class="c-modal__header-title">{{ texts.viewManagerText }}</h2>
+			<h2
+				class="c-modal__header-title"
+				:id="`q-modal-${modalId}_title`">
+				{{ texts.viewManagerText }}
+			</h2>
 		</div>
 	</teleport>
 
@@ -29,6 +33,7 @@
 					:config="config"
 					:total-rows="totalRows"
 					:header-level="1"
+					:texts="texts"
 					@row-action="(emitAction) => viewRowAction(emitAction)"
 					@update-external="(...args) => updateExternal(...args)" />
 			</div>

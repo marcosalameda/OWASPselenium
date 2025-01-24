@@ -59,6 +59,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'CODORGAN',
 			relatedArea: 'ORGAN',
 			description: '',
+			isFixed: true,
 		}).cloneFrom(values?.ValCodorgan))
 		watch(() => this.ValCodorgan.value, (newValue, oldValue) => this.onUpdate('sale.codorgan', this.ValCodorgan, newValue, oldValue))
 
@@ -80,6 +81,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'IDENTIFI',
 			maxLength: 85,
 			description: computed(() => this.Resources.IDENTIFICATION_OF_BU58085),
+			isFixed: true,
 		}).cloneFrom(values?.ValIdentifi))
 		watch(() => this.ValIdentifi.value, (newValue, oldValue) => this.onUpdate('sale.identifi', this.ValIdentifi, newValue, oldValue))
 	}
@@ -96,5 +98,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodvenda'
 
 	get QPrimaryKey() { return this.ValCodvenda.value }
-	set QPrimaryKey(value) { this.ValCodvenda.value = value }
+	set QPrimaryKey(value) { this.ValCodvenda.updateValue(value) }
 }

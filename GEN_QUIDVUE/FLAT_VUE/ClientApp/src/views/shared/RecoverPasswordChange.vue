@@ -1,7 +1,7 @@
 ﻿<template>
 	<div
 		v-if="isVisible"
-		class="f-login">
+		:class="['f-login' , ...authenticationClasses]">
 		<div class="f-login__container">
 			<div class="f-login__background">
 				<div class="f-login__brand">
@@ -10,53 +10,64 @@
 						alt="" />
 					<p>{{ texts.appName }}</p>
 				</div>
+				
+				<p class="q-logon-text">{{ texts.changePassword }}</p>
+				
+				<div class="form-flow">	
+					<q-password-input
+						v-bind="controls.NewPassword"
+						:model-value="model.NewPassword.value"
+						:placeholder="texts.newPassword"
+						:classes="{ error: newPasswordError && showError }"
+						size="block"
+						@update:model-value="updateNewPasswordValue">
+						<template #prepend>
+							<span>
+								<q-icon icon="lock" />
+							</span>
+						</template>
+					</q-password-input>
 
-				<h2>{{ texts.changePassword }}</h2>
+					<div 
+						v-if="newPasswordError && showError"
+						class="i-text__error">
+						<q-icon icon="exclamation-sign" />
+						{{ validationErrors["NewPassword"][0] }}
+					</div>					
 
-				<q-validation-summary :error-data="validationErrors" />
+					<q-password-input
+						v-bind="controls.ConfirmPassword"
+						:placeholder="texts.confirmPassword"
+						:classes="{ error: confirmPasswordError && showError }"
+						size="block"
+						:model-value="model.ConfirmPassword.value" 
+						@keyup-enter="resetPassword"
+						@update:model-value="updateConfirmPasswordValue">
+						<template #prepend>
+							<span>
+								<q-icon icon="lock" />
+							</span>
+						</template>
+					</q-password-input>
 
-				<div>
-					<fieldset>
-						<div class="clearfix">
-							<base-input-structure v-bind="controls.UserId">
-								<q-text-field
-									class="f-login__input-field"
-									v-bind="controls.UserId.props"
-									:model-value="model.UserId.value"
-									@update:model-value="model.UserId.fnUpdateValue" />
-							</base-input-structure>
-						</div>
 
-						<div class="clearfix">
-							<base-input-structure v-bind="controls.NewPassword">
-								<q-password-input
-									:classes="['f-login__input-field']"
-									v-bind="controls.NewPassword"
-									:model-value="model.NewPassword.value"
-									@update:model-value="model.NewPassword.fnUpdateValue" />
-							</base-input-structure>
-						</div>
+					<div 
+						v-if="errorMessage"
+						class="i-text__error">
+						<q-icon icon="exclamation-sign" />
+						{{ errorMessage }}
+					</div>	
 
-						<div class="clearfix">
-							<base-input-structure v-bind="controls.ConfirmPassword">
-								<q-password-input
-									:classes="['f-login__input-field']"
-									v-bind="controls.ConfirmPassword"
-									:model-value="model.ConfirmPassword.value"
-									@update:model-value="model.ConfirmPassword.fnUpdateValue" />
-							</base-input-structure>
-						</div>
-
-						<div class="actions">
-							<q-button
-								b-style="primary"
-								block
-								:class="['q-btn--login', 'text-uppercase']"
-								:label="texts.reset"
-								:title="texts.reset"
-								@click="resetPassword" />
-						</div>
-					</fieldset>
+					<div class="q-logon-btns-container">
+						<q-button
+							b-style="secondary"
+							block
+							:class="['q-btn--login', 'text-uppercase']"
+							:label="texts.reset"
+							:title="texts.reset"
+							:loading="loading"
+							@click="resetPassword" />
+					</div>
 				</div>
 			</div>
 		</div>
@@ -76,23 +87,15 @@
 	import VueNavigation from '@/mixins/vueNavigation.js'
 	import modelFieldType from '@/mixins/formModelFieldTypes.js'
 	import fieldControlClass from '@/mixins/fieldControl.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
 	import ViewModelBase from '@/mixins/formViewModelBase.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
+	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 
 	class ViewModel extends ViewModelBase
 	{
 		constructor(vueContext)
 		{
 			super(vueContext)
-
-			this.UserId = new modelFieldType.String({
-				id: 'UserId',
-				originId: 'UserId',
-				field: 'UserId',
-				readonly: true,
-				required: true
-			})
 
 			this.NewPassword = new modelFieldType.String({
 				id: 'NewPassword',
@@ -115,7 +118,8 @@
 
 		mixins: [
 			NavHandlers,
-			VueNavigation
+			VueNavigation,
+			LayoutHandlers
 		],
 
 		expose: [
@@ -127,6 +131,10 @@
 			return {
 				validationErrors: {},
 
+				loading: false,
+
+				showError: false,
+
 				isVisible: false,
 
 				internalEvents: new QEventEmitter(),
@@ -134,15 +142,6 @@
 				model: new ViewModel(this),
 
 				controls: {
-					UserId: new fieldControlClass.StringControl({
-						id: 'UserId',
-						modelField: 'UserId',
-						valueChangeEvent: 'fieldChange:email',
-						name: 'UserId',
-						label: computed(() => this.Resources[hardcodedTexts.user]),
-						maxLength: 75,
-						labelAttrs: null
-					}, this),
 					NewPassword: new fieldControlClass.StringControl({
 						id: 'NewPassword',
 						modelField: 'NewPassword',
@@ -168,7 +167,9 @@
 				texts: {
 					appName: computed(() => this.Resources[hardcodedTexts.appName]),
 					changePassword: computed(() => this.Resources[hardcodedTexts.changePassword]),
-					reset: computed(() => this.Resources[hardcodedTexts.reset])
+					reset: computed(() => this.Resources[hardcodedTexts.reset]),
+					newPassword: computed(() => this.Resources[hardcodedTexts.newPassword]),
+					confirmPassword: computed(() => this.Resources[hardcodedTexts.confirmPassword]),
 				}
 			}
 		},
@@ -180,7 +181,6 @@
 			else
 			{
 				this.isVisible = true
-				this.model.UserId.updateValue(this.$route.query.UserId)
 				this.initFormControls(true)
 			}
 		},
@@ -197,7 +197,31 @@
 
 			...mapState(useAuthDataStore, [
 				'hasPasswordRecovery'
-			])
+			]),
+
+			newPasswordError()
+			{	
+				return !this.isEmpty(this.validationErrors) && this.validationErrors["NewPassword"]
+			},
+
+			confirmPasswordError()
+			{	
+				return !this.isEmpty(this.validationErrors) && this.validationErrors["ConfirmPassword"]
+			},
+
+			genericError()
+			{
+				return !this.isEmpty(this.validationErrors) && this.validationErrors["error"]
+			},
+
+			errorMessage()
+			{
+				// Theres really not a better way do it this at the moment, if the user changed the language at runtime the message won't translate automatically
+				if(this.confirmPasswordError) return this.validationErrors["ConfirmPassword"][0]
+				if(this.genericError) return this.validationErrors["error"][0]
+				else return undefined
+			},
+
 		},
 
 		methods: {
@@ -210,33 +234,55 @@
 					this.model[fld].updateValue(modelValue[fld])
 			},
 
-			resetPassword()
+			hideError()
 			{
-				return this.netAPI.postData('Account', 'RecoverPasswordChange', this.model.serverObjModel, async (data, response) => {
-					this.setData(data)
+				this.showError = false
+			},
 
-					if (response.data.Success)
-						this.navigateToRouteName('password-recovery-change-success')
-					else
-					{
-						if (!_isEmpty(response.data.Errors))
-							this.validationErrors = response.data.Errors
-						else if (typeof response.data.Message === 'string')
-							genericFunctions.displayMessage(response.data.Message, 'error')
+			async resetPassword()
+			{	
+				this.loading = true
+				await this.netAPI.postData('Account', 'RecoverPasswordChange', this.model.serverObjModel, this.resetPasswordSuccess)
+				this.loading = false
+			},
+
+			resetPasswordSuccess(_, response)
+			{	
+				const responseData = response.data
+				this.setData(responseData.Data)
+
+				if (response.data.Success)
+					this.navigateToRouteName('password-recovery-change-success')
+				else
+				{
+					if (!_isEmpty(response.data.Errors)){
+						this.validationErrors = response.data.Errors
+						this.showError = true
+						this.model.ConfirmPassword.value = ''
 					}
-				})
+				}
 			},
 
 			initFormControls()
 			{
-				this.controls.UserId.Init(false)
-				this.controls.NewPassword.Init(true)
-				this.controls.ConfirmPassword.Init(true)
+				this.controls.NewPassword.init(true)
+				this.controls.ConfirmPassword.init(true)
 			},
 
 			destroyFormControls()
 			{
-				_forEach(this.controls, ctrl => ctrl.destroy())
+				_forEach(this.controls, (ctrl) => ctrl.destroy())
+			},
+
+			updateNewPasswordValue(newVal)
+			{
+				delete this.validationErrors["NewPassword"] // When the user starts typing hide the error message
+				this.model.NewPassword.fnUpdateValue(newVal)
+			},
+
+			updateConfirmPasswordValue(newVal){
+				delete this.validationErrors["ConfirmPassword"]
+				this.model.ConfirmPassword.fnUpdateValue(newVal)
 			}
 		}
 	}

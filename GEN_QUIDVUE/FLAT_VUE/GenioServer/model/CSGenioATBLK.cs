@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Table (Foreign Keys)
 	/// </summary>
-	public class CSGenioAtblk : DbArea	{
+	public class CSGenioAtblk : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -252,7 +253,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodtblk, value); }
 		}
 
-
 		/// <summary>Field : "Foreign Key 1" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldFkey1 { get { return m_fldFkey1; } }
 		private static FieldRef m_fldFkey1 = new FieldRef("tblk", "fkey1");
@@ -263,7 +263,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldFkey1); }
 			set { insertNameValueField(FldFkey1, value); }
 		}
-
 
 		/// <summary>Field : "Foreign Key 2" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldFkey2 { get { return m_fldFkey2; } }
@@ -276,7 +275,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldFkey2, value); }
 		}
 
-
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("tblk", "name");
@@ -287,7 +285,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldName); }
 			set { insertNameValueField(FldName, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -330,23 +327,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAtblk> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAtblk> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAtblk>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -395,7 +375,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX TBLK]/

@@ -3,7 +3,7 @@ import path from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
 import mkcert from 'vite-plugin-mkcert'
 
-const projectPack = require('./svgstore.config.js')
+import projectPack from './svgstore.config.js'
 
 function svgbundlePlugin()
 {
@@ -36,8 +36,12 @@ export default ({ mode }) => {
 			emptyOutDir: true,
 			rollupOptions: {
 				cache: true,
+				// TODO: Why is treeshake disabled?
 				treeshake: false,
 				output: {
+					// We need a balance between chunk size and number of requests
+					experimentalMinChunkSize: 100000,
+					compact: true,
 					manualChunks: {
 						ui: [
 							'@quidgest/ui'
@@ -55,7 +59,56 @@ export default ({ mode }) => {
 							'vue',
 							'vue-cookies',
 							'vue-i18n',
-							'vue-router'
+							'vue-router',
+							'uuid'
+						],
+
+						mainPageScript: [
+							'src/hardcodedTexts.js',
+							'src/api/network/index.js',
+							'src/api/genio/quidgestFunctions.js',
+							'src/api/genio/projectArrays.js',
+							'src/api/genio/menuRoutines.js',
+							'src/mixins/quidgest.mainEnums.js',
+							'src/mixins/layoutHandlers.js',
+							'src/mixins/alertHandlers.js'
+						],
+
+						mixins: [
+							'src/mixins/formHandlers.js',
+							'src/mixins/listHandlers.js',
+							'src/mixins/listColumnTypes.js',
+							'src/mixins/menuAction.js',
+							
+							'src/mixins/formViewModelBase.js',
+							'src/mixins/viewModelBase.js',
+						],
+
+						asyncMainPageFiles:
+						[
+							'src/views/shared/cav/CavContainer.vue',
+							'src/views/shared/Footer.vue',
+							'src/views/shared/LogOn.vue',
+							'src/views/shared/Suggestions.vue',
+							'src/views/shared/DebugWindow.vue',
+						],
+
+						/**
+						 * The main page
+						 */
+						mainPage: [
+							'src/App.vue',
+							'src/views/layout/Layout.vue',
+							'src/views/shared/QInfoMessageContainer.vue',
+							'src/views/shared/Breadcrumbs.vue',
+							'src/views/shared/RightSidebar.vue',
+							'src/components/QPageBusyState.vue',
+							'src/components/inputs/QCookies.vue',
+							'src/views/layout/NavigationalBar.vue',
+							'src/views/shared/BreadcrumbsContent.vue',
+							'src/views/shared/QRouterLink.vue',
+							'src/views/shared/Home.vue',
+							'src/views/shared/EmbeddedMenu.vue',
 						],
 
 						tableControls: [
@@ -71,7 +124,7 @@ export default ({ mode }) => {
 							'src/components/table/QTableChecklistCheckbox.vue',
 							'src/components/table/QTableSelector.vue',
 							'src/components/table/QTableColumnFilters.vue',
-							'src/components/table/QTableActiveFilters.vue',
+							'src/components/table/QTableCurrentFilters.vue',
 							'src/components/table/QTableActions.vue',
 							'src/components/table/QTableConfig.vue',
 							'src/components/table/QTableViews.vue',
@@ -99,6 +152,12 @@ export default ({ mode }) => {
 							'src/components/containers/QAnchorElement.vue'
 						],
 
+						/**
+						 * Render components are used by tables to display fields.
+						 * Edit components are used by tables for advanced filters, column filters 
+						 * and editable fields in normal tables 
+						 * (different than in the editable table lists).
+						 */
 						renderingControls: [
 							'src/components/rendering/QRenderArray.vue',
 							'src/components/rendering/QRenderBoolean.vue',
@@ -127,7 +186,7 @@ export default ({ mode }) => {
 		plugins: [
 			vue(),
 			svgbundlePlugin(),
-			visualizer()
+			visualizer(/*{ open: true, filename: 'bundle-analysis.html' }*/)
 		],
 		css: {
 			preprocessorOptions: {
@@ -161,14 +220,14 @@ export default ({ mode }) => {
 					target: 'https://localhost:7015/',
 					secure: false
 				},
-				'/OpenIdRegister': {
+				'/chatbotapi': {
 					target: 'https://localhost:7015/',
 					secure: false
 				},
-				'/OpenIdLogin': {
+				'/auth': {
 					target: 'https://localhost:7015/',
 					secure: false
-				},
+				}
 			},
 			port: 5173,
 			https: true
@@ -186,9 +245,7 @@ export default ({ mode }) => {
 	}
 
 	if (mode === 'development')
-	{
 		commonOptions.plugins.push(mkcert())
-	}
 
 	return commonOptions
 }

@@ -8,14 +8,13 @@
 			@submit.prevent>
 			<q-row-container>
 				<q-table
-					v-if="componentOnLoadProc.loaded"
-					v-bind="model.menu"
-					v-on="model.menu.handlers">
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
 				</q-table>
 
 				<q-table-extra-extension
-					:list-ctrl="model.menu"
-					v-on="model.menu.handlers" />
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
 	</teleport>
@@ -69,6 +68,8 @@
 	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
+	import MenuViewModel from './QMenuTBS_161ViewModel.js'
+
 	const requiredTextResources = ['QMenuTBS_161', 'hardcoded', 'messages']
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -116,6 +117,7 @@
 				menuInfo: {
 					id: '161',
 					isMenuList: true,
+					designation: computed(() => this.Resources.CONTACT_GENRES29532),
 					acronym: 'TBS_161',
 					name: 'GENCO',
 					route: 'menu-TBS_161',
@@ -125,12 +127,20 @@
 					isPopup: false
 				},
 
-				model: {
+				model: new MenuViewModel(this),
+
+				controls: {
 					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'TBS_Menu_161',
 						controller: 'GENRE',
 						action: 'TBS_Menu_161',
 						hasDependencies: false,
 						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
@@ -185,17 +195,17 @@
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
-							// eslint-disable-next-line no-unused-vars, eqeqeq
-							rowTextColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValTextcolo)==1,qApi.RGB(0,0,0),row.Fields.ValTextcolo),
-							// eslint-disable-next-line no-unused-vars, eqeqeq
-							rowBgColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValBackcolo)==1,qApi.RGB(255,255,255),row.Fields.ValBackcolo),
+							// eslint-disable-next-line no-unused-vars
+							rowTextColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValTextcolo)===1,qApi.RGB(0,0,0),row.Fields.ValTextcolo),
+							// eslint-disable-next-line no-unused-vars
+							rowBgColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValBackcolo)===1,qApi.RGB(255,255,255),row.Fields.ValBackcolo),
 							crudActions: [
 								{
 									id: 'show',
@@ -293,6 +303,7 @@
 								id: 'RCA_TBS_1611',
 								name: 'form-GENCO',
 								params: {
+									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
@@ -309,23 +320,17 @@
 									isPopup: false
 								},
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							// The list support form: GENCO
-							crudConditions: {
-							},
 							defaultSearchColumnName: 'ValGender',
 							defaultSearchColumnNameOriginal: 'ValGender',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValGender',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-GENRE'],
 						uuid: '367a8002-7b01-45e4-9022-ea27414db6de',
 						allSelectedRows: 'false',
-						headerLevel: 1
+						headerLevel: 1,
 					}, this)
 				}
 			}
@@ -354,6 +359,10 @@
 		},
 
 		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS TBS_161]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT LISTING_CODEJS TBS_MENU_161]/
 // eslint-disable-next-line

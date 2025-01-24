@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Rooms;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_SALAS_CANCEL = new NavigationLocation("ROOM50867", "Salas_Cancel", "Rooms") { vueRouteName = "form-SALAS", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_SALAS_SHOW = new NavigationLocation("ROOM50867", "Salas_Show", "Rooms") { vueRouteName = "form-SALAS", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_SALAS_NEW = new NavigationLocation("ROOM50867", "Salas_New", "Rooms") { vueRouteName = "form-SALAS", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_SALAS_EDIT = new NavigationLocation("ROOM50867", "Salas_Edit", "Rooms") { vueRouteName = "form-SALAS", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_SALAS_DUPLICATE = new NavigationLocation("ROOM50867", "Salas_Duplicate", "Rooms") { vueRouteName = "form-SALAS", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_SALAS_DELETE = new NavigationLocation("ROOM50867", "Salas_Delete", "Rooms") { vueRouteName = "form-SALAS", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_SALAS_CANCEL = new("ROOM50867", "Salas_Cancel", "Rooms") { vueRouteName = "form-SALAS", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_SALAS_SHOW = new("ROOM50867", "Salas_Show", "Rooms") { vueRouteName = "form-SALAS", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_SALAS_NEW = new("ROOM50867", "Salas_New", "Rooms") { vueRouteName = "form-SALAS", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_SALAS_EDIT = new("ROOM50867", "Salas_Edit", "Rooms") { vueRouteName = "form-SALAS", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_SALAS_DUPLICATE = new("ROOM50867", "Salas_Duplicate", "Rooms") { vueRouteName = "form-SALAS", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_SALAS_DELETE = new("ROOM50867", "Salas_Delete", "Rooms") { vueRouteName = "form-SALAS", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Salas_ModalDBEdit()
-		{
-			Salas_ViewModel model = new Salas_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Salas_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Salas Multiform actions
 
-		//
-		// GET /Rooms/MFSalas_New
-		[HttpGet]
-		[ActionName("MFSalas_New")]
-		public ActionResult MFSalas_New()
-		{
-			var model = new Salas_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_SALAS_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("rooms", model.ValCodrooms);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFSalas_New_GET()
-		{
-			return MFSalas_New();
-		}
-
-		//
-		// GET /Rooms/MFSalas_Edit
-		[HttpGet]
-		[ActionName("MFSalas_Edit")]
-		public ActionResult MFSalas_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("SALAS", "EDIT", new { id = id, partialView = "MFSalas", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFSalas_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFSalas_Edit(requestModel);
-		}
-
-		//
-		// GET /Rooms/MFSalas_Cancel
-		[ActionName("MFSalas_Cancel")]
-		public ActionResult MFSalas_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Rooms(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Rooms/MFSalas_Save
-		[HttpPost]
-		[ActionName("MFSalas_Save")]
-		public JsonResult MFSalas_Save(Salas_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFSalas_Save",
-				ViewName = "MFSalas",
-				AreaName = "rooms"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Rooms/MFSalas_Delete
-		[HttpPost]
-		[ActionName("MFSalas_Delete")]
-		public JsonResult MFSalas_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFSalas_Delete",
-				ViewName = "MFSalas",
-				AreaName = "rooms",
-				Location = ACTION_SALAS_EDIT
-			};
-
-			var model = new Salas_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Rooms/Salas_SaveEdit
 		[HttpPost]

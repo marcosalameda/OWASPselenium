@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Controller
 	/// </summary>
-	public class CSGenioAaudit : DbArea	{
+	public class CSGenioAaudit : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -226,7 +227,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodaudit, value); }
 		}
 
-
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldNome { get { return m_fldNome; } }
 		private static FieldRef m_fldNome = new FieldRef("audit", "nome");
@@ -237,7 +237,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldNome); }
 			set { insertNameValueField(FldNome, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -280,23 +279,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAaudit> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAaudit> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAaudit>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -345,7 +327,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX AUDIT]/

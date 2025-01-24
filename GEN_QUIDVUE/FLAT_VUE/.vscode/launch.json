@@ -5,29 +5,35 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (web)",
+            "name": "Launch Frontend",
+            "type": "chrome",
+            "url": "https://localhost:5173",
+            "request": "launch",
+            "webRoot": "${workspaceFolder}/ClientApp",
+            "preLaunchTask": "vite"
+        },
+        {
+            "name": "Launch Backend",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
             "program": "${workspaceFolder}/GenioMVC/bin/Debug/net8.0/GenioMVC.dll",
             "args": [],
             "cwd": "${workspaceFolder}/GenioMVC",
             "stopAtEntry": false,
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },
+            "logging": {
+                "moduleLoad": false
+            },
+            "justMyCode": true
+        }
+    ],
+    "compounds": [
         {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach"
+            "name": "Debug Ui+Portal",
+            "configurations": ["Launch Backend", "Launch Frontend"],
+            "stopAll": true
         }
     ]
 }

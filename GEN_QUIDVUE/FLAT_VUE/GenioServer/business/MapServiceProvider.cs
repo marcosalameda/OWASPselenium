@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace CSGenio.business
 {
@@ -21,30 +21,37 @@ namespace CSGenio.business
 		/// <returns>A token to access the ArcGis service, or null if some error prevents it's obtainment</returns>
 		public string GetToken(IDictionary<string, string> parameters)
 		{
-			string expiration = "1440"; // Default expiration time of 1 day (in minutes).
-
-			if (parameters.ContainsKey("expiration"))
-				expiration = parameters["expiration"];
-
-			using (var client = new HttpClient())
+			try
 			{
-				string url = parameters["baseUrl"] + parameters["tokenPath"];
+				string expiration = "1440"; // Default expiration time of 1 day (in minutes).
 
-				var data = new Dictionary<string, string>
+				if (parameters.ContainsKey("expiration"))
+					expiration = parameters["expiration"];
+
+				using (var client = new HttpClient())
 				{
-					{ "username", parameters["username"] },
-					{ "password", parameters["password"] },
-					{ "f", "json" },
-					{ "client", "referer" },
-					{ "referer", parameters["baseUrl"] },
-					{ "expiration", expiration }
-				};
+					string url = parameters["baseUrl"] + parameters["tokenPath"];
 
-				var response = client.PostAsync(url, new FormUrlEncodedContent(data)).Result;
-				var responseContent = response.Content.ReadAsStringAsync();
+					var data = new Dictionary<string, string>
+					{
+						{ "username", parameters["username"] },
+						{ "password", parameters["password"] },
+						{ "f", "json" },
+						{ "client", "referer" },
+						{ "referer", parameters["baseUrl"] },
+						{ "expiration", expiration }
+					};
 
-				var responseData = (JObject) JsonConvert.DeserializeObject(responseContent.Result);
-				return responseData?.SelectToken("token")?.Value<string>();
+					var response = client.PostAsync(url, new FormUrlEncodedContent(data)).Result;
+					var responseContent = response.Content.ReadAsStringAsync();
+
+					var responseData = (JObject) JsonConvert.DeserializeObject(responseContent.Result);
+					return responseData?.SelectToken("token")?.Value<string>();
+				}
+			}
+			catch
+			{
+				return null;
 			}
 		}
 	}

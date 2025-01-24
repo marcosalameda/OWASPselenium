@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Tradu
 {
-	public class Tradu_ViewModel : FormViewModel<Models.Tradu>
+	public class Tradu_ViewModel : FormViewModel<Models.Tradu>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,26 +29,35 @@ namespace GenioMVC.ViewModels.Tradu
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Language" | Type: "CE"
+		/// </summary>
+		public string ValCodidio1 { get; set; }
+		/// <summary>
+		/// Title: "Language" | Type: "CE"
+		/// </summary>
+		public string ValCodidio2 { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Reference" | Type: "C"
 		/// </summary>
 		public string ValReferenc { get; set; }
-
 		/// <summary>
 		/// Title: "Language" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Lang1> TableLang1Langua { get; set; }
-
 		/// <summary>
 		/// Title: "To translate" | Type: "C"
 		/// </summary>
 		public string ValAtraduzi { get; set; }
-
 		/// <summary>
 		/// Title: "Language" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Lang2> TableLang2Langua { get; set; }
-
 		/// <summary>
 		/// Title: "Translated" | Type: "C"
 		/// </summary>
@@ -61,20 +70,6 @@ namespace GenioMVC.ViewModels.Tradu
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Language" | Type: "CE"
-		/// </summary>
-		public string ValCodidio1 { get; set; }
-
-		/// <summary>
-		/// Title: "Language" | Type: "CE"
-		/// </summary>
-		public string ValCodidio2 { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -90,9 +85,10 @@ namespace GenioMVC.ViewModels.Tradu
 
 		public string ValCodtradu { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Tradu_ViewModel() : base(null!) { }
@@ -128,6 +124,15 @@ namespace GenioMVC.ViewModels.Tradu
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Tradu model = new Models.Tradu(userContext) { Identifier = "FTRADU" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FTRADU");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -188,11 +193,11 @@ namespace GenioMVC.ViewModels.Tradu
 
 			try
 			{
+				ValCodidio1 = ViewModelConversion.ToString(m.ValCodidio1);
+				ValCodidio2 = ViewModelConversion.ToString(m.ValCodidio2);
 				ValReferenc = ViewModelConversion.ToString(m.ValReferenc);
 				ValAtraduzi = ViewModelConversion.ToString(m.ValAtraduzi);
 				ValTraduzid = ViewModelConversion.ToString(m.ValTraduzid);
-				ValCodidio1 = ViewModelConversion.ToString(m.ValCodidio1);
-				ValCodidio2 = ViewModelConversion.ToString(m.ValCodidio2);
 				ValCodtradu = ViewModelConversion.ToString(m.ValCodtradu);
 			}
 			catch (Exception)
@@ -202,6 +207,20 @@ namespace GenioMVC.ViewModels.Tradu
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Tradu m)
 		{
 			if (m == null)
@@ -212,22 +231,78 @@ namespace GenioMVC.ViewModels.Tradu
 
 			try
 			{
+				m.ValCodidio1 = ViewModelConversion.ToString(ValCodidio1);
+				m.ValCodidio2 = ViewModelConversion.ToString(ValCodidio2);
 				m.ValReferenc = ViewModelConversion.ToString(ValReferenc);
 				m.ValAtraduzi = ViewModelConversion.ToString(ValAtraduzi);
 				m.ValTraduzid = ViewModelConversion.ToString(ValTraduzid);
-				m.ValCodidio1 = ViewModelConversion.ToString(ValCodidio1);
-				m.ValCodidio2 = ViewModelConversion.ToString(ValCodidio2);
 				m.ValCodtradu = ViewModelConversion.ToString(ValCodtradu);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Tradu) to Model (Tradu) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Tradu) to Model (Tradu) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "tradu.codidio1":
+						this.ValCodidio1 = ViewModelConversion.ToString(_value);
+						break;
+					case "tradu.codidio2":
+						this.ValCodidio2 = ViewModelConversion.ToString(_value);
+						break;
+					case "tradu.referenc":
+						this.ValReferenc = ViewModelConversion.ToString(_value);
+						break;
+					case "tradu.atraduzi":
+						this.ValAtraduzi = ViewModelConversion.ToString(_value);
+						break;
+					case "tradu.traduzid":
+						this.ValTraduzid = ViewModelConversion.ToString(_value);
+						break;
+					case "tradu.codtradu":
+						this.ValCodtradu = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Tradu) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Tradu)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Tradu.Find(id ?? Navigation.GetStrValue("tradu"), m_userContext, "FTRADU"); }
+			finally { Model ??= new Models.Tradu(m_userContext) { Identifier = "FTRADU" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -241,20 +316,13 @@ namespace GenioMVC.ViewModels.Tradu
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FTRADU";
@@ -264,6 +332,7 @@ namespace GenioMVC.ViewModels.Tradu
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -322,33 +391,27 @@ namespace GenioMVC.ViewModels.Tradu
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValReferenc", Resources.Resources.REFERENCE28402, ValReferenc, 50);
 			validator.StringLength("ValAtraduzi", Resources.Resources.TO_TRANSLATE20058, ValAtraduzi, 50);
 			validator.StringLength("ValTraduzid", Resources.Resources.TRANSLATED03333, ValTraduzid, 50);
 
+
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE TRADU]/
 		public override void Save()
 		{
 
-			try { Model = Models.Tradu.Find(Navigation.GetStrValue("tradu"), m_userContext, "FTRADU"); }
-			finally { if (Model == null) Model = new Models.Tradu(m_userContext) { Identifier = "FTRADU" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY TRADU]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Tradu.Find(Navigation.GetStrValue("tradu"), m_userContext, "FTRADU"); }
-			finally { if (Model == null) Model = new Models.Tradu(m_userContext) { Identifier = "FTRADU" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE TRADU]/
 
@@ -381,8 +444,8 @@ namespace GenioMVC.ViewModels.Tradu
 				object hValue = Navigation.GetValue("lang1", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					tradu___lang1langua__Conds.Equal(CSGenioAlang1.FldCodlang, Navigation.GetValue("lang1"));
-					this.ValCodidio1 = Navigation.GetStrValue("lang1");
+					tradu___lang1langua__Conds.Equal(CSGenioAlang1.FldCodlang, hValue);
+					this.ValCodidio1 = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -399,8 +462,6 @@ namespace GenioMVC.ViewModels.Tradu
 					Navigation.CurrentLevel.SetEntry("RETURN_lang1", null);
 				}
 				FillDependant_TraduTableLang1Langua(lazyLoad);
-				//Check if foreignkey comes from history
-				TableLang1Langua.FilledByHistory = Navigation.CheckFilledByHistory("lang1");
 				return;
 			}
 
@@ -468,9 +529,6 @@ namespace GenioMVC.ViewModels.Tradu
 
 				TableLang1Langua.List = new SelectList(TableLang1Langua.Elements.ToSelectList(x => x.ValLangua, x => x.ValCodlang,  x => x.ValCodlang == this.ValCodidio1), "Value", "Text", this.ValCodidio1);
 				FillDependant_TraduTableLang1Langua();
-
-				//Check if foreignkey comes from history
-				TableLang1Langua.FilledByHistory = Navigation.CheckFilledByHistory("lang1");
 			}
 		}
 
@@ -576,8 +634,8 @@ namespace GenioMVC.ViewModels.Tradu
 				object hValue = Navigation.GetValue("lang2", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					tradu___lang2langua__Conds.Equal(CSGenioAlang2.FldCodlang, Navigation.GetValue("lang2"));
-					this.ValCodidio2 = Navigation.GetStrValue("lang2");
+					tradu___lang2langua__Conds.Equal(CSGenioAlang2.FldCodlang, hValue);
+					this.ValCodidio2 = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -594,8 +652,6 @@ namespace GenioMVC.ViewModels.Tradu
 					Navigation.CurrentLevel.SetEntry("RETURN_lang2", null);
 				}
 				FillDependant_TraduTableLang2Langua(lazyLoad);
-				//Check if foreignkey comes from history
-				TableLang2Langua.FilledByHistory = Navigation.CheckFilledByHistory("lang2");
 				return;
 			}
 
@@ -663,9 +719,6 @@ namespace GenioMVC.ViewModels.Tradu
 
 				TableLang2Langua.List = new SelectList(TableLang2Langua.Elements.ToSelectList(x => x.ValLangua, x => x.ValCodlang,  x => x.ValCodlang == this.ValCodidio2), "Value", "Text", this.ValCodidio2);
 				FillDependant_TraduTableLang2Langua();
-
-				//Check if foreignkey comes from history
-				TableLang2Langua.FilledByHistory = Navigation.CheckFilledByHistory("lang2");
 			}
 		}
 
@@ -762,19 +815,21 @@ namespace GenioMVC.ViewModels.Tradu
 		{
 			return identifier switch
 			{
+				"tradu.codidio1" => ViewModelConversion.ToString(modelValue),
+				"tradu.codidio2" => ViewModelConversion.ToString(modelValue),
 				"tradu.referenc" => ViewModelConversion.ToString(modelValue),
 				"tradu.atraduzi" => ViewModelConversion.ToString(modelValue),
 				"tradu.traduzid" => ViewModelConversion.ToString(modelValue),
-				"tradu.codidio1" => ViewModelConversion.ToString(modelValue),
-				"tradu.codidio2" => ViewModelConversion.ToString(modelValue),
 				"tradu.codtradu" => ViewModelConversion.ToString(modelValue),
 				"lang1.codlang" => ViewModelConversion.ToString(modelValue),
 				"lang1.langua" => ViewModelConversion.ToString(modelValue),
 				"lang2.codlang" => ViewModelConversion.ToString(modelValue),
 				"lang2.langua" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

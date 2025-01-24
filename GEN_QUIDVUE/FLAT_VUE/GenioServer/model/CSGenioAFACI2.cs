@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Facility
 	/// </summary>
-	public class CSGenioAfaci2 : DbArea	{
+	public class CSGenioAfaci2 : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -150,6 +151,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Latitude";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 6;
 			Qfield.CavDesignation = "LATITUDE11291";
 
@@ -161,6 +163,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Longitude";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 6;
 			Qfield.CavDesignation = "LONGITUDE01015";
 
@@ -189,8 +192,18 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"gpsinput","latitude","longitud","geocoori"}, new int[] {0,1,2,3}, "faci2", "codfacil"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 4, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((((string)args[0])=="L")?(new GlobalFunctions(user,module,sp).GetGeoFromLatLng(((double)args[1]),((double)args[2]))):(((string)args[3])));
+				return ((((string)args[0])=="L")?(new GlobalFunctions(user,module,sp).GetGeoFromLatLng(((decimal)args[1]),((decimal)args[2]))):(((string)args[3])));
 			});
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("codcntry", FieldType.CHAVE_FALSA_GUID);
+			Qfield.FieldDescription = ">> Country";
+			Qfield.FieldSize =  36;
+			Qfield.Alias = info.Alias;
+			Qfield.CavDesignation = "___COUNTRY10061";
+
+			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -255,7 +268,7 @@ namespace CSGenio.business
 			argumentsListByArea= new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"longitud","longitud"},new int[] {0,1},"faci2","codfacil"));
 			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 2, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return ((double)args[0])>=-180&&((double)args[1])<=180;
+				return ((decimal)args[0])>=-180&&((decimal)args[1])<=180;
 			});
 			writeCondition.ErrorWarning = "Longitudes range from -180 to 180.";
             writeCondition.Type =  ConditionType.ERROR;
@@ -270,7 +283,7 @@ namespace CSGenio.business
 			argumentsListByArea= new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"latitude","latitude"},new int[] {0,1},"faci2","codfacil"));
 			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 2, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return ((double)args[0])>=-90&&((double)args[1])<=90;
+				return ((decimal)args[0])>=-90&&((decimal)args[1])<=90;
 			});
 			writeCondition.ErrorWarning = "Latitudes range from -90 to 90.";
             writeCondition.Type =  ConditionType.ERROR;
@@ -391,7 +404,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodfacil, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldCodentit { get { return m_fldCodentit; } }
 		private static FieldRef m_fldCodentit = new FieldRef("faci2", "codentit");
@@ -402,7 +414,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodentit); }
 			set { insertNameValueField(FldCodentit, value); }
 		}
-
 
 		/// <summary>Field : "Incorporation" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldIncorpor { get { return m_fldIncorpor; } }
@@ -415,7 +426,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldIncorpor, value); }
 		}
 
-
 		/// <summary>Field : "Facility name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("faci2", "name");
@@ -426,7 +436,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldName); }
 			set { insertNameValueField(FldName, value); }
 		}
-
 
 		/// <summary>Field : "Facility type" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldFaciltyp { get { return m_fldFaciltyp; } }
@@ -439,7 +448,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldFaciltyp, value); }
 		}
 
-
 		/// <summary>Field : "Address" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldAddress { get { return m_fldAddress; } }
 		private static FieldRef m_fldAddress = new FieldRef("faci2", "address");
@@ -450,7 +458,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldAddress); }
 			set { insertNameValueField(FldAddress, value); }
 		}
-
 
 		/// <summary>Field : ">>Facility type" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldCodfacty { get { return m_fldCodfacty; } }
@@ -463,7 +470,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodfacty, value); }
 		}
 
-
 		/// <summary>Field : "Image" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldImage { get { return m_fldImage; } }
 		private static FieldRef m_fldImage = new FieldRef("faci2", "image");
@@ -474,7 +480,6 @@ namespace CSGenio.business
 			get { return (byte[])returnValueField(FldImage); }
 			set { insertNameValueField(FldImage, value); }
 		}
-
 
 		/// <summary>Field : "GPS input" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldGpsinput { get { return m_fldGpsinput; } }
@@ -487,30 +492,27 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGpsinput, value); }
 		}
 
-
 		/// <summary>Field : "Latitude" Tipo: "ND" Formula:  ""</summary>
 		public static FieldRef FldLatitude { get { return m_fldLatitude; } }
 		private static FieldRef m_fldLatitude = new FieldRef("faci2", "latitude");
 
 		/// <summary>Field : "Latitude" Tipo: "ND" Formula:  ""</summary>
-		public double ValLatitude
+		public decimal ValLatitude
 		{
-			get { return (double)returnValueField(FldLatitude); }
+			get { return (decimal)returnValueField(FldLatitude); }
 			set { insertNameValueField(FldLatitude, value); }
 		}
-
 
 		/// <summary>Field : "Longitude" Tipo: "ND" Formula:  ""</summary>
 		public static FieldRef FldLongitud { get { return m_fldLongitud; } }
 		private static FieldRef m_fldLongitud = new FieldRef("faci2", "longitud");
 
 		/// <summary>Field : "Longitude" Tipo: "ND" Formula:  ""</summary>
-		public double ValLongitud
+		public decimal ValLongitud
 		{
-			get { return (double)returnValueField(FldLongitud); }
+			get { return (decimal)returnValueField(FldLongitud); }
 			set { insertNameValueField(FldLongitud, value); }
 		}
-
 
 		/// <summary>Field : "Geographical coordinate" Tipo: "GG" Formula:  ""</summary>
 		public static FieldRef FldGeocoori { get { return m_fldGeocoori; } }
@@ -523,7 +525,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGeocoori, value); }
 		}
 
-
 		/// <summary>Field : "Geographical coordinate" Tipo: "GG" Formula: + "iif([FACI2->GPSINPUT]=="L",GetGeoFromLatLng([FACI2->LATITUDE],[FACI2->LONGITUD]),[FACI2->GEOCOORI])"</summary>
 		public static FieldRef FldGeocoord { get { return m_fldGeocoord; } }
 		private static FieldRef m_fldGeocoord = new FieldRef("faci2", "geocoord");
@@ -535,6 +536,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGeocoord, value); }
 		}
 
+		/// <summary>Field : ">> Country" Tipo: "CF" Formula:  ""</summary>
+		public static FieldRef FldCodcntry { get { return m_fldCodcntry; } }
+		private static FieldRef m_fldCodcntry = new FieldRef("faci2", "codcntry");
+
+		/// <summary>Field : ">> Country" Tipo: "CF" Formula:  ""</summary>
+		public string ValCodcntry
+		{
+			get { return (string)returnValueField(FldCodcntry); }
+			set { insertNameValueField(FldCodcntry, value); }
+		}
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -577,23 +588,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAfaci2> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAfaci2> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAfaci2>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -642,14 +636,14 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX FACI2]/
 
      
 
-              
+               
 
 	}
 }

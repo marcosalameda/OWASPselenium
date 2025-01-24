@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "" Tipo: "+" Formula:  ""</summary>
@@ -41,23 +41,23 @@ namespace GenioMVC.Models
 		private Rogl1 _rogl1;
 		[DisplayName("Rogl1")]
 		[ShouldSerialize("Rogl1")]
-		public virtual Rogl1 Rogl1 { 
-			get { 
+		public virtual Rogl1 Rogl1 {
+			get {
 				if (!this.isEmptyModel && (_rogl1 == null || (!string.IsNullOrEmpty(ValCodrogl1) && (_rogl1.isEmptyModel || _rogl1.klass.QPrimaryKey != ValCodrogl1))))
 					_rogl1 = Models.Rogl1.Find(ValCodrogl1, m_userContext, Identifier, _fieldsToSerialize);
 				if (_rogl1 == null)
 					_rogl1 = new Models.Rogl1(m_userContext, true, _fieldsToSerialize);
 				return _rogl1;
 			}
-			set { _rogl1 = value; } 
+			set { _rogl1 = value; }
 		}
-		
+
 
 		[DisplayName("Order")]
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Roigf.ValOrder")]
 		[NumericAttribute(1)]
-		public decimal? ValOrder { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrder, 1)); } set { klass.ValOrder = Convert.ToDouble(value); } }
+		public decimal? ValOrder { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrder, 1)); } set { klass.ValOrder = Convert.ToDecimal(value); } }
 
 		[DisplayName("Title")]
 		/// <summary>Field : "Title" Tipo: "C" Formula:  ""</summary>
@@ -72,19 +72,19 @@ namespace GenioMVC.Models
 		public Roigf(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAroigf(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Roigf(UserContext userContext, CSGenioAroigf val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAroigf csgenioa)
@@ -106,7 +106,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

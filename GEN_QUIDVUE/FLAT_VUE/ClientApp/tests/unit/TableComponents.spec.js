@@ -1,19 +1,16 @@
-﻿/**
- * @jest-environment jsdom
- */
-import { within } from '@testing-library/dom'
+﻿import { findByTitle, within } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { fireEvent } from '@testing-library/vue'
 import { flushPromises } from '@vue/test-utils'
 import cloneDeep from 'lodash-es/cloneDeep'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import { render } from './utils'
 
 import listFunctions from '@/mixins/listFunctions.js'
 import fakeData from '../cases/Table.mock.js'
 
-import QTableActiveFilters from '@/components/table/QTableActiveFilters.vue'
+import QTableCurrentFilters from '@/components/table/QTableCurrentFilters.vue'
 import QTableChecklistCheckbox from '@/components/table/QTableChecklistCheckbox.vue'
 import QTableColumnFilters from '@/components/table/QTableColumnFilters.vue'
 import QTableExport from '@/components/table/QTableExport.vue'
@@ -26,19 +23,6 @@ import QTableStaticFilters from '@/components/table/QTableStaticFilters.vue'
 
 const global = {
 	stubs: ['inline-svg']
-}
-
-/**
- * Create popup element for dropdown to be teleported to.
- */
-function createPopup()
-{
-	const popup = document.createElement('div')
-	popup.id = 'q-dropdown'
-	popup.style.position = 'absolute'
-	popup.style.zIndex = 10000
-	document.body.appendChild(popup)
-	return popup
 }
 
 let tableTest
@@ -466,7 +450,7 @@ describe('QTableStaticFilters.vue', () => {
 		const controls = await within(controlgroup).findAllByRole('radio')
 		// Click filter control and check emit
 		await fireEvent.click(controls[idx])
-		expect(wrapper.emitted()).toHaveProperty('on-update-filter')
+		expect(wrapper.emitted()).toHaveProperty('update:groupFilters')
 	})
 
 	it('Selecting a filter checkbox emits event to update filter values', async () => {
@@ -486,7 +470,7 @@ describe('QTableStaticFilters.vue', () => {
 		const controls = await wrapper.findAllByRole('checkbox')
 		// Click filter control and check emit
 		await fireEvent.click(controls[idx])
-		expect(wrapper.emitted()).toHaveProperty('on-update-filter')
+		expect(wrapper.emitted()).toHaveProperty('update:groupFilters')
 	})
 
 	it('Selecting an active filter checkbox emits event to update filter values', async () => {
@@ -510,7 +494,7 @@ describe('QTableStaticFilters.vue', () => {
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		expect(wrapper.emitted()).toHaveProperty('on-update-filter')
+		expect(wrapper.emitted()).toHaveProperty('update:activeFilters')
 	})
 })
 
@@ -531,7 +515,7 @@ describe('QTablePagination.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
+		const buttons = await wrapper.findAllByRole('button')
 		// Click page button and check emit
 		await fireEvent.click(buttons[0])
 		expect(wrapper.emitted()).toHaveProperty('update:page')
@@ -554,7 +538,7 @@ describe('QTablePagination.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
+		const buttons = await wrapper.findAllByRole('button')
 		// Click page button and check emit
 		await fireEvent.click(buttons[1])
 		expect(wrapper.emitted()).toHaveProperty('update:page')
@@ -577,7 +561,7 @@ describe('QTablePagination.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
+		const buttons = await wrapper.findAllByRole('button')
 		// Click page button and check emit
 		await fireEvent.click(buttons[4])
 		expect(wrapper.emitted()).toHaveProperty('update:page')
@@ -600,7 +584,7 @@ describe('QTablePagination.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
+		const buttons = await wrapper.findAllByRole('button')
 		// Click page button and check emit
 		await fireEvent.click(buttons[7])
 		expect(wrapper.emitted()).toHaveProperty('update:page')
@@ -623,7 +607,7 @@ describe('QTablePagination.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
+		const buttons = await wrapper.findAllByRole('button')
 		// Click page button and check emit
 		await fireEvent.click(buttons[8])
 		expect(wrapper.emitted()).toHaveProperty('update:page')
@@ -632,12 +616,12 @@ describe('QTablePagination.vue', () => {
 		)
 	})
 
-	it('Pagination with no rows shows has no buttons', async () => {
+	it('Pagination with no rows has no buttons', async () => {
 		const dataPagination = cloneDeep(fakeData.paginationNormal01)
 		const wrapper = render(QTablePagination, {
 			global,
 			props: {
-				page: dataPagination.page,
+				page: 0,
 				perPage: dataPagination.perPage,
 				total: 0,
 				numVisibilePaginationButtons: dataPagination.numVisibilePaginationButtons,
@@ -648,11 +632,11 @@ describe('QTablePagination.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.queryAllByRole('link')
+		const buttons = await wrapper.queryAllByRole('button')
 		expect(buttons).toHaveLength(0)
 	})
 
-	it('Pagination on first page has numbered pages, next, last buttons', async () => {
+	it('Pagination on first page has first, previous, numbered pages, next, last buttons', async () => {
 		const dataPagination = cloneDeep(fakeData.paginationNormal01)
 		dataPagination.page = 1
 		const wrapper = render(QTablePagination, {
@@ -669,17 +653,19 @@ describe('QTablePagination.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
-		expect(buttons[0]).toHaveTextContent(dataPagination.page)
-		expect(buttons[1]).toHaveTextContent(dataPagination.page + 1)
-		expect(buttons[2]).toHaveTextContent(dataPagination.page + 2)
-		expect(buttons[3]).toHaveTextContent(dataPagination.page + 3)
-		expect(buttons[4]).toHaveTextContent(dataPagination.page + 4)
-		expect(buttons[5]).toHaveTextContent('>')
-		expect(buttons[6]).toHaveTextContent('>>')
+		const buttons = await wrapper.findAllByRole('button')
+		expect(buttons[0].getAttribute('aria-label')).toBe(tableTest.texts.first.value)
+		expect(buttons[1].getAttribute('aria-label')).toBe(tableTest.texts.previous.value)
+		expect(buttons[2]).toHaveTextContent(dataPagination.page)
+		expect(buttons[3]).toHaveTextContent(dataPagination.page + 1)
+		expect(buttons[4]).toHaveTextContent(dataPagination.page + 2)
+		expect(buttons[5]).toHaveTextContent(dataPagination.page + 3)
+		expect(buttons[6]).toHaveTextContent(dataPagination.page + 4)
+		expect(buttons[7].getAttribute('aria-label')).toBe(tableTest.texts.next.value)
+		expect(buttons[8].getAttribute('aria-label')).toBe(tableTest.texts.last.value)
 	})
 
-	it('Pagination on second page has previous, numbered pages, next, last buttons', async () => {
+	it('Pagination on second page has first, previous, numbered pages, next, last buttons', async () => {
 		const dataPagination = cloneDeep(fakeData.paginationNormal01)
 		dataPagination.page = 2
 		const wrapper = render(QTablePagination, {
@@ -696,15 +682,16 @@ describe('QTablePagination.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
-		expect(buttons[0]).toHaveTextContent('<')
-		expect(buttons[1]).toHaveTextContent(dataPagination.page - 1)
-		expect(buttons[2]).toHaveTextContent(dataPagination.page)
-		expect(buttons[3]).toHaveTextContent(dataPagination.page + 1)
-		expect(buttons[4]).toHaveTextContent(dataPagination.page + 2)
-		expect(buttons[5]).toHaveTextContent(dataPagination.page + 3)
-		expect(buttons[6]).toHaveTextContent('>')
-		expect(buttons[7]).toHaveTextContent('>>')
+		const buttons = await wrapper.findAllByRole('button')
+		expect(buttons[0].getAttribute('aria-label')).toBe(tableTest.texts.first.value)
+		expect(buttons[1].getAttribute('aria-label')).toBe(tableTest.texts.previous.value)
+		expect(buttons[2]).toHaveTextContent(dataPagination.page - 1)
+		expect(buttons[3]).toHaveTextContent(dataPagination.page)
+		expect(buttons[4]).toHaveTextContent(dataPagination.page + 1)
+		expect(buttons[5]).toHaveTextContent(dataPagination.page + 2)
+		expect(buttons[6]).toHaveTextContent(dataPagination.page + 3)
+		expect(buttons[7].getAttribute('aria-label')).toBe(tableTest.texts.next.value)
+		expect(buttons[8].getAttribute('aria-label')).toBe(tableTest.texts.last.value)
 	})
 
 	it('Pagination on middle page has first, previous, numbered pages, next, last buttons', async () => {
@@ -723,16 +710,16 @@ describe('QTablePagination.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
-		expect(buttons[0]).toHaveTextContent('<<')
-		expect(buttons[1]).toHaveTextContent('<')
+		const buttons = await wrapper.findAllByRole('button')
+		expect(buttons[0].getAttribute('aria-label')).toBe(tableTest.texts.first.value)
+		expect(buttons[1].getAttribute('aria-label')).toBe(tableTest.texts.previous.value)
 		expect(buttons[2]).toHaveTextContent(dataPagination.page - 2)
 		expect(buttons[3]).toHaveTextContent(dataPagination.page - 1)
 		expect(buttons[4]).toHaveTextContent(dataPagination.page)
 		expect(buttons[5]).toHaveTextContent(dataPagination.page + 1)
 		expect(buttons[6]).toHaveTextContent(dataPagination.page + 2)
-		expect(buttons[7]).toHaveTextContent('>')
-		expect(buttons[8]).toHaveTextContent('>>')
+		expect(buttons[7].getAttribute('aria-label')).toBe(tableTest.texts.next.value)
+		expect(buttons[8].getAttribute('aria-label')).toBe(tableTest.texts.last.value)
 	})
 
 	it('Pagination on second last page has first, previous, numbered pages, next buttons', async () => {
@@ -752,15 +739,15 @@ describe('QTablePagination.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
-		expect(buttons[0]).toHaveTextContent('<<')
-		expect(buttons[1]).toHaveTextContent('<')
+		const buttons = await wrapper.findAllByRole('button')
+		expect(buttons[0].getAttribute('aria-label')).toBe(tableTest.texts.first.value)
+		expect(buttons[1].getAttribute('aria-label')).toBe(tableTest.texts.previous.value)
 		expect(buttons[2]).toHaveTextContent(dataPagination.page - 3)
 		expect(buttons[3]).toHaveTextContent(dataPagination.page - 2)
 		expect(buttons[4]).toHaveTextContent(dataPagination.page - 1)
 		expect(buttons[5]).toHaveTextContent(dataPagination.page)
 		expect(buttons[6]).toHaveTextContent(dataPagination.page + 1)
-		expect(buttons[7]).toHaveTextContent('>')
+		expect(buttons[7].getAttribute('aria-label')).toBe(tableTest.texts.next.value)
 	})
 
 	it('Pagination on last page has first, previous, numbered pages buttons', async () => {
@@ -780,9 +767,9 @@ describe('QTablePagination.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
-		expect(buttons[0]).toHaveTextContent('<<')
-		expect(buttons[1]).toHaveTextContent('<')
+		const buttons = await wrapper.findAllByRole('button')
+		expect(buttons[0].getAttribute('aria-label')).toBe(tableTest.texts.first.value)
+		expect(buttons[1].getAttribute('aria-label')).toBe(tableTest.texts.previous.value)
 		expect(buttons[2]).toHaveTextContent(dataPagination.page - 4)
 		expect(buttons[3]).toHaveTextContent(dataPagination.page - 3)
 		expect(buttons[4]).toHaveTextContent(dataPagination.page - 2)
@@ -808,7 +795,7 @@ describe('QTablePaginationAlt.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
+		const buttons = await wrapper.findAllByRole('button')
 		// Click page button and check emit
 		await fireEvent.click(buttons[0])
 		expect(wrapper.emitted()).toHaveProperty('update:page')
@@ -831,7 +818,7 @@ describe('QTablePaginationAlt.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
+		const buttons = await wrapper.findAllByRole('button')
 		// Click page button and check emit
 		await fireEvent.click(buttons[1])
 		expect(wrapper.emitted()).toHaveProperty('update:page')
@@ -854,7 +841,7 @@ describe('QTablePaginationAlt.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
+		const buttons = await wrapper.findAllByRole('button')
 		// Click page button and check emit
 		await fireEvent.click(buttons[2])
 		expect(wrapper.emitted()).toHaveProperty('update:page')
@@ -879,7 +866,7 @@ describe('QTablePaginationAlt.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.queryAllByRole('link')
+		const buttons = await wrapper.queryAllByRole('button')
 		expect(buttons).toHaveLength(0)
 	})
 
@@ -900,13 +887,13 @@ describe('QTablePaginationAlt.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
-		expect(buttons[0]).toHaveTextContent('<<')
-		expect(buttons[1]).toHaveTextContent('<')
-		expect(buttons[2]).toHaveTextContent('>')
+		const buttons = await wrapper.findAllByRole('button')
+		expect(buttons[0].getAttribute('aria-label')).toBe(tableTest.texts.first.value)
+		expect(buttons[1].getAttribute('aria-label')).toBe(tableTest.texts.previous.value)
+		expect(buttons[2].getAttribute('aria-label')).toBe(tableTest.texts.next.value)
 	})
 
-	it('Pagination on second page has previous, next buttons', async () => {
+	it('Pagination on second page has first, previous, next buttons', async () => {
 		const dataPagination = cloneDeep(fakeData.paginationAlt01)
 		dataPagination.page = 2
 		const wrapper = render(QTablePaginationAlt, {
@@ -923,9 +910,10 @@ describe('QTablePaginationAlt.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
-		expect(buttons[0]).toHaveTextContent('<')
-		expect(buttons[buttons.length - 1]).toHaveTextContent('>')
+		const buttons = await wrapper.findAllByRole('button')
+		expect(buttons[0].getAttribute('aria-label')).toBe(tableTest.texts.first.value)
+		expect(buttons[1].getAttribute('aria-label')).toBe(tableTest.texts.previous.value)
+		expect(buttons[buttons.length - 1].getAttribute('aria-label')).toBe(tableTest.texts.next.value)
 	})
 
 	it('Pagination on middle page has first, previous, next buttons', async () => {
@@ -944,10 +932,10 @@ describe('QTablePaginationAlt.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
-		expect(buttons[0]).toHaveTextContent('<<')
-		expect(buttons[1]).toHaveTextContent('<')
-		expect(buttons[2]).toHaveTextContent('>')
+		const buttons = await wrapper.findAllByRole('button')
+		expect(buttons[0].getAttribute('aria-label')).toBe(tableTest.texts.first.value)
+		expect(buttons[1].getAttribute('aria-label')).toBe(tableTest.texts.previous.value)
+		expect(buttons[2].getAttribute('aria-label')).toBe(tableTest.texts.next.value)
 	})
 
 	it('Pagination on last page has first, previous buttons', async () => {
@@ -967,9 +955,9 @@ describe('QTablePaginationAlt.vue', () => {
 		await nextTick()
 
 		// Get page buttons
-		const buttons = await wrapper.findAllByRole('link')
-		expect(buttons[0]).toHaveTextContent('<<')
-		expect(buttons[1]).toHaveTextContent('<')
+		const buttons = await wrapper.findAllByRole('button')
+		expect(buttons[0].getAttribute('aria-label')).toBe(tableTest.texts.first.value)
+		expect(buttons[1].getAttribute('aria-label')).toBe(tableTest.texts.previous.value)
 	})
 })
 
@@ -1046,9 +1034,6 @@ describe('QTableChecklistCheckbox.vue', () => {
 })
 
 describe('QTableColumnFilters.vue', () => {
-	let popup
-	beforeEach(() => (popup = createPopup()))
-	afterEach(() => document.body.removeChild(popup))
 
 	it('Clicking sort ascending emits event, column and sort direction', async () => {
 		const dataFilter = fakeData.columnFilter01
@@ -1059,6 +1044,7 @@ describe('QTableColumnFilters.vue', () => {
 			global,
 			props: {
 				column: columns[1],
+				tableName: fakeData.searchableColumns01TableName,
 				query: {},
 				allowColumnSort: true,
 				allowColumnFilters: true,
@@ -1069,22 +1055,23 @@ describe('QTableColumnFilters.vue', () => {
 			}
 		})
 
+		// Arrange
+		const toggleButton = document.getElementById(listFunctions.getTableColumnDropdownToggleId(fakeData.searchableColumns01TableName, columns[1].name))
+		expect(toggleButton)
+
+		// Click toggle button to open dropdown
+		await fireEvent.click(toggleButton)
 		await nextTick()
 
-		const toggleButton = await wrapper.findByRole('button')
-		expect(toggleButton)
-		// Click button
-		await fireEvent.click(toggleButton)
-		// Check emit
-		expect(wrapper.emitted()).toHaveProperty('set-dropdown')
+		// Act
+		const sortAscButton = await findByTitle(document, 'ORDENAR_ASCENDENTE32130')
+		// Click sort ascending button
+		fireEvent.click(sortAscButton)
 
-		// Get buttons in dropdown
-		const buttons = await within(popup).findAllByRole('button')
-		// Click button
-		await fireEvent.click(buttons[0])
+		// Assert
 		// Check emit
 		expect(wrapper.emitted()).toHaveProperty('update-sort')
-		expect(wrapper.emitted()['update-sort'][0][0]).toEqual(columns[1])
+		expect(wrapper.emitted()['update-sort'][0][0]).toEqual(columns[1].name)
 		expect(wrapper.emitted()['update-sort'][0][1]).toBe('asc')
 	})
 
@@ -1097,6 +1084,7 @@ describe('QTableColumnFilters.vue', () => {
 			global,
 			props: {
 				column: columns[1],
+				tableName: fakeData.searchableColumns01TableName,
 				query: {},
 				allowColumnSort: true,
 				allowColumnFilters: true,
@@ -1107,22 +1095,23 @@ describe('QTableColumnFilters.vue', () => {
 			}
 		})
 
+		// Arrange
+		const toggleButton = document.getElementById(listFunctions.getTableColumnDropdownToggleId(fakeData.searchableColumns01TableName, columns[1].name))
+		expect(toggleButton)
+
+		// Click toggle button to open dropdown
+		await fireEvent.click(toggleButton)
 		await nextTick()
 
-		const toggleButton = await wrapper.findByRole('button')
-		expect(toggleButton)
-		// Click button
-		await fireEvent.click(toggleButton)
-		// Check emit
-		expect(wrapper.emitted()).toHaveProperty('set-dropdown')
+		// Act
+		const sortDescButton = await findByTitle(document, 'ORDENAR_DESCENDENTE63669')
+		// Click sort descending button
+		fireEvent.click(sortDescButton)
 
-		// Get buttons in dropdown
-		const buttons = await within(popup).findAllByRole('button')
-		// Click button
-		await fireEvent.click(buttons[1])
+		// Assert
 		// Check emit
 		expect(wrapper.emitted()).toHaveProperty('update-sort')
-		expect(wrapper.emitted()['update-sort'][0][0]).toEqual(columns[1])
+		expect(wrapper.emitted()['update-sort'][0][0]).toEqual(columns[1].name)
 		expect(wrapper.emitted()['update-sort'][0][1]).toBe('desc')
 	})
 
@@ -1135,8 +1124,10 @@ describe('QTableColumnFilters.vue', () => {
 			global,
 			props: {
 				column: columns[1],
+				tableName: fakeData.searchableColumns01TableName,
 				query: {},
 				allowColumnFilters: true,
+				allowColumnSort: true,
 				searchableColumns: searchableColumns,
 				filter: dataFilter,
 				searchFilterData: searchFilterData,
@@ -1144,19 +1135,20 @@ describe('QTableColumnFilters.vue', () => {
 			}
 		})
 
+		// Arrange
+		const toggleButton = document.getElementById(listFunctions.getTableColumnDropdownToggleId(fakeData.searchableColumns01TableName, columns[1].name))
+		expect(toggleButton)
+
+		// Click toggle button to open dropdown
+		await fireEvent.click(toggleButton)
 		await nextTick()
 
-		const toggleButton = await wrapper.findByRole('button')
-		expect(toggleButton)
-		// Click button
-		await fireEvent.click(toggleButton)
-		// Check emit
-		expect(wrapper.emitted()).toHaveProperty('set-dropdown')
+		// Act
+		const saveButton = await findByTitle(document, 'ACTIVAR_FILTRO21924')
+		// Click save button
+		fireEvent.click(saveButton)
 
-		// Get buttons in dropdown
-		const buttons = await within(popup).findAllByRole('button')
-		// Click button
-		await fireEvent.click(buttons[0])
+		// Assert
 		// Check emit
 		expect(wrapper.emitted()).toHaveProperty('edit-column-filter')
 		expect(wrapper.emitted()['edit-column-filter'][0][0]).toBe(
@@ -1173,6 +1165,7 @@ describe('QTableColumnFilters.vue', () => {
 			global,
 			props: {
 				column: columns[1],
+				tableName: fakeData.searchableColumns01TableName,
 				query: {},
 				allowColumnSort: true,
 				allowColumnFilters: true,
@@ -1183,19 +1176,20 @@ describe('QTableColumnFilters.vue', () => {
 			}
 		})
 
+		// Arrange
+		const toggleButton = document.getElementById(listFunctions.getTableColumnDropdownToggleId(fakeData.searchableColumns01TableName, columns[1].name))
+		expect(toggleButton)
+
+		// Click toggle button to open dropdown
+		await fireEvent.click(toggleButton)
 		await nextTick()
 
-		const toggleButton = await wrapper.findByRole('button')
-		expect(toggleButton)
-		// Click button
-		await fireEvent.click(toggleButton)
-		// Check emit
-		expect(wrapper.emitted()).toHaveProperty('set-dropdown')
+		// Act
+		const removeButton = await findByTitle(document, 'DESACTIVAR_FILTRO34573')
+		// Click remove button
+		fireEvent.click(removeButton)
 
-		// Get buttons in dropdown
-		const buttons = await within(popup).findAllByRole('button')
-		// Click button
-		await fireEvent.click(buttons[3])
+		// Assert
 		// Check emit
 		expect(wrapper.emitted()).toHaveProperty('remove-column-filter')
 		expect(wrapper.emitted()['remove-column-filter'][0][0]).toBe(
@@ -1204,14 +1198,14 @@ describe('QTableColumnFilters.vue', () => {
 	})
 })
 
-describe('QTableActiveFilters.vue', () => {
+describe('QTableCurrentFilters.vue', () => {
 	it('Configuration with advanced filters, column filters and searchbar filter show tag for each filter and tag to remove all filters', async () => {
 		const dataAdvancedFilters = fakeData.filterArray01
 		const dataColumnFilters = fakeData.filterHash01
 		const dataSearchBarFilters = fakeData.filterHash02
 		const hasFiltersActive = true
 		const searchableColumns = fakeData.searchableColumns01
-		const wrapper = render(QTableActiveFilters, {
+		const wrapper = render(QTableCurrentFilters, {
 			global,
 			props: {
 				searchableColumns: searchableColumns,
@@ -1241,7 +1235,7 @@ describe('QTableActiveFilters.vue', () => {
 		const dataSearchBarFilters = fakeData.filterHash02
 		const hasFiltersActive = true
 		const searchableColumns = fakeData.searchableColumns01
-		const wrapper = render(QTableActiveFilters, {
+		const wrapper = render(QTableCurrentFilters, {
 			global,
 			props: {
 				searchableColumns: searchableColumns,
@@ -1274,7 +1268,7 @@ describe('QTableActiveFilters.vue', () => {
 		const dataSearchBarFilters = null
 		const hasFiltersActive = true
 		const searchableColumns = fakeData.searchableColumns01
-		const wrapper = render(QTableActiveFilters, {
+		const wrapper = render(QTableCurrentFilters, {
 			global,
 			props: {
 				searchableColumns: searchableColumns,
@@ -1308,7 +1302,7 @@ describe('QTableActiveFilters.vue', () => {
 		const dataSearchBarFilters = null
 		const hasFiltersActive = true
 		const searchableColumns = fakeData.searchableColumns01
-		const wrapper = render(QTableActiveFilters, {
+		const wrapper = render(QTableCurrentFilters, {
 			global,
 			props: {
 				searchableColumns: searchableColumns,
@@ -1340,7 +1334,7 @@ describe('QTableActiveFilters.vue', () => {
 		const dataSearchBarFilters = fakeData.filterHash02
 		const hasFiltersActive = true
 		const searchableColumns = fakeData.searchableColumns01
-		const wrapper = render(QTableActiveFilters, {
+		const wrapper = render(QTableCurrentFilters, {
 			global,
 			props: {
 				searchableColumns: searchableColumns,

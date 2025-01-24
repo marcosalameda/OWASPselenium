@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Produ
 {
-	public class Produ_ViewModel : FormViewModel<Models.Produ>
+	public class Produ_ViewModel : FormViewModel<Models.Produ>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,81 +29,83 @@ namespace GenioMVC.ViewModels.Produ
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "GLN Extension Component" | Type: "CE"
+		/// </summary>
+		public string ValCodlcext { get; set; }
+		/// <summary>
+		/// Title: "Global Location Number" | Type: "CE"
+		/// </summary>
+		public string ValCodlocat { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Product" | Type: "C"
 		/// </summary>
 		public string ValProduct { get; set; }
-
 		/// <summary>
 		/// Title: "In use" | Type: "AL"
 		/// </summary>
 		public int ValIn_use { get; set; }
-
 		/// <summary>
 		/// Title: "" | Type: "PSEUD"
 		/// </summary>
 		[JsonIgnore]
 		public SelectList List_ValIn_use { get; set; }
-
 		/// <summary>
 		/// Title: "Description" | Type: "MO"
 		/// </summary>
 		public string ValDescript { get; set; }
-
 		/// <summary>
 		/// Title: "SKU" | Type: "C"
 		/// </summary>
 		public string ValSku { get; set; }
-
 		/// <summary>
 		/// Title: "GTIN" | Type: "C"
 		/// </summary>
 		public string ValGtin { get; set; }
-
 		/// <summary>
 		/// Title: "Size" | Type: "C"
 		/// </summary>
 		public string ValSize { get; set; }
-
 		/// <summary>
 		/// Title: "Weight" | Type: "N"
 		/// </summary>
 		public decimal? ValWeight { get; set; }
-
 		/// <summary>
 		/// Title: "Price" | Type: "$D"
 		/// </summary>
 		public decimal? ValPrice { get; set; }
-
 		/// <summary>
 		/// Title: "Inputs" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValInputs { get; set; }
-
 		/// <summary>
 		/// Title: "Outputs" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValOutputs { get; set; }
-
 		/// <summary>
 		/// Title: "Stock" | Type: "N"
 		/// </summary>
+		[ValidateSetAccess]
 		public decimal? ValStock { get; set; }
-
 		/// <summary>
 		/// Title: "Image" | Type: "IJ"
 		/// </summary>
 		[ImageThumbnailJsonConverter(400, 300)]
-		public GenioMVC.ViewModels.ImageModel ValImage { get; set; }
-
+		public GenioMVC.Models.ImageModel ValImage { get; set; }
 		/// <summary>
 		/// Title: "Global Location Number" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Locat> TableLocatGln { get; set; }
-
 		/// <summary>
 		/// Title: "GLN Extension Component" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Lcext> TableLcextGlnext { get; set; }
 
 		#region Navigations
@@ -113,20 +115,6 @@ namespace GenioMVC.ViewModels.Produ
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "GLN Extension Component" | Type: "CE"
-		/// </summary>
-		public string ValCodlcext { get; set; }
-
-		/// <summary>
-		/// Title: "Global Location Number" | Type: "CE"
-		/// </summary>
-		public string ValCodlocat { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -142,9 +130,10 @@ namespace GenioMVC.ViewModels.Produ
 
 		public string ValCodprodu { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Produ_ViewModel() : base(null!) { }
@@ -180,6 +169,15 @@ namespace GenioMVC.ViewModels.Produ
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Produ model = new Models.Produ(userContext) { Identifier = "FPRODU" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FPRODU");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -240,6 +238,8 @@ namespace GenioMVC.ViewModels.Produ
 
 			try
 			{
+				ValCodlcext = ViewModelConversion.ToString(m.ValCodlcext);
+				ValCodlocat = ViewModelConversion.ToString(m.ValCodlocat);
 				ValProduct = ViewModelConversion.ToString(m.ValProduct);
 				ValIn_use = ViewModelConversion.ToInteger(m.ValIn_use);
 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
@@ -252,8 +252,6 @@ namespace GenioMVC.ViewModels.Produ
 				ValOutputs = ViewModelConversion.ToNumeric(m.ValOutputs);
 				ValStock = ViewModelConversion.ToNumeric(m.ValStock);
 				ValImage = ViewModelConversion.ToImage(m.ValImage);
-				ValCodlcext = ViewModelConversion.ToString(m.ValCodlcext);
-				ValCodlocat = ViewModelConversion.ToString(m.ValCodlocat);
 				ValCodprodu = ViewModelConversion.ToString(m.ValCodprodu);
 			}
 			catch (Exception)
@@ -263,6 +261,20 @@ namespace GenioMVC.ViewModels.Produ
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Produ m)
 		{
 			if (m == null)
@@ -273,6 +285,8 @@ namespace GenioMVC.ViewModels.Produ
 
 			try
 			{
+				m.ValCodlcext = ViewModelConversion.ToString(ValCodlcext);
+				m.ValCodlocat = ViewModelConversion.ToString(ValCodlocat);
 				m.ValProduct = ViewModelConversion.ToString(ValProduct);
 				m.ValIn_use = ViewModelConversion.ToInteger(ValIn_use);
 				m.ValDescript = ViewModelConversion.ToString(ValDescript);
@@ -281,23 +295,104 @@ namespace GenioMVC.ViewModels.Produ
 				m.ValSize = ViewModelConversion.ToString(ValSize);
 				m.ValWeight = ViewModelConversion.ToNumeric(ValWeight);
 				m.ValPrice = ViewModelConversion.ToNumeric(ValPrice);
+				if (ValImage == null || !ValImage.IsThumbnail)
+					m.ValImage = ViewModelConversion.ToImage(ValImage);
+				m.ValCodprodu = ViewModelConversion.ToString(ValCodprodu);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
 				m.ValInputs = ViewModelConversion.ToNumeric(ValInputs);
 				m.ValOutputs = ViewModelConversion.ToNumeric(ValOutputs);
 				m.ValStock = ViewModelConversion.ToNumeric(ValStock);
-				m.ValImage = ViewModelConversion.ToImage(ValImage);
-				m.ValCodlcext = ViewModelConversion.ToString(ValCodlcext);
-				m.ValCodlocat = ViewModelConversion.ToString(ValCodlocat);
-				m.ValCodprodu = ViewModelConversion.ToString(ValCodprodu);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Produ) to Model (Produ) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Produ) to Model (Produ) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "produ.codlcext":
+						this.ValCodlcext = ViewModelConversion.ToString(_value);
+						break;
+					case "produ.codlocat":
+						this.ValCodlocat = ViewModelConversion.ToString(_value);
+						break;
+					case "produ.product":
+						this.ValProduct = ViewModelConversion.ToString(_value);
+						break;
+					case "produ.in_use":
+						this.ValIn_use = ViewModelConversion.ToInteger(_value);
+						break;
+					case "produ.descript":
+						this.ValDescript = ViewModelConversion.ToString(_value);
+						break;
+					case "produ.sku":
+						this.ValSku = ViewModelConversion.ToString(_value);
+						break;
+					case "produ.gtin":
+						this.ValGtin = ViewModelConversion.ToString(_value);
+						break;
+					case "produ.size":
+						this.ValSize = ViewModelConversion.ToString(_value);
+						break;
+					case "produ.weight":
+						this.ValWeight = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "produ.price":
+						this.ValPrice = ViewModelConversion.ToNumeric(_value);
+						break;
+					case "produ.image":
+						this.ValImage = ViewModelConversion.ToImage(_value);
+						break;
+					case "produ.codprodu":
+						this.ValCodprodu = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Produ) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Produ)", "Unexpected error", ex);
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Produ.Find(id ?? Navigation.GetStrValue("produ"), m_userContext, "FPRODU"); }
+			finally { Model ??= new Models.Produ(m_userContext) { Identifier = "FPRODU" }; }
+
+			base.LoadModel();
+		}
 
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
@@ -311,20 +406,13 @@ namespace GenioMVC.ViewModels.Produ
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FPRODU";
@@ -334,6 +422,7 @@ namespace GenioMVC.ViewModels.Produ
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -392,35 +481,30 @@ namespace GenioMVC.ViewModels.Produ
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
-
 			validator.StringLength("ValProduct", Resources.Resources.PRODUCT12880, ValProduct, 85);
-			validator.Required("ValProduct", Resources.Resources.PRODUCT12880, ValProduct);
+
+			validator.Required("ValProduct", Resources.Resources.PRODUCT12880, ViewModelConversion.ToString(ValProduct), FieldType.TEXTO.Formatting);
 			validator.StringLength("ValSku", Resources.Resources.SKU42303, ValSku, 20);
 			validator.StringLength("ValGtin", Resources.Resources.GTIN45487, ValGtin, 14);
 			validator.StringLength("ValSize", Resources.Resources.SIZE10299, ValSize, 50);
 
+
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE PRODU]/
 		public override void Save()
 		{
 
-			try { Model = Models.Produ.Find(Navigation.GetStrValue("produ"), m_userContext, "FPRODU"); }
-			finally { if (Model == null) Model = new Models.Produ(m_userContext) { Identifier = "FPRODU" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY PRODU]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Produ.Find(Navigation.GetStrValue("produ"), m_userContext, "FPRODU"); }
-			finally { if (Model == null) Model = new Models.Produ(m_userContext) { Identifier = "FPRODU" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE PRODU]/
 
@@ -453,8 +537,8 @@ namespace GenioMVC.ViewModels.Produ
 				object hValue = Navigation.GetValue("locat", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					produ___locatgln_____Conds.Equal(CSGenioAlocat.FldCodlocat, Navigation.GetValue("locat"));
-					this.ValCodlocat = Navigation.GetStrValue("locat");
+					produ___locatgln_____Conds.Equal(CSGenioAlocat.FldCodlocat, hValue);
+					this.ValCodlocat = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -471,8 +555,6 @@ namespace GenioMVC.ViewModels.Produ
 					Navigation.CurrentLevel.SetEntry("RETURN_locat", null);
 				}
 				FillDependant_ProduTableLocatGln(lazyLoad);
-				//Check if foreignkey comes from history
-				TableLocatGln.FilledByHistory = Navigation.CheckFilledByHistory("locat");
 				return;
 			}
 
@@ -540,9 +622,6 @@ namespace GenioMVC.ViewModels.Produ
 
 				TableLocatGln.List = new SelectList(TableLocatGln.Elements.ToSelectList(x => x.ValGln, x => x.ValCodlocat,  x => x.ValCodlocat == this.ValCodlocat), "Value", "Text", this.ValCodlocat);
 				FillDependant_ProduTableLocatGln();
-
-				//Check if foreignkey comes from history
-				TableLocatGln.FilledByHistory = Navigation.CheckFilledByHistory("locat");
 			}
 		}
 
@@ -648,14 +727,14 @@ namespace GenioMVC.ViewModels.Produ
 				object hValue = Navigation.GetValue("lcext", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					produ___lcextglnext__Conds.Equal(CSGenioAlcext.FldCodlcext, Navigation.GetValue("lcext"));
-					this.ValCodlcext = Navigation.GetStrValue("lcext");
+					produ___lcextglnext__Conds.Equal(CSGenioAlcext.FldCodlcext, hValue);
+					this.ValCodlcext = DBConversion.ToString(hValue);
 				}
 			}
 			// Limits Generation
 
 			// Area limit
-			produ___lcextglnext__DoLoad &= AddCriteriaAreaLimit(produ___lcextglnext__Conds, CSGenio.business.CSGenioAlocat.FldCodlocat, "locat", this.ValCodlocat, false);
+			produ___lcextglnext__DoLoad &= AddCriteriaAreaLimit(produ___lcextglnext__Conds, CSGenio.business.CSGenioAlocat.FldCodlocat, "locat", this.ValCodlocat, true);
 
 			TableLcextGlnext = new TableDBEdit<Models.Lcext>
 			{
@@ -670,8 +749,6 @@ namespace GenioMVC.ViewModels.Produ
 					Navigation.CurrentLevel.SetEntry("RETURN_lcext", null);
 				}
 				FillDependant_ProduTableLcextGlnext(lazyLoad);
-				//Check if foreignkey comes from history
-				TableLcextGlnext.FilledByHistory = Navigation.CheckFilledByHistory("lcext");
 				return;
 			}
 
@@ -742,9 +819,6 @@ namespace GenioMVC.ViewModels.Produ
 
 				TableLcextGlnext.List = new SelectList(TableLcextGlnext.Elements.ToSelectList(x => x.ValGlnext, x => x.ValCodlcext,  x => x.ValCodlcext == this.ValCodlcext), "Value", "Text", this.ValCodlcext);
 				FillDependant_ProduTableLcextGlnext();
-
-				//Check if foreignkey comes from history
-				TableLcextGlnext.FilledByHistory = Navigation.CheckFilledByHistory("lcext");
 			}
 		}
 
@@ -850,6 +924,8 @@ namespace GenioMVC.ViewModels.Produ
 		{
 			return identifier switch
 			{
+				"produ.codlcext" => ViewModelConversion.ToString(modelValue),
+				"produ.codlocat" => ViewModelConversion.ToString(modelValue),
 				"produ.product" => ViewModelConversion.ToString(modelValue),
 				"produ.in_use" => ViewModelConversion.ToInteger(modelValue),
 				"produ.descript" => ViewModelConversion.ToString(modelValue),
@@ -862,15 +938,21 @@ namespace GenioMVC.ViewModels.Produ
 				"produ.outputs" => ViewModelConversion.ToNumeric(modelValue),
 				"produ.stock" => ViewModelConversion.ToNumeric(modelValue),
 				"produ.image" => ViewModelConversion.ToImage(modelValue),
-				"produ.codlcext" => ViewModelConversion.ToString(modelValue),
-				"produ.codlocat" => ViewModelConversion.ToString(modelValue),
 				"produ.codprodu" => ViewModelConversion.ToString(modelValue),
 				"locat.codlocat" => ViewModelConversion.ToString(modelValue),
 				"locat.gln" => ViewModelConversion.ToString(modelValue),
 				"lcext.codlcext" => ViewModelConversion.ToString(modelValue),
 				"lcext.glnext" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
+		}
+
+
+		/// <inheritdoc/>
+		protected override void SetTicketToImageFields()
+		{
+			if (ValImage != null)
+				ValImage.Ticket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaPRODU, CSGenioAprodu.FldImage.Field, null, ValCodprodu);
 		}
 
 		#region Charts

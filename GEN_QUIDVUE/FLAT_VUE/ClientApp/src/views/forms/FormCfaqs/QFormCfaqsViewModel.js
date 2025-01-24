@@ -61,7 +61,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValIcon))
 		watch(() => this.ValIcon.value, (newValue, oldValue) => this.onUpdate('cfaqs.icon', this.ValIcon, newValue, oldValue))
 
-		this.ValCategory = reactive(new modelFieldType.String({
+		this.ValCategory = reactive(new modelFieldType.MultiLineString({
 			id: 'ValCategory',
 			originId: 'ValCategory',
 			area: 'CFAQS',
@@ -70,7 +70,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValCategory))
 		watch(() => this.ValCategory.value, (newValue, oldValue) => this.onUpdate('cfaqs.category', this.ValCategory, newValue, oldValue))
 
-		this.ValDescript = reactive(new modelFieldType.String({
+		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
 			originId: 'ValDescript',
 			area: 'CFAQS',
@@ -92,5 +92,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodcfaqs'
 
 	get QPrimaryKey() { return this.ValCodcfaqs.value }
-	set QPrimaryKey(value) { this.ValCodcfaqs.value = value }
+	set QPrimaryKey(value) { this.ValCodcfaqs.updateValue(value) }
 }

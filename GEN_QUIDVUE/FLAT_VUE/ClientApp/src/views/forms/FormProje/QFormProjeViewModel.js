@@ -92,6 +92,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 7,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.FIRST42972),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -103,7 +104,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:proje.year', 'fieldChange:proje.codproje'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValPrimeiro))
@@ -117,6 +117,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 7,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.BEFORE60156),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -128,7 +129,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:proje.year', 'fieldChange:proje.codproje'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValBefore))
@@ -142,6 +142,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 7,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.FOLLOWING22170),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -153,7 +154,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:proje.year', 'fieldChange:proje.codproje'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValFollowin))
@@ -167,6 +167,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 7,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.LAST49207),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
@@ -178,7 +179,6 @@ export default class ViewModel extends ViewModelBase
 				},
 				dependencyEvents: ['fieldChange:proje.year', 'fieldChange:proje.codproje'],
 				isServerRecalc: true,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValUltimo))
@@ -192,18 +192,17 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 7,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.NEXT___PREVIOUS__58212),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [PROJE->FOLLOWIN]-[PROJE->BEFORE]
-					// eslint-disable-next-line eqeqeq
 					return this.ValFollowin.value-this.ValBefore.value
 				},
 				dependencyEvents: ['fieldChange:proje.followin', 'fieldChange:proje.before'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValSaldo1))
@@ -217,18 +216,17 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 7,
 			decimalDigits: 2,
 			description: computed(() => this.Resources.LAST___FIRST__42481),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [PROJE->ULTIMO]-[PROJE->PRIMEIRO]
-					// eslint-disable-next-line eqeqeq
 					return this.ValUltimo.value-this.ValPrimeiro.value
 				},
 				dependencyEvents: ['fieldChange:proje.ultimo', 'fieldChange:proje.primeiro'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValSaldo2))
@@ -247,5 +245,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCodproje'
 
 	get QPrimaryKey() { return this.ValCodproje.value }
-	set QPrimaryKey(value) { this.ValCodproje.value = value }
+	set QPrimaryKey(value) { this.ValCodproje.updateValue(value) }
 }

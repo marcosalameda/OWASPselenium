@@ -27,7 +27,7 @@ namespace GenioMVC.Models
 		/// [MH] - Referencia ao GLOB to ter acesso aos fields necessarios to formulas server-side (MVC)
 		/// </summary>
 		[JsonIgnore]
-		public virtual Glob TGlob { get { if (_globTable == null) _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); return _globTable; } }
+		public virtual Glob TGlob { get { if (_globTable == null) { _globTable = Glob.GetGlob(m_userContext, false, this?._fieldsToSerialize); _globTable.SetIsEmptyModel(true); } return _globTable; } }
 
 		[Key]
 		/// <summary>Field : "Address" Tipo: "+" Formula:  ""</summary>
@@ -48,15 +48,15 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Address Number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Addrl.ValAddressnumber")]
 		[NumericAttribute(0)]
-		public decimal? ValAddressnumber { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAddressnumber, 0)); } set { klass.ValAddressnumber = Convert.ToDouble(value); } }
+		public decimal? ValAddressnumber { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAddressnumber, 0)); } set { klass.ValAddressnumber = Convert.ToDecimal(value); } }
 
 		[DisplayName("Object Type")]
 		/// <summary>Field : "Object Type" Tipo: "AN" Formula:  ""</summary>
 		[ShouldSerialize("Addrl.ValObjecttypecode")]
 		[DataArray("Objetype", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double ValObjecttypecode { get { return klass.ValObjecttypecode; } set { klass.ValObjecttypecode = value; } }
+		public decimal ValObjecttypecode { get { return klass.ValObjecttypecode; } set { klass.ValObjecttypecode = value; } }
 		[JsonIgnore]
-		public SelectList ArrayValobjecttypecode { get { return new SelectList(CSGenio.business.ArrayObjetype.GetDictionary(), "Key", "Value", ValObjecttypecode); } set { ValObjecttypecode = Convert.ToDouble(value.SelectedValue); } }
+		public SelectList ArrayValobjecttypecode { get { return new SelectList(CSGenio.business.ArrayObjetype.GetDictionary(), "Key", "Value", ValObjecttypecode); } set { ValObjecttypecode = Convert.ToDecimal(value.SelectedValue); } }
 
 		[DisplayName("objectTypeCode_display")]
 		/// <summary>Field : "objectTypeCode_display" Tipo: "C" Formula:  ""</summary>
@@ -67,9 +67,9 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Address Type Code" Tipo: "AN" Formula:  ""</summary>
 		[ShouldSerialize("Addrl.ValAddresstypecode")]
 		[DataArray("Addrtyco", GenioMVC.Helpers.ArrayType.Numeric)]
-		public double ValAddresstypecode { get { return klass.ValAddresstypecode; } set { klass.ValAddresstypecode = value; } }
+		public decimal ValAddresstypecode { get { return klass.ValAddresstypecode; } set { klass.ValAddresstypecode = value; } }
 		[JsonIgnore]
-		public SelectList ArrayValaddresstypecode { get { return new SelectList(CSGenio.business.ArrayAddrtyco.GetDictionary(), "Key", "Value", ValAddresstypecode); } set { ValAddresstypecode = Convert.ToDouble(value.SelectedValue); } }
+		public SelectList ArrayValaddresstypecode { get { return new SelectList(CSGenio.business.ArrayAddrtyco.GetDictionary(), "Key", "Value", ValAddresstypecode); } set { ValAddresstypecode = Convert.ToDecimal(value.SelectedValue); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Addrl.ValZzstate")]
@@ -79,19 +79,19 @@ namespace GenioMVC.Models
 		public Addrl(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
 			klass = new CSGenioAaddrl(userContext.User);
-            isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-        }
+			isEmptyModel = isEmpty;
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+		}
 
 		public Addrl(UserContext userContext, CSGenioAaddrl val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
-        {
+		{
 			klass = val;
 			isEmptyModel = isEmpty;
-            if (fieldsToSerialize != null)
-                SetFieldsToSerialize(fieldsToSerialize);
-            FillRelatedAreas(val);
-        }
+			if (fieldsToSerialize != null)
+				SetFieldsToSerialize(fieldsToSerialize);
+			FillRelatedAreas(val);
+		}
 
 
 		public void FillRelatedAreas(CSGenioAaddrl csgenioa)
@@ -108,7 +108,6 @@ namespace GenioMVC.Models
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Search the row by key.

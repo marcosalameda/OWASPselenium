@@ -5,7 +5,11 @@
 		:to="`#q-modal-${modalId}-header`"
 		:key="domKey">
 		<div>
-			<h4 class="c-modal__header-title">{{ texts.tableConfig }}</h4>
+			<h4 
+				class="c-modal__header-title"
+				:id="`q-modal-${modalId}_title`">
+				{{ texts.tableConfig }}
+			</h4>
 		</div>
 	</teleport>
 
@@ -60,7 +64,6 @@
 			'apply-config',
 			'hide-popup',
 			'reset-config',
-			'set-property',
 			'show-popup',
 			'signal-component'
 		],
@@ -125,11 +128,11 @@
 							componentId: 'columnConfig',
 							name: 'columns',
 							label: this.texts.configureColumns,
-							disabled: false,
+							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'columnConfig'])?.active === false),
 							isVisible: computed(() => {
 								return (
 									this.tableCtrl.config.allowColumnConfiguration &&
-									_find(this.tableCtrl.config.configOptions, ['id', 'columnConfig'])?.visible
+									_find(this.tableCtrl.config.configOptionsUse, ['id', 'columnConfig'])?.visible
 								)
 							})
 						},
@@ -138,11 +141,11 @@
 							componentId: 'advancedFilters',
 							name: 'filters',
 							label: this.texts.advancedFiltersText,
-							disabled: false,
+							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'advancedFilters'])?.active === false),
 							isVisible: computed(() => {
 								return (
 									this.tableCtrl.config.allowAdvancedFilters &&
-									_find(this.tableCtrl.config.configOptions, ['id', 'advancedFilters'])?.visible
+									_find(this.tableCtrl.config.configOptionsUse, ['id', 'advancedFilters'])?.visible
 								)
 							})
 						},
@@ -151,10 +154,10 @@
 							componentId: 'viewSave',
 							name: 'newView',
 							label: this.texts.saveViewText,
-							disabled: false,
+							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'viewSave'])?.active === false),
 							isVisible: computed(() => {
 								return (
-									this.tableCtrl.config.allowManageViews && _find(this.tableCtrl.config.configOptions, ['id', 'viewSave'])?.visible
+									this.tableCtrl.config.allowManageViews && _find(this.tableCtrl.config.configOptionsUse, ['id', 'viewSave'])?.visible
 								)
 							})
 						},
@@ -163,9 +166,9 @@
 							componentId: 'views',
 							name: 'views',
 							label: this.texts.viewManagerText,
-							disabled: false,
+							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'views'])?.active === false),
 							isVisible: computed(() => {
-								return this.tableCtrl.config.allowManageViews && _find(this.tableCtrl.config.configOptions, ['id', 'views'])?.visible
+								return this.tableCtrl.config.allowManageViews && _find(this.tableCtrl.config.configOptionsUse, ['id', 'views'])?.visible
 							})
 						}
 					]

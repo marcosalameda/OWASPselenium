@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Contact
 	/// </summary>
-	public class CSGenioAconta : DbArea	{
+	public class CSGenioAconta : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -125,10 +126,11 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(7);
+			info.Pathways = new Dictionary<string, string>(8);
 			info.Pathways.Add("genre","genre");
 			info.Pathways.Add("tpcon","tpcon");
 			info.Pathways.Add("pesso","pesso");
+			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("cntry","pesso");
 			info.Pathways.Add("cmpny","pesso");
 			info.Pathways.Add("pais1","pesso");
@@ -265,7 +267,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodconta, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodpesso { get { return m_fldCodpesso; } }
 		private static FieldRef m_fldCodpesso = new FieldRef("conta", "codpesso");
@@ -276,7 +277,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodpesso); }
 			set { insertNameValueField(FldCodpesso, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodgenre { get { return m_fldCodgenre; } }
@@ -289,7 +289,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodgenre, value); }
 		}
 
-
 		/// <summary>Field : "Contact type" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodtpcon { get { return m_fldCodtpcon; } }
 		private static FieldRef m_fldCodtpcon = new FieldRef("conta", "codtpcon");
@@ -301,7 +300,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodtpcon, value); }
 		}
 
-
 		/// <summary>Field : "Contact" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldContacto { get { return m_fldContacto; } }
 		private static FieldRef m_fldContacto = new FieldRef("conta", "contacto");
@@ -312,7 +310,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldContacto); }
 			set { insertNameValueField(FldContacto, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -355,23 +352,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAconta> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAconta> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAconta>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -420,7 +400,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX CONTA]/

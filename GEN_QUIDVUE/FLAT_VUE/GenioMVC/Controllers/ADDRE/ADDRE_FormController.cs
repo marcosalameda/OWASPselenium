@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 
 using CSGenio.business;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using CSGenio.reporting;
@@ -19,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
+using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Addre;
 using Quidgest.Persistence.GenericQuery;
 
@@ -30,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ADDRE_CANCEL = new NavigationLocation("ADDRESS04342", "Addre_Cancel", "Addre") { vueRouteName = "form-ADDRE", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ADDRE_SHOW = new NavigationLocation("ADDRESS04342", "Addre_Show", "Addre") { vueRouteName = "form-ADDRE", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ADDRE_NEW = new NavigationLocation("ADDRESS04342", "Addre_New", "Addre") { vueRouteName = "form-ADDRE", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ADDRE_EDIT = new NavigationLocation("ADDRESS04342", "Addre_Edit", "Addre") { vueRouteName = "form-ADDRE", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ADDRE_DUPLICATE = new NavigationLocation("ADDRESS04342", "Addre_Duplicate", "Addre") { vueRouteName = "form-ADDRE", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ADDRE_DELETE = new NavigationLocation("ADDRESS04342", "Addre_Delete", "Addre") { vueRouteName = "form-ADDRE", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ADDRE_CANCEL = new("ADDRESS04342", "Addre_Cancel", "Addre") { vueRouteName = "form-ADDRE", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ADDRE_SHOW = new("ADDRESS04342", "Addre_Show", "Addre") { vueRouteName = "form-ADDRE", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ADDRE_NEW = new("ADDRESS04342", "Addre_New", "Addre") { vueRouteName = "form-ADDRE", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ADDRE_EDIT = new("ADDRESS04342", "Addre_Edit", "Addre") { vueRouteName = "form-ADDRE", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ADDRE_DUPLICATE = new("ADDRESS04342", "Addre_Duplicate", "Addre") { vueRouteName = "form-ADDRE", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ADDRE_DELETE = new("ADDRESS04342", "Addre_Delete", "Addre") { vueRouteName = "form-ADDRE", mode = "DELETE" };
 
 		#endregion
 
@@ -47,17 +49,6 @@ namespace GenioMVC.Controllers
 		}
 
 		#endregion
-
-		public ActionResult Addre_ModalDBEdit()
-		{
-			Addre_ViewModel model = new Addre_ViewModel(UserContext.Current);
-			model.setModes(Request.Query["m"].ToString());
-			var values = new NameValueCollection();
-			values.AddRange(Request.Form);
-			model.Load(values, true, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		#region Addre_Show
 
@@ -400,135 +391,7 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-		#region Addre Multiform actions
 
-		//
-		// GET /Addre/MFAddre_New
-		[HttpGet]
-		[ActionName("MFAddre_New")]
-		public ActionResult MFAddre_New()
-		{
-			var model = new Addre_ViewModel(UserContext.Current, true);
-			model.setModes(Request.Query["m"].ToString());
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			var navigationLocationAction = ACTION_ADDRE_NEW.SetRoutedValues(new { m = Request.Query["m"].ToString() });
-
-			try
-			{
-				sp.openTransaction();
-				model.New();
-				sp.closeTransaction();
-
-				Navigation.SetValue("addre", model.ValCodaddre);
-
-				sp.openConnection();
-				model.NewLoad();
-				sp.closeConnection();
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-			}
-
-			return JsonOK(model);
-		}
-
-		[HttpPost]
-		public ActionResult MFAddre_New_GET()
-		{
-			return MFAddre_New();
-		}
-
-		//
-		// GET /Addre/MFAddre_Edit
-		[HttpGet]
-		[ActionName("MFAddre_Edit")]
-		public ActionResult MFAddre_Edit([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			return RedirectToFormAction("ADDRE", "EDIT", new { id = id, partialView = "MFAddre", nestedForm = "true", multiForm = "true" });
-		}
-
-		[HttpPost]
-		public ActionResult MFAddre_Edit_GET([FromBody]RequestIdModel requestModel)
-		{
-			return MFAddre_Edit(requestModel);
-		}
-
-		//
-		// GET /Addre/MFAddre_Cancel
-		[ActionName("MFAddre_Cancel")]
-		public ActionResult MFAddre_Cancel([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			if (string.IsNullOrEmpty(id))
-				return JsonOK(new { Success = false });
-
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			try
-			{
-				var model = new GenioMVC.Models.Addre(UserContext.Current);
-				model.klass.QPrimaryKey = id;
-
-				sp.openTransaction();
-				model.Destroy();
-				sp.closeTransaction();
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-				ClearMessages();
-
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				return JsonERROR(exceptionUserMessage);
-			}
-
-			return JsonOK(new { Success = true });
-		}
-
-		//
-		// POST /Addre/MFAddre_Save
-		[HttpPost]
-		[ActionName("MFAddre_Save")]
-		public JsonResult MFAddre_Save(Addre_ViewModel model, string mode)
-		{
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAddre_Save",
-				ViewName = "MFAddre",
-				AreaName = "addre"
-			};
-
-			return GenericHandleMultiFormSave(eventSink, model, mode);
-		}
-
-		//
-		// POST /Addre/MFAddre_Delete
-		[HttpPost]
-		[ActionName("MFAddre_Delete")]
-		public JsonResult MFAddre_Delete([FromBody]RequestIdModel requestModel)
-		{
-			var id = requestModel.Id;
-			var eventSink = new EventSink()
-			{
-				MethodName = "MFAddre_Delete",
-				ViewName = "MFAddre",
-				AreaName = "addre",
-				Location = ACTION_ADDRE_EDIT
-			};
-
-			var model = new Addre_ViewModel(UserContext.Current, id);
-			model.MapFromModel();
-
-			return GenericHandlePostMultiFormDelete(eventSink, model);
-		}
-
-		#endregion
 
 		// POST: /Addre/Addre_SaveEdit
 		[HttpPost]

@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Grid Foto
 	/// </summary>
-	public class CSGenioAftgri : DbArea	{
+	public class CSGenioAftgri : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -56,7 +57,7 @@ namespace CSGenio.business
 
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("foto", FieldType.IMAGEM_JPEG);
-			Qfield.FieldDescription = "Fotos";
+			Qfield.FieldDescription = "Photos";
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
@@ -240,7 +241,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodphoto, value); }
 		}
 
-
 		/// <summary>Field : "Fotos" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldFoto { get { return m_fldFoto; } }
 		private static FieldRef m_fldFoto = new FieldRef("ftgri", "foto");
@@ -252,7 +252,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldFoto, value); }
 		}
 
-
 		/// <summary>Field : "Legenda" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldLegenda { get { return m_fldLegenda; } }
 		private static FieldRef m_fldLegenda = new FieldRef("ftgri", "legenda");
@@ -263,7 +262,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldLegenda); }
 			set { insertNameValueField(FldLegenda, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -306,23 +304,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAftgri> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAftgri> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAftgri>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -371,7 +352,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX FTGRI]/

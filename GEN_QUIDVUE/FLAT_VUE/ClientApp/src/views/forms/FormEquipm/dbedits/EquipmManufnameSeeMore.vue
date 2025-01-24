@@ -14,7 +14,6 @@
 	/* eslint-disable no-unused-vars */
 	import { computed } from 'vue'
 	import { mapActions } from 'pinia'
-	import _assignIn from 'lodash-es/assignIn'
 	import _merge from 'lodash-es/merge'
 
 	import { useGenericDataStore } from '@/stores/genericData.js'
@@ -29,12 +28,14 @@
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 
-	import netAPI from '@/api/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import genericFunctions from '@/mixins/genericFunctions.js'
+	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
+
+	import ViewModelBase from '@/mixins/viewModelBase.js'
 
 	const requiredTextResources = ['EQUIPM__MANUFNAME_____SeeMore', 'hardcoded', 'messages']
 
@@ -99,23 +100,22 @@
 				},
 
 				listCtrl: new TableListControl(this.getListConfig(), this),
+
+				// Basic view model to handle access to GLOB, if necessary.
+				model: new ViewModelBase(this),
 			}
 		},
 
 		created()
 		{
-			let params = {
-				id: this.id || null,
-				Limits: this.limits || []
-			}
+			this.componentOnLoadProc.addImmediateBusy(loadResources(this, requiredTextResources))
 
-			_merge(params, this.limits)
+			this.listCtrl.init()
+			this.onTableDBDataChanged()
 
-			this.componentOnLoadProc.AddImmediateBusy(loadResources(this, requiredTextResources))
-			this.componentOnLoadProc.AddImmediateBusy(this.fetchListData(this.listCtrl, params))
-			this.componentOnLoadProc.Once(() => {
+			this.componentOnLoadProc.once(() => {
 				this.isReady = true
-				this.listCtrl.Init()
+				this.listCtrl.initData()
 			}, this)
 		},
 
@@ -132,7 +132,7 @@
 				dismissWithEsc: true,
 				dismissAction: this.close,
 				isActive: true,
-				returnElement: 'EQUIPM__MANUFNAME____'
+				returnElement: 'EQUIPM__MANUFNAME_____lookup_see-more_button'
 			}
 			this.setModal(modalProps)
 		},
@@ -149,8 +149,7 @@
 
 		methods: {
 			...mapActions(useGenericDataStore, [
-				'setModal',
-				'setDropdown'
+				'setModal'
 			]),
 
 			...mapActions(useNavDataStore, [
@@ -165,14 +164,13 @@
 
 			onTableDBDataChanged()
 			{
-				let params = {
+				const params = {
 					id: this.id || null,
-					Limits: this.limits
+					limits: this.limits,
+					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
 				}
 
-				_merge(params, this.limits)
-
-				this.componentOnLoadProc.AddBusy(this.fetchListData(this.listCtrl, params))
+				this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
 			},
 
 			handleRowAction(eventData)
@@ -180,7 +178,7 @@
 				if (eventData.id === 'see-more-choice')
 				{
 					let rowKey = eventData?.rowKeyPath
-					if(Array.isArray(eventData?.rowKeyPath) && eventData?.rowKeyPath.length > 0)
+					if (Array.isArray(eventData?.rowKeyPath) && eventData?.rowKeyPath.length > 0)
 						rowKey = eventData?.rowKeyPath[eventData?.rowKeyPath.length - 1]
 
 					this.$emit('see-more-choice', rowKey)
@@ -225,10 +223,11 @@
 							tableAlias: 'MANUF',
 							tableNamePlural: computed(() => this.Resources.MANUFACTURERS25464),
 							viewManagement: 'N',
+							tableTitle: '',
 							showAlternatePagination: true,
 							permissions: {
 							},
-							globalSearch: {
+							searchBarConfig: {
 								visibility: true,
 								searchOnPressEnter: true
 							},
@@ -249,17 +248,12 @@
 							},
 							formsDefinition: {
 							},
-							rowValidation: {
-								fnValidate: (row) => row.Fields.ValZzstate === 0,
-								message: computed(() => this.Resources.ATENCAO__ESTA_FICHA_24725),
-								class: 'c-table__row--pending'
-							},
-							crudConditions: {
-							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
-							initialSortColumnName: '',
-							initialSortColumnOrder: 'asc'
+							defaultColumnSorting: {
+								columnName: 'ValName',
+								sortOrder: 'asc'
+							}
 						},
 						changeEvents: ['changed-MANUF'],
 						uuid: 'Equipm_Equipm_ManufValName',

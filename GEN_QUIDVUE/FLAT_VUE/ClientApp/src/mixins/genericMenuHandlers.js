@@ -6,9 +6,11 @@ import { useGenericDataStore } from '@/stores/genericData.js'
 import { useSystemDataStore } from '@/stores/systemData.js'
 import { useUserDataStore } from '@/stores/userData.js'
 
-import hardcodedTexts from '@/hardcodedTexts.js'
 import netAPI from '@/api/network'
+import { QEventEmitter } from '@/api/global/eventBus.js'
+import { logOff } from '@/utils/user.js'
 import genericFunctions from '@/mixins/genericFunctions.js'
+import hardcodedTexts from '@/hardcodedTexts.js'
 
 import VueNavigation from '@/mixins/vueNavigation.js'
 import NavHandlers from '@/mixins/navHandlers.js'
@@ -27,6 +29,8 @@ export default {
 	data()
 	{
 		return {
+			internalEvents: new QEventEmitter(),
+
 			menuModalIsReady: false,
 
 			menuButtons: {
@@ -71,10 +75,6 @@ export default {
 			'system'
 		]),
 
-		...mapState(useGenericDataStore, [
-			'tGlob'
-		]),
-
 		/**
 		 * The data of the current user.
 		 */
@@ -92,10 +92,7 @@ export default {
 		 */
 		hasButtons()
 		{
-			for (let i in this.menuButtons)
-				if (this.menuButtons[i].isVisible)
-					return true
-			return false
+			return Object.values(this.menuButtons).some((b) => b.isVisible)
 		},
 
 		/**
@@ -117,7 +114,7 @@ export default {
 		 */
 		canGoBack()
 		{
-			var levelHigherThan2 = false
+			let levelHigherThan2 = false
 
 			const navLevel = this.currentNavLevel?.level
 			if (typeof navLevel === 'number')
@@ -129,11 +126,9 @@ export default {
 
 	methods: {
 		...mapActions(useGenericDataStore, [
-			'setGlobData',
 			'setInfoMessage',
 			'clearInfoMessages',
-			'setModal',
-			'setDropdown'
+			'setModal'
 		]),
 
 		...mapActions(useUserDataStore, [
@@ -205,7 +200,33 @@ export default {
 				this.$router.push({ name: 'home' })
 			}
 			else
-				this.goBack()
+			{
+				/**
+				 * In the case of an error, we cannot go back because the previous menu may have 'Skip if just one,'
+				 * 	which will cause it to return to where it was. And if that one also has 'Skip if just one,' it will simply enter a loop.
+				 * To prevent the Back button from also entering a loop, we will simply display an error and try go to Main page.
+				 */
+				const message = request.data.Message || hardcodedTexts.errorProcessingRequest
+				const buttons = {
+					confirm: {
+						label: this.Resources[hardcodedTexts.initialPage],
+						action: () => this.$router.push({ name: 'home', params: { module: this.system.defaultModule } })
+					},
+					cancel: {
+						label: this.Resources[hardcodedTexts.close]
+					},
+					/**
+					 * Option to allow user to exit the system if unable to leave the PHE selection interface.
+					 * Instead of having to manually delete cookies to lose the session.
+					 */
+					deny: {
+						label: this.Resources[hardcodedTexts.backToLogin],
+						action: () => logOff()
+					}
+				}
+
+				genericFunctions.displayMessage(message, 'error', null, buttons)
+			}
 		},
 
 		/**
@@ -216,15 +237,19 @@ export default {
 		 */
 		setPHEValue(listCfg, actionCfg, rowData)
 		{
-			if (_isEmpty(this.model) || _isEmpty(rowData) || _isEmpty(rowData.rowKey))
+			if (_isEmpty(this.controls) || _isEmpty(rowData) || _isEmpty(rowData.rowKey))
 				return
 
 			const params = {
-				id: rowData.rowKey,
+				selectedId: rowData.rowKey,
 				formId: this.menuInfo.id
 			}
 
-			netAPI.postData(this.model.menu.controller, 'DefineEphForm', params, (_, request) => this.handleDefinedPHE(request, [rowData.rowKey]))
+			netAPI.postData(
+				this.controls.menu.controller,
+				'DefineEphForm',
+				params,
+				(_, request) => this.handleDefinedPHE(request, [rowData.rowKey]))
 		},
 
 		/**
@@ -234,7 +259,7 @@ export default {
 		 */
 		setPHEValues(listCfg, actionData)
 		{
-			if (_isEmpty(this.model) || _isEmpty(actionData) || _isEmpty(actionData.rowsSelected))
+			if (_isEmpty(this.controls) || _isEmpty(actionData) || _isEmpty(actionData.rowsSelected))
 				return
 
 			var data = []
@@ -249,7 +274,11 @@ export default {
 				formId: this.menuInfo.id
 			}
 
-			netAPI.postData(this.model.menu.controller, 'DefineEphFormValues', params, (_, request) => this.handleDefinedPHE(request, data))
+			netAPI.postData(
+				this.controls.menu.controller,
+				'DefineEphFormValues',
+				params,
+				(_, request) => this.handleDefinedPHE(request, data))
 		}
 	},
 

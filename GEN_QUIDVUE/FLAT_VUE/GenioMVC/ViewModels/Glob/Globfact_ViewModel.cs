@@ -18,7 +18,7 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Glob
 {
-	public class Globfact_ViewModel : FormViewModel<Models.Glob>
+	public class Globfact_ViewModel : FormViewModel<Models.Glob>, IPreparableForSerialization
 	{
 		[JsonIgnore]
 		public override bool HasWriteConditions { get => false; }
@@ -29,9 +29,17 @@ namespace GenioMVC.ViewModels.Glob
 		[JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+		#region Foreign keys
+		/// <summary>
+		/// Title: "Facility type" | Type: "CE"
+		/// </summary>
+		public string ValCodfacty { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Title: "Facility type" | Type: "C"
 		/// </summary>
+		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Facty> TableFactyType { get; set; }
 
 		#region Navigations
@@ -41,15 +49,6 @@ namespace GenioMVC.ViewModels.Glob
 
 
 
-		#endregion
-
-		#region Additional foreign keys
-
-
-		/// <summary>
-		/// Title: "Facility type" | Type: "CE"
-		/// </summary>
-		public string ValCodfacty { get; set; }
 		#endregion
 
 		#region Extra database fields
@@ -62,15 +61,17 @@ namespace GenioMVC.ViewModels.Glob
 
 		// Field for formula
 		/// <summary>Field: "Home text" Tipo: "MO"</summary>
+		[ValidateSetAccess]
 		public string ValHome { get; set; }
 
 		#endregion
 
 		public string ValCodglob { get; set; }
 
+
 		/// <summary>
 		/// FOR DESERIALIZATION ONLY
-		/// A call to Init() needs to be made manually after this constructor
+		/// A call to Init() needs to be manually invoked after this constructor
 		/// </summary>
 		[Obsolete("For deserialization only")]
 		public Globfact_ViewModel() : base(null!) { }
@@ -106,6 +107,15 @@ namespace GenioMVC.ViewModels.Glob
 			var m_userContext = userContext;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			Models.Glob model = new Models.Glob(userContext) { Identifier = "FGLOBFACT" };
+
+			var navigation = m_userContext.CurrentNavigation;
+			// The "LoadKeysFromHistory" must be after the "LoadEPH" because the PHE's in the tree mark Foreign Keys to null
+			// (since they cannot assign multiple values to a single field) and thus the value that comes from Navigation is lost.
+			// And this makes it more like the order of loading the model when opening the form.
+			model.LoadEPH("FGLOBFACT");
+			if (navigation != null)
+				model.LoadKeysFromHistory(navigation, navigation.CurrentLevel.Level);
+
 			var tableResult = model.EvaluateTableConditions(ConditionType.INSERT);
 			result.MergeStatusMessage(tableResult);
 			return result;
@@ -177,6 +187,20 @@ namespace GenioMVC.ViewModels.Glob
 			}
 		}
 
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		public override void MapToModel()
+		{
+			MapToModel(this.Model);
+		}
+
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
+		/// <param name="m">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
 		public override void MapToModel(Models.Glob m)
 		{
 			if (m == null)
@@ -188,17 +212,70 @@ namespace GenioMVC.ViewModels.Glob
 			try
 			{
 				m.ValCodfacty = ViewModelConversion.ToString(ValCodfacty);
-				m.ValHome = ViewModelConversion.ToString(ValHome);
 				m.ValCodglob = ViewModelConversion.ToString(ValCodglob);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValHome = ViewModelConversion.ToString(ValHome);
 			}
 			catch (Exception)
 			{
-				CSGenio.framework.Log.Error("Map ViewModel (Globfact) to Model (Glob) - Error during mapping");
+				CSGenio.framework.Log.Error($"Map ViewModel (Globfact) to Model (Glob) - Error during mapping. All user values: {HasDisabledUserValuesSecurity}");
 				throw;
 			}
 		}
 
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		public override void SetViewModelValue(string fullFieldName, object value)
+		{
+			try
+			{
+				ArgumentNullException.ThrowIfNull(fullFieldName);
+				// Obtain a valid value from JsonValueKind that can come from "prefillValues" during the pre-filling of fields during insertion
+				var _value = ViewModelConversion.ToRawValue(value);
+
+				switch (fullFieldName)
+				{
+					case "glob.codfacty":
+						this.ValCodfacty = ViewModelConversion.ToString(_value);
+						break;
+					case "glob.codglob":
+						this.ValCodglob = ViewModelConversion.ToString(_value);
+						break;
+					default:
+						Log.Error($"SetViewModelValue (Globfact) - Unexpected field identifier {fullFieldName}");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new FrameworkException(Resources.Resources.PEDIMOS_DESCULPA__OC63848, "SetViewModelValue (Globfact)", "Unexpected error", ex);
+			}
+		}
+
 		#endregion
+
+		/// <summary>
+		/// Reads the Model from the database based on the key that is in the history or that was passed through the parameter
+		/// </summary>
+		/// <param name="id">The primary key of the record that needs to be read from the database. Leave NULL to use the value from the History.</param>
+		public override void LoadModel(string id = null)
+		{
+			try { Model = Models.Glob.Find(id ?? Navigation.GetStrValue("glob"), m_userContext, "FGLOBFACT"); }
+			finally { Model ??= new Models.Glob(m_userContext) { Identifier = "FGLOBFACT" }; }
+
+			base.LoadModel();
+		}
 
 		public void LoadGlob()
 		{
@@ -217,7 +294,6 @@ namespace GenioMVC.ViewModels.Glob
 			InitModel(qs);
 		}
 
-
 		public override void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false)
 		{
 			this.editable = editable;
@@ -230,20 +306,13 @@ namespace GenioMVC.ViewModels.Glob
 			}
 			finally
 			{
+				if (Model == null)
+					throw new ModelNotFoundException("Model not found");
+
 				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					LoadDefaultValues();
-				}
 				else
-				{
-					if (Model == null)
-						throw new ModelNotFoundException("Model not found");
-
 					oldvalues = Model.klass;
-				}
 			}
 
 			Model.Identifier = "FGLOBFACT";
@@ -253,6 +322,7 @@ namespace GenioMVC.ViewModels.Glob
 			{
 				// MH - Voltar calcular as formulas to "atualizar" os Qvalues dos fields fixos
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
+				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
@@ -315,25 +385,19 @@ namespace GenioMVC.ViewModels.Glob
 			return validator.GetResult();
 		}
 
+		public override void Init(UserContext userContext)
+		{
+			base.Init(userContext);
+		}
 // USE /[MANUAL GQT VIEWMODEL_SAVE GLOBFACT]/
 		public override void Save()
 		{
 
-			try { Model = Models.Glob.Find(Navigation.GetStrValue("glob"), m_userContext, "FGLOBFACT"); }
-			finally { if (Model == null) Model = new Models.Glob(m_userContext) { Identifier = "FGLOBFACT" }; }
 
 			base.Save();
 		}
 
 // USE /[MANUAL GQT VIEWMODEL_APPLY GLOBFACT]/
-		public override void Apply()
-		{
-			// Precisamos posicionar a ficha para não "estragar" o Qvalue do zzstate
-			try { Model = Models.Glob.Find(Navigation.GetStrValue("glob"), m_userContext, "FGLOBFACT"); }
-			finally { if (Model == null) Model = new Models.Glob(m_userContext) { Identifier = "FGLOBFACT" }; }
-
-			base.Apply();
-		}
 
 // USE /[MANUAL GQT VIEWMODEL_DUPLICATE GLOBFACT]/
 
@@ -366,8 +430,8 @@ namespace GenioMVC.ViewModels.Glob
 				object hValue = Navigation.GetValue("facty", true);
 				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
 				{
-					globfactfactytype____Conds.Equal(CSGenioAfacty.FldCodfacty, Navigation.GetValue("facty"));
-					this.ValCodfacty = Navigation.GetStrValue("facty");
+					globfactfactytype____Conds.Equal(CSGenioAfacty.FldCodfacty, hValue);
+					this.ValCodfacty = DBConversion.ToString(hValue);
 				}
 			}
 
@@ -384,8 +448,6 @@ namespace GenioMVC.ViewModels.Glob
 					Navigation.CurrentLevel.SetEntry("RETURN_facty", null);
 				}
 				FillDependant_GlobfactTableFactyType(lazyLoad);
-				//Check if foreignkey comes from history
-				TableFactyType.FilledByHistory = Navigation.CheckFilledByHistory("facty");
 				return;
 			}
 
@@ -453,9 +515,6 @@ namespace GenioMVC.ViewModels.Glob
 
 				TableFactyType.List = new SelectList(TableFactyType.Elements.ToSelectList(x => x.ValType, x => x.ValCodfacty,  x => x.ValCodfacty == this.ValCodfacty), "Value", "Text", this.ValCodfacty);
 				FillDependant_GlobfactTableFactyType();
-
-				//Check if foreignkey comes from history
-				TableFactyType.FilledByHistory = Navigation.CheckFilledByHistory("facty");
 			}
 		}
 
@@ -557,9 +616,11 @@ namespace GenioMVC.ViewModels.Glob
 				"glob.codglob" => ViewModelConversion.ToString(modelValue),
 				"facty.codfacty" => ViewModelConversion.ToString(modelValue),
 				"facty.type" => ViewModelConversion.ToString(modelValue),
-				_ => throw new Exception("Unexpected field identifier")
+				_ => modelValue
 			};
 		}
+
+
 
 		#region Charts
 

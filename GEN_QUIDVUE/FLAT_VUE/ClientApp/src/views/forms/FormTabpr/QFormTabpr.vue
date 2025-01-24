@@ -11,7 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header">
+					class="form-header"
+					:id="formTitleId">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -33,6 +34,7 @@
 									v-if="showFormHeaderButton(btn)"
 									:id="`top-${btn.id}`"
 									:title="btn.text"
+									:label="btn.label"
 									:disabled="btn.disabled"
 									:active="btn.isSelected"
 									@click="btn.action">
@@ -47,11 +49,9 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && groupFields.length > 0"
-				:is-visible="anchorContainerVisibility"
-				:anchors="groupFields"
-				:controls="controls"
-				:header-height="visibleHeaderHeight"
+				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				:anchors="anchorGroups"
+				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
@@ -61,7 +61,7 @@
 		:to="`#${uiContainersId.body}`"
 		:disabled="!isPopup || isNested">
 		<q-validation-summary
-			:error-data="validationErrors"
+			:messages="validationErrors"
 			@error-clicked="focusField" />
 
 		<div class="heading-button-group-clear"></div>
@@ -117,14 +117,11 @@
 										v-on="controls.TABPR___TPEQUTIPOEQUI.handlers"
 										:loading="controls.TABPR___TPEQUTIPOEQUI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-lookup
 											v-if="controls.TABPR___TPEQUTIPOEQUI.isVisible"
 											v-bind="controls.TABPR___TPEQUTIPOEQUI.props"
-											:model-value="model.ValCodtpeq1.value"
-											v-on="controls.TABPR___TPEQUTIPOEQUI.handlers"
-											@update:model-value="model.ValCodtpeq1.fnUpdateValue" />
+											v-on="controls.TABPR___TPEQUTIPOEQUI.handlers" />
 										<q-see-more-tabpr-tpequtipoequi
 											v-if="controls.TABPR___TPEQUTIPOEQUI.seeMoreIsVisible"
 											v-bind="controls.TABPR___TPEQUTIPOEQUI.seeMoreParams"
@@ -142,14 +139,13 @@
 										v-on="controls.TABPR___TABPRSINCE___.handlers"
 										:loading="controls.TABPR___TABPRSINCE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
-										<q-datetime-input
+										:suggestion-mode-on="suggestionModeOn">
+										<q-date-time-picker
 											v-if="controls.TABPR___TABPRSINCE___.isVisible"
-											v-bind="controls.TABPR___TABPRSINCE___"
-											format="DateTime"
+											v-bind="controls.TABPR___TABPRSINCE___.props"
 											:model-value="model.ValSince.value"
-											@update:model-value="model.ValSince.fnUpdateValue" />
+											@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
+											@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -161,12 +157,10 @@
 										v-on="controls.TABPR___TABPRPRECOHOR.handlers"
 										:loading="controls.TABPR___TABPRPRECOHOR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn"
-										:help-style="layoutConfig.HelpStyle">
+										:suggestion-mode-on="suggestionModeOn">
 										<q-numeric-input
 											v-if="controls.TABPR___TABPRPRECOHOR.isVisible"
-											v-bind="controls.TABPR___TABPRPRECOHOR"
-											:model-value="model.ValPrecohor.value"
+											v-bind="controls.TABPR___TABPRPRECOHOR.props"
 											@update:model-value="model.ValPrecohor.fnUpdateValue" />
 									</base-input-structure>
 								</q-control-wrapper>
@@ -257,15 +251,13 @@
 			 */
 			nestedRouteParams: {
 				type: Object,
-				default: () => {
-					return {
-						name: 'TABPR',
-						location: 'form-TABPR',
-						params: {
-							isNested: true
-						}
+				default: () => ({
+					name: 'TABPR',
+					location: 'form-TABPR',
+					params: {
+						isNested: true
 					}
-				}
+				})
 			}
 		},
 
@@ -311,6 +303,8 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
+
+				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -383,8 +377,9 @@
 							icon: 'add',
 							type: 'svg'
 						},
-						type: 'form-mode',
+						type: 'form-insert',
 						text: computed(() => vm.Resources[hardcodedTexts.insert]),
+						label: computed(() => vm.Resources[hardcodedTexts.insert]),
 						style: 'secondary',
 						showInHeader: true,
 						showInFooter: false,
@@ -466,7 +461,7 @@
 						showInFooter: true,
 						isActive: false,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.resetFormFields,
+						action: () => vm.model.resetValues(),
 						emitAction: {
 							name: 'deselect',
 							params: {}
@@ -520,21 +515,6 @@
 						isActive: true,
 						isVisible: computed(() => !vm.authData.isAllowed || !vm.isEditable),
 						action: vm.leaveForm
-					},
-					showAnchors: {
-						id: 'toggle-form-anchors',
-						icon: {
-							icon: 'list-bordered',
-							type: 'svg'
-						},
-						text: computed(() => vm.anchorContainerVisibility ? vm.Resources[hardcodedTexts.hideAnchors] : vm.Resources[hardcodedTexts.showAnchors]),
-						type: 'form-action',
-						style: 'primary',
-						showInHeader: true,
-						showInFooter: false,
-						isActive: true,
-						isVisible: computed(() => vm.isAnchorsButtonVisible),
-						action: vm.toggleAnchorVisibility
 					}
 				},
 
@@ -543,15 +523,11 @@
 						id: 'TABPR___PSEUDNOVOGR01',
 						name: 'NOVOGR01',
 						size: 'block',
-						hasLabel: true,
 						label: computed(() => this.Resources.TABLE_PRICE06259),
-						userHelp: '',
-						description: '',
 						placeholder: '',
-						labelPosition: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						mustBeFilled: false,
 						controlLimits: [
 						],
 					}, this),
@@ -561,28 +537,10 @@
 						id: 'TABPR___TPEQUTIPOEQUI',
 						name: 'TIPOEQUI',
 						size: 'xlarge',
-						hasLabel: true,
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TABPR___PSEUDNOVOGR01',
-						mustBeFilled: false,
-						controlLimits: [
-						],
-						lookupKeyModelField: {
-							name: 'ValCodtpeq1',
-							dependencyEvent: 'fieldChange:tabpr.codtpeq1'
-						},
-						dependentFields: () => {
-							return {
-								set 'tpequ.codtpequ'(value) { vm.model.ValCodtpeq1.updateValue(value) },
-								set 'tpequ.tipoequi'(value) { vm.model.TableTpequTipoequi.updateValue(value) },
-							}
-						},
-						insertEnabled: true,
-						supportForm: 'TPEQU',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
 							getModelFieldValue: vm.getModelFieldValue,
@@ -591,6 +549,18 @@
 						externalProperties: {
 							modelKeys: computed(() => vm.modelKeys)
 						},
+						lookupKeyModelField: {
+							name: 'ValCodtpeq1',
+							dependencyEvent: 'fieldChange:tabpr.codtpeq1'
+						},
+						dependentFields: () => ({
+							set 'tpequ.codtpequ'(value) { vm.model.ValCodtpeq1.updateValue(value) },
+							set 'tpequ.tipoequi'(value) { vm.model.TableTpequTipoequi.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'TPEQU',
+						controlLimits: [
+						],
 					}, this),
 					TABPR___TABPRSINCE___: new fieldControlClass.DateControl({
 						modelField: 'ValSince',
@@ -598,33 +568,26 @@
 						id: 'TABPR___TABPRSINCE___',
 						name: 'SINCE',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.SINCE47259),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TABPR___PSEUDNOVOGR01',
-						mustBeFilled: false,
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
 					TABPR___TABPRPRECOHOR: new fieldControlClass.CurrencyControl({
 						modelField: 'ValPrecohor',
 						valueChangeEvent: 'fieldChange:tabpr.precohor',
-						maxIntegers: 9,
-						maxDecimals: 2,
 						id: 'TABPR___TABPRPRECOHOR',
 						name: 'PRECOHOR',
 						size: 'medium',
-						hasLabel: true,
 						label: computed(() => this.Resources.PRICE_PER_HOUR_37472),
-						userHelp: '',
-						description: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TABPR___PSEUDNOVOGR01',
-						mustBeFilled: false,
+						maxIntegers: 9,
+						maxDecimals: 2,
 						controlLimits: [
 						],
 					}, this),
@@ -669,7 +632,7 @@
 						/** The foreign key to the TPEQU table */
 						get tpequ() { return vm.model.ValCodtpeq1 },
 					},
-					extraProperties: {}
+					get extraProperties() { return vm.model.extraProperties },
 				},
 			}
 		},
@@ -765,6 +728,14 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
+				applyForm = await this.model.setDocumentChanges()
+
+				if (applyForm)
+				{
+					const results = await this.model.saveDocuments()
+					applyForm = results.every((e) => e === true)
+				}
+
 				this.emitEvent('before-apply-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -804,6 +775,14 @@
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
+
+				saveForm = await this.model.setDocumentChanges()
+
+				if (saveForm)
+				{
+					const results = await this.model.saveDocuments()
+					saveForm = results.every((e) => e === true)
+				}
 
 				this.emitEvent('before-save-form')
 
@@ -930,6 +909,22 @@
 			},
 
 			/**
+			 * Called whenever a field is unfocused.
+			 * @param {*} fieldObject The object representing the field in the model
+			 * @param {*} fieldValue The value of the field
+			 */
+			// eslint-disable-next-line
+			onBlur(fieldObject, fieldValue)
+			{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT CTRLBLR TABPR]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+				this.afterFieldUnfocus(fieldObject, fieldValue)
+			},
+
+			/**
 			 * Called whenever a control's value is updated.
 			 * @param {string} controlField The name of the field in the controls that will be updated
 			 * @param {object} control The object representing the field in the controls
@@ -945,6 +940,10 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS TABPR]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		watch: {

@@ -16,7 +16,8 @@ namespace CSGenio.business
 	/// <summary>
 	/// Project
 	/// </summary>
-	public class CSGenioAproje : DbArea	{
+	public class CSGenioAproje : DbArea
+	{
 		/// <summary>
 		/// Meta-information on this area
 		/// </summary>
@@ -94,6 +95,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "FIRST42972";
 
@@ -107,6 +109,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "BEFORE60156";
 
@@ -120,6 +123,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "FOLLOWING22170";
 
@@ -133,6 +137,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "LAST49207";
 
@@ -146,6 +151,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "NEXT___PREVIOUS__58212";
 
@@ -153,7 +159,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"followin","before"}, new int[] {0,1}, "proje", "codproje"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((double)args[0])-((double)args[1]);
+				return ((decimal)args[0])-((decimal)args[1]);
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -163,6 +169,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "LAST___FIRST__42481";
 
@@ -170,7 +177,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"ultimo","primeiro"}, new int[] {0,1}, "proje", "codproje"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((double)args[0])-((double)args[1]);
+				return ((decimal)args[0])-((decimal)args[1]);
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -353,7 +360,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodproje, value); }
 		}
 
-
 		/// <summary>Field : "Project" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldProjecto { get { return m_fldProjecto; } }
 		private static FieldRef m_fldProjecto = new FieldRef("proje", "projecto");
@@ -364,7 +370,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldProjecto); }
 			set { insertNameValueField(FldProjecto, value); }
 		}
-
 
 		/// <summary>Field : ">REFERENCE YEAR" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodyear { get { return m_fldCodyear; } }
@@ -377,7 +382,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodyear, value); }
 		}
 
-
 		/// <summary>Field : "Year" Tipo: "C" Formula: ++ "[YEAR1->YEAR]"</summary>
 		public static FieldRef FldYear { get { return m_fldYear; } }
 		private static FieldRef m_fldYear = new FieldRef("proje", "year");
@@ -389,78 +393,71 @@ namespace CSGenio.business
 			set { insertNameValueField(FldYear, value); }
 		}
 
-
 		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		public static FieldRef FldPrimeiro { get { return m_fldPrimeiro; } }
 		private static FieldRef m_fldPrimeiro = new FieldRef("proje", "primeiro");
 
 		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
-		public double ValPrimeiro
+		public decimal ValPrimeiro
 		{
-			get { return (double)returnValueField(FldPrimeiro); }
+			get { return (decimal)returnValueField(FldPrimeiro); }
 			set { insertNameValueField(FldPrimeiro, value); }
 		}
-
 
 		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		public static FieldRef FldBefore { get { return m_fldBefore; } }
 		private static FieldRef m_fldBefore = new FieldRef("proje", "before");
 
 		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
-		public double ValBefore
+		public decimal ValBefore
 		{
-			get { return (double)returnValueField(FldBefore); }
+			get { return (decimal)returnValueField(FldBefore); }
 			set { insertNameValueField(FldBefore, value); }
 		}
-
 
 		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		public static FieldRef FldFollowin { get { return m_fldFollowin; } }
 		private static FieldRef m_fldFollowin = new FieldRef("proje", "followin");
 
 		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
-		public double ValFollowin
+		public decimal ValFollowin
 		{
-			get { return (double)returnValueField(FldFollowin); }
+			get { return (decimal)returnValueField(FldFollowin); }
 			set { insertNameValueField(FldFollowin, value); }
 		}
-
 
 		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		public static FieldRef FldUltimo { get { return m_fldUltimo; } }
 		private static FieldRef m_fldUltimo = new FieldRef("proje", "ultimo");
 
 		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
-		public double ValUltimo
+		public decimal ValUltimo
 		{
-			get { return (double)returnValueField(FldUltimo); }
+			get { return (decimal)returnValueField(FldUltimo); }
 			set { insertNameValueField(FldUltimo, value); }
 		}
-
 
 		/// <summary>Field : "Next - Previous =" Tipo: "$D" Formula: + "[PROJE->FOLLOWIN]-[PROJE->BEFORE]"</summary>
 		public static FieldRef FldSaldo1 { get { return m_fldSaldo1; } }
 		private static FieldRef m_fldSaldo1 = new FieldRef("proje", "saldo1");
 
 		/// <summary>Field : "Next - Previous =" Tipo: "$D" Formula: + "[PROJE->FOLLOWIN]-[PROJE->BEFORE]"</summary>
-		public double ValSaldo1
+		public decimal ValSaldo1
 		{
-			get { return (double)returnValueField(FldSaldo1); }
+			get { return (decimal)returnValueField(FldSaldo1); }
 			set { insertNameValueField(FldSaldo1, value); }
 		}
-
 
 		/// <summary>Field : "Last - First =" Tipo: "$D" Formula: + "[PROJE->ULTIMO]-[PROJE->PRIMEIRO]"</summary>
 		public static FieldRef FldSaldo2 { get { return m_fldSaldo2; } }
 		private static FieldRef m_fldSaldo2 = new FieldRef("proje", "saldo2");
 
 		/// <summary>Field : "Last - First =" Tipo: "$D" Formula: + "[PROJE->ULTIMO]-[PROJE->PRIMEIRO]"</summary>
-		public double ValSaldo2
+		public decimal ValSaldo2
 		{
-			get { return (double)returnValueField(FldSaldo2); }
+			get { return (decimal)returnValueField(FldSaldo2); }
 			set { insertNameValueField(FldSaldo2, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -503,23 +500,6 @@ namespace CSGenio.business
 				return informacao.ControlledRecords.GetPrimaryKeyFromControlledRecord(sp, user, ID);
 			return String.Empty;
 		}
-
-
-
-        /// <summary>
-        /// Search for all records of this area that comply with a condition
-        /// </summary>
-        /// <param name="sp">Persistent support from where to get the list</param>
-        /// <param name="user">The context of the user</param>
-        /// <param name="where">The search condition for the records. Use null to get all records</param>
-        /// <param name="fields">The fields to be filled in the area</param>
-        /// <returns>A list of area records with all fields populated</returns>
-        /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        [Obsolete("Use List<CSGenioAproje> searchList(PersistentSupport sp, User user, CriteriaSet where, string []fields) instead")]
-        public static List<CSGenioAproje> searchList(PersistentSupport sp, User user, string where, string []fields = null)
-        {
-            return sp.searchListWhere<CSGenioAproje>(where, user, fields);
-        }
 
 
         /// <summary>
@@ -568,7 +548,7 @@ namespace CSGenio.business
 
 
 
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX PROJE]/

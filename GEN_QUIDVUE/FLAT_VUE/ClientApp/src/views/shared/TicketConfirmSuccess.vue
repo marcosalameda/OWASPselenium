@@ -7,15 +7,18 @@
 						:src="`${system.resourcesPath}f-login__brand.png`"
 						alt="" />
 					<p>{{ texts.appName }}</p>
+					
+					<h5>{{ texts.emailConfirmed }}</h5>
 				</div>
 
-				<h2>{{ texts.emailConfirmed }}</h2>
-
-				<p>{{ texts.userCreateSuccess }}</p>
+				<p class="q-logon-text">{{ texts.userCreateSuccess }}</p>
 
 				<q-router-link
 					class="f-login__link"
-					:link="{ name: 'main' }">
+					:link="{ 
+						name: 'main',
+						params: { culture: system.currentLang } 
+					}">
 					{{ texts.backToLogin }}
 				</q-router-link>
 			</div>

@@ -1,16 +1,13 @@
-﻿import { computed, readonly } from 'vue'
+﻿import { readonly } from 'vue'
 import { isNavigationFailure } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 import _forEach from 'lodash-es/forEach'
-import _get from 'lodash-es/get'
 import _isEmpty from 'lodash-es/isEmpty'
 import _some from 'lodash-es/some'
 
 import { useGenericDataStore } from '@/stores/genericData.js'
-import { useLayoutDataStore } from '@/stores/layoutData.js'
+import { useGlobalTablesDataStore } from '@/stores/globalTablesData.js'
 import { useNavDataStore } from '@/stores/navData.js'
-import { useSystemDataStore } from '@/stores/systemData.js'
-import { useUserDataStore } from '@/stores/userData.js'
 
 import netAPI from '@/api/network'
 import { QEventEmitter } from '@/api/global/eventBus.js'
@@ -51,7 +48,8 @@ export default {
 		'insert-form': (payload) => typeof payload === 'object',
 		'is-form-dirty': (payload) => typeof payload === 'object',
 		'update-form-mode': (payload) => typeof payload === 'string',
-		'update:nestedModel': (payload) => typeof payload === 'object'
+		'update-model-id': (payload) => typeof payload === 'string',
+		'update:nested-model': (payload) => typeof payload === 'object'
 	},
 
 	mixins: [
@@ -165,11 +163,19 @@ export default {
 		 * because they will limit other branches of the history. History entries should only be added to the current form level.
 		 *
 		 * For example, if we choose Table list row at the level of the form to which the list belongs,
-		 * forms such as «Multiform» or «Extended support form» will have this limit applied forever.
+		 * forms such as «Multiform» or «Extended support form» will always have this limit applied.
 		 */
 		historyEntries: {
 			type: Array,
 			default: () => []
+		},
+
+		/**
+		 * Values used to set default values for specified fields.
+		 */
+		prefillValues: {
+			type: Object,
+			default: () => ({})
 		}
 	},
 
@@ -189,10 +195,6 @@ export default {
 				errorMessage: ''
 			},
 
-			texts: {
-				genericLoad: computed(() => this.Resources[hardcodedTexts.genericLoad])
-			},
-
 			formModalIsReady: false,
 
 			showExternalApp: true,
@@ -203,9 +205,6 @@ export default {
 			formHeader: '',
 
 			validationErrors: {},
-
-			// Controls the visibility of the horizontal anchor container.
-			anchorContainerVisibility: true,
 
 			// Allows anchor containers to be opened on first load.
 			anchorsTabOpened: false,
@@ -238,12 +237,16 @@ export default {
 
 	mounted()
 	{
-		this.$eventTracker.addTrace({ origin: 'mounted (formHandler)', message: 'Form is mounted', contextData: { formInfo: this.formInfo } })
+		this.$eventTracker.addTrace({
+			origin: 'mounted (formHandler)',
+			message: 'Form is mounted',
+			contextData: { formInfo: this.formInfo }
+		})
 
 		// Override form buttons with buttons received from prop.
 		for (let btnKey in this.buttonsOverride)
 		{
-			let button = this.buttonsOverride[btnKey]
+			const button = this.buttonsOverride[btnKey]
 
 			for (let propKey in button)
 			{
@@ -267,11 +270,15 @@ export default {
 
 	beforeUnmount()
 	{
-		this.$eventTracker.addTrace({ origin: 'beforeUnmount (formHandler)', message: 'Form will be unmounted', contextData: { formInfo: this.formInfo } })
+		this.$eventTracker.addTrace({
+			origin: 'beforeUnmount (formHandler)',
+			message: 'Form will be unmounted',
+			contextData: { formInfo: this.formInfo }
+		})
 
 		this.showExternalApp = false
 		this.internalEvents.removeAllListeners()
-		this.formControl.Destroy()
+		this.formControl.destroy()
 
 		this.$eventHub.off('modal-is-ready', this.setFormModalReady)
 		this.$eventHub.off('form-apply', this.formApplyCallback)
@@ -281,22 +288,39 @@ export default {
 	},
 
 	computed: {
-		...mapState(useSystemDataStore, [
-			'system'
-		]),
-
 		...mapState(useGenericDataStore, [
-			'tGlob',
 			'suggestionModeOn',
 			'reportingModeCAV'
 		]),
 
-		...mapState(useLayoutDataStore, [
-			'pageScroll',
-			'headerHeight',
-			'layoutType',
-			'navbarHeight'
-		]),
+		/**
+		 * A list with the currently visible controls.
+		 */
+		visibleControls()
+		{
+			return Object.keys(this.controls)
+				.filter((id) => formFunctions.fieldIsVisible(this.controls, id))
+				.reduce((obj, key) => {
+					obj[key] = this.controls[key]
+					return obj
+				}, {})
+		},
+
+		/**
+		 * A list with the currently visible group IDs.
+		 */
+		visibleGroups()
+		{
+			return this.groupFields.filter((id) => formFunctions.fieldIsVisible(this.controls, id))
+		},
+
+		/**
+		 * A list with the currently visible anchor group IDs.
+		 */
+		anchorGroups()
+		{
+			return this.visibleGroups.filter((id) => this.controls[id].anchored === true)
+		},
 
 		/**
 		 * Tree of anchors for the current form.
@@ -314,18 +338,6 @@ export default {
 			if (this.layoutConfig.FormAnchorsPosition !== 'form-header')
 				return false
 			return Object.values(this.controls).some((x) => x.anchored === true)
-		},
-
-		/**
-		 * The data of the current user.
-		 */
-		userData()
-		{
-			const userDataStore = useUserDataStore()
-
-			return {
-				name: userDataStore.username
-			}
 		},
 
 		/**
@@ -349,27 +361,16 @@ export default {
 		 */
 		showFormFooter()
 		{
-			var hasButtons = false
-
-			for (let i in this.formButtons)
-			{
-				let btn = this.formButtons[i]
-				if (btn.isActive && btn.isVisible && btn.showInFooter)
-				{
-					hasButtons = true
-					break
-				}
-			}
-
+			const hasButtons = Object.values(this.formButtons).some((btn) => btn.isActive && btn.isVisible && btn.showInFooter)
 			return hasButtons && this.formControl.uiComponents.footer && this.authData.isAllowed
 		},
 
-		/*
+		/**
 		 * The threshold used to set the header fixed.
 		 */
 		stickyThreshold()
 		{
-			return this.layoutType === 'horizontal' ? this.formHeader.offsetTop - this.navbarHeight  : this.formHeader.offsetTop - this.headerHeight
+			return this.formHeader.offsetTop - (this.layoutType === 'horizontal' ? this.navbarHeight : this.headerHeight)
 		},
 
 		/**
@@ -380,11 +381,11 @@ export default {
 			return !this.isNested && !this.isPopup && this.pageScroll >= this.stickyThreshold && (_isEmpty(this.layoutConfig.ContainerWidth) || this.layoutConfig.ContainerWidth === 'whole_page')
 		},
 
-
 		/**
 		 * True if the header of the form should be sticky, false otherwise.
 		 */
-		isStickyHeader(){
+		isStickyHeader()
+		{
 			return !this.isNested && !this.isPopup
 		},
 
@@ -438,7 +439,7 @@ export default {
 		 */
 		isEditable()
 		{
-			return !_isEmpty(this.formInfo.mode) && this.formInfo.mode !== this.formModes.show && this.formInfo.mode !== this.formModes.delete
+			return ![this.formModes.show, this.formModes.delete].includes(this.formInfo.mode)
 		},
 
 		/**
@@ -462,8 +463,8 @@ export default {
 		 */
 		primaryKeyValue()
 		{
-			const pKey = this.formInfo.primaryKey || ''
-			return !_isEmpty(pKey) ? this.model[pKey].value || '' : ''
+			const pKey = this.formInfo.primaryKey ?? ''
+			return !_isEmpty(pKey) ? this.model[pKey].value ?? '' : ''
 		},
 
 		/**
@@ -528,7 +529,8 @@ export default {
 		formButtonSections()
 		{
 			let formModeBtns = {},
-				formActionBtns = {}
+				formActionBtns = {},
+				formInsertBtns = {}
 
 			for (let i in this.formButtons)
 			{
@@ -536,11 +538,14 @@ export default {
 					formModeBtns[i] = { ...this.formButtons[i] }
 				else if (this.formButtons[i].type === 'form-action' || this.formButtons[i].type === 'custom')
 					formActionBtns[i] = { ...this.formButtons[i] }
+				else if (this.formButtons[i].type === 'form-insert')
+					formInsertBtns[i] = { ...this.formButtons[i] }
 			}
 
 			return {
 				modesButtons: formModeBtns,
-				actionButtons: formActionBtns
+				actionButtons: formActionBtns,
+				insertButtons: formInsertBtns
 			}
 		},
 
@@ -565,11 +570,9 @@ export default {
 
 	methods: {
 		...mapActions(useGenericDataStore, [
-			'setGlobData',
 			'setInfoMessage',
 			'clearInfoMessages',
-			'setModal',
-			'setDropdown'
+			'setModal'
 		]),
 
 		...mapActions(useNavDataStore, [
@@ -616,7 +619,7 @@ export default {
 				})
 				.map((ctrlId) => {
 					const control = this.controls[ctrlId]
-					return control.Reload()
+					return control.reload()
 				})
 
 			await Promise.all(promises)
@@ -634,7 +637,26 @@ export default {
 				this.refreshControls(this.tableFields, (table) => !isFirstLoad || !table.isInCollapsible && !table.config.showAfterFilter),
 				// Load the data of the timelines.
 				this.refreshControls(this.timelineFields)
-			])
+			]).then(() => {
+				this.initTablesData(this.tableFields)
+				this.initTablesData(this.timelineFields)
+			})
+		},
+
+		/**
+		 * Initializes the data for the specified control IDs.
+		 * @param {Array<string>} controlIds An array of control IDs whose data needs to be initialized.
+		 */
+		initTablesData(controlIds)
+		{
+			if (!Array.isArray(controlIds))
+				return
+
+			for (const tableFieldId of controlIds)
+			{
+				const tableField = this.controls[tableFieldId]
+				tableField.initData()
+			}
 		},
 
 		/**
@@ -656,7 +678,7 @@ export default {
 			const promises = []
 
 			if (isVisible && updateControl)
-				promises.push(list.Reload())
+				promises.push(list.reload())
 
 			if (list.hasDependencies && updateControl)
 				promises.push(this.model.recalculateFormulas())
@@ -678,10 +700,11 @@ export default {
 
 		/**
 		 * Sets the states of the form containers with the values in the store.
-		 * @param {string} key A key unique to this form
 		 */
-		setContainersStateFromStore(key)
+		setContainersStateFromStore()
 		{
+			const key = this.storeKey
+
 			if (!formFunctions.validateStoredValues(key, this.containersState, this.formInfo))
 				return
 
@@ -700,11 +723,11 @@ export default {
 					containerState = false
 
 				if (!container.isInAccordion)
-					container.SetState(containerState)
+					container.setState(containerState)
 				else if (containerState)
 				{
 					const accordion = this.controls[container.container]
-					accordion.SetOpenGroup(containerState, container.id)
+					accordion.setOpenGroup(containerState, container.id)
 				}
 			}
 
@@ -713,7 +736,7 @@ export default {
 			{
 				const selectedTab = this.containersState[areaName][key][formName].formTabs
 				if (selectedTab && typeof selectedTab === 'string')
-					this.controls.formTabs.SelectTab(selectedTab)
+					this.controls.formTabs.selectTab(selectedTab)
 			}
 		},
 
@@ -729,10 +752,10 @@ export default {
 				if (!(container instanceof fieldControlClass.GroupControl))
 					continue
 
-				container.SetState(false)
+				container.setState(false)
 			}
 
-			this.controls.formTabs?.SelectFirstTab()
+			this.controls.formTabs?.selectFirstTab()
 		},
 
 		/**
@@ -743,9 +766,9 @@ export default {
 		{
 			this.model.hydrate(rawData)
 
-			// Glob info.
-			if (Reflect.has(rawData, 'TGlob'))
-				this.setGlobData(rawData.TGlob)
+			// Global tables
+			const globalTablesData = useGlobalTablesDataStore()
+			globalTablesData.loadFromViewModel(rawData)
 		},
 
 		/**
@@ -756,7 +779,7 @@ export default {
 		 */
 		hydrateField(modelField, rawData)
 		{
-			this.model[modelField].hydrateField(modelField, rawData)
+			this.model.hydrateField(modelField, rawData)
 		},
 
 		/**
@@ -828,15 +851,6 @@ export default {
 		},
 
 		/**
-		 * Resets the values of all the form fields to their original values.
-		 */
-		resetFormFields()
-		{
-			for (let i in this.model)
-				this.model[i].value = this.model[i].originalValue
-		},
-
-		/**
 		 * If there are any dirty fields, makes them valid.
 		 */
 		setFormFieldsValid()
@@ -847,12 +861,12 @@ export default {
 			for (let i in this.model)
 			{
 				const field = this.model[i]
-				// Grid - data is in memory.
-				if (!(field instanceof modelFieldType.GridTableList))
+				// The editable table list data is in memory.
+				if (!(field instanceof modelFieldType.GridTableList) && field.isDirty)
 					field.hydrate(field.value)
 			}
 
-			// Extended support forms - nested forms need to be validated as well
+			// Extended support forms - nested forms need to be validated as well.
 			this.$emit('is-form-dirty', { isDirty: false, afterFormSave: true })
 		},
 
@@ -860,9 +874,10 @@ export default {
 		 * Changes the route to the specified navigation level.
 		 * @param {object} navLevel The navigation level
 		 * @param {object} options Additional options to include in route params (optional)
+		 * @param {boolean} replace Whether to create a new entry in the browser history or to replace the current one (optional)
 		 * @returns A falsy value if the navigation succeeds, or a navigation failure or true value if it fails.
 		 */
-		async navigateTo(navLevel, options)
+		async navigateTo(navLevel, options, replace = false)
 		{
 			if (!this.hasRoute || typeof navLevel !== 'object')
 				return true
@@ -871,21 +886,25 @@ export default {
 
 			const nonNestedLevel = navLevel?.getFirstNotNested()
 			const location = nonNestedLevel?.location || 'home'
-			// the clearHistory flag in params should be true when we navigate to another menu. However, in forms without an area (menu structures M->F+), 
+			// The clearHistory flag in params should be true when we navigate to another menu. However, in forms without an area (menu structures M->F+),
 			// the flag persisted from the previous menu navigation. This made extended support forms lose the positioning of the record after selecting a record action
-			// (read, edit, ...) and then canceling and leaving the form. 
+			// (read, edit, ...) and then canceling and leaving the form.
 			const params = {
 				isControlled: true,
 				...nonNestedLevel?.params,
 				isDuplicate: false,
 				...options,
 				historyBranchId: this.navigationId,
-				clearHistory: false // Reset clearHistory from previous navigation
+				clearHistory: false // Reset clearHistory from previous navigation.
 			}
 
 			try
 			{
-				const result = await this.$router.push({ name: location, params })
+				let result
+				if (replace)
+					result = await this.$router.replace({ name: location, params })
+				else
+					result = await this.$router.push({ name: location, params })
 
 				genericFunctions.saveNavigation(this.$route, (data) => {
 					const navParams = {
@@ -926,13 +945,8 @@ export default {
 			{
 				if (!key.includes('.'))
 					errors[key] = data[key]
-				else
-				{
-					const field = _get(this.model, key)
 
-					if (field instanceof modelFieldType.Base)
-						field.serverErrorMessages = data[key]
-				}
+				this.model.setServerErrorMessages(key, data[key])
 			}
 
 			return errors
@@ -961,15 +975,32 @@ export default {
 				previouslyRemovedRoute: this.formInfo.route,
 				previouslyRemovedTable: this.formInfo.area,
 				previouslyRemovedRowKey: previousRowKey,
-				returnControl: this.navigation.currentLevel.previousLevel.params.anchor,
+				returnControl: this.navigation.currentLevel?.previousLevel?.params.anchor,
 				keepAlerts: true
+			}
+		},
+
+		/**
+		 * Displays an error message that came from the server, in case there are no validation errors.
+		 * @param {object} data The server response data
+		 */
+		displayErrorMessage(data)
+		{
+			if (typeof data.Message === 'string' && _isEmpty(this.validationErrors))
+			{
+				const errorProps = {
+					type: messageTypes.E,
+					message: data.Message,
+					pinned: true
+				}
+				this.setInfoMessage(errorProps)
 			}
 		},
 
 		/**
 		 * Loads the raw data of the form from the server.
 		 * @param {boolean} forceFetch Specifies if the form fields should be forcefully fetched (defaults to false)
-		 * @returns A promise with the response from the server.
+		 * @returns True if the operation was successful, false otherwise.
 		 */
 		async fetchFormFields(forceFetch)
 		{
@@ -977,11 +1008,11 @@ export default {
 				forceFetch = false
 
 			if (this.formInitialDataLoaded && !forceFetch)
-				return
+				return false
 
 			const currentLevel = this.navigation.currentLevel
 			if (_isEmpty(currentLevel))
-				return
+				return false
 
 			const mode = this.hasRoute ? this.$route.params.mode : this.mode,
 				id = this.hasRoute ? (this.$route.params.id || null) : (this.isNested && this.mode === this.formModes.new ? null : this.id),
@@ -995,12 +1026,12 @@ export default {
 				prefillValues = undefined
 
 			if (!Object.values(this.formModes).includes(mode))
-				return
+				return false
 
 			for (let i in this.model)
 				this.model[i].isReady = false
 
-			var params = { id, isNewLocation, prefillValues: prefillValues }
+			let params = { id, isNewLocation, prefillValues }
 			if (this.$route.query)
 			{
 				params = {
@@ -1009,7 +1040,7 @@ export default {
 				}
 			}
 
-			var opResult = false
+			let opResult = false
 
 			// When the form is used as a component with the already loaded model.
 			if (this.isNested && !_isEmpty(this.nestedModel))
@@ -1037,56 +1068,63 @@ export default {
 			}
 			else
 			{
-				await netAPI.fetchFormData(this.formArea, this.formInfo.name, mode, params, async (_, response) => {
-					// Show the warnings and errors.
-					this.validationErrors = !_isEmpty(response.data.Errors)
-						? this.parseResponseErrors(response.data.Errors)
-						: {}
+				await netAPI.fetchFormData(
+					this.formArea,
+					this.formInfo.name,
+					mode,
+					params,
+					async (data, response) => {
+						// Show the warnings and errors.
+						this.validationErrors = !_isEmpty(response.data.Errors)
+							? this.parseResponseErrors(response.data.Errors)
+							: {}
 
-					if (typeof response.data.Success !== 'boolean' || !response.data.Success)
-					{
-						this.authData.isAllowed = false
-						this.authData.errorMessage = response.data.Message || ''
-						return
-					}
-
-					const model = response.data.Data
-
-					this.formInfo.mode = mode
-					this.hydrate(model)
-					this.authData.isAllowed = true
-					this.formInitialDataLoaded = true
-
-					// When creating a new record, or duplicating an existing one, the id in the navigation will be null because
-					// the new history level is created before knowing the id of the new record. This ensures that doesn't happen.
-					if (!this.isNested && this.formInfo.primaryKey && (!currentLevel.params.id || currentLevel.params.id !== this.primaryKeyValue))
-					{
-						const options = {
-							id: this.primaryKeyValue,
-							culture: this.system.currentLang,
-							isControlled: true
+						if (typeof response.data.Success !== 'boolean' || !response.data.Success)
+						{
+							this.authData.isAllowed = false
+							this.authData.errorMessage = response.data.Message ?? ''
+							return
 						}
 
-						await this.navigateTo(currentLevel, options)
-						this.setFormReturnControl()
-					}
+						this.formInfo.mode = mode
+						this.hydrate(data)
+						this.authData.isAllowed = true
+						this.formInitialDataLoaded = true
 
-					this.setExtraProperties(model.ExtraProperties)
+						// When creating a new record, or duplicating an existing one, the id in the navigation will be null because
+						// the new history level is created before knowing the id of the new record. This ensures that doesn't happen.
+						if (this.formInfo.primaryKey && (!currentLevel.params.id || currentLevel.params.id !== this.primaryKeyValue))
+						{
+							this.$emit('update-model-id', this.primaryKeyValue)
 
-					// Handles the storing of field values.
-					if (this.storeKey !== null)
-					{
-						this.setValuesFromStore()
-						this.storeValues({
-							navigationId: this.navigationId,
-							key: this.storeKey,
-							formInfo: this.formInfo,
-							fields: this.model
-						})
-					}
+							if (!this.isNested)
+							{
+								const options = {
+									id: this.primaryKeyValue,
+									culture: this.system.currentLang,
+									isControlled: true
+								}
 
-					opResult = true
-				}, this.navigationId)
+								await this.navigateTo(currentLevel, options, true)
+								this.setFormReturnControl()
+							}
+						}
+
+						// Handles the storing of field values.
+						if (this.storeKey !== null)
+						{
+							this.setValuesFromStore()
+							this.storeValues({
+								navigationId: this.navigationId,
+								key: this.storeKey,
+								formInfo: this.formInfo,
+								fields: this.model
+							})
+						}
+
+						opResult = true
+					},
+					this.navigationId)
 			}
 
 			return opResult
@@ -1102,9 +1140,13 @@ export default {
 
 			this.model[modelField].isReady = false
 
-			await netAPI.fetchFormFieldData(this.formArea, this.formInfo.name, modelField, { id }, async (_, response) => {
-				this.hydrateField(modelField, response.data.Data)
-			}, this.navigationId)
+			await netAPI.fetchFormFieldData(
+				this.formArea,
+				this.formInfo.name,
+				modelField,
+				{ id },
+				(data) => this.hydrateField(modelField, data),
+				this.navigationId)
 		},
 
 		/**
@@ -1140,7 +1182,7 @@ export default {
 		/**
 		 * Applies the current changes, made by the user, without leaving the form.
 		 * @param {boolean} showSuccess Specifies if the user should be notified that the operation was successful (if true, a success message will be displayed)
-		 * @returns A promise with the response from the server, or null if the apply action isn't supported.
+		 * @returns True if the operation was successful, false otherwise.
 		 */
 		async applyChanges(showSuccess)
 		{
@@ -1163,15 +1205,25 @@ export default {
 			if (!shouldApply)
 				return Promise.resolve(false)
 
-			return new Promise((resolve) => {
-				netAPI.postFormData(this.formArea, this.formInfo.name, 'SaveEdit', this.model.serverObjModel, async (_, response) => {
-					// Show the warnings and errors.
-					this.validationErrors = !_isEmpty(response.data.Errors)
-						? this.parseResponseErrors(response.data.Errors)
-						: {}
+			const applyProc = new Promise((resolve) => {
+				netAPI.postFormData(
+					this.formArea,
+					this.formInfo.name,
+					'SaveEdit',
+					this.model.serverObjModel,
+					async (data, response) => {
+						// Show the warnings and errors.
+						this.validationErrors = !_isEmpty(response.data.Errors)
+							? this.parseResponseErrors(response.data.Errors)
+							: {}
 
-					if (response.data.Success)
-					{
+						if (!response.data.Success)
+						{
+							this.displayErrorMessage(response.data)
+							resolve(false)
+							return
+						}
+
 						// Emits an event saying the DB table was altered, so lists that show records from it know they need to refresh.
 						this.$eventHub.emit(`changed-${this.formArea}`, this.model.dirtyFieldNames)
 
@@ -1182,7 +1234,7 @@ export default {
 						{
 							const successProps = {
 								type: messageTypes.OK,
-								message: response.data.Data.Message,
+								message: data.Message,
 								pinned: true
 							}
 
@@ -1192,25 +1244,21 @@ export default {
 
 						await this.afterApply()
 						resolve(true)
-					}
-					else if (typeof response.data.Message === 'string' && _isEmpty(this.validationErrors))
-					{
-						const errorProps = {
-							type: messageTypes.E,
-							message: response.data.Message,
-							pinned: true
-						}
-						this.setInfoMessage(errorProps)
-						resolve(false)
-					}
-				})
+					},
+					undefined,
+					undefined,
+					this.navigationId)
 			})
+
+			this.addBusy(applyProc, this.Resources[hardcodedTexts.processing])
+
+			return applyProc
 		},
 
 		/**
 		 * Saves the current content of the form.
 		 * @param {boolean} repeatInsert Should be true if a new record is to be created after the current one, false otherwise
-		 * @returns A promise with the response from the server.
+		 * @returns True if the operation was successful, false otherwise.
 		 */
 		async saveForm(repeatInsert)
 		{
@@ -1222,201 +1270,244 @@ export default {
 			if (!_isEmpty(validationErrors))
 			{
 				this.validationErrors = validationErrors
-				return
+				return Promise.resolve(false)
 			}
 
-			this.beforeSave().then(async (value) => {
-				if (value === true)
-				{
-					return netAPI.postFormData(this.formArea, this.formInfo.name, this.formInfo.mode, this.model.serverObjModel, async (_, response) => {
+			const shouldSave = await this.beforeSave()
+
+			if (!shouldSave)
+				return Promise.resolve(false)
+
+			const saveProc = new Promise((resolve) => {
+				netAPI.postFormData(
+					this.formArea,
+					this.formInfo.name,
+					this.formInfo.mode,
+					this.model.serverObjModel,
+					async (data, response) => {
 						// Show the warnings and errors.
 						this.validationErrors = !_isEmpty(response.data.Errors)
 							? this.parseResponseErrors(response.data.Errors)
 							: {}
 
-						if (response.data.Success)
+						if (!response.data.Success)
 						{
-							if (this.formInfo.mode === this.formModes.new)
-							{
-								// FOR: tree table select row on return.
-								// Add new row key to row key path to select.
-								const currentControl = this.navigation.currentLevel.previousLevel.currentControl
-								const rowKeyToScroll = currentControl?.data?.rowKey ?? null
-
-								if (Array.isArray(rowKeyToScroll))
-									rowKeyToScroll.push(this.primaryKeyValue)
-							}
-
-							// Emits an event saying the DB table was altered, so lists that show records from it know they need to refresh.
-							this.$eventHub.emit(`changed-${this.formArea}`, this.model.dirtyFieldNames)
-
-							// If the form fields were successfully saved, then they are no longer dirty.
-							this.setFormFieldsValid()
-
-							this.clearInfoMessages()
-
-							// If there are any warning messages, they will be displayed.
-							if (typeof response.data.Data.Warnings === 'object' && Array.isArray(response.data.Data.Warnings))
-							{
-								response.data.Data.Warnings.forEach((w) => {
-									const warningProps = {
-										type: messageTypes.W,
-										message: w,
-										icon: 'error',
-										pinned: true
-									}
-									this.setInfoMessage(warningProps)
-								})
-							}
-
-							this.afterSave().then(async (value) => {
-								if (value === true)
-								{
-									// Sets up the success message that the user will see after leaving the form.
-									const successProps = {
-										type: messageTypes.OK,
-										message: response.data.Data.Message,
-										pinned: true
-									}
-									this.setInfoMessage(successProps)
-
-									genericFunctions.scrollToTop()
-
-									if (repeatInsert)
-									{
-										const params = {
-											...this.getExtraNavParams(this.primaryKeyValue),
-											id: null,
-											mode: this.formModes.new,
-											modes: this.navigation.currentLevel.params.modes,
-											isControlled: true
-										}
-
-										// Adds a new empty history level, with the same route as the current one.
-										await this.navigateTo(this.navigation.currentLevel, params)
-
-										this.navigation.currentLevel.clearEntries()
-										this.resetContainersState()
-										this.reloadFormData()
-									}
-									else
-									{
-										const options = {
-											...this.getExtraNavParams(this.primaryKeyValue),
-											/*
-											 * The back navigation doesn't need to show the data loss confirmation popup if we are going back to the previous level after a successful save.
-											 * This occurred when a button for a form without Apply opened a form with 'isControlled: false' in the parameters.
-											 * Thus, navigating back with the same parameters caused the confirmation message to appear.
-											 */
-											isControlled: true
-										}
-
-										this.formRemoveHistoryLevels((this.currentRouteParams || {}).goBack)
-
-										if (this.isNested)
-											this.$emit('close', { type: 'save' })
-										else
-											await this.navigateTo(this.navigation.currentLevel, options)
-									}
-								}
-							})
+							this.displayErrorMessage(response.data)
+							resolve(false)
+							return
 						}
-						else if (typeof response.data.Message === 'string' && _isEmpty(this.validationErrors))
+
+						if (this.formInfo.mode === this.formModes.new)
 						{
-							const errorProps = {
-								type: messageTypes.E,
-								message: response.data.Message,
-								pinned: true
-							}
-							this.setInfoMessage(errorProps)
+							// FOR: tree table select row on return.
+							// Add new row key to row key path to select.
+							const currentControl = this.navigation.currentLevel.previousLevel.currentControl
+							const rowKeyToScroll = currentControl?.data?.rowKey ?? null
+
+							if (Array.isArray(rowKeyToScroll))
+								rowKeyToScroll.push(this.primaryKeyValue)
 						}
-					}, undefined, undefined, this.navigationId)
+
+						// Emits an event saying the DB table was altered, so lists that show records from it know they need to refresh.
+						this.$eventHub.emit(`changed-${this.formArea}`, this.model.dirtyFieldNames)
+
+						// If the form fields were successfully saved, then they are no longer dirty.
+						this.setFormFieldsValid()
+
+						this.clearInfoMessages()
+
+						// If there are any warning messages, they will be displayed.
+						if (typeof data.Warnings === 'object' && Array.isArray(data.Warnings) && !this.isEmpty(data.Warnings))
+						{
+							this.showWarningsDialog(data)
+
+							resolve(false)
+							return
+						}
+
+						const shouldContinue = await this.afterSave()
+						if (!shouldContinue)
+						{
+							resolve(false)
+							return
+						}
+
+						this.continueSaveForm(repeatInsert, data)
+						resolve(true)
+					},
+					undefined,
+					undefined,
+					this.navigationId)
+			})
+
+			this.addBusy(saveProc, this.Resources[hardcodedTexts.processing])
+
+			return saveProc
+		},
+
+		/**
+		 * Saves the current content of the form.
+		 * @param {boolean} repeatInsert Should be true if a new record is to be created after the current one, false otherwise
+		 * @param {object} data The server response data
+		 */
+		async continueSaveForm(repeatInsert, data)
+		{
+			// Sets up the success message that the user will see after leaving the form.
+			const successProps = {
+				type: messageTypes.OK,
+				message: data.Message,
+				pinned: true
+			}
+
+			this.setInfoMessage(successProps)
+			genericFunctions.scrollToTop()
+
+			if (repeatInsert)
+			{
+				const params = {
+					...this.getExtraNavParams(this.primaryKeyValue),
+					id: null,
+					mode: this.formModes.new,
+					modes: this.navigation.currentLevel.params.modes,
+					isControlled: true
 				}
-			}, (error) => { this.validationErrors = error })
+
+				// Adds a new empty history level, with the same route as the current one.
+				await this.navigateTo(this.navigation.currentLevel, params)
+
+				this.navigation.currentLevel.clearEntries()
+				this.resetContainersState()
+				this.reloadFormData()
+			}
+			else
+			{
+				const options = {
+					...this.getExtraNavParams(this.primaryKeyValue),
+					// The back navigation doesn't need to show the data loss confirmation popup if we are going back to the previous level after a successful save.
+					// This occurred when a button for a form without Apply opened a form with 'isControlled: false' in the parameters.
+					// Thus, navigating back with the same parameters caused the confirmation message to appear.
+					isControlled: true
+				}
+
+				this.formRemoveHistoryLevels((this.currentRouteParams || {}).goBack)
+
+				if (this.isNested)
+					this.$emit('close', { type: 'save' })
+				else
+					await this.navigateTo(this.navigation.currentLevel, options)
+			}
+		},
+
+		/**
+		 * Shows the warning messages dialog.
+		 * @param {object} data The server response data
+		 */
+		showWarningsDialog(data)
+		{
+			const buttons = {
+				confirm: {
+					action: () => this.continueSaveForm(false, data),
+					label: this.formButtons.saveBtn.text
+				},
+				cancel: {
+					label: this.formButtons.cancelBtn.text
+				}
+			}
+
+			const warnings = data.Warnings.map((warning) => `<div>${warning}</div>`).join('')
+			genericFunctions.displayMessage(warnings, 'warning', null, buttons)
 		},
 
 		/**
 		 * Deletes the current record.
-		 * @returns A promise with the response from the server.
+		 * @returns True if the operation was successful, false otherwise.
 		 */
 		async deleteRecordAfterConfirmation()
 		{
-			this.beforeDel().then(async (value) => {
-				if (value === true)
-				{
-					return netAPI.postFormData(this.formArea, this.formInfo.name, this.formModes.delete, { id: this.primaryKeyValue }, async (_, response) => {
+			const shouldDelete = await this.beforeDel()
+
+			if (!shouldDelete)
+				return Promise.resolve(false)
+
+			return new Promise((resolve) => {
+				netAPI.postFormData(
+					this.formArea,
+					this.formInfo.name,
+					this.formModes.delete,
+					{ id: this.primaryKeyValue },
+					async (data, response) => {
 						// Show the warnings and errors.
 						this.validationErrors = !_isEmpty(response.data.Errors)
 							? this.parseResponseErrors(response.data.Errors)
 							: {}
 
-						if (response.data.Success)
+						if (!response.data.Success)
 						{
-							this.formControl.removeListOnDBChangeEvent()
-							// Emits an event saying the DB table was altered, so lists that show records from it know they need to refresh.
-							this.$eventHub.emit(`changed-${this.formArea}`)
-
-							this.afterDel().then(async (value) => {
-								if (value === true)
-								{
-									// FOR: tree table select row on return.
-									// Remove the row key of the deleted row from row key path to select.
-									const currentControl = this.navigation.currentLevel.previousLevel.currentControl
-									const rowKeyToScroll = currentControl?.data?.rowKey ?? null
-
-									if (Array.isArray(rowKeyToScroll))
-										rowKeyToScroll.pop()
-
-									// Sets up the success message that the user will see after leaving the form.
-									const successProps = {
-										type: messageTypes.OK,
-										message: response.data.Data.Message,
-										pinned: true
-									}
-
-									this.clearInfoMessages()
-									this.setInfoMessage(successProps)
-
-									const options = {
-										culture: this.system.currentLang,
-										previouslyRemovedRoute: this.formInfo.route,
-										keepAlerts: true
-									}
-
-									this.formRemoveHistoryLevels((this.currentRouteParams || {}).goBack)
-
-									if (this.isNested)
-										this.$emit('close', { type: 'delete' })
-									else
-										await this.navigateTo(this.navigation.currentLevel, options)
-								}
-							})
+							this.displayErrorMessage(response.data)
+							resolve(false)
+							return
 						}
-						else if (typeof response.data.Message === 'string' && _isEmpty(this.validationErrors))
+
+						this.formControl.removeListOnDBChangeEvent()
+						// Emits an event saying the DB table was altered, so lists that show records from it know they need to refresh.
+						this.$eventHub.emit(`changed-${this.formArea}`)
+
+						const shouldContinue = await this.afterDel()
+
+						if (!shouldContinue)
 						{
-							const errorProps = {
-								type: messageTypes.E,
-								message: response.data.Message,
-								pinned: true
-							}
-							this.setInfoMessage(errorProps)
+							resolve(false)
+							return
 						}
-					}, undefined, undefined, this.navigationId)
-				}
+
+						// FOR: tree table select row on return.
+						// Remove the row key of the deleted row from row key path to select.
+						const currentControl = this.navigation.currentLevel.previousLevel.currentControl
+						const rowKeyToScroll = currentControl?.data?.rowKey ?? null
+
+						if (Array.isArray(rowKeyToScroll))
+							rowKeyToScroll.pop()
+
+						// Sets up the success message that the user will see after leaving the form.
+						const successProps = {
+							type: messageTypes.OK,
+							message: data.Message,
+							pinned: true
+						}
+						this.clearInfoMessages()
+						this.setInfoMessage(successProps)
+
+						const options = {
+							culture: this.system.currentLang,
+							previouslyRemovedRoute: this.formInfo.route,
+							keepAlerts: true
+						}
+
+						this.formRemoveHistoryLevels((this.currentRouteParams || {}).goBack)
+
+						if (this.isNested)
+							this.$emit('close', { type: 'delete' })
+						else
+							await this.navigateTo(this.navigation.currentLevel, options)
+
+						resolve(true)
+					},
+					undefined,
+					undefined,
+					this.navigationId)
 			})
 		},
 
 		/**
 		 * Deletes the current record.
-		 * @returns A promise with the response from the server.
 		 */
 		async deleteRecord()
 		{
 			// If is nested asks for confirmation.
 			if (this.isNested)
 			{
-				let message = this.Resources[hardcodedTexts.confirmDelete]
-				let buttons = {
+				const message = this.Resources[hardcodedTexts.confirmDelete]
+				const buttons = {
 					confirm: {
 						label: this.Resources[hardcodedTexts.confirm],
 						action: () => this.deleteRecordAfterConfirmation()
@@ -1429,7 +1520,7 @@ export default {
 				genericFunctions.displayMessage(message, 'warning', null, buttons)
 			}
 			else
-				return this.deleteRecordAfterConfirmation()
+				await this.deleteRecordAfterConfirmation()
 		},
 
 		/**
@@ -1492,21 +1583,6 @@ export default {
 		},
 
 		/**
-		 * Adds the specified properties to the extra properties of the form.
-		 * @param {object} extraProps The extra properties
-		 */
-		setExtraProperties(extraProps)
-		{
-			if (_isEmpty(extraProps))
-				return
-
-			this.dataApi.extraProperties = {
-				...this.dataApi.extraProperties,
-				...extraProps
-			}
-		},
-
-		/**
 		 * Checks if the form has dirty fields, if so asks the user if he wants to proceed.
 		 * @param {function} next A callback function
 		 */
@@ -1551,6 +1627,7 @@ export default {
 			if (!this.hasRoute)
 			{
 				this.formInfo.mode = mode
+				this.navigation.currentLevel.setMode(mode)
 				this.$emit('update-form-mode', mode)
 
 				// If the form is nested, instead of showing the usual warning, opens a popup to confirm the delete action.
@@ -1560,7 +1637,7 @@ export default {
 					this.deleteRecord()
 				}
 
-				return
+				return false
 			}
 
 			if (!otherParams)
@@ -1577,7 +1654,7 @@ export default {
 				const result = await this.navigateTo(this.navigation.currentLevel, params)
 
 				if (!isNavigationFailure(result))
-					this.resetFormFields()
+					this.model.resetValues()
 
 				return result
 			}
@@ -1689,57 +1766,64 @@ export default {
 		{
 			this.handleDirtiness(async (success) => {
 				if (typeof success === 'boolean' && !success)
-					return // If dirty handling was unsuccessful, abort leaving.
+					return Promise.resolve(false) // If dirty handling was unsuccessful, abort leaving.
 
 				const shouldLeave = await this.beforeExit()
 
-				if (shouldLeave)
-				{
-					// Local function to execute common form exit logic.
-					const executeNextAndExit = async () => {
-						this.clearInfoMessages()
-						if (typeof next === 'function')
-						{
-							await next()
-							this.afterExit()
-						}
-					}
+				if (!shouldLeave)
+					return Promise.resolve(false)
 
-					// Only New and Duplicate modes need to go to the server to remove the record from the database.
-					if (![this.formModes.duplicate, this.formModes.new].includes(this.formInfo.mode))
+				// Local function to execute common form exit logic.
+				const executeNextAndExit = async () => {
+					this.clearInfoMessages()
+
+					if (typeof next === 'function')
 					{
-						await executeNextAndExit()
-						return
+						await next()
+						this.afterExit()
 					}
-
-					/*
-					 * TODO: In a situation where a form is open and the user logs out, Cancel will enter a loop.
-					 * The Server will return the redirect for PermissionErro, but the 'beforeRouteLeave' will return to invoke Cancel.
-					 */
-					return netAPI.postData(this.formInfo.area, `${this.formInfo.name}_Cancel`, null, async (_, response) => {
-						// Show the warnings and errors.
-						this.validationErrors = !_isEmpty(response.data.Errors)
-							? this.parseResponseErrors(response.data.Errors)
-							: {}
-
-						if (response.data.Success)
-							await executeNextAndExit()
-						else if (typeof response.data.Message === 'string' && _isEmpty(this.validationErrors))
-						{
-							const errorProps = {
-								type: messageTypes.E,
-								message: response.data.Message,
-								pinned: true
-							}
-							this.setInfoMessage(errorProps)
-						}
-					},
-					() => {
-						this.validationErrors = {
-							onCancelError: hardcodedTexts.errorProcessingRequest
-						}
-					}, undefined, this.navigationId)
 				}
+
+				// Only New and Duplicate modes need to go to the server to remove the record from the database.
+				if (![this.formModes.duplicate, this.formModes.new].includes(this.formInfo.mode))
+				{
+					await executeNextAndExit()
+					return Promise.resolve(true)
+				}
+
+				/*
+				 * TODO: In a situation where a form is open and the user logs out, Cancel will enter a loop.
+				 * The server will return the redirect for PermissionError, but the 'beforeRouteLeave' will return to invoke Cancel.
+				 */
+				return new Promise((resolve) => {
+					netAPI.postData(
+						this.formInfo.area,
+						`${this.formInfo.name}_Cancel`,
+						null,
+						async (_, response) => {
+							// Show the warnings and errors.
+							this.validationErrors = !_isEmpty(response.data.Errors)
+								? this.parseResponseErrors(response.data.Errors)
+								: {}
+
+							if (!response.data.Success)
+							{
+								this.displayErrorMessage(response.data)
+								resolve(false)
+								return
+							}
+
+							await executeNextAndExit()
+							resolve(true)
+						},
+						() => {
+							this.validationErrors = {
+								onCancelError: hardcodedTexts.errorProcessingRequest
+							}
+						},
+						undefined,
+						this.navigationId)
+				})
 			})
 		},
 
@@ -1785,8 +1869,69 @@ export default {
 			if (this.isNested)
 			{
 				this.$emit('is-form-dirty', { isDirty: this.isDirty, afterFormSave: false })
-				this.$emit('update:nestedModel', this.model)
+				this.$emit('update:nested-model', this.model)
 			}
+		},
+
+		/**
+		 * Executes the necessary procedures after the specified field is unfocused.
+		 * @param {object} fieldObject The object representing the field in the model
+		 * @param {any} fieldValue The value of the field
+		 */
+		afterFieldUnfocus(fieldObject, fieldValue)
+		{
+			// Only does the next lines of code if the form is nested.
+			if (!this.isNested || this.nestedFormConfig.recordSelected || this.nestedFormConfig.prefillField !== fieldObject.modelField)
+				return
+
+			const area = this.nestedFormConfig.mainForm.area
+			const action = `${area}_${this.nestedFormConfig.action}`
+			const params = { queryParams: { searchFilter: fieldValue } }
+
+			netAPI.postData(
+				area,
+				action,
+				params,
+				(data) => {
+					if (data)
+					{
+						// There's a record already created.
+						const eventData = {
+							supportFormId: this.nestedFormConfig.supportFormId,
+							formMode: this.formModes.edit,
+							rowKey: data
+						}
+
+						this.$emit('update:modelValue', data)
+						this.$emit('update:nested-model', eventData)
+					}
+					else
+					{
+						// There isn't a record already created.
+						const buttons = {
+							confirm: {
+								label: this.Resources[hardcodedTexts.confirm],
+								action: () => {
+									const fieldRef = fieldObject.modelFieldRef
+									const eventData = {
+										supportFormId: this.nestedFormConfig.supportFormId,
+										formMode: this.formModes.new,
+										prefillValues: {
+											[`${fieldRef.area}.${fieldRef.field}`.toLowerCase()]: fieldValue
+										},
+										rowKey: undefined
+									}
+
+									this.$emit('update:nested-model', eventData)
+								}
+							},
+							cancel: {
+								label: this.Resources[hardcodedTexts.cancel]
+							}
+						}
+						genericFunctions.displayMessage(this.Resources[hardcodedTexts.notFoundCreateNew], 'question', null, buttons)
+					}
+				})
 		},
 
 		/**
@@ -1810,7 +1955,8 @@ export default {
 
 			for (let i in this.controls)
 			{
-				if (this.controls[i].modelField !== fieldId)
+				// Note: The real field that has the field errors in the case of Lookup is the foreign key.
+				if (this.controls[i].modelField !== fieldId && this.controls[i].lookupKeyModelField?.name !== fieldId)
 					continue
 
 				let controlId = this.controls[i].id
@@ -1829,8 +1975,9 @@ export default {
 		 * @param {string} controlId The id of the control
 		 * @param {boolean} skipValidation If true, it won't check if the control can be made visible (optional)
 		 * @param {string} position Determines if scroll keeps target element at the top of page or at the center (possible values: 'start', 'center')
+		 * @param {string} behavior The behavior of the scroll, either instant or smooth
 		 */
-		focusControl(controlId, skipValidation, position = 'center')
+		focusControl(controlId, skipValidation, position = 'center', behavior = 'smooth')
 		{
 			if (typeof skipValidation !== 'boolean')
 				skipValidation = false
@@ -1840,7 +1987,7 @@ export default {
 
 			formFunctions.makeFieldVisible(this.controls, controlId, true)
 			// Timeout to give time for the DOM to update (open the tabs and collapsible groups).
-			setTimeout(() => genericFunctions.scrollTo(controlId, position), 500)
+			setTimeout(() => genericFunctions.scrollTo(controlId, position, behavior), 500)
 		},
 
 		/**
@@ -1912,7 +2059,7 @@ export default {
 			}
 
 			if (this.isPopup)
-				this.setModalProperties({ isActive: true })
+				this.setModalProperties({ isActive: true, formIdentifier: this.formInfo.identifier })
 
 			if (!this.authData.isAllowed)
 			{
@@ -1927,17 +2074,17 @@ export default {
 		 * Inits the form and all it's controls.
 		 * @param {boolean} refreshDom Whether or not to force a DOM update
 		 */
-		initFormControls(refreshDom)
+		async initFormControls(refreshDom)
 		{
-			this.formControl.Init(false, this.isEditable)
+			await this.formControl.init(false, this.isEditable)
 
 			if (refreshDom)
 				this.domVersionKey++
 
 			// In some cases, this operation won't work as expected unless we force a DOM update before calling it.
-			this.setContainersStateFromStore(this.storeKey)
+			this.setContainersStateFromStore()
 			// Tabs need to be initialized only after setting the selected tab.
-			this.formControl.InitTabs()
+			this.formControl.initTabs()
 		},
 
 		/**
@@ -1967,7 +2114,7 @@ export default {
 		{
 			// Being a different route from the current one means the human key is probably already calculated, if not, it's because we have no way of calculating it.
 			if (this.formInfo.route !== this.$route.name || this.isNested || this.isHomePage)
-				return this.humanKey || ''
+				return this.humanKey ?? ''
 
 			const humanKeyFields = this.$route.meta.humanKeyFields
 			return genericFunctions.buildHumanKey(humanKeyFields, this.model)
@@ -1998,7 +2145,7 @@ export default {
 		getNestedRouteData()
 		{
 			if (!this.isNested)
-				return
+				return {}
 
 			return {
 				name: this.formInfo.name,
@@ -2030,71 +2177,58 @@ export default {
 		 */
 		async loadFormData(isFirstLoad)
 		{
-			return new Promise((resolve, reject) => {
-				// FOR: tree table select row on return.
-				const currentLevel = this.navigation.currentLevel
-				if (!_isEmpty(currentLevel))
+			// FOR: tree table select row on return.
+			const currentLevel = this.navigation.currentLevel
+			if (!_isEmpty(currentLevel))
+			{
+				const id = this.hasRoute ? (this.$route.params.id || null) : (this.isNested && this.mode === this.formModes.new ? null : this.id),
+					removedKeyEntryName = `PreviouslyRemovedRowKey_${this.formArea.toLowerCase()}`
+
+				// If ID is the ID of the record that was deleted, don't try to load.
+				if (currentLevel.hasEntry(removedKeyEntryName) && id === currentLevel?.previousLevel?.entries[removedKeyEntryName])
 				{
-					const id = this.hasRoute ? (this.$route.params.id || null) : (this.isNested && this.mode === this.formModes.new ? null : this.id),
-						removedKeyEntryName = `PreviouslyRemovedRowKey_${this.formArea.toLowerCase()}`
+					if (this.mode === this.formModes.new)
+						currentLevel.previousLevel.removeEntryValue(removedKeyEntryName)
 
-					// If ID is the ID of the record that was deleted, don't try to load
-					if (currentLevel.hasEntry(removedKeyEntryName) && id === currentLevel?.previousLevel?.entries[removedKeyEntryName])
-					{
-						if (this.mode === this.formModes.new)
-							currentLevel.previousLevel.removeEntryValue(removedKeyEntryName)
-
-						resolve('Record was deleted, load not necessary.')
-						return
-					}
+					return 'Record was deleted, load not necessary.'
 				}
+			}
 
-				// Load form data.
-				this.addBusy(this.fetchFormFields(!isFirstLoad), this.Resources[hardcodedTexts.formLoad])
+			// Load form data.
+			await this.addBusy(this.fetchFormFields(!isFirstLoad), this.Resources[hardcodedTexts.formLoad])
 
-				// Only after the data is loaded from the server, init all controls.
-				this.componentOnLoadProc.Once(() => {
-					const route = this.isNested ? this.getNestedRouteData() : this.$route
-					const formInited = isFirstLoad ? this.initFormProperties(route) : true
+			const route = this.isNested ? this.getNestedRouteData() : this.$route
+			const formInited = isFirstLoad ? this.initFormProperties(route) : true
 
-					if (!formInited)
-					{
-						reject('Form initialization failed.')
-						return
-					}
+			if (!formInited)
+				throw new Error('Form initialization failed.')
 
-					this.formHeader = this.$refs.formHeader
+			this.formHeader = this.$refs.formHeader
 
-					// Destroy any running periodic events.
-					if (!isFirstLoad)
-						this.formControl.DestroyTriggers()
+			// Destroy any running periodic events.
+			if (!isFirstLoad)
+				this.formControl.destroyTriggers()
 
-					// Init form, forcing a DOM update if it's not the first load.
-					this.initFormControls(!isFirstLoad)
+			// Init form, forcing a DOM update if it's not the first load.
+			await this.initFormControls(!isFirstLoad)
 
-					// Load Table List controls data.
-					this.refreshAllListsData(isFirstLoad)
-						.then(() => {
-							if (!this.isNested)
-							{
-								this.internalEvents.emit('form-buttons-change', this.formButtons)
-								this.setBreadcrumbProperties()
+			// Load Table List controls data.
+			await this.refreshAllListsData(isFirstLoad)
 
-								this.$nextTick().then(() => {
-									// If the user is navigating from a record below, scrolls the page to the respective table.
-									const anchor = this.$route.params.anchor
-									if (!_isEmpty(anchor))
-										this.focusControl(anchor)
-								})
-							}
+			if (!this.isNested)
+			{
+				this.internalEvents.emit('form-buttons-change', this.formButtons)
+				this.setBreadcrumbProperties()
 
-							resolve('Form data loaded successfully.')
-						})
-						.catch((error) => {
-							reject(`Error refreshing lists data: ${error}`)
-						})
-				}, this)
-			})
+				this.$nextTick().then(() => {
+					// If the user is navigating from a record below, scrolls the page to the respective table.
+					const anchor = this.$route.params.anchor
+					if (!_isEmpty(anchor))
+						this.focusControl(anchor)
+				})
+			}
+
+			return 'Form data loaded successfully.'
 		},
 
 		/**
@@ -2111,16 +2245,16 @@ export default {
 		 */
 		buildFormAnchors()
 		{
-			let toExpand = []
-			let anchorsTree = []
+			const toExpand = []
+			const anchorsTree = []
 
 			if (!this.groupFields)
-				return
+				return []
 
 			toExpand.push(...this.groupFields.map((ctrlId) => this.controls[ctrlId]))
 
 			toExpand.forEach((el) => {
-				if (el.anchored && !el.isCollapsible && !_isEmpty(el.label) && formFunctions.fieldIsVisible(this.controls, el.id, false))
+				if (el.anchored && !el.isCollapsible && !_isEmpty(el.label) && formFunctions.fieldIsVisible(this.controls, el.id))
 				{
 					const parent = this.getLastAnchoredParent(el)
 					if (parent === null)
@@ -2149,16 +2283,9 @@ export default {
 		},
 
 		/**
-		 * Toggle visibility for anchor container.
-		 */
-		toggleAnchorVisibility()
-		{
-			this.anchorContainerVisibility = !this.anchorContainerVisibility
-		},
-
-		/**
-		 * Gets a model field by its name.
+		 * Gets a model field by it's name.
 		 * @param {string} fieldName The name of the field
+		 * @returns The model field.
 		 */
 		getModelField(fieldName)
 		{
@@ -2166,8 +2293,9 @@ export default {
 		},
 
 		/**
-		 * Gets the value of a model field by its name.
+		 * Gets the value of a model field by it's name.
 		 * @param {string} fieldName The name of the field
+		 * @returns The model field's value.
 		 */
 		getModelFieldValue(fieldName)
 		{
@@ -2175,7 +2303,7 @@ export default {
 		},
 
 		/**
-		 * Sets the value of a model field by its name.
+		 * Sets the value of a model field by it's name.
 		 * @param {string} fieldName The name of the field
 		 * @param {any} value The value to set
 		 */
@@ -2185,9 +2313,9 @@ export default {
 		},
 
 		/**
-		 * True if the section with the provided section id should be visible,
-		 * false otherwise.
+		 * Checks if the section with the provided section id should be visible.
 		 * @param {string} sectionId The identifier of the form header button section
+		 * @returns True if the section with the provided section id should be visible, false otherwise.
 		 */
 		showFormHeaderSection(sectionId)
 		{
@@ -2196,15 +2324,15 @@ export default {
 		},
 
 		/**
-		 * True if the provided form header section should be prepended by a separator,
-		 * false otherwise.
+		 * Checks if the provided form header section should be prepended by a separator.
 		 * @param {string} sectionId The identifier of the form header button section
+		 * @returns True if the provided form header section should be prepended by a separator, false otherwise.
 		 */
 		showHeadingSep(sectionId)
 		{
 			// Should not show the separator if it's the first visible section.
-			if (!this.formControl.uiComponents.headerButtons
-				|| sectionId === this.firstVisibleButtonSection)
+			if (!this.formControl.uiComponents.headerButtons ||
+				sectionId === this.firstVisibleButtonSection)
 				return false
 
 			// Should be prepended with a separator
@@ -2213,8 +2341,9 @@ export default {
 		},
 
 		/**
-		 * True if the provided form header button should be visible,
-		 * false otherwise.
+		 * Checks if the provided form header button should be visible.
+		 * @param {object} btn The button to check
+		 * @returns True if the provided form header button should be visible, false otherwise.
 		 */
 		showFormHeaderButton(btn)
 		{
@@ -2229,9 +2358,9 @@ export default {
 		 */
 		addBusy(cbPromise, busyStateMessage)
 		{
-			this.isWidget
-				? this.componentOnLoadProc.AddWL(cbPromise)
-				: this.componentOnLoadProc.AddBusy(cbPromise, busyStateMessage, 300)
+			return this.isWidget
+				? this.componentOnLoadProc.addWL(cbPromise)
+				: this.componentOnLoadProc.addBusy(cbPromise, busyStateMessage, 300)
 		}
 	},
 
@@ -2270,10 +2399,25 @@ export default {
 				}
 			}
 
+			// Navigating to the same form through a different menu (M->F+, M->F)
+			const sameFormDifferentMenu = !to.params.id && to.params.mode === 'NEW' && to.params.openedMenu !== undefined
+			// Record changes without leaving the form
+			const sameFormDifferentRecord = to.params.id && this.primaryKeyValue !== to.params.id
+
 			// In case the route params change without leaving the form.
 			if (this.componentOnLoadProc.loaded && to.name === this.formInfo.route &&
-				(to.params.id && this.primaryKeyValue !== to.params.id || !this.authData.isAllowed || to.name !== from.name))
+				(
+					sameFormDifferentMenu ||
+					sameFormDifferentRecord ||
+					!this.authData.isAllowed ||
+					to.name !== from.name
+				)
+			)
+			{
+				if (sameFormDifferentMenu)
+					this.navigationId = this.createNavigationLevel()
 				this.reloadFormData()
+			}
 		},
 
 		formButtons: {
@@ -2306,8 +2450,7 @@ export default {
 
 		isEditable(val)
 		{
-			if (typeof this.formControl?.setFormModeBlockAndVisibility === 'function')
-				this.formControl.setFormModeBlockAndVisibility(val)
+			this.formControl?.setFormModeBlockAndVisibility?.(val)
 		},
 
 		isDirty(val)

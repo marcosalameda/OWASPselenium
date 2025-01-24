@@ -1,6 +1,7 @@
 ﻿using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -210,9 +211,15 @@ namespace CSGenio.framework
             this.KeyValue = keyValue;
         }
 
+        /// <summary>
+        /// Create a resource name with a random sufix to avoid overriding the same files
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="Qfield"></param>
+        /// <returns></returns>
         public static string GenerateResourceName(string table, string Qfield)
         {
-            int suf = new Random().Next();
+            string suf = Guid.NewGuid().ToString();
             // a forma de nomear os ficheiros pode ser alterada, visto que já não são gravados na pasta temp
             string file = "imagem" + "_" + table + "_" + Qfield + suf + ".jpg";
             return file;
@@ -354,6 +361,8 @@ namespace CSGenio.framework
     /// </summary>
     public static class QResources
     {
+		private static ConcurrentDictionary<string, Type> ResourceTypes { get; set; } = new ConcurrentDictionary<string, Type>();
+		
         // a key e o vector de inicialização que são re-gerados sempre que o application pool arranca
         // o que implica que os tickets gerados anteriormente ficam inválidos to leitura
 
@@ -372,8 +381,6 @@ namespace CSGenio.framework
         {
             get { InitializeValues(); return m_iv; }
         }
-
-        public static Dictionary<string, Type> ResourceTypes { get; set; } = new Dictionary<string, Type>();
 
         // cria uma nova key e vector de inicialização, caso algum deles não esteja definido
         private static void InitializeValues()
@@ -405,7 +412,9 @@ namespace CSGenio.framework
             {
                 writer.Write(username);
                 writer.Write(location);
-                writer.Write(resource.GetType().Name);
+                Type type = resource.GetType();
+				writer.Write(type.FullName);
+				writer.Write(type.Assembly.GetName().Name);
                 resource.ToBinaryStream(writer);
                 objsByteArray = stream.ToArray();
             }
@@ -437,40 +446,142 @@ namespace CSGenio.framework
             {
                 objs[0] = reader.ReadString(); //username
                 objs[1] = reader.ReadString(); //location
-                string typename = reader.ReadString();
+                string typeName = reader.ReadString();
+                string assemblyName = reader.ReadString();
+                string searchTypeName = $"{typeName}, {assemblyName}";
 
-                //Check if the type of resource file is present in the dictionary
-                if (!ResourceTypes.ContainsKey(typename))
+                if (!ResourceTypes.TryGetValue(searchTypeName, out Type type))
                 {
-                    //Searches through all the assemblies to search for the type
-                    Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-                    Type type = null;
-                    foreach (Assembly assemb in assemblies)
+                    ResourceTypes.GetOrAdd(searchTypeName, key =>
                     {
-                        type = assemb.GetTypes().Where(x => x.Name == typename).FirstOrDefault(); //Checks inside the assembly for the type
-
-                        if (type != null) //If we find the type we break the loop to save additional time
-                            break;
-                    }
-
-                    //If class derives of Resource we add to the dictionary
-                    if (type != null && type.IsSubclassOf(typeof(Resource)))
-                        ResourceTypes.Add(typename, type);
-                    else
-                        throw new Exception("Unknown type for Resource deserialization");
+                        type = Type.GetType(searchTypeName, false, true);
+                        if (type != null && type.IsSubclassOf(typeof(Resource)))
+                            return type;
+                        else
+                            throw new Exception("Unknown type for Resource deserialization");
+                    });
                 }
 
-                Type gotType;
-                //Finally if it exists in the dictionary we simply gather the type
-                if (!ResourceTypes.TryGetValue(typename, out gotType))
-                    throw new Exception("The resource could not be found for deserialization");
-
-                //And invoke the constructor using the BinaryReader parameter
-                objs[2] = gotType.GetConstructor(new Type[] { typeof(BinaryReader) }).Invoke(new object[] { reader });
+                //Invoke the constructor using the BinaryReader parameter
+                objs[2] = type.GetConstructor(new Type[] { typeof(BinaryReader) }).Invoke(new object[] { reader });
             }
 
             return objs;
         }
+    }
+	
+	public static class QResourcesSign
+    {
+        // a key e o vector de inicialização que são re-gerados sempre que o application pool arranca
+        // o que implica que os tickets gerados anteriormente ficam inválidos to leitura
+
+        // key de cifra simétrica utilizada to cifrar e decifrar os recursos
+        private static byte[] m_key;
+
+        // vector de inicialização utilizado to cifrar e decifrar os recursos
+        private static byte[] m_iv;
+
+        //public static Dictionary<string, Type> ResourceTypes { get; set; } = new Dictionary<string, Type>();
+
+        private static byte[] Key
+        {
+            get { InitializeValues(); return m_key; }
+        }
+
+        private static byte[] IV
+        {
+            get { InitializeValues(); return m_iv; }
+        }
+
+        // cria uma nova key e vector de inicialização, caso algum deles não esteja definido
+        private static void InitializeValues()
+        {
+            if (m_key == null || m_iv == null)
+            {
+                // instancia-se um objecto da classe apenas to gerar as chaves
+                RijndaelManaged dummyRijndael = new RijndaelManaged();
+                m_key = dummyRijndael.Key;
+                m_iv = dummyRijndael.IV;
+            }
+        }
+
+        /// <summary>
+        /// Serializa, cifra e gera uma string em base 64 com a location e o resource.
+        /// A localização é um parametro de validação, na web é utilizado o endereço IP do cliente.
+        /// </summary>
+        /// <param name="localizacao">Localização, serve to validação</param>
+        /// <param name="recurso">Resource em si</param>
+        /// <returns>string em base 64 com a representação dos objectos serializados e cifrados</returns>
+        public static string CreateTicketEncryptedBase64(string username, string location, ResourceSign resource)
+        {
+            byte[] objsByteArray;
+            using (var stream = new MemoryStream())
+            using (var writer = new BinaryWriter(stream, Encoding.UTF8))
+            {
+                writer.Write(username);
+                writer.Write(location);
+                Type type = resource.GetType();
+                writer.Write(type.FullName);
+                writer.Write(type.Assembly.GetName().Name);
+
+                resource.ToBinaryStream(writer);
+                objsByteArray = stream.ToArray();
+            }
+
+            // a key e o vector de inicialização são acedidos através das
+            // propriedades da classe to garantir que foram inicializados
+            byte[] objsCrypt = CryptographicFunctions.EncryptData(QResourcesSign.Key, QResourcesSign.IV, objsByteArray);
+            return Convert.ToBase64String(objsCrypt).Replace('+', '.').Replace('=', '-').Replace('/', '_');
+        }
+
+        /// <summary>
+        /// Converte a representação de um ticket em base 64 to os objectos que foram utilizados na sua criação,
+        /// decifrando e desserializando o seu conteúdo.
+        /// Por agora, to criar o ticket são utilizados dois objectos, o primeiro é o endereço ip do cliente,
+        /// to validação e o second é o resource em si.
+        /// </summary>
+        /// <param name="ticket64">Representação do ticket em base 64</param>
+        /// <returns>Array de objectos utilizados na criação do ticket</returns>
+        public static object[] DecryptTicketBase64(string ticket64)
+        {
+            byte[] ticket = Convert.FromBase64String(ticket64.Replace('.', '+').Replace('-', '=').Replace('_', '/'));
+            // a key e o vector de inicialização são acedidos através das
+            // propriedades da classe to garantir que foram inicializados
+            byte[] ticketClean = CryptographicFunctions.DecryptData(QResourcesSign.Key, QResourcesSign.IV, ticket);
+
+            object[] objs = new object[3];
+            using (var stream = new MemoryStream(ticketClean))
+            using (var reader = new BinaryReader(stream, Encoding.UTF8))
+            {
+                objs[0] = reader.ReadString(); //username
+                objs[1] = reader.ReadString(); //location
+                string typename = reader.ReadString();
+                string assemblyName = reader.ReadString();
+
+                Type type = Type.GetType($"{typename}, {assemblyName}", true, true);
+
+                if (type != null && type.IsSubclassOf(typeof(ResourceSign)))
+                    objs[2] = (ResourceSign)Activator.CreateInstance(type, reader);
+                else
+                    throw new Exception("Unknown type for ResourceSign deserialization");
+            }
+
+            return objs;
+        }
+
+    }
+
+    public abstract class ResourceSign
+    {
+        public ResourceSign() { }
+
+        public ResourceSign(BinaryReader reader)
+        {
+            FromBinaryStream(reader);
+        }
+
+        public abstract void ToBinaryStream(BinaryWriter writer);
+        public abstract void FromBinaryStream(BinaryReader reader);
+        public abstract void Sign(PersistentSupport sp, User user, byte[] file);
     }
 }

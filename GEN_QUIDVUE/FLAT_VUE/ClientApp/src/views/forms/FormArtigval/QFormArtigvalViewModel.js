@@ -128,12 +128,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [GITEM->ITEMGCOD]
-					// eslint-disable-next-line eqeqeq
 					return this.GitemValItemgcod.value
 				},
-				dependencyEvents: ['fieldChange:gitem.itemgcod'],
+				dependencyEvents: ['fieldChange:gitem.itemgcod', 'fieldChange:item.codgitem'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValItemcod))
@@ -152,12 +150,10 @@ export default class ViewModel extends ViewModelBase
 				fnFormula(params)
 				{
 					// Formula: [GITEM->ITEMDES]
-					// eslint-disable-next-line eqeqeq
 					return this.TableGitemItemdes.value
 				},
-				dependencyEvents: ['fieldChange:gitem.itemdes'],
+				dependencyEvents: ['fieldChange:gitem.itemdes', 'fieldChange:item.codgitem'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValItemdes))
@@ -180,6 +176,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.ENTRIES32319),
+			isFixed: true,
 		}).cloneFrom(values?.ValEntries))
 		watch(() => this.ValEntries.value, (newValue, oldValue) => this.onUpdate('item.entries', this.ValEntries, newValue, oldValue))
 
@@ -191,6 +188,7 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.OUTPUTS47833),
+			isFixed: true,
 		}).cloneFrom(values?.ValExits))
 		watch(() => this.ValExits.value, (newValue, oldValue) => this.onUpdate('item.exits', this.ValExits, newValue, oldValue))
 
@@ -202,15 +200,17 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.STOCKS47349),
+			isFixed: true,
 		}).cloneFrom(values?.ValExistenc))
 		watch(() => this.ValExistenc.value, (newValue, oldValue) => this.onUpdate('item.existenc', this.ValExistenc, newValue, oldValue))
 
-		this.ValCategory = reactive(new modelFieldType.String({
+		this.ValCategory = reactive(new modelFieldType.MultiLineString({
 			id: 'ValCategory',
 			originId: 'ValCategory',
 			area: 'ITEM',
 			field: 'CATEGORY',
 			description: computed(() => this.Resources.CATEGORIZATION17554),
+			isFixed: true,
 		}).cloneFrom(values?.ValCategory))
 		watch(() => this.ValCategory.value, (newValue, oldValue) => this.onUpdate('item.category', this.ValCategory, newValue, oldValue))
 
@@ -222,18 +222,17 @@ export default class ViewModel extends ViewModelBase
 			arrayOptions: qProjArrays.QArrayDsiponib.setResources(vm.$getResource).elements,
 			maxLength: 1,
 			description: computed(() => this.Resources.AVAILABILITY56489),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif([ITEM->EXISTENC]>0,"A",iif([ITEM->EXISTENC]<=0,"O","D"))
-					// eslint-disable-next-line eqeqeq
 					return qApi.iif(this.ValExistenc.value>0,"A",qApi.iif(this.ValExistenc.value<=0,"O","D"))
 				},
 				dependencyEvents: ['fieldChange:item.existenc'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyC,
 			},
 		}).cloneFrom(values?.ValDisponib))
@@ -247,6 +246,7 @@ export default class ViewModel extends ViewModelBase
 			field: 'ITEMGCOD',
 			maxLength: 15,
 			description: computed(() => this.Resources.CODE49225),
+			isFixed: true,
 		}).cloneFrom(values?.GitemValItemgcod))
 		watch(() => this.GitemValItemgcod.value, (newValue, oldValue) => this.onUpdate('gitem.itemgcod', this.GitemValItemgcod, newValue, oldValue))
 	}
@@ -263,5 +263,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCoditem'
 
 	get QPrimaryKey() { return this.ValCoditem.value }
-	set QPrimaryKey(value) { this.ValCoditem.value = value }
+	set QPrimaryKey(value) { this.ValCoditem.updateValue(value) }
 }

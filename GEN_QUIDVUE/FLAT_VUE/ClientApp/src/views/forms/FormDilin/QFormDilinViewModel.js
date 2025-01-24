@@ -137,18 +137,17 @@ export default class ViewModel extends ViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.OUTSTANDING36400),
+			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [DILIN->ORDERED]-[DILIN->DELIVERE]
-					// eslint-disable-next-line eqeqeq
 					return this.ValOrdered.value-this.ValDelivere.value
 				},
 				dependencyEvents: ['fieldChange:dilin.ordered', 'fieldChange:dilin.delivere'],
 				isServerRecalc: false,
-				isServerFormula: false,
 				isEmpty: qApi.emptyN,
 			},
 		}).cloneFrom(values?.ValOutstand))
@@ -167,5 +166,5 @@ export default class ViewModel extends ViewModelBase
 	static QPrimaryKeyName = 'ValCoddilin'
 
 	get QPrimaryKey() { return this.ValCoddilin.value }
-	set QPrimaryKey(value) { this.ValCoddilin.value = value }
+	set QPrimaryKey(value) { this.ValCoddilin.updateValue(value) }
 }

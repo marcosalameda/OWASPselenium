@@ -16,7 +16,7 @@ namespace GenioMVC.Controllers
 			var results = MenuSearch.Search(UserContext.Current, searchString, UserContext.Current.User,
 				Thread.CurrentThread.CurrentCulture);
 			foreach (var result in results)
-				result.MenuObj = Menus.FindMenu(result.Module, result.Id);
+				result.MenuObj = Menus.FindMenuForUserRec(UserContext.Current, result.Module, result.Id, true);
 			return JsonOK(results);
 		}
 	}

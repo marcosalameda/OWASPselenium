@@ -1,11 +1,9 @@
-/**
- * @jest-environment jsdom
- */
 import '@testing-library/jest-dom'
-import { render } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 
+import { render } from './utils'
 import CheckBoxInput from '@/components/inputs/CheckBoxInput'
+import BaseInputStructure from '@/components/inputs/BaseInputStructure'
 
 describe('CheckBoxInput.vue', () => {
 	it('Changes the model value when clicking', async () => {
@@ -53,5 +51,24 @@ describe('CheckBoxInput.vue', () => {
 		const checkbox = await wrapper.getByTestId('checkbox')
 		await userEvent.click(checkbox)
 		expect(checkbox).toBeChecked()
+	})
+
+	it('Click in checkbox with label', async () => {
+		const wrapper = render({
+			components: { CheckBoxInput, BaseInputStructure },
+			template: `
+				<div>
+					<BaseInputStructure id="checkbox-test" label="Teste" :hasLabel="true" labelPosition="left">
+						<CheckBoxInput :modelValue="false" dataTestid="checkbox" />
+					</BaseInputStructure>
+				</div>
+			`
+		})
+
+		const label = wrapper.getByText('Teste')
+		expect(label).toBeInTheDocument()
+		const checkbox = await wrapper.getByTestId('checkbox')
+		await userEvent.click(checkbox)
+		expect(checkbox.checked).toBe(true)
 	})
 })

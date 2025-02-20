@@ -35,12 +35,12 @@ public class FldscondForm : Form
 	/// <summary>
 	/// Campo com condições client-side
 	/// </summary>
-	public BaseInputControl FldsFclient1 => new BaseInputControl(driver, ContainerLocator, "#FLDSCONDFLDS_FCLIENT1");
+	public BaseInputControl FldsFclient1 => new BaseInputControl(driver, ContainerLocator, "container-FLDSCONDFLDS_FCLIENT1", "#FLDSCONDFLDS_FCLIENT1");
 
 	/// <summary>
 	/// Campo com condição de Preenchimento
 	/// </summary>
-	public BaseInputControl FldsFfillwhn => new BaseInputControl(driver, ContainerLocator, "#FLDSCONDFLDS_FFILLWHN");
+	public BaseInputControl FldsFfillwhn => new BaseInputControl(driver, ContainerLocator, "container-FLDSCONDFLDS_FFILLWHN", "#FLDSCONDFLDS_FFILLWHN");
 
 	/// <summary>
 	/// Campo com condições server-side
@@ -60,7 +60,7 @@ public class FldscondForm : Form
 	/// <summary>
 	/// Campo com condições server-side
 	/// </summary>
-	public BaseInputControl FldsFserver2 => new BaseInputControl(driver, ContainerLocator, "#FLDSCONDFLDS_FSERVER2");
+	public BaseInputControl FldsFserver2 => new BaseInputControl(driver, ContainerLocator, "container-FLDSCONDFLDS_FSERVER2", "#FLDSCONDFLDS_FSERVER2");
 
 	/// <summary>
 	/// Campos com condições na tabela e no formulário
@@ -70,12 +70,12 @@ public class FldscondForm : Form
 	/// <summary>
 	/// Campo com condições client-side
 	/// </summary>
-	public DocumentControl FldsFclient3 => new DocumentControl(driver, ContainerLocator, "container-FLDSCONDFLDS_FCLIENT3");
+	public DocumentControl FldsFclient3 => new DocumentControl(driver, ContainerLocator, "FLDSCONDFLDS_FCLIENT3");
 
 	/// <summary>
 	/// Campo com condições server-side
 	/// </summary>
-	public BaseInputControl FldsFserver3 => new BaseInputControl(driver, ContainerLocator, "#FLDSCONDFLDS_FSERVER3");
+	public BaseInputControl FldsFserver3 => new BaseInputControl(driver, ContainerLocator, "container-FLDSCONDFLDS_FSERVER3", "#FLDSCONDFLDS_FSERVER3");
 
 	/// <summary>
 	/// 

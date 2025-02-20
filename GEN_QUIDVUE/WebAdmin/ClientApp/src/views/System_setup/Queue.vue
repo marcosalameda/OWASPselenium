@@ -1,11 +1,15 @@
 ﻿<template>
-<div id="system_setup_queue_container">
-	<row>
-		<br />
+    <row>
 		<row>
 			<div class="control-join-group">
-				<text-input v-model="model.MQueues.Journaltimeout" :label="Resources.JOURNAL_TIMEOUT__MIN38634" :size="'xlarge'"></text-input>
-				<text-input v-model="model.MQueues.Maxsendnumber" :label="Resources.NUMERO_MAXIMO_DE_TEN51201" :size="'xlarge'"></text-input>
+				<q-text-field
+					v-model="model.MQueues.Journaltimeout"
+					:label="Resources.JOURNAL_TIMEOUT__MIN38634"
+					:size="'xlarge'" />
+				<q-text-field
+					v-model="model.MQueues.Maxsendnumber"
+					:label="Resources.NUMERO_MAXIMO_DE_TEN51201"
+					:size="'xlarge'" />
 			</div>
 		</row>
 		<row class="footer-btn">
@@ -42,7 +46,7 @@
 							<q-button
 								:label="Resources.INSERIR43365"
 								@click="createQueue">
-								<q-icon icon="plus-sign" />
+								<q-icon icon="add" />
 							</q-button>
 						</td>
 					</tr>
@@ -76,7 +80,7 @@
 							<q-button
 								:label="Resources.INSERIR43365"
 								@click="createAck">
-								<q-icon icon="plus-sign" />
+								<q-icon icon="add" />
 							</q-button>
 						</td>
 					</tr>
@@ -87,7 +91,6 @@
 		<queue_modal :show="queueModal.show" :Model="queueModal.data" @close="reloadMQueues"></queue_modal>
 		<ack_modal :show="ackModal.show" :Model="ackModal.data" @close="reloadMQueues"></ack_modal>
 	</row>
-</div>
 </template>
 
 <script>
@@ -99,17 +102,23 @@
 	import ack_modal from './Ack_modal';
 
 	export default {
-		name: 'queue',
+		name: 'integration',
+
+		components: {
+			queue_modal, ack_modal
+		},
+
 		mixins: [reusableMixin],
-		emits: ['reloadMQueues'],
-		components: { queue_modal, ack_modal },
+
+		emits: ['alertClass', 'reloadMQueues'],
+
 		props: {
 			model: {
 				required: true
 			}
 		},
+
 		data() {
-			var vm = this;
 			return {
 				queueModal: {
 					show: false,
@@ -123,7 +132,7 @@
 					rows: [],
 					total_rows: 0,
 					columns: [{
-						label: () => vm.$t('ACOES22599'),
+						label: () => this.$t('ACOES22599'),
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -132,49 +141,49 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: () => vm.$t('NOME_DA_QUEUE56594'),
+						label: () => this.$t('NOME_DA_QUEUE56594'),
 						name: "queue",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: () => vm.$t('CANAL_DA_QUEUE34934'),
+						label: () => this.$t('CANAL_DA_QUEUE34934'),
 						name: "queueChannel",
 						sort: true
 					},
 					{
-						label: () => vm.$t('TRAJETO_DA_QUEUE07185'),
+						label: () => this.$t('TRAJETO_DA_QUEUE07185'),
 						name: "path",
 						sort: true
 					},
 					{
-						label: () => vm.$t('ANO33022'),
+						label: () => this.$t('ANO33022'),
 						name: "Qyear",
 						sort: true
 					},
 					{
-						label: () => vm.$t('UNICODE63246'),
+						label: () => this.$t('UNICODE63246'),
 						name: "Unicode",
 						sort: true
 					},
 					{
-						label: () => vm.$t('USA_MSMQ18528'),
+						label: () => this.$t('USA_MSMQ18528'),
 						name: "UsesMsmq",
 						sort: true
 					},
 					{
-						label: () => vm.$t('JOURNAL20931'),
+						label: () => this.$t('JOURNAL20931'),
 						name: "Journal",
 						sort: true
 					},
 					{
-						label: () => vm.$t('TAMANHO_DO_BLOCO42316'),
+						label: () => this.$t('TAMANHO_DO_BLOCO42316'),
 						name: "Blocksize",
 						sort: true
 					}],
 					config: {
-						table_title: () => vm.$t('LISTA_DE_MENSAGENS31887'),
+						table_title: () => this.$t('LISTA_DE_MENSAGENS31887'),
 						global_search: {
 							classes: "qtable-global-search",
 							searchOnPressEnter: true,
@@ -188,7 +197,7 @@
 					rows: [],
 					total_rows: 0,
 					columns: [{
-						label: () => vm.$t('ACOES22599'),
+						label: () => this.$t('ACOES22599'),
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -197,24 +206,24 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: () => vm.$t('QUEUE_ORIGEM31278'),
+						label: () => this.$t('QUEUE_ORIGEM31278'),
 						name: "source",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: () => vm.$t('QUEUE_ACK30680'),
+						label: () => this.$t('QUEUE_ACK30680'),
 						name: "ackQueue",
 						sort: true
 					},
 					{
-						label: () => vm.$t('TAMANHO_DO_BLOCO42316'),
+						label: () => this.$t('TAMANHO_DO_BLOCO42316'),
 						name: "Blocksize",
 						sort: true
 					}],
 					config: {
-						table_title: () => vm.$t('CONFIGURACAO_DE_ACKS49550'),
+						table_title: () => this.$t('CONFIGURACAO_DE_ACKS49550'),
 						global_search: {
 							classes: "qtable-global-search",
 							searchOnPressEnter: true,
@@ -223,9 +232,38 @@
 						},
 						preservePageOnDataChange: true
 					}
-				}
+				},
+				tRepor: {
+					rows: [
+						{Rep:this.model.pathReports  + '\\' + 'en-US',Lang: 'English'},
+						{Rep:this.model.pathReports  + '\\' + 'pt-PT',Lang: 'Português'},
+					],
+					total_rows: 0,
+					columns: [
+						{
+							label: this.$t('RELATORIO62426'),
+							name: "Rep",
+							sort: true,
+							initial_sort: true,
+							initial_sort_order: "asc"
+						},
+						{
+							label: this.$t('LINGUAGEM43329'),
+							name: "Lang",
+							sort: true
+						}
+					],
+					config: {
+						table_title: this.$t('RELATORIOS_POR_LINGU35356'),
+						pagination : false,
+						global_search: {visibility : false},
+						highlight_row_hover: false,
+						pagination_info: false
+					}
+				},
 			};
 		},
+		
 		methods: {
 			SaveConfigMessageQueue() {
 				QUtils.postData('Config', 'SaveConfigMessageQueue', this.model, null, function (data) {
@@ -282,13 +320,10 @@
 				if (reload) {
 					this.$emit('reloadMQueues');
 				}
-			}
-		},
-		created() {
-			this.initTables();
+			},
 		},
 		updated(){
 			this.initTables();
-		}
+		},
 	};
 </script>

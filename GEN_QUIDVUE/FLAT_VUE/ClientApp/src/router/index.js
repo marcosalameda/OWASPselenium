@@ -42,9 +42,9 @@ export function setupRouter(i18n)
 		const module = to.params.module
 
 		/**
-		 * Stores an attempted access to a route for a form or menu. 
-		 * This way, if the user tries to access a route that requires authentication, it will be remembered, 
-		 * and after logging in, they will be redirected to that route. 
+		 * Stores an attempted access to a route for a form or menu.
+		 * This way, if the user tries to access a route that requires authentication, it will be remembered,
+		 * and after logging in, they will be redirected to that route.
 		 * However, if another page is opened instead of logging in, the stored route information will be cleared in this case.
 		 */
 		const routeType = to.meta.routeType
@@ -59,7 +59,7 @@ export function setupRouter(i18n)
 			const moduleIsAvailable = module && (module === 'Public' || systemDataStore.system.availableModules[module])
 
 			// If not allowed, save the current route data
-			if((!systemIsAvailable || !moduleIsAvailable) && (routeType === 'menu' || routeType === 'form'))
+			if ((!systemIsAvailable || !moduleIsAvailable) && (routeType === 'menu' || routeType === 'form'))
 				userDataStore.setRedirectRouteAfterLogin(routeData)
 			// For any additional redirection on LogOn, add to the route exception list
 			else
@@ -147,7 +147,7 @@ export function setupRouter(i18n)
 			{
 				to.params.prefillValues = JSON.parse(to.params.prefillValues)
 			}
-			catch (e)
+			catch
 			{
 				to.params.prefillValues = {}
 			}

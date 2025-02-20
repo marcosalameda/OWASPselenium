@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Proph
 		public string ValCodproph { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Proph
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PHOTO03_PROPETITLE]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Proph
 
 			if (Menu == null)
 				Menu = new TablePartial<Photo03_PropeValTitle_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Proph
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Proph
 				photo03_propetitle___Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ PHOTO03_TITLE]/
+// USE /[MANUAL GQT OVERRQ PHOTO03_PROPETITLE]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Proph
 
 					Qlisting = Models.ModelBase.Where<CSGenioAprope>(m_userContext, false, photo03_propetitle___Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PHOTO03_PROPETITLE___", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP PHOTO03_TITLE]/
+// USE /[MANUAL GQT OVERRQLSTEXP PHOTO03_PROPETITLE]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST PHOTO03_TITLE]/
+// USE /[MANUAL GQT OVERRQLIST PHOTO03_PROPETITLE]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_prope"];
 					CriteriaSet m_PagingPosEPHs = null;

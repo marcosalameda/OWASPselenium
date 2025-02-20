@@ -38,11 +38,6 @@
 		<Script>DeleteLogTriggers.sql</Script>
 	  </Scripts>
 	</Function>
-	<Function Id="DISABLECT" Name="Disable Change Tracking" Help="" Connection="Normal" Selected="false" Selectable="true">
-	  <Scripts>
-		<Script>DisableChangeTracking.sql</Script>
-	  </Scripts>
-	</Function>
 
     <Function Id="UPDATEFUNCTIONS" Name="Update Functions" Help="" Connection="Normal" Selected="true" Selectable="true">
 	  <Scripts>
@@ -175,11 +170,6 @@
         <Script>CreateLogViews.sql</Script>
       </Scripts>
     </Function>
-	<Function Id="ENABLECT" Name="Enable Change Tracking" Help="" Connection="Normal" Selected="false" Selectable="true">
-	  <Scripts>
-		<Script>EnableChangeTracking.sql</Script>
-	  </Scripts>
-	</Function>
     <Function Id="CREATEDEFAULTUSER" Name="Create default user" Help="" Connection="Normal" Selected="false" Selectable="true">
 	  <Scripts>
 		<Script>DatabaseSeed.sql</Script>

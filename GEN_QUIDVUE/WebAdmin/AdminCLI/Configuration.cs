@@ -1,10 +1,12 @@
 using CommandLine;
 using CSGenio;
+using CSGenio.config;
 using DbAdmin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 namespace AdminCLI
 {
@@ -37,6 +39,9 @@ namespace AdminCLI
 
         [Option("is-log", HelpText = "Specify if its a log database configuration")]
         public bool IsLog { get; set; }
+
+        [Option("path", HelpText = "The location of the configuration file. Creates a new one if not exists")]
+        public string Path { get; set; }
     }
 
     [Verb("dbconfig-read", HelpText = "Database Configuration")]
@@ -48,6 +53,19 @@ namespace AdminCLI
         [Option('s', "schema", HelpText = "The database schema/name")]
         public string Schema { get; set; }
     }
+
+
+    [Verb("create-redirect", HelpText = "Create a new redirect file")]
+    class CreateRedirectOptions
+    {
+        [Option("config-path", Required=true, HelpText = "The path with the Configuracoes.xml")]
+        public string ConfigPath { get; set; }
+
+        [Option("redirect-path", HelpText = "The path where the new Configuracoes.redirect.xml will be created")]
+        public string RedirectPath { get; set; }
+    }
+
+
 
     partial class AdminCLI
     {
@@ -110,13 +128,20 @@ namespace AdminCLI
             if (!ValidateOptions(options))
                 return 1;
 
+            SysConfiguration sysConfig = sysConfiguration;
+            if(!String.IsNullOrEmpty(options.Path))
+            {
+                var fileManager = new FileConfigurationManager(options.Path);
+                sysConfig = new SysConfiguration(fileManager);
+            }
+
             try
             {
                 if(options.IsLog)
-                    sysConfiguration.SaveLogDatabaseConfig(options.Username, options.Password, options.Server, options.Type, options.Schema,
+                    sysConfig.SaveLogDatabaseConfig(options.Username, options.Password, options.Server, options.Type, options.Schema,
                         options.Port, options.EncryptConnection, options.DomainUser);
                 else
-                    sysConfiguration.SaveDatabaseConfig(options.Username, options.Password, options.Server, options.Type, options.Schema,
+                    sysConfig.SaveDatabaseConfig(options.Username, options.Password, options.Server, options.Type, options.Schema,
                         options.Port, options.EncryptConnection, options.DomainUser);
             }
             catch (Exception e)
@@ -145,6 +170,26 @@ namespace AdminCLI
 
             DisplayDataSystem(dataSystem);
             return 0;
+        }
+
+        /// <summary>
+        /// Creates a new redirect file
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        private static int CreateNewRedirect(CreateRedirectOptions options)
+        {            
+            try
+            {
+                var redirect = sysConfiguration.CreateRedirect(options.ConfigPath);
+                string path = Path.Combine(options.RedirectPath, "Configuracoes.redirect.xml");
+                RedirectXML.WriteRedirectFile(redirect, path);
+                return 0;
+            }
+            catch (Exception ex) {             
+                Console.WriteLine($"Error: {ex.Message}");
+                return 1;
+            }
         }
 
         /// <summary>

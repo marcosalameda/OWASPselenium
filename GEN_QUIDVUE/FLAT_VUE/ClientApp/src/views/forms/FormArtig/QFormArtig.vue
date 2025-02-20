@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ARTIG"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ARTIG___PSEUDNOVOGR02.isVisible">
 					<q-control-wrapper
@@ -996,6 +995,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['ARTIG___WAREHWAREHDES'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -1009,6 +1009,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['ARTIG___GITEMITEMGCOD', 'ARTIG___GITEMITEMDES_'],
 						controlLimits: [
 						],
 					}, this),
@@ -1100,7 +1101,6 @@
 						label: computed(() => this.Resources.IMAGE65174),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR08',
 						container: 'ARTIG___PSEUDNOVOGR08',
 						height: 50,
 						width: 100,
@@ -1117,6 +1117,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['ARTIG___ITEM_ITEMCOD_', 'ARTIG___ITEM_ITEMDES_', 'ARTIG___ITEM_VALID___', 'ARTIG___ITEM_ITEMTYPE', 'ARTIG___ITEM_ENTRIES_', 'ARTIG___ITEM_EXITS___', 'ARTIG___ITEM_EXISTENC', 'ARTIG___ITEM_DISPONIB', 'ARTIG___PSEUDNOVOGR08'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -1131,7 +1132,7 @@
 						container: 'ARTIG___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-ARTIG___PSEUDNOVOGR03',
+						directChildren: ['ARTIG___PSEUDCONTACOR'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1153,7 +1154,6 @@
 						label: computed(() => this.Resources.MOVEMENTS47007),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR03',
 						container: 'ARTIG___PSEUDNOVOGR03',
 						controller: 'ITEM',
 						action: 'Artig_ValContacor',
@@ -1280,7 +1280,7 @@
 						container: 'ARTIG___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-ARTIG___PSEUDNOVOGR04',
+						directChildren: ['ARTIG___PSEUDLENTRADA', 'ARTIG___PSEUDLSAIDAS_'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1292,7 +1292,6 @@
 						label: computed(() => this.Resources.ENTRIES32319),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR04',
 						container: 'ARTIG___PSEUDNOVOGR04',
 						controller: 'ITEM',
 						action: 'Artig_ValLentrada',
@@ -1513,7 +1512,6 @@
 						label: computed(() => this.Resources.OUTPUT_10769),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR04',
 						container: 'ARTIG___PSEUDNOVOGR04',
 						controller: 'ITEM',
 						action: 'Artig_ValLsaidas',
@@ -1736,6 +1734,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['ARTIG___PSEUDNOVOGR03', 'ARTIG___PSEUDNOVOGR04'],
 						controlLimits: [
 						],
 					}, this),
@@ -1746,7 +1745,6 @@
 						label: computed(() => this.Resources.CATEGORIZATION17554),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR06',
 						container: 'ARTIG___PSEUDNOVOGR06',
 						controller: 'ITEM',
 						action: 'Artig_List_Categori',
@@ -1835,7 +1833,6 @@
 						label: computed(() => this.Resources.CHOSEN_CATEGORIES47546),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR06',
 						container: 'ARTIG___PSEUDNOVOGR06',
 						controlLimits: [
 						],
@@ -1847,7 +1844,6 @@
 						label: computed(() => this.Resources.FILTERED_CHECKLIST06261),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR06',
 						container: 'ARTIG___PSEUDNOVOGR06',
 						controller: 'ITEM',
 						action: 'Artig_List_Categor',
@@ -1944,7 +1940,6 @@
 						label: computed(() => this.Resources.CATEGORIZATION17554),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ARTIG___PSEUDNOVOGR06',
 						container: 'ARTIG___PSEUDNOVOGR06',
 						isFormulaBlocked: true,
 						controlLimits: [
@@ -1959,7 +1954,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-ARTIG___PSEUDNOVOGR06',
+						directChildren: ['ARTIG___PSEUDCATEGORI', 'ARTIG___PSEUDESCCATEG', 'ARTIG___PSEUDCATEGOR_', 'ARTIG___ITEM_CATEGORY'],
 						controlLimits: [
 						],
 					}, this),
@@ -2008,7 +2003,7 @@
 						container: 'ARTIG___PSEUDNOVOGR07',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-ARTIG___PSEUDNOVOGR08',
+						directChildren: ['ARTIG___ITEM_IMAGE___'],
 						controlLimits: [
 						],
 					}, this),

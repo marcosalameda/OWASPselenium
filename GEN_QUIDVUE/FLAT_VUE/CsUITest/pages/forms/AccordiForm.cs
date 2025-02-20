@@ -27,7 +27,7 @@ public class AccordiForm : Form
 	/// <summary>
 	/// Sequential no.
 	/// </summary>
-	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "#ACCORDI_EQUIPSEQUENNR");
+	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "container-ACCORDI_EQUIPSEQUENNR", "#ACCORDI_EQUIPSEQUENNR");
 
 	/// <summary>
 	/// PHOTO
@@ -37,7 +37,7 @@ public class AccordiForm : Form
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl EquipPhotogra => new BaseInputControl(driver, ContainerLocator, "#ACCORDI_EQUIPPHOTOGRA");
+	public BaseInputControl EquipPhotogra => new BaseInputControl(driver, ContainerLocator, "container-ACCORDI_EQUIPPHOTOGRA", "#ACCORDI_EQUIPPHOTOGRA");
 
 	/// <summary>
 	/// Accordion

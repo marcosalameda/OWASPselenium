@@ -204,11 +204,12 @@ namespace CSGenio.business
             // Add configuration version
             tableConfig.Version = tableConfigVersion;
 
-            // Update table configuration with load options
+            // Update table configuration with load options accounting for version changes
             bool shouldSave = TableConfigurationHelpers.ApplyTableConfigurationVersionChanges(tableConfig, options);
 
             // Re-save updated configuration if necessary
-            if (shouldSave)
+            // Should not be done when in maintenance mode
+            if (shouldSave && !Maintenance.Current.IsActive)
             {
                 try
                 {

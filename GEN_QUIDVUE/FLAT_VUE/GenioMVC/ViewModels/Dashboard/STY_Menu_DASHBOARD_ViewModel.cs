@@ -226,7 +226,7 @@ namespace GenioMVC.ViewModels.Dashboard
 				},
 				new MenuWidget
 				{
-					Id = "Menu_TABLE",
+					Id = "Menu_25",
 					Order = 15,
 					Width = 2,
 					Height = 2,
@@ -239,8 +239,8 @@ namespace GenioMVC.ViewModels.Dashboard
 					Title = Resources.Resources.MENU_136496,
 					Group = "_MENUS",
 					Module = "STY",
-					Path = "STY" + " > " + string.Join(" > ", GenioMVC.Helpers.Menus.Menus.MenuTextPath("STY", "TABLE")),
-					MenuEntry = GenioMVC.Helpers.Menus.Menus.FindMenu("STY", "TABLE")
+					Path = "STY" + " > " + string.Join(" > ", GenioMVC.Helpers.Menus.Menus.MenuTextPath("STY", "25")),
+					MenuEntry = GenioMVC.Helpers.Menus.Menus.FindMenu("STY", "25")
 				},
 				new MenuWidget
 				{

@@ -83,7 +83,7 @@
 					id: 'Nroles-tab',
 					componentId: 'Nroles',
 					name: 'Nroles',
-					label: this.$t('GESTAO_DE_ACESSOS25265'),
+					label: this.$t('GESTAO_DE_FUNCOES_DE46211'),
 					disabled: false,
 					isVisible: true,
 					events: { 'alertClass': this.updateAlert }

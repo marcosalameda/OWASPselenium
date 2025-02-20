@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Lnhpd
 		public string ValCodlnhpd { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Lnhpd
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS LNHPD_PEDIDNRPEDIDO]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 			if (Menu == null)
 				Menu = new TablePartial<Lnhpd_PedidValNrpedido_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -147,6 +171,8 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 				lnhpd___pedidnrpedidoConds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ LNHPD_NRPEDIDO]/
+// USE /[MANUAL GQT OVERRQ LNHPD_PEDIDNRPEDIDO]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 					Qlisting = Models.ModelBase.Where<CSGenioApedid>(m_userContext, false, lnhpd___pedidnrpedidoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LNHPD___PEDIDNRPEDIDO", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP LNHPD_NRPEDIDO]/
+// USE /[MANUAL GQT OVERRQLSTEXP LNHPD_PEDIDNRPEDIDO]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST LNHPD_NRPEDIDO]/
+// USE /[MANUAL GQT OVERRQLIST LNHPD_PEDIDNRPEDIDO]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_pedid"];
 					CriteriaSet m_PagingPosEPHs = null;

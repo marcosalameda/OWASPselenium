@@ -10,7 +10,7 @@ public class TrsbForm : Form
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl TrsbName => new BaseInputControl(driver, ContainerLocator, "#TRSB____TRSB_NAME____");
+	public BaseInputControl TrsbName => new BaseInputControl(driver, ContainerLocator, "container-TRSB____TRSB_NAME____", "#TRSB____TRSB_NAME____");
 
 	public TrsbForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "TRSB", containerLocator: containerLocator) { }

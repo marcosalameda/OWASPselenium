@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Regio
 		public string ValCodregia { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Regio
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS REGIA_ON_PSEUDIMOVEISL]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -134,6 +155,9 @@ namespace GenioMVC.ViewModels.Regio
 
 			if (Menu == null)
 				Menu = new TablePartial<Regia_on_ValImoveisl_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -155,6 +179,8 @@ namespace GenioMVC.ViewModels.Regio
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

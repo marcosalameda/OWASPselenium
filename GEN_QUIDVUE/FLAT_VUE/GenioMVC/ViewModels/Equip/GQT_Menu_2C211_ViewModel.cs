@@ -43,6 +43,20 @@ namespace GenioMVC.ViewModels.Equip
 		public string ValCodequip { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+				// Limit "SC"
+				conditions.Equal(CSGenioAequip.FldIfabatif, "1");
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -50,6 +64,7 @@ namespace GenioMVC.ViewModels.Equip
 				CriteriaSet conds = CriteriaSet.And();
 				if (Navigation.CheckKey("equip.ifabatif"))
 					conds.Equal(CSGenioAequip.FldIfabatif, Navigation.GetValue("equip.ifabatif"));
+
 				return conds;
 			}
 		}
@@ -64,6 +79,15 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS 2C211]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -71,21 +95,17 @@ namespace GenioMVC.ViewModels.Equip
 			var areaBase = CSGenio.business.Area.createArea("equip", user, "GQT");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet gqt_menu_2c211Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML2C211");
-			gqt_menu_2c211Conds.Equal(CSGenioAequip.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML2C211");
+			conditions.Equal(CSGenioAequip.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-						gqt_menu_2c211Conds.Equal(CSGenioAequip.FldIfabatif, 1);
-
-
-// USE /[MANUAL GQT OVERRQ 2C211]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.FldZzstate, CSGenioAequip.FldRegistnr, CSGenioAequip.FldDesignat, CSGenioAequip.FldDtaquisi, CSGenioAequip.FldCoddeco, CSGenioAdecom.FldCoddeco, CSGenioAdecom.FldDecomnr, CSGenioAequip.FldDtdeco, CSGenioAequip.FldIfabatif, CSGenioAequip.FldPhotogra, CSGenioAequip.FldCodrooms, CSGenioAroom1.FldCodrooms, CSGenioAroom1.FldRoomnr };
 
 			ListingMVC<CSGenioAequip> listing = new ListingMVC<CSGenioAequip>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(gqt_menu_2c211Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -166,6 +186,9 @@ namespace GenioMVC.ViewModels.Equip
 
 			if (Menu == null)
 				Menu = new TablePartial<GQT_Menu_2C211_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -187,9 +210,9 @@ namespace GenioMVC.ViewModels.Equip
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
-			// Limit "SC"
-			crs.Equal(CSGenioAequip.FldIfabatif, "1");
 
 			if (isToExport)
 			{

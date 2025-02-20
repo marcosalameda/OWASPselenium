@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="RECEI"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.RECEI___RECEIDTRECEIP.isVisible || controls.RECEI___RECEINUMBER__.isVisible || controls.RECEI___ENTITNAME____.isVisible">
 					<q-control-wrapper

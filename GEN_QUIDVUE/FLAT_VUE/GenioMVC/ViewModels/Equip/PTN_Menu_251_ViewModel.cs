@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Equip
 		public string ValCodequip { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -60,6 +72,15 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL PTN LIST_LIMITS 251]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -67,20 +88,17 @@ namespace GenioMVC.ViewModels.Equip
 			var areaBase = CSGenio.business.Area.createArea("equip", user, "PTN");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet ptn_menu_251Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML251");
-			ptn_menu_251Conds.Equal(CSGenioAequip.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML251");
+			conditions.Equal(CSGenioAequip.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL PTN OVERRQ 251]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.FldZzstate, CSGenioAequip.FldCodempre, CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAequip.FldCodpess1, CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioAequip.FldSequennr, CSGenioAequip.FldRegistnr, CSGenioAequip.FldCodtpequ, CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.FldTipoequi, CSGenioAequip.FldCodwareh, CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes, CSGenioAequip.FldCoditem, CSGenioAitem.FldCoditem, CSGenioAitem.FldItemdes, CSGenioAequip.FldDesignat, CSGenioAequip.FldDtaquisi, CSGenioAequip.FldCoddeco, CSGenioAdecom.FldCoddeco, CSGenioAdecom.FldDecomnr, CSGenioAequip.FldDtdeco, CSGenioAequip.FldIfabatif, CSGenioAequip.FldPhotogra, CSGenioAequip.FldValortot, CSGenioAequip.FldFrequenc, CSGenioAequip.FldBought, CSGenioAequip.FldCodrooms, CSGenioAroom1.FldCodrooms, CSGenioAroom1.FldRoomnr, CSGenioAequip.FldDtrefere, CSGenioAequip.FldFirst, CSGenioAequip.FldBefore, CSGenioAequip.FldFollowin, CSGenioAequip.FldLast, CSGenioAequip.FldSitefabr, CSGenioAequip.FldLastpho, CSGenioAequip.FldMoviment, CSGenioAequip.FldQtdmovim, CSGenioAequip.FldShowrc };
 
 			ListingMVC<CSGenioAequip> listing = new ListingMVC<CSGenioAequip>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(ptn_menu_251Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -180,6 +198,9 @@ namespace GenioMVC.ViewModels.Equip
 
 			if (Menu == null)
 				Menu = new TablePartial<PTN_Menu_251_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -200,6 +221,8 @@ namespace GenioMVC.ViewModels.Equip
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

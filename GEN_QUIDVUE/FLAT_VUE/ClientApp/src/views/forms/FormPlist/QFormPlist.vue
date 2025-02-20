@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PLIST"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.PLIST___WAREHWAREHDES.isVisible || controls.PLIST___ITEM_ITEMDES_.isVisible">
 					<q-control-wrapper
@@ -569,6 +568,12 @@
 									props: {
 										id: 'FLD_TXTPROP',
 										required: true,
+										modelValue: computed(() => {
+											const property = vm.model?.ValPlist?.value['ValTxtprop']
+											if(!property) return null
+
+											return vm.model?.ValPlist?.getPropertyParsedValue(property);
+										}),
 										maxLength: 20,
 									}
 								}, this),
@@ -581,6 +586,12 @@
 									props: {
 										id: 'FLD_MULTPROP',
 										required: false,
+										modelValue: computed(() => {
+											const property = vm.model?.ValPlist?.value['ValMultprop']
+											if(!property) return null
+
+											return vm.model?.ValPlist?.getPropertyParsedValue(property);
+										}),
 									}
 								}, this),
 								new propertyListControls.DateProperty({
@@ -592,6 +603,12 @@
 									props: {
 										id: 'FLD_DATEPROP',
 										required: false,
+										modelValue: computed(() => {
+											const property = vm.model?.ValPlist?.value['ValDateprop']
+											if(!property) return null
+
+											return vm.model?.ValPlist?.getPropertyParsedValue(property);
+										}),
 									}
 								}, this),
 								new propertyListControls.BooleanProperty({
@@ -603,6 +620,12 @@
 									props: {
 										id: 'FLD_BOOLPROP',
 										required: false,
+										modelValue: computed(() => {
+											const property = vm.model?.ValPlist?.value['ValBoolprop']
+											if(!property) return null
+
+											return vm.model?.ValPlist?.getPropertyParsedValue(property);
+										}),
 									}
 								}, this),
 								new propertyListControls.NumberProperty({
@@ -614,6 +637,12 @@
 									props: {
 										id: 'FLD_NUMPROP',
 										required: false,
+										modelValue: computed(() => {
+											const property = vm.model?.ValPlist?.value['ValNumprop']
+											if(!property) return null
+
+											return vm.model?.ValPlist?.getPropertyParsedValue(property);
+										}),
 									}
 								}, this),
 								new propertyListControls.ArrayProperty({
@@ -626,6 +655,12 @@
 									props: {
 										id: 'FLD_ENUMPROP',
 										required: false,
+										modelValue: computed(() => {
+											const property = vm.model?.ValPlist?.value['ValEnumprop']
+											if(!property) return null
+
+											return vm.model?.ValPlist?.getPropertyParsedValue(property);
+										}),
 									}
 								}, this),
 							],

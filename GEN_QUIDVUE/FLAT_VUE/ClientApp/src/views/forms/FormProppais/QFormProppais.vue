@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PROPPAIS"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.PROPPAISPSEUDNOVOGR02.isVisible">
 					<q-control-wrapper
@@ -581,6 +580,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPPAISCNTRYCOUNTRY_', 'PROPPAISCNTRYACTIVE__', 'PROPPAISPSEUDNOVOGR01'],
 						controlLimits: [
 						],
 					}, this),
@@ -622,7 +622,7 @@
 						container: 'PROPPAISPSEUDNOVOGR02',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PROPPAISPSEUDNOVOGR01',
+						directChildren: ['PROPPAISCNTRYCODIGONR', 'PROPPAISCNTRYALFA2___', 'PROPPAISCNTRYALFA3___'],
 						controlLimits: [
 						],
 					}, this),
@@ -635,7 +635,6 @@
 						label: computed(() => this.Resources.NUMERIC19292),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPPAISPSEUDNOVOGR01',
 						container: 'PROPPAISPSEUDNOVOGR01',
 						maxLength: 3,
 						labelId: 'label_PROPPAISCNTRYCODIGONR',
@@ -651,7 +650,6 @@
 						label: computed(() => this.Resources.ALPHABETIC_2_16300),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPPAISPSEUDNOVOGR01',
 						container: 'PROPPAISPSEUDNOVOGR01',
 						maxLength: 2,
 						labelId: 'label_PROPPAISCNTRYALFA2___',
@@ -667,7 +665,6 @@
 						label: computed(() => this.Resources.ALPHABETIC_3_29295),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPPAISPSEUDNOVOGR01',
 						container: 'PROPPAISPSEUDNOVOGR01',
 						maxLength: 3,
 						labelId: 'label_PROPPAISCNTRYALFA3___',

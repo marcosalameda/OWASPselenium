@@ -351,7 +351,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'DESPE',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'DESPE', restrictedModes: true,
 								}
 							},
 							formsDefinition: {

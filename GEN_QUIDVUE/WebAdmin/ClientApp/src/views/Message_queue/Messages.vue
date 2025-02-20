@@ -3,6 +3,9 @@
 		<q-card
 			width="block">
 			<q-row-container>
+				<data-system-badge
+					:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">

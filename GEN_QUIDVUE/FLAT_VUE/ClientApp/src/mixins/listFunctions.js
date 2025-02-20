@@ -1,4 +1,4 @@
-﻿import { markRaw, reactive, ref, shallowReactive, toValue } from 'vue'
+﻿import { isRef, markRaw, reactive, ref, shallowReactive, toValue } from 'vue'
 import cloneDeep from 'lodash-es/cloneDeep'
 import _find from 'lodash-es/find'
 import _findIndex from 'lodash-es/findIndex'
@@ -327,15 +327,13 @@ export function applyTableConfiguration(listControl, viewCfg)
 			const idx = _findIndex(viewCfg.columnConfiguration, ['name', originalColumn.name])
 
 			// Clone the column
-			const currentColumn = cloneDeep(originalColumn);
+			const currentColumn = cloneDeep(originalColumn)
 
-			//Keep reactivity on computed properties
+			// Keep reactivity on computed properties
 			Object.keys(currentColumn).forEach((key) => {
-				const descriptor = Object.getOwnPropertyDescriptor(originalColumn, key);
-
-				if (descriptor?.value && typeof descriptor.value === 'object' && descriptor.value.__v_isRef) {
-					currentColumn[key] = descriptor.value;
-				}
+				const descriptor = Object.getOwnPropertyDescriptor(originalColumn, key)
+				if (isRef(descriptor?.value))
+					currentColumn[key] = descriptor.value
 			})
 
 			// If column is in the configuration
@@ -487,7 +485,6 @@ export function convertTableConfigurationToDB(tableConfig)
 export function updateConfigOptions(configOptions, viewManagement, confirmChanges, readonly)
 {
 	let viewSaveChanges = _find(configOptions, ['id', 'viewSaveChanges'])
-	let viewRename = _find(configOptions, ['id', 'viewRename'])
 
 	if (viewManagement === tableViewManagementModes.persistMany)
 	{
@@ -498,16 +495,11 @@ export function updateConfigOptions(configOptions, viewManagement, confirmChange
 			else
 				viewSaveChanges.active = false
 		}
-
-		if (viewRename)
-			viewRename.active = true
 	}
 	else
 	{
 		if (viewSaveChanges)
 			viewSaveChanges.active = false
-		if (viewRename)
-			viewRename.active = false
 	}
 
 	// Account for readonly mode
@@ -1054,10 +1046,10 @@ export function getRowByKey(rows, rowKey)
  */
 export function getRowByKeyPath(rows, dataInfo)
 {
-	//if it comes from "mark items from list to" we use just the array with the ID's
+	// If it comes from "mark items from list to" we use just the array with the ID's
 	if (dataInfo?.multipleSelection)
 		dataInfo = dataInfo.rowKeyPath
-	//if dataInfo contains only a key, convert it into an array so can be used in cycle
+	// If dataInfo contains only a key, convert it into an array so can be used in cycle
 	else if (!Array.isArray(dataInfo))
 		dataInfo = [dataInfo]
 
@@ -1560,7 +1552,7 @@ export function documentDisplayCell(row, column, options)
 			else
 				val.viewType = column.viewType
 		}
-	
+
 		return genericFunctions.documentDisplay(val, options)
 	}
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
@@ -2017,6 +2009,11 @@ export function getFilterName(filterOperators, filter, searchableColumns, orText
 	{
 		condition = filter.conditions[conditionIdx]
 		column = getFilterColumnFromName(filter, conditionIdx, searchableColumns)
+
+		// Skip invalid conditions
+		if(column === undefined || column === null)
+			continue
+
 		operator = _get(filterOperators, `${column.searchFieldType}.${condition.operator}`, { Title: 'Unknown', ValueCount: 0 })
 		conditionNames[conditionIdx] = `${column.label} ${operator.Title}`
 
@@ -2033,8 +2030,10 @@ export function getFilterName(filterOperators, filter, searchableColumns, orText
 				for (let idx in condition.values)
 					conditionValues[idx] = genericFunctions.dateDisplay(condition.values[idx], dateFormat, column.dateTimeType, false)
 			}
-			else if (column.searchFieldType === 'enum') {
-				if (condition.values.length === 1 && typeof condition.values[0] === 'string') //fix for enums searched with search bar (would show up as 'X is ""' without this)
+			else if (column.searchFieldType === 'enum')
+			{
+				// Fix for enums searched with search bar (would show up as 'X is ""' without this)
+				if (condition.values.length === 1 && typeof condition.values[0] === 'string')
 					conditionValues = condition.values.map((value) => value)
 				else
 					conditionValues = condition.values.map((value) => value?.value)
@@ -2084,10 +2083,10 @@ export function getColumnTotalizers(listConf)
  * @param {Object} listConf : The list configuration.
  * @returns {Array} An array of Ids corresponding to the table's currently selected rows.
  */
-export function getSelectedRows(listConf) {
+export function getSelectedRows(listConf)
+{
 	if (listConf.config?.showRowsSelectedTotalizer && listConf.allSelectedRows === 'false')
 		return Object.keys(listConf.rowsSelected)
-
 	return []
 }
 
@@ -2097,14 +2096,17 @@ export function getSelectedRows(listConf) {
 * @param value {Number} the value in the column.
 * @returns String The sum in a string format.
 */
-export function getColumnTotalValueDisplay(column, value) {
-	//Actions column shows text to show this is the totals row
-	if (column.isTotalizerTitle) {
+export function getColumnTotalValueDisplay(column, value)
+{
+	// Actions column shows text to show this is the totals row
+	if (column.isTotalizerTitle)
 		return 'Total'
-	}
-	//Column to show total (numeric or currency type)
-	else if (column.totalizer) {
-		if (column.currency !== undefined) {
+
+	// Column to show total (numeric or currency type)
+	else if (column.totalizer)
+	{
+		if (column.currency !== undefined)
+		{
 			return genericFunctions.currencyDisplay(
 				value,
 				column.numberFormat.decimalSeparator,
@@ -2114,7 +2116,9 @@ export function getColumnTotalValueDisplay(column, value) {
 				'en-US', // Hardcoded to show the currency symbol previous to the value
 				'narrowSymbol'
 			)
-		} else {
+		}
+		else
+		{
 			return genericFunctions.numericDisplay(
 				value,
 				column.numberFormat.decimalSeparator,
@@ -2131,6 +2135,88 @@ export function getColumnTotalValueDisplay(column, value) {
 }
 
 /**
+ * Check if a filter condition is valid
+ * @param {Object} filter
+ * @param {number} conditionIdx : index
+ * @param {number} searchableColumns
+ * @returns {Boolean}
+ */
+export function isValidFilterCondition(filter, conditionIdx, searchableColumns)
+{
+	let condition = filter.conditions[conditionIdx]
+
+	// Check if the field used in the column is searchable / visible
+	return searchableColumns.some(col => col.area.toUpperCase() + '.' + col.field.toUpperCase() === condition.field.toUpperCase())
+}
+
+/**
+ * Check if a filter is valid
+ * @param {Object} filter
+ * @param {number} searchableColumns
+ * @returns {Boolean}
+ */
+export function isValidFilter(filter, searchableColumns)
+{
+	// Check if any of the conditions are valid
+	for (let idx = 0; idx < filter?.conditions?.length; idx++)
+	{
+		if(isValidFilterCondition(filter, idx, searchableColumns))
+			return true
+	}
+
+	return false
+}
+
+/**
+ * Get the corresponding index of this condition in an array that only has valid conditions
+ * @param {Object} filter
+ * @param {number} conditionIdx : index
+ * @param {number} searchableColumns
+ * @returns {Boolean}
+ */
+export function getValidFilterConditionRelativeIndex(filter, conditionIdx, searchableColumns)
+{
+	let validConditionIndex = -1
+	let currentConditionIsValid = false
+
+	// Check the conditions up to this index
+	for (let idx = 0; idx <= conditionIdx; idx++)
+	{
+		currentConditionIsValid = isValidFilterCondition(filter, idx, searchableColumns)
+		if(currentConditionIsValid)
+			validConditionIndex++
+	}
+
+	if(!currentConditionIsValid)
+		return -1
+
+	return validConditionIndex
+}
+
+/**
+ * Get the number of valid conditions in this filter
+ * @param {Object} filter
+ * @param {number} searchableColumns
+ * @returns {Boolean}
+ */
+export function getValidFilterConditionCount(filter, searchableColumns)
+{
+	if(isNaN(filter?.conditions?.length))
+		return 0
+
+	let validConditionCount = 0
+
+	// Check the conditions up to this index
+	for (let idx = 0; idx < filter.conditions.length; idx++)
+	{
+		if(isValidFilterCondition(filter, idx, searchableColumns))
+			validConditionCount++
+	}
+
+	return validConditionCount
+}
+
+/**
  * Get operators for condition by index
  * @param {Object} filterOperators
  * @param {Object} filter
@@ -2141,7 +2227,7 @@ export function getFilterOperators(filterOperators, filter, conditionIdx, search
 {
 	if (filter.conditions.length < 1)
 		return []
-	return filterOperators[getFilterColumnFromName(filter, conditionIdx, searchableColumns).searchFieldType]
+	return filterOperators[getFilterColumnFromName(filter, conditionIdx, searchableColumns)?.searchFieldType]
 }
 
 /**
@@ -2162,7 +2248,8 @@ export function getFilterValueCount(filterOperators, filter, conditionIdx, searc
 		return 0
 	if (filter.conditions[conditionIdx].operator.length < 1)
 		return 0
-	if (getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)[filter.conditions[conditionIdx].operator] === undefined)
+	if (getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns) === undefined
+		|| getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)[filter.conditions[conditionIdx].operator] === undefined)
 		return 0
 	return getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)[filter.conditions[conditionIdx].operator].ValueCount
 }
@@ -2280,11 +2367,12 @@ export function filtersToServerFormat(filterCollection, searchableColumns)
 			// If condition's first value is an array, replace condition's Values array with first value array
 			if (column?.searchFieldType === 'enum')
 			{
-				if (filterCondition.operator === 'IN' && Array.isArray(filterCondition.values[0])) {
+				if (filterCondition.operator === 'IN' && Array.isArray(filterCondition.values[0]))
 					filterCondition.values = filterCondition.values[0]
-				}
-				else {
-					if (filterCondition.values.length === 1 && typeof filterCondition.values[0] === 'string')  //fix for enums searched with search bar (would show up as 'X is ""' without this)
+				else
+				{
+					// Fix for enums searched with search bar (would show up as 'X is ""' without this)
+					if (filterCondition.values.length === 1 && typeof filterCondition.values[0] === 'string')
 						filterCondition.values = filterCondition.values.map((value) => value)
 					else
 						filterCondition.values = filterCondition.values.map((value) => value?.value)
@@ -2494,7 +2582,8 @@ export function isDragAndDropColumn(column)
  * @param column {Object}
  * @returns Boolean
  */
-export function isTotalizerColumn(column) {
+export function isTotalizerColumn(column)
+{
 	if (column.isTotalizer !== undefined)
 		return column.isTotalizer
 	return false
@@ -2504,7 +2593,8 @@ export function isTotalizerColumn(column) {
  * True if the column is a data column, false otherwise.
  * @param column {Object} The column of the table.
  */
-export function isDataColumn(column) {
+export function isDataColumn(column)
+{
 	return !(isActionsColumn(column) || isExtendedActionsColumn(column) || isChecklistColumn(column) || isDragAndDropColumn(column) || isTotalizerColumn(column))
 }
 
@@ -2561,8 +2651,8 @@ export function initTableEvents(listControl)
 			listControl.vueContext.internalEvents.onMany(dependencyEvents, () => listControl.reload())
 
 		// Reload the list when it becomes visible.
-		listControl.vueContext.internalEvents.on('field-shown', (controlId) => {
-			if (controlId === listControl.id && !listControl.isLoaded)
+		listControl.showWhenConditions.addOnShowListener(() => {
+			if (!listControl.isLoaded)
 				listControl.reload()
 		})
 
@@ -2579,7 +2669,8 @@ export function initTableEvents(listControl)
 
 		// Force list reload.
 		listControl.vueContext.internalEvents.on('reload-list', ({ controlId }) => {
-			if (controlId === listControl.id) {
+			if (controlId === listControl.id)
+			{
 				const params = {
 					tableConfiguration: getTableConfiguration(listControl)
 				}
@@ -2587,15 +2678,6 @@ export function initTableEvents(listControl)
 				listControl.reload(params)
 			}
 		})
-
-		// Reload the list when the parent opens.
-		if (typeof listControl.parentOpeningEvent === 'string')
-		{
-			listControl.vueContext.internalEvents.on(listControl.parentOpeningEvent, () => {
-				if (!listControl.isLoaded)
-					listControl.reload()
-			})
-		}
 	}
 }
 
@@ -2813,6 +2895,10 @@ export default {
 	getColumnTotalizers,
 	getSelectedRows,
 	getColumnTotalValueDisplay,
+	isValidFilterCondition,
+	isValidFilter,
+	getValidFilterConditionRelativeIndex,
+	getValidFilterConditionCount,
 	getFilterOperators,
 	getFilterValueCount,
 	getFilterInputComponent,

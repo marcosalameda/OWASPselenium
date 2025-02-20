@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ANO"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ANO_____YEAR_YEAR____.isVisible || controls.ANO_____YEAR_YEARNUM_.isVisible">
 					<q-control-wrapper

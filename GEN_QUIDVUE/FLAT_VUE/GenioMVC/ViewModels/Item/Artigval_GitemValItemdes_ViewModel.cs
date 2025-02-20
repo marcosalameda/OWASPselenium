@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Item
 		public string ValCoditem { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Item
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS ARTIGVAL_GITEMITEMDES]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Item
 
 			if (Menu == null)
 				Menu = new TablePartial<Artigval_GitemValItemdes_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Item
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Item
 				artigvalgitemitemdes_Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ ARTIGVAL_ITEMDES]/
+// USE /[MANUAL GQT OVERRQ ARTIGVAL_GITEMITEMDES]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Item
 
 					Qlisting = Models.ModelBase.Where<CSGenioAgitem>(m_userContext, false, artigvalgitemitemdes_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ARTIGVALGITEMITEMDES_", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP ARTIGVAL_ITEMDES]/
+// USE /[MANUAL GQT OVERRQLSTEXP ARTIGVAL_GITEMITEMDES]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST ARTIGVAL_ITEMDES]/
+// USE /[MANUAL GQT OVERRQLIST ARTIGVAL_GITEMITEMDES]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_gitem"];
 					CriteriaSet m_PagingPosEPHs = null;

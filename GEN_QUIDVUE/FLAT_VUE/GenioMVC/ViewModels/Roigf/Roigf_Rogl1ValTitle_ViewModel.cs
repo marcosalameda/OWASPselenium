@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Roigf
 		public string ValCodroigf { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Roigf
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS ROIGF_ROGL1TITLE]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Roigf
 
 			if (Menu == null)
 				Menu = new TablePartial<Roigf_Rogl1ValTitle_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Roigf
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Roigf
 				roigf___rogl1title___Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ ROIGF_TITLE]/
+// USE /[MANUAL GQT OVERRQ ROIGF_ROGL1TITLE]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Roigf
 
 					Qlisting = Models.ModelBase.Where<CSGenioArogl1>(m_userContext, false, roigf___rogl1title___Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ROIGF___ROGL1TITLE___", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP ROIGF_TITLE]/
+// USE /[MANUAL GQT OVERRQLSTEXP ROIGF_ROGL1TITLE]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST ROIGF_TITLE]/
+// USE /[MANUAL GQT OVERRQLIST ROIGF_ROGL1TITLE]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_rogl1"];
 					CriteriaSet m_PagingPosEPHs = null;

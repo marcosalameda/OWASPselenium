@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.C_brn
 		public string ValCodctry { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -60,6 +72,15 @@ namespace GenioMVC.ViewModels.C_brn
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL TRN LIST_LIMITS T04C_BRN]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -67,20 +88,17 @@ namespace GenioMVC.ViewModels.C_brn
 			var areaBase = CSGenio.business.Area.createArea("c_brn", user, "TRN");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet trn_menu_t04c_brnConds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLT04C_BRN");
-			trn_menu_t04c_brnConds.Equal(CSGenioAc_brn.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLT04C_BRN");
+			conditions.Equal(CSGenioAc_brn.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL TRN OVERRQ T04C_BRN]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAc_brn.FldCodctry, CSGenioAc_brn.FldZzstate, CSGenioAc_brn.FldCountry };
 
 			ListingMVC<CSGenioAc_brn> listing = new ListingMVC<CSGenioAc_brn>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(trn_menu_t04c_brnConds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -154,6 +172,9 @@ namespace GenioMVC.ViewModels.C_brn
 
 			if (Menu == null)
 				Menu = new TablePartial<TRN_Menu_T04C_BRN_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -174,6 +195,8 @@ namespace GenioMVC.ViewModels.C_brn
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

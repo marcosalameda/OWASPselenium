@@ -43,11 +43,23 @@ namespace GenioMVC.ViewModels.Entit
 		public string ValCodentit { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -62,6 +74,15 @@ namespace GenioMVC.ViewModels.Entit
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL WMS LIST_LIMITS 511]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -69,20 +90,17 @@ namespace GenioMVC.ViewModels.Entit
 			var areaBase = CSGenio.business.Area.createArea("entit", user, "WMS");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet wms_menu_511Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML511");
-			wms_menu_511Conds.Equal(CSGenioAentit.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML511");
+			conditions.Equal(CSGenioAentit.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL WMS OVERRQ 511]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAentit.FldCodentit, CSGenioAentit.FldZzstate, CSGenioAentit.FldName, CSGenioAentit.FldInitials, CSGenioAentit.FldRegistra, CSGenioAentit.FldTaxnumbe, CSGenioAentit.FldEmail, CSGenioAentit.FldPhonenum, CSGenioAentit.FldWebsite, CSGenioAentit.FldPerson, CSGenioAentit.FldIban, CSGenioAentit.FldBuilding, CSGenioAentit.FldStreet, CSGenioAentit.FldTown, CSGenioAentit.FldCounty, CSGenioAentit.FldState, CSGenioAentit.FldPobox, CSGenioAentit.FldPostalco, CSGenioAentit.FldTelephon, CSGenioAentit.FldFax, CSGenioAentit.FldContact, CSGenioAentit.FldManufact, CSGenioAentit.FldFounded, CSGenioAentit.FldFirstfacilitie, CSGenioAfaci1.FldCodfacil, CSGenioAfaci1.FldName, CSGenioAentit.FldLastfacilitie, CSGenioAfaci2.FldCodfacil, CSGenioAfaci2.FldName, CSGenioAentit.FldLanguage, CSGenioAentit.FldCurrency, CSGenioAentit.FldOwner, CSGenioAentit.FldCarrier, CSGenioAentit.FldSupplier };
 
 			ListingMVC<CSGenioAentit> listing = new ListingMVC<CSGenioAentit>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(wms_menu_511Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -183,6 +201,9 @@ namespace GenioMVC.ViewModels.Entit
 
 			if (Menu == null)
 				Menu = new TablePartial<WMS_Menu_511_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -203,6 +224,8 @@ namespace GenioMVC.ViewModels.Entit
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

@@ -375,7 +375,7 @@
 											fnValueSelector: (row) => row.ValCoddespe
 										},
 									],
-									action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_BUTTONTRIGGERTEST2,
+									action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_BUTTONTRIGGERTEST2, restrictedModes: true,
 								}
 							},
 							formsDefinition: {

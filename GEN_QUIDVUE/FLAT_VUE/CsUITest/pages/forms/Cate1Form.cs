@@ -10,12 +10,12 @@ public class Cate1Form : Form
 	/// <summary>
 	/// Abbreviation
 	/// </summary>
-	public BaseInputControl Cate1Abbrevia => new BaseInputControl(driver, ContainerLocator, "#CATE1___CATE1ABBREVIA");
+	public BaseInputControl Cate1Abbrevia => new BaseInputControl(driver, ContainerLocator, "container-CATE1___CATE1ABBREVIA", "#CATE1___CATE1ABBREVIA");
 
 	/// <summary>
 	/// Category
 	/// </summary>
-	public BaseInputControl Cate1Category => new BaseInputControl(driver, ContainerLocator, "#CATE1___CATE1CATEGORY");
+	public BaseInputControl Cate1Category => new BaseInputControl(driver, ContainerLocator, "container-CATE1___CATE1CATEGORY", "#CATE1___CATE1CATEGORY");
 
 	public Cate1Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "CATE1", containerLocator: containerLocator) { }

@@ -10,12 +10,12 @@ public class AnoForm : Form
 	/// <summary>
 	/// Year
 	/// </summary>
-	public BaseInputControl YearYear => new BaseInputControl(driver, ContainerLocator, "#ANO_____YEAR_YEAR____");
+	public BaseInputControl YearYear => new BaseInputControl(driver, ContainerLocator, "container-ANO_____YEAR_YEAR____", "#ANO_____YEAR_YEAR____");
 
 	/// <summary>
 	/// Year (numbers)
 	/// </summary>
-	public BaseInputControl YearYearnum => new BaseInputControl(driver, ContainerLocator, "#ANO_____YEAR_YEARNUM_");
+	public BaseInputControl YearYearnum => new BaseInputControl(driver, ContainerLocator, "container-ANO_____YEAR_YEARNUM_", "#ANO_____YEAR_YEARNUM_");
 
 	/// <summary>
 	/// All the expenses
@@ -30,7 +30,7 @@ public class AnoForm : Form
 	/// <summary>
 	/// Value
 	/// </summary>
-	public BaseInputControl YearValue => new BaseInputControl(driver, ContainerLocator, "#ANO_____YEAR_VALUE___");
+	public BaseInputControl YearValue => new BaseInputControl(driver, ContainerLocator, "container-ANO_____YEAR_VALUE___", "#ANO_____YEAR_VALUE___");
 
 	public AnoForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "ANO", containerLocator: containerLocator) { }

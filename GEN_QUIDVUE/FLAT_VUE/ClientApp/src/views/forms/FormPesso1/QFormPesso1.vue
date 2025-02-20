@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PESSO1"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.PESSO1__PSEUDNOVOGR08.isVisible"
@@ -909,6 +908,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO1__PSEUDNOVOGR04', 'PESSO1__PSEUDNOVOGR02'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -923,6 +923,7 @@
 						container: 'PESSO1__PSEUDNOVOGR08',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO1__PESSOPHOTOGRA'],
 						controlLimits: [
 						],
 					}, this),
@@ -952,6 +953,7 @@
 						container: 'PESSO1__PSEUDNOVOGR08',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO1__PESSOIDFUNCIO', 'PESSO1__PESSONAME____', 'PESSO1__PESSODTNASCIM', 'PESSO1__PESSOIDADE___', 'PESSO1__PESSOGENDER__', 'PESSO1__PESSOINTERNA_', 'PESSO1__PESSOEXTERNA_', 'PESSO1__CATEGCATEGORY', 'PESSO1__PESSODTULTCAT'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -1139,6 +1141,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO1__PSEUDNOVOGR07', 'PESSO1__PSEUDNOVOGR05', 'PESSO1__PSEUDNOVOGR11'],
 						controlLimits: [
 						],
 					}, this),
@@ -1152,6 +1155,7 @@
 						container: 'PESSO1__PSEUDNOVOGR06',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO1__PSEUDNOVOGR03', 'PESSO1__PSEUDNOVOGR09'],
 						controlLimits: [
 						],
 					}, this),
@@ -1165,6 +1169,7 @@
 						container: 'PESSO1__PSEUDNOVOGR07',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO1__PESSOTELEPHON', 'PESSO1__PESSOEMAIL___'],
 						controlLimits: [
 						],
 					}, this),
@@ -1208,6 +1213,7 @@
 						container: 'PESSO1__PSEUDNOVOGR07',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO1__PSEUDCONTACTO'],
 						controlLimits: [
 						],
 					}, this),
@@ -1404,6 +1410,7 @@
 						container: 'PESSO1__PSEUDNOVOGR06',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO1__PSEUDNOVOGR01', 'PESSO1__PSEUDNOVOGR10'],
 						controlLimits: [
 						],
 					}, this),
@@ -1417,6 +1424,7 @@
 						container: 'PESSO1__PSEUDNOVOGR05',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO1__CMPNYDESIGNAT', 'PESSO1__CNTRYCOUNTRY_'],
 						controlLimits: [
 						],
 					}, this),
@@ -1481,6 +1489,7 @@
 						container: 'PESSO1__PSEUDNOVOGR05',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO1__PSEUDEVOLUCAO'],
 						controlLimits: [
 						],
 					}, this),
@@ -1706,6 +1715,7 @@
 						container: 'PESSO1__PSEUDNOVOGR06',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO1__REGI1REGIAO__'],
 						controlLimits: [
 						],
 					}, this),

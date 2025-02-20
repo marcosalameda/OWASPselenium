@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Lnhag
 		public string ValCodlnhag { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Lnhag
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS LNHAG_TPEQ1TIPOEQUI]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Lnhag
 
 			if (Menu == null)
 				Menu = new TablePartial<Lnhag_Tpeq1ValTipoequi_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Lnhag
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -320,7 +346,7 @@ namespace GenioMVC.ViewModels.Lnhag
 				lnhag___tpeq1tipoequiConds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ LNHAG_TIPOEQUI]/
+// USE /[MANUAL GQT OVERRQ LNHAG_TPEQ1TIPOEQUI]/
 
 				if (isToExport)
 				{
@@ -329,14 +355,14 @@ namespace GenioMVC.ViewModels.Lnhag
 
 					Qlisting = Models.ModelBase.Where<CSGenioAtpeq1>(m_userContext, false, lnhag___tpeq1tipoequiConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LNHAG___TPEQ1TIPOEQUI", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP LNHAG_TIPOEQUI]/
+// USE /[MANUAL GQT OVERRQLSTEXP LNHAG_TPEQ1TIPOEQUI]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST LNHAG_TIPOEQUI]/
+// USE /[MANUAL GQT OVERRQLIST LNHAG_TPEQ1TIPOEQUI]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_tpeq1"];
 					CriteriaSet m_PagingPosEPHs = null;

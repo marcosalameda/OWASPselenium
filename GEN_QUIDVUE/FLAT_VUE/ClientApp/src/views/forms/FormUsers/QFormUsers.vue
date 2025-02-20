@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="USERS"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.USERS___PSW__NOME____.isVisible || controls.USERS___PERSONAME____.isVisible">
 					<q-control-wrapper

@@ -19,7 +19,7 @@
 		<template v-if="Model.FormMode==3">
 			<div class="alert alert--warning">
 				<strong>
-					{{ Resources.WARNING52043 + ':' }}
+					{{ Resources.AVISO03237 + ':' }}
 				</strong>
 				{{ Resources.DESEJA_ELIMINAR_ESTA24564 }}
 			</div>

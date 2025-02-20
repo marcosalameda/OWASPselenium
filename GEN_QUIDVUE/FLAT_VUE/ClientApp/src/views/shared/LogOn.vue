@@ -27,7 +27,7 @@
 								:title="value.Description || 'Authentication'"
 								:label="value.Description || value.Id"
 								:loading="loading"
-								@click="AuthRedirectButtonClick(value)" />
+								@click="authRedirectButtonClick(value)" />
 						</div>
 
 
@@ -103,7 +103,7 @@
 							class="q-logon-links-container"
 							v-if="hasPasswordRecovery || allowRegistration">
 							<q-router-link
-								v-if="hasPasswordRecovery"
+								v-if="hasPasswordRecovery && !maintenance.isActive"
 								id="forgot-password"
 								class="f-login__link"
 								:link="{
@@ -174,8 +174,6 @@
 
 				isPasswordVisible: false,
 
-				showReturnMessage: false,
-
 				loading: false,
 
 				model: {
@@ -196,7 +194,21 @@
 
 		created()
 		{
-			fetchData('Account', 'LogOn', {}, this.loadedContent)
+			fetchData(
+				'Account',
+				'LogOn',
+				{},
+				(data) => {
+					this.loadedContent(data)
+
+					if (
+						!this.hasUsernameAuth &&
+						this.model.AuthRedirectMethods.length === 1 &&
+						this.layoutConfig.LoginStyle === 'single_page' &&
+						!this.allowRegistration
+					)
+						this.authRedirectButtonClick(this.model.AuthRedirectMethods[0])
+				})
 		},
 
 		mounted()
@@ -300,7 +312,6 @@
 			loginSuccess(_, response)
 			{
 				const responseData = response.data
-				this.showReturnMessage = true
 				this.returnMessage = responseData.Errors
 
 				if (responseData.Success)
@@ -325,14 +336,14 @@
 			 */
 			checkIfValidRoute(route)
 			{
-				if(route)
+				if (route)
 				{
 					const locale = route.params?.culture
 					const system = route.params?.system
 					const module = route.params?.module
 
 					// Check locale.
-					if (locale && !this.system.supportedLangs.find(lang => lang.language === locale))
+					if (locale && !this.system.supportedLangs.find((lang) => lang.language === locale))
 						return false
 
 					// Check system.
@@ -345,6 +356,7 @@
 
 					return true
 				}
+
 				return false
 			},
 
@@ -366,7 +378,7 @@
 
 			finalizeLogin()
 			{
-				const userDataStore = useUserDataStore();
+				const userDataStore = useUserDataStore()
 				const lastAttemptedRoute = userDataStore.routeAfterLogin
 				// Remove previously saved
 				userDataStore.setRedirectRouteAfterLogin()
@@ -381,20 +393,15 @@
 						Name: this.currentUser
 					}
 					this.setUserData(userData)
-					
+
 					/**
-					 * If the last attempted route is valid, redirect to it; otherwise, go to the default route. 
-					 * This way, if the user attempted to open a URL that requires authentication, 
+					 * If the last attempted route is valid, redirect to it; otherwise, go to the default route.
+					 * This way, if the user attempted to open a URL that requires authentication,
 					 * they will be redirected to it after a successful login.
 					 */
 					const routeParams = this.checkIfValidRoute(lastAttemptedRoute) ? lastAttemptedRoute : this.getMainPageRoute()
 					this.$router.push(routeParams)
 				})
-			},
-
-			clearReturnMessage()
-			{
-				this.showReturnMessage = false
 			},
 
 			confirmBox2FA()
@@ -494,6 +501,9 @@
 				// When the user starts typing hide the error message
 				delete this.returnMessage.Password
 				this.password = newVal
+
+				if (this.hasError)
+					delete this.returnMessage.Error
 			}
 		}
 	}

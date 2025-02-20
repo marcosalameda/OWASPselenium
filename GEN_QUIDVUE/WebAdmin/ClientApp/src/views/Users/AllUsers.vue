@@ -1,92 +1,128 @@
 ﻿<template>
-	<div class="module-container panel panel-default">
-		<h5>{{ Resources.TODOS_OS_UTILIZADORE41512 }}</h5>
+	<div>
+		<div class="title-container--with-badge">
+			<h5>{{ Resources.TODOS_OS_UTILIZADORE41512 }}</h5>
+			<data-system-badge
+				:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+		</div>
+
 		<hr>
-		<div class="panel-heading">{{ Resources.FILTRAR_POR_MODULOS26042 }}</div>
-		<div class="checkbox-container">
-			<div class="form-check-inline">
-				<q-checkbox
-					v-model="selectModules"
-					:label="Resources.TODOS59977" />
-				<hr>
-			</div>
-			<div class="form-check-inline" 
+
+		<span>
+			{{ Resources.FILTRAR_POR_MODULOS26042 }} 
+		</span>
+
+		<div class="all-users-checkboxes">
+			<q-checkbox
+				v-model="selectModules"
+				:label="Resources.TODOS59977" />
+
+			<div class="all-users-checkboxes__divider" />
+
+			<q-checkbox
 				v-for="module in Modules" 
-				:key="module.Cod">
-				<q-checkbox
-					v-model="module.active"
-					:label="Resources[module.Description]" />
-			</div>
+				:key="module.Cod"
+				v-model="module.active"
+				:label="Resources[module.Description]" />
 		</div>
 	</div>
-	<qtable :rows="Users.rows"
-			:columns="Users.columns"
-			:config="Users.config"
-			@on-change-query="onChangeQuery"
-			:totalRows="Users.total_rows"
-			:exportLabel="Resources.EXPORT_TO_EXCEL22478"
-			:enableExport="true"
-			class="q-table--borderless">
+
+	<qtable 
+		:rows="Users.rows"
+		:columns="Users.columns"
+		:config="Users.config"
+		:totalRows="Users.total_rows"
+		:exportLabel="Resources.EXPORT_TO_EXCEL22478"
+		:enableExport="true"
+		@on-change-query="onChangeQuery"
+		class="q-table--borderless">
 		<!--Action column-->
 		<template #actions="props">
 		<q-button-group borderless>
 			<q-button
-			:title="Resources.EDITAR11616"
-			@click="editUser(props.row)">
-			<q-icon icon="pencil" />
+				:title="Resources.EDITAR11616"
+				@click="editUser(props.row)">
+				<q-icon icon="pencil" />
 			</q-button>
 			<q-button
-			:title="Resources.ELIMINAR21155"
-			@click="deleteUser(props.row)">
-			<q-icon icon="bin" />
+				:title="Resources.ELIMINAR21155"
+				@click="deleteUser(props.row)">
+				<q-icon icon="bin" />
 			</q-button>
 		</q-button-group>
 		</template>
-		<!--All roles slot -->
+
 		<template #user-roles="props">
-			<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="Modules[userRole.Module].active" class="role-tag">{{Resources[userRole.Designation]}}</span>
-			</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #TBS="props">
-			<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'TBS'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-			</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'TBS' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #WMS="props">
-			<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'WMS'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-			</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'WMS' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #IMO="props">
-			<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'IMO'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-			</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'IMO' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #TRN="props">
-			<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'TRN'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-			</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'TRN' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #STY="props">
-			<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'STY'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-			</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'STY' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #PTN="props">
-			<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'PTN'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-			</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'PTN' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #REG="props">
-			<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'REG'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-			</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'REG' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #GQT="props">
-			<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'GQT'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-			</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'GQT' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #table-footer>
 			<tr>
@@ -114,7 +150,7 @@
 	<q-dialog
 		v-model="showDialog"
 		:text="Resources.UTILIZADOR_EXCLUIDO_17794"
-		:icon='{"icon":"ok-circle"}'
+		:icon='{"icon":"check-circle-outline"}'
 		:buttons="dialogBtns" />
 </template>
 

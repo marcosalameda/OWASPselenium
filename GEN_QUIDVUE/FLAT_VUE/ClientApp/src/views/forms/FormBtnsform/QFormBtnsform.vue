@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="BTNSFORM"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 			</template>
 		</div>

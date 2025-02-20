@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="EQUIP"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.EQUIP___PSEUDNOVOGR02.isVisible"
@@ -1232,7 +1231,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-EQUIP___PSEUDNOVOGR02',
+						directChildren: ['EQUIP___CMPNYDESIGNAT', 'EQUIP___PESS1NAME____'],
 						controlLimits: [
 						],
 					}, this),
@@ -1245,7 +1244,6 @@
 						label: computed(() => this.Resources.COMPANY_22615),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR02',
 						container: 'EQUIP___PSEUDNOVOGR02',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -1277,7 +1275,6 @@
 						label: computed(() => this.Resources.PERSON10446),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR02',
 						container: 'EQUIP___PSEUDNOVOGR02',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -1323,6 +1320,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: true,
+						directChildren: ['EQUIP___EQUIPSEQUENNR', 'EQUIP___EQUIPREGISTNR', 'EQUIP___TPEQUTIPOEQUI', 'EQUIP___EQUIPSITEFABR', 'EQUIP___WAREHWAREHDES', 'EQUIP___ITEM_ITEMDES_', 'EQUIP___EQUIPDESIGNAT', 'EQUIP___EQUIPFREQUENC', 'EQUIP___EQUIPVALORTOT', 'EQUIP___EQUIPDTAQUISI', 'EQUIP___EQUIPDTDECO__', 'EQUIP___EQUIPBOUGHT__'],
 						controlLimits: [
 						],
 					}, this),
@@ -1573,6 +1571,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: true,
+						directChildren: ['EQUIP___ROOM1ROOMNR__', 'EQUIP___ROOM1DESIGNAT', 'EQUIP___EQUIPDTREFERE', 'EQUIP___EQUIPFIRST___', 'EQUIP___EQUIPBEFORE__', 'EQUIP___EQUIPFOLLOWIN', 'EQUIP___EQUIPLAST____', 'EQUIP___EQUIPQTDMOVIM', 'EQUIP___EQUIPMOVIMENT', 'EQUIP___PSEUDNOVOGR10'],
 						controlLimits: [
 						],
 					}, this),
@@ -1744,7 +1743,7 @@
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-EQUIP___PSEUDNOVOGR10',
+						directChildren: ['EQUIP___PSEUDMOVIMEVV', 'EQUIP___PSEUDROOMSMVE', 'EQUIP___PSEUDMOVIMELS'],
 						controlLimits: [
 						],
 					}, this),
@@ -1765,7 +1764,6 @@
 						label: computed(() => this.Resources.CHOOSE_ROOM04275),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR10',
 						container: 'EQUIP___PSEUDNOVOGR10',
 						controller: 'EQUIP',
 						action: 'Equip_List_Movimevv',
@@ -1842,7 +1840,6 @@
 						label: computed(() => this.Resources.MULTIPLE_VALUES_EXTE07457),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR10',
 						container: 'EQUIP___PSEUDNOVOGR10',
 						controlLimits: [
 						],
@@ -1854,7 +1851,6 @@
 						label: computed(() => this.Resources.EQUIPMENT_MOVEMENT_H06876),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR10',
 						container: 'EQUIP___PSEUDNOVOGR10',
 						controller: 'EQUIP',
 						action: 'Equip_ValMovimels',
@@ -2059,7 +2055,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-EQUIP___PSEUDNOVOGR06',
+						directChildren: ['EQUIP___EQUIPPHOTOGRA', 'EQUIP___EQUIPLASTPHO_'],
 						controlLimits: [
 						],
 					}, this),
@@ -2072,7 +2068,6 @@
 						label: computed(() => this.Resources.PHOTO51874),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR06',
 						container: 'EQUIP___PSEUDNOVOGR06',
 						height: 50,
 						width: 30,
@@ -2089,7 +2084,6 @@
 						label: computed(() => this.Resources.PHOTO51874),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR06',
 						container: 'EQUIP___PSEUDNOVOGR06',
 						isFormulaBlocked: true,
 						height: 50,
@@ -2107,6 +2101,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIP___PSEUDNOVOGR03', 'EQUIP___PSEUDNOVOGR04', 'EQUIP___PSEUDNOVOGR11'],
 						controlLimits: [
 						],
 					}, this),
@@ -2120,7 +2115,7 @@
 						container: 'EQUIP___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-EQUIP___PSEUDNOVOGR03',
+						directChildren: ['EQUIP___PSEUDINSTALAG'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -2132,7 +2127,6 @@
 						label: computed(() => this.Resources.FACILITIES_23844),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR03',
 						container: 'EQUIP___PSEUDNOVOGR03',
 						controller: 'EQUIP',
 						action: 'Equip_ValInstalag',
@@ -2349,7 +2343,7 @@
 						container: 'EQUIP___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-EQUIP___PSEUDNOVOGR04',
+						directChildren: ['EQUIP___PSEUDINSTALAC'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -2361,7 +2355,6 @@
 						label: computed(() => this.Resources.FACILITIES_23844),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR04',
 						container: 'EQUIP___PSEUDNOVOGR04',
 						controller: 'EQUIP',
 						action: 'Equip_ValInstalac',
@@ -2518,6 +2511,10 @@
 										rawValue: true,
 										isMapped: false
 									},
+									zoomDelta: {
+										rawValue: 1,
+										isMapped: false
+									},
 									boundSouthWest: {
 										rawValue: undefined,
 										isMapped: false
@@ -2644,7 +2641,7 @@
 						container: 'EQUIP___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-EQUIP___PSEUDNOVOGR11',
+						directChildren: ['EQUIP___PSEUDREPARACO', 'EQUIP___DECOMDECOMNR_', 'EQUIP___EQUIPIFABATIF'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -2656,7 +2653,6 @@
 						label: computed(() => this.Resources.EQUIPMENT_REPAIRS62266),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR11',
 						container: 'EQUIP___PSEUDNOVOGR11',
 						controller: 'EQUIP',
 						action: 'Equip_ValReparaco',
@@ -2921,7 +2917,6 @@
 						label: computed(() => this.Resources.DECOMISSION_NO_16646),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR11',
 						container: 'EQUIP___PSEUDNOVOGR11',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -2953,7 +2948,6 @@
 						label: computed(() => this.Resources.DOWNED_EQUIPMENT43331),
 						placeholder: '',
 						labelPosition: computed(() => this.layoutConfig.CheckboxLabelAlignment),
-						parentOpeningEvent: 'opened-EQUIP___PSEUDNOVOGR11',
 						container: 'EQUIP___PSEUDNOVOGR11',
 						isFormulaBlocked: true,
 						controlLimits: [
@@ -2968,6 +2962,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: true,
+						directChildren: ['EQUIP___PSEUDFOTOEQUI'],
 						controlLimits: [
 						],
 					}, this),
@@ -3165,6 +3160,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: true,
+						directChildren: ['EQUIP___PSEUDVISEQUIP'],
 						controlLimits: [
 						],
 					}, this),
@@ -3601,6 +3597,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: true,
+						directChildren: ['EQUIP___PSEUDANEXOS__'],
 						controlLimits: [
 						],
 					}, this),

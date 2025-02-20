@@ -488,6 +488,17 @@ export default function getFormsRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/:module/form/DISST/:mode/:id?',
+			name: 'form-DISST',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormDisst/QFormDisst.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'DISST',
+				humanKeyFields: ['ValStatus']
+			}
+		},
+		{
 			path: '/:culture/:system/:module/form/DOCSD/:mode/:id?',
 			name: 'form-DOCSD',
 			props: route => propsConverter(route),

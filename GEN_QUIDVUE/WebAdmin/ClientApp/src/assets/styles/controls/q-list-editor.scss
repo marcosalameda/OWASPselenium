@@ -15,10 +15,12 @@
 	}
 
 	&__item {
-		position: relative;
 		display: flex;
-		align-items: stretch;
-		flex-wrap: nowrap !important;
-		margin-bottom: 8px;
+		flex-wrap: nowrap;
+
+		&-remove {
+			align-self: flex-end;
+			padding: 0.5rem;
+		}
 	}
 }

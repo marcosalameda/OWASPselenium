@@ -16,7 +16,7 @@ using OpenTelemetry.Metrics;
 using CSGenio.core.logger;
 using CSGenio.core.di;
 using GenioMVC.Metrics;
-using CSGenio.core.framework.ChatbotApi;
+using CSGenio.core.ai;
 using GenioMVC.Helpers;
 
 //---------------------------------

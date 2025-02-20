@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Relin
 		public string ValCoddilin { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Relin
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS RELIN_PRODUPRODUCT]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Relin
 
 			if (Menu == null)
 				Menu = new TablePartial<Relin_ProduValProduct_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Relin
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Relin
 				relin___produproduct_Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ RELIN_PRODUCT]/
+// USE /[MANUAL GQT OVERRQ RELIN_PRODUPRODUCT]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Relin
 
 					Qlisting = Models.ModelBase.Where<CSGenioAprodu>(m_userContext, false, relin___produproduct_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_RELIN___PRODUPRODUCT_", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP RELIN_PRODUCT]/
+// USE /[MANUAL GQT OVERRQLSTEXP RELIN_PRODUPRODUCT]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST RELIN_PRODUCT]/
+// USE /[MANUAL GQT OVERRQLIST RELIN_PRODUPRODUCT]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_produ"];
 					CriteriaSet m_PagingPosEPHs = null;

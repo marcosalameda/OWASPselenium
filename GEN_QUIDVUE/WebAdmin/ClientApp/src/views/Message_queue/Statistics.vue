@@ -31,6 +31,9 @@
 						b-style="primary"
 						:label="Resources.ATUALIZAR_ESTATISTIC07525"
 						@click="UpdateStats" />
+
+					<data-system-badge
+						:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
 				</row>
 			</q-row-container>
 			

@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ROGL1"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ROGL1___ROGL1TITLE___.isVisible">
 					<q-control-wrapper

@@ -41,6 +41,20 @@ namespace GenioMVC.ViewModels.Pesso
 		public string ValCodpesso { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+				// Limit "SC"
+				conditions.Equal(CSGenioApesso.FldGender, "F");
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -48,6 +62,7 @@ namespace GenioMVC.ViewModels.Pesso
 				CriteriaSet conds = CriteriaSet.And();
 				if (Navigation.CheckKey("pesso.gender"))
 					conds.Equal(CSGenioApesso.FldGender, Navigation.GetValue("pesso.gender"));
+
 				return conds;
 			}
 		}
@@ -62,6 +77,15 @@ namespace GenioMVC.ViewModels.Pesso
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL PTN LIST_LIMITS 3F111]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -69,21 +93,17 @@ namespace GenioMVC.ViewModels.Pesso
 			var areaBase = CSGenio.business.Area.createArea("pesso", user, "PTN");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet ptn_menu_3f111Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML3F111");
-			ptn_menu_3f111Conds.Equal(CSGenioApesso.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML3F111");
+			conditions.Equal(CSGenioApesso.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-						ptn_menu_3f111Conds.Equal(CSGenioApesso.FldGender, "F");
-
-
-// USE /[MANUAL PTN OVERRQ 3F111]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.FldZzstate, CSGenioApesso.FldName };
 
 			ListingMVC<CSGenioApesso> listing = new ListingMVC<CSGenioApesso>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(ptn_menu_3f111Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -157,6 +177,9 @@ namespace GenioMVC.ViewModels.Pesso
 
 			if (Menu == null)
 				Menu = new TablePartial<PTN_Menu_3F111_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -178,9 +201,9 @@ namespace GenioMVC.ViewModels.Pesso
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
-			// Limit "SC"
-			crs.Equal(CSGenioApesso.FldGender, "F");
 
 			if (isToExport)
 			{

@@ -15,15 +15,21 @@ public class DispaForm : Form
 	/// <summary>
 	/// Dispatch number
 	/// </summary>
-	public BaseInputControl DispaDispanr => new BaseInputControl(driver, ContainerLocator, "#DISPA___DISPADISPANR_");
+	public BaseInputControl DispaDispanr => new BaseInputControl(driver, ContainerLocator, "container-DISPA___DISPADISPANR_", "#DISPA___DISPADISPANR_");
 
 	/// <summary>
 	/// Status
 	/// </summary>
-	public BaseInputControl DispaStatus => new BaseInputControl(driver, ContainerLocator, "#DISPA___DISPASTATUS__");
+	public LookupControl DisstStatus => new LookupControl(driver, ContainerLocator, "container-DISPA___DISSTSTATUS__");
+	public SeeMorePage DisstStatusSeeMorePage => new SeeMorePage(driver, "DISPA", "DISPA___DISSTSTATUS__");
 
 	/// <summary>
-	/// Customer
+	/// Status
+	/// </summary>
+	public BaseInputControl DispaStatus => new BaseInputControl(driver, ContainerLocator, "container-DISPA___DISPASTATUS__", "#DISPA___DISPASTATUS__");
+
+	/// <summary>
+	/// Cliente
 	/// </summary>
 	public LookupControl EntitName => new LookupControl(driver, ContainerLocator, "container-DISPA___ENTITNAME____");
 	public SeeMorePage EntitNameSeeMorePage => new SeeMorePage(driver, "DISPA", "DISPA___ENTITNAME____");

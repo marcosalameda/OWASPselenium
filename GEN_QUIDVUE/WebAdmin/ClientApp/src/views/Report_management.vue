@@ -77,15 +77,16 @@
 					:classes="tReportList.classes">
 
 					<template #status="props">
-						<i
+						<q-button
 							v-if="!isEmptyObject(props.row.Error)"
-							class="glyphicons glyphicons-exclamation-sign"
-							data-toggle="tooltip"
+							b-style="tertiary"
 							:title="props.row.Error"
-							@click.stop="showError(props.row)" />
-						<i
+							@click.stop="showError(props.row)">
+							<q-icon icon="alert-circle" />
+						</q-button>
+						<q-icon
 							v-else
-							class="glyphicons glyphicons-ok-sign" />
+							:icon="check" />
 						{{ props.row.Status }}
 					</template>
 				</qtable>
@@ -116,7 +117,7 @@
 								<q-button
 									:label="Resources.INSERIR43365"
 									@click="ManageSlotReport('new', '')">
-									<q-icon icon="plus-sign" />
+									<q-icon icon="add" />
 								</q-button>
 							</td>
 						</tr>

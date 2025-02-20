@@ -1,313 +1,208 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CSGenio.framework;
 using CSGenio.persistence;
-using System.Linq;
 using Quidgest.Persistence.GenericQuery;
 
 namespace CSGenio.business.async
 {
-    using Process = CSGenioAs_apr; 
+    using Process = CSGenioAs_apr;
+
     /// <summary>
-    /// Class responsible for distributing jobs to every worker.
-    /// It's a singleton class, only one instance can exist at a time.
+    /// Singleton class responsible for distributing jobs to workers.
     /// Be careful, every public method must deal with possible concurrency.
     /// </summary>
     public class SchedulerBroker
     {
+        private static SchedulerBroker instance = null;
+        private readonly object lockProcess = new object();
 
+        private readonly Dictionary<string, List<Process>> allProcess = new Dictionary<string, List<Process>>();
+        private readonly Dictionary<string, DateTime> lastCheck;
+        private List<Process> processes;
+
+        private readonly GenioScheduler scheduler;
+
+        /// <summary>
+        /// Private constructor to enforce singleton pattern.
+        /// </summary>
+        private SchedulerBroker() : this(null) { }
+
+        /// <summary>
+        /// Initializes the scheduler broker with a job finder.
+        /// </summary>
         private SchedulerBroker(JobFinder jobFinder)
         {
-            scheduler = new GenioScheduler(jobFinder);
+            scheduler = jobFinder != null ? new GenioScheduler(jobFinder) : null;
             lastCheck = new Dictionary<string, DateTime>();
-            process = new List<Process>();
+            processes = new List<Process>();
         }
 
+        /// <summary>
+        /// Retrieves the singleton instance of the broker.
+        /// </summary>
+        public static SchedulerBroker GetBroker()
+        {
+            lock (typeof(SchedulerBroker))
+            {
+                if (instance == null)
+                {
+                    instance = new SchedulerBroker(new ReflectionJobFinder());
+                }
+                return instance;
+            }
+        }
+
+        /// <summary>
+        /// Configures the broker with a specific job finder.
+        /// </summary>
         public static void SetupBroker(JobFinder jobFinder)
         {
             instance = new SchedulerBroker(jobFinder);
         }
 
         /// <summary>
-        /// 
+        /// Finds and returns the next executable job for a given user.
+        /// Returns null if no work is available.
         /// </summary>
-        private List<Process> process = new List<Process>(); //Beware, not all fields have data, check ObtainProcess()
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        private Dictionary<string, List<Process>> allProcess = new Dictionary<string, List<Process>>();
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        private Dictionary<string, DateTime> lastCheck;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private Object lockProcess = new Object();
-
-        private GenioScheduler scheduler;
-
-        /// <summary>
-        /// Finds the next process that can be executed and returns the corresponding job.
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns>A job to be executed or null if no work can be executed</returns>
         public IGenioWork GetWork(User user)
         {
             PersistentSupport sp = null;
+
             try
             {
                 sp = PersistentSupport.getPersistentSupport(user.Year);
                 sp.openTransaction();
 
-                //If the scheduler is not working, no one gets new work.
-                //CSGenioAglob glob = GlobalFunctions.SearchListUnique<CSGenioAglob>(sp, null, user, false);                
-                //CSGenioAglob glob = null;
-
                 lock (lockProcess)
                 {
-                    process = GetProcess(sp, user);
-                                        
-                    //if (glob.ValDesbloqu == 1)
+                    processes = GetProcess(sp, user);
                     KillUnresponsive(user);
 
-                    if (CanWork() == false)
-                    {
-                        //If there is no work to be done, return null
+                    if (!CanWork())
                         return null;
-                    }
 
-                    GenioWork mostUrgent = scheduler.GetWork(process, sp, user);
-                    if (mostUrgent != null)
-                    {
-                        //Se conseguirmos marcar o processo retornamos
-                        GenioProcessManager manager = GenioProcessManager.PersistProcessManager(user);
-                        if (manager.AllocateProcess(mostUrgent.Process))
-                        {
-                            return mostUrgent;
-                        }
-                        else
-                        {
-                            //Someone changed the state of the process being allocated.  We will simply return null;
-                        }
-                    }
-                    sp.closeTransaction();
-                    return null;
+                    GenioWork mostUrgent = scheduler.GetWork(processes, sp, user);
+                    if (mostUrgent == null)
+                        return null;
+
+                    var manager = GenioProcessManager.PersistProcessManager(user);
+                    return manager.AllocateProcess(mostUrgent.Process) ? mostUrgent : null;
                 }
-
             }
-            catch (InvalidProcessException ex)
+            catch (Exception ex) when (ex is InvalidProcessException || ex is BusinessException)
             {
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                sp.rollbackTransaction();
-                //Se houver problemas damos exceção
+                sp?.rollbackTransaction();
                 string message = Translations.Get("MSG_ERROR_OBTAIN_NEXT_PROCESS", user.Language);
                 throw new BusinessException(message, "Scheduler.GetWork", ex.Message);
             }
             finally
             {
-                sp.closeTransaction();
+                sp?.closeTransaction();
             }
         }
 
+        /// <summary>
+        /// Terminates a process and removes it from active tracking.
+        /// </summary>
+        public void TerminatedProcess(Process processo)
+        {
+            lock (lockProcess)
+            {
+                processes.RemoveAll(x => x.ValCodascpr == processo.ValCodascpr);
+            }
+        }
+
+        /// <summary>
+        /// Identifies and aborts unresponsive processes.
+        /// </summary>
         private void KillUnresponsive(User user)
         {
-            //var unit = MonitorUtils.GetTimeUnit(glob.ValDesblqun);
             var unit = MonitorUtils.GetTimeUnit("S");
             var manager = GenioProcessManager.PersistProcessManager(user);
-                       
-            //double val = glob.ValDesblqpr;
-            double val = 120;
-            if (Configuration.ExistsProperty("inactivitytime"))
-                val = Convert.ToDouble(Configuration.GetProperty("inactivitytime"));
+            double timeout = Convert.ToDouble(Configuration.GetProperty("inactivitytime", "120"));
 
-            foreach (var proc in process.Where(NotResponding))
+            foreach (var proc in processes.Where(NotResponding))
             {
-                var passedTime = DateTime.Now - proc.ValLastupdt;
-                bool overtime = MonitorUtils.CompareTimeDiff(passedTime, val, unit);
+                var elapsedTime = DateTime.Now - proc.ValLastupdt;
+                if (!MonitorUtils.CompareTimeDiff(elapsedTime, timeout, unit)) continue;
 
-                if (overtime)
-                {
-                    string msg = Translations.Get("MSG_ABORT_PROCESS_AUTO", user.Language);
-                    int t = (int)MonitorUtils.GetUnitTimeSpan(unit, passedTime);
-                    msg = string.Format(msg, t, MonitorUtils.GetTimeUnitAsString(unit));
-                    //proc.ValUnblock = 1;
-                    manager.AbortProcess(proc, msg);
-                    manager.NotifyProcess(proc);
-                }
+                string msg = string.Format(
+                    Translations.Get("MSG_ABORT_PROCESS_AUTO", user.Language),
+                    (int)MonitorUtils.GetUnitTimeSpan(unit, elapsedTime),
+                    MonitorUtils.GetTimeUnitAsString(unit));
+
+                manager.AbortProcess(proc, msg);
+                manager.NotifyProcess(proc);
             }
         }
 
-
-        //Checks if the scheduler is turned on.
-        private bool Shutdown()
-        {
-            string sched = Environment.GetEnvironmentVariable("Schedulerswith");
-            if (sched == null)
-                return false;
-
-            return sched.Equals("off");
-            //return glob.ValSchedoff == 1;
-        }
-
         /// <summary>
-        /// Validate if it is possible to continue work
+        /// Determines if additional processes can be executed based on concurrency rules.
         /// </summary>
-        /// <param name="glob"></param>
-        /// <returns></returns>
-        /// private bool CanWork(CSGenioAglob glob)
         private bool CanWork()
         {
-            //string concurrencyType = Environment.GetEnvironmentVariable("concurrencytype");
-            string concurrencyType = null;
+            string concurrencyType = Configuration.ExistsProperty("concurrencytype")
+                ? Configuration.GetProperty("concurrencytype")
+                : null;
 
-            if (Configuration.ExistsProperty("concurrencytype"))
-                concurrencyType = Configuration.GetProperty("concurrencytype");
-            
-            if (concurrencyType != null)
+            switch (concurrencyType)
             {
-                if(concurrencyType == "L")
-                {
-                    int convertedMaxProc = 1;
-                    //string maxprocess = Environment.GetEnvironmentVariable("maxprocess");
-                    if (Configuration.ExistsProperty("maxprocess"))
-                        convertedMaxProc = Conversion.string2Int(Configuration.GetProperty("maxprocess"));
-
-                    int numProcessos = process.Count(IsExecuting);
-                    if (numProcessos >= convertedMaxProc)
-                        return false;
-                    else
-                        return true;
-                }
-                else if (concurrencyType == "I")
-                {
+                case "L":
+                    int maxProcesses = Configuration.ExistsProperty("maxprocess")
+                        ? Conversion.string2Int(Configuration.GetProperty("maxprocess"))
+                        : 1;
+                    return processes.Count(IsExecuting) < maxProcesses;
+                case "I":
                     return true;
-                }
+                default:
+                    return !processes.Exists(IsExecuting);
             }
-            else
-            {
-                //Por defeito faz o caso de 'Apenas 1'
-                return !process.Exists(IsExecuting);
-            }
-
-            //if (glob.ValConcorre == ArrayAconcorr.E_L_2)
-            //{
-            //    int numProcessos = process.Count(EmExecucao);
-            //    if (numProcessos >= glob.ValMax_proc)
-            //        return false;
-            //    else
-            //        return true;
-            //}
-            //else if (glob.ValConcorre == ArrayAconcorr.E_I_3)
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    //Por defeito faz o caso de 'Apenas 1'
-            //    return !process.Exists(EmExecucao);
-            //}
-            return true;
         }
 
         /// <summary>
-        /// Get the list of all valid/available process for execution
+        /// Retrieves the list of available processes for execution.
         /// </summary>
-        /// <param name="sp"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
         private List<Process> GetProcess(PersistentSupport sp, User user)
         {
-            TimeSpan duration = new TimeSpan(0, 0, 0, 0, 500); // 0.5 seconds
-            if (!lastCheck.ContainsKey(user.Year))
-                lastCheck[user.Year] = DateTime.MinValue;
+            TimeSpan checkInterval = TimeSpan.FromMilliseconds(500);
 
-            if (DateTime.Now - lastCheck[user.Year] > duration)
+            if (!lastCheck.ContainsKey(user.Year) || DateTime.Now - lastCheck[user.Year] > checkInterval)
             {
-                List<Process> results = Process.searchList(sp, user,
+                var results = Process.searchList(sp, user,
                     CriteriaSet.And()
                         .Equal(Process.FldFinished, 0)
                         .Equal(Process.FldZzstate, 0)
                         .SubSet(CriteriaSet.NotAnd()
                             .Equal(Process.FldRtstatus, ArrayS_prstat.E_AC_8)
                             .Equal(Process.FldRtstatus, ArrayS_prstat.E_NR_6))
-                        //Não count com processos em fila de espera que estão em manutenção 
-                        //(os em execução têm de ser considerados to a concorrência)
-                        //.SubSet(CriteriaSet.NotAnd()
-                        //    .Equal(Process.FldStatus, ArrayS_prstat.E_FE_2)
-                            //.Exists(new SelectQuery()
-                            //    .Select(new SqlValue(1), "exists")
-                            //    .From(CSGenioAprman.AreaPRMAN)
-                            //    .Where(CriteriaSet.And()
-                            //        .Equal(CSGenioAprman.FldTipoproc, CSGenioAlogp0.FldTipoproc)
-                            //        .In(CSGenioAprman.FldModomanu, new string[] { ArrayAmanproc.E_E_2, ArrayAmanproc.E_AE_3 }))
-                            //        )
-                        //)
-                    );
+                );
 
                 lastCheck[user.Year] = DateTime.Now;
                 allProcess[user.Year] = results;
                 return results;
             }
-            else
-            {
-                //Se não passou time suficente retornamos o que está em memoria.
-                return allProcess[user.Year];
-            }
-        }
 
-        private static bool IsWaiting(Process processo)
-        {
-            return processo.ValRtstatus == ArrayS_prstat.E_FE_2;
-        }
-
-        public static bool IsExecuting(Process processo)
-        {
-            return processo.ValRtstatus == ArrayS_prstat.E_AG_3 ||
-                processo.ValRtstatus == ArrayS_prstat.E_EE_1 ||
-                processo.ValRtstatus == ArrayS_prstat.E_AC_8;
-        }
-
-        private static bool NotResponding(Process processo)
-        {
-            return processo.ValRtstatus == ArrayS_prstat.E_NR_6;
-        }
-
-        /* Esta classe é Singleton, só pode haver uma instancia! */
-        private static SchedulerBroker instance = null;
-        private SchedulerBroker()
-        {
-            lastCheck = new Dictionary<string, DateTime>();
-            process = new List<Process>();
-        }
-
-        public static SchedulerBroker GetBroker()
-        {
-            lock(typeof(SchedulerBroker))
-            {
-                if (instance == null)
-                    instance = new SchedulerBroker(new ReflectionJobFinder());
-                return instance;
-            }            
+            return allProcess[user.Year];
         }
 
         /// <summary>
-        /// Indicates that a process has terminated successfully.
+        /// Checks if a process is currently executing.
         /// </summary>
-        /// <param name="processo">The terminated process</param>
-        public void TerminatedProcess(Process processo)
-        {
-            lock (lockProcess)
-            {
-                //Finds a process in the cache and updates the state. No need to go to the DB.
-                process.RemoveAll(x => x.ValCodascpr == processo.ValCodascpr);
-            }
-        }
+        public static bool IsExecuting(Process processo) =>
+            processo.ValRtstatus == ArrayS_prstat.E_AG_3 ||
+            processo.ValRtstatus == ArrayS_prstat.E_EE_1 ||
+            processo.ValRtstatus == ArrayS_prstat.E_AC_8;
+
+        /// <summary>
+        /// Checks if a process is unresponsive.
+        /// </summary>
+        private static bool NotResponding(Process processo) =>
+            processo.ValRtstatus == ArrayS_prstat.E_NR_6;
     }
 }

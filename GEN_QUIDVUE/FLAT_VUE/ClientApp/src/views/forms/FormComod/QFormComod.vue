@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="COMOD"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.COMOD___PESS1NAME____.isVisible">
 					<q-control-wrapper

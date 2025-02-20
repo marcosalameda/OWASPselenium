@@ -19,6 +19,18 @@ export class HistoryLevel
 		_assignIn(this, {
 			uniqueIdentifier: uuidv4(),
 			previousLevel,
+			/**
+			 * Indicates if the level is active.
+			 * Default state is active.
+			 * It is used to identify the Nested Levels that should have been removed but were kept in memory for potential recovery later.
+			 */
+			isActive: true,
+			/**
+			 * Time-to-Live (TTL).
+			 * No expiration time by default.
+			 * If the Nested Level that should have been removed was only deactivated to allow recovery if needed, and it is not used for recovery within a short time, it means it is no longer necessary.
+			 */
+			expiresAt: null,
 			isNested: false,
 			upperLevels: new Map(),
 			entries: {},
@@ -40,6 +52,40 @@ export class HistoryLevel
 	get level()
 	{
 		return _isEmpty(this.previousLevel) ? 0 : this.previousLevel.level + 1
+	}
+
+	/**
+	 * Marks the level as inactive and sets a time-to-live for expiration.
+	 * @param {Number} ttl Default Time-to-Live (TTL) in milliseconds (default: 1 minute)
+	 */
+	deactivate(ttl = 1 * 60 * 1000)
+	{
+		this.isActive = false
+		this.expiresAt = Date.now() + ttl
+	}
+
+	/**
+	 * Marks the level as active and clears the expiration time.
+	 */
+	activate()
+	{
+		this.isActive = true
+		// Clear the expiration time when activated
+		this.expiresAt = null
+	}
+
+	/**
+	 * Checks if the level is still valid.
+	 * Returns true if:
+	 * - The level is active.
+	 * - The level is inactive but has an expiration time and the time has not passed yet.
+	 * Returns false if:
+	 * - The level is inactive without an expiration time.
+	 * - The level is inactive and the expiration time has passed.
+	 */
+	get isValid()
+	{
+		return this.isActive || (this.expiresAt && Date.now() <= this.expiresAt)
 	}
 
 	/**
@@ -558,11 +604,49 @@ export class NavigationContext
 			this.updateHistoryLevelData(options)
 		else
 		{
-			const historyLevel = new HistoryLevel(previousLevel || this.currentLevel, options)
-			if (!_isEmpty(historyLevel.previousLevel))
-				historyLevel.previousLevel.upperLevels.set(historyLevel.uniqueIdentifier, historyLevel)
+			/*
+				When navigating to the previous level, if the form contained Nested Forms and we are opening it, 
+				we will attempt to recover it from upperLevels.
+			*/
+			let nestedLevelRestore = null;
+			if (previousLevel?.upperLevels) {
+				for (const [key, upperLevel] of previousLevel.upperLevels.entries()) {
+					/*
+						Clean up deactivated nested levels, as they were not used to recover the history level. 
+						If we navigate to the next normal level and the deactivated level was not recovered, it means it is no longer needed.
+					*/
+					if (!upperLevel.isValid) {
+						// Destroy the level
+						upperLevel.destroy()
+						// Remove it from the Map
+						previousLevel.upperLevels.delete(key)
+					}
+					else if (
+						upperLevel.isNested === true &&
+						upperLevel.checkLocation(options) &&
+						upperLevel.params?.id === options?.params?.id &&
+						upperLevel.previousLevel === previousLevel
+					) {
+						// Assign the nested level to restore if it matches the conditions
+						nestedLevelRestore = upperLevel
+					}
+				}
+			}
 
-			this.currentLevel = historyLevel
+			if(nestedLevelRestore instanceof HistoryLevel)
+			{
+				nestedLevelRestore.activate()
+				this.currentLevel = nestedLevelRestore
+				this.updateHistoryLevelData(options)
+			}
+			else
+			{
+				const historyLevel = new HistoryLevel(previousLevel || this.currentLevel, options)
+				if (!_isEmpty(historyLevel.previousLevel))
+					historyLevel.previousLevel.upperLevels.set(historyLevel.uniqueIdentifier, historyLevel)
+	
+				this.currentLevel = historyLevel
+			}
 		}
 	}
 
@@ -663,7 +747,19 @@ export class NavigationContext
 		{
 			if (this.checkLocation({ location, params }))
 				break
-			this.removeNavigationLevel()
+
+			/*
+				The levels of Nested forms will be ignores to allow recovery later if needed.
+				It still needs to be analyzed how to deactivate other Nested Levels that may no longer be required.
+				For example, a form with multiple nested forms, and navigation moves forward from one of them. Currently, we only deactivate one and not all of them at once.
+			*/
+			if (this.currentLevel?.isNested)
+			{
+				this.currentLevel.deactivate();
+				this.currentLevel = this.currentLevel.previousLevel
+			} 
+			else
+				this.removeNavigationLevel();
 		}
 	}
 

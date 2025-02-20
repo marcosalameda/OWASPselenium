@@ -22,16 +22,16 @@
 			{{ props.row.ValTo }}{{ props.row.ValTomanual }}
 		</template>
 		<template #ValAtivo="props">
-			<span v-if="props.row.ValAtivo" class='glyphicons glyphicons-check' />
-			<span v-else class='glyphicons glyphicons-unchecked' />
+			<q-icon v-if="props.row.ValAtivo" icon="check" />
+			<q-icon v-else icon="close" />
 		</template>
 		<template #ValEmail="props">
-			<span v-if="props.row.ValEmail" class='glyphicons glyphicons-check' />
-			<span v-else class='glyphicons glyphicons-unchecked' />
+			<q-icon v-if="props.row.ValEmail" icon="check" />
+			<q-icon v-else icon="close" />
 		</template>
 		<template #ValGravabd="props">
-			<span v-if="props.row.ValGravabd" class='glyphicons glyphicons-check' />
-			<span v-else class='glyphicons glyphicons-unchecked' />
+			<q-icon v-if="props.row.ValGravabd" icon="check" />
+			<q-icon v-else icon="close" />
 		</template>
 		<template #table-footer>
 			<tr>
@@ -39,7 +39,7 @@
 					<q-button
 					:label="Resources.INSERIR43365"
 					@click="ManageMessage(1)">
-					<q-icon icon="plus-sign" />
+					<q-icon icon="add" />
 					</q-button>
 				</td>
 			</tr>

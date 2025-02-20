@@ -3,6 +3,9 @@
 		<q-card
 			width="block">
 			<q-row-container>
+				<data-system-badge
+					:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+
 				<qtable
 					:rows="tQueues.rows"
 					:columns="tQueues.columns"
@@ -14,7 +17,7 @@
 							borderless
 							:title="Resources.EXPORTAR35632"
 							@click="exportQueue(props.row)">
-							<q-icon icon="share" />
+							<q-icon icon="export" />
 						</q-button>
 					</template>
 				</qtable>

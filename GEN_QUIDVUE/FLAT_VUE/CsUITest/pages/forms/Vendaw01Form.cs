@@ -21,12 +21,12 @@ public class Vendaw01Form : Form
 	/// <summary>
 	/// Identification of business opportunity
 	/// </summary>
-	public BaseInputControl SaleIdentifi => new BaseInputControl(driver, ContainerLocator, "#VENDAW01SALE_IDENTIFI");
+	public BaseInputControl SaleIdentifi => new BaseInputControl(driver, ContainerLocator, "container-VENDAW01SALE_IDENTIFI", "#VENDAW01SALE_IDENTIFI");
 
 	/// <summary>
 	/// Potential buyers
 	/// </summary>
-	public BaseInputControl SalePotcompr => new BaseInputControl(driver, ContainerLocator, "#VENDAW01SALE_POTCOMPR");
+	public BaseInputControl SalePotcompr => new BaseInputControl(driver, ContainerLocator, "container-VENDAW01SALE_POTCOMPR", "#VENDAW01SALE_POTCOMPR");
 
 	/// <summary>
 	/// Prospecting carried out

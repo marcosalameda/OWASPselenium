@@ -27,17 +27,17 @@ public class ArtigextForm : Form
 	/// <summary>
 	/// Item
 	/// </summary>
-	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "#ARTIGEXTITEM_ITEMDES_");
+	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "container-ARTIGEXTITEM_ITEMDES_", "#ARTIGEXTITEM_ITEMDES_");
 
 	/// <summary>
 	/// Code
 	/// </summary>
-	public BaseInputControl ItemItemcod => new BaseInputControl(driver, ContainerLocator, "#ARTIGEXTITEM_ITEMCOD_");
+	public BaseInputControl ItemItemcod => new BaseInputControl(driver, ContainerLocator, "container-ARTIGEXTITEM_ITEMCOD_", "#ARTIGEXTITEM_ITEMCOD_");
 
 	/// <summary>
 	/// Image
 	/// </summary>
-	public BaseInputControl ItemImage => new BaseInputControl(driver, ContainerLocator, "#ARTIGEXTITEM_IMAGE___");
+	public BaseInputControl ItemImage => new BaseInputControl(driver, ContainerLocator, "container-ARTIGEXTITEM_IMAGE___", "#ARTIGEXTITEM_IMAGE___");
 
 	public ArtigextForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "ARTIGEXT", containerLocator: containerLocator) { }

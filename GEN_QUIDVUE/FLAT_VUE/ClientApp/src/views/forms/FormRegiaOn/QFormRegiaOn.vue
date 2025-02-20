@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="REGIA_ON"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.REGIA_ONCNTRYCOUNTRY_.isVisible || controls.REGIA_ONREGIOREGIAO__.isVisible || controls.REGIA_ONPAIS1COUNTRY_.isVisible || controls.REGIA_ONPSEUDIMOVEISL.isVisible">
 					<q-control-wrapper

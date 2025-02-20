@@ -1,5 +1,4 @@
 ﻿import { mapState } from 'pinia'
-import cloneDeep from 'lodash-es/cloneDeep'
 import _assignIn from 'lodash-es/assignIn'
 import _find from 'lodash-es/find'
 import _foreach from 'lodash-es/forEach'
@@ -96,7 +95,10 @@ export default {
 				const currentTableConfig = currentControl?.data?.tableConfig
 				// If current unsaved configuration exists
 				if (currentTableConfig !== undefined && currentTableConfig !== null)
+				{
 					Reflect.set(actionParams, 'tableConfiguration', currentTableConfig)
+					listControl.confirmChanges = currentControl.data.confirmChanges
+				}
 				// END: If returning from a form
 				else if (actionParams.tableConfiguration === undefined ||
 					actionParams.tableConfiguration === null ||
@@ -219,9 +221,9 @@ export default {
 		 * @param filter {Object}
 		 * @param index {number}
 		 */
-		editAdvancedFilter(listConf, filter, index)
+		editAdvancedFilters(listConf, filters)
 		{
-			listConf.advancedFilters[index] = filter
+			listConf.advancedFilters = filters
 
 			// Reload table
 			return this.onTableListChangeQuery(listConf)
@@ -242,44 +244,12 @@ export default {
 		},
 
 		/**
-		 * Set multiple advanced filter states
-		 * @param {object} listConf The list configuration
-		 * @param {Array} selectedFilterIdxs : index
-		 * @param {boolean} active : active state
-		 */
-		setAdvancedFilterStates(listConf, selectedFilterIdxs, active)
-		{
-			var selectedFilterIdx = -1
-			for (let idx in selectedFilterIdxs)
-			{
-				selectedFilterIdx = selectedFilterIdxs[idx]
-				listConf.advancedFilters[selectedFilterIdx].active = active
-			}
-
-			// Reload table
-			return this.onTableListChangeQuery(listConf)
-		},
-
-		/**
 		 * Remove all advanced filters
 		 * @param {object} listConf The list configuration
 		 */
 		removeAllAdvancedFilters(listConf)
 		{
 			listConf.advancedFilters.splice(0)
-
-			// Reload table
-			return this.onTableListChangeQuery(listConf)
-		},
-
-		/**
-		 * Set all advanced filter states to inactive
-		 * @param {object} listConf The list configuration
-		 */
-		deactivateAllAdvancedFilters(listConf)
-		{
-			for (let idx in listConf.advancedFilters)
-				listConf.advancedFilters[idx].active = false
 
 			// Reload table
 			return this.onTableListChangeQuery(listConf)
@@ -718,7 +688,8 @@ export default {
 		 */
 		onTableListApplyColumnConfig(listConf, eObj)
 		{
-			var columnsOrdered = []
+			var tableConfiguration = listFunctions.getTableConfiguration(listConf)
+			var columnCfgsOrdered = []
 			var columnCfg = {}
 
 			// Column order and visibility
@@ -729,27 +700,29 @@ export default {
 				{
 					columnCfg = eObj.columnOrder[idxCfg]
 
-					// Find column, set properties and add to ordered columns array
-					let idx = listConf.columns.findIndex((x) => x.name === columnCfg.Fields.formField)
-					if (idx > -1)
+					// Find column configuration data, set properties and add to ordered column configuration data array
+					let currentColumn = listConf.columns.find((x) => x.name === columnCfg.Fields.formField)
+					if (currentColumn)
 					{
-						let currentColumn = cloneDeep(listConf.columns[idx])
-						currentColumn.formField = columnCfg.Fields.formField
-						currentColumn.position = columnCfg.Fields.order
-						currentColumn.visibility = columnCfg.Fields.visibility
-
-						columnsOrdered.push(currentColumn)
+						columnCfgsOrdered.push({
+							name: currentColumn.name,
+							order: columnCfg.Fields.order,
+							visibility: columnCfg.Fields.visibility
+						})
 					}
 				}
 
-				// Set columns to columns configured by user
-				listConf.columnsCustom = columnsOrdered
+				// Set column configuration data to new data configured by user
+				tableConfiguration.columnConfiguration = columnCfgsOrdered
 				listConf.config.hasCustomColumns = true
 			}
 
 			// Default search column
 			if (eObj.defaultSearchColumn !== undefined && eObj.defaultSearchColumn !== null)
 				listConf.config.defaultSearchColumnName = eObj.defaultSearchColumn
+
+			// Reload table using new configuration
+			return this.fetchListData(listConf, { tableConfiguration })
 		},
 
 		/**
@@ -1302,7 +1275,8 @@ export default {
 						id: listConf.id,
 						data: {
 							rowKey: row?.rowKey,
-							tableConfig: tableConfig
+							tableConfig: tableConfig,
+							confirmChanges: listConf.confirmChanges
 						}
 					}
 				})
@@ -1550,18 +1524,22 @@ export default {
 			let isForm = typeof this.formInfo === 'object' && typeof this.isEditable === 'boolean'
 
 			let formModes = ''
-			if (listConf.config.permissions.canView && genericFunctions.btnHasPermission(row?.btnPermission, qEnums.formModes.show))
-				formModes += 'v'
-			if (!isForm || this.isEditable)
-			{
-				if (listConf.config.permissions.canEdit && genericFunctions.btnHasPermission(row?.btnPermission, qEnums.formModes.edit))
-					formModes += 'e'
-				if (listConf.config.permissions.canDuplicate && genericFunctions.btnHasPermission(row?.btnPermission, qEnums.formModes.duplicate))
-					formModes += 'd'
-				if (listConf.config.permissions.canDelete && genericFunctions.btnHasPermission(row?.btnPermission, qEnums.formModes.delete))
-					formModes += 'a'
-				if (listConf.config.permissions.canInsert && genericFunctions.btnHasPermission(row?.btnPermission, qEnums.formModes.new))
-					formModes += 'i'
+			if (actionCfg.params.restrictedModes) // Until access modes change from DBs to each Form
+				formModes = genericFunctions.getDefaultFormModesForMode(actionCfg.params.mode)
+			else {
+				if (listConf.config.permissions.canView && genericFunctions.btnHasPermission(row?.btnPermission, qEnums.formModes.show))
+					formModes += 'v'
+				if (!isForm || this.isEditable)
+				{
+					if (listConf.config.permissions.canEdit && genericFunctions.btnHasPermission(row?.btnPermission, qEnums.formModes.edit))
+						formModes += 'e'
+					if (listConf.config.permissions.canDuplicate && genericFunctions.btnHasPermission(row?.btnPermission, qEnums.formModes.duplicate))
+						formModes += 'd'
+					if (listConf.config.permissions.canDelete && genericFunctions.btnHasPermission(row?.btnPermission, qEnums.formModes.delete))
+						formModes += 'a'
+					if (listConf.config.permissions.canInsert && genericFunctions.btnHasPermission(row?.btnPermission, qEnums.formModes.new))
+						formModes += 'i'
+				}
 			}
 
 			let formName = actionCfg.params.formName,

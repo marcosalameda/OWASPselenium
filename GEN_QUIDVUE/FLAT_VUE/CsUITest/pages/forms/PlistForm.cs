@@ -16,7 +16,7 @@ public class PlistForm : Form
 	/// <summary>
 	/// Article
 	/// </summary>
-	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "#PLIST___ITEM_ITEMDES_");
+	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "container-PLIST___ITEM_ITEMDES_", "#PLIST___ITEM_ITEMDES_");
 
 	/// <summary>
 	/// Property List

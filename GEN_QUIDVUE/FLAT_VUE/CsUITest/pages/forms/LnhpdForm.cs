@@ -16,7 +16,7 @@ public class LnhpdForm : Form
 	/// <summary>
 	/// Line
 	/// </summary>
-	public BaseInputControl LnhpdLine => new BaseInputControl(driver, ContainerLocator, "#LNHPD___LNHPDLINE____");
+	public BaseInputControl LnhpdLine => new BaseInputControl(driver, ContainerLocator, "container-LNHPD___LNHPDLINE____", "#LNHPD___LNHPDLINE____");
 
 	/// <summary>
 	/// Type of equipment
@@ -32,12 +32,12 @@ public class LnhpdForm : Form
 	/// <summary>
 	/// Quantity
 	/// </summary>
-	public BaseInputControl LnhpdQuantida => new BaseInputControl(driver, ContainerLocator, "#LNHPD___LNHPDQUANTIDA");
+	public BaseInputControl LnhpdQuantida => new BaseInputControl(driver, ContainerLocator, "container-LNHPD___LNHPDQUANTIDA", "#LNHPD___LNHPDQUANTIDA");
 
 	/// <summary>
 	/// Amount
 	/// </summary>
-	public BaseInputControl LnhpdQuantdec => new BaseInputControl(driver, ContainerLocator, "#LNHPD___LNHPDQUANTDEC");
+	public BaseInputControl LnhpdQuantdec => new BaseInputControl(driver, ContainerLocator, "container-LNHPD___LNHPDQUANTDEC", "#LNHPD___LNHPDQUANTDEC");
 
 	/// <summary>
 	/// Breakdown:

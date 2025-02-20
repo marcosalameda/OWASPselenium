@@ -22,7 +22,7 @@ public class LdentForm : PopupForm
 	/// <summary>
 	/// Line
 	/// </summary>
-	public BaseInputControl LdentLine => new BaseInputControl(driver, ContainerLocator, "#LDENT___LDENTLINE____");
+	public BaseInputControl LdentLine => new BaseInputControl(driver, ContainerLocator, "container-LDENT___LDENTLINE____", "#LDENT___LDENTLINE____");
 
 	/// <summary>
 	/// Items in use
@@ -38,7 +38,7 @@ public class LdentForm : PopupForm
 	/// <summary>
 	/// Input Quantity
 	/// </summary>
-	public BaseInputControl LdentQtdentra => new BaseInputControl(driver, ContainerLocator, "#LDENT___LDENTQTDENTRA");
+	public BaseInputControl LdentQtdentra => new BaseInputControl(driver, ContainerLocator, "container-LDENT___LDENTQTDENTRA", "#LDENT___LDENTQTDENTRA");
 
 	/// <summary>
 	/// 

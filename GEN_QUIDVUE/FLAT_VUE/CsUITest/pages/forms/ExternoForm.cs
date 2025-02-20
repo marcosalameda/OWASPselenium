@@ -26,7 +26,7 @@ public class ExternoForm : Form
 	/// <summary>
 	/// Name:
 	/// </summary>
-	public BaseInputControl PessoName => new BaseInputControl(driver, ContainerLocator, "#EXTERNO_PESSONAME____");
+	public BaseInputControl PessoName => new BaseInputControl(driver, ContainerLocator, "container-EXTERNO_PESSONAME____", "#EXTERNO_PESSONAME____");
 
 	/// <summary>
 	/// Gender
@@ -46,12 +46,12 @@ public class ExternoForm : Form
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl PessoTelephon => new BaseInputControl(driver, ContainerLocator, "#EXTERNO_PESSOTELEPHON");
+	public BaseInputControl PessoTelephon => new BaseInputControl(driver, ContainerLocator, "container-EXTERNO_PESSOTELEPHON", "#EXTERNO_PESSOTELEPHON");
 
 	/// <summary>
 	/// Email:
 	/// </summary>
-	public BaseInputControl PessoEmail => new BaseInputControl(driver, ContainerLocator, "#EXTERNO_PESSOEMAIL___");
+	public BaseInputControl PessoEmail => new BaseInputControl(driver, ContainerLocator, "container-EXTERNO_PESSOEMAIL___", "#EXTERNO_PESSOEMAIL___");
 
 	/// <summary>
 	/// PHOTO
@@ -61,7 +61,7 @@ public class ExternoForm : Form
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "#EXTERNO_PESSOPHOTOGRA");
+	public BaseInputControl PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "container-EXTERNO_PESSOPHOTOGRA", "#EXTERNO_PESSOPHOTOGRA");
 
 	/// <summary>
 	/// @required

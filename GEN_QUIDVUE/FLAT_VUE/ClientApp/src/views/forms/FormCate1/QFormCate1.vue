@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="CATE1"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.CATE1___CATE1ABBREVIA.isVisible || controls.CATE1___CATE1CATEGORY.isVisible">
 					<q-control-wrapper

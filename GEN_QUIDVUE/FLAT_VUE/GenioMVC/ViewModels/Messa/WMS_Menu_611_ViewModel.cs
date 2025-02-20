@@ -43,11 +43,23 @@ namespace GenioMVC.ViewModels.Messa
 		public string ValCodmessa { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -62,6 +74,15 @@ namespace GenioMVC.ViewModels.Messa
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL WMS LIST_LIMITS 611]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -69,20 +90,17 @@ namespace GenioMVC.ViewModels.Messa
 			var areaBase = CSGenio.business.Area.createArea("messa", user, "WMS");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet wms_menu_611Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML611");
-			wms_menu_611Conds.Equal(CSGenioAmessa.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML611");
+			conditions.Equal(CSGenioAmessa.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL WMS OVERRQ 611]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAmessa.FldCodmessa, CSGenioAmessa.FldZzstate, CSGenioAmessa.FldIdnotif, CSGenioAmessa.FldIdmsg, CSGenioAmessa.FldDesignat, CSGenioAmessa.FldEmail, CSGenioAmessa.FldMessage, CSGenioAmessa.FldMailsent, CSGenioAmessa.FldMailerr, CSGenioAmessa.FldCreatope, CSGenioAmessa.FldCreatdat, CSGenioAmessa.FldCodentit, CSGenioAentit.FldCodentit, CSGenioAentit.FldName, CSGenioAmessa.FldCodperso, CSGenioAperso.FldCodperso, CSGenioAperso.FldName, CSGenioAmessa.FldDocum_nr };
 
 			ListingMVC<CSGenioAmessa> listing = new ListingMVC<CSGenioAmessa>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(wms_menu_611Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -167,6 +185,9 @@ namespace GenioMVC.ViewModels.Messa
 
 			if (Menu == null)
 				Menu = new TablePartial<WMS_Menu_611_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -187,6 +208,8 @@ namespace GenioMVC.ViewModels.Messa
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

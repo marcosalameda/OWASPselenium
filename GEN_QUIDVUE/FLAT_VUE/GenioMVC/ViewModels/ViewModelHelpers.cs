@@ -32,6 +32,9 @@ namespace GenioMVC.ViewModels
 		[JsonIgnore]
 		public string Identifier { get; set; }
 
+		[JsonIgnore]
+		public string TableName { get; set; }
+
 		public TablePagination Pagination { get; set; }
 
 		public List<Totalizer> Totalizers { get; set; }

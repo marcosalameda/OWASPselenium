@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="DENTR"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.DENTR___CNTRYCOUNTRY_.isVisible">
 					<q-control-wrapper

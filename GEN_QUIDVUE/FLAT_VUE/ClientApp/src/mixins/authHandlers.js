@@ -36,9 +36,9 @@ export default {
 			'set2FAOptions'
 		]),
 
-		AuthRedirectButtonClick(data) {
-			window.location.href = data.Redirect;
+		authRedirectButtonClick(data)
+		{
+			window.location.href = data.Redirect
 		}
-
 	}
 }

@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.City
 		public string ValCodcity { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -60,6 +72,15 @@ namespace GenioMVC.ViewModels.City
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL TRN LIST_LIMITS T12CITY]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -67,20 +88,17 @@ namespace GenioMVC.ViewModels.City
 			var areaBase = CSGenio.business.Area.createArea("city", user, "TRN");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet trn_menu_t12cityConds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLT12CITY");
-			trn_menu_t12cityConds.Equal(CSGenioAcity.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLT12CITY");
+			conditions.Equal(CSGenioAcity.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL TRN OVERRQ T12CITY]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAcity.FldCodcity, CSGenioAcity.FldZzstate, CSGenioAcity.FldCity, CSGenioAcity.FldCodctry, CSGenioActry.FldCodctry, CSGenioActry.FldCountry };
 
 			ListingMVC<CSGenioAcity> listing = new ListingMVC<CSGenioAcity>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(trn_menu_t12cityConds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -155,6 +173,9 @@ namespace GenioMVC.ViewModels.City
 
 			if (Menu == null)
 				Menu = new TablePartial<TRN_Menu_T12CITY_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -175,6 +196,8 @@ namespace GenioMVC.ViewModels.City
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

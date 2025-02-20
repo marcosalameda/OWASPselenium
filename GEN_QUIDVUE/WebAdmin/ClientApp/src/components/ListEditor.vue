@@ -2,54 +2,40 @@
 	<div :class="[`input-${size}`, 'i-list-editor']" :id="ctrlId">
 		<div class="d-flex" v-if="label">
 			<label class="i-text__label i-text i-list-editor__label" :for="ctrlId">{{ label }}</label>
-			<span v-if="helpText" class="field-help glyphicons glyphicons-info-sign" :title="helpText"></span>
+			<q-icon
+				v-if="helpText"
+				class="field-help"
+				icon="information-outline"
+				:title="helpText" />
 		</div>
 		<div class="i-list-editor__content">
 			<ul class="i-list-editor__list">
 				<li v-for="(_, index) in localItems" :key="index" class="i-list-editor__item">
-					<input 
-						type="text"
-						:class="['i-text__field', 'i-text', 'i-list-editor__item-field']"
+					<q-text-field 
 						v-model="localItems[index]"
-						@input="updateItem(index, $event.target.value)"
-						:aria-label="`${defaultEditText} ${index + 1}`"
+						class="i-list-editor__item-field"
+						size="block"
+						:label="`${defaultEditText} ${index + 1}`"
 						:readonly="isReadOnly"
+						@update:model-value="updateItem(index, $event.target.value)"
 					/>
-					<button 
+					<q-button 
 						v-if="!isReadOnly"
-						@click="removeItem(index)" 
-						class="q-btn q-btn--secondary q-btn--borderless i-list-editor__item-remove"
-						:aria-label="`${defaultRemoveText} ${index + 1}`">
-						<slot 
-							name="remove-icon"
-							:text="defaultRemoveText">
-							<span 
-								role="img" 
-								class="q-btn__content"
-								:aria-label="`${defaultRemoveText} ${index + 1}`">
-								<i class="q-icon q-icon__font glyphicons glyphicons-bin"></i>
-							</span>
-						</slot>
-					</button>
+						b-style="tertiary"
+						class="i-list-editor__item-remove"
+						:title="`${defaultRemoveText} ${index + 1}`"
+						@click="removeItem(index)">
+						<q-icon icon="bin" />
+					</q-button>
 				</li>
 			</ul>
-			<button 
+			<q-button 
 				v-if="!isReadOnly"
-				@click="addItem" 
-				class="q-btn q-btn--primary i-list-editor__add-button"
-				:aria-label="defaultAddText">
-				<slot 
-					name="add-icon"
-					:text="defaultAddText">
-					<span 
-						role="img" 
-						class="q-btn__content"
-						:aria-label="`${defaultRemoveText} ${index + 1}`">
-						<i class="q-icon q-icon__font glyphicons glyphicons-plus"></i>
-						{{ defaultAddText }}
-					</span>
-				</slot>
-			</button>
+				class="i-list-editor__add-button"
+				:label="defaultAddText"
+				@click="addItem">
+					<q-icon icon="add" />
+			</q-button>
 		</div>
 	</div>
 </template>

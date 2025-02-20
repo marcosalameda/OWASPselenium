@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Dilin
 		public string ValCoddilin { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Dilin
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS DILIN_DISPADISPANR]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Dilin
 
 			if (Menu == null)
 				Menu = new TablePartial<Dilin_DispaValDispanr_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -147,6 +171,8 @@ namespace GenioMVC.ViewModels.Dilin
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -300,7 +326,7 @@ namespace GenioMVC.ViewModels.Dilin
 				dilin___dispadispanr_Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ DILIN_DISPANR]/
+// USE /[MANUAL GQT OVERRQ DILIN_DISPADISPANR]/
 
 				if (isToExport)
 				{
@@ -309,14 +335,14 @@ namespace GenioMVC.ViewModels.Dilin
 
 					Qlisting = Models.ModelBase.Where<CSGenioAdispa>(m_userContext, false, dilin___dispadispanr_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DILIN___DISPADISPANR_", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP DILIN_DISPANR]/
+// USE /[MANUAL GQT OVERRQLSTEXP DILIN_DISPADISPANR]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST DILIN_DISPANR]/
+// USE /[MANUAL GQT OVERRQLIST DILIN_DISPADISPANR]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_dispa"];
 					CriteriaSet m_PagingPosEPHs = null;
@@ -474,7 +500,7 @@ namespace GenioMVC.ViewModels.Dilin
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Dispa", "Dispa.ValCoddispa", "Dispa.ValZzstate", "Dispa.ValDispanr", "Dispa.ValCodentit", "Dispa.ValCodperso", "BtnPermission"
+			"Dispa", "Dispa.ValCoddispa", "Dispa.ValZzstate", "Dispa.ValDispanr", "Dispa.ValCoddisst", "Dispa.ValCodentit", "Dispa.ValCodperso", "BtnPermission"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns = 

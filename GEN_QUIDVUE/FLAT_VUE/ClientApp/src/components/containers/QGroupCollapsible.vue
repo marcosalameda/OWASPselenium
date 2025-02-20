@@ -50,7 +50,7 @@
 	import { defineAsyncComponent } from 'vue'
 
 	export default {
-		name: 'QCollapsibleContainer',
+		name: 'QGroupCollapsible',
 
 		emits: ['state-changed'],
 
@@ -68,7 +68,7 @@
 			 * Unique identifier for the control.
 			 */
 			id: String,
-			
+
 			/**
 			 * Text strings which might be used to override default texts within the component.
 			 */
@@ -115,8 +115,9 @@
 				controlId: this.id || `groupbox-${this._.uid}`,
 				contentHeight: 0,
 				animating: false,
-				// This property changes to true right away when opening the container and changes to false after closing the container
-				contentsVisible: this.isOpen
+				// This property changes to true right away when opening the container and changes to false after closing the container.
+				contentsVisible: this.isOpen,
+				resizeObserver: null
 			}
 		},
 
@@ -129,28 +130,33 @@
 			classes()
 			{
 				const baseClass = 'q-group-collapsible'
-				const _classes = [baseClass, this.$attrs.class]
+				const classes = [baseClass, this.$attrs.class]
 
-				// When opened, add class to show overflow which prevents height from changing back and forth
+				// When opened, add class to show overflow which prevents height from changing back and forth.
 				if (this.isOpen && !this.animating)
-					_classes.push(`${baseClass}--open`)
+					classes.push(`${baseClass}--open`)
+				else if (this.animating)
+					classes.push(`${baseClass}--toggling`)
 
-				return _classes
+				return classes
 			},
 
 			contentStyle()
 			{
 				return {
-					maxHeight: this.isOpen ? this.contentHeight + 'px' : 0,
-					// Must use 'visibility' property so the contents are still their full height even when hidden
+					maxHeight: this.isOpen ? `${this.contentHeight}px` : 0,
+					// Must use 'visibility' property so the contents are still their full height even when hidden.
 					visibility: this.contentsVisible ? null : 'hidden'
 				}
 			},
 
-			labelId() {
+			labelId()
+			{
 				return `label_${this.controlId}`
 			},
-			buttonId() {
+
+			buttonId()
+			{
 				return this.controlId
 			}
 		},
@@ -159,12 +165,15 @@
 		{
 			if (typeof ResizeObserver !== 'undefined')
 			{
-				this.$nextTick().then(() => {
-					this.resizeObserver = new ResizeObserver(() => {
-						this.contentHeight = this.$refs.content?.scrollHeight
-					})
+				this.resizeObserver = new ResizeObserver(() => {
+					this.contentHeight = this.$refs.content?.scrollHeight
 				})
 			}
+
+			this.$nextTick().then(() => {
+				if (this.isOpen)
+					this.collapseStateHandler()
+			})
 		},
 
 		beforeUnmount()
@@ -205,7 +214,7 @@
 			{
 				this.animating = false
 
-				// If closing the container, set contents visibility to hidden
+				// If closing the container, set contents visibility to hidden.
 				if (!this.isOpen)
 					this.contentsVisible = false
 
@@ -214,12 +223,9 @@
 		},
 
 		watch: {
-			isOpen: {
-				handler()
-				{
-					this.collapseStateHandler()
-				},
-				immediate: true
+			isOpen()
+			{
+				this.collapseStateHandler()
 			}
 		}
 	}

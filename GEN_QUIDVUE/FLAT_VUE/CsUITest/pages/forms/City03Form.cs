@@ -10,7 +10,7 @@ public class City03Form : Form
 	/// <summary>
 	/// Cidade
 	/// </summary>
-	public BaseInputControl CityCity => new BaseInputControl(driver, ContainerLocator, "#CITY03__CITY_CITY____");
+	public BaseInputControl CityCity => new BaseInputControl(driver, ContainerLocator, "container-CITY03__CITY_CITY____", "#CITY03__CITY_CITY____");
 
 	/// <summary>
 	/// Country

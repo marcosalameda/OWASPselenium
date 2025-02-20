@@ -1151,7 +1151,7 @@ qapi.prototype.isGuid = function (key)
 }
 /*********** Support data structures ***********/
 
-var FLAT_VUE_THEME_VARIABLES = {
+const FLAT_VUE_THEME_VARIABLES = {
 	'$footer-bg': "transparent",
 	'$menu-sidebar-width': "16rem",
 	'$menu-behaviour': "partial_collapse",
@@ -1199,6 +1199,8 @@ var FLAT_VUE_THEME_VARIABLES = {
 	'$tab-style': "line",
 	'$group-border-top': "none",
 	'$group-border-bottom': "none",
+	'$input-bg': "transparent",
+	'$input-bg-readonly': "rgb($neutral-light-rgb / 0.25)",
 	'$hover-item': "rgb($primary-light-rgb / 0.5)",
 	'$header-bg': "$background",
 	'$header-color': "$on-background",
@@ -1207,7 +1209,7 @@ var FLAT_VUE_THEME_VARIABLES = {
 	'$menu-multi-level-border': "false"
 };
 
-var HORIZONTAL_VUE_THEME_VARIABLES = {
+const HORIZONTAL_VUE_THEME_VARIABLES = {
 	'$footer-bg': "transparent",
 	'$menu-sidebar-width': "16rem",
 	'$menu-behaviour': "partial_collapse",
@@ -1255,6 +1257,8 @@ var HORIZONTAL_VUE_THEME_VARIABLES = {
 	'$tab-style': "line",
 	'$group-border-top': "none",
 	'$group-border-bottom': "none",
+	'$input-bg': "transparent",
+	'$input-bg-readonly': "rgb($neutral-light-rgb / 0.25)",
 	'$hover-item': "rgb($primary-light-rgb / 0.5)",
 	'$header-bg': "$background",
 	'$header-color': "$on-background",

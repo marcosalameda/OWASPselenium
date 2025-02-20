@@ -10,7 +10,7 @@ public class EqudocumForm : Form
 	/// <summary>
 	/// Designation
 	/// </summary>
-	public BaseInputControl EquipDesignat => new BaseInputControl(driver, ContainerLocator, "#EQUDOCUMEQUIPDESIGNAT");
+	public BaseInputControl EquipDesignat => new BaseInputControl(driver, ContainerLocator, "container-EQUDOCUMEQUIPDESIGNAT", "#EQUDOCUMEQUIPDESIGNAT");
 
 	/// <summary>
 	/// Add ANEXD

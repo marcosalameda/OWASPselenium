@@ -41,12 +41,24 @@ namespace GenioMVC.ViewModels.Tpequ
 		public string ValCodtpequ { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
 				conds.Equal(CSGenioAcmpki.FldCodtpequ, this.ValCodtpequ ?? Navigation.GetStrValue("tpequ"));
+
 				return conds;
 			}
 		}
@@ -64,6 +76,15 @@ namespace GenioMVC.ViewModels.Tpequ
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS TPEQU_PSEUDCOMPONEN]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -138,6 +159,9 @@ namespace GenioMVC.ViewModels.Tpequ
 
 			if (Menu == null)
 				Menu = new TablePartial<Tpequ_ValComponen_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -161,6 +185,8 @@ namespace GenioMVC.ViewModels.Tpequ
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

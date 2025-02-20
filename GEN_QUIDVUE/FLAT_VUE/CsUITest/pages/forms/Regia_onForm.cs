@@ -16,7 +16,7 @@ public class Regia_onForm : Form
 	/// <summary>
 	/// Região:
 	/// </summary>
-	public BaseInputControl RegioRegiao => new BaseInputControl(driver, ContainerLocator, "#REGIA_ONREGIOREGIAO__");
+	public BaseInputControl RegioRegiao => new BaseInputControl(driver, ContainerLocator, "container-REGIA_ONREGIOREGIAO__", "#REGIA_ONREGIOREGIAO__");
 
 	/// <summary>
 	/// País pessoa

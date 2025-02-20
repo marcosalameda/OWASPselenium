@@ -27,7 +27,7 @@ public class LocatForm : Form
 	/// <summary>
 	/// Global Location Number
 	/// </summary>
-	public BaseInputControl LocatGln => new BaseInputControl(driver, ContainerLocator, "#LOCAT___LOCATGLN_____");
+	public BaseInputControl LocatGln => new BaseInputControl(driver, ContainerLocator, "container-LOCAT___LOCATGLN_____", "#LOCAT___LOCATGLN_____");
 
 	/// <summary>
 	/// Location Extension Components

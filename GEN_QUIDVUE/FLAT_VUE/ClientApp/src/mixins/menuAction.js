@@ -1,5 +1,6 @@
 ﻿import { useSystemDataStore } from '@/stores/systemData.js'
 import { useTracingDataStore } from '@/stores/tracingData.js'
+import genericFunctions from '@/mixins/genericFunctions.js'
 
 function getMenu(menuEntry)
 {
@@ -77,7 +78,7 @@ export default {
 				const lastIndex = menuEntry.ActionMVC.lastIndexOf('_'),
 					formName = (menuEntry.ActionMVC.substr(0, lastIndex) || '').toUpperCase()
 
-				this.navigateToForm(formName, menuEntry.Mode, null, { openedMenu: menuEntry.Order, clearHistory: true })
+				this.navigateToForm(formName, menuEntry.Mode, null, { modes: genericFunctions.getDefaultFormModesForMode(menuEntry.Mode), openedMenu: menuEntry.Order, clearHistory: true })
 			}
 			else if (menuEntry.Type === 'REPORT' && !menuEntry.RouteName.startsWith('menu-'))
 				// TODO: If we are only going to have SSRS, we can change the «Mode» property to have the opening type instead of the report type (SSRS / Crystal)
@@ -88,7 +89,7 @@ export default {
 				if (menuEntry.RouteName === this.$route.name)
 					return
 
-				this.navigateToRouteName(menuEntry.RouteName, menuEntry.IsForm ? { mode: menuEntry.Mode, openedMenu: menuEntry.Order, clearHistory: true } : { openedMenu: menuEntry.Order, clearHistory: true })
+				this.navigateToRouteName(menuEntry.RouteName, menuEntry.IsForm ? { mode: menuEntry.Mode, modes: genericFunctions.getDefaultFormModesForMode(menuEntry.Mode), openedMenu: menuEntry.Order, clearHistory: true } : { openedMenu: menuEntry.Order, clearHistory: true })
 			}
 		},
 

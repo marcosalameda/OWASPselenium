@@ -151,7 +151,7 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// Changes number
 	/// </summary>
-	public BaseInputControl EquipQtdmovim => new BaseInputControl(driver, ContainerLocator, "#EQUIGROUEQUIPQTDMOVIM");
+	public BaseInputControl EquipQtdmovim => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPQTDMOVIM", "#EQUIGROUEQUIPQTDMOVIM");
 
 	/// <summary>
 	/// Acquisition
@@ -227,17 +227,17 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// Sequential no.
 	/// </summary>
-	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "#EQUIGROUEQUIPSEQUENNR");
+	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPSEQUENNR", "#EQUIGROUEQUIPSEQUENNR");
 
 	/// <summary>
 	/// No. register
 	/// </summary>
-	public BaseInputControl EquipRegistnr => new BaseInputControl(driver, ContainerLocator, "#EQUIGROUEQUIPREGISTNR");
+	public BaseInputControl EquipRegistnr => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPREGISTNR", "#EQUIGROUEQUIPREGISTNR");
 
 	/// <summary>
 	/// Total value
 	/// </summary>
-	public BaseInputControl EquipValortot => new BaseInputControl(driver, ContainerLocator, "#EQUIGROUEQUIPVALORTOT");
+	public BaseInputControl EquipValortot => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPVALORTOT", "#EQUIGROUEQUIPVALORTOT");
 
 	/// <summary>
 	/// It is nest within the first zone and it has the same style
@@ -262,7 +262,7 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// First
 	/// </summary>
-	public BaseInputControl EquipFirst => new BaseInputControl(driver, ContainerLocator, "#EQUIGROUEQUIPFIRST___");
+	public BaseInputControl EquipFirst => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPFIRST___", "#EQUIGROUEQUIPFIRST___");
 
 	/// <summary>
 	/// 3. c-groupbox--minor-border-top
@@ -272,7 +272,7 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl EquipPhotogra => new BaseInputControl(driver, ContainerLocator, "#EQUIGROUEQUIPPHOTOGRA");
+	public BaseInputControl EquipPhotogra => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPPHOTOGRA", "#EQUIGROUEQUIPPHOTOGRA");
 
 	/// <summary>
 	/// It is nest within the first zone and it has the same style
@@ -282,7 +282,7 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// Designation
 	/// </summary>
-	public BaseInputControl EquipDesignat => new BaseInputControl(driver, ContainerLocator, "#EQUIGROUEQUIPDESIGNAT");
+	public BaseInputControl EquipDesignat => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPDESIGNAT", "#EQUIGROUEQUIPDESIGNAT");
 
 	public EquigrouForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "EQUIGROU", containerLocator: containerLocator) { }

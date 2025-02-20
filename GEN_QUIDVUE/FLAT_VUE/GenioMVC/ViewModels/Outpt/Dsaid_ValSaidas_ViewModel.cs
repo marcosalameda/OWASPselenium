@@ -43,12 +43,24 @@ namespace GenioMVC.ViewModels.Outpt
 		public string ValCodoutpt { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
 				conds.Equal(CSGenioAoutpu.FldCodoutpt, this.ValCodoutpt ?? Navigation.GetStrValue("outpt"));
+
 				return conds;
 			}
 		}
@@ -66,6 +78,15 @@ namespace GenioMVC.ViewModels.Outpt
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS DSAID_PSEUDSAIDAS]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -139,6 +160,9 @@ namespace GenioMVC.ViewModels.Outpt
 
 			if (Menu == null)
 				Menu = new TablePartial<Dsaid_ValSaidas_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -162,6 +186,8 @@ namespace GenioMVC.ViewModels.Outpt
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

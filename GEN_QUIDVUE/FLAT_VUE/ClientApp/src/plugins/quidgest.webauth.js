@@ -36,7 +36,7 @@ export async function createRegisterWebAuth()
 				publicKey: dataWebAuth.options
 			})
 		}
-		catch (e)
+		catch
 		{
 			let msg =
 				'Could not create credentials in browser. Probably because the username is already registered with your authenticator. Please change username or authenticator.'

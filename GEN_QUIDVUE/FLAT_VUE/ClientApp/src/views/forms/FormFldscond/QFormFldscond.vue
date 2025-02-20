@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="FLDSCOND"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.FLDSCONDFLDS_COND____.isVisible || controls.FLDSCONDPSEUDGROUP4__.isVisible">
 					<q-control-wrapper
@@ -616,6 +615,23 @@
 						isVisible: computed(() => vm.authData.isAllowed && vm.formModes.duplicate !== vm.formInfo.mode),
 						action: vm.changeToInsertMode
 					},
+					applyBtn: {
+						id: 'apply-btn',
+						icon: {
+							icon: 'apply',
+							type: 'svg'
+						},
+						type: 'form-action',
+						text: computed(() => vm.Resources[hardcodedTexts.apply]),
+						style: 'secondary',
+						classes: [],
+						showInHeader: true,
+						showInFooter: true,
+						isActive: true,
+						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
+						disabled: false,
+						action: () => vm.applyChanges(true)
+					},
 					repeatInsertBtn: {
 						id: 'repeat-insert-btn',
 						icon: {
@@ -772,6 +788,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FLDSCONDFLDS_TBLCOND_', 'FLDSCONDFLDS_FORMCOND'],
 						controlLimits: [
 						],
 					}, this),
@@ -810,6 +827,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FLDSCONDFLDS_FCLIENT1', 'FLDSCONDFLDS_FFILLWHN', 'FLDSCONDFLDS_FSERVER1'],
 						controlLimits: [
 						],
 					}, this),
@@ -894,6 +912,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FLDSCONDFLDS_FCLIENT2', 'FLDSCONDFLDS_FSERVER2'],
 						controlLimits: [
 						],
 					}, this),
@@ -1014,6 +1033,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FLDSCONDFLDS_FCLIENT3', 'FLDSCONDFLDS_FSERVER3'],
 						controlLimits: [
 						],
 					}, this),
@@ -1143,6 +1163,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FLDSCONDPSEUDSTATICTX', 'FLDSCONDPSEUDGRIDTBL_', 'FLDSCONDPSEUDLISTTBL_', 'FLDSCONDPSEUDLISTBTN_'],
 						controlLimits: [
 						],
 					}, this),

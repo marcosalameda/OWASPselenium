@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Procn
 		public string ValCodprocn { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Procn
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS CONTAC03_PROPETITLE]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Procn
 
 			if (Menu == null)
 				Menu = new TablePartial<Contac03_PropeValTitle_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Procn
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Procn
 				contac03propetitle___Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ CONTAC03_TITLE]/
+// USE /[MANUAL GQT OVERRQ CONTAC03_PROPETITLE]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Procn
 
 					Qlisting = Models.ModelBase.Where<CSGenioAprope>(m_userContext, false, contac03propetitle___Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_CONTAC03PROPETITLE___", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP CONTAC03_TITLE]/
+// USE /[MANUAL GQT OVERRQLSTEXP CONTAC03_PROPETITLE]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST CONTAC03_TITLE]/
+// USE /[MANUAL GQT OVERRQLIST CONTAC03_PROPETITLE]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_prope"];
 					CriteriaSet m_PagingPosEPHs = null;

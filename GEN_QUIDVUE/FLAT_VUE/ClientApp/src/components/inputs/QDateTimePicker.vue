@@ -33,7 +33,7 @@
 			<template #clear-icon="{ clear }">
 				<q-button
 					class="q-date-time-picker__clear"
-					:title="texts?.clearValue"
+					:title="texts.clearValue"
 					b-style="plain"
 					borderless
 					@click="clear">
@@ -46,6 +46,13 @@
 
 <script>
 	import Datepicker from '@vuepic/vue-datepicker'
+
+	import { validateTexts } from '@/mixins/genericFunctions.js'
+
+	// The texts needed by the component.
+	const DEFAULT_TEXTS = {
+		clearValue: 'Clear value'
+	}
 
 	export default {
 		name: 'QDateTimePicker',
@@ -69,10 +76,8 @@
 			 * Value of the control, could be a date, time or date with time
 			 */
 			modelValue: {
-				validator(value) {
-					return typeof value === 'string' || typeof value === 'object'
-				},
-				default: () => null
+				type: [String, Object],
+				default: null
 			},
 
 			/**
@@ -132,13 +137,14 @@
 				type: String,
 				default: ''
 			},
-			
+
 			/**
 			 * Localization and customization of textual content within the component.
 			 */
 			texts: {
 				type: Object,
-				default: () => {}
+				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
+				default: () => DEFAULT_TEXTS
 			},
 
 			/**
@@ -168,9 +174,12 @@
 
 		computed: {
 			model: {
-				get() {
-					if(typeof this.modelValue === 'string' && this.format === 'time') {
-						if(this.modelValue === '') return null
+				get()
+				{
+					if (typeof this.modelValue === 'string' && this.format === 'time')
+					{
+						if (this.modelValue === '')
+							return null
 
 						const timeObj = this.modelValue.split(':')
 						return {
@@ -180,7 +189,8 @@
 					}
 					return this.modelValue
 				},
-				set(value) {
+				set(value)
+				{
 					this.$emit('update:modelValue', value)
 				}
 			},

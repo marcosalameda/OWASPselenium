@@ -345,13 +345,21 @@
 			{
 				return this.extendedTab === 'widgets-panel'
 			},
+			
+			/**
+			 * True if the alerts tab should be visible, false otherwise.
+			 */
+			hasAlerts()
+			{
+				return this.appAlerts.length > 0
+			},
 
 			/**
 			 * True if the alerts tab should be visible, false otherwise.
 			 */
 			showAlerts()
 			{
-				return this.appAlerts.length > 0 && this.extendedTab === 'alerts-tab'
+				return this.hasAlerts && this.extendedTab === 'alerts-tab'
 			},
 
 			/**
@@ -365,7 +373,7 @@
 					!this.isChatBotAvailable &&
 					!this.showFormAnchors &&
 					!this.disableButtons &&
-					!this.showAlerts
+					!this.hasAlerts
 			},
 
 			/**

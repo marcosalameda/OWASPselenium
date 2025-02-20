@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="LNHDE"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.LNHDE___PEDIDNRPEDIDO.isVisible || controls.LNHDE___LNHPDLINE____.isVisible || controls.LNHDE___LNHDEORDEM___.isVisible || controls.LNHDE___TPEQ1TIPOEQUI.isVisible || controls.LNHDE___LNHDEQUANTIDA.isVisible || controls.LNHDE___LNHDEQUANTDEC.isVisible">
 					<q-control-wrapper

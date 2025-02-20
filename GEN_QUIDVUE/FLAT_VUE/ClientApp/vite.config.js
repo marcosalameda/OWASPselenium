@@ -224,6 +224,10 @@ export default ({ mode }) => {
 					target: 'https://localhost:7015/',
 					secure: false
 				},
+				'/telemetryapi': {
+					target: 'https://localhost:7015/',
+					secure: false
+				},
 				'/auth': {
 					target: 'https://localhost:7015/',
 					secure: false

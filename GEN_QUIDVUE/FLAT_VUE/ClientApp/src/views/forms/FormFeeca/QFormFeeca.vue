@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="FEECA"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.FEECA___FLDS_DESCRIP_.isVisible">
 					<q-control-wrapper

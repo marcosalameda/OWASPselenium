@@ -39,7 +39,7 @@ public class DentrForm : Form
 	/// <summary>
 	/// No.
 	/// </summary>
-	public BaseInputControl IndocDocumenr => new BaseInputControl(driver, ContainerLocator, "#DENTR___INDOCDOCUMENR");
+	public BaseInputControl IndocDocumenr => new BaseInputControl(driver, ContainerLocator, "container-DENTR___INDOCDOCUMENR", "#DENTR___INDOCDOCUMENR");
 
 	/// <summary>
 	/// Date

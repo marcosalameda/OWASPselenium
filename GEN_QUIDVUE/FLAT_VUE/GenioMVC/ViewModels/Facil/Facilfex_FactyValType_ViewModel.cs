@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Facil
 		public string ValCodfacil { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Facil
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS FACILFEX_FACTYTYPE]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Facil
 
 			if (Menu == null)
 				Menu = new TablePartial<Facilfex_FactyValType_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Facil
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Facil
 				facilfexfactytype____Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ FACILFEX_TYPE]/
+// USE /[MANUAL GQT OVERRQ FACILFEX_FACTYTYPE]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Facil
 
 					Qlisting = Models.ModelBase.Where<CSGenioAfacty>(m_userContext, false, facilfexfactytype____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_FACILFEXFACTYTYPE____", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP FACILFEX_TYPE]/
+// USE /[MANUAL GQT OVERRQLSTEXP FACILFEX_FACTYTYPE]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST FACILFEX_TYPE]/
+// USE /[MANUAL GQT OVERRQLIST FACILFEX_FACTYTYPE]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_facty"];
 					CriteriaSet m_PagingPosEPHs = null;

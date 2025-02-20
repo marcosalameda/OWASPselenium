@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="LEAFLETD"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.LEAFLETDEQUIPREGISTNR.isVisible || controls.LEAFLETDTPEQUTIPOEQUI.isVisible">
 					<q-control-wrapper

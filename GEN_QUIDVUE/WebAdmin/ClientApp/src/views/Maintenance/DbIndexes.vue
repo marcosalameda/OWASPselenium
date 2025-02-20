@@ -9,18 +9,24 @@
 				<span v-if="isUsageText()">
 					{{ Resources.VERIFICAR_INDICES_SQ51609 }}
 				</span>
-
-				<q-button
-					b-style="secondary"
-					:label="Resources.EXECUTAR_ATUALIZACAO61833"
-					@click="DBIndexesStart" />
+				
+				<row class="footer-btn">
+					<q-button
+						b-style="secondary"
+						:label="Resources.EXECUTAR_ATUALIZACAO61833"
+						@click="DBIndexesStart" />
+					<data-system-badge
+						:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+				</row>
 
 				<row v-if="!isEmptyObject(Model.UnusedIndexesList)">
 					<hr />
 					<row v-if="!isEmptyObject(formatDate(Model.LastUpdate))">
 						<div class="alert alert--info">
 							<div class="alert-header">
-								<span class="mdi mdi-information alert-icon" />
+								<q-icon
+									class="alert-icon"
+									icon="information" />
 								<label>
 									<b>
 										{{ Resources.ULTIMA_VERIFICACAO35305 + ':' }}
@@ -45,7 +51,9 @@
 					<row v-if="!isEmptyObject(formatDate(Model.LastUpdate))">
 						<div class="alert alert--info">
 							<div class="alert-header">
-								<span class="mdi mdi-information alert-icon" />
+								<q-icon
+									class="alert-icon"
+									icon="information" />
 								<label>
 									<b>
 										{{ Resources.ULTIMA_VERIFICACAO35305 }}

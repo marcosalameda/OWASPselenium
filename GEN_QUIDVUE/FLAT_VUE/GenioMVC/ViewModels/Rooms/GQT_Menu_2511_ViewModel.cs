@@ -43,11 +43,24 @@ namespace GenioMVC.ViewModels.Rooms
 		public string ValCodrooms { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -62,6 +75,15 @@ namespace GenioMVC.ViewModels.Rooms
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS 2511]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -69,20 +91,17 @@ namespace GenioMVC.ViewModels.Rooms
 			var areaBase = CSGenio.business.Area.createArea("rooms", user, "GQT");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet gqt_menu_2511Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML2511");
-			gqt_menu_2511Conds.Equal(CSGenioArooms.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML2511");
+			conditions.Equal(CSGenioArooms.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL GQT OVERRQ 2511]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioArooms.FldCodrooms, CSGenioArooms.FldZzstate, CSGenioArooms.FldRoomnr, CSGenioArooms.FldDesignat };
 
 			ListingMVC<CSGenioArooms> listing = new ListingMVC<CSGenioArooms>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(gqt_menu_2511Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -168,6 +187,9 @@ namespace GenioMVC.ViewModels.Rooms
 
 			if (Menu == null)
 				Menu = new TablePartial<GQT_Menu_2511_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -192,6 +214,8 @@ namespace GenioMVC.ViewModels.Rooms
 
 			//DbEdit N:N Limits
 			crs.SubSets.Add(GetConditionsToNN(CSGenio.business.Area.AreaROOMS, CSGenioArooms.FldCodrooms, CSGenio.business.Area.AreaMOVIM, CSGenio.business.Area.AreaEQUIP, CSGenioAequip.FldCodequip, (string)Navigation.GetValue("equip"), "ML2511"));
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Limitations
 

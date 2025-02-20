@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PROPE19"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.PROPE19_PROPEORDER___.isVisible">
 					<q-control-wrapper
@@ -891,6 +890,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPE19_PROPEPHOTO___', 'PROPE19_PROPETITLE___', 'PROPE19_PROPEPRICE___', 'PROPE19_PROPEDESCRIPT'],
 						controlLimits: [
 						],
 					}, this),
@@ -962,6 +962,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPE19_PSEUDLOCALIZA', 'PROPE19_PSEUDDETAILS_', 'PROPE19_PSEUDAGENTINF'],
 						controlLimits: [
 						],
 					}, this),
@@ -975,7 +976,7 @@
 						container: 'PROPE19_PSEUDACC01___',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PROPE19_PSEUDLOCALIZA',
+						directChildren: ['PROPE19_CITY_CITY____', 'PROPE19_CTRY_COUNTRY_'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -989,7 +990,6 @@
 						label: computed(() => this.Resources.CIDADE42080),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPE19_PSEUDLOCALIZA',
 						container: 'PROPE19_PSEUDLOCALIZA',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -1022,7 +1022,6 @@
 						label: computed(() => this.Resources.COUNTRY64133),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPE19_PSEUDLOCALIZA',
 						container: 'PROPE19_PSEUDLOCALIZA',
 						maxLength: 50,
 						labelId: 'label_PROPE19_CTRY_COUNTRY_',
@@ -1039,7 +1038,7 @@
 						container: 'PROPE19_PSEUDACC01___',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PROPE19_PSEUDDETAILS_',
+						directChildren: ['PROPE19_PROPEBUILDTYP', 'PROPE19_PROPEGRNDSIZE', 'PROPE19_PROPEFLOORNUM', 'PROPE19_PROPETYPOLOGY', 'PROPE19_PROPESIZE____', 'PROPE19_PROPEBATHRMS_', 'PROPE19_PROPEYEAR____', 'PROPE19_PROPEBUILDAGE'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1053,7 +1052,6 @@
 						label: computed(() => this.Resources.TIPO_DE_EDIFICIO02279),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPE19_PSEUDDETAILS_',
 						container: 'PROPE19_PSEUDDETAILS_',
 						maxLength: 1,
 						labelId: 'label_PROPE19_PROPEBUILDTYP',
@@ -1072,7 +1070,6 @@
 						label: computed(() => this.Resources.TAMANHO_DO_TERRENO16675),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPE19_PSEUDDETAILS_',
 						container: 'PROPE19_PSEUDDETAILS_',
 						maxIntegers: 15,
 						maxDecimals: 0,
@@ -1098,7 +1095,6 @@
 						label: computed(() => this.Resources.NUMERO_DO_ANDAR43531),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPE19_PSEUDDETAILS_',
 						container: 'PROPE19_PSEUDDETAILS_',
 						maxIntegers: 3,
 						maxDecimals: 0,
@@ -1124,7 +1120,6 @@
 						label: computed(() => this.Resources.TYPOLOGY11991),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-PROPE19_PSEUDDETAILS_',
 						container: 'PROPE19_PSEUDDETAILS_',
 						maxIntegers: 1,
 						maxDecimals: 0,
@@ -1142,7 +1137,6 @@
 						label: computed(() => this.Resources.TAMANHO__M2_40951),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPE19_PSEUDDETAILS_',
 						container: 'PROPE19_PSEUDDETAILS_',
 						maxIntegers: 15,
 						maxDecimals: 0,
@@ -1158,7 +1152,6 @@
 						label: computed(() => this.Resources.NUMERO_DE_CASA_DE_BA10087),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPE19_PSEUDDETAILS_',
 						container: 'PROPE19_PSEUDDETAILS_',
 						maxIntegers: 2,
 						maxDecimals: 0,
@@ -1174,7 +1167,6 @@
 						label: computed(() => this.Resources.ANO_CONSTRUIDO64369),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPE19_PSEUDDETAILS_',
 						container: 'PROPE19_PSEUDDETAILS_',
 						maxLength: 50,
 						labelId: 'label_PROPE19_PROPEYEAR____',
@@ -1190,7 +1182,6 @@
 						label: computed(() => this.Resources.BUILDING_AGE27311),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPE19_PSEUDDETAILS_',
 						container: 'PROPE19_PSEUDDETAILS_',
 						isFormulaBlocked: true,
 						maxIntegers: 8,
@@ -1218,7 +1209,7 @@
 						container: 'PROPE19_PSEUDACC01___',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PROPE19_PSEUDAGENTINF',
+						directChildren: ['PROPE19_AGENTNAME____', 'PROPE19_AGENTEMAIL___', 'PROPE19_AGENTPHOTO___'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1232,7 +1223,6 @@
 						label: computed(() => this.Resources.NAME31974),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPE19_PSEUDAGENTINF',
 						container: 'PROPE19_PSEUDAGENTINF',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -1266,7 +1256,6 @@
 						label: computed(() => this.Resources.EMAIL25170),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPE19_PSEUDAGENTINF',
 						container: 'PROPE19_PSEUDAGENTINF',
 						maxLength: 50,
 						labelId: 'label_PROPE19_AGENTEMAIL___',
@@ -1284,7 +1273,6 @@
 						label: computed(() => this.Resources.PHOTO51874),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPE19_PSEUDAGENTINF',
 						container: 'PROPE19_PSEUDAGENTINF',
 						height: 10,
 						width: 480,

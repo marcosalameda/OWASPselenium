@@ -10,7 +10,7 @@ public class FaqsForm : Form
 	/// <summary>
 	/// Question
 	/// </summary>
-	public BaseInputControl FaqsQuestion => new BaseInputControl(driver, ContainerLocator, "#FAQS____FAQS_QUESTION");
+	public BaseInputControl FaqsQuestion => new BaseInputControl(driver, ContainerLocator, "container-FAQS____FAQS_QUESTION", "#FAQS____FAQS_QUESTION");
 
 	/// <summary>
 	/// Answer

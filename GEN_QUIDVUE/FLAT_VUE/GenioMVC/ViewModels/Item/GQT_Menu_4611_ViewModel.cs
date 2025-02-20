@@ -43,12 +43,25 @@ namespace GenioMVC.ViewModels.Item
 		public string ValCoditem { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
 				conds.Equal(CSGenioAitem.FldCodwareh, Navigation.GetValue("wareh"));
+
 				return conds;
 			}
 		}
@@ -62,6 +75,14 @@ namespace GenioMVC.ViewModels.Item
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS 4611]/
+
+			return crs;
+		}
+
 
 		public string WarehValWarehdes { get; set; }
 
@@ -114,26 +135,24 @@ namespace GenioMVC.ViewModels.Item
 				SetViewModelValue(querySelect.SelectFields[i].Alias, dbValues[i]);
 		}
 
+
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
 			var areaBase = CSGenio.business.Area.createArea("item", user, "GQT");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet gqt_menu_4611Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML4611");
-			gqt_menu_4611Conds.Equal(CSGenioAitem.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML4611");
+			conditions.Equal(CSGenioAitem.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL GQT OVERRQ 4611]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZzstate, CSGenioAitem.FldItemdes, CSGenioAitem.FldItemcod, CSGenioAitem.FldEntries, CSGenioAitem.FldExits, CSGenioAitem.FldExistenc, CSGenioAitem.FldCodwareh, CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes, CSGenioAitem.FldCodgitem, CSGenioAgitem.FldCodgitem, CSGenioAgitem.FldItemdes };
 
 			ListingMVC<CSGenioAitem> listing = new ListingMVC<CSGenioAitem>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(gqt_menu_4611Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -216,6 +235,9 @@ namespace GenioMVC.ViewModels.Item
 
 			if (Menu == null)
 				Menu = new TablePartial<GQT_Menu_4611_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -238,6 +260,8 @@ namespace GenioMVC.ViewModels.Item
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Limitations
 			// Limit "DB"

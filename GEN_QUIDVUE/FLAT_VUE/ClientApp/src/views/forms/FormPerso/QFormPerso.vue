@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PERSO"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.PERSO___PSEUDNOVOGR01.isVisible">
 					<q-control-wrapper
@@ -739,6 +738,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PERSO___PSEUDNOVOGR04', 'PERSO___PSEUDNOVOGR05'],
 						controlLimits: [
 						],
 					}, this),
@@ -752,6 +752,7 @@
 						container: 'PERSO___PSEUDNOVOGR01',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PERSO___PERSOPHOTO___'],
 						controlLimits: [
 						],
 					}, this),
@@ -781,6 +782,7 @@
 						container: 'PERSO___PSEUDNOVOGR01',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PERSO___PERSONAME____', 'PERSO___PERSOIDENTIFI', 'PERSO___PERSOGENDER__', 'PERSO___PERSOEMAIL___'],
 						controlLimits: [
 						],
 					}, this),
@@ -856,6 +858,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PERSO___PERSODOB_____', 'PERSO___PERSOTOB_____', 'PERSO___PERSOYEAR____', 'PERSO___PERSOMONTH___'],
 						controlLimits: [
 						],
 					}, this),

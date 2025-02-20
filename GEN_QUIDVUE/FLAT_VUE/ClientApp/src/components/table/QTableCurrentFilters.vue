@@ -2,43 +2,52 @@
 	<!-- BEGIN: Active Filters -->
 	<div
 		class="c-table__active-filters">
-		<q-button
+		<template
 			v-for="(advancedFilter, advancedFilterIdx) in advancedFilters"
-			:key="advancedFilterIdx"
-			:style="{ 'background-color': advancedFilter.active ? null : 'white' }"
-			:class="['e-badge', 'e-badge--filter', 'mb-1', 'advanced']"
-			:title="getFilterName(advancedFilter, searchableColumns, texts.orText)"
-			@click="editAdvancedFilters(advancedFilterIdx)">
-			<span :style="{ opacity: advancedFilter.active ? '1' : '0.4' }">
-				<q-icon
-					icon="advanced-filters"
-					class="search-filters-icon" />
-				{{ getFilterName(advancedFilter, searchableColumns, texts.orText) }}
-				<q-icon icon="pencil" />
-			</span>
-		</q-button>
+			:key="advancedFilterIdx">
+			<q-button
+				v-if="isValidFilter(advancedFilter, searchableColumns)"
+				:style="{ 'background-color': advancedFilter.active ? null : 'white' }"
+				:class="['e-badge', 'e-badge--filter', 'mb-1', 'advanced']"
+				:title="getFilterName(filterOperators, advancedFilter, searchableColumns, texts.orText)"
+				@click="editAdvancedFilters(advancedFilterIdx)">
+				<span :style="{ opacity: advancedFilter.active ? '1' : '0.4' }">
+					<q-icon
+						icon="advanced-filters"
+						class="search-filters-icon" />
+					{{ getFilterName(filterOperators, advancedFilter, searchableColumns, texts.orText) }}
+					<q-icon icon="pencil" />
+				</span>
+			</q-button>
+		</template>
 
-		<q-button
+		<template
 			v-for="(columnFilter, columnFilterKey) in columnFilters"
-			:key="columnFilterKey"
-			:class="['e-badge', 'e-badge--filter', 'mb-1', 'column-filter']"
-			:title="getFilterName(columnFilter, searchableColumns, texts.orText)"
-			icon-on-right
-			@click="removeColumnFilter(columnFilterKey)">
-			{{ getFilterName(columnFilter, searchableColumns, texts.orText) }}
-			<q-icon icon="remove" />
-		</q-button>
+			:key="columnFilterKey">
+			<q-button
+				v-if="isValidFilter(columnFilter, searchableColumns)"
+				:class="['e-badge', 'e-badge--filter', 'mb-1', 'column-filter']"
+				:title="getFilterName(filterOperators, columnFilter, searchableColumns, texts.orText)"
+				icon-on-right
+				@click="removeColumnFilter(columnFilterKey)">
+				{{ getFilterName(filterOperators, columnFilter, searchableColumns, texts.orText) }}
+				<q-icon icon="remove" />
+			</q-button>
+		</template>
 
-		<q-button
+		<template
 			v-for="(searchBarFilter, searchBarFilterKey) in searchBarFilters"
-			:key="searchBarFilterKey"
-			:class="['e-badge', 'e-badge--filter', 'mb-1', 'search-bar-filter']"
-			:title="getFilterName(searchBarFilter, searchableColumns, texts.orText)"
-			icon-on-right
-			@click="$emit('remove-search-bar-filter', searchBarFilterKey)">
-			{{ getFilterName(searchBarFilter, searchableColumns, texts.orText) }}
-			<q-icon icon="remove" />
-		</q-button>
+			:key="searchBarFilterKey">
+			<q-button
+				v-if="isValidFilter(searchBarFilter, searchableColumns)"
+				:class="['e-badge', 'e-badge--filter', 'mb-1', 'search-bar-filter']"
+				:title="getFilterName(filterOperators, searchBarFilter, searchableColumns, texts.orText)"
+				icon-on-right
+				@click="$emit('remove-search-bar-filter', searchBarFilterKey)">
+				{{ getFilterName(filterOperators, searchBarFilter, searchableColumns, texts.orText) }}
+				<q-icon icon="remove" />
+			</q-button>
+		</template>
 
 		<q-button
 			v-if="hasFiltersActive"
@@ -129,17 +138,8 @@
 		expose: [],
 
 		methods: {
-			/**
-			 * Get name of filter, calculating if empty
-			 * @param {Object} filter
-			 * @param {Array} searchableColumns
-			 * @param {string resource ID} orText
-			 * @returns {String}
-			 */
-			getFilterName(filter, searchableColumns, orText)
-			{
-				return listFunctions.getFilterName(this.filterOperators, filter, searchableColumns, orText)
-			},
+			getFilterName: listFunctions.getFilterName,
+			isValidFilter: listFunctions.isValidFilter,
 
 			/**
 			 * Edit advanced filters, highlighting selected filter

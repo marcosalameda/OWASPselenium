@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ABATE"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ABATE___DECOMDECOMNR_.isVisible || controls.ABATE___DECOMDTDECO__.isVisible">
 					<q-control-wrapper

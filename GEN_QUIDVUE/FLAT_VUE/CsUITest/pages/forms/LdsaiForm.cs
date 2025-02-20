@@ -26,7 +26,7 @@ public class LdsaiForm : Form
 	/// <summary>
 	/// Line
 	/// </summary>
-	public BaseInputControl OutpuLine => new BaseInputControl(driver, ContainerLocator, "#LDSAI___OUTPULINE____");
+	public BaseInputControl OutpuLine => new BaseInputControl(driver, ContainerLocator, "container-LDSAI___OUTPULINE____", "#LDSAI___OUTPULINE____");
 
 	/// <summary>
 	/// Warehouse
@@ -43,7 +43,7 @@ public class LdsaiForm : Form
 	/// <summary>
 	/// Output quantity:
 	/// </summary>
-	public BaseInputControl OutpuExitqnty => new BaseInputControl(driver, ContainerLocator, "#LDSAI___OUTPUEXITQNTY");
+	public BaseInputControl OutpuExitqnty => new BaseInputControl(driver, ContainerLocator, "container-LDSAI___OUTPUEXITQNTY", "#LDSAI___OUTPUEXITQNTY");
 
 	/// <summary>
 	/// Output No

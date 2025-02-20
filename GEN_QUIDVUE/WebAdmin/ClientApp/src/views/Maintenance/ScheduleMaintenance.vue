@@ -7,7 +7,7 @@
 			<q-row-container>
 				<datetime-picker v-model="scheduleDT" ref="scheduleDT" v-if="showScheduleDT"></datetime-picker>
 				<span class="q-help__subtext">
-					<span class="mdi mdi-information-outline"></span>
+					<q-icon icon="information-outline" />
 					{{ Resources.DEIXAR_VAZIO_PARA_LI30681 }}
 				</span>
 

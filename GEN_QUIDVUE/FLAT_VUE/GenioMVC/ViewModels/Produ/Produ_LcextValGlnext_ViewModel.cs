@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Produ
 		public string ValCodprodu { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -60,7 +72,16 @@ namespace GenioMVC.ViewModels.Produ
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PRODU_LCEXTGLNEXT]/
+
+			return crs;
+		}
+
+
 		public string ValCodlocat { get; set; }
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -134,6 +155,9 @@ namespace GenioMVC.ViewModels.Produ
 
 			if (Menu == null)
 				Menu = new TablePartial<Produ_LcextValGlnext_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -155,6 +179,8 @@ namespace GenioMVC.ViewModels.Produ
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -316,7 +342,7 @@ namespace GenioMVC.ViewModels.Produ
 				produ___lcextglnext__Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ PRODU_GLNEXT]/
+// USE /[MANUAL GQT OVERRQ PRODU_LCEXTGLNEXT]/
 
 				if (isToExport)
 				{
@@ -325,14 +351,14 @@ namespace GenioMVC.ViewModels.Produ
 
 					Qlisting = Models.ModelBase.Where<CSGenioAlcext>(m_userContext, false, produ___lcextglnext__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PRODU___LCEXTGLNEXT__", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP PRODU_GLNEXT]/
+// USE /[MANUAL GQT OVERRQLSTEXP PRODU_LCEXTGLNEXT]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST PRODU_GLNEXT]/
+// USE /[MANUAL GQT OVERRQLIST PRODU_LCEXTGLNEXT]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_lcext"];
 					CriteriaSet m_PagingPosEPHs = null;

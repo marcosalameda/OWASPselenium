@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="EXTERNO"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.EXTERNO_PSEUDNOVOGR01.isVisible"
@@ -649,6 +648,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EXTERNO_CMPNYDESIGNAT'],
 						controlLimits: [
 						],
 					}, this),
@@ -692,6 +692,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EXTERNO_PESSONAME____', 'EXTERNO_PESSOGENDER__'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -739,6 +740,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EXTERNO_PSEUDNOVOGR03', 'EXTERNO_PSEUDNOVOGR04'],
 						controlLimits: [
 						],
 					}, this),
@@ -752,7 +754,7 @@
 						container: 'EXTERNO_PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-EXTERNO_PSEUDNOVOGR03',
+						directChildren: ['EXTERNO_PESSOTELEPHON', 'EXTERNO_PESSOEMAIL___'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -766,7 +768,6 @@
 						label: computed(() => this.Resources.TELEPHONE28697),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EXTERNO_PSEUDNOVOGR03',
 						container: 'EXTERNO_PSEUDNOVOGR03',
 						maxLength: 20,
 						labelId: 'label_EXTERNO_PESSOTELEPHON',
@@ -782,7 +783,6 @@
 						label: computed(() => this.Resources.EMAIL_44228),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EXTERNO_PSEUDNOVOGR03',
 						container: 'EXTERNO_PSEUDNOVOGR03',
 						maxLength: 254,
 						labelId: 'label_EXTERNO_PESSOEMAIL___',
@@ -799,7 +799,7 @@
 						container: 'EXTERNO_PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-EXTERNO_PSEUDNOVOGR04',
+						directChildren: ['EXTERNO_PESSOPHOTOGRA'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -813,7 +813,6 @@
 						label: computed(() => this.Resources.PHOTO51874),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EXTERNO_PSEUDNOVOGR04',
 						container: 'EXTERNO_PSEUDNOVOGR04',
 						height: 50,
 						width: 100,

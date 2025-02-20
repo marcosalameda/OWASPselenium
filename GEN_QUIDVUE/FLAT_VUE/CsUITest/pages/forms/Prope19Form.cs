@@ -10,7 +10,7 @@ public class Prope19Form : Form
 	/// <summary>
 	/// Order
 	/// </summary>
-	public BaseInputControl PropeOrder => new BaseInputControl(driver, ContainerLocator, "#PROPE19_PROPEORDER___");
+	public BaseInputControl PropeOrder => new BaseInputControl(driver, ContainerLocator, "container-PROPE19_PROPEORDER___", "#PROPE19_PROPEORDER___");
 
 	/// <summary>
 	/// Informações principais
@@ -20,22 +20,22 @@ public class Prope19Form : Form
 	/// <summary>
 	/// Foto principal
 	/// </summary>
-	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "#PROPE19_PROPEPHOTO___");
+	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "container-PROPE19_PROPEPHOTO___", "#PROPE19_PROPEPHOTO___");
 
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "#PROPE19_PROPETITLE___");
+	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "container-PROPE19_PROPETITLE___", "#PROPE19_PROPETITLE___");
 
 	/// <summary>
 	/// Price
 	/// </summary>
-	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "#PROPE19_PROPEPRICE___");
+	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "container-PROPE19_PROPEPRICE___", "#PROPE19_PROPEPRICE___");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl PropeDescript => new BaseInputControl(driver, ContainerLocator, "#PROPE19_PROPEDESCRIPT");
+	public BaseInputControl PropeDescript => new BaseInputControl(driver, ContainerLocator, "container-PROPE19_PROPEDESCRIPT", "#PROPE19_PROPEDESCRIPT");
 
 	/// <summary>
 	/// 
@@ -71,12 +71,12 @@ public class Prope19Form : Form
 	/// <summary>
 	/// Tamanho do terreno
 	/// </summary>
-	public BaseInputControl PropeGrndsize => new BaseInputControl(driver, ContainerLocator, "#PROPE19_PROPEGRNDSIZE");
+	public BaseInputControl PropeGrndsize => new BaseInputControl(driver, ContainerLocator, "container-PROPE19_PROPEGRNDSIZE", "#PROPE19_PROPEGRNDSIZE");
 
 	/// <summary>
 	/// Número do andar
 	/// </summary>
-	public BaseInputControl PropeFloornum => new BaseInputControl(driver, ContainerLocator, "#PROPE19_PROPEFLOORNUM");
+	public BaseInputControl PropeFloornum => new BaseInputControl(driver, ContainerLocator, "container-PROPE19_PROPEFLOORNUM", "#PROPE19_PROPEFLOORNUM");
 
 	/// <summary>
 	/// Typology
@@ -86,22 +86,22 @@ public class Prope19Form : Form
 	/// <summary>
 	/// Tamanho (m2)
 	/// </summary>
-	public BaseInputControl PropeSize => new BaseInputControl(driver, ContainerLocator, "#PROPE19_PROPESIZE____");
+	public BaseInputControl PropeSize => new BaseInputControl(driver, ContainerLocator, "container-PROPE19_PROPESIZE____", "#PROPE19_PROPESIZE____");
 
 	/// <summary>
 	/// Numero de Casa de banhos
 	/// </summary>
-	public BaseInputControl PropeBathrms => new BaseInputControl(driver, ContainerLocator, "#PROPE19_PROPEBATHRMS_");
+	public BaseInputControl PropeBathrms => new BaseInputControl(driver, ContainerLocator, "container-PROPE19_PROPEBATHRMS_", "#PROPE19_PROPEBATHRMS_");
 
 	/// <summary>
 	/// Ano construído
 	/// </summary>
-	public BaseInputControl PropeYear => new BaseInputControl(driver, ContainerLocator, "#PROPE19_PROPEYEAR____");
+	public BaseInputControl PropeYear => new BaseInputControl(driver, ContainerLocator, "container-PROPE19_PROPEYEAR____", "#PROPE19_PROPEYEAR____");
 
 	/// <summary>
 	/// Building age
 	/// </summary>
-	public BaseInputControl PropeBuildage => new BaseInputControl(driver, ContainerLocator, "#PROPE19_PROPEBUILDAGE");
+	public BaseInputControl PropeBuildage => new BaseInputControl(driver, ContainerLocator, "container-PROPE19_PROPEBUILDAGE", "#PROPE19_PROPEBUILDAGE");
 
 	/// <summary>
 	/// Informação do agente

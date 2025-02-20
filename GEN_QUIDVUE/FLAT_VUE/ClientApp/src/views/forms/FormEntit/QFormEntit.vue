@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ENTIT"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ENTIT___ENTITNAME____.isVisible">
 					<q-control-wrapper

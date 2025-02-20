@@ -10,7 +10,7 @@ public class ArtigForm : Form
 	/// <summary>
 	/// Code
 	/// </summary>
-	public BaseInputControl ItemItemcod => new BaseInputControl(driver, ContainerLocator, "#ARTIG___ITEM_ITEMCOD_");
+	public BaseInputControl ItemItemcod => new BaseInputControl(driver, ContainerLocator, "container-ARTIG___ITEM_ITEMCOD_", "#ARTIG___ITEM_ITEMCOD_");
 
 	/// <summary>
 	/// Warehouse
@@ -42,7 +42,7 @@ public class ArtigForm : Form
 	/// <summary>
 	/// Item
 	/// </summary>
-	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "#ARTIG___ITEM_ITEMDES_");
+	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "container-ARTIG___ITEM_ITEMDES_", "#ARTIG___ITEM_ITEMDES_");
 
 	/// <summary>
 	/// In use
@@ -57,17 +57,17 @@ public class ArtigForm : Form
 	/// <summary>
 	/// Entries:
 	/// </summary>
-	public BaseInputControl ItemEntries => new BaseInputControl(driver, ContainerLocator, "#ARTIG___ITEM_ENTRIES_");
+	public BaseInputControl ItemEntries => new BaseInputControl(driver, ContainerLocator, "container-ARTIG___ITEM_ENTRIES_", "#ARTIG___ITEM_ENTRIES_");
 
 	/// <summary>
 	/// Output:
 	/// </summary>
-	public BaseInputControl ItemExits => new BaseInputControl(driver, ContainerLocator, "#ARTIG___ITEM_EXITS___");
+	public BaseInputControl ItemExits => new BaseInputControl(driver, ContainerLocator, "container-ARTIG___ITEM_EXITS___", "#ARTIG___ITEM_EXITS___");
 
 	/// <summary>
 	/// Image
 	/// </summary>
-	public BaseInputControl ItemImage => new BaseInputControl(driver, ContainerLocator, "#ARTIG___ITEM_IMAGE___");
+	public BaseInputControl ItemImage => new BaseInputControl(driver, ContainerLocator, "container-ARTIG___ITEM_IMAGE___", "#ARTIG___ITEM_IMAGE___");
 
 	/// <summary>
 	/// Item
@@ -122,7 +122,7 @@ public class ArtigForm : Form
 	/// <summary>
 	/// Categorization
 	/// </summary>
-	public BaseInputControl ItemCategory => new BaseInputControl(driver, ContainerLocator, "#ARTIG___ITEM_CATEGORY");
+	public BaseInputControl ItemCategory => new BaseInputControl(driver, ContainerLocator, "container-ARTIG___ITEM_CATEGORY", "#ARTIG___ITEM_CATEGORY");
 
 	/// <summary>
 	/// Categorization
@@ -132,12 +132,12 @@ public class ArtigForm : Form
 	/// <summary>
 	/// Existence
 	/// </summary>
-	public BaseInputControl ItemExistenc => new BaseInputControl(driver, ContainerLocator, "#ARTIG___ITEM_EXISTENC");
+	public BaseInputControl ItemExistenc => new BaseInputControl(driver, ContainerLocator, "container-ARTIG___ITEM_EXISTENC", "#ARTIG___ITEM_EXISTENC");
 
 	/// <summary>
 	/// Availability
 	/// </summary>
-	public BaseInputControl ItemDisponib => new BaseInputControl(driver, ContainerLocator, "#ARTIG___ITEM_DISPONIB");
+	public BaseInputControl ItemDisponib => new BaseInputControl(driver, ContainerLocator, "container-ARTIG___ITEM_DISPONIB", "#ARTIG___ITEM_DISPONIB");
 
 	/// <summary>
 	/// Image

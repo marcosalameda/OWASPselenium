@@ -44,18 +44,17 @@
 				type: String,
 				default: 'Column',
 			},
+
+			/**
+			 * Localized text strings to be used within the component.
+			 */
+			texts: {
+				type: Object,
+				required: true
+			},
 		},
 	
 		emits: ['add:card'],
-	
-		data() {
-			return {
-				texts: {
-					columnPlaceholder: 'Column Name',
-					addItem: '+ Add Item',
-				},
-			}
-		},
 	
 		methods: {
 			addNew() {

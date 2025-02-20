@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="MOVIM"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.MOVIM___MOVIMDHMUDANC.isVisible || controls.MOVIM___EQUIPREGISTNR.isVisible || controls.MOVIM___ROOMSROOMNR__.isVisible || controls.MOVIM___MOVIMOBSERVAT.isVisible">
 					<q-control-wrapper

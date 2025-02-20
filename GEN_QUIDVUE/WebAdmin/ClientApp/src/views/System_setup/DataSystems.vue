@@ -11,7 +11,7 @@
 					:items="defaultDsItems"
 					:label="texts.SISTEMA_DE_DADOS_PAD13413">
 					<template #extras>
-						<span class="mdi mdi-information-outline" />
+						<q-icon icon="information-outline" />
 						{{ texts.O_SISTEMA_DE_DADOS_U47595 }}
 					</template>					
 				</q-select>
@@ -19,7 +19,7 @@
 					v-model="model.HideYears" 
 					:label="texts.OCULTAR_SISTEMAS_DE_60940">
 					<template #extras>
-						<span class="mdi mdi-information-outline" />
+						<q-icon icon="information-outline" />
 						{{ texts.QUANDO_SELECIONADO__16895 }}
 					</template>
 				</q-checkbox>
@@ -97,7 +97,7 @@
 					size="block"
 					:label="texts.NOME_DO_SISTEMA_DE_D18974">
 					<template #extras v-if="invalidNewDataSystemName">
-						<span class="mdi mdi-information-outline" />
+						<q-icon icon="information-outline" />
 						{{ texts.OS_NOMES_DOS_SISTEMA01515 }}
 					</template>
 				</q-text-field>
@@ -107,7 +107,7 @@
 					size="block"
 					:label="texts.NOME_DA_BASE_DE_DADO25105">
 					<template #extras v-if="invalidNewDbName">
-						<span class="mdi mdi-information-outline" />
+						<q-icon icon="information-outline" />
 						{{ texts.OS_NOMES_DAS_BASES_D40646 }}
 					</template>
 				</q-text-field>

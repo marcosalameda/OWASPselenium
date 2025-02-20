@@ -102,6 +102,7 @@ namespace GenioMVC.Helpers
                     };
                 })
                 .AddHttpClientInstrumentation()
+                .AddSource("ClientSide.Telemetry")
                 .AddOtlpExporter(otlpOptions => otlpOptions.Endpoint = new Uri(telemetryConfig.CollectorAddress));
             });
         }

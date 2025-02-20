@@ -15,7 +15,7 @@ public class EquipmForm : Form
 	/// <summary>
 	/// Identification name
 	/// </summary>
-	public BaseInputControl AssetName => new BaseInputControl(driver, ContainerLocator, "#EQUIPM__ASSETNAME____");
+	public BaseInputControl AssetName => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETNAME____", "#EQUIPM__ASSETNAME____");
 
 	/// <summary>
 	/// Asset type
@@ -25,7 +25,7 @@ public class EquipmForm : Form
 	/// <summary>
 	/// Asset number
 	/// </summary>
-	public BaseInputControl AssetAssetnum => new BaseInputControl(driver, ContainerLocator, "#EQUIPM__ASSETASSETNUM");
+	public BaseInputControl AssetAssetnum => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETASSETNUM", "#EQUIPM__ASSETASSETNUM");
 
 	/// <summary>
 	/// Identifier type
@@ -35,12 +35,12 @@ public class EquipmForm : Form
 	/// <summary>
 	/// GRAI – Global Returnable Asset Identifier
 	/// </summary>
-	public BaseInputControl AssetGrai => new BaseInputControl(driver, ContainerLocator, "#EQUIPM__ASSETGRAI____");
+	public BaseInputControl AssetGrai => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETGRAI____", "#EQUIPM__ASSETGRAI____");
 
 	/// <summary>
 	/// GIAI – Global Individual Asset Identifier
 	/// </summary>
-	public BaseInputControl AssetGiai => new BaseInputControl(driver, ContainerLocator, "#EQUIPM__ASSETGIAI____");
+	public BaseInputControl AssetGiai => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETGIAI____", "#EQUIPM__ASSETGIAI____");
 
 	/// <summary>
 	/// Manufacturer
@@ -77,7 +77,7 @@ public class EquipmForm : Form
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl Equip01AssetPhoto => new BaseInputControl(driver, ContainerLocator, "#EQUIP01_ASSETPHOTO___");
+	public BaseInputControl Equip01AssetPhoto => new BaseInputControl(driver, ContainerLocator, "container-EQUIP01_ASSETPHOTO___", "#EQUIP01_ASSETPHOTO___");
 
 	/// <summary>
 	/// 

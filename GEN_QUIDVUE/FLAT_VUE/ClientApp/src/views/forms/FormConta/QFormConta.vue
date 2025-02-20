@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="CONTA"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.CONTA___PESSONAME____.isVisible || controls.CONTA___GENREGENDER__.isVisible || controls.CONTA___TPCONTIPOCONT.isVisible">
 					<q-control-wrapper

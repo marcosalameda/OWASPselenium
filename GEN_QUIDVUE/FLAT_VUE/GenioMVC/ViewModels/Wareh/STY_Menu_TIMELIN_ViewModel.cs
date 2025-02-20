@@ -43,6 +43,20 @@ namespace GenioMVC.ViewModels.Wareh
 		public string ValCodwareh { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+				// Limit "SC"
+				conditions.Equal(CSGenioAwareh.FldShowreco, "1");
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -50,6 +64,7 @@ namespace GenioMVC.ViewModels.Wareh
 				CriteriaSet conds = CriteriaSet.And();
 				if (Navigation.CheckKey("wareh.showreco"))
 					conds.Equal(CSGenioAwareh.FldShowreco, Navigation.GetValue("wareh.showreco"));
+
 				return conds;
 			}
 		}
@@ -64,6 +79,15 @@ namespace GenioMVC.ViewModels.Wareh
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL STY LIST_LIMITS TIMELIN]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -71,21 +95,17 @@ namespace GenioMVC.ViewModels.Wareh
 			var areaBase = CSGenio.business.Area.createArea("wareh", user, "STY");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet sty_menu_timelinConds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLTIMELIN");
-			sty_menu_timelinConds.Equal(CSGenioAwareh.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLTIMELIN");
+			conditions.Equal(CSGenioAwareh.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-						sty_menu_timelinConds.Equal(CSGenioAwareh.FldShowreco, 1);
-
-
-// USE /[MANUAL STY OVERRQ TIMELIN]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldZzstate, CSGenioAwareh.FldWarehdes, CSGenioAwareh.FldWarehcod, CSGenioAwareh.FldActivity };
 
 			ListingMVC<CSGenioAwareh> listing = new ListingMVC<CSGenioAwareh>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(sty_menu_timelinConds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -161,6 +181,9 @@ namespace GenioMVC.ViewModels.Wareh
 
 			if (Menu == null)
 				Menu = new TablePartial<STY_Menu_TIMELIN_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -182,9 +205,9 @@ namespace GenioMVC.ViewModels.Wareh
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
-			// Limit "SC"
-			crs.Equal(CSGenioAwareh.FldShowreco, "1");
 
 			if (isToExport)
 			{

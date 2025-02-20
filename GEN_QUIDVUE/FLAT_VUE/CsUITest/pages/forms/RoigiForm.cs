@@ -16,12 +16,12 @@ public class RoigiForm : Form
 	/// <summary>
 	/// Order
 	/// </summary>
-	public BaseInputControl RoigiOrder => new BaseInputControl(driver, ContainerLocator, "#ROIGI___ROIGIORDER___");
+	public BaseInputControl RoigiOrder => new BaseInputControl(driver, ContainerLocator, "container-ROIGI___ROIGIORDER___", "#ROIGI___ROIGIORDER___");
 
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl RoigiTitle => new BaseInputControl(driver, ContainerLocator, "#ROIGI___ROIGITITLE___");
+	public BaseInputControl RoigiTitle => new BaseInputControl(driver, ContainerLocator, "container-ROIGI___ROIGITITLE___", "#ROIGI___ROIGITITLE___");
 
 	public RoigiForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "ROIGI", containerLocator: containerLocator) { }

@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="EQUIPM"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.EQUIPM__PSEUDNOVOGR01.isVisible"
@@ -808,6 +807,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIPM__ASSETNAME____', 'EQUIPM__ASSETASSETTYP', 'EQUIPM__ASSETASSETNUM', 'EQUIPM__ASSETIDENTTYP', 'EQUIPM__ASSETGRAI____', 'EQUIPM__ASSETGIAI____', 'EQUIPM__MANUFNAME____', 'EQUIPM__KINDEDESIGNAT'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -947,7 +947,7 @@
 						label: computed(() => this.Resources.PHOTO51874),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-EQUIPM__PSEUDEQUIP01_',
+						directChildren: ['EQUIP01_ASSETPHOTO___'],
 						controlLimits: [
 						],
 					}, this),
@@ -958,7 +958,7 @@
 						label: computed(() => this.Resources.ATTACHMENTS19612),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-EQUIPM__PSEUDEQUIP02_',
+						directChildren: ['EQUIP02_PSEUDNOVOGR01'],
 						controlLimits: [
 						],
 					}, this),
@@ -969,7 +969,7 @@
 						label: computed(() => this.Resources.DOCUMENTS14470),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-EQUIPM__PSEUDEQUIP03_',
+						directChildren: ['EQUIP03_PSEUDNOVOGR01'],
 						controlLimits: [
 						],
 					}, this),
@@ -980,7 +980,7 @@
 						label: computed(() => this.Resources.PARAMETERS28294),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-EQUIPM__PSEUDEQUIP04_',
+						directChildren: ['EQUIP04_PSEUDNOVOGR01'],
 						controlLimits: [
 						],
 					}, this),
@@ -1022,7 +1022,6 @@
 						label: computed(() => this.Resources.PHOTO51874),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIPM__PSEUDEQUIP01_',
 						tab: 'EQUIPM__PSEUDEQUIP01_',
 						height: 300,
 						width: 400,
@@ -1037,10 +1036,10 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIPM__PSEUDEQUIP02_',
 						tab: 'EQUIPM__PSEUDEQUIP02_',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIP02_PSEUDATTACHME'],
 						controlLimits: [
 						],
 					}, this),
@@ -1051,7 +1050,6 @@
 						label: computed(() => this.Resources.ATTACHMENTS19612),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIPM__PSEUDEQUIP02_',
 						container: 'EQUIP02_PSEUDNOVOGR01',
 						tab: 'EQUIPM__PSEUDEQUIP02_',
 						controller: 'ASSET',
@@ -1246,10 +1244,10 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIPM__PSEUDEQUIP03_',
 						tab: 'EQUIPM__PSEUDEQUIP03_',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIP03_PSEUDDOCUMENT'],
 						controlLimits: [
 						],
 					}, this),
@@ -1260,7 +1258,6 @@
 						label: computed(() => this.Resources.DOCUMENTS14470),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIPM__PSEUDEQUIP03_',
 						container: 'EQUIP03_PSEUDNOVOGR01',
 						tab: 'EQUIPM__PSEUDEQUIP03_',
 						controller: 'ASSET',
@@ -1455,10 +1452,10 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIPM__PSEUDEQUIP04_',
 						tab: 'EQUIPM__PSEUDEQUIP04_',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIP04_PSEUDPARAMLOA', 'EQUIP04_PSEUDMANUALS_', 'EQUIP04_PSEUDPARAMETE'],
 						controlLimits: [
 						],
 					}, this),
@@ -1470,7 +1467,6 @@
 						label: computed(() => this.Resources.PARAMETERS_LOAD27737),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIPM__PSEUDEQUIP04_',
 						container: 'EQUIP04_PSEUDNOVOGR01',
 						tab: 'EQUIPM__PSEUDEQUIP04_',
 						// eslint-disable-next-line
@@ -1512,7 +1508,6 @@
 						label: computed(() => this.Resources.MANUALS_LOAD21238),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIPM__PSEUDEQUIP04_',
 						container: 'EQUIP04_PSEUDNOVOGR01',
 						tab: 'EQUIPM__PSEUDEQUIP04_',
 						// eslint-disable-next-line
@@ -1553,7 +1548,6 @@
 						label: computed(() => this.Resources.PARAMETERS28294),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIPM__PSEUDEQUIP04_',
 						container: 'EQUIP04_PSEUDNOVOGR01',
 						tab: 'EQUIPM__PSEUDEQUIP04_',
 						controller: 'ASSET',

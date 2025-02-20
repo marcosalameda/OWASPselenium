@@ -52,6 +52,16 @@ export default class ViewModel extends ViewModelBase
 		watch(() => this.ValCoddispa.value, (newValue, oldValue) => this.onUpdate('dispa.coddispa', this.ValCoddispa, newValue, oldValue))
 
 		/** The used foreign keys. */
+		this.ValCoddisst = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCoddisst',
+			originId: 'ValCoddisst',
+			area: 'DISPA',
+			field: 'CODDISST',
+			relatedArea: 'DISST',
+			description: computed(() => this.Resources.___STATUS46938),
+		}).cloneFrom(values?.ValCoddisst))
+		watch(() => this.ValCoddisst.value, (newValue, oldValue) => this.onUpdate('dispa.coddisst', this.ValCoddisst, newValue, oldValue))
+
 		this.ValCodentit = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodentit',
 			originId: 'ValCodentit',
@@ -92,6 +102,17 @@ export default class ViewModel extends ViewModelBase
 			description: computed(() => this.Resources.DISPATCH_NUMBER23616),
 		}).cloneFrom(values?.ValDispanr))
 		watch(() => this.ValDispanr.value, (newValue, oldValue) => this.onUpdate('dispa.dispanr', this.ValDispanr, newValue, oldValue))
+
+		this.TableDisstStatus = reactive(new modelFieldType.String({
+			type: 'Lookup',
+			id: 'TableDisstStatus',
+			originId: 'ValStatus',
+			area: 'DISST',
+			field: 'STATUS',
+			maxLength: 50,
+			description: computed(() => this.Resources.STATUS62033),
+		}).cloneFrom(values?.TableDisstStatus))
+		watch(() => this.TableDisstStatus.value, (newValue, oldValue) => this.onUpdate('disst.status', this.TableDisstStatus, newValue, oldValue))
 
 		this.ValStatus = reactive(new modelFieldType.String({
 			id: 'ValStatus',

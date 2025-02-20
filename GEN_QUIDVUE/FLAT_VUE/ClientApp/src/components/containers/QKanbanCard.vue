@@ -173,18 +173,18 @@
 	
 		computed: {
 			classes() {
-				const type =
-					this.card.type !== 'Task'
-						? `q-kanban-card--${this.card.type?.replace(/\s+/g, '-').toLowerCase()}`
-						: undefined
-				const status = `q-kanban-card--${this.card.status
-					?.replace(/\s+/g, '-')
-					?.toLowerCase()}`
+				// const type =
+				// 	this.card.type !== 'Task'
+				// 		? `q-kanban-card--${this.card.type?.replace(/\s+/g, '-').toLowerCase()}`
+				// 		: undefined
+				// const status = `q-kanban-card--${this.card.status
+				// 	?.replace(/\s+/g, '-')
+				// 	?.toLowerCase()}`
 	
 				return [
-					'q-kanban-card',
-					type,
-					status,
+					'q-kanban-card q-card--clickable',
+					// type,
+					// status,
 					{
 						'q-kanban-card--warning': this.card.warning,
 					},

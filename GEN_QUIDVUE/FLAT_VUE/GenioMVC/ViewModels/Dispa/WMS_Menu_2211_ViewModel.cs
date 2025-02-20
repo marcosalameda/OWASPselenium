@@ -29,7 +29,7 @@ namespace GenioMVC.ViewModels.Dispa
 		public override string TableAlias { get => "dispa"; }
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "26adf4c3-c69b-49c3-9b58-2dd6e756779a"; }
+		public override string Uuid { get => "cfbb1913-41cc-44c3-9c1e-563789f3471f"; }
 
 		/// <inheritdoc/>
 		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
@@ -43,6 +43,20 @@ namespace GenioMVC.ViewModels.Dispa
 		public string ValCoddispa { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+				// Limit "SC"
+				conditions.Equal(CSGenioAdispa.FldIsprepar, "0");
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -50,6 +64,7 @@ namespace GenioMVC.ViewModels.Dispa
 				CriteriaSet conds = CriteriaSet.And();
 				if (Navigation.CheckKey("dispa.isprepar"))
 					conds.Equal(CSGenioAdispa.FldIsprepar, Navigation.GetValue("dispa.isprepar"));
+
 				return conds;
 			}
 		}
@@ -64,6 +79,15 @@ namespace GenioMVC.ViewModels.Dispa
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL WMS LIST_LIMITS 2211]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -71,21 +95,17 @@ namespace GenioMVC.ViewModels.Dispa
 			var areaBase = CSGenio.business.Area.createArea("dispa", user, "WMS");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet wms_menu_2211Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML2211");
-			wms_menu_2211Conds.Equal(CSGenioAdispa.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML2211");
+			conditions.Equal(CSGenioAdispa.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-						wms_menu_2211Conds.Equal(CSGenioAdispa.FldIsprepar, 1);
-
-
-// USE /[MANUAL WMS OVERRQ 2211]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAdispa.FldCoddispa, CSGenioAdispa.FldZzstate, CSGenioAdispa.FldDispadt, CSGenioAdispa.FldDispanr, CSGenioAdispa.FldCodentit, CSGenioAentit.FldCodentit, CSGenioAentit.FldName };
 
 			ListingMVC<CSGenioAdispa> listing = new ListingMVC<CSGenioAdispa>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(wms_menu_2211Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -161,6 +181,9 @@ namespace GenioMVC.ViewModels.Dispa
 
 			if (Menu == null)
 				Menu = new TablePartial<WMS_Menu_2211_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -182,9 +205,9 @@ namespace GenioMVC.ViewModels.Dispa
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
-			// Limit "SC"
-			crs.Equal(CSGenioAdispa.FldIsprepar, "1");
 
 			if (isToExport)
 			{
@@ -357,13 +380,13 @@ namespace GenioMVC.ViewModels.Dispa
 			//Current Area = "DISPA"
 			//1st Area Limit: "DISPA"
 			//1st Area Field: "ISPREPAR"
-			//1st Area Value: "1"
+			//1st Area Value: "0"
 			{
 				Limit limit = new Limit();
 				limit.TipoLimite = LimitType.SC;
 				limit.NaoAplicaSeNulo = false;
 				CSGenioAdispa model_limit_area = new CSGenioAdispa(m_userContext.User);
-				string limit_field = "isprepar", limit_field_value = "1";
+				string limit_field = "isprepar", limit_field_value = "0";
 				object this_limit_field = Navigation.GetStrValue(limit_field_value);
 				Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
 				if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
@@ -555,7 +578,7 @@ namespace GenioMVC.ViewModels.Dispa
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Dispa", "Dispa.ValCoddispa", "Dispa.ValZzstate", "Dispa.ValDispadt", "Dispa.ValDispanr", "Entit", "Entit.ValName", "Dispa.ValCodentit", "Dispa.ValCodperso", "BtnPermission"
+			"Dispa", "Dispa.ValCoddispa", "Dispa.ValZzstate", "Dispa.ValDispadt", "Dispa.ValDispanr", "Entit", "Entit.ValName", "Dispa.ValCoddisst", "Dispa.ValCodentit", "Dispa.ValCodperso", "BtnPermission"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns = 

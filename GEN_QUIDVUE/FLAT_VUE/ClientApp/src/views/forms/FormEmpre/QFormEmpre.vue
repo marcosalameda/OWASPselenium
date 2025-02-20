@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="EMPRE"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.EMPRE___PSEUDNOVOGR02.isVisible">
 					<q-control-wrapper
@@ -668,6 +667,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EMPRE___CMPNYLOGO____'],
 						controlLimits: [
 						],
 					}, this),
@@ -696,6 +696,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EMPRE___CMPNYACRONYM_', 'EMPRE___CMPNYNIF_____', 'EMPRE___CMPNYTELEPHON', 'EMPRE___CMPNYEMAIL___'],
 						controlLimits: [
 						],
 					}, this),
@@ -783,6 +784,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EMPRE___CNTRYCOUNTRY_'],
 						controlLimits: [
 						],
 					}, this),
@@ -871,6 +873,10 @@
 									},
 									fitZoom: {
 										rawValue: true,
+										isMapped: false
+									},
+									zoomDelta: {
+										rawValue: 1,
 										isMapped: false
 									},
 									boundSouthWest: {

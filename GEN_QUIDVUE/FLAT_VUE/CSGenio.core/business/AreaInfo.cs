@@ -644,7 +644,7 @@ namespace CSGenio.business
     {
         get 
         {
-            m_MsqActive = ActiveQueuesList.Count > 0;
+            m_MsqActive = ActiveQueuesList != null && ActiveQueuesList.Count > 0;
             return m_MsqActive;
         } 
     }

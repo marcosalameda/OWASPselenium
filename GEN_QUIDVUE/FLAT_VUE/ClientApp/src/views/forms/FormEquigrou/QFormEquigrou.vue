@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="EQUIGROU"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.EQUIGROUPSEUDNEWGRP19.isVisible"
@@ -1352,6 +1351,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: true,
+						directChildren: ['EQUIGROUPSEUDNEWGRP13'],
 						controlLimits: [
 						],
 					}, this),
@@ -1365,6 +1365,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP19',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUPESS1PHOTOGRA', 'EQUIGROUPESS1NAME____', 'EQUIGROUPESS1GENDER__', 'EQUIGROUPSEUDNEWGRP14', 'EQUIGROUPSEUDNEWGRP17'],
 						controlLimits: [
 						],
 					}, this),
@@ -1469,6 +1470,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP13',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUPESS1DTNASCIM', 'EQUIGROUPESS1IDADE___'],
 						controlLimits: [
 						],
 					}, this),
@@ -1515,6 +1517,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP13',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUPSEUDNEWGRP15', 'EQUIGROUPSEUDNEWGRP16'],
 						controlLimits: [
 						],
 					}, this),
@@ -1528,7 +1531,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP17',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-EQUIGROUPSEUDNEWGRP15',
+						directChildren: ['EQUIGROUPESS1IDFUNCIO', 'EQUIGROUPESS1TELEPHON'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1544,7 +1547,6 @@
 						label: computed(() => this.Resources.OFFICIAL_NO_34819),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIGROUPSEUDNEWGRP15',
 						container: 'EQUIGROUPSEUDNEWGRP15',
 						maxIntegers: 6,
 						maxDecimals: 0,
@@ -1563,7 +1565,6 @@
 						label: computed(() => this.Resources.PHONE56703),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIGROUPSEUDNEWGRP15',
 						container: 'EQUIGROUPSEUDNEWGRP15',
 						maxLength: 20,
 						labelId: 'label_EQUIGROUPESS1TELEPHON',
@@ -1580,7 +1581,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP17',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-EQUIGROUPSEUDNEWGRP16',
+						directChildren: ['EQUIGROUPESS1EMAIL___', 'EQUIGROUPESS1EMAIL2__'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1596,7 +1597,6 @@
 						label: computed(() => this.Resources.EMAIL_106184),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIGROUPSEUDNEWGRP16',
 						container: 'EQUIGROUPSEUDNEWGRP16',
 						maxLength: 254,
 						labelId: 'label_EQUIGROUPESS1EMAIL___',
@@ -1614,7 +1614,6 @@
 						label: computed(() => this.Resources.EMAIL_211233),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-EQUIGROUPSEUDNEWGRP16',
 						container: 'EQUIGROUPSEUDNEWGRP16',
 						maxLength: 254,
 						labelId: 'label_EQUIGROUPESS1EMAIL2__',
@@ -1630,6 +1629,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: true,
+						directChildren: ['EQUIGROUPSEUDFIELD001', 'EQUIGROUPSEUDNEWGRP01'],
 						controlLimits: [
 						],
 					}, this),
@@ -1656,6 +1656,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP18',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUPSEUDNEWGRP02', 'EQUIGROUPSEUDNEWGRP03'],
 						controlLimits: [
 						],
 					}, this),
@@ -1669,6 +1670,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP01',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUCMPNYLOGO____', 'EQUIGROUCMPNYDESIGNAT', 'EQUIGROUCMPNYACRONYM_', 'EQUIGROUCMPNYNIF_____'],
 						controlLimits: [
 						],
 					}, this),
@@ -1753,6 +1755,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP01',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUCMPNYTELEPHON', 'EQUIGROUCMPNYEMAIL___'],
 						controlLimits: [
 						],
 					}, this),
@@ -1799,6 +1802,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: true,
+						directChildren: ['EQUIGROUPSEUDNEWGRP08'],
 						controlLimits: [
 						],
 					}, this),
@@ -1812,7 +1816,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP21',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-EQUIGROUPSEUDNEWGRP08',
+						directChildren: ['EQUIGROUEQUIPQTDMOVIM', 'EQUIGROUEQUIPDTAQUISI'],
 						controlLimits: [
 						],
 					}, this),
@@ -1825,7 +1829,6 @@
 						label: computed(() => this.Resources.CHANGES_NUMBER59897),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-EQUIGROUPSEUDNEWGRP08',
 						container: 'EQUIGROUPSEUDNEWGRP08',
 						isFormulaBlocked: true,
 						maxIntegers: 10,
@@ -1842,7 +1845,6 @@
 						label: computed(() => this.Resources.ACQUISITION44180),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-EQUIGROUPSEUDNEWGRP08',
 						container: 'EQUIGROUPSEUDNEWGRP08',
 						format: 'date',
 						controlLimits: [
@@ -1857,6 +1859,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: true,
+						directChildren: ['EQUIGROUPSEUDNEWGRP09', 'EQUIGROUPSEUDNEWGRP07', 'EQUIGROUPSEUDNEWGRP04'],
 						controlLimits: [
 						],
 					}, this),
@@ -1870,6 +1873,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP23',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUPSEUDNEWGRP10'],
 						controlLimits: [
 						],
 					}, this),
@@ -1883,6 +1887,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP09',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUTPEQUTIPOEQUI', 'EQUIGROUTPEQUTPEQUCOD', 'EQUIGROUTPEQUPRECOMAX', 'EQUIGROUPSEUDNEWGRP11'],
 						controlLimits: [
 						],
 					}, this),
@@ -1965,6 +1970,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP10',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUTPEQUTPEQUPAI', 'EQUIGROUTPEQUNIVEL___', 'EQUIGROUPSEUDNEWGRP12'],
 						controlLimits: [
 						],
 					}, this),
@@ -2012,6 +2018,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP11',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUTPEQUBACKCOLO', 'EQUIGROUTPEQUCORLETRA'],
 						controlLimits: [
 						],
 					}, this),
@@ -2059,6 +2066,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP23',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUEQUIPSEQUENNR', 'EQUIGROUEQUIPREGISTNR', 'EQUIGROUEQUIPVALORTOT', 'EQUIGROUPSEUDNEWGRP05'],
 						controlLimits: [
 						],
 					}, this),
@@ -2120,6 +2128,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP07',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUEQUIPFREQUENC', 'EQUIGROUEQUIPBOUGHT__', 'EQUIGROUEQUIPDTREFERE', 'EQUIGROUEQUIPFIRST___'],
 						controlLimits: [
 						],
 					}, this),
@@ -2201,6 +2210,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP23',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUEQUIPPHOTOGRA', 'EQUIGROUPSEUDNEWGRP06'],
 						controlLimits: [
 						],
 					}, this),
@@ -2232,6 +2242,7 @@
 						container: 'EQUIGROUPSEUDNEWGRP04',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['EQUIGROUEQUIPDESIGNAT'],
 						controlLimits: [
 						],
 					}, this),

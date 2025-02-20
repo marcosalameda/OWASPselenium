@@ -207,10 +207,7 @@ export default {
 			validationErrors: {},
 
 			// Allows anchor containers to be opened on first load.
-			anchorsTabOpened: false,
-
-			// Changing the value of this key will force a reload of the form DOM.
-			domVersionKey: 1
+			anchorsTabOpened: false
 		}
 	},
 
@@ -2072,14 +2069,10 @@ export default {
 
 		/**
 		 * Inits the form and all it's controls.
-		 * @param {boolean} refreshDom Whether or not to force a DOM update
 		 */
-		async initFormControls(refreshDom)
+		async initFormControls()
 		{
 			await this.formControl.init(false, this.isEditable)
-
-			if (refreshDom)
-				this.domVersionKey++
 
 			// In some cases, this operation won't work as expected unless we force a DOM update before calling it.
 			this.setContainersStateFromStore()
@@ -2209,10 +2202,7 @@ export default {
 			if (!isFirstLoad)
 				this.formControl.destroyTriggers()
 
-			// Init form, forcing a DOM update if it's not the first load.
-			await this.initFormControls(!isFirstLoad)
-
-			// Load Table List controls data.
+			await this.initFormControls()
 			await this.refreshAllListsData(isFirstLoad)
 
 			if (!this.isNested)

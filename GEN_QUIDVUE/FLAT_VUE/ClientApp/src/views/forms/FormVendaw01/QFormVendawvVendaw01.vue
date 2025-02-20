@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="VENDAW01"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.VENDAWV_PSEUDFASES___.isVisible">
 					<q-control-wrapper
@@ -732,6 +731,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['VENDAW01SALE_IDENTIFI', 'VENDAW01SALE_POTCOMPR', 'VENDAW01SALE_PROSPECC'],
 						controlLimits: [
 						],
 					}, this),

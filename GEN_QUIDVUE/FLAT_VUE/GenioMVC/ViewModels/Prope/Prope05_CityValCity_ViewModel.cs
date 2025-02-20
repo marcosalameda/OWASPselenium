@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Prope
 		public string ValCodprope { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Prope
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PROPE05_CITYCITY]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Prope
 
 			if (Menu == null)
 				Menu = new TablePartial<Prope05_CityValCity_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Prope
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Prope
 				prope05_city_city____Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ PROPE05_CITY]/
+// USE /[MANUAL GQT OVERRQ PROPE05_CITYCITY]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Prope
 
 					Qlisting = Models.ModelBase.Where<CSGenioAcity>(m_userContext, false, prope05_city_city____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PROPE05_CITY_CITY____", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP PROPE05_CITY]/
+// USE /[MANUAL GQT OVERRQLSTEXP PROPE05_CITYCITY]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST PROPE05_CITY]/
+// USE /[MANUAL GQT OVERRQLIST PROPE05_CITYCITY]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_city"];
 					CriteriaSet m_PagingPosEPHs = null;

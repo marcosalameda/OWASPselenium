@@ -200,5 +200,22 @@ namespace DbAdmin
             user.Language = CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper();
             return user;
         }
+
+        /// <summary>
+        /// Creates a new redirect pointing to a given path
+        /// </summary>
+        /// <param name="path">The path with the intend configuration.xml</param>
+        /// <returns></returns>
+        public RedirectXML CreateRedirect(string path)
+        {
+            RedirectXML redirect = new RedirectXML();
+            redirect.files = new FileRedirect[1];
+            var fileRedirect = new FileRedirect();
+            fileRedirect.file = "Configuracoes.xml";
+            fileRedirect.relative = false;
+            fileRedirect.path = path;
+            redirect.files[0] = fileRedirect;
+            return redirect;
+        }
     }
 }

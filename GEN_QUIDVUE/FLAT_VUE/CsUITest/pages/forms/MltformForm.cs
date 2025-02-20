@@ -10,12 +10,12 @@ public class MltformForm : Form
 	/// <summary>
 	/// Warehouse
 	/// </summary>
-	public BaseInputControl WarehWarehdes => new BaseInputControl(driver, ContainerLocator, "#MLTFORM_WAREHWAREHDES");
+	public BaseInputControl WarehWarehdes => new BaseInputControl(driver, ContainerLocator, "container-MLTFORM_WAREHWAREHDES", "#MLTFORM_WAREHWAREHDES");
 
 	/// <summary>
 	/// Acronym
 	/// </summary>
-	public BaseInputControl WarehWarehcod => new BaseInputControl(driver, ContainerLocator, "#MLTFORM_WAREHWAREHCOD");
+	public BaseInputControl WarehWarehcod => new BaseInputControl(driver, ContainerLocator, "container-MLTFORM_WAREHWAREHCOD", "#MLTFORM_WAREHWAREHCOD");
 
 	/// <summary>
 	/// Warehouse employees

@@ -274,7 +274,7 @@ namespace CSGenio.framework.TableConfiguration
                 return searchFilters;
             }
         }
-		
+
 		// First visible column, based on the column configuration.
 		[JsonIgnore]
 		public ColumnConfiguration FirstVisibleColumnConfig
@@ -295,11 +295,76 @@ namespace CSGenio.framework.TableConfiguration
 		{
 			return CSGenio.framework.TableConfiguration.ColumnConfiguration.getFieldRef(mainTableName, FirstVisibleColumnConfig?.Name);
 		}
+
+        /// <summary>
+		/// Visible column names (TABLE_NAME.COLUMN_NAME), based on the column configuration.
+		/// </summary>
+        /// <param name="columnConfiguration">Column configuration (order and visibility)</param>
+		/// <param name="mainTableName">Name of the main table</param>
+        /// <returns>Array of column names</returns>
+        public static string[] getVisibleColumnNames(List<CSGenio.framework.TableConfiguration.ColumnConfiguration> columnConfiguration, string mainTableName)
+        {
+            if (columnConfiguration == null || columnConfiguration.Count == 0)
+                return [];
+
+            List<string> visibleColumnNames = new List<string>();
+
+            foreach (ColumnConfiguration columnConfig in columnConfiguration)
+            {
+                if (columnConfig.Visibility == 1)
+                {
+                    string tableName = CSGenio.framework.TableConfiguration.ColumnConfiguration.getTableName(mainTableName, columnConfig.Name);
+                    string columnName = CSGenio.framework.TableConfiguration.ColumnConfiguration.getColumnName(columnConfig.Name);
+
+                    if (string.IsNullOrEmpty(tableName) || string.IsNullOrEmpty(columnName))
+                        continue;
+                    
+                    visibleColumnNames.Add(tableName + "." + columnName);
+                }
+            }
+
+            return visibleColumnNames?.ToArray();
+        }
+
+        /// <summary>
+		/// Get all the search filters in the column configuration that are valid and should be applied.
+		/// </summary>
+        /// <param name="tableConfig">Table configuration</param>
+		/// <param name="mainTableName">Name of the main table</param>
+        /// <param name="searchableColumnNames">Names of the searchable columns</param>
+        /// <returns>Array of search filters</returns>
+        public static List<SearchFilter> getValidSearchFilters(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, string mainTableName, List<string> searchableColumnNames)
+        {
+			// Clone the current search filters so the originals are not changed
+			// The original data must be kept so the invalid filters can be included if they become valid again
+            string searchFiltersJSON = JsonSerializer.Serialize(tableConfig.SearchFilters);
+            List<SearchFilter> validSearchFilters = JsonSerializer.Deserialize<List<SearchFilter>>(searchFiltersJSON);
+
+            string[] customVisibleColumnNames = getVisibleColumnNames(tableConfig?.ColumnConfiguration, mainTableName);
+
+            List<string> finalSearchableColumnNames;
+            if (customVisibleColumnNames != null && customVisibleColumnNames.Length > 0)
+                finalSearchableColumnNames = searchableColumnNames.Select((x) => x.ToLowerInvariant()).Where(x => customVisibleColumnNames.Contains(x)).ToList();
+            else
+                finalSearchableColumnNames = searchableColumnNames.Select((x) => x.ToLowerInvariant()).ToList();
+
+            // Remove conditions that use fields that are not searchable / visible
+            foreach (SearchFilter filter in validSearchFilters)
+            {
+                SearchFilterCondition[] filterConditions = filter.Conditions.Where((condition) => finalSearchableColumnNames.Contains(condition.Field.ToLowerInvariant()))?.ToArray();
+                filter.Conditions = filterConditions;
+            }
+
+            // Remove filters that have no conditions
+            validSearchFilters = validSearchFilters.Where((filter) => filter.Conditions.Length > 0)?.ToList();
+
+            return validSearchFilters;
+        }
     }
 
 	public class TableConfigurationLoadOptions
 	{
-		public Dictionary<string, int> StaticFiltersKeyShiftValues { get; set; }
+        public Dictionary<string, int> StaticFiltersKeyShiftValues { get; set; }
     }
 	
 	public class TableConfigurationHelpers
@@ -372,11 +437,12 @@ namespace CSGenio.framework.TableConfiguration
         {
             bool succeeded = true;
 
-            // Update table configuration with load options
+            // Update table configuration with load options accounting for version changes
             bool shouldSave = ApplyTableConfigurationVersionChanges(tableConfig, options);
 
             // Save updated table configuration to the database if necessary
-            if (shouldSave)
+            // Should not be done when in maintenance mode
+            if (shouldSave && !Maintenance.Current.IsActive)
                 succeeded = UpdateTableConfigurationDbRecord(sp, user, tableConfigDbRecord, tableConfig);
 
             return succeeded;
@@ -443,5 +509,5 @@ namespace CSGenio.framework.TableConfiguration
 			return updatedStaticFilters;
 
         }
-	}
+    }
 }

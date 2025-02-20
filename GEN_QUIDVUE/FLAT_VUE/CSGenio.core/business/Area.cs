@@ -32,6 +32,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaFEECA = new AreaRef("GQT", "gqtfeeca", "feeca");
         public static AreaRef AreaNOTIF { get { return m_AreaNOTIF; } }
         private static AreaRef m_AreaNOTIF = new AreaRef("GQT", "gqtnotif", "notif");
+        public static AreaRef AreaDISST { get { return m_AreaDISST; } }
+        private static AreaRef m_AreaDISST = new AreaRef("GQT", "gqtdisst", "disst");
         public static AreaRef AreaASSET { get { return m_AreaASSET; } }
         private static AreaRef m_AreaASSET = new AreaRef("GQT", "gqtasset", "asset");
         public static AreaRef AreaLANG2 { get { return m_AreaLANG2; } }
@@ -392,6 +394,7 @@ namespace CSGenio.business
             "genre",
             "feeca",
             "notif",
+            "disst",
             "asset",
             "lang2",
             "lendi",

@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Inpgr
 		public string ValCodinpgr { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -60,6 +72,15 @@ namespace GenioMVC.ViewModels.Inpgr
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL STY LIST_LIMITS 361]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -67,20 +88,17 @@ namespace GenioMVC.ViewModels.Inpgr
 			var areaBase = CSGenio.business.Area.createArea("inpgr", user, "STY");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet sty_menu_361Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML361");
-			sty_menu_361Conds.Equal(CSGenioAinpgr.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML361");
+			conditions.Equal(CSGenioAinpgr.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL STY OVERRQ 361]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAinpgr.FldCodinpgr, CSGenioAinpgr.FldZzstate, CSGenioAinpgr.FldNumbgro, CSGenioAinpgr.FldTextgro, CSGenioAinpgr.FldButtngro, CSGenioAinpgr.FldSpangro, CSGenioAinpgr.FldName, CSGenioAinpgr.FldLastname, CSGenioAinpgr.FldAdress, CSGenioAinpgr.FldPrefix, CSGenioAinpgr.FldPhone, CSGenioAinpgr.FldEmail, CSGenioAinpgr.FldWeb, CSGenioAinpgr.FldIban, CSGenioAinpgr.FldBankacco, CSGenioAinpgr.FldTextspan, CSGenioAinpgr.FldDirectio, CSGenioAinpgr.FldBankcomp };
 
 			ListingMVC<CSGenioAinpgr> listing = new ListingMVC<CSGenioAinpgr>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(sty_menu_361Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -169,6 +187,9 @@ namespace GenioMVC.ViewModels.Inpgr
 
 			if (Menu == null)
 				Menu = new TablePartial<STY_Menu_361_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -189,6 +210,8 @@ namespace GenioMVC.ViewModels.Inpgr
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

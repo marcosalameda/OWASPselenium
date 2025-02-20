@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="FACTY"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.FACTY___FACTYTYPE____.isVisible || controls.FACTY___FACTYLAYRNAME.isVisible || controls.FACTY___FACTYICONURL_.isVisible || controls.FACTY___FACTYSHADOWUR.isVisible || controls.FACTY___FACTYICONANCX.isVisible || controls.FACTY___FACTYICONANCY.isVisible || controls.FACTY___FACTYICONHEIG.isVisible || controls.FACTY___FACTYICONWID_.isVisible || controls.FACTY___FACTYPOPUPANX.isVisible || controls.FACTY___FACTYPOPUPANY.isVisible || controls.FACTY___FACTYSHADOWAX.isVisible || controls.FACTY___FACTYSHADOWAY.isVisible || controls.FACTY___FACTYSHADOWHE.isVisible || controls.FACTY___FACTYSHADOWWI.isVisible">
 					<q-control-wrapper

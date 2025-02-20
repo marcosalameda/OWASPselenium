@@ -23,12 +23,12 @@
               </q-button-group>
             </template>
             <template #sendsEmail="props">
-              <span v-if="props.row.SendsEmail" class='glyphicons glyphicons-ok' />
-              <span v-else class='glyphicons glyphicons-remove' />
+              <q-icon v-if="props.row.SendsEmail" icon="check" />
+              <q-icon v-else icon="close" />
             </template>
             <template #sendsToDatabase="props">
-              <span v-if="props.row.SendsToDatabase" class='glyphicons glyphicons-ok' />
-              <span v-else class='glyphicons glyphicons-remove' />
+              <q-icon v-if="props.row.SendsToDatabase" icon="check" />
+              <q-icon v-else icon="close" />
             </template>
         </qtable>
     </row>

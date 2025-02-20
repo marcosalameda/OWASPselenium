@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ARTGL"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ARTGL___GITEMITEMDES_.isVisible || controls.ARTGL___GITEMITEMGCOD.isVisible || controls.ARTGL___GITEMDOCUMENT.isVisible">
 					<q-control-wrapper

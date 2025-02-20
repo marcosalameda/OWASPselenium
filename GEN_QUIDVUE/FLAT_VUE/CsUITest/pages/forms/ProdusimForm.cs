@@ -15,32 +15,32 @@ public class ProdusimForm : Form
 	/// <summary>
 	/// Product
 	/// </summary>
-	public BaseInputControl ProduProduct => new BaseInputControl(driver, ContainerLocator, "#PRODUSIMPRODUPRODUCT_");
+	public BaseInputControl ProduProduct => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUPRODUCT_", "#PRODUSIMPRODUPRODUCT_");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl ProduDescript => new BaseInputControl(driver, ContainerLocator, "#PRODUSIMPRODUDESCRIPT");
+	public BaseInputControl ProduDescript => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUDESCRIPT", "#PRODUSIMPRODUDESCRIPT");
 
 	/// <summary>
 	/// SKU
 	/// </summary>
-	public BaseInputControl ProduSku => new BaseInputControl(driver, ContainerLocator, "#PRODUSIMPRODUSKU_____");
+	public BaseInputControl ProduSku => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUSKU_____", "#PRODUSIMPRODUSKU_____");
 
 	/// <summary>
 	/// GTIN
 	/// </summary>
-	public BaseInputControl ProduGtin => new BaseInputControl(driver, ContainerLocator, "#PRODUSIMPRODUGTIN____");
+	public BaseInputControl ProduGtin => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUGTIN____", "#PRODUSIMPRODUGTIN____");
 
 	/// <summary>
 	/// Size
 	/// </summary>
-	public BaseInputControl ProduSize => new BaseInputControl(driver, ContainerLocator, "#PRODUSIMPRODUSIZE____");
+	public BaseInputControl ProduSize => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUSIZE____", "#PRODUSIMPRODUSIZE____");
 
 	/// <summary>
 	/// Weight
 	/// </summary>
-	public BaseInputControl ProduWeight => new BaseInputControl(driver, ContainerLocator, "#PRODUSIMPRODUWEIGHT__");
+	public BaseInputControl ProduWeight => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUWEIGHT__", "#PRODUSIMPRODUWEIGHT__");
 
 	/// <summary>
 	/// Location

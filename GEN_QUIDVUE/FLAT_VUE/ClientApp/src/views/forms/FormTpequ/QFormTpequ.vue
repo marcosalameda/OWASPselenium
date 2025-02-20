@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="TPEQU"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.TPEQU___PSEUDNOVOGR01.isVisible"
@@ -818,6 +817,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['TPEQU___FAMILFAMILY__', 'TPEQU___TPEQUTIPOEQUI', 'TPEQU___TPEQUTPEQUCOD', 'TPEQU___TPEQUNIVEL___', 'TPEQU___TPEQUTPEQUPAI', 'TPEQU___TPEQUQTDEQUIP'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -906,6 +906,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['TPEQU___PSEUDNOVOGR04', 'TPEQU___PSEUDNOVOGR03', 'TPEQU___PSEUDNOVOGR02', 'TPEQU___PSEUDNOVOGR06'],
 						controlLimits: [
 						],
 					}, this),
@@ -919,7 +920,7 @@
 						container: 'TPEQU___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-TPEQU___PSEUDNOVOGR04',
+						directChildren: ['TPEQU___TPEQUKIT_____', 'TPEQU___PSEUDCOMPONEN'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -933,7 +934,6 @@
 						label: computed(() => this.Resources.KIT27179),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-TPEQU___PSEUDNOVOGR04',
 						container: 'TPEQU___PSEUDNOVOGR04',
 						controlLimits: [
 						],
@@ -947,7 +947,6 @@
 						label: computed(() => this.Resources.MAXIMUM_PRICE26470),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-TPEQU___PSEUDNOVOGR03',
 						container: 'TPEQU___PSEUDNOVOGR03',
 						isFormulaBlocked: true,
 						maxIntegers: 9,
@@ -964,7 +963,6 @@
 						label: computed(() => this.Resources.BACKGROUND_COLOR07511),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-TPEQU___PSEUDNOVOGR02',
 						container: 'TPEQU___PSEUDNOVOGR02',
 						maxLength: 50,
 						labelId: 'label_TPEQU___TPEQUBACKCOLO',
@@ -980,7 +978,6 @@
 						label: computed(() => this.Resources.LETTER_COLOR63305),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-TPEQU___PSEUDNOVOGR02',
 						container: 'TPEQU___PSEUDNOVOGR02',
 						maxLength: 50,
 						labelId: 'label_TPEQU___TPEQUCORLETRA',
@@ -1011,7 +1008,6 @@
 						label: computed(() => this.Resources.LAST_PRICE56195),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-TPEQU___PSEUDNOVOGR03',
 						container: 'TPEQU___PSEUDNOVOGR03',
 						isFormulaBlocked: true,
 						maxIntegers: 9,
@@ -1028,7 +1024,6 @@
 						label: computed(() => this.Resources.SINCE47259),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-TPEQU___PSEUDNOVOGR03',
 						container: 'TPEQU___PSEUDNOVOGR03',
 						isFormulaBlocked: true,
 						format: 'dateTime',
@@ -1042,7 +1037,6 @@
 						label: computed(() => this.Resources.COMPONENTES_DO_KIT59823),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-TPEQU___PSEUDNOVOGR04',
 						container: 'TPEQU___PSEUDNOVOGR04',
 						controller: 'TPEQU',
 						action: 'Tpequ_ValComponen',
@@ -1273,7 +1267,7 @@
 						container: 'TPEQU___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-TPEQU___PSEUDNOVOGR03',
+						directChildren: ['TPEQU___TPEQUPRECOMAX', 'TPEQU___TPEQUPRECOULT', 'TPEQU___TPEQUSINCE___', 'TPEQU___PSEUDEVOLUCAO'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1285,7 +1279,6 @@
 						label: computed(() => this.Resources.C51806),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-TPEQU___PSEUDNOVOGR03',
 						container: 'TPEQU___PSEUDNOVOGR03',
 						controller: 'TPEQU',
 						action: 'Tpequ_ValEvolucao',
@@ -1479,7 +1472,7 @@
 						container: 'TPEQU___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-TPEQU___PSEUDNOVOGR02',
+						directChildren: ['TPEQU___TPEQUBACKCOLO', 'TPEQU___TPEQUCORLETRA'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1542,7 +1535,7 @@
 						container: 'TPEQU___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-TPEQU___PSEUDNOVOGR06',
+						directChildren: ['TPEQU___PSEUDINSTALAC', 'TPEQU___PSEUDINSTALA1'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1554,7 +1547,6 @@
 						label: computed(() => this.Resources.FACILITIES_23844),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-TPEQU___PSEUDNOVOGR06',
 						container: 'TPEQU___PSEUDNOVOGR06',
 						controller: 'TPEQU',
 						action: 'Tpequ_ValInstalac',
@@ -1828,7 +1820,6 @@
 						label: computed(() => this.Resources.MAP_WITH_FACILITIES_33619),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-TPEQU___PSEUDNOVOGR06',
 						container: 'TPEQU___PSEUDNOVOGR06',
 						controller: 'TPEQU',
 						action: 'Tpequ_ValInstala1',

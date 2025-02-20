@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="TPCON"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.TPCON___PSEUDNOVOGR01.isVisible"
@@ -511,6 +510,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['TPCON___GENREGENDER__', 'TPCON___TPCONTIPOCONT'],
 						controlLimits: [
 						],
 					}, this),

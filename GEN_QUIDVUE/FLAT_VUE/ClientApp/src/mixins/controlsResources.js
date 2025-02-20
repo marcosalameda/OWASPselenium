@@ -47,7 +47,6 @@ class TableListMainResources extends BaseResources
 		this.manageViews = computed(() => this._fnGetResource('GERIR_VISTAS48777'))
 		this.createView = computed(() => this._fnGetResource('CRIAR_VISTA61829'))
 		this.saveChanges = computed(() => this._fnGetResource('GRAVAR_ALTERACOES12886'))
-		this.saveWithOtherName = computed(() => this._fnGetResource('GRAVAR_COM_OUTRO_NOM00327'))
 		this.viewModeConfigButtonTitle = computed(() => this._fnGetResource('OPCOES_DE_VISUALIZAC22988'))
 		this.toListViewButtonTitle = computed(() => this._fnGetResource('MUDAR_PARA_VISTA_EM_03626'))
 		this.toAlternativeViewButtonTitle = computed(() => this._fnGetResource('MUDAR_PARA_VISTA_ALT46064'))
@@ -425,6 +424,19 @@ class TabsResources extends BaseResources
 	}
 }
 
+class KanbanResources extends BaseResources
+{
+	constructor(fnGetResource)
+	{
+		super (fnGetResource)
+		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
+		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
+
+		this.addItem = computed(() => '+ ' + this._fnGetResource('INSERIR43365'))
+		this.columnPlaceholder = computed(() => this._fnGetResource('NOME_DA_COLUNA14566'))
+	}
+}
+
 export default {
 	BaseResources,
 	TableListMainResources,
@@ -440,5 +452,6 @@ export default {
 	FormContainerResources,
 	CodeEditorResources,
 	PropertyListResources,
-	TabsResources
+	TabsResources,
+	KanbanResources
 }

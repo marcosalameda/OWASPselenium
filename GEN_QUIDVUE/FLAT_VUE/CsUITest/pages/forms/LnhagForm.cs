@@ -22,7 +22,7 @@ public class LnhagForm : Form
 	/// <summary>
 	/// Quantity
 	/// </summary>
-	public BaseInputControl LnhagQtdtpequ => new BaseInputControl(driver, ContainerLocator, "#LNHAG___LNHAGQTDTPEQU");
+	public BaseInputControl LnhagQtdtpequ => new BaseInputControl(driver, ContainerLocator, "container-LNHAG___LNHAGQTDTPEQU", "#LNHAG___LNHAGQTDTPEQU");
 
 	public LnhagForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "LNHAG", containerLocator: containerLocator) { }

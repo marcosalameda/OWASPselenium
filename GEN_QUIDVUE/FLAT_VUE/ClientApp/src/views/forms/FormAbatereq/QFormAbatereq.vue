@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ABATEREQ"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ABATEREQPSEUDREQTEXT_.isVisible">
 					<q-control-wrapper
@@ -594,7 +593,6 @@
 						label: computed(() => this.Resources.NOTES05274),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ABATEREQPSEUDCOLLAPSE',
 						container: 'ABATEREQPSEUDCOLLAPSE',
 						mustBeFilled: true,
 						controlLimits: [
@@ -609,7 +607,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-ABATEREQPSEUDCOLLAPSE',
+						directChildren: ['ABATEREQDECOMNOTE____'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -621,7 +619,7 @@
 						label: computed(() => this.Resources.TAB41839),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-ABATEREQPSEUDABATETAB',
+						directChildren: ['ABATETABDECOMDTDECO__'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -635,7 +633,6 @@
 						label: computed(() => this.Resources.DECOMISSION14486),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ABATEREQPSEUDABATETAB',
 						tab: 'ABATEREQPSEUDABATETAB',
 						format: 'dateTime',
 						mustBeFilled: true,

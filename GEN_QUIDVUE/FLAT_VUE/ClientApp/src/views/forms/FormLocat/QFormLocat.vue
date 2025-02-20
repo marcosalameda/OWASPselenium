@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="LOCAT"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.LOCAT___PSEUDNOVOGR01.isVisible"
@@ -547,6 +546,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['LOCAT___ENTITNAME____', 'LOCAT___FACILNAME____', 'LOCAT___LOCATGLN_____', 'LOCAT___PSEUDLOCALEXT'],
 						controlLimits: [
 						],
 					}, this),

@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="SALAS"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.SALAS___ROOMSROOMNR__.isVisible || controls.SALAS___ROOMSDESIGNAT.isVisible">
 					<q-control-wrapper

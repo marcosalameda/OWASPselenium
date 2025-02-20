@@ -268,7 +268,7 @@
 											fnValueSelector: (row) => row.ValCoditem
 										},
 									],
-									action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_3811,
+									action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_3811, restrictedModes: true,
 								}
 							},
 							formsDefinition: {

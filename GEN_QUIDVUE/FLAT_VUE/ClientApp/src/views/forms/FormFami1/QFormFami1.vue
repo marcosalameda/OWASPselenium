@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="FAMI1"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.FAMI1___FAMI1FAMILY__.isVisible">
 					<q-control-wrapper

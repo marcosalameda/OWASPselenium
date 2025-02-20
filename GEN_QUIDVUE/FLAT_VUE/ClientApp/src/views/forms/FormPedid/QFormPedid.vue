@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PEDID"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.PEDID___PEDIDDTPEDIDO.isVisible || controls.PEDID___PEDIDNRPEDIDO.isVisible">
 					<q-control-wrapper

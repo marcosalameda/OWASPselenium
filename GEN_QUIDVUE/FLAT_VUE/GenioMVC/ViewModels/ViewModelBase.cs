@@ -101,7 +101,6 @@ namespace GenioMVC.ViewModels
 		/// Gets the list of fields to serialize.
 		/// </summary>
 		virtual protected string[] FieldsToSerialize { get; }
-		
 
 		#region Form modes
 
@@ -410,7 +409,7 @@ namespace GenioMVC.ViewModels
 				if (userColumn != null)
 					return userColumn.Visibility == 1;
 			}
-			
+
 			return searchColumn.Visible;
 		}
 
@@ -446,13 +445,15 @@ namespace GenioMVC.ViewModels
 				SearchColumnsDic.Add(tsc.AreaField.FullName.ToUpper(), tsc);
 
 			string query = Menu.Filters.Query = Menu.Query = tableConfig.Query ?? "";
+			
+			List<CSGenio.framework.TableConfiguration.SearchFilter> validSearchFilters = CSGenio.framework.TableConfiguration.TableConfiguration.getValidSearchFilters(tableConfig, Menu.TableName, SearchColumnsDic.Keys.ToList());
 
 			CriteriaSet search_filters = CriteriaSet.And();
 			//Search with filters for each field
-			if (tableConfig.SearchFilters != null)
+			if (validSearchFilters != null)
 			{
 				//Iterate search filters
-				foreach (CSGenio.framework.TableConfiguration.SearchFilter sf in tableConfig.SearchFilters)
+				foreach (CSGenio.framework.TableConfiguration.SearchFilter sf in validSearchFilters)
 				{
 					//Inactive condition
 					if (!sf.Active)
@@ -472,13 +473,20 @@ namespace GenioMVC.ViewModels
 						Field fieldInfo = CSGenio.business.Area.GetFieldInfo(sc.AreaField);
 						if (sc.FieldType.Equals(typeof(DateTime?)))
 						{
+							// Get datetime format from configuration
+							string format = Configuration.DateFormat.DateTimeSeconds;
+							if (fieldInfo.FieldType.Formatting == FieldFormatting.DATAHORA)
+								format = Configuration.DateFormat.DateTime;
+							else if (fieldInfo.FieldType.Formatting == FieldFormatting.DATA)
+								format = Configuration.DateFormat.Date;
+
 							//Parse values
 							//Values must be an array because the number of values depends on the operation
 							DateTime[] Values = new DateTime[sfc.Values.Length];
 							DateTime parsedValue = new DateTime();
 							int x = 0;
 							foreach (string value in sfc.Values)
-								if (DateTime.TryParse(value, System.Threading.Thread.CurrentThread.CurrentCulture, DateTimeStyles.None, out parsedValue) && CSGenio.business.GlobalFunctions.emptyD(parsedValue) == 0)
+								if (DateTime.TryParseExact(value, format, System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedValue) && CSGenio.business.GlobalFunctions.emptyD(parsedValue) == 0)
 									Values[x++] = parsedValue;
 
 							//Create criteria based on operator code
@@ -597,7 +605,7 @@ namespace GenioMVC.ViewModels
 									string[] valueParts = value.Split(".");
 									string integerDigits = valueParts[0];
 									string decimalDigits = valueParts.Length > 1 ? valueParts[1] : "";
-									
+
 									//Verify if the number of the search value is more than what the field allows
 									if ((integerDigits != null && integerDigits.Length > fieldInfo.IntegerDigits) ||
 									(decimalDigits != null && decimalDigits.Length > fieldInfo.Decimals))

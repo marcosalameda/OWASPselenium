@@ -3,6 +3,9 @@
 		<q-card
 			width="block">
 			<q-row-container>
+				<data-system-badge
+					:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
@@ -50,11 +53,10 @@
 					<template #actions="props">
 						<div elem-identifier="BtnGroup">
 							<button
-								class="b-icon b-icon--secondary dropdown"
 								data-toggle="dropdown"
 								title="Actions"
 								aria-expanded="true">
-								<i class="glyphicons glyphicons-option-horizontal e-icon" />
+								<q-icon icon="dots-horizontal" />
 							</button>
 							<div
 								class="pull-left dropdown-menu"
@@ -63,13 +65,17 @@
 								<a
 									class="dropdown-item"
 									@click.stop="ProcessBTClick(props.row, 'SEND')">
-									<i class="glyphicons glyphicons-eye-open dropdown__icon" />
+									<q-icon
+										class= "dropdown__icon"
+										icon="view" />
 									{{ Resources.REENVIAR02385 }}
 								</a>
 								<a
 									class="dropdown-item"
 									@click.stop="ProcessBTClick(props.row, 'END')">
-									<i class="glyphicons glyphicons-eye-open dropdown__icon" />
+									<q-icon
+										class="dropdown__icon"
+										icon="view" />
 									{{ Resources.FINALIZAR53456 }}
 								</a>
 							</div>

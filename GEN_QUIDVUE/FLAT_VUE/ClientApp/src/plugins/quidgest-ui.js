@@ -1,4 +1,4 @@
-import { createFramework } from '@quidgest/ui'
+﻿import { createFramework } from '@quidgest/ui/framework'
 
 const framework = createFramework({
 	themes: {
@@ -57,8 +57,8 @@ const framework = createFramework({
 				},
 				close: {
 					icon: 'square-plus',
-				},
-			},
+				}
+			}
 		}
 	}
 })

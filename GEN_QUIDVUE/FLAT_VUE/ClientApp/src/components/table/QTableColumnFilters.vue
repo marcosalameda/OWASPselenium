@@ -154,7 +154,6 @@
 
 <script>
 	import cloneDeep from 'lodash-es/cloneDeep'
-	import isEmpty from 'lodash-es/isEmpty'
 
 	import searchFilterDataModule from '@/api/genio/searchFilterData.js'
 	import { dropdownIsFocused } from '@/mixins/genericFunctions'
@@ -279,14 +278,14 @@
 			return {
 				showOverlay: false,
 				editFilter: {},
-				validationErrorFieldIndex: []
+				validationErrors: []
 			}
 		},
 
 		mounted()
 		{
 			// Clear validation errors
-			this.validationErrorFieldIndex = []
+			this.validationErrors = []
 		},
 
 		computed: {
@@ -298,11 +297,6 @@
 			hasFilter()
 			{
 				return Object.keys(this.filter).length > 0
-			},
-
-			conditionsAreValid()
-			{
-				return !this.validationErrorFieldIndex.some((value) => !isEmpty(value.message))
 			},
 
 			hasSearch() {
@@ -570,12 +564,7 @@
 			saveFilter()
 			{
 				// Validate condition
-				this.validationErrorFieldIndex = this.getValidationErrorFieldIndex(
-					this.editFilter,
-					[this.column]
-				)
-
-				if (!this.conditionsAreValid)
+				if (!this.validateFilter(this.editFilter, this.column))
 					return
 
 				// Save filter
@@ -595,7 +584,7 @@
 			removeFilter()
 			{
 				// Clear validation errors
-				this.validationErrorFieldIndex = []
+				this.validationErrors = []
 				// Remove filter
 				this.$emit('remove-column-filter', listFunctions.columnFullName(this.column))
 				this.$emit('update-config')
@@ -608,6 +597,10 @@
 			 */
 			moveFilterToAdvancedFilters()
 			{
+				// Validate condition
+				if (!this.validateFilter(this.editFilter, this.column))
+					return
+
 				// Add filter to advanced filters
 				this.$emit('add-advanced-filter', this.editFilter)
 				// Remove filter
@@ -620,19 +613,22 @@
 			},
 
 			/**
-			 * Get validation error information
-			 * @param {Array} filters
-			 * @param {Array} columns
-			 * @returns {Array}
+			 * Validates the filter
+			 * @param {Array} filter
+			 * @param {Array} column
+			 * @returns {Boolean} Whether the filter is valid or not
 			 */
-			getValidationErrorFieldIndex(filters, columns)
+			validateFilter(filter, column)
 			{
-				let validationErrorFieldIndex = []
-				let conditionStates = listFunctions.filterValidate(filters, columns)
+				let validationErrors = []
+				let conditionStates = listFunctions.filterValidate(filter, [column])
+				let isValid = true
 
 				if (conditionStates.length > 0)
 				{
 					let conditionState = conditionStates[0]
+					if (conditionState.State === 'INVALID')
+						isValid = false
 
 					// Iterate values
 					for (let valueIdx in conditionState.ValueStates)
@@ -640,16 +636,17 @@
 						let valueState = conditionState.ValueStates[valueIdx]
 						let message = ''
 
-						if (valueState !== 'VALID')
+						if (valueState === 'EMPTY')
 							message = conditionState.Label + ' ' + this.texts.isRequired
 
-						validationErrorFieldIndex.push({
+						validationErrors.push({
 							message: message
 						})
 					}
 				}
 
-				return validationErrorFieldIndex
+				this.validationErrors = validationErrors
+				return isValid
 			},
 
 			/**
@@ -659,7 +656,7 @@
 			 */
 			getValueErrorMessages(idx)
 			{
-				const messages = this.validationErrorFieldIndex?.[idx]?.message
+				const messages = this.validationErrors?.[idx]?.message
 				return messages ? [messages] : []
 			},
 
@@ -685,6 +682,8 @@
 			openOverlay() {
 				this.showOverlay = true
 
+				this.initFilter()
+
 				// Wait for the dropdown to exist before focusing on it
 				this.$nextTick().then(() => {
 					this.focusOverlay()
@@ -702,16 +701,6 @@
 
 			focusTriggerBtn() {
 				this.$refs.triggerBtn?.$el?.focus()
-			}
-		},
-
-		watch: {
-			filter: {
-				handler() {
-					this.initFilter()
-				},
-				deep: true,
-				immediate: true
 			}
 		}
 	}

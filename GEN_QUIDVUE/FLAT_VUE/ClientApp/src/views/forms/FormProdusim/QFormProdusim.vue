@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PRODUSIM"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.PRODUSIMPSEUDNOVOGR01.isVisible"
@@ -638,6 +637,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PRODUSIMPRODUPRODUCT_', 'PRODUSIMPRODUDESCRIPT', 'PRODUSIMPRODUSKU_____', 'PRODUSIMPRODUGTIN____', 'PRODUSIMPRODUSIZE____', 'PRODUSIMPRODUWEIGHT__'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -740,7 +740,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PRODUSIMPSEUDNOVOGR02',
+						directChildren: ['PRODUSIMLOCATGLN_____', 'PRODUSIMLCEXTGLNEXT__'],
 						controlLimits: [
 						],
 					}, this),
@@ -753,7 +753,6 @@
 						label: computed(() => this.Resources.GLOBAL_LOCATION_NUMB24637),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PRODUSIMPSEUDNOVOGR02',
 						container: 'PRODUSIMPSEUDNOVOGR02',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -783,7 +782,6 @@
 						label: computed(() => this.Resources.GLN_EXTENSION_COMPON55869),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PRODUSIMPSEUDNOVOGR02',
 						container: 'PRODUSIMPSEUDNOVOGR02',
 						externalCallbacks: {
 							getModelField: vm.getModelField,

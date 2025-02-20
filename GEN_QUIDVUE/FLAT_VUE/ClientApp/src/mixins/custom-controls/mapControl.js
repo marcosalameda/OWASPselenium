@@ -105,13 +105,11 @@ export default class MapControl extends CustomControl
 	 */
 	setListeners()
 	{
-		if (typeof this.controlContext.parentOpeningEvent === 'string' &&
-			typeof this.controlContext.onParentOpen !== 'function')
+		// In case the map is inside some sub-form or collapsible group, adds a listener for when the parent becomes visible/open.
+		if (typeof this.controlContext.onParentOpen !== 'function')
 		{
 			this.controlContext.onParentOpen = () => this.reload()
-
-			this.controlContext.vueContext.internalEvents.off(this.controlContext.parentOpeningEvent, this.controlContext.onParentOpen)
-			this.controlContext.vueContext.internalEvents.on(this.controlContext.parentOpeningEvent, this.controlContext.onParentOpen)
+			this.controlContext.showWhenConditions.addOnShowListener(this.controlContext.onParentOpen)
 		}
 	}
 

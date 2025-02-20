@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PRODU"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.PRODU___PSEUDNOVOGR01.isVisible"
@@ -830,6 +829,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PRODU___PRODUPRODUCT_', 'PRODU___PRODUIN_USE__', 'PRODU___PRODUDESCRIPT', 'PRODU___PRODUSKU_____', 'PRODU___PRODUGTIN____', 'PRODU___PRODUSIZE____', 'PRODU___PRODUWEIGHT__', 'PRODU___PRODUPRICE___', 'PRODU___PRODUINPUTS__', 'PRODU___PRODUOUTPUTS_', 'PRODU___PRODUSTOCK___'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -1013,7 +1013,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PRODU___PSEUDNOVOGR02',
+						directChildren: ['PRODU___PRODUIMAGE___'],
 						controlLimits: [
 						],
 					}, this),
@@ -1026,7 +1026,6 @@
 						label: computed(() => this.Resources.IMAGE65174),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR02',
 						container: 'PRODU___PSEUDNOVOGR02',
 						height: 300,
 						width: 400,
@@ -1043,6 +1042,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PRODU___PSEUDNOVOGR04', 'PRODU___PSEUDNOVOGR05'],
 						controlLimits: [
 						],
 					}, this),
@@ -1056,7 +1056,7 @@
 						container: 'PRODU___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PRODU___PSEUDNOVOGR04',
+						directChildren: ['PRODU___PSEUDNOVOGR03', 'PRODU___PSEUDSTOCKEVO'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1068,10 +1068,10 @@
 						label: computed(() => this.Resources.LOCATION54790),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR04',
 						container: 'PRODU___PSEUDNOVOGR04',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PRODU___LOCATGLN_____', 'PRODU___LCEXTGLNEXT__'],
 						controlLimits: [
 						],
 					}, this),
@@ -1084,7 +1084,6 @@
 						label: computed(() => this.Resources.GLOBAL_LOCATION_NUMB24637),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR04',
 						container: 'PRODU___PSEUDNOVOGR03',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -1114,7 +1113,6 @@
 						label: computed(() => this.Resources.GLN_EXTENSION_COMPON55869),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR04',
 						container: 'PRODU___PSEUDNOVOGR03',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -1148,7 +1146,6 @@
 						label: computed(() => this.Resources.STOCK_EVOLUTION61800),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR04',
 						container: 'PRODU___PSEUDNOVOGR04',
 						controller: 'PRODU',
 						action: 'Produ_ValStockevo',
@@ -1275,7 +1272,7 @@
 						container: 'PRODU___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PRODU___PSEUDNOVOGR05',
+						directChildren: ['PRODU___PSEUDINPUTSRE', 'PRODU___PSEUDOUTPUTSD'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1287,7 +1284,6 @@
 						label: computed(() => this.Resources.INPUTS19315),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR05',
 						container: 'PRODU___PSEUDNOVOGR05',
 						controller: 'PRODU',
 						action: 'Produ_ValInputsre',
@@ -1523,7 +1519,6 @@
 						label: computed(() => this.Resources.OUTPUTS47833),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PRODU___PSEUDNOVOGR05',
 						container: 'PRODU___PSEUDNOVOGR05',
 						controller: 'PRODU',
 						action: 'Produ_ValOutputsd',

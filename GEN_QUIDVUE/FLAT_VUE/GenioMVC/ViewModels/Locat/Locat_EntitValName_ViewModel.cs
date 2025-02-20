@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Locat
 		public string ValCodlocat { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Locat
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS LOCAT_ENTITNAME]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -129,6 +150,9 @@ namespace GenioMVC.ViewModels.Locat
 
 			if (Menu == null)
 				Menu = new TablePartial<Locat_EntitValName_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -150,6 +174,8 @@ namespace GenioMVC.ViewModels.Locat
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -311,7 +337,7 @@ namespace GenioMVC.ViewModels.Locat
 				locat___entitname____Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ LOCAT_NAME]/
+// USE /[MANUAL GQT OVERRQ LOCAT_ENTITNAME]/
 
 				if (isToExport)
 				{
@@ -320,14 +346,14 @@ namespace GenioMVC.ViewModels.Locat
 
 					Qlisting = Models.ModelBase.Where<CSGenioAentit>(m_userContext, false, locat___entitname____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LOCAT___ENTITNAME____", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP LOCAT_NAME]/
+// USE /[MANUAL GQT OVERRQLSTEXP LOCAT_ENTITNAME]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST LOCAT_NAME]/
+// USE /[MANUAL GQT OVERRQLIST LOCAT_ENTITNAME]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_entit"];
 					CriteriaSet m_PagingPosEPHs = null;

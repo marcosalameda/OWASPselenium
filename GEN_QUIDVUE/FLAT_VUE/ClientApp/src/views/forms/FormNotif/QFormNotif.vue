@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="NOTIF"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.NOTIF___NOTIFNRCOMODA.isVisible || controls.NOTIF___NOTIFBEGIN___.isVisible || controls.NOTIF___NOTIFEND_____.isVisible">
 					<q-control-wrapper

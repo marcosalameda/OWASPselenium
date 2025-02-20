@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="TPEQ1"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.TPEQ1___FAMI1FAMILY__.isVisible || controls.TPEQ1___TPEQ1TPEQUCOD.isVisible || controls.TPEQ1___TPEQ1NIVEL___.isVisible">
 					<q-control-wrapper

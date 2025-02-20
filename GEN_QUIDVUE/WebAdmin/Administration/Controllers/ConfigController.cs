@@ -1187,13 +1187,8 @@ namespace Administration.Controllers
         public FileResult DownloadRedirect()
         {
             string path = AppDomain.CurrentDomain.BaseDirectory;
-            RedirectXML redirect = new RedirectXML();
-            redirect.files = new FileRedirect[1];
-            var fileRedirect = new FileRedirect();
-            fileRedirect.file = "Configuracoes.xml";
-            fileRedirect.relative = false;
-            fileRedirect.path = path;
-            redirect.files[0] = fileRedirect;
+            var sysConfig = new SysConfiguration(configManager);
+            var redirect = sysConfig.CreateRedirect(path);
 
             var dataStream = new MemoryStream();
             var serializer = new System.Xml.Serialization.XmlSerializer(typeof(RedirectXML));

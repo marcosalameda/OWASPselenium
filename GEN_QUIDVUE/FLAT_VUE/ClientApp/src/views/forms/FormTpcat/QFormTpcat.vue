@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="TPCAT"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.TPCAT___CATTPTPCATEGO.isVisible">
 					<q-control-wrapper

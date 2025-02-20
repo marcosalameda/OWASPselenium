@@ -16,27 +16,27 @@ public class CampoForm : Form
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl FldsDescrip => new BaseInputControl(driver, ContainerLocator, "#CAMPO___FLDS_DESCRIP_");
+	public BaseInputControl FldsDescrip => new BaseInputControl(driver, ContainerLocator, "container-CAMPO___FLDS_DESCRIP_", "#CAMPO___FLDS_DESCRIP_");
 
 	/// <summary>
 	/// Passenger capacity on the plane
 	/// </summary>
-	public BaseInputControl FldsNpassage => new BaseInputControl(driver, ContainerLocator, "#CAMPO___FLDS_NPASSAGE");
+	public BaseInputControl FldsNpassage => new BaseInputControl(driver, ContainerLocator, "container-CAMPO___FLDS_NPASSAGE", "#CAMPO___FLDS_NPASSAGE");
 
 	/// <summary>
 	/// Trip Duration
 	/// </summary>
-	public BaseInputControl FldsDuration => new BaseInputControl(driver, ContainerLocator, "#CAMPO___FLDS_DURATION");
+	public BaseInputControl FldsDuration => new BaseInputControl(driver, ContainerLocator, "container-CAMPO___FLDS_DURATION", "#CAMPO___FLDS_DURATION");
 
 	/// <summary>
 	/// Rounded Ticket Price
 	/// </summary>
-	public BaseInputControl FldsPrice => new BaseInputControl(driver, ContainerLocator, "#CAMPO___FLDS_PRICE___");
+	public BaseInputControl FldsPrice => new BaseInputControl(driver, ContainerLocator, "container-CAMPO___FLDS_PRICE___", "#CAMPO___FLDS_PRICE___");
 
 	/// <summary>
 	/// Ticket price at tenths
 	/// </summary>
-	public BaseInputControl FldsPrecobil => new BaseInputControl(driver, ContainerLocator, "#CAMPO___FLDS_PRECOBIL");
+	public BaseInputControl FldsPrecobil => new BaseInputControl(driver, ContainerLocator, "container-CAMPO___FLDS_PRECOBIL", "#CAMPO___FLDS_PRECOBIL");
 
 	/// <summary>
 	/// Departure date (DD/MM/YEAR)
@@ -56,12 +56,12 @@ public class CampoForm : Form
 	/// <summary>
 	/// Departure hour
 	/// </summary>
-	public BaseInputControl FldsTime => new BaseInputControl(driver, ContainerLocator, "#CAMPO___FLDS_TIME____");
+	public BaseInputControl FldsTime => new BaseInputControl(driver, ContainerLocator, "container-CAMPO___FLDS_TIME____", "#CAMPO___FLDS_TIME____");
 
 	/// <summary>
 	/// Creation year of the airport
 	/// </summary>
-	public BaseInputControl FldsYear => new BaseInputControl(driver, ContainerLocator, "#CAMPO___FLDS_YEAR____");
+	public BaseInputControl FldsYear => new BaseInputControl(driver, ContainerLocator, "container-CAMPO___FLDS_YEAR____", "#CAMPO___FLDS_YEAR____");
 
 	/// <summary>
 	/// 1ªViagem
@@ -71,7 +71,7 @@ public class CampoForm : Form
 	/// <summary>
 	/// Have you traveled before?
 	/// </summary>
-	public BaseInputControl FldsConditio => new BaseInputControl(driver, ContainerLocator, "#CAMPO___FLDS_CONDITIO");
+	public BaseInputControl FldsConditio => new BaseInputControl(driver, ContainerLocator, "container-CAMPO___FLDS_CONDITIO", "#CAMPO___FLDS_CONDITIO");
 
 	/// <summary>
 	/// Class (Enumeração de Texto)
@@ -91,32 +91,32 @@ public class CampoForm : Form
 	/// <summary>
 	/// Logo
 	/// </summary>
-	public BaseInputControl FldsLogo => new BaseInputControl(driver, ContainerLocator, "#CAMPO___FLDS_LOGO____");
+	public BaseInputControl FldsLogo => new BaseInputControl(driver, ContainerLocator, "container-CAMPO___FLDS_LOGO____", "#CAMPO___FLDS_LOGO____");
 
 	/// <summary>
 	/// Attachments
 	/// </summary>
-	public DocumentControl FldsAttach => new DocumentControl(driver, ContainerLocator, "container-CAMPO___FLDS_ATTACH__");
+	public DocumentControl FldsAttach => new DocumentControl(driver, ContainerLocator, "CAMPO___FLDS_ATTACH__");
 
 	/// <summary>
 	/// Created by
 	/// </summary>
-	public BaseInputControl FldsCreatuse => new BaseInputControl(driver, ContainerLocator, "#CAMPO___FLDS_CREATUSE");
+	public BaseInputControl FldsCreatuse => new BaseInputControl(driver, ContainerLocator, "container-CAMPO___FLDS_CREATUSE", "#CAMPO___FLDS_CREATUSE");
 
 	/// <summary>
 	/// Creation Date (DD/MM/YY)
 	/// </summary>
-	public BaseInputControl FldsCreatdat => new BaseInputControl(driver, ContainerLocator, "#CAMPO___FLDS_CREATDAT");
+	public BaseInputControl FldsCreatdat => new BaseInputControl(driver, ContainerLocator, "container-CAMPO___FLDS_CREATDAT", "#CAMPO___FLDS_CREATDAT");
 
 	/// <summary>
 	/// Creation Date
 	/// </summary>
-	public BaseInputControl FldsCreathou => new BaseInputControl(driver, ContainerLocator, "#CAMPO___FLDS_CREATHOU");
+	public BaseInputControl FldsCreathou => new BaseInputControl(driver, ContainerLocator, "container-CAMPO___FLDS_CREATHOU", "#CAMPO___FLDS_CREATHOU");
 
 	/// <summary>
 	/// Complete Creation Date
 	/// </summary>
-	public BaseInputControl FldsCreatins => new BaseInputControl(driver, ContainerLocator, "#CAMPO___FLDS_CREATINS");
+	public BaseInputControl FldsCreatins => new BaseInputControl(driver, ContainerLocator, "container-CAMPO___FLDS_CREATINS", "#CAMPO___FLDS_CREATINS");
 
 	public CampoForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "CAMPO", containerLocator: containerLocator) { }

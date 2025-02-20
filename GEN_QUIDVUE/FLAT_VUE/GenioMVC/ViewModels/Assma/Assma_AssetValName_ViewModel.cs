@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Assma
 		public string ValCodassma { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Assma
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS ASSMA_ASSETNAME]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Assma
 
 			if (Menu == null)
 				Menu = new TablePartial<Assma_AssetValName_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Assma
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Assma
 				assma___assetname____Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ ASSMA_NAME]/
+// USE /[MANUAL GQT OVERRQ ASSMA_ASSETNAME]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Assma
 
 					Qlisting = Models.ModelBase.Where<CSGenioAasset>(m_userContext, false, assma___assetname____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ASSMA___ASSETNAME____", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP ASSMA_NAME]/
+// USE /[MANUAL GQT OVERRQLSTEXP ASSMA_ASSETNAME]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST ASSMA_NAME]/
+// USE /[MANUAL GQT OVERRQLIST ASSMA_ASSETNAME]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_asset"];
 					CriteriaSet m_PagingPosEPHs = null;

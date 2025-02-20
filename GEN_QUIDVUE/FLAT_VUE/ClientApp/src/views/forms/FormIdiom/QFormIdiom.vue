@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="IDIOM"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.IDIOM___LANGULANGUA__.isVisible || controls.IDIOM___LANGUACRON___.isVisible">
 					<q-control-wrapper

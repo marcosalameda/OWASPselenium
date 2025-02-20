@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="CONTAC03"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.CONTAC03PROCNNAME____.isVisible || controls.CONTAC03PROCNEMAIL___.isVisible || controls.CONTAC03PROCNTELEPHON.isVisible || controls.CONTAC03PROCNDESCRIPT.isVisible || controls.CONTAC03PROCNDATE____.isVisible || controls.CONTAC03PROPETITLE___.isVisible">
 					<q-control-wrapper

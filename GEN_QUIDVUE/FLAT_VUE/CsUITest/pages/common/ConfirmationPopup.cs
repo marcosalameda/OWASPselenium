@@ -3,7 +3,7 @@
 public class ConfirmationPopup: PageObject
 {
     // TODO: When the "SweetAlert" dependency is removed, this should be improved so it doesn't use class names.
-    IWebElement dialogContainer => driver.FindElement(By.CssSelector(".swal2-container"));
+    IWebElement dialogContainer => driver.FindElement(By.CssSelector(".swal2-container.swal2-backdrop-show"));
     IWebElement dialog => driver.FindElement(By.CssSelector(".swal2-popup[role='dialog']"));
     IWebElement buttonOk => dialog.FindElement(By.CssSelector("button.swal2-confirm"));
     IWebElement buttonCancel => dialog.FindElement(By.CssSelector("button.swal2-cancel"));

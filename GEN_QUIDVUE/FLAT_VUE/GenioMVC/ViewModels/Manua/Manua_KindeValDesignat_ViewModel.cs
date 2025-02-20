@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Manua
 		public string ValCodmanua { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Manua
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS MANUA_KINDEDESIGNAT]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Manua
 
 			if (Menu == null)
 				Menu = new TablePartial<Manua_KindeValDesignat_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Manua
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Manua
 				manua___kindedesignatConds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ MANUA_DESIGNAT]/
+// USE /[MANUAL GQT OVERRQ MANUA_KINDEDESIGNAT]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Manua
 
 					Qlisting = Models.ModelBase.Where<CSGenioAkinde>(m_userContext, false, manua___kindedesignatConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_MANUA___KINDEDESIGNAT", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP MANUA_DESIGNAT]/
+// USE /[MANUAL GQT OVERRQLSTEXP MANUA_KINDEDESIGNAT]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST MANUA_DESIGNAT]/
+// USE /[MANUAL GQT OVERRQLIST MANUA_KINDEDESIGNAT]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_kinde"];
 					CriteriaSet m_PagingPosEPHs = null;

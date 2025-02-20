@@ -824,6 +824,11 @@ namespace GenioMVC.Controllers
 
 					user.insert(sp);
 				}
+				catch (BusinessException ex)
+				{
+					ModelState.AddModelError("Erro", ex.UserMessage);
+					return JsonERROR(ex.UserMessage);
+				}
 				finally
 				{
 					//Ensure that whe remove the remove in case of sucess and error

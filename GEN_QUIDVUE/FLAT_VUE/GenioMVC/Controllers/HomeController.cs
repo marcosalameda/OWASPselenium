@@ -800,9 +800,13 @@ namespace GenioMVC.Controllers
 
 				return JsonOK(new { Message = Resources.Resources.A_SUA_PASSWORD_FOI_A50177 });
 			}
-			catch
+			catch (Exception ex)
 			{
 				var errorMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
+
+				if (ex is BusinessException businessEx && !string.IsNullOrEmpty(ex.Message))
+					errorMessage = businessEx.UserMessage;
+
 				ModelState.AddModelError("Erro", errorMessage);
 				return JsonERROR(null, model);
 			}
@@ -1283,14 +1287,14 @@ namespace GenioMVC.Controllers
 		public ActionResult RefreshDbPDF()
 		{
 			string sessionId = HttpContext.Session.Id;
-			if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "temp\\loading" + sessionId + ".txt"))
+			if (System.IO.File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp", "loading" + sessionId + ".txt")))
 			{
-				System.IO.File.Delete(AppDomain.CurrentDomain.BaseDirectory + "temp\\loading" + sessionId + ".txt");
+				System.IO.File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp", "loading" + sessionId + ".txt"));
 				return JsonOK(new { success = true, loading = true });
 			}
-			if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "temp\\" + sessionId + ".txt"))
+			if (System.IO.File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp", sessionId + ".txt")))
 			{
-				System.IO.File.Delete(AppDomain.CurrentDomain.BaseDirectory + "temp\\" + sessionId + ".txt");
+				System.IO.File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp", sessionId + ".txt"));
 				return JsonOK(new { success = true, loading = false });
 			}
 
@@ -1373,10 +1377,10 @@ namespace GenioMVC.Controllers
 					Byte[] bytes = new byte[0];
 					if (Configuration.Files2Disk)
 					{
-						System.IO.FileInfo fileinfo = new System.IO.FileInfo(Configuration.PathDocuments + "\\" + values.GetString(0, 1));
+						System.IO.FileInfo fileinfo = new System.IO.FileInfo(Path.Combine(Configuration.PathDocuments, values.GetString(0, 1)));
 						int size = (int)fileinfo.Length;
 						bytes = new Byte[size];
-						System.IO.FileStream fs = new System.IO.FileStream(Configuration.PathDocuments + "\\" + values.GetString(0, 1), System.IO.FileMode.Open);
+						System.IO.FileStream fs = new System.IO.FileStream(Path.Combine(Configuration.PathDocuments, values.GetString(0, 1)), System.IO.FileMode.Open);
 						fs.Read(bytes, 0, size);
 						fs.Flush();
 						fs.Close();
@@ -1388,13 +1392,13 @@ namespace GenioMVC.Controllers
 					string documsPrimaryKey = values.GetString(0, 3);
 					string timestamp = values.GetDate(0, 4).ToUniversalTime().ToString("s", System.Globalization.CultureInfo.InvariantCulture);
 
-					string tempFile = ".\\temp\\" + documsPrimaryKey + "-" + fileName;
+					string tempFile = Path.Combine(".", "temp", documsPrimaryKey + "-" + fileName);
 					using (System.IO.FileStream tempFileStream = System.IO.File.OpenWrite(tempFile))
 					{
 						tempFileStream.Write(bytes, 0, bytes.Length);
 					}
 					string baseUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-					tempFile = baseUrl + "\\temp\\" + documsPrimaryKey + "-" + fileName;
+					tempFile = Path.Combine(baseUrl, "temp", documsPrimaryKey + "-" + fileName);
 
 					ResourceFile resource = new(documsPrimaryKey + "-" + fileName, "");
 					string ticket = QResources.CreateTicketEncryptedBase64(m_userContext.User.Name, m_userContext.User.Location, resource);

@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ENTIX"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.ENTIX___PSEUDNOVOGR01.isVisible"
@@ -1046,6 +1045,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['ENTIX___ENTITNAME____', 'ENTIX___ENTITFOUNDED_', 'ENTIX___ENTITINITIALS', 'ENTIX___ENTITREGISTRA', 'ENTIX___ENTITTAXNUMBE', 'ENTIX___ENTITIBAN____', 'ENTIX___ENTITPHONENUM', 'ENTIX___ENTITOWNER___', 'ENTIX___ENTITCARRIER_', 'ENTIX___ENTITSUPPLIER', 'ENTIX___ENTITMANUFACT'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -1218,6 +1218,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['ENTIX___PSEUDNOVOGR02', 'ENTIX___PSEUDNOVOGR03', 'ENTIX___PSEUDNOVOGR04'],
 						controlLimits: [
 						],
 					}, this),
@@ -1231,7 +1232,7 @@
 						container: 'ENTIX___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-ENTIX___PSEUDNOVOGR02',
+						directChildren: ['ENTIX___ENTITTELEPHON', 'ENTIX___ENTITFAX_____', 'ENTIX___ENTITEMAIL___', 'ENTIX___ENTITWEBSITE_', 'ENTIX___ENTITPERSON__', 'ENTIX___ENTITCONTACT_', 'ENTIX___ENTITLANGUAGE', 'ENTIX___ENTITCURRENCY'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1245,7 +1246,6 @@
 						label: computed(() => this.Resources.TELEPHONE28697),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 20,
 						labelId: 'label_ENTIX___ENTITTELEPHON',
@@ -1261,7 +1261,6 @@
 						label: computed(() => this.Resources.FAX08532),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 20,
 						labelId: 'label_ENTIX___ENTITFAX_____',
@@ -1277,7 +1276,6 @@
 						label: computed(() => this.Resources.EMAIL25170),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 254,
 						labelId: 'label_ENTIX___ENTITEMAIL___',
@@ -1293,7 +1291,6 @@
 						label: computed(() => this.Resources.WEB_SITE06263),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 254,
 						labelId: 'label_ENTIX___ENTITWEBSITE_',
@@ -1309,7 +1306,6 @@
 						label: computed(() => this.Resources.PERSON_DEPARTMENT_TO28777),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 85,
 						labelId: 'label_ENTIX___ENTITPERSON__',
@@ -1325,7 +1321,6 @@
 						label: computed(() => this.Resources.CONTACT_TELEPHONE_NU12694),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 30,
 						labelId: 'label_ENTIX___ENTITCONTACT_',
@@ -1341,7 +1336,6 @@
 						label: computed(() => this.Resources.LANGUAGE16872),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 2,
 						labelId: 'label_ENTIX___ENTITLANGUAGE',
@@ -1357,7 +1351,6 @@
 						label: computed(() => this.Resources.CURRENCY13881),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR02',
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 3,
 						labelId: 'label_ENTIX___ENTITCURRENCY',
@@ -1374,7 +1367,7 @@
 						container: 'ENTIX___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-ENTIX___PSEUDNOVOGR03',
+						directChildren: ['ENTIX___ENTITBUILDING', 'ENTIX___ENTITSTREET__', 'ENTIX___ENTITTOWN____', 'ENTIX___ENTITCOUNTY__', 'ENTIX___ENTITSTATE___', 'ENTIX___ENTITPOSTALCO', 'ENTIX___ENTITPOBOX___'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1388,7 +1381,6 @@
 						label: computed(() => this.Resources.BUILDING_HOUSE_NUMBE20738),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 25,
 						labelId: 'label_ENTIX___ENTITBUILDING',
@@ -1404,7 +1396,6 @@
 						label: computed(() => this.Resources.STREET44324),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 50,
 						labelId: 'label_ENTIX___ENTITSTREET__',
@@ -1420,7 +1411,6 @@
 						label: computed(() => this.Resources.TOWN_CITY16259),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 50,
 						labelId: 'label_ENTIX___ENTITTOWN____',
@@ -1436,7 +1426,6 @@
 						label: computed(() => this.Resources.COUNTY_PROVINCE34285),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 50,
 						labelId: 'label_ENTIX___ENTITCOUNTY__',
@@ -1452,7 +1441,6 @@
 						label: computed(() => this.Resources.STATE_PROVINCE28516),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 50,
 						labelId: 'label_ENTIX___ENTITSTATE___',
@@ -1468,7 +1456,6 @@
 						label: computed(() => this.Resources.ZIP_POSTAL_CODE55613),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 10,
 						labelId: 'label_ENTIX___ENTITPOSTALCO',
@@ -1484,7 +1471,6 @@
 						label: computed(() => this.Resources.POST_OFFICE_BOX06223),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR03',
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 5,
 						labelId: 'label_ENTIX___ENTITPOBOX___',
@@ -1501,7 +1487,7 @@
 						container: 'ENTIX___PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-ENTIX___PSEUDNOVOGR04',
+						directChildren: ['ENTIX___FACI1NAME____', 'ENTIX___FACI2NAME____'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1515,7 +1501,6 @@
 						label: computed(() => this.Resources.FACILITY_NAME19514),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR04',
 						container: 'ENTIX___PSEUDNOVOGR04',
 						isFormulaBlocked: true,
 						externalCallbacks: {
@@ -1546,7 +1531,6 @@
 						label: computed(() => this.Resources.FACILITY_NAME19514),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ENTIX___PSEUDNOVOGR04',
 						container: 'ENTIX___PSEUDNOVOGR04',
 						isFormulaBlocked: true,
 						externalCallbacks: {
@@ -1577,6 +1561,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['ENTIX___PSEUDFACILITE'],
 						controlLimits: [
 						],
 					}, this),

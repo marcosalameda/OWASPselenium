@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ADDRE"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ADDRE___ADDREADDRUSE_.isVisible || controls.ADDRE___ADDREADDRTYPE.isVisible">
 					<q-control-wrapper

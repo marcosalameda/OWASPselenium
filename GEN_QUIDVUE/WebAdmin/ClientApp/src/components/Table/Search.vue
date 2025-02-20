@@ -17,12 +17,12 @@
                     <q-button
                         b-style="tertiary"
                         @click="emitSearch">
-                        <span class="mdi mdi-magnify"></span>
+                        <q-icon icon="magnify" />
                     </q-button>
                     <q-button
                         b-style="tertiary"
                         @click="resetQuery">
-                        <span class="mdi mdi-close"></span>
+                        <q-icon icon="close" />
                     </q-button>
                 </template>
             </q-text-field>

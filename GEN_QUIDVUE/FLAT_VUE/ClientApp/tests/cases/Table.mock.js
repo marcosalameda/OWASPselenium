@@ -6797,49 +6797,85 @@ export default {
 	columnFilter01: {
 		name: '',
 		active: true,
-		field: '',
-		operator: '',
-		values: []
+		conditions: [
+			{
+				name: '',
+				active: true,
+				field: 'DFLDS.BOOLEAN',
+				operator: '',
+				values: []
+			}
+		]
 	},
 	filterArray01: [
 		{
-			name: 'filter 1',
+			name: '',
 			active: true,
-			field: '',
-			operator: '',
-			values: []
+			conditions: [
+				{
+					name: 'filter 1',
+					active: true,
+					field: 'DFLDS.KEY',
+					operator: '',
+					values: []
+				}
+			]
 		},
 		{
-			name: 'filter 2',
+			name: '',
 			active: true,
-			field: '',
-			operator: '',
-			values: []
+			conditions: [
+				{
+					name: 'filter 2',
+					active: true,
+					field: 'DFLDS.VAL',
+					operator: '',
+					values: []
+				}
+			]
 		}
 	],
 	filterHash01: {
 		column01: {
-			name: 'filter a',
+			name: '',
 			active: true,
-			field: '',
-			operator: '',
-			values: []
+			conditions: [
+				{
+					name: 'filter a',
+					active: true,
+					field: 'DFLDS.TEXT',
+					operator: '',
+					values: []
+				}
+			]
 		},
 		column02: {
-			name: 'filter b',
+			name: '',
 			active: true,
-			field: '',
-			operator: '',
-			values: []
+			conditions: [
+				{
+					name: 'filter b',
+					active: true,
+					field: 'DFLDS.NUMERIC',
+					operator: '',
+					values: []
+				}
+			]
 		}
 	},
 	filterHash02: {
 		columnA: {
-			name: 'filter a',
+			name: '',
 			active: true,
-			field: '',
-			operator: '',
-			values: []
+			conditions: [
+				{
+					name: 'filter a',
+					active: true,
+					field: 'DFLDS.DATE',
+					operator: '',
+					values: []
+				}
+			]
 		}
 	},
 	cssClasses: {
@@ -7099,9 +7135,9 @@ export default {
 		 * @param filter {Object}
 		 * @param index {number}
 		 */
-		editAdvancedFilter(listConf, filter, index)
+		editAdvancedFilters(listConf, filters)
 		{
-			listConf.advancedFilters[index] = filter
+			listConf.advancedFilters = filters
 		},
 
 		/**
@@ -7128,18 +7164,6 @@ export default {
 			{
 				selectedFilterIdx = selectedFilterIdxs[idx]
 				listConf.advancedFilters[selectedFilterIdx].active = active
-			}
-		},
-
-		/**
-		 * Set all advanced filter states to inactive
-		 * @param {object} listConf The list configuration
-		 */
-		deactivateAllAdvancedFilters(listConf)
-		{
-			for (let idx in listConf.advancedFilters)
-			{
-				listConf.advancedFilters[idx].active = false
 			}
 		},
 

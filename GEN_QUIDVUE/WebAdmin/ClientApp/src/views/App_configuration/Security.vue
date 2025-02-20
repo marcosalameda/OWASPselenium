@@ -129,7 +129,7 @@
 							<q-button
 								:label="Resources.INSERIR43365"
 								@click="createIdentityProvider">
-								<q-icon icon="plus-sign" />
+								<q-icon icon="add" />
 							</q-button>
 						</td>
 					</tr>
@@ -165,7 +165,7 @@
 							<q-button
 								:label="Resources.INSERIR43365"
 								@click="createRoleProvider">
-								<q-icon icon="plus-sign" />
+								<q-icon icon="add" />
 							</q-button>
 						</td>
 					</tr>
@@ -202,8 +202,12 @@
 					{{ SelectLists.DisplayUserType.filter((t) => t.Text == props.row.Type)[0] }}
 				</template>
 				<template #AutoLogin="props">
-					<span v-if="props.row.AutoLogin" class='glyphicons glyphicons-ok' />
-					<span v-else class='glyphicons glyphicons-remove' />
+					<q-icon
+						v-if="props.row.AutoLogin" 
+						icon="check" />
+					<q-icon 
+						v-else 
+						icon="close" />
 				</template>
 				<template #table-footer>
 					<tr>
@@ -211,7 +215,7 @@
 							<q-button
 								:label="Resources.INSERIR43365"
 								@click="createUser">
-								<q-icon icon="plus-sign" />
+								<q-icon icon="add" />
 							</q-button>
 						</td>
 					</tr>
@@ -223,7 +227,6 @@
 			id="manage_blacklist"
 			v-model="showBlacklistDialog"
 			:title="Resources.MANAGE_PASSWORD_BLAC01612"
-			dismissible
 			:buttons="buttonsBlacklist">
 			<template #body.content>
 				<div class="q-dialog-container">
@@ -261,7 +264,7 @@
 							:label="Resources.APAGAR04097"
 							b-style="danger"
 							@click="deleteAll">
-							<q-icon icon="delete" />
+							<q-icon icon="bin" />
 						</q-button>
 					</row>
 					<row>
@@ -305,7 +308,6 @@
 			id="identity_provider"
 			v-model="showIdentityDialog"
 			:title="Resources.FORNECEDOR_DE_IDENTI58587"
-			dismissible
 			:buttons="buttons">
 			<template #body.content>
 				<div class="q-dialog-container">
@@ -357,7 +359,6 @@
 		<q-dialog
 			v-model="showRoleDialog"
 			:title="Resources.FORNECEDOR_DE_AUTORI36867"
-			dismissible
 			:buttons="buttons">
 			<template #body.content>
 				<div class="q-dialog-container">
@@ -407,7 +408,6 @@
 		<q-dialog
 			v-model="showUserDialog"
 			:title="Resources.UTILIZADOR_FIXO32336"
-			dismissible
 			:buttons="buttons">
 			<template #body.content>
 				<div class="q-dialog-container">
@@ -419,7 +419,7 @@
 						:readonly="dialogMode != 'new'"
 						size="large">
 						<template #extras v-if="isSameName">
-							<span class="mdi mdi-information-outline"></span>
+							<q-icon icon="information-outline" />
 							{{ Resources.ESTE_NOME_JA_EXISTE_51368 }}
 						</template>
 					</q-text-field>

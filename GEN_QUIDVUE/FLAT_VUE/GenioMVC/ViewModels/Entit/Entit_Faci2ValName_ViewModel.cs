@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Entit
 		public string ValCodentit { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Entit
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS ENTIT_FACI2NAME]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Entit
 
 			if (Menu == null)
 				Menu = new TablePartial<Entit_Faci2ValName_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Entit
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Entit
 				entit___faci2name____Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ ENTIT_NAME]/
+// USE /[MANUAL GQT OVERRQ ENTIT_FACI2NAME]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Entit
 
 					Qlisting = Models.ModelBase.Where<CSGenioAfaci2>(m_userContext, false, entit___faci2name____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ENTIT___FACI2NAME____", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP ENTIT_NAME]/
+// USE /[MANUAL GQT OVERRQLSTEXP ENTIT_FACI2NAME]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST ENTIT_NAME]/
+// USE /[MANUAL GQT OVERRQLIST ENTIT_FACI2NAME]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_faci2"];
 					CriteriaSet m_PagingPosEPHs = null;

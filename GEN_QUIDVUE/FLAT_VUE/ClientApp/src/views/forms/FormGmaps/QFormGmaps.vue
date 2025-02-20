@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="GMAPS"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.GMAPS___PSEUDINSTALAC.isVisible">
 					<q-control-wrapper

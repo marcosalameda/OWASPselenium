@@ -1,5 +1,7 @@
 ﻿<template>
-	<div :id="controlId">
+	<div
+		:id="controlId"
+		:class="{ 'q-document--readonly': readonly }">
 		<div class="q-document__container">
 			<q-input-group :size="size">
 				<q-text-field

@@ -188,7 +188,7 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(12);
+			info.Pathways = new Dictionary<string, string>(13);
 			info.Pathways.Add("recei","recei");
 			info.Pathways.Add("dispa","dispa");
 			info.Pathways.Add("produ","produ");
@@ -196,6 +196,7 @@ namespace CSGenio.business
 			info.Pathways.Add("faci1","recei");
 			info.Pathways.Add("faci2","recei");
 			info.Pathways.Add("perso","dispa");
+			info.Pathways.Add("disst","dispa");
 			info.Pathways.Add("locat","produ");
 			info.Pathways.Add("lcext","produ");
 			info.Pathways.Add("facil","produ");

@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="AGREG"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.AGREG___PROJEPROJECTO.isVisible">
 					<q-control-wrapper

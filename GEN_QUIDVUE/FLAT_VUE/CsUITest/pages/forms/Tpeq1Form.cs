@@ -16,42 +16,42 @@ public class Tpeq1Form : Form
 	/// <summary>
 	/// Code
 	/// </summary>
-	public BaseInputControl Tpeq1Tpequcod => new BaseInputControl(driver, ContainerLocator, "#TPEQ1___TPEQ1TPEQUCOD");
+	public BaseInputControl Tpeq1Tpequcod => new BaseInputControl(driver, ContainerLocator, "container-TPEQ1___TPEQ1TPEQUCOD", "#TPEQ1___TPEQ1TPEQUCOD");
 
 	/// <summary>
 	/// Level:
 	/// </summary>
-	public BaseInputControl Tpeq1Nivel => new BaseInputControl(driver, ContainerLocator, "#TPEQ1___TPEQ1NIVEL___");
+	public BaseInputControl Tpeq1Nivel => new BaseInputControl(driver, ContainerLocator, "container-TPEQ1___TPEQ1NIVEL___", "#TPEQ1___TPEQ1NIVEL___");
 
 	/// <summary>
 	/// Type of equipment
 	/// </summary>
-	public BaseInputControl Tpeq1Tipoequi => new BaseInputControl(driver, ContainerLocator, "#TPEQ1___TPEQ1TIPOEQUI");
+	public BaseInputControl Tpeq1Tipoequi => new BaseInputControl(driver, ContainerLocator, "container-TPEQ1___TPEQ1TIPOEQUI", "#TPEQ1___TPEQ1TIPOEQUI");
 
 	/// <summary>
 	/// Dependence on
 	/// </summary>
-	public BaseInputControl Tpeq1Tpequpai => new BaseInputControl(driver, ContainerLocator, "#TPEQ1___TPEQ1TPEQUPAI");
+	public BaseInputControl Tpeq1Tpequpai => new BaseInputControl(driver, ContainerLocator, "container-TPEQ1___TPEQ1TPEQUPAI", "#TPEQ1___TPEQ1TPEQUPAI");
 
 	/// <summary>
 	/// Background Color
 	/// </summary>
-	public BaseInputControl Tpeq1Backcolo => new BaseInputControl(driver, ContainerLocator, "#TPEQ1___TPEQ1BACKCOLO");
+	public BaseInputControl Tpeq1Backcolo => new BaseInputControl(driver, ContainerLocator, "container-TPEQ1___TPEQ1BACKCOLO", "#TPEQ1___TPEQ1BACKCOLO");
 
 	/// <summary>
 	/// Letter Color:
 	/// </summary>
-	public BaseInputControl Tpeq1Corletra => new BaseInputControl(driver, ContainerLocator, "#TPEQ1___TPEQ1CORLETRA");
+	public BaseInputControl Tpeq1Corletra => new BaseInputControl(driver, ContainerLocator, "container-TPEQ1___TPEQ1CORLETRA", "#TPEQ1___TPEQ1CORLETRA");
 
 	/// <summary>
 	/// Maximum Price
 	/// </summary>
-	public BaseInputControl Tpeq1Precomax => new BaseInputControl(driver, ContainerLocator, "#TPEQ1___TPEQ1PRECOMAX");
+	public BaseInputControl Tpeq1Precomax => new BaseInputControl(driver, ContainerLocator, "container-TPEQ1___TPEQ1PRECOMAX", "#TPEQ1___TPEQ1PRECOMAX");
 
 	/// <summary>
 	/// Last price
 	/// </summary>
-	public BaseInputControl Tpeq1Precoult => new BaseInputControl(driver, ContainerLocator, "#TPEQ1___TPEQ1PRECOULT");
+	public BaseInputControl Tpeq1Precoult => new BaseInputControl(driver, ContainerLocator, "container-TPEQ1___TPEQ1PRECOULT", "#TPEQ1___TPEQ1PRECOULT");
 
 	/// <summary>
 	/// In
@@ -61,7 +61,7 @@ public class Tpeq1Form : Form
 	/// <summary>
 	/// Quantity
 	/// </summary>
-	public BaseInputControl Tpeq1Qtdequip => new BaseInputControl(driver, ContainerLocator, "#TPEQ1___TPEQ1QTDEQUIP");
+	public BaseInputControl Tpeq1Qtdequip => new BaseInputControl(driver, ContainerLocator, "container-TPEQ1___TPEQ1QTDEQUIP", "#TPEQ1___TPEQ1QTDEQUIP");
 
 	/// <summary>
 	/// Kit

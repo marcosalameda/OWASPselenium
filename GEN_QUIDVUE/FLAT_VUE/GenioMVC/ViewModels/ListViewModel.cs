@@ -54,6 +54,11 @@ namespace GenioMVC.ViewModels
 		/// Gets the searchable columns.
 		/// </summary>
 		protected abstract List<TableSearchColumn> SearchableColumns { get; }
+		
+		/// <summary>
+		/// Gets the tables limits that are always applied.
+		/// </summary>
+		public abstract CriteriaSet StaticLimits { get; }
 
 		/// <summary>
 		/// Gets the list base conditions.
@@ -115,6 +120,14 @@ namespace GenioMVC.ViewModels
 		/// </summary>
 		/// <param name="userContext">The current user request context</param>
 		public ListViewModel(UserContext userContext) : base(userContext) {}
+		
+		/// <summary>
+		/// Applies manual code to change the static limits property
+		/// </summary>
+		public virtual CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+			return crs;
+		}
 		
 		/// <summary>
 		/// Gets the user table configuration names from the loaded data and sets the corresponding properties.

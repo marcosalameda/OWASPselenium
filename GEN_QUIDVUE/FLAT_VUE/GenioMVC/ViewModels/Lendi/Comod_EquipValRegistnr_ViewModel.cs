@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Lendi
 		public string ValCodlendi { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -60,7 +72,16 @@ namespace GenioMVC.ViewModels.Lendi
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS COMOD_EQUIPREGISTNR]/
+
+			return crs;
+		}
+
+
 		public string ValCodpess1 { get; set; }
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -140,6 +161,9 @@ namespace GenioMVC.ViewModels.Lendi
 
 			if (Menu == null)
 				Menu = new TablePartial<Comod_EquipValRegistnr_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -161,6 +185,8 @@ namespace GenioMVC.ViewModels.Lendi
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

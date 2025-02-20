@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Hpess
 		public string ValCodhpess { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -60,6 +72,15 @@ namespace GenioMVC.ViewModels.Hpess
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL PTN LIST_LIMITS 1421]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -67,20 +88,17 @@ namespace GenioMVC.ViewModels.Hpess
 			var areaBase = CSGenio.business.Area.createArea("hpess", user, "PTN");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet ptn_menu_1421Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML1421");
-			ptn_menu_1421Conds.Equal(CSGenioAhpess.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML1421");
+			conditions.Equal(CSGenioAhpess.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL PTN OVERRQ 1421]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAhpess.FldCodhpess, CSGenioAhpess.FldZzstate, CSGenioAhpess.FldName, CSGenioAhpess.FldAuthor, CSGenioAhpess.FldDate, CSGenioAhpess.FldCodempre, CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAhpess.FldCodpesso, CSGenioApesso.FldCodpesso, CSGenioApesso.FldName };
 
 			ListingMVC<CSGenioAhpess> listing = new ListingMVC<CSGenioAhpess>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(ptn_menu_1421Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -158,6 +176,9 @@ namespace GenioMVC.ViewModels.Hpess
 
 			if (Menu == null)
 				Menu = new TablePartial<PTN_Menu_1421_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -178,6 +199,8 @@ namespace GenioMVC.ViewModels.Hpess
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

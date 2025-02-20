@@ -29,7 +29,7 @@
 				<q-row-container>
 					<div class="q-help__info-banner">
 						<div class="q-help__info-banner-header">
-							<span class="mdi mdi-information-outline"></span>
+							<q-icon icon="information-outline" />
 							<h5 for="ResultMsg">Database Encryption Key (DEK)</h5>
 						</div>
 						<div class="q-help__info-banner-body">
@@ -53,7 +53,7 @@
 							class="i-text">
 							<password-input v-model="Model.MasterPsw" :label="Resources.CHAVE_MESTRA09773" is-required></password-input>
 							<span class="q-help__subtext">
-								<span class="mdi mdi-information-outline"></span>
+								<q-icon icon="information-outline" />
 								{{ Resources.A_SENHA_DEVE_TER_ENT28631 }}
 							</span>
 						</base-input-structure>
@@ -81,6 +81,9 @@
 						<q-button
 							:label="Resources.STATUS62033"
 							@click="CheckStatusTDE" />
+
+						<data-system-badge
+							:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
 					</row>
 				</q-row-container>
 			</q-card>

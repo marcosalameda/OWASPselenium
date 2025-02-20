@@ -10,7 +10,7 @@ public class TblkForm : Form
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl TblkName => new BaseInputControl(driver, ContainerLocator, "#TBLK____TBLK_NAME____");
+	public BaseInputControl TblkName => new BaseInputControl(driver, ContainerLocator, "container-TBLK____TBLK_NAME____", "#TBLK____TBLK_NAME____");
 
 	/// <summary>
 	/// Name

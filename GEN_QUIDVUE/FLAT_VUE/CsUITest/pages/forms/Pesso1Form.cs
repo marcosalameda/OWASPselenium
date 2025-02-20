@@ -20,7 +20,7 @@ public class Pesso1Form : Form
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "#PESSO1__PESSOPHOTOGRA");
+	public BaseInputControl PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOPHOTOGRA", "#PESSO1__PESSOPHOTOGRA");
 
 	/// <summary>
 	/// IDENTIFICATION
@@ -30,12 +30,12 @@ public class Pesso1Form : Form
 	/// <summary>
 	/// Employee No.
 	/// </summary>
-	public BaseInputControl PessoIdfuncio => new BaseInputControl(driver, ContainerLocator, "#PESSO1__PESSOIDFUNCIO");
+	public BaseInputControl PessoIdfuncio => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOIDFUNCIO", "#PESSO1__PESSOIDFUNCIO");
 
 	/// <summary>
 	/// Name:
 	/// </summary>
-	public BaseInputControl PessoName => new BaseInputControl(driver, ContainerLocator, "#PESSO1__PESSONAME____");
+	public BaseInputControl PessoName => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSONAME____", "#PESSO1__PESSONAME____");
 
 	/// <summary>
 	/// Birth
@@ -45,7 +45,7 @@ public class Pesso1Form : Form
 	/// <summary>
 	/// Age
 	/// </summary>
-	public BaseInputControl PessoIdade => new BaseInputControl(driver, ContainerLocator, "#PESSO1__PESSOIDADE___");
+	public BaseInputControl PessoIdade => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOIDADE___", "#PESSO1__PESSOIDADE___");
 
 	/// <summary>
 	/// Gender
@@ -91,12 +91,12 @@ public class Pesso1Form : Form
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl PessoTelephon => new BaseInputControl(driver, ContainerLocator, "#PESSO1__PESSOTELEPHON");
+	public BaseInputControl PessoTelephon => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOTELEPHON", "#PESSO1__PESSOTELEPHON");
 
 	/// <summary>
 	/// Email:
 	/// </summary>
-	public BaseInputControl PessoEmail => new BaseInputControl(driver, ContainerLocator, "#PESSO1__PESSOEMAIL___");
+	public BaseInputControl PessoEmail => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOEMAIL___", "#PESSO1__PESSOEMAIL___");
 
 	/// <summary>
 	/// ALL CONTACTS

@@ -43,11 +43,23 @@ namespace GenioMVC.ViewModels.Cntry
 		public string ValCodcntry { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -62,6 +74,15 @@ namespace GenioMVC.ViewModels.Cntry
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL IMO LIST_LIMITS 131]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -69,20 +90,17 @@ namespace GenioMVC.ViewModels.Cntry
 			var areaBase = CSGenio.business.Area.createArea("cntry", user, "IMO");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet imo_menu_131Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML131");
-			imo_menu_131Conds.Equal(CSGenioAcntry.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML131");
+			conditions.Equal(CSGenioAcntry.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL IMO OVERRQ 131]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAcntry.FldCodcntry, CSGenioAcntry.FldZzstate, CSGenioAcntry.FldCountry, CSGenioAcntry.FldActive, CSGenioAcntry.FldCodigonr, CSGenioAcntry.FldAlfa2, CSGenioAcntry.FldAlfa3, CSGenioAcntry.FldFlag };
 
 			ListingMVC<CSGenioAcntry> listing = new ListingMVC<CSGenioAcntry>(fields, null, 1, 1, false, user, true, string.Empty, true);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(imo_menu_131Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -178,6 +196,9 @@ namespace GenioMVC.ViewModels.Cntry
 
 			if (Menu == null)
 				Menu = new TablePartial<IMO_Menu_131_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -198,6 +219,8 @@ namespace GenioMVC.ViewModels.Cntry
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 

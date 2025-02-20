@@ -51,10 +51,21 @@
 .control-join-group {
 	display: inline-flex;
 	align-items: stretch;
-	vertical-align: bottom;
 	white-space: nowrap;
 	max-width: 100%;
 	gap: $spacing-base;
+
+	&:not(.control-dynamic-group):not(:has(.c-groupbox)) {
+		align-self: flex-start;
+	
+		&:has(.i-button, .i-checkbox) {
+			align-self: flex-end;
+		}
+	
+		&:has(.i-dbedit) {
+			align-self: flex-end;
+		}
+	}
 
 	& > .i-text,
 	& > .i-textarea {
@@ -63,11 +74,7 @@
 		justify-content: flex-end;
 		align-self: flex-end;
 
-		&.labeltopleft:has(span.q-help__subtext) {
-			max-width: min-content;
-		}
-
-		&.labeltopleft:has(span.q-help__subtext) {
+		&:not(:has(.i-switch)):has(span.q-help__subtext) {
 			max-width: min-content;
 		}
 	}
@@ -107,6 +114,10 @@
 			margin-left: 0.25rem;
 		}
 	}
+
+	.table-responsive-wrapper {
+		white-space: initial;
+	}
 }
 
 .control-dynamic-group {
@@ -116,6 +127,22 @@
 	> * {
 		width: 100%;
 	}
+}
+
+.control-row-group:has(.control-join-group .i-text .q-help__subtext) {
+	.control-join-group:not(.control-dynamic-group):not(:has(.c-groupbox)):has(.i-checkbox) {
+		align-self: flex-start;
+		margin-top: calc(1.5 * 0.9rem + 0.9rem);
+	}
+	
+	.control-join-group:not(.control-dynamic-group):not(:has(.c-groupbox)):has(.i-button) {
+		align-self: flex-start;
+		margin-top: calc(1.5 * 0.9rem);
+	}
+}
+
+.active-filter-box .i-checkbox {
+	align-self: center;
 }
 
 .heading-button-group {

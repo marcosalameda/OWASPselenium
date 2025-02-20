@@ -40,7 +40,6 @@
 @import "controls/q-checkbox.scss";
 @import "controls/q-checklist.scss";
 @import "controls/q-code-editor.scss";
-@import "controls/q-color-picker-input.scss";
 @import "controls/q-cookies.scss";
 @import "controls/q-dashboard.scss";
 @import "controls/q-datetime.scss";
@@ -65,7 +64,6 @@
 @import "controls/q-progress.scss";
 @import "controls/q-radio.scss";
 @import "controls/q-rating.scss";
-@import "controls/q-skeleton-loader.scss";
 @import "controls/q-tab.scss";
 @import "controls/q-table.scss";
 @import "controls/q-text.scss";
@@ -185,4 +183,20 @@ label {
 			min-height: unset;
 		}
 	}
+}
+
+//Global style for inputs
+.q-field__control {
+	background-color: $input-bg;
+}
+.q-field--readonly > .q-field__control {
+	background-color: $input-bg-readonly;
+}
+
+.i-checkbox__field, .i-textarea__field, .i-radio__field {
+	background-color: $input-bg;
+}
+
+.i-checkbox__field[readonly], .i-textarea__field[readonly], .i-radio__field[readonly] {
+	background-color: $input-bg-readonly;
 }

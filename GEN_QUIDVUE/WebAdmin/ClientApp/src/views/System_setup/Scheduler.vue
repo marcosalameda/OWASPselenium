@@ -1,6 +1,5 @@
 ﻿<template>
-<div id="system_setup_scheduler_container">
-	<row>
+    <row>
 		<q-card
 			class="q-card--admin-default"
 			:title="Resources.AGENDADOR40611"
@@ -41,46 +40,36 @@
 								<q-button
 									:label="Resources.INSERIR43365"
 									@click="createJob">
-									<q-icon icon="plus-sign" />
+									<q-icon icon="add" />
 								</q-button>
 							</td>
 						</tr>
 					</template>
 				</qtable>
+				<row class="footer-btn">
+					<q-button
+						b-style="primary"
+						:label="Resources.GRAVAR_CONFIGURACAO36308"
+						@click="SaveSchedulerConfig" />
+				</row>
 			</q-row-container>
 		</q-card>
 	</row>
 
-	<row class="footer-btn">
-		<q-button
-			b-style="primary"
-			:label="Resources.GRAVAR_CONFIGURACAO36308"
-			@click="SaveSchedulerConfig" />
-	</row>
-
-	<q-dialog id="system_setup_scheduledjob"
+	<q-dialog
+		id="system_setup_scheduledjob"
 		v-model="showDialog"
 		:title="Resources.TAREFA_AGENDADA03399"
-		dismissible
 		:buttons="buttons">
 		<template #body.content>
-			<QAlert
-				v-if="alert.isVisible"
-				ref="alertBox"
-				:type="alert.alertType"
-				:text="alert.message"
-				:icon="alert.icon"
-				:title="Resources.ESTADO_DA_OPERACAO38065"
-				:dismissTime="5"
-				@message-dismissed="handleAlertDismissed" />
-			<div style="display: flex; flex-direction: column; padding: 1rem; gap: 0.5rem;">
-				<div style="display:flex; flex-direction: row; gap: 0.5rem;">
+			<div class="q-dialog-container">
+				<div>
 					<q-checkbox
 						v-model="rowEnabled"
 						:readonly="inDeleteMode"
 						:label="Resources.ATIVO_00196" />
 				</div>
-				<div style="display:flex; flex-direction: row; gap: 0.5rem;">
+				<div>
 					<q-text-field 
 						v-model="rowId"
 						:label="Resources.NOME47814"
@@ -88,7 +77,7 @@
 						size="xlarge"
 						required />
 				</div>
-				<div style="display:flex; flex-direction: row; gap: 0.5rem;">
+				<div>
 					<q-select 
 						v-model="rowTaskType"
 						:items="ScheduledJobSelect"
@@ -98,7 +87,7 @@
 						item-label="Text"
 						size="xlarge" />
 				</div>
-				<div style="display:flex; flex-direction: row; gap: 0.5rem;">
+				<div>
 					<base-input-structure
 						:label="'Cron'"
 						:id="'CronField'"
@@ -115,8 +104,7 @@
 							placeholder="cron schedule" />
 					</base-input-structure>
 				</div>					
-				<div style="display:flex; flex-direction: row; gap: 0.5rem;" v-for="c in TaskList[rowTaskType]" :key="c.PropertyName">
-					<hr/>
+				<div v-for="c in TaskList[rowTaskType]" :key="c.PropertyName">
 					<q-text-field
 						v-model="rowOptions[c.PropertyName]"
 						:label="c.DisplayName"
@@ -128,28 +116,23 @@
 			</div>
 		</template>
 	</q-dialog>
-</div>
 </template>
 
 <script>
-	// @ is an alias to /src
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
 	import BaseInputStructure from '@/components/BaseInputStructure.vue'
-	import QAlert from '@/components/QAlert.vue';
-
 
 	export default {
 		name: 'scheduler',
 
 		components: { 
-			BaseInputStructure, 
-			QAlert 
+			BaseInputStructure
 		},
 
 		mixins: [reusableMixin],
 
-		emits: ['updateModal'],
+		emits: ['alertClass', 'updateModal'],
 
 		props: {
 			model: {
@@ -160,9 +143,7 @@
 			}
 		},
 
-		emits: ['updateModal', 'alertClass'],
-
-		data() {
+		data () {
 			return {
 				showDialog: false,
 				job: [],
@@ -173,6 +154,7 @@
 				rowEnabled: false,
 				rowTaskType: '',
 				rowId: '',
+				temp: {},
 				alert: {
 					isVisible: false,
 					alertType: 'info',
@@ -221,7 +203,7 @@
 						}
 					}
 				},
-			};
+			}
 		},
 
 		computed: {
@@ -236,9 +218,9 @@
 					Text: x,
 					Value: x
 				}));
-			}
+			},
 		},
-		
+
 		methods: {
 			SaveSchedulerConfig() {
 				QUtils.log("SaveSchedulerConfig - Request", QUtils.apiActionURL('Config', 'SaveSchedulerConfig'));
@@ -373,11 +355,13 @@
 					rowOptions: {}
 				};
 				this.showScheduledJobModal('new', job);
-			},
+			}
 		},
+
 		mounted() {
 			this.job = this.model.Jobs || [];
 		},
+
 		watch: {
 			rowTaskType(newTaskType) {
 				if (!this.rowOptions) {
@@ -388,7 +372,7 @@
 						this.rowOptions[task.PropertyName] = '';
 					}
 				});
-			}
+			},
 		}
-	};
+	}
 </script>

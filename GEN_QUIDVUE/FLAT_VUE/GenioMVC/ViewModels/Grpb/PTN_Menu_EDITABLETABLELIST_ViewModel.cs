@@ -43,11 +43,23 @@ namespace GenioMVC.ViewModels.Grpb
 		public string ValCodgrpb { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -62,6 +74,15 @@ namespace GenioMVC.ViewModels.Grpb
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL PTN LIST_LIMITS EDITABLETABLELIST]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -69,20 +90,17 @@ namespace GenioMVC.ViewModels.Grpb
 			var areaBase = CSGenio.business.Area.createArea("grpb", user, "PTN");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet ptn_menu_editabletablelistConds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLEDITABLETABLELIST");
-			ptn_menu_editabletablelistConds.Equal(CSGenioAgrpb.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLEDITABLETABLELIST");
+			conditions.Equal(CSGenioAgrpb.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL PTN OVERRQ EDITABLETABLELIST]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZzstate, CSGenioAgrpb.FldName };
 
 			ListingMVC<CSGenioAgrpb> listing = new ListingMVC<CSGenioAgrpb>(fields, null, 1, 1, false, user, true, string.Empty, true);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(ptn_menu_editabletablelistConds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -156,6 +174,9 @@ namespace GenioMVC.ViewModels.Grpb
 
 			if (Menu == null)
 				Menu = new TablePartial<PTN_Menu_EDITABLETABLELIST_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -176,6 +197,8 @@ namespace GenioMVC.ViewModels.Grpb
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

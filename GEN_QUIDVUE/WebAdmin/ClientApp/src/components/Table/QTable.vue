@@ -35,15 +35,18 @@
               <!-- global search text ends here -->
               
               <!-- export to excel button -->
-              <div v-if="enableExport" class="export-btn">
-                <button class="form-group b-icon-text b-icon-text--secondary" @click="exportExcel">
-                    {{ exportLabel }}
-                </button>
-              </div>
+                <q-button
+                    class="form-group c-table__export-btn"
+                    v-if="enableExport"
+                    b-style="secondary"
+                    :label="exportLabel"
+                    @click="exportExcel">
+                    <q-icon icon="file-export" />
+                </q-button>
               <!--  export to excel button ends here -->
 
               <!-- action buttons starts here -->
-              <div class="col-md-8">
+              <div>
                 <slot name="vbt-action-buttons">
                   <div class="btn-group float-right" role="group" aria-label="Basic example">
                     <button v-for="(action, ac_key, index) in actions"

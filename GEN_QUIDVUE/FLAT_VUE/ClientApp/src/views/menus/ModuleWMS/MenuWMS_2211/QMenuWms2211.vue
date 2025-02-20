@@ -312,8 +312,8 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-DISPA', 'changed-PERSO', 'changed-ENTIT'],
-						uuid: '26adf4c3-c69b-49c3-9b58-2dd6e756779a',
+						changeEvents: ['changed-DISPA', 'changed-PERSO', 'changed-ENTIT', 'changed-DISST'],
+						uuid: 'cfbb1913-41cc-44c3-9c1e-563789f3471f',
 						allSelectedRows: 'false',
 						headerLevel: 1,
 						/** Menu limits */

@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="DOCSD"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.DOCSD___OUDOCNRDOCSDA.isVisible || controls.DOCSD___OUDOCDTDOCSDA.isVisible">
 					<q-control-wrapper

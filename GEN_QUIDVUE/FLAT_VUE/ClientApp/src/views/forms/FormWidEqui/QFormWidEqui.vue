@@ -50,8 +50,7 @@
 		<div
 			class="form-flow"
 			data-key="WID_EQUI"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.WID_EQUIPSEUDWIDEQUI_.isVisible">
 					<q-control-wrapper

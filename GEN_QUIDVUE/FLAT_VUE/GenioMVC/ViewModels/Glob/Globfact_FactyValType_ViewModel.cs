@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Glob
 		public string ValCodglob { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Glob
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS GLOBFACT_FACTYTYPE]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Glob
 
 			if (Menu == null)
 				Menu = new TablePartial<Globfact_FactyValType_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Glob
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -320,7 +346,7 @@ namespace GenioMVC.ViewModels.Glob
 				globfactfactytype____Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ GLOBFACT_TYPE]/
+// USE /[MANUAL GQT OVERRQ GLOBFACT_FACTYTYPE]/
 
 				if (isToExport)
 				{
@@ -329,14 +355,14 @@ namespace GenioMVC.ViewModels.Glob
 
 					Qlisting = Models.ModelBase.Where<CSGenioAfacty>(m_userContext, false, globfactfactytype____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_GLOBFACTFACTYTYPE____", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP GLOBFACT_TYPE]/
+// USE /[MANUAL GQT OVERRQLSTEXP GLOBFACT_FACTYTYPE]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST GLOBFACT_TYPE]/
+// USE /[MANUAL GQT OVERRQLIST GLOBFACT_FACTYTYPE]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_facty"];
 					CriteriaSet m_PagingPosEPHs = null;

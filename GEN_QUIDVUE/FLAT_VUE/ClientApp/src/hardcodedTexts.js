@@ -136,7 +136,6 @@
 	errorProcessingRequest: 'OCORREU_UM_ERRO_AO_P53091',
 	message: 'MENSAGEM32641',
 	messages: 'MENSAGENS53948',
-	tableViewConfirmSaveChanges: 'SALVAR_AS_ALTERACOES51739',
 	register: 'REGISTAR62252',
 	password: 'PALAVRA_CHAVE39832',
 	currentPassword: 'PALAVRA_CHAVE_ACTUAL29965',

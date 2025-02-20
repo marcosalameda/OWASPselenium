@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Uicom
 		public string ValCoduicom { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -60,6 +72,15 @@ namespace GenioMVC.ViewModels.Uicom
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL STY LIST_LIMITS OVERVIEW]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -67,20 +88,17 @@ namespace GenioMVC.ViewModels.Uicom
 			var areaBase = CSGenio.business.Area.createArea("uicom", user, "STY");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet sty_menu_overviewConds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLOVERVIEW");
-			sty_menu_overviewConds.Equal(CSGenioAuicom.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLOVERVIEW");
+			conditions.Equal(CSGenioAuicom.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL STY OVERRQ OVERVIEW]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAuicom.FldCoduicom, CSGenioAuicom.FldZzstate, CSGenioAuicom.FldName, CSGenioAuicom.FldCategory, CSGenioAuicom.FldMenuid, CSGenioAuicom.FldThumbnai };
 
 			ListingMVC<CSGenioAuicom> listing = new ListingMVC<CSGenioAuicom>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(sty_menu_overviewConds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -157,6 +175,9 @@ namespace GenioMVC.ViewModels.Uicom
 
 			if (Menu == null)
 				Menu = new TablePartial<STY_Menu_OVERVIEW_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -177,6 +198,8 @@ namespace GenioMVC.ViewModels.Uicom
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

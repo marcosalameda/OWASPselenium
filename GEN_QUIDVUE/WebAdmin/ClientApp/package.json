@@ -16,7 +16,7 @@
     "vite:preview": "set NODE_OPTIONS=--max_old_space_size=10240 && vite preview"
   },
   "dependencies": {
-    "@quidgest/ui": "0.14.10",
+    "@quidgest/ui": "0.14.12",
     "@vuepic/vue-datepicker": "3.0.0",
     "bootbox": "5.5.2",
     "bootstrap": "4.6.1",
@@ -42,6 +42,7 @@
     "eslint-plugin-vue": "^9.22.0",
     "prettier": "^3.2.5",
     "sass": "^1.77.6",
+    "svgstore": "3.0.1",
     "vite": "^5.1.4"
   }
 }

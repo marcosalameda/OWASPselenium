@@ -16,17 +16,17 @@ public class ManuaForm : Form
 	/// <summary>
 	/// Manual name
 	/// </summary>
-	public BaseInputControl ManuaName => new BaseInputControl(driver, ContainerLocator, "#MANUA___MANUANAME____");
+	public BaseInputControl ManuaName => new BaseInputControl(driver, ContainerLocator, "container-MANUA___MANUANAME____", "#MANUA___MANUANAME____");
 
 	/// <summary>
 	/// Digital document
 	/// </summary>
-	public DocumentControl ManuaDigdocum => new DocumentControl(driver, ContainerLocator, "container-MANUA___MANUADIGDOCUM");
+	public DocumentControl ManuaDigdocum => new DocumentControl(driver, ContainerLocator, "MANUA___MANUADIGDOCUM");
 
 	/// <summary>
 	/// Notes
 	/// </summary>
-	public BaseInputControl ManuaNotes => new BaseInputControl(driver, ContainerLocator, "#MANUA___MANUANOTES___");
+	public BaseInputControl ManuaNotes => new BaseInputControl(driver, ContainerLocator, "container-MANUA___MANUANOTES___", "#MANUA___MANUANOTES___");
 
 	public ManuaForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "MANUA", containerLocator: containerLocator) { }

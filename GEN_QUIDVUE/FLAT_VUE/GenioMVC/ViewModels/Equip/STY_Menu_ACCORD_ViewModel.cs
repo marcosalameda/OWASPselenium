@@ -43,6 +43,20 @@ namespace GenioMVC.ViewModels.Equip
 		public string ValCodequip { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+				// Limit "SC"
+				conditions.Equal(CSGenioAequip.FldShowrc, "1");
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -50,6 +64,7 @@ namespace GenioMVC.ViewModels.Equip
 				CriteriaSet conds = CriteriaSet.And();
 				if (Navigation.CheckKey("equip.showrc"))
 					conds.Equal(CSGenioAequip.FldShowrc, Navigation.GetValue("equip.showrc"));
+
 				return conds;
 			}
 		}
@@ -64,6 +79,15 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL STY LIST_LIMITS ACCORD]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -71,21 +95,17 @@ namespace GenioMVC.ViewModels.Equip
 			var areaBase = CSGenio.business.Area.createArea("equip", user, "STY");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet sty_menu_accordConds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLACCORD");
-			sty_menu_accordConds.Equal(CSGenioAequip.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLACCORD");
+			conditions.Equal(CSGenioAequip.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-						sty_menu_accordConds.Equal(CSGenioAequip.FldShowrc, 1);
-
-
-// USE /[MANUAL STY OVERRQ ACCORD]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.FldZzstate, CSGenioAequip.FldCodempre, CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAequip.FldSequennr, CSGenioAequip.FldRegistnr, CSGenioAequip.FldCodtpequ, CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.FldTipoequi, CSGenioAequip.FldDesignat, CSGenioAequip.FldDtaquisi, CSGenioAequip.FldDtdeco, CSGenioAequip.FldSitefabr };
 
 			ListingMVC<CSGenioAequip> listing = new ListingMVC<CSGenioAequip>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(sty_menu_accordConds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -166,6 +186,9 @@ namespace GenioMVC.ViewModels.Equip
 
 			if (Menu == null)
 				Menu = new TablePartial<STY_Menu_ACCORD_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -187,9 +210,9 @@ namespace GenioMVC.ViewModels.Equip
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
-			// Limit "SC"
-			crs.Equal(CSGenioAequip.FldShowrc, "1");
 
 			if (isToExport)
 			{

@@ -1,5 +1,5 @@
 ﻿import { isRef } from 'vue'
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 import tinycolor from 'tinycolor2'
 import cloneDeep from 'lodash-es/cloneDeep'
 import _forEach from 'lodash-es/forEach'
@@ -160,6 +160,8 @@ export function setAppConfig(data)
 		systemDataStore.setSchedulerLicenseKey(data.schedulerLicense)
 	if (typeof data.eventTracking === 'boolean')
 		tracingDataStore.activateEventTracker(data.eventTracking)
+	if (typeof data.enableTracing === 'boolean')
+		tracingDataStore.setTracingState(data.enableTracing)
 
 	authDataStore.setUsernameAuth(data.hasUsernameAuth)
 	authDataStore.setPasswordRecovery(data.hasPasswordRecovery)
@@ -991,17 +993,34 @@ export function currencyDisplay(value, decimalSep, groupSep, decimalPlaces, curr
 
 /**
  * Get formatted string representing a date/time
- * @param dateTimeStr {string}
+ * @param dateTime {string, object}
  * @param dateTimeFormat {string}
  * @returns String
  */
-export function dateDisplay(dateTimeStr, dateTimeFormat)
+export function dateDisplay(dateTime, dateTimeFormat)
 {
-	// NULL dates
-	if (isEmpty(dateTimeStr))
+	var date
+
+	if(_isDate(dateTime))
+		date = dateTime
+	else if(typeof dateTime === 'string' || dateTime instanceof String)
+	{
+		// NULL dates
+		if (isEmpty(dateTime))
+			return ''
+
+		// Parse
+		date = new Date()
+		date = parse(dateTime, dateTimeFormat, date)
+
+		// If date is invalid, return raw value
+		if (isNaN(date.getTime()))
+			return dateTime
+	}
+	else
 		return ''
 
-	const date = new Date(dateTimeStr)
+	// If date is valid, return formatted value
 	return format(date, dateTimeFormat ?? 'dd/MM/yyyy HH:mm:ss')
 }
 
@@ -1301,6 +1320,29 @@ export function btnHasPermission(permissions, actionType)
 }
 
 /**
+ * Retrieves the modes parameter for a given mode.
+ * This is meant to be used as a default when no other modes are defined.
+ * @param {object} mode The mode the form will be open with
+ * @returns 
+ */
+export function getDefaultFormModesForMode(mode) {
+	switch (mode) {
+		case formModes.show:
+			return 'v'
+		case formModes.edit:
+			return 'e'
+		case formModes.duplicate:
+			return 'd'
+		case formModes.delete:
+			return 'a'
+		case formModes.new:
+		case 'INSERT':
+			return 'i'
+	}
+	return ''
+}
+
+/**
  * Creates a JavaScript Model structure.
  * @param {Object} row - Data in the format { 'area.field': value }
  * @param {Object} objectStructure - Object structure in the format: 'Area.ValField': () => (rowFields) => rowFields['area.field']
@@ -1434,5 +1476,6 @@ export default {
 	formatColumnIdentifier,
 	resetStoreState,
 	focusElement,
-	removeModal
+	removeModal,
+	getDefaultFormModesForMode
 }

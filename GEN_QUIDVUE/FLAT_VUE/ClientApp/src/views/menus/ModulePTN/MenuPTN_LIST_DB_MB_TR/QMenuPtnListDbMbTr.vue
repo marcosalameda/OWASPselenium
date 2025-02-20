@@ -349,7 +349,7 @@
 											fnValueSelector: (row) => row.ValCoddespe
 										},
 									],
-									action: vm.PTN_MenuTR_TRIGGER_MENU1, type: 'trigger',
+									action: vm.PTN_MenuTR_TRIGGER_MENU1, type: 'trigger', restrictedModes: true,
 								}
 							},
 							formsDefinition: {

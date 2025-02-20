@@ -21,50 +21,55 @@
 		<q-card
 			width="block">
 			<q-row-container>
-				<q-control-wrapper
-					v-if="!Model.LockTable"
-					class="row-line-group">
-					<base-input-structure
-						class="i-text">
-						<select-input
-							v-model="Model.LogTable"
-							v-if="Model.SelectLists"
-							:options="Model.SelectLists.LogTables"
-							:label="Resources.SELECIONE_A_TABELA_A28300"
-							style="width: 350px;" />
-					</base-input-structure>
-				</q-control-wrapper>
-				<template v-if="Model.LogDatabaseExists">
-					<radio-input 
-						v-model="Model.LogDatabaseSelected"
-						:options="logDatabase"
-						:label="Resources.DADOS_43180" />
-					<select-simple
-						v-if="Model.LogTable == logTables.logGQTall"
-						side="left"
-						class="float-right"
-						:options="transferLogOptions"
-						:show-value="false"
-						:staticText="Resources.TRANSFERIR_DADOS_PAR38484"
-						@update:modelValue="TransferLog" />
-				</template>
-				<q-control-wrapper class="row-line-group">
-					<select-simple
-						class="float-right"
-						side="left"
-						:options="logExportType"
-						:show-value="false"
-						:staticText="Resources.EXPORTAR35632"
-						@update:modelValue="LogExport" />
-				</q-control-wrapper>
-				<qtable :rows="tAudit.rows"
+				<q-select
+					v-if="Model.SelectLists && !Model.LockTable"
+					v-model="Model.LogTable"
+					:label="Resources.SELECIONE_A_TABELA_A28300"
+					size="xlarge"
+					item-label="Text"
+					item-value="Value"
+					:items="Model.SelectLists.LogTables" />
+
+				<radio-input
+					v-if="Model.LogDatabaseExists"
+					v-model="Model.LogDatabaseSelected"
+					:options="logDatabase"
+					:label="Resources.DADOS_43180" />
+
+				<qtable 
+					:rows="tAudit.rows"
 					:columns="tAudit.columns"
 					:config="tAudit.config"
 					@on-change-query="onChangeQuery"
 					:totalRows="tAudit.total_rows"
-					@on-single-select-row="handleSingleSelect"
-					enable-export>
-				</qtable>
+					@on-single-select-row="handleSingleSelect" />
+
+					<row class="footer-btn">
+						<q-button
+							id="logExportActivator"
+							b-style="primary"
+							:label="Resources.EXPORTAR35632" />
+						<q-dropdown-menu
+							:activator="`#logExportActivator`"
+							item-label="Text"
+							item-value="Value"
+							:items="logExportType"
+							@select="LogExport" />
+
+						<template 
+							v-if="Model.LogDatabaseExists">
+							<q-button
+								id="logTransferActivator"
+								b-style="primary"
+								:label="Resources.TRANSFERIR_DADOS_PAR38484" />
+							<q-dropdown-menu
+								:activator="`#logTransferActivator`"
+								item-label="Text"
+								item-value="Value"
+								:items="transferLogOptions"
+								@select="TransferLog" />
+						</template>
+					</row>
 				<template v-if="Model && !isEmptyObject(Model.SelectedRow)">
 					<row>
 						<h3>{{ Resources.VALORES_CURRENTES_21555 }}</h3>
@@ -81,7 +86,7 @@
 							<dd 
 								v-if="isEmptyObject(Model.SelectedRowValues) || isEmptyObject(Model.SelectedRowValues[index-3])"
 								:class="style.ddClass">
-								<span class="glyphicons glyphicons-minus" />
+								<q-icon icon=minus />
 							</dd>
 							<dd 
 								v-else
@@ -144,6 +149,7 @@
 					total_rows: 0,
 					columns: vm.getColumns(),
 					config: {
+						table_title: vm.$t('REGISTO_DE_EVENTOS65341'),
 						global_search: {
 							classes: "qtable-global-search",
 							searchOnPressEnter: true,
@@ -236,7 +242,7 @@
 				this.fetchData();
 			},
 
-			handleSingleSelect: function (eventData) {
+			handleSingleSelect(eventData) {
 				var id = eventData.row[3];
 				if (this.curSelectedRowIndex == eventData.rowIndex) { this.unSelectRow(); }
 				else { this.SelectRow(id, eventData.rowIndex); }
@@ -276,7 +282,7 @@
 						var downloadUrl = QUtils.apiActionURL('AuditViewer', 'downloadExportFile', { id: data.fileId, type: exportType });
 						window.open(downloadUrl, "_self");
 					} else {
-						bootbox.alert(data.Message);
+						bootbox.alert(data.ResultMsg);
 					}
 				});
 			},

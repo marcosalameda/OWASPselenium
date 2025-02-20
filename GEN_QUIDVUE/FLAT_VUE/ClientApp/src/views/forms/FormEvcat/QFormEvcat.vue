@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="EVCAT"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.EVCAT___PESSONAME____.isVisible || controls.EVCAT___CATE1CATEGORY.isVisible || controls.EVCAT___EVCATSINCE___.isVisible || controls.EVCAT___EVCATUNTIL___.isVisible || controls.EVCAT___EVCATUNTILMAN.isVisible || controls.EVCAT___EVCATFIMPERIO.isVisible">
 					<q-control-wrapper

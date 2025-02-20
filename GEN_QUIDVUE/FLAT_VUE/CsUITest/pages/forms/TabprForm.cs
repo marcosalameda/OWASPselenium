@@ -26,7 +26,7 @@ public class TabprForm : Form
 	/// <summary>
 	/// Price per hour:
 	/// </summary>
-	public BaseInputControl TabprPrecohor => new BaseInputControl(driver, ContainerLocator, "#TABPR___TABPRPRECOHOR");
+	public BaseInputControl TabprPrecohor => new BaseInputControl(driver, ContainerLocator, "container-TABPR___TABPRPRECOHOR", "#TABPR___TABPRPRECOHOR");
 
 	public TabprForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "TABPR", containerLocator: containerLocator) { }

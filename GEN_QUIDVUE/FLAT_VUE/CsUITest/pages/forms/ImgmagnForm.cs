@@ -10,7 +10,7 @@ public class ImgmagnForm : Form
 	/// <summary>
 	/// Image Background
 	/// </summary>
-	public BaseInputControl WpessFtbackgr => new BaseInputControl(driver, ContainerLocator, "#IMGMAGN_WPESSFTBACKGR");
+	public BaseInputControl WpessFtbackgr => new BaseInputControl(driver, ContainerLocator, "container-IMGMAGN_WPESSFTBACKGR", "#IMGMAGN_WPESSFTBACKGR");
 
 	public ImgmagnForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "IMGMAGN", containerLocator: containerLocator) { }

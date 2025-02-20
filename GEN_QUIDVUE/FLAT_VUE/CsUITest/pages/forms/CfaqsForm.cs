@@ -10,17 +10,17 @@ public class CfaqsForm : Form
 	/// <summary>
 	/// Icon
 	/// </summary>
-	public BaseInputControl CfaqsIcon => new BaseInputControl(driver, ContainerLocator, "#CFAQS___CFAQSICON____");
+	public BaseInputControl CfaqsIcon => new BaseInputControl(driver, ContainerLocator, "container-CFAQS___CFAQSICON____", "#CFAQS___CFAQSICON____");
 
 	/// <summary>
 	/// Category
 	/// </summary>
-	public BaseInputControl CfaqsCategory => new BaseInputControl(driver, ContainerLocator, "#CFAQS___CFAQSCATEGORY");
+	public BaseInputControl CfaqsCategory => new BaseInputControl(driver, ContainerLocator, "container-CFAQS___CFAQSCATEGORY", "#CFAQS___CFAQSCATEGORY");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl CfaqsDescript => new BaseInputControl(driver, ContainerLocator, "#CFAQS___CFAQSDESCRIPT");
+	public BaseInputControl CfaqsDescript => new BaseInputControl(driver, ContainerLocator, "container-CFAQS___CFAQSDESCRIPT", "#CFAQS___CFAQSDESCRIPT");
 
 	/// <summary>
 	/// FAQS

@@ -74,26 +74,26 @@ namespace GenioMVC.ViewModels.Itemp
 
             foreach (var property in Fields)
             {
-                GenioMVC.Models.Itemp model = new GenioMVC.Models.Itemp(m_userContext);
+                var existingRow = GenioMVC.Models.Itemp.Find(property.RowId, m_userContext);
+                var model = existingRow ?? CreateNewRow();
 
-                // If its a new property insert a new record, otherwise update
-                if(String.IsNullOrEmpty(property.RowId))
-                {
-                    model.New();
-                }
-                else
-                {
-                    model.ValCoditemp = property.RowId;
-                }				
-
-                model.LoadKeysFromHistory(m_userContext.CurrentNavigation, m_userContext.CurrentNavigation.CurrentLevel.Level);
                 model.ValPropid = property.Name;
                 model.ValProptype = property.Type;
                 model.ValPropval = property.Value;
+                
                 rows.Add(model);
             }
 
             this.propertyListRows = rows;
+        }
+
+        private GenioMVC.Models.Itemp CreateNewRow()
+        {
+            var newRow = new GenioMVC.Models.Itemp(m_userContext);
+            newRow.New();
+            newRow.LoadKeysFromHistory(m_userContext.CurrentNavigation, m_userContext.CurrentNavigation.CurrentLevel.Level);
+
+            return newRow;
         }
     }
 

@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PWORG"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.PWORG___PSW__NOME____.isVisible || controls.PWORG___ORGANORGANIZA.isVisible">
 					<q-control-wrapper

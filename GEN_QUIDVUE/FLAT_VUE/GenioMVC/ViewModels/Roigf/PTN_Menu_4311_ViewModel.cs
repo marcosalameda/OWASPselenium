@@ -43,12 +43,25 @@ namespace GenioMVC.ViewModels.Roigf
 		public string ValCodroigf { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
 				conds.Equal(CSGenioAroigf.FldCodrogl1, Navigation.GetValue("rogl1"));
+
 				return conds;
 			}
 		}
@@ -63,6 +76,15 @@ namespace GenioMVC.ViewModels.Roigf
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL PTN LIST_LIMITS 4311]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -70,20 +92,17 @@ namespace GenioMVC.ViewModels.Roigf
 			var areaBase = CSGenio.business.Area.createArea("roigf", user, "PTN");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet ptn_menu_4311Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML4311");
-			ptn_menu_4311Conds.Equal(CSGenioAroigf.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML4311");
+			conditions.Equal(CSGenioAroigf.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL PTN OVERRQ 4311]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAroigf.FldCodroigf, CSGenioAroigf.FldZzstate, CSGenioAroigf.FldOrder, CSGenioAroigf.FldTitle, CSGenioAroigf.FldCodrogl1, CSGenioArogl1.FldCodrogl1, CSGenioArogl1.FldTitle };
 
 			ListingMVC<CSGenioAroigf> listing = new ListingMVC<CSGenioAroigf>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(ptn_menu_4311Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -162,6 +181,9 @@ namespace GenioMVC.ViewModels.Roigf
 
 			if (Menu == null)
 				Menu = new TablePartial<PTN_Menu_4311_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -182,6 +204,8 @@ namespace GenioMVC.ViewModels.Roigf
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Limitations
 			// Limit "DB"

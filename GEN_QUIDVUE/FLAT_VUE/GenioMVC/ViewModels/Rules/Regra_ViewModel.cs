@@ -218,7 +218,7 @@ namespace GenioMVC.ViewModels.Rules
 			{
 				// (REGRA form condition) [RULES->TIPOCOND]=="M"
 				if (!isApply && (areaRules.klass.ValTipocond=="M")
-					&& CSGenio.business.Area.GetFieldInfo(CSGenioArules.FldDescript).isEmptyValue(model.ValDescript))
+					&& CSGenio.business.Area.GetFieldInfo(CSGenioArules.FldDescript).isEmptyValue(ViewModelConversion.ToString(model.ValDescript)))
 				{
 					var status = Status.E;
 					var message = new StatusMessage(status, Resources.Resources.E_OBRIGATORIO_PREENC03702); // Message: "É obrigatório preencher a descrição: Regra do form sem apply"
@@ -240,7 +240,7 @@ namespace GenioMVC.ViewModels.Rules
 				}
 				// (REGRA form condition) [RULES->TIPOCOND]=="M" && [RULES->LOCAL]=="F"
 				if ((areaRules.klass.ValTipocond=="M"&&areaRules.klass.ValLocal=="F")
-					&& CSGenio.business.Area.GetFieldInfo(CSGenioArules.FldDescript).isEmptyValue(model.ValDescript))
+					&& CSGenio.business.Area.GetFieldInfo(CSGenioArules.FldDescript).isEmptyValue(ViewModelConversion.ToString(model.ValDescript)))
 				{
 					var status = Status.E;
 					var message = new StatusMessage(status, Resources.Resources.E_OBRIGATORIO_PREENC62370); // Message: "É obrigatório preencher a descrição: Regra do form com apply"

@@ -2,6 +2,19 @@
     <div id="container">
         <div class="row">
             <div class="col-6">
+            <div class="q-help__info-banner">
+                <div class="q-help__info-banner-header">
+                    <q-icon icon="information-outline" />
+                    <h5>{{ Resources.ATRIBUIR_RAPIDAMENTE15967 }}</h5>
+                </div>
+                <div class="q-help__info-banner-body">
+                    <span>
+                        {{ Resources._1__SELECIONE_UTILIZ36383 }}<br>
+                        {{ Resources._2__SELECIONE_FUNCOE01301 }}<br>
+                        {{ Resources._3__REVEJA_E_CONFIRM63315 }}<br>
+                    </span>
+                </div>
+            </div>
             <q-group-box-container :label="Resources.DISPONIVEIS47523">
                 <div class="list-group">
                     <h3>{{Resources.UTILIZADORES39761}}</h3>
@@ -15,7 +28,7 @@
                                     borderless
                                     :title="Resources.EDITAR11616"
                                     @click="captureUser(props.row)">
-                                    <q-icon icon="arrow-right" />
+                                    <q-icon icon="arrow-right-bold" />
                                 </q-button>
                             </template>
                         </qtable>
@@ -38,11 +51,14 @@
                                         borderless
                                         :title="Resources.EDITAR11616"
                                         @click="captureRole(props.row)">
-                                        <q-icon icon="arrow-right" />
+                                        <q-icon icon="arrow-right-bold" />
                                     </q-button>
                                 </template>
                                 <template #Designation="props">
-                                    <span class="role-tag">{{$t(props.row.Designation)}}</span>
+                                    <q-badge
+                                        variant="bold" >
+                                        {{ $t(props.row.Designation) }}
+                                    </q-badge>
                                 </template>
                             </qtable>
                         </div>
@@ -51,8 +67,8 @@
             </div>
             <div class="col-6">
                 <q-group-box-container :label="Resources.SELECIONADOS52011">
-                <div class="list-group">
-                    <h3>{{Resources.UTILIZADORES39761}}</h3>
+                    <div class="list-group">
+                        <h3>{{Resources.UTILIZADORES39761}}</h3>
                         <qtable :columns="UsersSelected.columns"
                             :rows="selectedUsers"
                             :totalRows="selectedUsers.length"
@@ -62,37 +78,12 @@
                                     borderless
                                     :title="Resources.ELIMINAR21155"
                                     @click="removeUser(props.row)">
-                                    <q-icon icon="arrow-left" />
+                                    <q-icon icon="arrow-left-bold" />
                                 </q-button>
                             </template>
                         </qtable>
                         <br>
                         <hr>
-                        <br>
-                        <div id="roles-list" class="list-group">
-                            <h3>{{Resources.FUNCOES16287}}</h3>
-                            <select id="module-list" class="i-input-group__field input-large" v-model="selectedModule">
-                            <option value="" disabled="" hidden="">{{Resources.SELECCIONAR_MODULO15000}}</option>
-                            <option v-for="module in this.modules" v-bind:value="module.Module" :key="module.Module">{{ module.ModuleName }}</option>
-                            </select>
-                            <qtable :columns="Roles.columns"
-                                :rows="modulesList"
-                                :total_rows="modulesList.length"
-                                :config="Roles.config"
-                                >
-                                <template #actions="props">
-                                    <q-button
-                                        borderless
-                                        :title="Resources.EDITAR11616"
-                                        @click="captureRole(props.row)">
-                                        <q-icon icon="arrow-right" />
-                                    </q-button>
-                                </template>
-                                <template #Designation="props">
-                                    <span class="role-tag">{{$t(props.row.Designation)}}</span>
-                                </template>
-                            </qtable>
-                        </div>
                     </div>
                     <div class="list-group"> <!-- v-if="selectedRoles.length > 0" -->
                         <h3>{{Resources.FUNCOES16287}}</h3>
@@ -105,44 +96,47 @@
                                 borderless
                                 :title="Resources.ELIMINAR21155"
                                 @click="removeRole(props.row)">
-                                <q-icon icon="arrow-left" />
+                                <q-icon icon="arrow-left-bold" />
                             </q-button>
                         </template>
                         <template #Designation="props">
-                            <span class="role-tag">{{$t(props.row.Designation)}}</span>
+                            <q-badge
+                                variant="bold" >
+                                {{ $t(props.row.Designation) }}
+                            </q-badge>
                         </template>
                         </qtable>
                     </div>
                 </q-group-box-container>
             </div>
-            </div>
-          </div>
-        <div class="centerdiv">
-            <q-button
-                v-if="selectedRoles.length > 0 || selectedUsers.length > 0"
-                :disabled="selectedRoles.length <= 0 || selectedUsers.length <= 0"
-                :label="Resources.INSERIR43365"
-                @click="bindConfigAdd" />
-            <q-button
-                v-if="selectedRoles.length > 0 || selectedUsers.length > 0"
-                :disabled="selectedRoles.length <= 0 || selectedUsers.length <= 0"
-                :label="Resources.REMOVER14367"
-                @click="bindConfigRemove" />
         </div>
+    </div>
+    <div class="centerdiv">
+        <q-button
+            v-if="selectedRoles.length > 0 || selectedUsers.length > 0"
+            :disabled="selectedRoles.length <= 0 || selectedUsers.length <= 0"
+            :label="Resources.INSERIR43365"
+            @click="bindConfigAdd" />
+        <q-button
+            v-if="selectedRoles.length > 0 || selectedUsers.length > 0"
+            :disabled="selectedRoles.length <= 0 || selectedUsers.length <= 0"
+            :label="Resources.REMOVER14367"
+            @click="bindConfigRemove" />
+    </div>
 </template>
 
 <script>
 
-  import { reusableMixin } from '@/mixins/mainMixin';
-  import { QUtils } from '@/utils/mainUtils';
-  import bootbox from 'bootbox';
-  import $ from 'jquery';
+    import { reusableMixin } from '@/mixins/mainMixin';
+    import { QUtils } from '@/utils/mainUtils';
+    import bootbox from 'bootbox';
+    import $ from 'jquery';
 
 
 export default {
     name: 'Nroles',
     mixins: [reusableMixin],
-    data: function () {
+    data() {
         var vm = this;
         return {
             Users: {
@@ -290,7 +284,7 @@ export default {
         }
     },
     methods:{
-        reset: function () {
+        reset() {
             this.selectedUsers = [];
             this.selectedRoles = [];
             this.repeatedAssignments = [];
@@ -300,7 +294,7 @@ export default {
             this.selectedUsersCounter = 1;
         },
         // Users Section
-        fetchUsers: function () {
+        fetchUsers() {
             var vm = this;
             QUtils.log("GetUserList - Users");
             QUtils.FetchData(QUtils.apiActionURL('Users', 'GetUserList', vm.Users.queryParams)).done(function (data) {
@@ -322,7 +316,7 @@ export default {
         },
 
         // get an user from users list
-        getUser: function (codpsw) {
+        getUser(codpsw) {
             var vm = this;
             QUtils.log("GetUserList - Users");
             QUtils.FetchData(QUtils.apiActionURL('Users', 'GetUserList', vm.Users.queryParams)).done(function (data) {
@@ -343,7 +337,7 @@ export default {
         },
 
         // get user from manage users list
-        fetchUser: function (codpsw, index) {
+        fetchUser(codpsw, index) {
             var vm = this;
             var repeated = false;
 
@@ -381,13 +375,13 @@ export default {
         },
 
 
-        onChangeQuery: function (queryParams) {
+        onChangeQuery(queryParams) {
             this.Users.queryParams = queryParams;
             this.fetchUsers();
         },
 
         //remove user from available users list
-        removeUserList: function (row) {
+        removeUserList(row) {
             var vm = this;
             vm.Users.rows.splice(vm.Users.rows.findIndex(element =>
             element.Index === row.Index), 1);
@@ -399,7 +393,7 @@ export default {
             this.removeUserList(row);
         },
         //remove user from selected users list and insert into available list
-        removeUser: function (row) {
+        removeUser(row) {
         this.selectedUsers.splice(this.selectedUsers.findIndex(element =>
         element.CodUser === row.CodUser), 1);
         this.getUser(row.CodUser);
@@ -409,7 +403,7 @@ export default {
         // Roles Section
 
         //fetch all roles from db
-         fetchRoles: function () {
+        fetchRoles() {
             var vm = this;
             QUtils.FetchData(QUtils.apiActionURL('Users', 'GetRoles')).done(function (data) {
                 var allRoles = data;
@@ -437,7 +431,7 @@ export default {
             });
         },
         //Get roles by a selected module
-        getRolesByModule: function () {
+        getRolesByModule() {
             var vm = this;
             if (vm.selectedModule == "All") {
                 vm.modulesList = vm.Roles.rows;
@@ -454,7 +448,7 @@ export default {
         },
 
         // get a role from roles list
-        getRole: function (designation, index) {
+        getRole(designation, index) {
             var vm = this;
             QUtils.FetchData(QUtils.apiActionURL('Users', 'GetRoles')).done(function (data) {
                 var allRoles = data;
@@ -475,7 +469,7 @@ export default {
         },
 
         //remove role from principal roles list
-            removeRoleList: function (row) {
+            removeRoleList(row) {
             var vm = this;
             vm.modulesList.splice(vm.modulesList.findIndex(element => (element.Module === row.Module) && (element.Designation === row.Designation)), 1)
         },
@@ -499,7 +493,7 @@ export default {
 
 
          //remove role from selected roles list and insert into available list
-        removeRole: function (row) {
+        removeRole(row) {
             this.selectedRoles.splice(this.selectedRoles.findIndex(element =>
             (element.Module === row.Module) && (element.Designation === row.Designation)),1);
 
@@ -508,7 +502,7 @@ export default {
         },
 
         //////////////// Check and Submit/Remove ////////////////
-        roleCheck: function (user, role, removable) {
+        roleCheck(user, role, removable) {
             var entry = 0;
             var flag = false;
 
@@ -535,7 +529,7 @@ export default {
                 if(!flag)
                     this.result = {boolean: false, index: -1};
         },
-        roleIsAssigned: function (user, role) {
+        roleIsAssigned(user, role) {
             var entry = 0;
             var flag = false;
             user.AssignedRoles[role.Module].forEach(r => {
@@ -553,7 +547,7 @@ export default {
                 this.result = {boolean: false, index: -1};
         },
 
-        submit: function (model,codpsw) {
+        submit(model,codpsw) {
             var vm = this;
             QUtils.postData('ManageUsers', 'SaveConfig', model, { mod: "2", cod: codpsw }, function (data) {
                 if (data.Success) {
@@ -582,7 +576,7 @@ export default {
             });
         },
 
-        displayInvalidActions: function (type) {
+        displayInvalidActions(type) {
             var vm = this;
             var MESSAGE, message, roleMessage, i;
 
@@ -610,7 +604,7 @@ export default {
                             label: '<i class="fa fa-check"></i> Ok'
                         }
                     },
-                    callback: function () {
+                    callback() {
                         vm.$router.replace({ name: 'users', params: { culture: vm.currentLang, system: vm.currentYear } });
                     }
                 });
@@ -640,7 +634,7 @@ export default {
                             label: '<i class="fa fa-check"></i> Ok'
                         }
                     },
-                    callback: function () {
+                    callback() {
                         vm.$router.replace({ name: 'users', params: { culture: vm.currentLang, system: vm.currentYear } });
                     }
                 });
@@ -652,7 +646,7 @@ export default {
             }
         },
 
-        storeRedundantRoles: function() {
+        storeRedundantRoles() {
             var vm = this;
             //error message to show a role is redundant
             vm.redundantRolesMessage = vm.Resources.ATENCAO__ALGUMAS_PER50140 + "<br>";
@@ -669,24 +663,24 @@ export default {
             }
         },
 
-        displayredundantRoles: function() {
+        displayredundantRoles() {
             var vm = this;
             if(vm.redundantRolesMessage) {
             bootbox.dialog({
                     title:  vm.Resources.RELATORIO_DE_GESTAO_29557,
                     message: vm.redundantRolesMessage,
-                     buttons: {
+                    buttons: {
                         ok: {
                             label: '<i class="fa fa-check"></i> Ok'
                         }
                     },
-                    callback: function () {
+                    callback () {
                         vm.$router.replace({ name: 'users', params: { culture: vm.currentLang, system: vm.currentYear } });
                     }
                 });
             }
         },
-        checkRepeated: function(role, added) {
+        checkRepeated(role, added) {
 
         //find the correct module inside the user to insert the role
             this.selectedUsers.forEach(user => {
@@ -712,7 +706,7 @@ export default {
             });
         },
 
-        bindConfigAdd: function () {
+        bindConfigAdd() {
 
             //find the correct module inside the user to insert the role
             this.selectedUsers.forEach(user => {
@@ -728,7 +722,7 @@ export default {
             this.fetchData(); //update the list after remove
         },
 
-        bindConfigRemove: function () {
+        bindConfigRemove() {
 
             //find the correct module inside the user to remove the role
             this.selectedUsers.forEach(user => {
@@ -754,7 +748,7 @@ export default {
         //Modules Section
 
         //get all distinct modules
-        getDistinctModules: function () {
+        getDistinctModules() {
             var vm = this;
             var temp = vm.Roles.rows.filter((value, index, self) =>
                 index === self.findIndex((t) => (
@@ -766,18 +760,18 @@ export default {
 			vm.modules = temp;
         },
         //fetch all data (users and roles)
-        fetchData: function () {
+        fetchData() {
             var vm = this;
             vm.fetchUsers();
             vm.fetchRoles();
         },
     },
-    mounted: function(){
+    mounted(){
         var vm = this;
         vm.fetchData();
-      },
+    },
     watch: {
-    'selectedModule': 'getRolesByModule'
+        'selectedModule': 'getRolesByModule'
     }
 }
 </script>
@@ -807,9 +801,6 @@ export default {
   .list-group {
   width: 100%;
   min-height:500px;
-  }
-  .list-group .b-icon--secondary{
-  border-color: #009AA5 !important;
   }
   #module-list {
   height: 40px;

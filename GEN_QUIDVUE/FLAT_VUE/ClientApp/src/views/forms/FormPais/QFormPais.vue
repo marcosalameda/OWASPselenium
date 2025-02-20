@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PAIS"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.PAIS____PSEUDNOVOGR02.isVisible">
 					<q-control-wrapper
@@ -652,6 +651,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PAIS____CNTRYCOUNTRY_', 'PAIS____CNTRYACTIVE__', 'PAIS____PSEUDNOVOGR01', 'PAIS____CNTRYFLAG____'],
 						controlLimits: [
 						],
 					}, this),
@@ -693,6 +693,7 @@
 						container: 'PAIS____PSEUDNOVOGR02',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PAIS____CNTRYCODIGONR', 'PAIS____CNTRYALFA2___', 'PAIS____CNTRYALFA3___'],
 						controlLimits: [
 						],
 					}, this),
@@ -785,6 +786,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PAIS____PSEUDNOVOGR03'],
 						controlLimits: [
 						],
 					}, this),
@@ -798,6 +800,7 @@
 						container: 'PAIS____PSEUDNOVOGR04',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PAIS____PSEUDPROPRIE1'],
 						controlLimits: [
 						],
 					}, this),

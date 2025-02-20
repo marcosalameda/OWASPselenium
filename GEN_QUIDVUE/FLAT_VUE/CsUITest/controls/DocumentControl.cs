@@ -7,6 +7,11 @@ public class DocumentControl(IWebDriver driver, By containerLocator, string cont
     protected IWebElement DeleteBtn => driver.FindElement(By.CssSelector("[data-testid='document-delete']"));
 
     /// <summary>
+    /// True if the control is blocked, false otherwise
+    /// </summary>
+    public bool IsBlocked => m_control.GetAttribute("class").Contains("q-document--readonly");
+
+    /// <summary>
     /// Get the file name
     /// </summary>
     public string GetFileName()

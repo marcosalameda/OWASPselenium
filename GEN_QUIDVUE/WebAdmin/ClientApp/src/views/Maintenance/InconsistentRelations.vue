@@ -37,10 +37,16 @@
 								:label="Resources.CONSIDERAR_AS_VIEWS07942" />
 						</base-input-structure>
 					</q-control-wrapper>
-					<q-button
-						b-style="secondary"
-						:label="Resources.EXECUTAR_ATUALIZACAO61833"
-						@click="DataQualityStart" />
+
+					<row class="footer-btn">
+						<q-button
+							b-style="secondary"
+							:label="Resources.EXECUTAR_ATUALIZACAO61833"
+							@click="DataQualityStart" />
+						<data-system-badge
+							:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+					</row>
+
 				</q-row-container>
 
 				<row v-if="!isEmptyObject(Model.IncoherentRelations)">
@@ -48,7 +54,9 @@
 					<row>
 						<div class="alert alert--info">
 							<div class="alert-header">
-								<span class="mdi mdi-information alert-icon" />
+								<q-icon
+									class="alert-icon"
+									icon="information" />
 								<label>
 									<b>
 										{{ Resources.ULTIMA_VERIFICACAO35305 }}&#58;
@@ -72,7 +80,9 @@
 					<row>
 						<div class="alert alert--info">
 							<div class="alert-header">
-								<span class="mdi mdi-information alert-icon"></span>
+								<q-icon
+									class="alert-icon"
+									icon="information" />
 								<label><b>{{ Resources.ULTIMA_VERIFICACAO35305 }}&#58;</b></label>
 									{{ formatDate(Model.LastUpdate) }}
 							</div>

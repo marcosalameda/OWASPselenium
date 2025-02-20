@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PWCOM"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.PWCOM___PSW__NOME____.isVisible">
 					<q-control-wrapper

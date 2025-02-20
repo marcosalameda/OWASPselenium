@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="TPPRO"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.TPPRO___TPPROTPPROPRI.isVisible">
 					<q-control-wrapper

@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ARMAZ03"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ARMAZ03_PSEUDARTIGAPO.isVisible">
 					<q-control-wrapper

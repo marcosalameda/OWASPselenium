@@ -16,7 +16,7 @@ public class FeecaForm : Form
 	/// <summary>
 	/// Feedback
 	/// </summary>
-	public BaseInputControl FeecaFeedback => new BaseInputControl(driver, ContainerLocator, "#FEECA___FEECAFEEDBACK");
+	public BaseInputControl FeecaFeedback => new BaseInputControl(driver, ContainerLocator, "container-FEECA___FEECAFEEDBACK", "#FEECA___FEECAFEEDBACK");
 
 	/// <summary>
 	/// Attachments

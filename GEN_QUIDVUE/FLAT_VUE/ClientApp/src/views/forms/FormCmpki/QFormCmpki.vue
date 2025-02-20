@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="CMPKI"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.CMPKI___TPEQUTIPOEQUI.isVisible">
 					<q-control-wrapper

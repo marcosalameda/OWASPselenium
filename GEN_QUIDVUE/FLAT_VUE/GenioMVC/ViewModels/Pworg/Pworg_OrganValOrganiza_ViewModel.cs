@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Pworg
 		public string ValCodpworg { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Pworg
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PWORG_ORGANORGANIZA]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Pworg
 
 			if (Menu == null)
 				Menu = new TablePartial<Pworg_OrganValOrganiza_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Pworg
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Pworg
 				pworg___organorganizaConds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ PWORG_ORGANIZA]/
+// USE /[MANUAL GQT OVERRQ PWORG_ORGANORGANIZA]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Pworg
 
 					Qlisting = Models.ModelBase.Where<CSGenioAorgan>(m_userContext, false, pworg___organorganizaConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PWORG___ORGANORGANIZA", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP PWORG_ORGANIZA]/
+// USE /[MANUAL GQT OVERRQLSTEXP PWORG_ORGANORGANIZA]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST PWORG_ORGANIZA]/
+// USE /[MANUAL GQT OVERRQLIST PWORG_ORGANORGANIZA]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_organ"];
 					CriteriaSet m_PagingPosEPHs = null;

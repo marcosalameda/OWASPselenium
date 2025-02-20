@@ -308,7 +308,7 @@ namespace Administration
             //Get order2execPath
             var dbMaintenance = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory);
             string reindexScriptsPath = dbMaintenance.GetReindexPath();
-            string order2execPath = System.IO.Path.Combine(reindexScriptsPath, "order2exec.xml");
+            string order2execPath = System.IO.Path.Combine(reindexScriptsPath, "order2Exec.xml");
             
             try
             {

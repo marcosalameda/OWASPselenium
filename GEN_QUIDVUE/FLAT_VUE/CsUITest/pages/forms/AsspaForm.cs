@@ -21,7 +21,7 @@ public class AsspaForm : Form
 	/// <summary>
 	/// Decimal places
 	/// </summary>
-	public BaseInputControl AsspaDecplace => new BaseInputControl(driver, ContainerLocator, "#ASSPA___ASSPADECPLACE");
+	public BaseInputControl AsspaDecplace => new BaseInputControl(driver, ContainerLocator, "container-ASSPA___ASSPADECPLACE", "#ASSPA___ASSPADECPLACE");
 
 	/// <summary>
 	/// Parameter
@@ -32,12 +32,12 @@ public class AsspaForm : Form
 	/// <summary>
 	/// Text
 	/// </summary>
-	public BaseInputControl AsspaText => new BaseInputControl(driver, ContainerLocator, "#ASSPA___ASSPATEXT____");
+	public BaseInputControl AsspaText => new BaseInputControl(driver, ContainerLocator, "container-ASSPA___ASSPATEXT____", "#ASSPA___ASSPATEXT____");
 
 	/// <summary>
 	/// Quantity
 	/// </summary>
-	public BaseInputControl AsspaQuantity => new BaseInputControl(driver, ContainerLocator, "#ASSPA___ASSPAQUANTITY");
+	public BaseInputControl AsspaQuantity => new BaseInputControl(driver, ContainerLocator, "container-ASSPA___ASSPAQUANTITY", "#ASSPA___ASSPAQUANTITY");
 
 	/// <summary>
 	/// Date
@@ -47,7 +47,7 @@ public class AsspaForm : Form
 	/// <summary>
 	/// To show
 	/// </summary>
-	public BaseInputControl AsspaToshow => new BaseInputControl(driver, ContainerLocator, "#ASSPA___ASSPATOSHOW__");
+	public BaseInputControl AsspaToshow => new BaseInputControl(driver, ContainerLocator, "container-ASSPA___ASSPATOSHOW__", "#ASSPA___ASSPATOSHOW__");
 
 	public AsspaForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "ASSPA", containerLocator: containerLocator) { }

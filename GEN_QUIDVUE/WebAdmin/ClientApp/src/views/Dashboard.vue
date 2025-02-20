@@ -31,7 +31,7 @@
 			<div v-if="CurentMaintenance.IsActive || CurentMaintenance.IsScheduled" class="alert alert--info">
 				<h4>{{ Resources.INFORMACAO46082 }}</h4>
 				<div>
-					<span class="mdi mdi-alert" />
+					<q-icon icon="alert" />
 					<span>
 						{{ maintenanceText }}
 					</span>
@@ -65,7 +65,7 @@
 					</dl>
 					<dl class="row">
 						<dt>{{ Resources.VERSAO_DE_SISTEMA07287 }}</dt>
-						<dd>2890</dd>
+						<dd>2901</dd>
 						<dt>{{ Resources.VERSAO_DE_BASE_DE_DA46937 }}</dt>
 						<dd>{{ Model.VersionDbGen }}</dd>
 						<dt>{{ Resources.APP_MIGRATION_VERSIO41495 }}</dt>
@@ -73,9 +73,9 @@
 						<dt>{{ Resources.VERSAO_DOS_INDICES49454 }}</dt>
 						<dd>{{ Model.VersionIdxDbGen }}</dd>
 						<dt>{{ Resources.VERSAO_DE_GENIO44840 }}</dt>
-						<dd>361.29</dd>
+						<dd>362.21</dd>
 						<dt>{{ Resources.GERADO_EM27272 }}</dt>
-						<dd>01/24/2025</dd>
+						<dd>02/19/2025</dd>
 					</dl>
 					<dl class="row">
 						<span class="app-brand">
@@ -89,6 +89,11 @@
 				class="q-card--admin-default"
 				:title="Resources.AMBIENTE12083"
 				width="block">
+				<template #[`header.content.append`]>
+					<data-system-badge
+						:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+				</template>
+				
 				<dl class="wa-environment">
 					<dt>{{ Resources.SERVIDOR_DE_SGBD19838 }}</dt>
 					<dd>{{ Model.SGBDServer }}</dd>
@@ -96,11 +101,9 @@
 					<dd>{{ Model.TpSGBD }}</dd>
 					<dt>{{ Resources.VERSAO_DO_SGBD43730 }}</dt>
 					<dd>{{ Model.SGBDVersion }}
-						<span
+						<q-icon
 							v-if="Model.HasSGBDVersion"
-							style="color:red;">&nbsp;
-							<i class="glyphicons glyphicons-exclamation-sign" aria-hidden="true"></i>
-						</span>
+							icon="alert-circle" />
 					</dd>
 					<dt>{{ Resources.BASE_DE_DADOS58234 }}</dt>
 					<dd>{{ Model.DBSchema }}</dd>
@@ -108,10 +111,9 @@
 					<dd>{{ Model.DBSize }} MB</dd>
 					<dt class="version">{{ Resources.VERSAO_DA_BD12683 }}</dt>
 					<dd class="version">{{ Model.VersionDb }}
-						<span class="icon" v-if="Model.HasDiffIdxVersion">
-							&nbsp;
-							<span class="mdi mdi-alert-circle"></span>
-						</span>
+						<q-icon
+							v-if="Model.HasDiffIdxVersion"
+							icon="alert-circle" />
 					</dd>
 					<dt>{{ Resources.COMPUTADOR39938 }}</dt>
 					<dd>{{ Model.PCDesc }}</dd>

@@ -16,7 +16,7 @@ public class Visit2Form : PopupForm
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl VisitTitle => new BaseInputControl(driver, ContainerLocator, "#VISIT2__VISITTITLE___");
+	public BaseInputControl VisitTitle => new BaseInputControl(driver, ContainerLocator, "container-VISIT2__VISITTITLE___", "#VISIT2__VISITTITLE___");
 
 	/// <summary>
 	/// Start
@@ -31,7 +31,7 @@ public class Visit2Form : PopupForm
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl VisitDescript => new BaseInputControl(driver, ContainerLocator, "#VISIT2__VISITDESCRIPT");
+	public BaseInputControl VisitDescript => new BaseInputControl(driver, ContainerLocator, "container-VISIT2__VISITDESCRIPT", "#VISIT2__VISITDESCRIPT");
 
 	/// <summary>
 	/// Day
@@ -41,7 +41,7 @@ public class Visit2Form : PopupForm
 	/// <summary>
 	/// Color
 	/// </summary>
-	public BaseInputControl VisitColor => new BaseInputControl(driver, ContainerLocator, "#VISIT2__VISITCOLOR___");
+	public BaseInputControl VisitColor => new BaseInputControl(driver, ContainerLocator, "container-VISIT2__VISITCOLOR___", "#VISIT2__VISITCOLOR___");
 
 	/// <summary>
 	/// Background

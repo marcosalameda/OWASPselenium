@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Prope
 		public string ValCodprope { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Prope
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PROPE05_AGENTNAME]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Prope
 
 			if (Menu == null)
 				Menu = new TablePartial<Prope05_AgentValName_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Prope
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Prope
 				prope05_agentname____Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ PROPE05_NAME]/
+// USE /[MANUAL GQT OVERRQ PROPE05_AGENTNAME]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Prope
 
 					Qlisting = Models.ModelBase.Where<CSGenioAagent>(m_userContext, false, prope05_agentname____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PROPE05_AGENTNAME____", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP PROPE05_NAME]/
+// USE /[MANUAL GQT OVERRQLSTEXP PROPE05_AGENTNAME]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST PROPE05_NAME]/
+// USE /[MANUAL GQT OVERRQLIST PROPE05_AGENTNAME]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_agent"];
 					CriteriaSet m_PagingPosEPHs = null;

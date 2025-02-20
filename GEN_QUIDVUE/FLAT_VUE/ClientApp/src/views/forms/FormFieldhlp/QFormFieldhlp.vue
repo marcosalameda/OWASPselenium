@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="FIELDHLP"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.FIELDHLPPSEUDNOVOGR02.isVisible || controls.FIELDHLPPSEUDNOVOGR06.isVisible">
 					<q-control-wrapper
@@ -1197,6 +1196,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FIELDHLPFLDS_TXTFIELD', 'FIELDHLPFLDS_DESCRIP_'],
 						controlLimits: [
 						],
 					}, this),
@@ -1267,6 +1267,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FIELDHLPFLDS_PRIMVIAG', 'FIELDHLPFLDS_LOGICENU', 'FIELDHLPFLDS_CLASSNUM', 'FIELDHLPFLDS_RADIOB__', 'FIELDHLPPSEUDFIELD002', 'FIELDHLPPSEUDFIELD003', 'FIELDHLPPSEUDFIELD001'],
 						controlLimits: [
 						],
 					}, this),
@@ -1440,6 +1441,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FIELDHLPFLDS_YEAR____', 'FIELDHLPFLDS_TIME____', 'FIELDHLPFLDS_DATE____', 'FIELDHLPFLDS_DATETIME', 'FIELDHLPFLDS_DATESECO'],
 						controlLimits: [
 						],
 					}, this),
@@ -1573,6 +1575,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FIELDHLPFLDS_DURATION', 'FIELDHLPFLDS_NPASSAGE', 'FIELDHLPFLDS_PRECOBIL', 'FIELDHLPFLDS_PRICE___'],
 						controlLimits: [
 						],
 					}, this),
@@ -1685,6 +1688,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FIELDHLPFLDS_SSNUMBER', 'FIELDHLPFLDS_ZIPFIELD', 'FIELDHLPFLDS_VATNUMBR', 'FIELDHLPFLDS_LICPLATE', 'FIELDHLPFLDS_BANKNMBR', 'FIELDHLPFLDS_EMAILFLD', 'FIELDHLPFLDS_IBANFIEL', 'FIELDHLPFLDS_UPPRTEXT'],
 						controlLimits: [
 						],
 					}, this),
@@ -1903,6 +1907,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FIELDHLPFLDS_PASSFLD_', 'FIELDHLPFLDS_CLRPICKE'],
 						controlLimits: [
 						],
 					}, this),
@@ -1965,6 +1970,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FIELDHLPFLDS_LOGOEXTE', 'FIELDHLPFLDS_LOGO____', 'FIELDHLPFLDS_ATTACH__'],
 						controlLimits: [
 						],
 					}, this),

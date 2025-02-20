@@ -10,22 +10,22 @@ public class Contac06Form : PopupForm
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl ProcnName => new BaseInputControl(driver, ContainerLocator, "#CONTAC06PROCNNAME____");
+	public BaseInputControl ProcnName => new BaseInputControl(driver, ContainerLocator, "container-CONTAC06PROCNNAME____", "#CONTAC06PROCNNAME____");
 
 	/// <summary>
 	/// Email
 	/// </summary>
-	public BaseInputControl ProcnEmail => new BaseInputControl(driver, ContainerLocator, "#CONTAC06PROCNEMAIL___");
+	public BaseInputControl ProcnEmail => new BaseInputControl(driver, ContainerLocator, "container-CONTAC06PROCNEMAIL___", "#CONTAC06PROCNEMAIL___");
 
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl ProcnTelephon => new BaseInputControl(driver, ContainerLocator, "#CONTAC06PROCNTELEPHON");
+	public BaseInputControl ProcnTelephon => new BaseInputControl(driver, ContainerLocator, "container-CONTAC06PROCNTELEPHON", "#CONTAC06PROCNTELEPHON");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl ProcnDescript => new BaseInputControl(driver, ContainerLocator, "#CONTAC06PROCNDESCRIPT");
+	public BaseInputControl ProcnDescript => new BaseInputControl(driver, ContainerLocator, "container-CONTAC06PROCNDESCRIPT", "#CONTAC06PROCNDESCRIPT");
 
 	/// <summary>
 	/// Date

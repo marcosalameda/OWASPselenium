@@ -50,8 +50,7 @@
 		<div
 			class="form-flow"
 			data-key="WID_COLA"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.WID_COLACMPNYLOGO____.isVisible || controls.WID_COLACMPNYDESIGNAT.isVisible">
 					<q-control-wrapper

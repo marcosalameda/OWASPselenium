@@ -16,7 +16,7 @@ public class ParamForm : Form
 	/// <summary>
 	/// Parameter
 	/// </summary>
-	public BaseInputControl ParamParamete => new BaseInputControl(driver, ContainerLocator, "#PARAM___PARAMPARAMETE");
+	public BaseInputControl ParamParamete => new BaseInputControl(driver, ContainerLocator, "container-PARAM___PARAMPARAMETE", "#PARAM___PARAMPARAMETE");
 
 	/// <summary>
 	/// Data type

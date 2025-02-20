@@ -6,14 +6,12 @@ import select_input from '@/components/Select_input.vue';
 import password_input from '@/components/Password_input.vue';
 import static_text from '@/components/Static_text.vue';
 import datetime_picker from '@/components/DateTime_input.vue';
-import card_container from '@/components/Card_container.vue';
 import row from '@/components/Row.vue';
 import qtable from '@/components/Table/QTable.vue';
 import progress_bar from '@/components/ProgressBar.vue';
-import image_byte_array from '@/components/Image_byte_array.vue';
 import image_input from '@/components/Image_input.vue';
-import select_simple from '@/components/Select_simple.vue';
 import textarea_input from '@/components/Textarea_input.vue';
+import DataSystemBadge from '@/components/DataSystemBadge.vue';
 import GroupBoxContainer from '@/components/GroupBoxContainer.vue';
 import TabContainer from '@/components/TabContainer.vue';
 import BaseInputStructure from '@/components/BaseInputStructure.vue';
@@ -24,27 +22,27 @@ import QListEditor from '@/components/ListEditor.vue';
 
 // Quidgest UI
 import {
+    QAccordion,
+    QBadge,
 	QButton,
 	QButtonGroup,
 	QButtonToggle,
+    QCard,
+    QCheckbox,
+    QCollapsible,
     QDialog,
+    QDropdownMenu,
 	QField,
-	QInputGroup,
 	QIcon,
-	QIconImg,
-	QIconFont,
 	QIconSvg,
+	QInputGroup,
     QLineLoader,
 	QOverlay,
 	QPopover,
 	QSelect,
 	QSpinnerLoader,
 	QTextField,
-	QTooltip,
-    QCheckbox,
-    QCollapsible,
-    QAccordion,
-    QCard
+	QTooltip
 }from '@quidgest/ui/components'
 
 export default function ComponentsInit(app) {
@@ -54,43 +52,48 @@ export default function ComponentsInit(app) {
     app.component('radio-input', radio_input);
     app.component('select-input', select_input);
     app.component('password-input', password_input);
-    app.component('static-text', static_text);
     app.component('datetime-picker', datetime_picker);
-    app.component('card', card_container);
-    app.component('row', row);
-    app.component('qtable', qtable);
-    app.component('progress-bar', progress_bar);
-    app.component('image-byte-array', image_byte_array);
     app.component('image-input', image_input);
-    app.component('select-simple', select_simple);
     app.component('textarea-input', textarea_input);
+    app.component('QListEditor', QListEditor);
+    
+    // Containers
     app.component('QGroupBoxContainer', GroupBoxContainer);
     app.component('QTabContainer', TabContainer);
     app.component('BaseInputStructure', BaseInputStructure);
     app.component('QControlWrapper', QControlWrapper);
     app.component('QRowContainer', QRowContainer);
+    
+    // Table
+    app.component('row', row);
+    app.component('qtable', qtable);
+    
+    // Misc
+    app.component('DataSystemBadge', DataSystemBadge);
     app.component('QAlert', QAlert);
-    app.component('QListEditor', QListEditor)
+    app.component('progress-bar', progress_bar);
+    app.component('static-text', static_text);
 
+    // QuidgestUI
+    app.component('QAccordion', QAccordion)
+    app.component('QBadge', QBadge)
     app.component('QButton', QButton)
     app.component('QButtonGroup', QButtonGroup)
-    app.component('QIcon', QIcon)
-    app.component('QTextField', QTextField)
     app.component('QButtonToggle', QButtonToggle)
-    app.component('QField', QField)
-    app.component('QIconImg', QIconImg)
-    app.component('QIconFont', QIconFont)
-    app.component('QIconSvg', QIconSvg)
-    app.component('QPopover', QPopover)
-    app.component('QLineLoader', QLineLoader)
-    app.component('QSelect', QSelect)
-    app.component('QOverlay', QOverlay)
-    app.component('QSpinnerLoader', QSpinnerLoader)
-    app.component('QTooltip', QTooltip)
-    app.component('QInputGroup', QInputGroup)
-    app.component('QDialog', QDialog)
+    app.component('QCard', QCard)
     app.component('QCheckbox', QCheckbox)
     app.component('QCollapsible', QCollapsible)
-    app.component('QAccordion', QAccordion)
-    app.component('QCard', QCard)
+    app.component('QDialog', QDialog)
+    app.component('QDropdownMenu', QDropdownMenu)
+    app.component('QField', QField)
+    app.component('QIcon', QIcon)
+    app.component('QIconSvg', QIconSvg)
+    app.component('QInputGroup', QInputGroup)
+    app.component('QLineLoader', QLineLoader)
+    app.component('QOverlay', QOverlay)
+    app.component('QPopover', QPopover)
+    app.component('QSelect', QSelect)
+    app.component('QSpinnerLoader', QSpinnerLoader)
+    app.component('QTextField', QTextField)
+    app.component('QTooltip', QTooltip)
 }

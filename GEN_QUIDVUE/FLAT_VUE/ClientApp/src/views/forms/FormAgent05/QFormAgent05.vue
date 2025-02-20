@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="AGENT05"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.AGENT05_PSEUDAGENTINF.isVisible">
 					<q-control-wrapper
@@ -556,6 +555,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['AGENT05_AGENTPHOTO___', 'AGENT05_AGENTNAME____', 'AGENT05_AGENTBIRTHDAT', 'AGENT05_AGENTEMAIL___', 'AGENT05_AGENTTELEPHON'],
 						mustBeFilled: true,
 						controlLimits: [
 						],

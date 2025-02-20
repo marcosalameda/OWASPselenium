@@ -15,12 +15,13 @@ import _mergeWith from 'lodash-es/mergeWith'
 import _some from 'lodash-es/some'
 import _toLower from 'lodash-es/toLower'
 import _unionWith from 'lodash-es/unionWith'
+import cloneDeep from 'lodash-es/cloneDeep'
 
 import netAPI from '@/api/network'
 import searchFilterData from '@/api/genio/searchFilterData.js'
 import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 import eventBus from '@/api/global/eventBus.js'
-import { BlockConditionStack, FillConditionStack, HideConditionStack, RequiredConditionStack } from '@/models/fields/conditionStack.js'
+import { BlockConditionStack, HideConditionStack, RequiredConditionStack } from '@/models/fields/conditionStack.js'
 import { useSystemDataStore } from '@/stores/systemData.js'
 
 import getSpecialRenderingControls from './customControl.js'
@@ -29,7 +30,6 @@ import formFunctions from './formFunctions.js'
 import genericFunctions from './genericFunctions.js'
 import listFunctions from './listFunctions.js'
 import qEnums from './quidgest.mainEnums.js'
-import { cloneDeep } from 'lodash-es'
 
 /**
  * Runs the specified field formula.
@@ -277,14 +277,9 @@ export class BaseControl
 				if (typeof modelFieldRef.fillWhen.clearValue !== 'function')
 				{
 					// If the field becomes blocked by the "Fill when" formula, it should also be cleared.
-					modelFieldRef.fillWhen.clearValue = (fieldId) => {
-						if (this.id === fieldId && this.modelFieldRef.fillWhenConditions.contains('FORMULA_FILL_WHEN'))
-							modelFieldRef.clearValue()
-					}
+					modelFieldRef.fillWhen.clearValue = () => modelFieldRef.clearValue()
+					this.modelFieldRef.fillWhenConditions.addOnClearListener(modelFieldRef.fillWhen.clearValue)
 				}
-
-				this.vueContext.internalEvents.off(FillConditionStack.ADD_EVENT, modelFieldRef.fillWhen.clearValue)
-				this.vueContext.internalEvents.on(FillConditionStack.ADD_EVENT, modelFieldRef.fillWhen.clearValue)
 			}
 
 			// Show when formula of the table
@@ -356,20 +351,9 @@ export class BaseControl
 			this.blockWhenConditions.setEventEmitter(this.vueContext.internalEvents)
 			this.fieldRequiredConditions.setEventEmitter(this.vueContext.internalEvents)
 
-			// For these stacks we won't specify a field identifier, since we don't want them to emit
-			// anything when adding or removing sources, as they don't know if all conditions are met.
 			this.modelFieldRef?.showWhenConditions.setEventEmitter(this.vueContext.internalEvents)
 			this.modelFieldRef?.blockWhenConditions.setEventEmitter(this.vueContext.internalEvents)
 			this.modelFieldRef?.fillWhenConditions.setEventEmitter(this.vueContext.internalEvents)
-		}
-
-		// Some controls may also not have an identifier.
-		if (this.id)
-		{
-			// The field identifier needs to be set here, because in the constructor it's not defined yet.
-			this.showWhenConditions.setFieldId(this.id)
-			this.blockWhenConditions.setFieldId(this.id)
-			this.fieldRequiredConditions.setFieldId(this.id)
 		}
 	}
 
@@ -651,6 +635,9 @@ export class TextEditorControl extends StringControl
 		_merge(this, options || {})
 	}
 
+	/**
+	 * @override
+	 */
 	initHandlers()
 	{
 		super.initHandlers()
@@ -663,6 +650,9 @@ export class TextEditorControl extends StringControl
 		_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
 	}
 
+	/**
+	 * @override
+	 */
 	destroy()
 	{
 		super.destroy()
@@ -792,6 +782,9 @@ export class NumberControl extends SizeableControl
 		}
 	}
 
+	/**
+	 * @override
+	 */
 	async init(isEditableForm)
 	{
 		await super.init(isEditableForm)
@@ -901,8 +894,7 @@ class BaseArrayControl extends SizeableControl
 	}
 
 	/**
-	 * Initializes the necessary properties.
-	 * @param {boolean} isEditableForm Whether or not the control is editable
+	 * @override
 	 */
 	async init(isEditableForm)
 	{
@@ -1104,8 +1096,7 @@ export class MaskControl extends StringControl
 	}
 
 	/**
-	 * Initializes the necessary properties.
-	 * @param {boolean} isEditableForm Whether or not the control is editable
+	 * @override
 	 */
 	async init(isEditableForm)
 	{
@@ -1197,6 +1188,9 @@ export class LookupControl extends SizeableControl
 		}
 	}
 
+	/**
+	 * @override
+	 */
 	async init(isEditableForm)
 	{
 		// Set reference to the model key field
@@ -1242,7 +1236,7 @@ export class LookupControl extends SizeableControl
 	}
 
 	/**
-	 * Initialize the default handlers for List component events
+	 * @override
 	 */
 	initHandlers()
 	{
@@ -1757,8 +1751,7 @@ export class TableListControl extends SizeableControl
 	}
 
 	/**
-	 * Initializes the necessary properties.
-	 * @param {boolean} isEditableForm Whether or not the control is editable
+	 * @override
 	 */
 	async init(isEditableForm)
 	{
@@ -1800,7 +1793,7 @@ export class TableListControl extends SizeableControl
 	}
 
 	/**
-	 * Initialize the default handlers for List component events
+	 * @override
 	 */
 	initHandlers()
 	{
@@ -1842,12 +1835,10 @@ export class TableListControl extends SizeableControl
 			setInfoMessage: (eventData) => this.setInfoMessage(eventData),
 			showAdvancedFilters: (eventData) => this.setAdvancedFiltersPopup(eventData),
 			addAdvancedFilter: (eventData) => this.addAdvancedFilter(eventData),
-			editAdvancedFilter: (eventData) => this.editAdvancedFilter(eventData),
+			editAdvancedFilters: (eventData) => this.editAdvancedFilters(eventData),
 			removeAdvancedFilter: (eventData) => this.removeAdvancedFilter(eventData),
 			setAdvancedFilterState: (eventData) => this.setAdvancedFilterState(eventData),
-			setAdvancedFilterStates: (eventData) => this.setAdvancedFilterStates(eventData),
 			removeAllAdvancedFilters: () => this.removeAllAdvancedFilters(),
-			deactivateAllAdvancedFilters: () => this.deactivateAllAdvancedFilters(),
 			'update:activeFilters': (eventData) => this.updateActiveFilters(eventData),
 			'update:groupFilters': (eventData) => this.updateGroupFilters(eventData),
 			updateConfig: () => this.updateConfig(),
@@ -1901,18 +1892,6 @@ export class TableListControl extends SizeableControl
 					icon: 'save'
 				},
 				text: this.texts.saveChanges,
-				active: false,
-				visible: true,
-				inReadonly: false
-			})
-			configOptions.push({
-				id: 'viewRename',
-				elementId: 'view-save',
-				componentId: 'viewSave',
-				icon: {
-					icon: 'add'
-				},
-				text: this.texts.saveWithOtherName,
 				active: false,
 				visible: true,
 				inReadonly: false
@@ -2009,12 +1988,10 @@ export class TableListControl extends SizeableControl
 	setInfoMessage(eventData) { this.vueContext.setInfoMessage(eventData) }
 	setAdvancedFiltersPopup(eventData) { this.vueContext.setAdvancedFiltersPopup(this, eventData[0], eventData[1]) }
 	addAdvancedFilter(eventData) { this.componentOnLoadProc.addWL(this.vueContext.addAdvancedFilter(this, eventData)) }
-	editAdvancedFilter(eventData) { this.componentOnLoadProc.addWL(this.vueContext.editAdvancedFilter(this, eventData[0], eventData[1])) }
+	editAdvancedFilters(eventData) { this.componentOnLoadProc.addWL(this.vueContext.editAdvancedFilters(this, eventData)) }
 	removeAdvancedFilter(eventData) { this.componentOnLoadProc.addWL(this.vueContext.removeAdvancedFilter(this, eventData)) }
 	setAdvancedFilterState(eventData) { this.componentOnLoadProc.addWL(this.vueContext.setAdvancedFilterState(this, eventData[0], eventData[1])) }
-	setAdvancedFilterStates(eventData) { this.componentOnLoadProc.addWL(this.vueContext.setAdvancedFilterStates(this, eventData[0], eventData[1])) }
 	removeAllAdvancedFilters() { this.componentOnLoadProc.addWL(this.vueContext.removeAllAdvancedFilters(this)) }
-	deactivateAllAdvancedFilters() { this.componentOnLoadProc.addWL(this.vueContext.deactivateAllAdvancedFilters(this)) }
 	updateConfig(...args) { this.vueContext.updateConfig(this, ...args) }
 	setProperty(...args) { this.vueContext.setProperty(this, ...args) }
 	setRowIndexProperty(...args) { listFunctions.setRowIndexProperty(this, ...args) }
@@ -2167,6 +2144,9 @@ export class TreeTableListControl extends TableListControl
 			Reflect.set(this.columnsOriginal[0], 'hasTreeShowHide', true)
 	}
 
+	/**
+	 * @override
+	 */
 	initHandlers()
 	{
 		// Apply the rest of the inherited handlers (which also don't override)
@@ -2272,8 +2252,7 @@ export class MultipleValuesControl extends TableListControl
 	}
 
 	/**
-	 * Initializes the necessary properties.
-	 * @param {boolean} isEditableForm Whether or not the control is editable
+	 * @override
 	 */
 	async init(isEditableForm)
 	{
@@ -2286,7 +2265,7 @@ export class MultipleValuesControl extends TableListControl
 	}
 
 	/**
-	 * Initialize the default handlers for List component events
+	 * @override
 	 */
 	initHandlers()
 	{
@@ -2382,8 +2361,7 @@ export class DocumentControl extends SizeableControl
 	}
 
 	/**
-	 * Initializes the necessary properties.
-	 * @param {boolean} isEditableForm Whether or not the control is editable
+	 * @override
 	 */
 	async init(isEditableForm)
 	{
@@ -2409,7 +2387,7 @@ export class DocumentControl extends SizeableControl
 	}
 
 	/**
-	 * Initialize the default handlers for Document component events.
+	 * @override
 	 */
 	initHandlers()
 	{
@@ -2910,6 +2888,9 @@ export class ImageControl extends SizeableControl
 		}
 	}
 
+	/**
+	 * @override
+	 */
 	async init(isEditableForm)
 	{
 		await super.init(isEditableForm)
@@ -2934,7 +2915,7 @@ export class ImageControl extends SizeableControl
 	}
 
 	/**
-	 * Initialize the default handlers for Image component events
+	 * @override
 	 */
 	initHandlers()
 	{
@@ -3090,13 +3071,20 @@ export class GroupControl extends NonBlockableControl
 		// Init default values of control properties
 		super({
 			type: 'Group',
+			directChildren: [],
 			anchoredChildren: [],
-			isInAccordion: false
+			isCollapsible: false,
+			isInAccordion: false,
+			anchored: false,
+			isOpen: false
 		}, _vueContext)
 
 		_merge(this, options || {})
 	}
 
+	/**
+	 * @override
+	 */
 	async init(isEditableForm)
 	{
 		await super.init(isEditableForm)
@@ -3117,23 +3105,21 @@ export class GroupControl extends NonBlockableControl
 			return false
 		})
 
-		if (this.isCollapsible)
-		{
-			this.isOpen = false
+		// When groups become visible, they re-emit an event for all their children
+		this.showWhenConditions.addOnShowListener(() => {
+			if (this.isCollapsible && !this.isOpen)
+				return
 
-			if (typeof this.parentOpeningEvent === 'string')
+			for (let childId of this.directChildren)
 			{
-				// If there's a collapsible group inside another collapsible group or tab, re-emits the event when the parent opens
-				this.vueContext.internalEvents.on(this.parentOpeningEvent, () => {
-					if (this.isOpen && typeof this.openingEvent === 'string')
-						this.vueContext.internalEvents.emit(this.openingEvent)
-				})
+				const child = this.vueContext.controls[childId]
+				child.showWhenConditions.emitShowEvent()
 			}
-		}
+		})
 	}
 
 	/**
-	 * Initialize the default handlers for List component events
+	 * @override
 	 */
 	initHandlers()
 	{
@@ -3146,6 +3132,10 @@ export class GroupControl extends NonBlockableControl
 		_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
 	}
 
+	/**
+	 * Sets the current state of the group, either open or closed
+	 * @param {boolean} state If true, the group will be open, otherwise it'll be closed
+	 */
 	setState(state)
 	{
 		if (!this.isCollapsible || this.isInAccordion || typeof state !== 'boolean')
@@ -3153,8 +3143,8 @@ export class GroupControl extends NonBlockableControl
 
 		this.isOpen = state
 
-		if (state && typeof this.openingEvent === 'string')
-			this.vueContext.internalEvents.emit(this.openingEvent)
+		if (state)
+			this.showWhenConditions.emitShowEvent()
 	}
 }
 
@@ -3174,7 +3164,7 @@ export class AccordionControl extends NonBlockableControl
 	}
 
 	/**
-	 * Initialize the default handlers for List component events
+	 * @override
 	 */
 	initHandlers()
 	{
@@ -3187,6 +3177,11 @@ export class AccordionControl extends NonBlockableControl
 		_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
 	}
 
+	/**
+	 * Sets the currently open group
+	 * @param {boolean} state The state of the group
+	 * @param {string} changedGroupId The group to open
+	 */
 	setOpenGroup(state, changedGroupId)
 	{
 		for (let groupId of this.vueContext.groupFields)
@@ -3198,8 +3193,8 @@ export class AccordionControl extends NonBlockableControl
 				const current = collapsibleGroup.id === changedGroupId
 				collapsibleGroup.isOpen = current && state
 
-				if (collapsibleGroup.isOpen && typeof collapsibleGroup?.openingEvent === 'string')
-					this.vueContext.internalEvents.emit(collapsibleGroup.openingEvent)
+				if (collapsibleGroup.isOpen)
+					collapsibleGroup.showWhenConditions.emitShowEvent()
 			}
 		}
 	}
@@ -3263,12 +3258,16 @@ export class TabControl extends NonBlockableControl
 	constructor(options, _vueContext)
 	{
 		super({
-			type: 'Tab'
+			type: 'Tab',
+			directChildren: []
 		}, _vueContext)
 
 		_merge(this, options || {})
 	}
 
+	/**
+	 * @override
+	 */
 	async init(isEditableForm)
 	{
 		await super.init(isEditableForm)
@@ -3287,6 +3286,14 @@ export class TabControl extends NonBlockableControl
 			}
 
 			return false
+		})
+
+		// When tabs become visible, they re-emit an event for all their children
+		this.showWhenConditions.addOnShowListener(() => {
+			for (let childId of this.directChildren) {
+				const child = this.vueContext.controls[childId]
+				child.showWhenConditions.emitShowEvent()
+			}
 		})
 	}
 }
@@ -3324,25 +3331,19 @@ export class TabsControl
 		}
 	}
 
+	/**
+	 * Initializes the tab group
+	 */
 	init()
 	{
 		this.tabsList.splice(0)
 
-		_forEach(this.tabControlsIds, (tabControlId) => {
-			let tabControl = Reflect.get(this.vueContext.controls, tabControlId)
-			this.tabsList.push(tabControl)
+		_forEach(this.tabControlsIds, (tabId) => {
+			const tab = this.vueContext.controls[tabId]
+			this.tabsList.push(tab)
 
-			if (_isEmpty(this.selectedTab) && tabControl.isVisible && !tabControl.isBlocked)
-				this.selectTab(tabControl.id)
-
-			if (typeof tabControl.parentOpeningEvent === 'string')
-			{
-				// If there's a tab inside another tab or collapsible group, re-emits the event when the parent opens
-				this.vueContext.internalEvents.on(tabControl.parentOpeningEvent, () => {
-					if (tabControl.isVisible && typeof tabControl.openingEvent === 'string')
-						this.vueContext.internalEvents.emit(tabControl.openingEvent)
-				})
-			}
+			if (_isEmpty(this.selectedTab) && tab.isVisible && !tab.isBlocked)
+				this.selectTab(tab.id)
 		})
 
 		this.isVisible = computed(() => _some(this.tabsList, { isVisible: true }))
@@ -3361,6 +3362,9 @@ export class TabsControl
 		{ deep: true, immediate: true })
 	}
 
+	/**
+	 * Selects the first tab available
+	 */
 	selectFirstTab()
 	{
 		for (let tab of this.tabsList)
@@ -3373,6 +3377,10 @@ export class TabsControl
 		}
 	}
 
+	/**
+	 * Selects the specified tab
+	 * @param {string} tabId The identifier of the tab to select
+	 */
 	selectTab(tabId)
 	{
 		this.selectedTab = tabId ?? ''
@@ -3380,8 +3388,7 @@ export class TabsControl
 		if (typeof tabId === 'string')
 		{
 			const tab = this.vueContext.controls[tabId]
-			if (typeof tab.openingEvent === 'string')
-				this.vueContext.internalEvents.emit(tab.openingEvent)
+			tab.showWhenConditions.emitShowEvent()
 		}
 		else
 			this.selectFirstTab()
@@ -3396,10 +3403,28 @@ export class SubformControl extends NonBlockableControl
 	constructor(options, _vueContext)
 	{
 		super({
-			type: 'Subform'
+			type: 'Subform',
+			directChildren: []
 		}, _vueContext)
 
 		_merge(this, options || {})
+	}
+
+	/**
+	 * @override
+	 */
+	async init(isEditableForm)
+	{
+		await super.init(isEditableForm)
+
+		// When sub-forms become visible, they re-emit an event for all their children
+		this.showWhenConditions.addOnShowListener(() => {
+			for (let childId of this.directChildren)
+			{
+				const child = this.vueContext.controls[childId]
+				child.showWhenConditions.emitShowEvent()
+			}
+		})
 	}
 }
 
@@ -3460,6 +3485,9 @@ export class FormContainerControl extends SizeableControl
 		this.initHeaderButtons()
 	}
 
+	/**
+	 * @override
+	 */
 	async init(isEditableForm)
 	{
 		await super.init(isEditableForm)
@@ -3474,6 +3502,9 @@ export class FormContainerControl extends SizeableControl
 		}
 	}
 
+	/**
+	 * @override
+	 */
 	initHandlers()
 	{
 		super.initHandlers()
@@ -3704,8 +3735,7 @@ export class GridTableListControl extends SizeableControl
 	}
 
 	/**
-	 * Initializes the necessary properties.
-	 * @param {boolean} isEditableForm Whether or not the control is editable
+	 * @override
 	 */
 	async init(isEditableForm)
 	{
@@ -3739,7 +3769,7 @@ export class GridTableListControl extends SizeableControl
 	}
 
 	/**
-	 * Initialize the default handlers for List component events
+	 * @override
 	 */
 	initHandlers()
 	{
@@ -3824,7 +3854,7 @@ export class WizardControl extends BaseControl
 	}
 
 	/**
-	 * Initializes the event handlers.
+	 * @override
 	 */
 	initHandlers()
 	{
@@ -3840,8 +3870,7 @@ export class WizardControl extends BaseControl
 	}
 
 	/**
-	 * Initializes the necessary properties.
-	 * @param {boolean} isEditableForm Whether or not the control is editable
+	 * @override
 	 */
 	async init(isEditableForm)
 	{
@@ -3894,18 +3923,24 @@ export class PropertyListControl extends SizeableControl
 		_merge(this, options || {})
 	}
 
+	/**
+	 * @override
+	 */
 	initHandlers()
 	{
 		super.initHandlers()
 
 		const handlers = {
-			fieldChange: (field) => this.onFieldChange(field)
+			fieldChange: (field, value) => this.onFieldChange(field, value)
 		}
 
 		// Apply handlers without overriding. The handler can come from outside at initialization.
 		_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
 	}
 
+	/**
+	 * @override
+	 */
 	async init(isEditableForm)
 	{
 		await super.init(isEditableForm)
@@ -3913,18 +3948,27 @@ export class PropertyListControl extends SizeableControl
 		this.config.readonly = computed(() => this.readonly)
 	}
 
-	onFieldChange(field)
+	/**
+	 * When a field changes, updates the model.
+	 * @param {object} field The field that changed
+	 * @param {unknown} value The new value of the field
+	 */
+	onFieldChange(field, value)
 	{
 		const fieldData = {
 			rowId: field.rowId ?? '',
 			id: field.id,
 			name: field.name,
-			value: this.parseToServerValue(field.props.modelValue, field.type),
+			value: this.parseToServerValue(value, field.type),
 			type: field.type,
 			isDirty: field.props.modelValue !== field.defaultValue
 		}
 
-		this.modelFieldRef.updateValue(fieldData)
+		const propertyModel = this.modelFieldRef.value[field.id]
+		if(propertyModel)
+			this.modelFieldRef.value[field.id].value = value
+
+		this.modelFieldRef.addProperty(fieldData)		
 	}
 
 	parseToServerValue(value, fieldType)
@@ -3954,7 +3998,7 @@ export class PropertyListControl extends SizeableControl
 
 	reload()
 	{
-		return this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this, undefined, this.fnHydrateViewModel))
+		return this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this))
 	}
 }
 
@@ -3962,9 +4006,13 @@ export class KanbanControl extends SizeableControl
 {
 	constructor(options, _vueContext)
 	{
+		const kanbanTexts = new controlsResources.KanbanResources(_vueContext.$getResource)
+
 		super({
 			type: 'Kanban',
+			columnsTable: '',
 			columns: [],
+			cardsTable: '',
 			cards: [],
 			config: {
 				crudActions: [],
@@ -3973,12 +4021,16 @@ export class KanbanControl extends SizeableControl
 				formsDefinition: {},
 				allowColumnEdition: false,
 				rowActionDisplay: computed(() => _vueContext.layoutConfig ? _vueContext.layoutConfig.RowActionDisplay : 'dropdown'),
-			}
+			},
+			texts: kanbanTexts
 		}, _vueContext)
 
 		_merge(this, options || {})
 	}
 
+	/**
+	 * @override
+	 */
 	async init(isEditableForm)
 	{
 		await super.init(isEditableForm)
@@ -3986,6 +4038,9 @@ export class KanbanControl extends SizeableControl
 		this.hasClickAction = computed(() => Object.keys(this.config.rowClickAction).length !== 0)
 	}
 
+	/**
+	 * @override
+	 */
 	initHandlers()
 	{
 		super.initHandlers()
@@ -4019,7 +4074,7 @@ export class KanbanControl extends SizeableControl
 	 */
 	afterLoaded()
 	{
-		// EMPTY
+		formFunctions.setValuesFromStore(this.modelFieldRef, this.vueContext)
 	}
 
 	/**
@@ -4085,7 +4140,7 @@ export class KanbanControl extends SizeableControl
 			// The the column in each the record is being inserted
 			const entry = {
 				navigationId: this.navigationId,
-				key: 'colum',
+				key: listConf.columnsTable,
 				value: column
 			}
 			this.vueContext.setEntryValue(entry)

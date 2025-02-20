@@ -10,12 +10,12 @@ public class Wid_colaForm : Form
 	/// <summary>
 	/// Logo
 	/// </summary>
-	public BaseInputControl CmpnyLogo => new BaseInputControl(driver, ContainerLocator, "#WID_COLACMPNYLOGO____");
+	public BaseInputControl CmpnyLogo => new BaseInputControl(driver, ContainerLocator, "container-WID_COLACMPNYLOGO____", "#WID_COLACMPNYLOGO____");
 
 	/// <summary>
 	/// Designation
 	/// </summary>
-	public BaseInputControl CmpnyDesignat => new BaseInputControl(driver, ContainerLocator, "#WID_COLACMPNYDESIGNAT");
+	public BaseInputControl CmpnyDesignat => new BaseInputControl(driver, ContainerLocator, "container-WID_COLACMPNYDESIGNAT", "#WID_COLACMPNYDESIGNAT");
 
 	/// <summary>
 	/// People

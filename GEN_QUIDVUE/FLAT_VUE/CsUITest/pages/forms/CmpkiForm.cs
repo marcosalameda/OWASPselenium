@@ -16,7 +16,7 @@ public class CmpkiForm : Form
 	/// <summary>
 	/// Order
 	/// </summary>
-	public BaseInputControl CmpkiOrder => new BaseInputControl(driver, ContainerLocator, "#CMPKI___CMPKIORDER___");
+	public BaseInputControl CmpkiOrder => new BaseInputControl(driver, ContainerLocator, "container-CMPKI___CMPKIORDER___", "#CMPKI___CMPKIORDER___");
 
 	/// <summary>
 	/// Type of equipment
@@ -27,22 +27,22 @@ public class CmpkiForm : Form
 	/// <summary>
 	/// Quantity:
 	/// </summary>
-	public BaseInputControl CmpkiQuantida => new BaseInputControl(driver, ContainerLocator, "#CMPKI___CMPKIQUANTIDA");
+	public BaseInputControl CmpkiQuantida => new BaseInputControl(driver, ContainerLocator, "container-CMPKI___CMPKIQUANTIDA", "#CMPKI___CMPKIQUANTIDA");
 
 	/// <summary>
 	/// Code
 	/// </summary>
-	public BaseInputControl CmpkiCode => new BaseInputControl(driver, ContainerLocator, "#CMPKI___CMPKICODE____");
+	public BaseInputControl CmpkiCode => new BaseInputControl(driver, ContainerLocator, "container-CMPKI___CMPKICODE____", "#CMPKI___CMPKICODE____");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl CmpkiDescript => new BaseInputControl(driver, ContainerLocator, "#CMPKI___CMPKIDESCRIPT");
+	public BaseInputControl CmpkiDescript => new BaseInputControl(driver, ContainerLocator, "container-CMPKI___CMPKIDESCRIPT", "#CMPKI___CMPKIDESCRIPT");
 
 	/// <summary>
 	/// Site
 	/// </summary>
-	public BaseInputControl CmpkiUrl => new BaseInputControl(driver, ContainerLocator, "#CMPKI___CMPKIURL_____");
+	public BaseInputControl CmpkiUrl => new BaseInputControl(driver, ContainerLocator, "container-CMPKI___CMPKIURL_____", "#CMPKI___CMPKIURL_____");
 
 	public CmpkiForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "CMPKI", containerLocator: containerLocator) { }

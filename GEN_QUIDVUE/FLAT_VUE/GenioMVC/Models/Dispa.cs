@@ -53,6 +53,25 @@ namespace GenioMVC.Models
 		}
 
 
+		[DisplayName(">> STATUS")]
+		/// <summary>Field : ">> STATUS" Tipo: "CE" Formula:  ""</summary>
+		[ShouldSerialize("Dispa.ValCoddisst")]
+		public string ValCoddisst { get { return klass.ValCoddisst; } set { klass.ValCoddisst = value; } }
+		private Disst _disst;
+		[DisplayName("Disst")]
+		[ShouldSerialize("Disst")]
+		public virtual Disst Disst {
+			get {
+				if (!this.isEmptyModel && (_disst == null || (!string.IsNullOrEmpty(ValCoddisst) && (_disst.isEmptyModel || _disst.klass.QPrimaryKey != ValCoddisst))))
+					_disst = Models.Disst.Find(ValCoddisst, m_userContext, Identifier, _fieldsToSerialize);
+				if (_disst == null)
+					_disst = new Models.Disst(m_userContext, true, _fieldsToSerialize);
+				return _disst;
+			}
+			set { _disst = value; }
+		}
+
+
 		[DisplayName("Is prepared")]
 		/// <summary>Field : "Is prepared" Tipo: "L" Formula:  ""</summary>
 		[ShouldSerialize("Dispa.ValIsprepar")]
@@ -141,6 +160,11 @@ namespace GenioMVC.Models
 						if (_entit == null)
 							_entit = new Entit(m_userContext, true, _fieldsToSerialize);
 						_entit.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
+						break;
+					case "disst":
+						if (_disst == null)
+							_disst = new Disst(m_userContext, true, _fieldsToSerialize);
+						_disst.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "perso":
 						if (_perso == null)

@@ -16,7 +16,7 @@ public class VendaForm : Form
 	/// <summary>
 	/// leader no.
 	/// </summary>
-	public BaseInputControl SaleNrlide => new BaseInputControl(driver, ContainerLocator, "#VENDA___SALE_NRLIDE__");
+	public BaseInputControl SaleNrlide => new BaseInputControl(driver, ContainerLocator, "container-VENDA___SALE_NRLIDE__", "#VENDA___SALE_NRLIDE__");
 
 	/// <summary>
 	/// Start
@@ -31,12 +31,12 @@ public class VendaForm : Form
 	/// <summary>
 	/// Identification of business opportunity
 	/// </summary>
-	public BaseInputControl SaleIdentifi => new BaseInputControl(driver, ContainerLocator, "#VENDA___SALE_IDENTIFI");
+	public BaseInputControl SaleIdentifi => new BaseInputControl(driver, ContainerLocator, "container-VENDA___SALE_IDENTIFI", "#VENDA___SALE_IDENTIFI");
 
 	/// <summary>
 	/// Potential Buyers
 	/// </summary>
-	public BaseInputControl SalePotcompr => new BaseInputControl(driver, ContainerLocator, "#VENDA___SALE_POTCOMPR");
+	public BaseInputControl SalePotcompr => new BaseInputControl(driver, ContainerLocator, "container-VENDA___SALE_POTCOMPR", "#VENDA___SALE_POTCOMPR");
 
 	/// <summary>
 	/// Prospection carried out

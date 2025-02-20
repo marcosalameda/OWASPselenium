@@ -90,7 +90,18 @@
 					isPopup: true
 				},
 
-				resourcesPath: useSystemDataStore().system.resourcesPath // Used for file format images
+				resourcesPath: useSystemDataStore().system.resourcesPath, // Used for file format images
+
+				/** Limits */
+				menuLimits: [
+					/** DB */
+					{
+						identifier: 'pess1',
+						dependencyEvents: [],
+						dependencyField: '',
+						fnValueSelector: () => this.$route.params['pess1']
+					},
+				]
 			}
 		},
 
@@ -142,6 +153,18 @@
 			 * Server call to render the report in a given format.
 			 */
 			exportReport(format) {
+				// Set previous limits in navigation
+				this.menuLimits.forEach((limit) => {
+					const limitIdentifier = limit.identifier
+					const limitValue = limit.fnValueSelector()
+
+					this.setEntryValue({
+						navigationId: this.navigationId,
+						key: limitIdentifier,
+						value: limitValue
+					})
+				})
+
 				const preview = false
 				this.navigateToReport('Pess1', 'PTN_Report_5311', { format: format }, preview)
 					.then((success) => {

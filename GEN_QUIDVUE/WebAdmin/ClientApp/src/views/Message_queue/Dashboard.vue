@@ -2,7 +2,13 @@
 <div id="message_queue_dashboard_container">
 	<row>
 		<br />
-		<label for="dashchart">{{ Resources.MENSAGENS53948 }}</label>
+		<div class="title-container--with-badge">
+			<label for="dashchart">
+				{{ Resources.MENSAGENS53948 }}
+			</label>
+			<data-system-badge
+				:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+		</div>
 		<div ref="plot_area" style="width:100%; height:520px;"></div>
 	</row>
 </div>

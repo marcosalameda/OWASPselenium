@@ -15,12 +15,12 @@ public class AbatereqForm : Form
 	/// <summary>
 	/// Number
 	/// </summary>
-	public BaseInputControl DecomDecomnr => new BaseInputControl(driver, ContainerLocator, "#ABATEREQDECOMDECOMNR_");
+	public BaseInputControl DecomDecomnr => new BaseInputControl(driver, ContainerLocator, "container-ABATEREQDECOMDECOMNR_", "#ABATEREQDECOMDECOMNR_");
 
 	/// <summary>
 	/// Notes
 	/// </summary>
-	public BaseInputControl DecomNote => new BaseInputControl(driver, ContainerLocator, "#ABATEREQDECOMNOTE____");
+	public BaseInputControl DecomNote => new BaseInputControl(driver, ContainerLocator, "container-ABATEREQDECOMNOTE____", "#ABATEREQDECOMNOTE____");
 
 	/// <summary>
 	/// Collapsible

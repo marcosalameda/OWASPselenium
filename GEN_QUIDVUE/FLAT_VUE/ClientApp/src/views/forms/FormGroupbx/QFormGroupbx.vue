@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="GROUPBX"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.GROUPBX_PSEUDNOVOGR01.isVisible">
 					<q-control-wrapper
@@ -798,6 +797,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['GROUPBX_EQUIPSEQUENNR', 'GROUPBX_EQUIPREGISTNR', 'GROUPBX_TPEQUTIPOEQUI', 'GROUPBX_EQUIPSITEFABR', 'GROUPBX_WAREHWAREHDES', 'GROUPBX_ITEM_ITEMDES_'],
 						controlLimits: [
 						],
 					}, this),
@@ -952,6 +952,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['GROUPBX_EQUIPDTDECO__', 'GROUPBX_ROOM1ROOMNR__', 'GROUPBX_ROOM1DESIGNAT', 'GROUPBX_EQUIPDESIGNAT', 'GROUPBX_EQUIPDTAQUISI', 'GROUPBX_EQUIPVALORTOT', 'GROUPBX_EQUIPFREQUENC', 'GROUPBX_EQUIPDTREFERE', 'GROUPBX_EQUIPFIRST___', 'GROUPBX_EQUIPBEFORE__', 'GROUPBX_EQUIPBOUGHT__'],
 						controlLimits: [
 						],
 					}, this),

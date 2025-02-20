@@ -16,7 +16,7 @@ public class Regia_mlForm : Form
 	/// <summary>
 	/// Região:
 	/// </summary>
-	public BaseInputControl RegioRegiao => new BaseInputControl(driver, ContainerLocator, "#REGIA_MLREGIOREGIAO__");
+	public BaseInputControl RegioRegiao => new BaseInputControl(driver, ContainerLocator, "container-REGIA_MLREGIOREGIAO__", "#REGIA_MLREGIOREGIAO__");
 
 	/// <summary>
 	/// País pessoa

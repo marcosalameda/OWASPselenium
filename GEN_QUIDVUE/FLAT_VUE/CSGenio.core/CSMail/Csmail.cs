@@ -393,7 +393,16 @@ namespace CSGenio.core
                 using SmtpClient client = new();
 
 
-                await client.ConnectAsync(smtpServer, port, ssl ? SecureSocketOptions.StartTls : SecureSocketOptions.Auto, cancellationToken).ConfigureAwait(false);
+                // Quick fix: This workaround addresses issues when clients use port 25,
+                // but the server has a misconfigured or untrusted certificate.
+                // In the future, this should be configurable via WebAdmin.
+                SecureSocketOptions secureOption = ssl
+                    ? SecureSocketOptions.StartTls
+                    : (port == 0 || port == 25
+                        ? SecureSocketOptions.None
+                        : SecureSocketOptions.Auto);
+
+                await client.ConnectAsync(smtpServer, port, secureOption, cancellationToken).ConfigureAwait(false);
 
                 if (AuthType == CSGenio.config.AuthType.BasicAuth)
                 {

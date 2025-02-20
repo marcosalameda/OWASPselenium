@@ -97,16 +97,10 @@
 </template>
 
 <script>
-	import { defineAsyncComponent } from 'vue'
-
 	export default {
 		name: 'QCard',
 
 		emits: ['click'],
-
-		components: {
-			QSkeletonLoader: defineAsyncComponent(() => import('@/components/QSkeletonLoader.vue'))
-		},
 
 		inheritAttrs: false,
 

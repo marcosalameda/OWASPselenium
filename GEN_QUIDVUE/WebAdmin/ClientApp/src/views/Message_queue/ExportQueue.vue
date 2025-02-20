@@ -27,7 +27,7 @@
                     <row>
                         <text-input v-model="conditionValue" :label="Resources.VALOR32448" :size="'xlarge'"></text-input>
                     </row>
-                    <p><span v-if="timeoutId" class="glyphicons glyphicons-hourglass"></span>{{Resources.MENSAGENS_A_SER_EXPO34711}}: {{count}}</p>
+                    <p>{{Resources.MENSAGENS_A_SER_EXPO34711}}: {{count}}</p>
 
                     <row v-if="progressModel.Active">
                         <label>{{ Resources.PROGRESSO52692 }}</label>

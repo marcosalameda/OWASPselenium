@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="INSTA"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.INSTA___PSEUDNOVOGR01.isVisible"
@@ -681,7 +680,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-INSTA___PSEUDNOVOGR01',
+						directChildren: ['INSTA___TPEQUTIPOEQUI', 'INSTA___EQUIPREGISTNR', 'INSTA___EQUIPDESIGNAT', 'INSTA___EQUIPPHOTOGRA'],
 						controlLimits: [
 						],
 					}, this),
@@ -694,7 +693,6 @@
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-INSTA___PSEUDNOVOGR01',
 						container: 'INSTA___PSEUDNOVOGR01',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -724,7 +722,6 @@
 						label: computed(() => this.Resources.REGISTRATION_NO_06209),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-INSTA___PSEUDNOVOGR01',
 						container: 'INSTA___PSEUDNOVOGR01',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -764,7 +761,6 @@
 						label: computed(() => this.Resources.DESIGNATION_35800),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-INSTA___PSEUDNOVOGR01',
 						container: 'INSTA___PSEUDNOVOGR01',
 						maxLength: 85,
 						labelId: 'label_INSTA___EQUIPDESIGNAT',
@@ -782,7 +778,6 @@
 						label: computed(() => this.Resources.PHOTO51874),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-INSTA___PSEUDNOVOGR01',
 						container: 'INSTA___PSEUDNOVOGR01',
 						height: 50,
 						width: 100,
@@ -799,6 +794,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INSTA___INSTASINCE___', 'INSTA___INSTAUNTIL___', 'INSTA___INSTAHOURS___', 'INSTA___INSTAPRECOHOR', 'INSTA___INSTAVALUE___'],
 						controlLimits: [
 						],
 					}, this),
@@ -887,6 +883,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INSTA___INSTACOORDGEO'],
 						controlLimits: [
 						],
 					}, this),
@@ -940,6 +937,10 @@
 									},
 									fitZoom: {
 										rawValue: true,
+										isMapped: false
+									},
+									zoomDelta: {
+										rawValue: 1,
 										isMapped: false
 									},
 									boundSouthWest: {

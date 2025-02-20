@@ -43,6 +43,20 @@ namespace GenioMVC.ViewModels.Flds
 		public string ValCodflds { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+				// Limit "SC"
+				conditions.Equal(CSGenioAflds.FldShwrc, "1");
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -50,6 +64,7 @@ namespace GenioMVC.ViewModels.Flds
 				CriteriaSet conds = CriteriaSet.And();
 				if (Navigation.CheckKey("flds.shwrc"))
 					conds.Equal(CSGenioAflds.FldShwrc, Navigation.GetValue("flds.shwrc"));
+
 				return conds;
 			}
 		}
@@ -64,6 +79,15 @@ namespace GenioMVC.ViewModels.Flds
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL STY LIST_LIMITS TABS]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -71,21 +95,17 @@ namespace GenioMVC.ViewModels.Flds
 			var areaBase = CSGenio.business.Area.createArea("flds", user, "STY");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet sty_menu_tabsConds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLTABS");
-			sty_menu_tabsConds.Equal(CSGenioAflds.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLTABS");
+			conditions.Equal(CSGenioAflds.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-						sty_menu_tabsConds.Equal(CSGenioAflds.FldShwrc, 1);
-
-
-// USE /[MANUAL STY OVERRQ TABS]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZzstate, CSGenioAflds.FldTxtfield };
 
 			ListingMVC<CSGenioAflds> listing = new ListingMVC<CSGenioAflds>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(sty_menu_tabsConds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -159,6 +179,9 @@ namespace GenioMVC.ViewModels.Flds
 
 			if (Menu == null)
 				Menu = new TablePartial<STY_Menu_TABS_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -178,9 +201,9 @@ namespace GenioMVC.ViewModels.Flds
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
-			// Limit "SC"
-			crs.Equal(CSGenioAflds.FldShwrc, "1");
 
 			if (isToExport)
 			{

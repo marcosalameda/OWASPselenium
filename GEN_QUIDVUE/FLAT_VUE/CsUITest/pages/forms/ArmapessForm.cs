@@ -10,17 +10,17 @@ public class ArmapessForm : Form
 	/// <summary>
 	/// Employee Number
 	/// </summary>
-	public BaseInputControl WpessNfunc => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSNFUNC___");
+	public BaseInputControl WpessNfunc => new BaseInputControl(driver, ContainerLocator, "container-ARMAPESSWPESSNFUNC___", "#ARMAPESSWPESSNFUNC___");
 
 	/// <summary>
 	/// Profille picture
 	/// </summary>
-	public BaseInputControl WpessPfoto => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSPFOTO___");
+	public BaseInputControl WpessPfoto => new BaseInputControl(driver, ContainerLocator, "container-ARMAPESSWPESSPFOTO___", "#ARMAPESSWPESSPFOTO___");
 
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl WpessName => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSNAME____");
+	public BaseInputControl WpessName => new BaseInputControl(driver, ContainerLocator, "container-ARMAPESSWPESSNAME____", "#ARMAPESSWPESSNAME____");
 
 	/// <summary>
 	/// Birth date
@@ -35,37 +35,37 @@ public class ArmapessForm : Form
 	/// <summary>
 	/// Country of Birth
 	/// </summary>
-	public BaseInputControl WpessNaturali => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSNATURALI");
+	public BaseInputControl WpessNaturali => new BaseInputControl(driver, ContainerLocator, "container-ARMAPESSWPESSNATURALI", "#ARMAPESSWPESSNATURALI");
 
 	/// <summary>
 	/// Nationality
 	/// </summary>
-	public BaseInputControl WpessNacional => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSNACIONAL");
+	public BaseInputControl WpessNacional => new BaseInputControl(driver, ContainerLocator, "container-ARMAPESSWPESSNACIONAL", "#ARMAPESSWPESSNACIONAL");
 
 	/// <summary>
 	/// Adress
 	/// </summary>
-	public BaseInputControl WpessAdress => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSADRESS__");
+	public BaseInputControl WpessAdress => new BaseInputControl(driver, ContainerLocator, "container-ARMAPESSWPESSADRESS__", "#ARMAPESSWPESSADRESS__");
 
 	/// <summary>
 	/// Zipcode
 	/// </summary>
-	public BaseInputControl WpessZipcode => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSZIPCODE_");
+	public BaseInputControl WpessZipcode => new BaseInputControl(driver, ContainerLocator, "container-ARMAPESSWPESSZIPCODE_", "#ARMAPESSWPESSZIPCODE_");
 
 	/// <summary>
 	/// Country
 	/// </summary>
-	public BaseInputControl WpessCountry => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSCOUNTRY_");
+	public BaseInputControl WpessCountry => new BaseInputControl(driver, ContainerLocator, "container-ARMAPESSWPESSCOUNTRY_", "#ARMAPESSWPESSCOUNTRY_");
 
 	/// <summary>
 	/// Email
 	/// </summary>
-	public BaseInputControl WpessEmail => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSEMAIL___");
+	public BaseInputControl WpessEmail => new BaseInputControl(driver, ContainerLocator, "container-ARMAPESSWPESSEMAIL___", "#ARMAPESSWPESSEMAIL___");
 
 	/// <summary>
 	/// Cellphone
 	/// </summary>
-	public BaseInputControl WpessCellphon => new BaseInputControl(driver, ContainerLocator, "#ARMAPESSWPESSCELLPHON");
+	public BaseInputControl WpessCellphon => new BaseInputControl(driver, ContainerLocator, "container-ARMAPESSWPESSCELLPHON", "#ARMAPESSWPESSCELLPHON");
 
 	/// <summary>
 	/// Warehouse

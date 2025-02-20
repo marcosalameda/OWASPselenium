@@ -19,7 +19,7 @@ import { useUserDataStore } from '@/stores/userData.js'
 import { postData } from '@/api/network'
 import { validateCoordinate } from '@/utils/geography.js'
 import genericFunctions from '@/mixins/genericFunctions.js'
-import { BlockConditionStack, FillConditionStack, HideConditionStack } from '@/models/fields/conditionStack.js'
+import { BlockConditionStack, ClearConditionStack, HideConditionStack } from '@/models/fields/conditionStack.js'
 
 export class Base
 {
@@ -36,7 +36,7 @@ export class Base
 		this.valueFormula = null
 		this.showWhenConditions = new HideConditionStack()
 		this.blockWhenConditions = new BlockConditionStack()
-		this.fillWhenConditions = new FillConditionStack()
+		this.fillWhenConditions = new ClearConditionStack()
 		// Ignore the field when the model is submitted to the server.
 		this.ignoreFldSubmit = false
 		this.isRequired = false
@@ -318,7 +318,7 @@ export class Base
 	 */
 	cloneValue()
 	{
-		return _cloneDeep(this.value)
+		return _cloneDeep(this._value)
 	}
 
 	/**
@@ -470,7 +470,7 @@ export class MultiLineString extends String
 	{
 		// The server expects \r\n, but text edited through web textarea only has \n. So we convert
 		// it first from server format to web format, in case the text came from the server and wasn't edited.
-		let value = this.value?.replaceAll('\r\n', '\n')
+		const value = this.value?.replaceAll('\r\n', '\n')
 		// Convert to server format.
 		return value?.replaceAll('\n', '\r\n')
 	}
@@ -759,12 +759,16 @@ export class Number extends Base
 
 	constructor(options)
 	{
+		const systemDataStore = useSystemDataStore()
+
 		super(_assignIn({
 			type: 'Number',
 			maxDigits: -1,
 			decimalDigits: 0,
 			maxIntegers: -1,
-			maxDecimals: -1
+			maxDecimals: -1,
+			decimalSeparator: computed(() => systemDataStore.system.numberFormat.decimalSeparator),
+			groupSeparator: computed(() => systemDataStore.system.numberFormat.thousandsSeparator),
 		}, options))
 	}
 
@@ -776,7 +780,7 @@ export class Number extends Base
 		const value = _toNumber(this.value)
 		if (isNaN(value))
 			return ''
-		return value.toFixed(this.decimalDigits)
+		return genericFunctions.numericDisplay(value.toFixed(this.decimalDigits), this.decimalSeparator, this.groupSeparator, undefined)
 	}
 
 	/**
@@ -997,6 +1001,8 @@ export class DocumentData extends Base
 
 export class Document extends Base
 {
+	static EMPTY_VALUE = ''
+
 	constructor(options)
 	{
 		super(_assignIn({
@@ -1606,7 +1612,6 @@ export class PropertyList extends Base
 	{
 		super(_assignIn({
 			type: 'PropertyList',
-			_value: {},
 			pkField: '',
 			propCol: '',
 			valueCol: '',
@@ -1633,19 +1638,38 @@ export class PropertyList extends Base
 	}
 
 	/**
+	 * Adds a new property to the list of properties.
+	 * @param {object} property The property to be added
+	 */
+	addProperty(property)
+	{
+		this.value[property.id] = property
+	}
+
+	/**
 	 * @override
 	 */
-	updateValue(field)
-	{
-		if (field === null)
-			return
+	isValidType(value)
+	{	
+		return typeof value === 'object'
+	}
 
-		const fieldExists = this._value[field.id]
-		// If the field is in the list, update it. Otherwise, add it.
-		if (fieldExists)
-			_assignIn(fieldExists, field)
-		else
-			this._value[field.id] = field
+	/**
+	 * @override
+	 */
+	updateValue(newValue)
+	{	
+		const clone = _cloneDeep(newValue)
+		return super.updateValue(clone)
+	}
+
+	/**
+	 * This function is used to get the parsed value of a property based on the field type
+	 * Its being used inside forms to display the value of the property in the UI
+	 */
+	getPropertyParsedValue(property)
+	{
+		return this.parseToDisplayValue(property.value, property.type)
 	}
 
 	/**
@@ -1679,7 +1703,10 @@ export class PropertyList extends Base
 		const properties = viewModel?.Elements
 
 		if (!properties)
-			return
+		{
+			this.originalValue = _cloneDeep(properties)
+			return;
+		}
 
 		_forEach(properties, (property) => {
 			const field = listControl.config.fields.find((f) => f.name === property[this.propCol])
@@ -1687,23 +1714,26 @@ export class PropertyList extends Base
 				return
 
 			// Update the client-side data.
-			const value = this.parseToDisplayValue(property[this.valueCol], property[this.typeCol])
+			const valueToParse = this.value[field.id]?.value ?? property[this.valueCol]
+			const value = this.parseToDisplayValue(valueToParse, field.type)
 			field.rowId = property[this.pkField]
-			field.props.modelValue = value
 			field.defaultValue = value
 			field.isDirty = false
 
-			const fieldData = {
+			// Update the server-side data.
+			const serverData = {
 				rowId: field.rowId ?? '',
 				id: field.id,
 				name: field.name,
-				value: property[this.valueCol],
+				value: valueToParse,
 				type: field.type,
 				isDirty: field.isDirty
 			}
 
-			this.updateValue(fieldData)
+			this.addProperty(serverData)
 		})
+
+		this.originalValue = this.cloneValue()
 	}
 }
 

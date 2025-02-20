@@ -10,7 +10,7 @@ public class ArtiginvForm : PopupForm
 	/// <summary>
 	/// Image
 	/// </summary>
-	public BaseInputControl ItemImage => new BaseInputControl(driver, ContainerLocator, "#ARTIGINVITEM_IMAGE___");
+	public BaseInputControl ItemImage => new BaseInputControl(driver, ContainerLocator, "container-ARTIGINVITEM_IMAGE___", "#ARTIGINVITEM_IMAGE___");
 
 	/// <summary>
 	/// Global Item
@@ -32,12 +32,12 @@ public class ArtiginvForm : PopupForm
 	/// <summary>
 	/// Code
 	/// </summary>
-	public BaseInputControl ItemItemcod => new BaseInputControl(driver, ContainerLocator, "#ARTIGINVITEM_ITEMCOD_");
+	public BaseInputControl ItemItemcod => new BaseInputControl(driver, ContainerLocator, "container-ARTIGINVITEM_ITEMCOD_", "#ARTIGINVITEM_ITEMCOD_");
 
 	/// <summary>
 	/// Item
 	/// </summary>
-	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "#ARTIGINVITEM_ITEMDES_");
+	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "container-ARTIGINVITEM_ITEMDES_", "#ARTIGINVITEM_ITEMDES_");
 
 	/// <summary>
 	/// In use

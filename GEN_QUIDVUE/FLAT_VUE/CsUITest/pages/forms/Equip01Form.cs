@@ -10,7 +10,7 @@ public class Equip01Form : Subform
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl AssetPhoto => new BaseInputControl(driver, ContainerLocator, "#EQUIP01_ASSETPHOTO___");
+	public BaseInputControl AssetPhoto => new BaseInputControl(driver, ContainerLocator, "container-EQUIP01_ASSETPHOTO___", "#EQUIP01_ASSETPHOTO___");
 
 	public Equip01Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "EQUIP01", "EQUIPM", containerLocator: containerLocator) { }

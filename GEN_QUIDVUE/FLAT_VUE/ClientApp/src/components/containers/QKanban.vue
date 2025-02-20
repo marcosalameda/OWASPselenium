@@ -5,12 +5,18 @@
 		<template
 			v-for="column in sortedColumns"
 			:key="column.id">
-			<div class="q-kanban-column">
+			<div
+				class="q-kanban-column"
+				:draggable="false"
+				@dragover.prevent
+				@dragenter.stop.prevent="() => handleDragEnter(column)"
+				@drop.stop.prevent="() => handleDragDrop(column)">
 				<!-- HEADER -->
 				<q-kanban-header
 					v-bind="column"
 					:id="column.id"
 					:title="column.title"
+					:texts="texts"
 					@add:card="addCard"
 				>
 					<slot
@@ -38,10 +44,7 @@
 				<!-- EMPTY SPACE -->
 				<div
 					class="q-kanban-column__empty"
-					@dragover.prevent
 					:draggable="false"
-					@dragenter.stop.prevent="() => handleDragEnter(column)"
-					@drop.stop.prevent="() => handleDragDrop(column)"
 				></div>
 			</div>
 		</template>
@@ -49,6 +52,13 @@
 </template>
 
 <script>
+	import { validateTexts } from '@/mixins/genericFunctions.js'
+
+	const DEFAULT_TEXTS = {
+		addItem: 'Insert',
+		columnPlaceholder: 'Column Name'
+	}
+
 	export default {
 		name: 'QKanban',
 		expose: [],
@@ -75,6 +85,15 @@
 			cards: {
 				type: Array,
 				required: true,
+			},
+
+			/**
+			 * Localization and customization of textual content within the table component.
+			 */
+			texts: {
+				type: Object,
+				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
+				default: () => DEFAULT_TEXTS
 			},
 		},
 	

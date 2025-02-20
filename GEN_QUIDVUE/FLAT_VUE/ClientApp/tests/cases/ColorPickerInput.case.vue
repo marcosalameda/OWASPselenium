@@ -20,24 +20,24 @@
 						<base-input-structure
 							id="CTRL_1"
 							label="Hexadecimal Color">
-							<q-color-picker-input :color="colorHexa" />
+							<q-color-picker :color="colorHexa" />
 						</base-input-structure>
 						<base-input-structure
 							id="CTRL_2"
 							label="RGBA Color">
-							<q-color-picker-input :color="colorRGBA" />
+							<q-color-picker :color="colorRGBA" />
 						</base-input-structure>
 						<base-input-structure
 							id="CTRL_3"
 							label="Theme">
-							<q-color-picker-input
+							<q-color-picker
 								:color="colorRGBA"
 								:theme="theme" />
 						</base-input-structure>
 						<base-input-structure
 							id="CTRL_4"
 							label="Available Colors">
-							<q-color-picker-input
+							<q-color-picker
 								:color="colorRGBA"
 								:colors-defaults="setColors" />
 						</base-input-structure>

@@ -47,6 +47,7 @@ export default {
 		app.component('QFormDespe', defineAsyncComponent(() => import('@/views/forms/FormDespe/QFormDespe.vue')))
 		app.component('QFormDilin', defineAsyncComponent(() => import('@/views/forms/FormDilin/QFormDilin.vue')))
 		app.component('QFormDispa', defineAsyncComponent(() => import('@/views/forms/FormDispa/QFormDispa.vue')))
+		app.component('QFormDisst', defineAsyncComponent(() => import('@/views/forms/FormDisst/QFormDisst.vue')))
 		app.component('QFormDocsd', defineAsyncComponent(() => import('@/views/forms/FormDocsd/QFormDocsd.vue')))
 		app.component('QFormDsaid', defineAsyncComponent(() => import('@/views/forms/FormDsaid/QFormDsaid.vue')))
 		app.component('QFormDttyp', defineAsyncComponent(() => import('@/views/forms/FormDttyp/QFormDttyp.vue')))

@@ -89,7 +89,11 @@ $gray: #7C858D;
 $gray-dark: #40474F;
 $gray-light: #C4C5CA;
 
+//  Variables for add background color to inputs
 $input-bg: transparent;
+$input-bg-readonly: rgb($neutral-light-rgb / 0.25);
+
+
 $input-label: $neutral-dark;
 $input-color: $on-background;
 $border-dark-color: rgb(0 0 0 / 0.1);

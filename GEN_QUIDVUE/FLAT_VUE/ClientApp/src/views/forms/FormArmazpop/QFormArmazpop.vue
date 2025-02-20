@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ARMAZPOP"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ARMAZPOPPSEUDARMAZ01_.isVisible || controls.ARMAZPOPPSEUDARMAZ02_.isVisible">
 					<q-control-wrapper
@@ -564,7 +563,7 @@
 						label: computed(() => this.Resources.IDENTIFICATION37731),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-ARMAZPOPPSEUDARMAZ01_',
+						directChildren: ['ARMAZ01_WAREHWAREHCOD', 'ARMAZ01_WAREHACTIVITY', 'ARMAZ01_WAREHWAREHDES'],
 						controlLimits: [
 						],
 					}, this),
@@ -575,7 +574,7 @@
 						label: computed(() => this.Resources.ITEM40802),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-ARMAZPOPPSEUDARMAZ02_',
+						directChildren: ['ARMAZ02_PSEUDARTIGAPO', 'ARMAZ02_PSEUDARTIGOS_'],
 						controlLimits: [
 						],
 					}, this),
@@ -588,7 +587,6 @@
 						label: computed(() => this.Resources.CODE_49120),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ARMAZPOPPSEUDARMAZ01_',
 						tab: 'ARMAZPOPPSEUDARMAZ01_',
 						maxLength: 10,
 						labelId: 'label_ARMAZ01_WAREHWAREHCOD',
@@ -604,7 +602,6 @@
 						label: computed(() => this.Resources.ACTIVITY_63514),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ARMAZPOPPSEUDARMAZ01_',
 						tab: 'ARMAZPOPPSEUDARMAZ01_',
 						maxIntegers: 1,
 						maxDecimals: 0,
@@ -623,7 +620,6 @@
 						label: computed(() => this.Resources.WAREHOUSE_33475),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ARMAZPOPPSEUDARMAZ01_',
 						tab: 'ARMAZPOPPSEUDARMAZ01_',
 						maxLength: 85,
 						labelId: 'label_ARMAZ01_WAREHWAREHDES',
@@ -637,7 +633,6 @@
 						label: computed(() => this.Resources.SUPPORT40814),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ARMAZPOPPSEUDARMAZ02_',
 						tab: 'ARMAZPOPPSEUDARMAZ02_',
 						targetTableListId: 'ARMAZ02_PSEUDARTIGOS_',
 						supportForm: {
@@ -658,7 +653,6 @@
 						label: computed(() => this.Resources.CATALOG_ARTICLES06740),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ARMAZPOPPSEUDARMAZ02_',
 						tab: 'ARMAZPOPPSEUDARMAZ02_',
 						controller: 'WAREH',
 						action: 'Armaz02_ValArtigos',

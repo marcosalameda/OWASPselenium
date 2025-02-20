@@ -41,21 +41,18 @@
 	import { QUtils } from '@/utils/mainUtils';
 	import { reactive, computed } from 'vue';
 	import database from './System_setup/Database.vue';
-	import audit from './System_setup/Audit.vue';
-	import advanced from './System_setup/Advanced.vue';
 	import display from './System_setup/Display.vue';
-	import reporting from './System_setup/Reporting.vue';
-	import queue from './System_setup/Queue.vue';
-	import messaging from './System_setup/Messaging.vue';
-	import elasticsearch from './System_setup/ElasticSearch.vue';
-	import scheduler from './System_setup/Scheduler.vue';
+	import externalservices from './System_setup/ExternalServices.vue';
+	import integration from './System_setup/Integration.vue';
 	import datasystems from './System_setup/DataSystems.vue';
+	import system from './System_setup/System.vue';
+	import extra from './System_setup/Extra.vue';
 	import QAlert from '@/components/QAlert.vue';
 
 	export default {
 		name: 'system_setup',
 		mixins: [reusableMixin],
-		components: { QAlert, database, audit, display, reporting, advanced, elasticsearch, messaging, datasystems, scheduler 			,queue
+		components: { QAlert, database, display, externalservices, datasystems, integration, system, extra
 },
 
 		props: {
@@ -95,89 +92,6 @@
 							events: { 'connection-tested': vm.handleConnectionTested, 'updateModal': vm.setModel, 'alertClass': vm.updateAlert }
 						},
 						{
-							id: 'display-tab',
-							componentId: 'display',
-							name: 'display',
-							label: vm.$t('DEFINICOES_DO_ECRA09420'), 
-							disabled: false,
-							isVisible: true,
-							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists) },
-							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
-						},
-						{
-							id: 'advanced-tab',
-							componentId: 'advanced',
-							name: 'advanced',
-							label: vm.$t('PROPRIEDADES_AVANCAD23972'),
-							disabled: false,
-							isVisible: true,
-							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists) },
-							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
-						},
-						{
-							id: 'elasticsearch-tab',
-							componentId: 'elasticsearch',
-							name: 'elasticsearch',
-							label: vm.$t('ELASTICSEARCH49143'),
-							disabled: false,
-							isVisible: true,
-							props: { model: computed(() => vm.Model), Cores: computed(() => vm.Cores), SelectLists: computed(() => vm.Model?.SelectLists) },
-							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
-						},
-						{
-							id: 'reporting-tab',
-							componentId: 'reporting',
-							name: 'reporting',
-							label: vm.$t('RELATORIOS37339'),
-							disabled: false,
-							isVisible: true,
-							props: { model: computed(() => vm.Model) },
-							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
-						},
-						{
-							id: 'scheduler-tab',
-							componentId: 'scheduler',
-							name: 'scheduler',
-							label: vm.$t('AGENDADOR40611'),
-							disabled: false,
-							isVisible: true,
-							props: { model: computed(() => vm.Model?.Scheduler),  TaskList: computed(() => vm.Model?.SelectLists.SchedulerTaskList) },
-							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
-						},
-						{
-							id: 'messaging-tab',
-							componentId: 'messaging',
-							name: 'messaging',
-							label: vm.$t('MENSAGENS53948'),
-							disabled: false,
-							isVisible: true,
-							props: { model: computed(() => vm.Model?.Messaging),  Metadata: computed(() => vm.Model?.MessagingMetadata) },
-							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
-						},
-						{
-							id: 'queue-tab',
-							componentId: 'queue',
-							name: 'queue',
-							label: vm.$t('MESSAGE_QUEUEING34227'),
-							disabled: false,
-							isVisible: true,
-							props: {
-								model: computed(() => vm.Model),
-								reloadMQueues: vm.reloadMQueues
-							},
-							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
-						},
-						{
-							id: 'audit-tab',
-							componentId: 'audit',
-							name: 'audit',
-							label: vm.$t('AUDITORIA29703'),
-							disabled: false,
-							isVisible: true,
-							props: { model: computed(() => vm.Model) },
-							events: { 'updateModal': vm.setModel, 'alertClass': vm.updateAlert }
-						},
-						{
 							id: 'datasystems-tab',
 							componentId: 'datasystems',
 							name: 'datasystems',
@@ -189,6 +103,57 @@
 								texts: computed(() => vm.Resources)
 							},
 							events: { 'changeTab': vm.changeTab, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'system-tab',
+							componentId: 'system',
+							name: 'system',
+							label: vm.$t('SISTEMA05814'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model), Scheduler: computed(() => vm.Model?.Scheduler), TaskList: computed(() => vm.Model?.SelectLists.SchedulerTaskList) },
+							events: { 'updateModal': () => vm.fetchData() || vm.setModel(), 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'display-tab',
+							componentId: 'display',
+							name: 'display',
+							label: vm.$t('DEFINICOES_DO_ECRA09420'), 
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists) },
+							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'externalservices-tab',
+							componentId: 'externalservices',
+							name: 'externalservices',
+							label: vm.$t('IA_E_SERVICOS_EXTERN49145'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model), Cores: computed(() => vm.Cores), SelectLists: computed(() => vm.Model?.SelectLists) },
+							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'integration-tab',
+							componentId: 'integration',
+							name: 'integration',
+							label: vm.$t('INTEGRACAO28978'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model), Messaging: computed(() => vm.Model?.Messaging),
+								Metadata: computed(() => vm.Model?.MessagingMetadata), reloadMQueues: vm.reloadMQueues },
+							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'extra-tab',
+							componentId: 'extra',
+							name: 'extra',
+							label: vm.$t('PROPRIEDADES_EXTRA18082'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists) },
+							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
 						},
 					]
 				}

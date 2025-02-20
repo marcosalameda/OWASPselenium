@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="VENDA"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.VENDA___ORGANORGANIZA.isVisible">
 					<q-control-wrapper
@@ -1026,6 +1025,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['VENDA___SALE_IDENTIFI', 'VENDA___SALE_POTCOMPR', 'VENDA___SALE_PROSPECC'],
 						controlLimits: [
 						],
 					}, this),
@@ -1081,6 +1081,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['VENDA___SALE_INTERESS', 'VENDA___SALE_SEMRFINA', 'VENDA___SALE_SEMCAPAC', 'VENDA___SALE_DTQUALIF', 'VENDA___SALE_QUALIFIC'],
 						controlLimits: [
 						],
 					}, this),
@@ -1159,6 +1160,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['VENDA___SALE_PREABORD', 'VENDA___SALE_HOMEWORK'],
 						controlLimits: [
 						],
 					}, this),
@@ -1198,6 +1200,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['VENDA___SALE_DTABORDA', 'VENDA___SALE_APPROACH'],
 						controlLimits: [
 						],
 					}, this),
@@ -1237,6 +1240,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['VENDA___SALE_DTAPRESE', 'VENDA___SALE_APRESENT'],
 						controlLimits: [
 						],
 					}, this),
@@ -1276,6 +1280,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['VENDA___SALE_DTSUPERA'],
 						controlLimits: [
 						],
 					}, this),
@@ -1302,6 +1307,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['VENDA___SALE_TENTFECH', 'VENDA___SALE_DTVENDA_'],
 						controlLimits: [
 						],
 					}, this),
@@ -1342,6 +1348,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['VENDA___SALE_DTACOMPA'],
 						controlLimits: [
 						],
 					}, this),

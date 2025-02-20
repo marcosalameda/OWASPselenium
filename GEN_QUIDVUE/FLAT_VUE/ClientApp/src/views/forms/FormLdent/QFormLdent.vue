@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="LDENT"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.LDENT___WAREHWAREHDES.isVisible || controls.LDENT___LDENTLINE____.isVisible || controls.LDENT___LDENTEMUSO___.isVisible">
 					<q-control-wrapper

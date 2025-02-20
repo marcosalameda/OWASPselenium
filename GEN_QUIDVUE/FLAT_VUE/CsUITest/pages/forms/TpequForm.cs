@@ -21,17 +21,17 @@ public class TpequForm : Form
 	/// <summary>
 	/// Type of equipment
 	/// </summary>
-	public BaseInputControl TpequTipoequi => new BaseInputControl(driver, ContainerLocator, "#TPEQU___TPEQUTIPOEQUI");
+	public BaseInputControl TpequTipoequi => new BaseInputControl(driver, ContainerLocator, "container-TPEQU___TPEQUTIPOEQUI", "#TPEQU___TPEQUTIPOEQUI");
 
 	/// <summary>
 	/// Code
 	/// </summary>
-	public BaseInputControl TpequTpequcod => new BaseInputControl(driver, ContainerLocator, "#TPEQU___TPEQUTPEQUCOD");
+	public BaseInputControl TpequTpequcod => new BaseInputControl(driver, ContainerLocator, "container-TPEQU___TPEQUTPEQUCOD", "#TPEQU___TPEQUTPEQUCOD");
 
 	/// <summary>
 	/// Level:
 	/// </summary>
-	public BaseInputControl TpequNivel => new BaseInputControl(driver, ContainerLocator, "#TPEQU___TPEQUNIVEL___");
+	public BaseInputControl TpequNivel => new BaseInputControl(driver, ContainerLocator, "container-TPEQU___TPEQUNIVEL___", "#TPEQU___TPEQUNIVEL___");
 
 	/// <summary>
 	/// ACCORDION
@@ -51,27 +51,27 @@ public class TpequForm : Form
 	/// <summary>
 	/// Maximum Price
 	/// </summary>
-	public BaseInputControl TpequPrecomax => new BaseInputControl(driver, ContainerLocator, "#TPEQU___TPEQUPRECOMAX");
+	public BaseInputControl TpequPrecomax => new BaseInputControl(driver, ContainerLocator, "container-TPEQU___TPEQUPRECOMAX", "#TPEQU___TPEQUPRECOMAX");
 
 	/// <summary>
 	/// Background Color
 	/// </summary>
-	public BaseInputControl TpequBackcolo => new BaseInputControl(driver, ContainerLocator, "#TPEQU___TPEQUBACKCOLO");
+	public BaseInputControl TpequBackcolo => new BaseInputControl(driver, ContainerLocator, "container-TPEQU___TPEQUBACKCOLO", "#TPEQU___TPEQUBACKCOLO");
 
 	/// <summary>
 	/// Letter Color
 	/// </summary>
-	public BaseInputControl TpequCorletra => new BaseInputControl(driver, ContainerLocator, "#TPEQU___TPEQUCORLETRA");
+	public BaseInputControl TpequCorletra => new BaseInputControl(driver, ContainerLocator, "container-TPEQU___TPEQUCORLETRA", "#TPEQU___TPEQUCORLETRA");
 
 	/// <summary>
 	/// Dependence on
 	/// </summary>
-	public BaseInputControl TpequTpequpai => new BaseInputControl(driver, ContainerLocator, "#TPEQU___TPEQUTPEQUPAI");
+	public BaseInputControl TpequTpequpai => new BaseInputControl(driver, ContainerLocator, "container-TPEQU___TPEQUTPEQUPAI", "#TPEQU___TPEQUTPEQUPAI");
 
 	/// <summary>
 	/// Last Price
 	/// </summary>
-	public BaseInputControl TpequPrecoult => new BaseInputControl(driver, ContainerLocator, "#TPEQU___TPEQUPRECOULT");
+	public BaseInputControl TpequPrecoult => new BaseInputControl(driver, ContainerLocator, "container-TPEQU___TPEQUPRECOULT", "#TPEQU___TPEQUPRECOULT");
 
 	/// <summary>
 	/// Since
@@ -121,7 +121,7 @@ public class TpequForm : Form
 	/// <summary>
 	/// Quantity of equipment:
 	/// </summary>
-	public BaseInputControl TpequQtdequip => new BaseInputControl(driver, ContainerLocator, "#TPEQU___TPEQUQTDEQUIP");
+	public BaseInputControl TpequQtdequip => new BaseInputControl(driver, ContainerLocator, "container-TPEQU___TPEQUQTDEQUIP", "#TPEQU___TPEQUQTDEQUIP");
 
 	public TpequForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "TPEQU", containerLocator: containerLocator) { }

@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Feeca
 		public string ValCodfeeca { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Feeca
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS FEECA_FLDSDESCRIP]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Feeca
 
 			if (Menu == null)
 				Menu = new TablePartial<Feeca_FldsValDescrip_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -147,6 +171,8 @@ namespace GenioMVC.ViewModels.Feeca
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -300,7 +326,7 @@ namespace GenioMVC.ViewModels.Feeca
 				feeca___flds_descrip_Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ FEECA_DESCRIP]/
+// USE /[MANUAL GQT OVERRQ FEECA_FLDSDESCRIP]/
 
 				if (isToExport)
 				{
@@ -309,14 +335,14 @@ namespace GenioMVC.ViewModels.Feeca
 
 					Qlisting = Models.ModelBase.Where<CSGenioAflds>(m_userContext, false, feeca___flds_descrip_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_FEECA___FLDS_DESCRIP_", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP FEECA_DESCRIP]/
+// USE /[MANUAL GQT OVERRQLSTEXP FEECA_FLDSDESCRIP]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST FEECA_DESCRIP]/
+// USE /[MANUAL GQT OVERRQLIST FEECA_FLDSDESCRIP]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_flds"];
 					CriteriaSet m_PagingPosEPHs = null;

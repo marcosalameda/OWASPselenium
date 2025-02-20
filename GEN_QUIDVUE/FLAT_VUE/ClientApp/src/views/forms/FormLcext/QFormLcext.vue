@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="LCEXT"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.LCEXT___PSEUDNOVOGR01.isVisible"
@@ -547,6 +546,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['LCEXT___LOCATGLN_____', 'LCEXT___LCEXTGLNEXT__', 'LCEXT___LCEXTSPACETYP', 'LCEXT___LCEXTSPACEOBS'],
 						controlLimits: [
 						],
 					}, this),

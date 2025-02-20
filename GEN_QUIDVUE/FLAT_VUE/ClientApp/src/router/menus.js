@@ -57,6 +57,19 @@ export default function getMenusRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/WMS/menu/WMS_251',
+			name: 'menu-WMS_251',
+			component: () => import('@/views/menus/ModuleWMS/MenuWMS_251/QMenuWms251.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'WMS',
+				order: '251',
+				baseArea: 'DISST',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValStatus'],
+			}
+		},
+		{
 			path: '/:culture/:system/WMS/menu/WMS_ASSET_CARD',
 			name: 'menu-WMS_ASSET_CARD',
 			component: () => import('@/views/menus/ModuleWMS/MenuWMS_ASSET_CARD/QMenuWmsAssetCard.vue'),
@@ -386,13 +399,13 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/WMS/menu/WMS_2111',
-			name: 'menu-WMS_2111',
-			component: () => import('@/views/menus/ModuleWMS/MenuWMS_2111/QMenuWms2111.vue'),
+			path: '/:culture/:system/WMS/menu/WMS_211',
+			name: 'menu-WMS_211',
+			component: () => import('@/views/menus/ModuleWMS/MenuWMS_211/QMenuWms211.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'WMS',
-				order: '2111',
+				order: '211',
 				baseArea: 'DISPA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDispanr'],
@@ -412,13 +425,26 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/WMS/menu/WMS_231',
-			name: 'menu-WMS_231',
-			component: () => import('@/views/menus/ModuleWMS/MenuWMS_231/QMenuWms231.vue'),
+			path: '/:culture/:system/WMS/menu/WMS_2311',
+			name: 'menu-WMS_2311',
+			component: () => import('@/views/menus/ModuleWMS/MenuWMS_2311/QMenuWms2311.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'WMS',
-				order: '231',
+				order: '2311',
+				baseArea: 'DISPA',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValDispanr'],
+			}
+		},
+		{
+			path: '/:culture/:system/WMS/menu/WMS_241',
+			name: 'menu-WMS_241',
+			component: () => import('@/views/menus/ModuleWMS/MenuWMS_241/QMenuWms241.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'WMS',
+				order: '241',
 				baseArea: 'DISPA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDispanr'],

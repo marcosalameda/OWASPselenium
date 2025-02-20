@@ -63,7 +63,7 @@
 							<q-control-wrapper class="control-row-group">
 								<base-input-structure
 									class="i-text">
-									<q-checkbox 
+									<q-checkbox
 										v-model="Model.CriarBD"
 										:label="Resources.CRIAR_A_BASE_DE_DADO55641" />
 								</base-input-structure>
@@ -150,7 +150,7 @@
 					} else {
 						vm.$emit('alertClass', { message: "Year change process completed successfully", AlertType: 'success' });
 					}
-					
+
 					setTimeout(vm.checkProgress, 250);
 				});
 			},
@@ -186,7 +186,7 @@
 		mounted() {
 			setTimeout(this.checkProgress, 250);
 		},
-		
+
 		created() {
 			// Ler dados
 			this.fetchData();

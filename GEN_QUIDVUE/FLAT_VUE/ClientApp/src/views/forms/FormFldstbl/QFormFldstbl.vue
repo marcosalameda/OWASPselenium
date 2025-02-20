@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="FLDSTBL"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.FLDSTBL_PSEUDNOVOGR02.isVisible || controls.FLDSTBL_PSEUDNOVOGR06.isVisible || controls.FLDSTBL_PSEUDNOVOGR01.isVisible || controls.FLDSTBL_PSEUDNOVOGR03.isVisible || controls.FLDSTBL_PSEUDNOVOGR04.isVisible || controls.FLDSTBL_PSEUDNOVOGR05.isVisible || controls.FLDSTBL_PSEUDNOVOGR07.isVisible || controls.FLDSTBL_FLDS_CREATDAT.isVisible || controls.FLDSTBL_FLDS_CREATUSE.isVisible || controls.FLDSTBL_FLDS_CREATINS.isVisible || controls.FLDSTBL_FLDS_CREATHOU.isVisible || controls.FLDSTBL_PSEUDFEECA___.isVisible">
 					<q-control-wrapper
@@ -1206,6 +1205,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FLDSTBL_FLDS_TXTFIELD', 'FLDSTBL_FLDS_DESCRIP_'],
 						controlLimits: [
 						],
 					}, this),
@@ -1276,6 +1276,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FLDSTBL_FLDS_PRIMVIAG', 'FLDSTBL_FLDS_LOGICENU', 'FLDSTBL_FLDS_CLASSNUM', 'FLDSTBL_FLDS_RADIOB__', 'FLDSTBL_PSEUDFIELD002', 'FLDSTBL_PSEUDFIELD003', 'FLDSTBL_PSEUDFIELD001'],
 						controlLimits: [
 						],
 					}, this),
@@ -1449,6 +1450,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FLDSTBL_FLDS_YEAR____', 'FLDSTBL_FLDS_TIME____', 'FLDSTBL_FLDS_DATE____', 'FLDSTBL_FLDS_DATETIME', 'FLDSTBL_FLDS_DATESECO'],
 						controlLimits: [
 						],
 					}, this),
@@ -1582,6 +1584,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FLDSTBL_FLDS_DURATION', 'FLDSTBL_FLDS_NPASSAGE', 'FLDSTBL_FLDS_PRECOBIL', 'FLDSTBL_FLDS_PRICE___'],
 						controlLimits: [
 						],
 					}, this),
@@ -1694,6 +1697,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FLDSTBL_FLDS_SSNUMBER', 'FLDSTBL_FLDS_ZIPFIELD', 'FLDSTBL_FLDS_VATNUMBR', 'FLDSTBL_FLDS_LICPLATE', 'FLDSTBL_FLDS_BANKNMBR', 'FLDSTBL_FLDS_EMAILFLD', 'FLDSTBL_FLDS_IBANFIEL', 'FLDSTBL_FLDS_UPPRTEXT', 'FLDSTBL_FLDS_NRCNTRY_'],
 						controlLimits: [
 						],
 					}, this),
@@ -1937,6 +1941,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FLDSTBL_FLDS_PASSFLD_', 'FLDSTBL_FLDS_CLRPICKE'],
 						controlLimits: [
 						],
 					}, this),
@@ -1999,6 +2004,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['FLDSTBL_FLDS_LOGOEXTE', 'FLDSTBL_FLDS_LOGO____', 'FLDSTBL_FLDS_ATTACH__'],
 						controlLimits: [
 						],
 					}, this),

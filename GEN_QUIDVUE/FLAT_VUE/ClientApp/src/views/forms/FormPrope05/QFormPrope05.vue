@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PROPE05"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.PROPE05_PSEUDMAININF_.isVisible">
 					<q-control-wrapper
@@ -627,6 +626,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPE05_PROPEPHOTO___', 'PROPE05_PROPETITLE___', 'PROPE05_PROPEPRICE___', 'PROPE05_PROPEDESCRIPT'],
 						controlLimits: [
 						],
 					}, this),

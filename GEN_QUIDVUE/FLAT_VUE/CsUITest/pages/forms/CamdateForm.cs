@@ -10,7 +10,7 @@ public class CamdateForm : Subform
 	/// <summary>
 	/// Year
 	/// </summary>
-	public BaseInputControl FldsYear => new BaseInputControl(driver, ContainerLocator, "#CAMDATE_FLDS_YEAR____");
+	public BaseInputControl FldsYear => new BaseInputControl(driver, ContainerLocator, "container-CAMDATE_FLDS_YEAR____", "#CAMDATE_FLDS_YEAR____");
 
 	/// <summary>
 	/// Date
@@ -30,7 +30,7 @@ public class CamdateForm : Subform
 	/// <summary>
 	/// Time
 	/// </summary>
-	public BaseInputControl FldsTime => new BaseInputControl(driver, ContainerLocator, "#CAMDATE_FLDS_TIME____");
+	public BaseInputControl FldsTime => new BaseInputControl(driver, ContainerLocator, "container-CAMDATE_FLDS_TIME____", "#CAMDATE_FLDS_TIME____");
 
 	public CamdateForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "CAMDATE", "LISTACAM", containerLocator: containerLocator) { }

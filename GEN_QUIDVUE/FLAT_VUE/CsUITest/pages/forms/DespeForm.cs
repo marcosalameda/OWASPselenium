@@ -28,22 +28,22 @@ public class DespeForm : Form
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl ExpenDescript => new BaseInputControl(driver, ContainerLocator, "#DESPE___EXPENDESCRIPT");
+	public BaseInputControl ExpenDescript => new BaseInputControl(driver, ContainerLocator, "container-DESPE___EXPENDESCRIPT", "#DESPE___EXPENDESCRIPT");
 
 	/// <summary>
 	/// Value
 	/// </summary>
-	public BaseInputControl ExpenValue => new BaseInputControl(driver, ContainerLocator, "#DESPE___EXPENVALUE___");
+	public BaseInputControl ExpenValue => new BaseInputControl(driver, ContainerLocator, "container-DESPE___EXPENVALUE___", "#DESPE___EXPENVALUE___");
 
 	/// <summary>
 	/// Previous Value
 	/// </summary>
-	public BaseInputControl ExpenPrevval => new BaseInputControl(driver, ContainerLocator, "#DESPE___EXPENPREVVAL_");
+	public BaseInputControl ExpenPrevval => new BaseInputControl(driver, ContainerLocator, "container-DESPE___EXPENPREVVAL_", "#DESPE___EXPENPREVVAL_");
 
 	/// <summary>
 	/// Previous Year
 	/// </summary>
-	public BaseInputControl ExpenYearprev => new BaseInputControl(driver, ContainerLocator, "#DESPE___EXPENYEARPREV");
+	public BaseInputControl ExpenYearprev => new BaseInputControl(driver, ContainerLocator, "container-DESPE___EXPENYEARPREV", "#DESPE___EXPENYEARPREV");
 
 	public DespeForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "DESPE", containerLocator: containerLocator) { }

@@ -1,5 +1,5 @@
 // Utils
-import { createFramework } from '@quidgest/ui'
+import { createFramework } from '@quidgest/ui/framework'
 
 const framework = createFramework()
 

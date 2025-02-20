@@ -216,7 +216,7 @@
 								@click="changeSelectedScript(sqlFunc)">
 								<q-icon
 									:class="sqlFunc.Result.length > 0 ? 'database-options__status-error' : 'database-options__status-success'"
-									:icon="sqlFunc.Result.length > 0 ? 'remove' : 'ok'" />
+									:icon="sqlFunc.Result.length > 0 ? 'close' : 'check'" />
 							</q-button>
 						</div>
 					</template>
@@ -228,11 +228,14 @@
 			<numeric-input v-model="currentModel.Timeout" :label="'Timeout'" size="small" />
 		</row>
 
-		<row>
+		<row class="footer-btn">
 			<q-button
 				b-style="primary"
 				:label="Resources.EXECUTAR_TAREFAS_DE_40767"
 				@click="Reindex" />
+
+			<data-system-badge
+				:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
 		</row>
 
 		<q-overlay
@@ -252,9 +255,8 @@
 					<q-button
 						b-style="plain"
 						borderless
-						size="small"
 						@click="closeOverlay">
-						<q-icon icon="remove" />
+						<q-icon icon="close" />
 					</q-button>
 				</div>
 				<div class="modal-body">
@@ -287,7 +289,7 @@
 										Line {{ block.ScriptId }}
 									</span>
 									<div>
-										<span class="mdi mdi-timer-outline" />
+										<q-icon icon="timer-outline" />
 										<span>
 											{{ (block.Duration).toLocaleString('en') }} ms
 										</span>

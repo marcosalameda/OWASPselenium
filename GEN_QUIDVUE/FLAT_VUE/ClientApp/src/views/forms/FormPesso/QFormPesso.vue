@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PESSO"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.PESSO___PSEUDNOVOGR08.isVisible"
@@ -1334,6 +1333,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: true,
+						directChildren: ['PESSO___PSEUDNOVOGR04', 'PESSO___PSEUDNOVOGR02'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -1348,6 +1348,7 @@
 						container: 'PESSO___PSEUDNOVOGR08',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO___PESSOPHOTOGRA'],
 						controlLimits: [
 						],
 					}, this),
@@ -1377,6 +1378,7 @@
 						container: 'PESSO___PSEUDNOVOGR08',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO___PESSOIDFUNCIO', 'PESSO___PESSONAME____', 'PESSO___PESSOGENDER__', 'PESSO___PESSODTNASCIM', 'PESSO___PESSOIDADE___', 'PESSO___PESSOINTERNA_', 'PESSO___PESSOEXTERNA_', 'PESSO___CATEGCATEGORY', 'PESSO___PESSODTULTCAT', 'PESSO___PAIS1COUNTRY_'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -1592,6 +1594,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: true,
+						directChildren: ['PESSO___PSEUDESPECIAL', 'PESSO___PSEUDESPECITL'],
 						controlLimits: [
 						],
 					}, this),
@@ -1887,7 +1890,7 @@
 						container: 'PESSO___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PESSO___PSEUDNOVOGR07',
+						directChildren: ['PESSO___PSEUDNOVOGR03', 'PESSO___PSEUDNOVOGR09'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1899,10 +1902,10 @@
 						label: computed(() => this.Resources.MAIN_CONTACT60524),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDNOVOGR07',
 						container: 'PESSO___PSEUDNOVOGR07',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO___PESSOTELEPHON', 'PESSO___PESSOEMAIL___', 'PESSO___PESSOEMAIL2__'],
 						controlLimits: [
 						],
 					}, this),
@@ -1915,7 +1918,6 @@
 						label: computed(() => this.Resources.TELEPHONE28697),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDNOVOGR07',
 						container: 'PESSO___PSEUDNOVOGR03',
 						maxLength: 20,
 						labelId: 'label_PESSO___PESSOTELEPHON',
@@ -1931,7 +1933,6 @@
 						label: computed(() => this.Resources.EMAIL_44228),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDNOVOGR07',
 						container: 'PESSO___PSEUDNOVOGR03',
 						maxLength: 254,
 						labelId: 'label_PESSO___PESSOEMAIL___',
@@ -1945,10 +1946,10 @@
 						label: computed(() => this.Resources.ALL_CONTACTS25646),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDNOVOGR07',
 						container: 'PESSO___PSEUDNOVOGR07',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO___PSEUDCONTACTO'],
 						controlLimits: [
 						],
 					}, this),
@@ -1959,7 +1960,6 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDNOVOGR07',
 						container: 'PESSO___PSEUDNOVOGR09',
 						controller: 'PESSO',
 						action: 'Pesso_ValContacto',
@@ -2152,7 +2152,7 @@
 						container: 'PESSO___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: true,
-						openingEvent: 'opened-PESSO___PSEUDNOVOGR05',
+						directChildren: ['PESSO___PSEUDNOVOGR01', 'PESSO___PSEUDNOVOGR10'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -2164,10 +2164,10 @@
 						label: computed(() => this.Resources.COMPANY52963),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDNOVOGR05',
 						container: 'PESSO___PSEUDNOVOGR05',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO___PSEUDNOVOGR13', 'PESSO___REGI1REGIAO__'],
 						controlLimits: [
 						],
 					}, this),
@@ -2178,10 +2178,10 @@
 						label: computed(() => this.Resources.C_D18888),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDNOVOGR05',
 						container: 'PESSO___PSEUDNOVOGR01',
 						isCollapsible: false,
 						anchored: true,
+						directChildren: ['PESSO___CMPNYDESIGNAT', 'PESSO___CNTRYCOUNTRY_'],
 						controlLimits: [
 						],
 					}, this),
@@ -2194,7 +2194,6 @@
 						label: computed(() => this.Resources.COMPANY52963),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDNOVOGR05',
 						container: 'PESSO___PSEUDNOVOGR13',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -2232,7 +2231,6 @@
 						label: computed(() => this.Resources.COUNTRY64133),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDNOVOGR05',
 						container: 'PESSO___PSEUDNOVOGR13',
 						maxLength: 90,
 						labelId: 'label_PESSO___CNTRYCOUNTRY_',
@@ -2248,7 +2246,6 @@
 						label: computed(() => this.Resources.REGION_OF_THE_PERSON14756),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDNOVOGR05',
 						container: 'PESSO___PSEUDNOVOGR01',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -2282,10 +2279,10 @@
 						label: computed(() => this.Resources.EVOLUTION63463),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDNOVOGR05',
 						container: 'PESSO___PSEUDNOVOGR05',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO___PSEUDEVOLUCAO'],
 						controlLimits: [
 						],
 					}, this),
@@ -2296,7 +2293,6 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDNOVOGR05',
 						container: 'PESSO___PSEUDNOVOGR10',
 						controller: 'PESSO',
 						action: 'Pesso_ValEvolucao',
@@ -2505,6 +2501,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSO___PSEUDNOVOGR07', 'PESSO___PSEUDNOVOGR05'],
 						controlLimits: [
 						],
 					}, this),
@@ -2529,7 +2526,6 @@
 						label: computed(() => this.Resources.ALTERNATIVE_EMAIL17444),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDNOVOGR07',
 						container: 'PESSO___PSEUDNOVOGR03',
 						maxLength: 254,
 						labelId: 'label_PESSO___PESSOEMAIL2__',
@@ -2545,7 +2541,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PESSO___PSEUDTERRAGRP',
+						directChildren: ['PESSO___PESSOEXTQUERY', 'PESSO___PESSOZOOMLVL_', 'PESSO___PESSOEXTMINZM', 'PESSO___PESSOMAPHEIGH', 'PESSO___PESSOOUTWEIGH', 'PESSO___PESSOLINECLR_', 'PESSO___PESSOPOLYCLR_', 'PESSO___PESSODRAWMRK_', 'PESSO___PESSOALLOWLIN', 'PESSO___PESSOALLOWPOL', 'PESSO___PESSOCANEXPOR', 'PESSO___PESSOGROUPMRK', 'PESSO___PESSOCANEDIT_', 'PESSO___PESSOCANCUT__', 'PESSO___PESSOCANDRAG_', 'PESSO___PESSOCANROT__', 'PESSO___PESSOCANREMOV', 'PESSO___PESSOTERRAIN_'],
 						controlLimits: [
 						],
 					}, this),
@@ -2558,7 +2554,6 @@
 						label: computed(() => this.Resources.QUERY_FOR_EXTERNAL_A51761),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						maxLength: 250,
 						labelId: 'label_PESSO___PESSOEXTQUERY',
@@ -2574,7 +2569,6 @@
 						label: computed(() => this.Resources.ZOOM_LEVEL17268),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						maxIntegers: 2,
 						maxDecimals: 0,
@@ -2590,7 +2584,6 @@
 						label: computed(() => this.Resources.MINIMUM_ZOOM_TO_LOAD08509),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						maxIntegers: 2,
 						maxDecimals: 0,
@@ -2606,7 +2599,6 @@
 						label: computed(() => this.Resources.MAP_HEIGHT06476),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						maxLength: 50,
 						labelId: 'label_PESSO___PESSOMAPHEIGH',
@@ -2622,7 +2614,6 @@
 						label: computed(() => this.Resources.OUTLINE_WEIGHT25236),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						maxIntegers: 2,
 						maxDecimals: 0,
@@ -2638,7 +2629,6 @@
 						label: computed(() => this.Resources.POLYLINE_COLOR11664),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						maxLength: 50,
 						labelId: 'label_PESSO___PESSOLINECLR_',
@@ -2654,7 +2644,6 @@
 						label: computed(() => this.Resources.POLYGON_COLOR32161),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						maxLength: 50,
 						labelId: 'label_PESSO___PESSOPOLYCLR_',
@@ -2670,7 +2659,6 @@
 						label: computed(() => this.Resources.ALLOW_DRAWING_MARKER56732),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						controlLimits: [
 						],
@@ -2684,7 +2672,6 @@
 						label: computed(() => this.Resources.ALLOW_DRAWING_POLYLI25703),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						controlLimits: [
 						],
@@ -2698,7 +2685,6 @@
 						label: computed(() => this.Resources.ALLOW_DRAWING_POLYGO46480),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						controlLimits: [
 						],
@@ -2712,7 +2698,6 @@
 						label: computed(() => this.Resources.ALLOW_EXPORTING_MAP27916),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						controlLimits: [
 						],
@@ -2726,7 +2711,6 @@
 						label: computed(() => this.Resources.GROUP_MARKERS_IN_CLU31341),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						controlLimits: [
 						],
@@ -2740,7 +2724,6 @@
 						label: computed(() => this.Resources.ALLOW_FEATURE_EDITIN16439),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						controlLimits: [
 						],
@@ -2754,7 +2737,6 @@
 						label: computed(() => this.Resources.ALLOW_FEATURE_CUTTIN10746),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						controlLimits: [
 						],
@@ -2768,7 +2750,6 @@
 						label: computed(() => this.Resources.ALLOW_FEATURE_DRAGGI09054),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						controlLimits: [
 						],
@@ -2782,7 +2763,6 @@
 						label: computed(() => this.Resources.ALLOW_FEATURE_ROTATI56653),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						controlLimits: [
 						],
@@ -2796,7 +2776,6 @@
 						label: computed(() => this.Resources.ALLOW_FEATURE_REMOVA13844),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						controlLimits: [
 						],
@@ -2812,7 +2791,6 @@
 						label: computed(() => this.Resources.TERRAIN43857),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSO___PSEUDTERRAGRP',
 						container: 'PESSO___PSEUDTERRAGRP',
 						viewModes: [
 							{
@@ -2853,6 +2831,10 @@
 									},
 									fitZoom: {
 										rawValue: true,
+										isMapped: false
+									},
+									zoomDelta: {
+										rawValue: 1,
 										isMapped: false
 									},
 									boundSouthWest: {

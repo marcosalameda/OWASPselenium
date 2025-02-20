@@ -4,15 +4,31 @@ public class CollapsibleZoneControl : ControlObject
 {
     private IWebElement toggle => m_control.FindElement(By.CssSelector(".q-group-collapsible__header button"));
 
-    public CollapsibleZoneControl(IWebDriver driver, By containerLocator, string css) 
+    public CollapsibleZoneControl(IWebDriver driver, By containerLocator, string css)
         : base(driver, containerLocator, By.CssSelector(css))
     {
     }
 
-    public bool IsExpanded => m_control.GetAttribute("class").Contains("q-group-collapsible--open");
+    public bool IsToggling => m_control.GetAttribute("class").Contains("q-group-collapsible--toggling");
+
+    public bool IsExpanded
+    {
+        get
+        {
+            WaitForToggling();
+            return m_control.GetAttribute("class").Contains("q-group-collapsible--open");
+        }
+    }
+
+    private void WaitForToggling()
+    {
+        if (IsToggling)
+            wait.Until(c => !IsToggling);
+    }
 
     public void Toggle()
     {
         toggle.Click();
+        WaitForToggling();
     }
 }

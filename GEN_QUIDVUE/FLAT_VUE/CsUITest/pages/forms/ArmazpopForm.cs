@@ -20,17 +20,17 @@ public class ArmazpopForm : PopupForm
 	/// <summary>
 	/// Code:
 	/// </summary>
-	public BaseInputControl Armaz01WarehWarehcod => new BaseInputControl(driver, ContainerLocator, "#ARMAZ01_WAREHWAREHCOD");
+	public BaseInputControl Armaz01WarehWarehcod => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHWAREHCOD", "#ARMAZ01_WAREHWAREHCOD");
 
 	/// <summary>
 	/// Activity:
 	/// </summary>
-	public BaseInputControl Armaz01WarehActivity => new BaseInputControl(driver, ContainerLocator, "#ARMAZ01_WAREHACTIVITY");
+	public BaseInputControl Armaz01WarehActivity => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHACTIVITY", "#ARMAZ01_WAREHACTIVITY");
 
 	/// <summary>
 	/// Warehouse:
 	/// </summary>
-	public BaseInputControl Armaz01WarehWarehdes => new BaseInputControl(driver, ContainerLocator, "#ARMAZ01_WAREHWAREHDES");
+	public BaseInputControl Armaz01WarehWarehdes => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHWAREHDES", "#ARMAZ01_WAREHWAREHDES");
 
 	/// <summary>
 	/// Support

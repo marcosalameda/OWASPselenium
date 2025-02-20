@@ -117,6 +117,7 @@
     <Compile Include="model\CSGenioAGENRE.cs" />
     <Compile Include="model\CSGenioAFEECA.cs" />
     <Compile Include="model\CSGenioANOTIF.cs" />
+    <Compile Include="model\CSGenioADISST.cs" />
     <Compile Include="model\CSGenioAASSET.cs" />
     <Compile Include="model\CSGenioALANG2.cs" />
     <Compile Include="model\CSGenioALENDI.cs" />

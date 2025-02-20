@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Cfaqs
 		public string ValCodcfaqs { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -60,6 +72,15 @@ namespace GenioMVC.ViewModels.Cfaqs
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS B1]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -67,20 +88,17 @@ namespace GenioMVC.ViewModels.Cfaqs
 			var areaBase = CSGenio.business.Area.createArea("cfaqs", user, "GQT");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet gqt_menu_b1Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLB1");
-			gqt_menu_b1Conds.Equal(CSGenioAcfaqs.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLB1");
+			conditions.Equal(CSGenioAcfaqs.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL GQT OVERRQ B1]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAcfaqs.FldCodcfaqs, CSGenioAcfaqs.FldZzstate, CSGenioAcfaqs.FldIcon, CSGenioAcfaqs.FldCategory, CSGenioAcfaqs.FldDescript };
 
 			ListingMVC<CSGenioAcfaqs> listing = new ListingMVC<CSGenioAcfaqs>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(gqt_menu_b1Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -156,6 +174,9 @@ namespace GenioMVC.ViewModels.Cfaqs
 
 			if (Menu == null)
 				Menu = new TablePartial<GQT_Menu_B1_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -174,6 +195,8 @@ namespace GenioMVC.ViewModels.Cfaqs
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

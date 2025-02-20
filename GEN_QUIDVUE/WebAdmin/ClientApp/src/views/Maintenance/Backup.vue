@@ -24,6 +24,9 @@
 							b-style="primary"
 							:label="Resources.EXECUTAR_BACKUP43010"
 							@click="startBackup" />
+
+						<data-system-badge
+							:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
 					</row>
 				</q-row-container>
 			</q-card>
@@ -42,12 +45,12 @@
 						<q-button
 							:title="Resources.RESTAURAR57043"
 							@click="restoreBackupFile(props.row)">
-							<q-icon icon="circle-arrow-top" />
+							<q-icon icon="restore" />
 						</q-button>
 						<q-button
 							:title="Resources.ELIMINAR21155"
 							@click="deleteBackupFile(props.row)">
-							<q-icon icon="remove" />
+							<q-icon icon="bin" />
 						</q-button>
 					</q-button-group>
 				</template>
@@ -134,10 +137,9 @@
 
 			restoreBackupFile(bf) {
 				var vm = this;
-				console.log(bf);
 				bootbox.confirm({
 					title: vm.Resources.RESTAURAR_BACKUP53628,
-					message: '<p><span class="e-icon glyphicons glyphicons-circle-arrow-top x2" width="32" height="32"></span> ' + vm.Resources.ESTA_OPERACAO_IRA_SU08117 + '</p>',
+					message: vm.Resources.ESTA_OPERACAO_IRA_SU08117,
 					buttons: {
 						confirm: {
 						label: vm.Resources.RESTAURAR57043,
@@ -159,10 +161,9 @@
 
 			deleteBackupFile(bf) {
 				var vm = this;
-				console.log(bf);
 				bootbox.confirm({
 				title: vm.Resources.APAGAR_BACKUP27193,
-				message: '<p><span class="e-icon glyphicons glyphicons-remove x2" width="32" height="32"></span> Tem a acerteza que quer apagar?</p>',
+				message: vm.Resources.TEM_A_CERTEZA_QUE_QU10641,
 				buttons: {
 					confirm: {
 					label: vm.Resources.APAGAR04097,

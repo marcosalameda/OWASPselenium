@@ -3,33 +3,13 @@
 		<row>
 			<q-card
 				class="q-card--admin-default"
-				:title="Resources.CONFIGURACOES_DE_INT56161"
-				width="block">
-				<q-row-container>
-					<q-text-field
-						v-model="model.UrlAPIBackend"
-						:label="Resources.URL_DO_BACKEND_DA_AP53038">
-						<template #extras>
-							<div class="q-field__extras">
-								<span class="mdi mdi-information-outline"></span>
-								{{ Resources.DEVERA_COLOCAR_O_END10058 }}
-							</div>
-						</template>
-					</q-text-field>						
-				</q-row-container>
-			</q-card>
-		</row>
-
-		<row>
-			<q-card
-				class="q-card--admin-default"
 				:title="Resources.GARANTIA_DE_QUALIDAD19784"
 				width="block">
 				<q-checkbox 
 					v-model="model.QAEnvironment" 
 					:label="Resources.AMBIENTE_DE_QA_09940">
 					<template #extras>
-						<span class="mdi mdi-information-outline" />
+						<q-icon icon="information-outline" />
 						{{ Resources.SELECIONE_PARA_MOSTR59643 }}
 					</template>
 				</q-checkbox>

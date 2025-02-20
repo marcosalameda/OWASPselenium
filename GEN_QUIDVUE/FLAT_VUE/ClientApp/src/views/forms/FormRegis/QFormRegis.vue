@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="REGIS"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.REGIS___PSEUDNOVOGR01.isVisible || controls.REGIS___PSEUDOBRIGATO.isVisible"
@@ -572,6 +571,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['REGIS___REGISNAME____', 'REGIS___REGISNIF_____', 'REGIS___REGISTELEPHON', 'REGIS___REGISEMAIL1__', 'REGIS___REGISEMAIL2__'],
 						mustBeFilled: true,
 						controlLimits: [
 						],

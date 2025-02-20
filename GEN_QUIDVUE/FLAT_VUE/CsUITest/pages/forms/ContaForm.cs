@@ -28,7 +28,7 @@ public class ContaForm : PopupForm
 	/// <summary>
 	/// Contact
 	/// </summary>
-	public BaseInputControl ContaContacto => new BaseInputControl(driver, ContainerLocator, "#CONTA___CONTACONTACTO");
+	public BaseInputControl ContaContacto => new BaseInputControl(driver, ContainerLocator, "container-CONTA___CONTACONTACTO", "#CONTA___CONTACONTACTO");
 
 	public ContaForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "CONTA") { }

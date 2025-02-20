@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="REPAR"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.REPAR___EQUIPREGISTNR.isVisible || controls.REPAR___EQUIPDESIGNAT.isVisible || controls.REPAR___EQUIPPHOTOGRA.isVisible || controls.REPAR___REPARDTREPARA.isVisible || controls.REPAR___REPARNRREPARA.isVisible">
 					<q-control-wrapper

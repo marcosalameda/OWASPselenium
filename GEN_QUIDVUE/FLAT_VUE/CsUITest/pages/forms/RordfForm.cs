@@ -10,12 +10,12 @@ public class RordfForm : Form
 	/// <summary>
 	/// Order
 	/// </summary>
-	public BaseInputControl RordfOrder => new BaseInputControl(driver, ContainerLocator, "#RORDF___RORDFORDER___");
+	public BaseInputControl RordfOrder => new BaseInputControl(driver, ContainerLocator, "container-RORDF___RORDFORDER___", "#RORDF___RORDFORDER___");
 
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl RordfTitle => new BaseInputControl(driver, ContainerLocator, "#RORDF___RORDFTITLE___");
+	public BaseInputControl RordfTitle => new BaseInputControl(driver, ContainerLocator, "container-RORDF___RORDFTITLE___", "#RORDF___RORDFTITLE___");
 
 	public RordfForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "RORDF", containerLocator: containerLocator) { }

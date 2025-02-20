@@ -42,7 +42,7 @@ public class EvcatForm : Form
 	/// <summary>
 	/// Observation
 	/// </summary>
-	public BaseInputControl EvcatObservat => new BaseInputControl(driver, ContainerLocator, "#EVCAT___EVCATOBSERVAT");
+	public BaseInputControl EvcatObservat => new BaseInputControl(driver, ContainerLocator, "container-EVCAT___EVCATOBSERVAT", "#EVCAT___EVCATOBSERVAT");
 
 	public EvcatForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "EVCAT", containerLocator: containerLocator) { }

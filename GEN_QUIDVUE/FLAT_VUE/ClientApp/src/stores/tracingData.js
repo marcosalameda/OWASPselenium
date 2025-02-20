@@ -18,7 +18,8 @@ import { EventTracker, TraceEventType } from '@/mixins/tracingEvents.js'
 const state = () => {
 	return {
 		eventTracker: new EventTracker({
-			active: false
+			active: false,
+			enableTracing: false
 		})
 	}
 }
@@ -64,6 +65,27 @@ const actions = {
 		this.eventTracker.active = active
 		if (!this.eventTracker.active)
 			this.eventTracker.reset()
+	},
+
+	/**
+	 * Sets the tracing active or inactive. Doesn't impact logs
+	 * 
+	 * NOTE: Tracker is the whole client side mechanism that capture
+	 * the telemetry.
+	 * Tracing refers to the telemetry that is registered as a trace in the
+	 * back-end, these are ResponseEvents, RequestEvents, TraceEvents
+	 * 
+	 * Settings this to disabled will still allow capturing ErrorEvents
+	 * WarningEvents and InfoEvents
+	 * 
+	 * @param {boolean} state - Wether to enable tracing or not.
+	 */
+	setTracingState(state) {
+		if (typeof state !== 'boolean')
+			return
+
+		this.eventTracker.enableTracing = state
+		this.eventTracker.reset()
 	},
 
 	/**

@@ -2964,6 +2964,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <ENUS>Lendings in a period</ENUS>
     <PTPT>Lendings in a period</PTPT>
   </msg>
+  <msg id="Dispatchment Status" code="DISPATCHMENT_STATUS18877">
+    <PTPT>Dispatchment Status</PTPT>
+  </msg>
   <msg id="Creation Date" code="CREATION_DATE32161">
     <ENUS>Creation Date</ENUS>
     <PTPT>Creation Date</PTPT>
@@ -8741,6 +8744,10 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
     <PTPT>Money - decimal (1-10) (storage: 5 byte)</PTPT>
     <ENUS>Money - decimal (1-10) (storage: 5 byte)</ENUS>
   </msg>
+  <msg id="Cliente" code="CLIENTE40500">
+    <PTPT>Cliente</PTPT>
+    <ENUS>Client</ENUS>
+  </msg>
   <msg id="   85" code="___8528571">
     <PTPT>Introduza aqui uma descrição detalhada da Visão que fundamente o Mapa Estratégico. A Visão representa a forma como nos pretendemos rever no futuro, o estado de graça para o qual nos queremos direccionar.</PTPT>
     <ENUS>Enter here a detailed description of the Vision that underpins the Strategy Map. The Vision represents the way we want to see ourselves in the future, the state of grace towards which we want to direct ourselves.</ENUS>
@@ -9574,6 +9581,9 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
   <msg id="Visible on homepage?" code="VISIBLE_ON_HOMEPAGE_28937">
     <ENUS>Visible on homepage?</ENUS>
     <PTPT>Visible on homepage?</PTPT>
+  </msg>
+  <msg id="&gt;&gt; STATUS" code="___STATUS46938">
+    <PTPT>&gt;&gt; STATUS</PTPT>
   </msg>
   <msg id="Group (Basic Types)" code="GROUP__BASIC_TYPES_31302">
     <PTPT>Group (Basic Types)</PTPT>
@@ -15684,10 +15694,6 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Gravar alterações</PTPT>
     <ENUS>Save changes</ENUS>
   </msg>
-  <msg id="Gravar com outro nome" code="GRAVAR_COM_OUTRO_NOM00327">
-    <PTPT>Gravar com outro nome</PTPT>
-    <ENUS>Save with another name</ENUS>
-  </msg>
   <msg id="Opções de visualização" code="OPCOES_DE_VISUALIZAC22988">
     <PTPT>Opções de visualização</PTPT>
     <ENUS>View options</ENUS>
@@ -19071,10 +19077,6 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Licenciamento" code="LICENCIAMENTO00852">
     <PTPT>Licenciamento</PTPT>
     <ENUS>Licensing</ENUS>
-  </msg>
-  <msg id="Cliente" code="CLIENTE40500">
-    <PTPT>Cliente</PTPT>
-    <ENUS>Client</ENUS>
   </msg>
   <msg id="Plataforma" code="PLATAFORMA28085">
     <PTPT>Plataforma</PTPT>
@@ -23259,5 +23261,49 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Tabelas partilhadas" code="TABELAS_PARTILHADAS29704">
     <PTPT>Tabelas partilhadas</PTPT>
     <ENUS>Shared tables</ENUS>
+  </msg>
+  <msg id="Tem a certeza que quer apagar o backup?" code="TEM_A_CERTEZA_QUE_QU10641">
+    <PTPT>Tem a certeza que quer apagar o backup?</PTPT>
+    <ENUS>Are you sure you want to delete this backup?</ENUS>
+  </msg>
+  <msg id="Gestão de Funções de Utilizadores em Massa" code="GESTAO_DE_FUNCOES_DE46211">
+    <PTPT>Gestão de Funções de Utilizadores em Massa</PTPT>
+    <ENUS>Bulk User Role Management</ENUS>
+  </msg>
+  <msg id="Atribuir rapidamente um grupo de utilizadores a múltiplas funções" code="ATRIBUIR_RAPIDAMENTE15967">
+    <PTPT>Atribuir rapidamente um grupo de utilizadores a múltiplas funções</PTPT>
+    <ENUS>Quick assign group of users to multiple roles</ENUS>
+  </msg>
+  <msg id="1. Selecione utilizadores: Escolha os utilizadores que deseja atribuir." code="_1__SELECIONE_UTILIZ36383">
+    <PTPT>1. Selecione utilizadores: Escolha os utilizadores que deseja atribuir.</PTPT>
+    <ENUS>1. Select users: Choose the users you want to assign.</ENUS>
+  </msg>
+  <msg id="2. Selecione funções: Selecione as funções que deseja atribuir." code="_2__SELECIONE_FUNCOE01301">
+    <PTPT>2. Selecione funções: Selecione as funções que deseja atribuir.</PTPT>
+    <ENUS>2. Select roles: Select the roles you&apos;d like to assign.</ENUS>
+  </msg>
+  <msg id="3. Reveja e confirme: Pré-visualize as suas alterações e confirme-as para aplicar aos utilizadores selecionados." code="_3__REVEJA_E_CONFIRM63315">
+    <PTPT>3. Reveja e confirme: Pré-visualize as suas alterações e confirme-as para aplicar aos utilizadores selecionados.</PTPT>
+    <ENUS>3. Review and confirm: Preview your changes and confirm them to apply to the selected users.</ENUS>
+  </msg>
+  <msg id="Color Picker" code="COLOR_PICKER08843">
+    <PTPT>Seletor de Cores</PTPT>
+    <ENUS>Color Picker</ENUS>
+  </msg>
+  <msg id="IA e Serviços Externos" code="IA_E_SERVICOS_EXTERN49145">
+    <PTPT>IA e Serviços Externos</PTPT>
+    <ENUS>AI and External Services</ENUS>
+  </msg>
+  <msg id="Sistema de Mensagens" code="SISTEMA_DE_MENSAGENS07077">
+    <PTPT>Sistema de Mensagens</PTPT>
+    <ENUS>Messaging System</ENUS>
+  </msg>
+  <msg id="Mensagens Queue Server" code="MENSAGENS_QUEUE_SERV62690">
+    <PTPT>Mensagens Queue Server</PTPT>
+    <ENUS>Queue Server Messages</ENUS>
+  </msg>
+  <msg id="Propriedades Extra" code="PROPRIEDADES_EXTRA18082">
+    <PTPT>Propriedades Extra</PTPT>
+    <ENUS>Extra Properties</ENUS>
   </msg>
 </Messages>

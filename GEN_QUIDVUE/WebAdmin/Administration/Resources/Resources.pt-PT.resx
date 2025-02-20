@@ -2355,6 +2355,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <data name="LENDINGS_IN_A_PERIOD43715" xml:space="preserve">
     <value>Lendings in a period</value>
   </data>
+  <data name="DISPATCHMENT_STATUS18877" xml:space="preserve">
+    <value>Dispatchment Status</value>
+  </data>
   <data name="CREATION_DATE32161" xml:space="preserve">
     <value>Creation Date</value>
   </data>
@@ -6741,6 +6744,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
   <data name="MONEY___DECIMAL__1_124403" xml:space="preserve">
     <value>Money - decimal (1-10) (storage: 5 byte)</value>
   </data>
+  <data name="CLIENTE40500" xml:space="preserve">
+    <value>Cliente</value>
+  </data>
   <data name="___8528571" xml:space="preserve">
     <value>Introduza aqui uma descrição detalhada da Visão que fundamente o Mapa Estratégico. A Visão representa a forma como nos pretendemos rever no futuro, o estado de graça para o qual nos queremos direccionar.</value>
   </data>
@@ -7375,6 +7381,9 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</v
   </data>
   <data name="VISIBLE_ON_HOMEPAGE_28937" xml:space="preserve">
     <value>Visible on homepage?</value>
+  </data>
+  <data name="___STATUS46938" xml:space="preserve">
+    <value>&gt;&gt; STATUS</value>
   </data>
   <data name="GROUP__BASIC_TYPES_31302" xml:space="preserve">
     <value>Group (Basic Types)</value>
@@ -12012,9 +12021,6 @@ https://dicionario.priberam.org/comodato &#91;consultado em 17-12-2018&#93;.</va
   <data name="GRAVAR_ALTERACOES12886" xml:space="preserve">
     <value>Gravar alterações</value>
   </data>
-  <data name="GRAVAR_COM_OUTRO_NOM00327" xml:space="preserve">
-    <value>Gravar com outro nome</value>
-  </data>
   <data name="OPCOES_DE_VISUALIZAC22988" xml:space="preserve">
     <value>Opções de visualização</value>
   </data>
@@ -14552,9 +14558,6 @@ https://dicionario.priberam.org/comodato &#91;consultado em 17-12-2018&#93;.</va
   </data>
   <data name="LICENCIAMENTO00852" xml:space="preserve">
     <value>Licenciamento</value>
-  </data>
-  <data name="CLIENTE40500" xml:space="preserve">
-    <value>Cliente</value>
   </data>
   <data name="PLATAFORMA28085" xml:space="preserve">
     <value>Plataforma</value>
@@ -17693,5 +17696,38 @@ https://dicionario.priberam.org/comodato &#91;consultado em 17-12-2018&#93;.</va
   </data>
   <data name="TABELAS_PARTILHADAS29704" xml:space="preserve">
     <value>Tabelas partilhadas</value>
+  </data>
+  <data name="TEM_A_CERTEZA_QUE_QU10641" xml:space="preserve">
+    <value>Tem a certeza que quer apagar o backup?</value>
+  </data>
+  <data name="GESTAO_DE_FUNCOES_DE46211" xml:space="preserve">
+    <value>Gestão de Funções de Utilizadores em Massa</value>
+  </data>
+  <data name="ATRIBUIR_RAPIDAMENTE15967" xml:space="preserve">
+    <value>Atribuir rapidamente um grupo de utilizadores a múltiplas funções</value>
+  </data>
+  <data name="_1__SELECIONE_UTILIZ36383" xml:space="preserve">
+    <value>1. Selecione utilizadores: Escolha os utilizadores que deseja atribuir.</value>
+  </data>
+  <data name="_2__SELECIONE_FUNCOE01301" xml:space="preserve">
+    <value>2. Selecione funções: Selecione as funções que deseja atribuir.</value>
+  </data>
+  <data name="_3__REVEJA_E_CONFIRM63315" xml:space="preserve">
+    <value>3. Reveja e confirme: Pré-visualize as suas alterações e confirme-as para aplicar aos utilizadores selecionados.</value>
+  </data>
+  <data name="COLOR_PICKER08843" xml:space="preserve">
+    <value>Seletor de Cores</value>
+  </data>
+  <data name="IA_E_SERVICOS_EXTERN49145" xml:space="preserve">
+    <value>IA e Serviços Externos</value>
+  </data>
+  <data name="SISTEMA_DE_MENSAGENS07077" xml:space="preserve">
+    <value>Sistema de Mensagens</value>
+  </data>
+  <data name="MENSAGENS_QUEUE_SERV62690" xml:space="preserve">
+    <value>Mensagens Queue Server</value>
+  </data>
+  <data name="PROPRIEDADES_EXTRA18082" xml:space="preserve">
+    <value>Propriedades Extra</value>
   </data>
 </root>

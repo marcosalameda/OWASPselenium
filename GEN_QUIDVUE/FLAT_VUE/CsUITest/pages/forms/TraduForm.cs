@@ -10,7 +10,7 @@ public class TraduForm : Form
 	/// <summary>
 	/// Reference
 	/// </summary>
-	public BaseInputControl TraduReferenc => new BaseInputControl(driver, ContainerLocator, "#TRADU___TRADUREFERENC");
+	public BaseInputControl TraduReferenc => new BaseInputControl(driver, ContainerLocator, "container-TRADU___TRADUREFERENC", "#TRADU___TRADUREFERENC");
 
 	/// <summary>
 	/// Language
@@ -21,7 +21,7 @@ public class TraduForm : Form
 	/// <summary>
 	/// To translate
 	/// </summary>
-	public BaseInputControl TraduAtraduzi => new BaseInputControl(driver, ContainerLocator, "#TRADU___TRADUATRADUZI");
+	public BaseInputControl TraduAtraduzi => new BaseInputControl(driver, ContainerLocator, "container-TRADU___TRADUATRADUZI", "#TRADU___TRADUATRADUZI");
 
 	/// <summary>
 	/// Language
@@ -32,7 +32,7 @@ public class TraduForm : Form
 	/// <summary>
 	/// Translated
 	/// </summary>
-	public BaseInputControl TraduTraduzid => new BaseInputControl(driver, ContainerLocator, "#TRADU___TRADUTRADUZID");
+	public BaseInputControl TraduTraduzid => new BaseInputControl(driver, ContainerLocator, "container-TRADU___TRADUTRADUZID", "#TRADU___TRADUTRADUZID");
 
 	public TraduForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "TRADU", containerLocator: containerLocator) { }

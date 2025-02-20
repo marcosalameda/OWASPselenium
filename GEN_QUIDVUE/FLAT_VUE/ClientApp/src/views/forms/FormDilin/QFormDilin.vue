@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="DILIN"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.DILIN___DISPADISPANR_.isVisible || controls.DILIN___DILINLINENUMB.isVisible">
 					<q-control-wrapper

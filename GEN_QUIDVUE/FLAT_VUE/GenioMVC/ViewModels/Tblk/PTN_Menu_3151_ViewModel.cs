@@ -43,11 +43,23 @@ namespace GenioMVC.ViewModels.Tblk
 		public string ValCodtblk { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -62,6 +74,15 @@ namespace GenioMVC.ViewModels.Tblk
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL PTN LIST_LIMITS 3151]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -69,20 +90,17 @@ namespace GenioMVC.ViewModels.Tblk
 			var areaBase = CSGenio.business.Area.createArea("tblk", user, "PTN");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet ptn_menu_3151Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML3151");
-			ptn_menu_3151Conds.Equal(CSGenioAtblk.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML3151");
+			conditions.Equal(CSGenioAtblk.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL PTN OVERRQ 3151]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAtblk.FldCodtblk, CSGenioAtblk.FldZzstate, CSGenioAtblk.FldName, CSGenioAtblk.FldFkey1, CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldName, CSGenioAtblk.FldFkey2, CSGenioAtrsb.FldCodtrsb, CSGenioAtrsb.FldName };
 
 			ListingMVC<CSGenioAtblk> listing = new ListingMVC<CSGenioAtblk>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(ptn_menu_3151Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -158,6 +176,9 @@ namespace GenioMVC.ViewModels.Tblk
 
 			if (Menu == null)
 				Menu = new TablePartial<PTN_Menu_3151_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -178,6 +199,8 @@ namespace GenioMVC.ViewModels.Tblk
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

@@ -21,7 +21,7 @@ public class TpconForm : Form
 	/// <summary>
 	/// Contact Type:
 	/// </summary>
-	public BaseInputControl TpconTipocont => new BaseInputControl(driver, ContainerLocator, "#TPCON___TPCONTIPOCONT");
+	public BaseInputControl TpconTipocont => new BaseInputControl(driver, ContainerLocator, "container-TPCON___TPCONTIPOCONT", "#TPCON___TPCONTIPOCONT");
 
 	public TpconForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "TPCON", containerLocator: containerLocator) { }

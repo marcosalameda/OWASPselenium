@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PROPRALL"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.PROPRALLPSEUDNOVOGR03.isVisible">
 					<q-control-wrapper
@@ -836,6 +835,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPRALLPROPRPHOTOGRA'],
 						controlLimits: [
 						],
 					}, this),
@@ -864,6 +864,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPRALLPROPRNAME____', 'PROPRALLPROPRPRECOEST', 'PROPRALLTPPROTPPROPRI', 'PROPRALLPROPRMOBILADA', 'PROPRALLPROPRQTD_WC__', 'PROPRALLPROPRQTDQUART', 'PROPRALLPROPRM2______', 'PROPRALLPROPRDTDISPON', 'PROPRALLPROPRDESCRIPT', 'PROPRALLPESSONAME____'],
 						controlLimits: [
 						],
 					}, this),
@@ -937,6 +938,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPRALLCNTRYCOUNTRY_', 'PROPRALLREGIOREGIAO__', 'PROPRALLPROPRENDERECO', 'PROPRALLPROPRLOCALIDA', 'PROPRALLPROPRPOSTALCO', 'PROPRALLPROPRPOSTALLO'],
 						controlLimits: [
 						],
 					}, this),

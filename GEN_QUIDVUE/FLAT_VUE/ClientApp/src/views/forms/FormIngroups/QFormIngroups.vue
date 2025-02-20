@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="INGROUPS"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.INGROUPSPSEUDGROUP1__.isVisible"
@@ -869,6 +868,7 @@
 						container: 'INGROUPSPSEUDGROUP1__',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INGROUPSPSEUDTEXTSPAN', 'INGROUPSINPGRTEXTGRO_'],
 						controlLimits: [
 						],
 					}, this),
@@ -881,6 +881,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INGROUPSPSEUDINPUTGR1'],
 						controlLimits: [
 						],
 					}, this),
@@ -893,6 +894,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INGROUPSPSEUDINPUTGR2', 'INGROUPSPSEUDINPUTGR5'],
 						controlLimits: [
 						],
 					}, this),
@@ -906,6 +908,7 @@
 						container: 'INGROUPSPSEUDGROUP2__',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INGROUPSPSEUDSPANGRO_', 'INGROUPSINPGRNAME____', 'INGROUPSINPGRLASTNAME'],
 						controlLimits: [
 						],
 					}, this),
@@ -918,6 +921,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INGROUPSPSEUDINPUTGR3'],
 						controlLimits: [
 						],
 					}, this),
@@ -931,6 +935,7 @@
 						container: 'INGROUPSPSEUDGROUP3__',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INGROUPSINPGRNUMBGRO_', 'INGROUPSPSEUDBUTTNGRO'],
 						controlLimits: [
 						],
 					}, this),
@@ -958,6 +963,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INGROUPSPSEUDINPUTGR4'],
 						controlLimits: [
 						],
 					}, this),
@@ -971,6 +977,7 @@
 						container: 'INGROUPSPSEUDGROUP4__',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INGROUPSINPGRPREFIX__', 'INGROUPSINPGRPHONE___', 'INGROUPSINPGRADRESS__', 'INGROUPSINPGRDIRECTIO'],
 						controlLimits: [
 						],
 					}, this),
@@ -1187,6 +1194,7 @@
 						container: 'INGROUPSPSEUDGROUP6__',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INGROUPSINPGRBANKCOMP', 'INGROUPSINPGRIBAN____', 'INGROUPSINPGRBANKACCO', 'INGROUPSPSEUDSAVEBTT_', 'INGROUPSPSEUDSENDBTT_'],
 						controlLimits: [
 						],
 					}, this),
@@ -1199,6 +1207,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INGROUPSPSEUDINPUTGR6'],
 						controlLimits: [
 						],
 					}, this),
@@ -1212,6 +1221,7 @@
 						container: 'INGROUPSPSEUDGROUP2__',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INGROUPSINPGREMAIL___', 'INGROUPSINPGRWEB_____'],
 						controlLimits: [
 						],
 					}, this),

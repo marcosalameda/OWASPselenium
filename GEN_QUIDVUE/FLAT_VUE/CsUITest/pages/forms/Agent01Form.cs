@@ -10,12 +10,12 @@ public class Agent01Form : Form
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl AgentPhoto => new BaseInputControl(driver, ContainerLocator, "#AGENT01_AGENTPHOTO___");
+	public BaseInputControl AgentPhoto => new BaseInputControl(driver, ContainerLocator, "container-AGENT01_AGENTPHOTO___", "#AGENT01_AGENTPHOTO___");
 
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl AgentName => new BaseInputControl(driver, ContainerLocator, "#AGENT01_AGENTNAME____");
+	public BaseInputControl AgentName => new BaseInputControl(driver, ContainerLocator, "container-AGENT01_AGENTNAME____", "#AGENT01_AGENTNAME____");
 
 	/// <summary>
 	/// Data de nascimento
@@ -25,7 +25,7 @@ public class Agent01Form : Form
 	/// <summary>
 	/// Email
 	/// </summary>
-	public BaseInputControl AgentEmail => new BaseInputControl(driver, ContainerLocator, "#AGENT01_AGENTEMAIL___");
+	public BaseInputControl AgentEmail => new BaseInputControl(driver, ContainerLocator, "container-AGENT01_AGENTEMAIL___", "#AGENT01_AGENTEMAIL___");
 
 	public Agent01Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "AGENT01", containerLocator: containerLocator) { }

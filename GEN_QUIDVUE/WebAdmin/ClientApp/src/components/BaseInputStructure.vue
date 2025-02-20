@@ -24,7 +24,7 @@
 				:id="popoverButtonId"
 				class="btn-popover"
 				b-style="plain">
-				<span class="mdi mdi-information-outline"></span>
+				<q-icon icon="information-outline" />
 			</q-button>
 			<q-popover
 				v-if="showPopoverButton"

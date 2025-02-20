@@ -282,6 +282,11 @@ namespace Administration.Controllers
                 sp.closeConnection();
                 return Json(new { Success = true , ignoredRoles});
             }
+            catch (BusinessException e)
+            {
+                model.ResultMsg = Translations.Get(e.UserMessage, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
+                return Json(new { Success = false, model = new { model.ResultMsg } });
+            }
             catch (Exception e)
             {
                 model.ResultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());

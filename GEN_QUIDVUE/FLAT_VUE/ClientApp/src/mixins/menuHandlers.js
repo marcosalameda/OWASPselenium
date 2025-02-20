@@ -54,42 +54,8 @@ export default {
 	methods: {
 		onBeforeRouteLeave(to, next)
 		{
-			const buttons = {
-				confirm: {
-					label: this.Resources[hardcodedTexts.save],
-					action: () => {
-						if (this.isEmpty(this.controls.menu.config.userTableConfigName))
-						{
-							this.controls.menu.subSignals.viewSave = { show: true, routeTo: to }
-							this.controls.menu.confirmChanges = false
-							next(false)
-						}
-						else
-						{
-							this.controls.menu.signal = { saveCurrentView: true }
-							this.controls.menu.confirmChanges = false
-							genericFunctions.setNavigationState(false)
-							next()
-						}
-					}
-				},
-				cancel: {
-					label: this.Resources[hardcodedTexts.discard],
-					action: () => {
-						this.controls.menu.confirmChanges = false
-						genericFunctions.setNavigationState(false)
-						next()
-					}
-				}
-			}
-
-			if (this.controls.menu.config.allowManageViews && this.controls.menu.confirmChanges && !this.controls.menu.readonly)
-				genericFunctions.displayMessage(this.Resources[hardcodedTexts.tableViewConfirmSaveChanges], 'warning', null, buttons)
-			else
-			{
-				genericFunctions.setNavigationState(false)
-				next()
-			}
+			genericFunctions.setNavigationState(false)
+			next()
 		},
 
 		/**

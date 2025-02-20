@@ -149,11 +149,12 @@
   --kanban-status-color: var(--q-theme-neutral);
 
   border-radius: $border-radius;
+  background: var(--q-theme-container);
   border-left: 0.25rem solid var(--kanban-type-color);
   position: relative;
 
   %extra-font {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--q-theme-neutral);
     padding: 0;
     line-height: 1.2;
@@ -214,9 +215,9 @@
 
   &__name {
     max-width: 90%;
-    font-size: 0.95rem;
-    letter-spacing: -0.02rem;
-    font-weight: bold;
+    font-size: 0.85rem;
+    letter-spacing: 0rem;
+    font-weight: 700;
     padding: 0;
     line-height: 1.2;
   }

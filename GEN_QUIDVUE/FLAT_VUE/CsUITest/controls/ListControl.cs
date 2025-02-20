@@ -280,7 +280,8 @@ public class ListControl : ControlObject
         int newOrderValue = newIndex + 1;
 
         // Get the input for the column order field and change it's value
-        BaseInputControl rowOrderInput = new BaseInputControl(driver, By.Id("container-" + id + "_" + currentIndex + "_" + orderingColumnName), "#" + id + "_" + currentIndex + "_" + orderingColumnName);
+        string inputId = $"{id}_{currentIndex}_{orderingColumnName}";
+        BaseInputControl rowOrderInput = new BaseInputControl(driver, By.Id($"container-{inputId}"), $"container-{inputId}", $"#{inputId}");
         rowOrderInput.SetValue(newOrderValue.ToString());
 
         // Confirm the value

@@ -55,7 +55,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static int Version { get; } = 3907;
+        public static int Version { get; } = 3938;
 
         /// <summary>
         /// System id
@@ -85,12 +85,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const int VersionDbGen = 3907;
+        public const int VersionDbGen = 3938;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1574;
+        public const int VersionIdxDbGen = 1606;
 
         /// <summary>
         /// Version of the latest upgrade index version
@@ -105,12 +105,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "361.29";
+        public const string GenioVersion = "362.21";
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2890;
+        public const int BuildVersionGen = 2901;
         /// <summary>
         /// Solution release version
         /// </summary>
@@ -334,7 +334,7 @@ namespace CSGenio.framework
             string defaultPath = AppDomain.CurrentDomain.BaseDirectory;
 
             //Check for config in BaseDirectory first
-            string defaultConfig = Path.Combine(defaultPath, "configuracoes.xml");
+            string defaultConfig = Path.Combine(defaultPath, "Configuracoes.xml");
             if (File.Exists(defaultConfig))
                 return defaultPath;
 
@@ -346,13 +346,13 @@ namespace CSGenio.framework
                 string path = redirect.GetFullPath(defaultPath);
 
                 //Try to get the file with the default path first
-                if (File.Exists(Path.Combine(path, "configuracoes.xml")))
+                if (File.Exists(Path.Combine(path, "Configuracoes.xml")))
                     return path;
 
                 //If it does not exist, try with environment variable
                 //This will happen when the CLI is in debug
                 path = redirect.GetFullPath(Environment.CurrentDirectory);
-                if (File.Exists(Path.Combine(path, "configuracoes.xml")))
+                if (File.Exists(Path.Combine(path, "Configuracoes.xml")))
                     return path;
             }
 

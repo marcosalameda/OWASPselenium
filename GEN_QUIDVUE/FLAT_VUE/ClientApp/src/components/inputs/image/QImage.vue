@@ -36,7 +36,8 @@
 
 		<div
 			v-if="!readonly && !disabled && !fullSizeImage"
-			:class="['q-image__field-drop-area', { 'q-image__field-drop-area-active': dragCount > 0 }]">
+			:class="['q-image__field-drop-area', { 'q-image__field-drop-area-active': isEmptyImage }]"
+			:style="dragMessageStyle">
 			<span>{{ texts.dropToUpload }}</span>
 		</div>
 
@@ -281,6 +282,16 @@
 			{
 				return {
 					'max-height': this.height ? `${this.height}px` : 'auto',
+					'max-width': this.width ? `${this.width}px` : 'auto'
+				}
+			},
+
+			/**
+			 * The CSS properties of the drag-and-drop message.
+			 */
+			dragMessageStyle()
+			{
+				return {
 					'max-width': this.width ? `${this.width}px` : 'auto'
 				}
 			},

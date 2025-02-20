@@ -2,7 +2,7 @@
 	<div id="maintenance_indexes_container">    
 		<div class="q-help__info-banner">
 			<div class="q-help__info-banner-header">
-				<span class="mdi mdi-information-outline"></span>
+				<q-icon icon="information-outline" />
 				<h5 for="ResultMsg">{{ Resources.DIRETRIZES_DE_INDICE35108 }}</h5>
 			</div>
 			<div class="q-help__info-banner-body">
@@ -27,6 +27,9 @@
 				</span>
 			</div>
 		</div>
+
+		<br />
+
 		<maintenance_dbindexes v-for="item in Model.Indexes" :key="item.IndexType" :Model="item" @updateData="updateData"></maintenance_dbindexes>
 	</div>
 </template>

@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="DTTYP"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.DTTYP___PSEUDNOVOGR06.isVisible"
@@ -911,6 +910,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['DTTYP___PSEUDNOVOGR01', 'DTTYP___PSEUDNOVOGR02', 'DTTYP___PSEUDNOVOGR03', 'DTTYP___PSEUDNOVOGR04', 'DTTYP___PSEUDNOVOGR05'],
 						controlLimits: [
 						],
 					}, this),
@@ -924,7 +924,7 @@
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-DTTYP___PSEUDNOVOGR01',
+						directChildren: ['DTTYP___DTTYPSTRING__', 'DTTYP___DTTYPUPPERCAS', 'DTTYP___DTTYPUUID____', 'DTTYP___DTTYPMULTILIN', 'DTTYP___DTTYPMULTILI3'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -938,7 +938,6 @@
 						label: computed(() => this.Resources.TEXT04938),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR01',
 						container: 'DTTYP___PSEUDNOVOGR01',
 						maxLength: 50,
 						labelId: 'label_DTTYP___DTTYPSTRING__',
@@ -954,7 +953,6 @@
 						label: computed(() => this.Resources.TEXT__UPPER_CASE_62204),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR01',
 						container: 'DTTYP___PSEUDNOVOGR01',
 						maxLength: 50,
 						labelId: 'label_DTTYP___DTTYPUPPERCAS',
@@ -970,7 +968,6 @@
 						label: computed(() => this.Resources.TEXT__UUID_AKA_GUID_03442),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR01',
 						container: 'DTTYP___PSEUDNOVOGR01',
 						maxLength: 36,
 						labelId: 'label_DTTYP___DTTYPUUID____',
@@ -986,7 +983,6 @@
 						label: computed(() => this.Resources.MULTILINE_TEXT57254),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR01',
 						container: 'DTTYP___PSEUDNOVOGR01',
 						controlLimits: [
 						],
@@ -1000,7 +996,6 @@
 						label: computed(() => this.Resources.MULTILINE_TEXT__TEXT35132),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR01',
 						container: 'DTTYP___PSEUDNOVOGR01',
 						controlLimits: [
 						],
@@ -1015,7 +1010,7 @@
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-DTTYP___PSEUDNOVOGR02',
+						directChildren: ['DTTYP___DTTYPBOOLEAN_', 'DTTYP___DTTYPBOOLEAN2'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1029,7 +1024,6 @@
 						label: computed(() => this.Resources.LOGICAL__TINYINT___S35014),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR02',
 						container: 'DTTYP___PSEUDNOVOGR02',
 						controlLimits: [
 						],
@@ -1043,7 +1037,6 @@
 						label: computed(() => this.Resources.CONDITIONAL__SMALLIN41010),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR02',
 						container: 'DTTYP___PSEUDNOVOGR02',
 						maxIntegers: 1,
 						maxDecimals: 0,
@@ -1060,7 +1053,7 @@
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-DTTYP___PSEUDNOVOGR03',
+						directChildren: ['DTTYP___DTTYPSMALLINT', 'DTTYP___DTTYPINTEGER_', 'DTTYP___DTTYPBIGINT__', 'DTTYP___DTTYPREAL____', 'DTTYP___DTTYPFLOAT___', 'DTTYP___DTTYPDECIMAL_', 'DTTYP___DTTYPDECIMAL9', 'DTTYP___DTTYPMONEY___', 'DTTYP___DTTYPMONEY9__'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1074,7 +1067,6 @@
 						label: computed(() => this.Resources.NUMERIC__4_0___SMALL21475),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
 						maxIntegers: 4,
 						maxDecimals: 0,
@@ -1090,7 +1082,6 @@
 						label: computed(() => this.Resources.NUMERIC__9_0___INTEG03994),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
 						maxIntegers: 9,
 						maxDecimals: 0,
@@ -1106,7 +1097,6 @@
 						label: computed(() => this.Resources.NUMERIC_15_0___BIG_I46007),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
 						maxIntegers: 15,
 						maxDecimals: 0,
@@ -1122,7 +1112,6 @@
 						label: computed(() => this.Resources.NUMERIC__8_2_REAL_FL21391),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
 						maxIntegers: 5,
 						maxDecimals: 2,
@@ -1138,7 +1127,6 @@
 						label: computed(() => this.Resources.NUMERIC_15_2_DOUBLE_11443),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
 						maxIntegers: 12,
 						maxDecimals: 2,
@@ -1154,7 +1142,6 @@
 						label: computed(() => this.Resources.DECIMAL__1_10___STOR64402),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
 						maxIntegers: 5,
 						maxDecimals: 4,
@@ -1170,7 +1157,6 @@
 						label: computed(() => this.Resources.DECIMAL__11_15___STO64707),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
 						maxIntegers: 10,
 						maxDecimals: 4,
@@ -1186,7 +1172,6 @@
 						label: computed(() => this.Resources.MONEY___DECIMAL__1_124403),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
 						maxIntegers: 5,
 						maxDecimals: 4,
@@ -1202,7 +1187,6 @@
 						label: computed(() => this.Resources.MONEY___DECIMAL__11_02101),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR03',
 						container: 'DTTYP___PSEUDNOVOGR03',
 						maxIntegers: 10,
 						maxDecimals: 4,
@@ -1219,7 +1203,7 @@
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-DTTYP___PSEUDNOVOGR04',
+						directChildren: ['DTTYP___DTTYPDATE____', 'DTTYP___DTTYPDATETIME', 'DTTYP___DTTYPDTSESOND', 'DTTYP___DTTYPTIME____'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1233,7 +1217,6 @@
 						label: computed(() => this.Resources.DATE18475),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR04',
 						container: 'DTTYP___PSEUDNOVOGR04',
 						format: 'date',
 						controlLimits: [
@@ -1248,7 +1231,6 @@
 						label: computed(() => this.Resources.DATE_TIME53960),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR04',
 						container: 'DTTYP___PSEUDNOVOGR04',
 						format: 'dateTime',
 						controlLimits: [
@@ -1263,7 +1245,6 @@
 						label: computed(() => this.Resources.DATE_TIME_SECOND45106),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR04',
 						container: 'DTTYP___PSEUDNOVOGR04',
 						format: 'dateTimeSeconds',
 						controlLimits: [
@@ -1278,7 +1259,6 @@
 						label: computed(() => this.Resources.TIME15328),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR04',
 						container: 'DTTYP___PSEUDNOVOGR04',
 						format: 'time',
 						controlLimits: [
@@ -1294,7 +1274,7 @@
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-DTTYP___PSEUDNOVOGR05',
+						directChildren: ['DTTYP___DTTYPIMAGE___'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1308,7 +1288,6 @@
 						label: computed(() => this.Resources.IMAGE__BINARY_46903),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-DTTYP___PSEUDNOVOGR05',
 						container: 'DTTYP___PSEUDNOVOGR05',
 						height: 138,
 						width: 115,

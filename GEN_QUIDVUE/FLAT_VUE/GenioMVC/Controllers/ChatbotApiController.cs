@@ -1,5 +1,5 @@
 using Newtonsoft.Json;
-using CSGenio.core.framework.ChatbotApi;
+using CSGenio.core.ai;
 using GenioMVC.Models.Navigation;
 using System.Text;
 

@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Expen
 		public string ValCoddespe { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Expen
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS DESPE_PROJEPROJECTO]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Expen
 
 			if (Menu == null)
 				Menu = new TablePartial<Despe_ProjeValProjecto_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Expen
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Expen
 				despe___projeprojectoConds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ DESPE_PROJECTO]/
+// USE /[MANUAL GQT OVERRQ DESPE_PROJEPROJECTO]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Expen
 
 					Qlisting = Models.ModelBase.Where<CSGenioAproje>(m_userContext, false, despe___projeprojectoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DESPE___PROJEPROJECTO", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP DESPE_PROJECTO]/
+// USE /[MANUAL GQT OVERRQLSTEXP DESPE_PROJEPROJECTO]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST DESPE_PROJECTO]/
+// USE /[MANUAL GQT OVERRQLIST DESPE_PROJEPROJECTO]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_proje"];
 					CriteriaSet m_PagingPosEPHs = null;

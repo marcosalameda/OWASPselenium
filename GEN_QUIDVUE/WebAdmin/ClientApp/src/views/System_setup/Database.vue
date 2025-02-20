@@ -13,7 +13,7 @@
 						size="xlarge"
 						:isReadOnly="isTestingConnection">
 						<template #extras>
-							<span class="mdi mdi-information-outline"></span>
+							<q-icon icon="information-outline" />
 							{{ Resources.O_NOME_DO_SERVIDOR_E58624 }}
 						</template>
 					</q-text-field>
@@ -52,7 +52,7 @@
 						size="xlarge"
 						:readonly="isTestingConnection">
 						<template #extras>
-							<span class="mdi mdi-information-outline"></span>
+							<q-icon icon="information-outline" />
 							{{ Resources._SISTEMA__ANO__E_G__40394 }}
 						</template>
 					</q-text-field>
@@ -114,7 +114,7 @@
 						size="xlarge"
 						:readonly="isTestingConnection">
 						<template #extras>
-							<span class="mdi mdi-information-outline"></span>
+							<q-icon icon="information-outline" />
 							{{ Resources._SISTEMA__ANO__E_G__40394 }}
 						</template>
 					</q-text-field>
@@ -139,7 +139,7 @@
 					size="xlarge"
 					:readonly="isTestingConnection">
 					<template #extras>
-						<span class="mdi mdi-information-outline"></span>
+						<q-icon icon="information-outline" />
 						{{ Resources.O_NOME_DO_SERVIDOR_E58624 }}
 					</template>
 				</q-text-field>
@@ -177,7 +177,7 @@
 					size="xlarge"
 					:readonly="isTestingConnection">
 					<template #extras>
-						<span class="mdi mdi-information-outline"></span>
+						<q-icon icon="information-outline" />
 						{{ Resources._SISTEMA__ANO__E_G__40394 }}
 					</template>
 				</q-text-field>
@@ -216,6 +216,9 @@
 				:label="Resources.GRAVAR_CONFIGURACAO36308"
 				:disabled="isTestingConnection"
 				@click="SaveConfigDatabase" />
+
+			<data-system-badge
+				:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
 		</row>
 	</div>
 </template>

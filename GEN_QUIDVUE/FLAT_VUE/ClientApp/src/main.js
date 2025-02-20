@@ -7,11 +7,10 @@ import { setupI18n, resourcesMixin } from './plugins/i18n.js'
 import eventTracker from './plugins/eventTracker.js'
 import { simpleFetch } from './api/network'
 import { setupRouter } from './router'
-import Components from './components/index.js'
+import components from './components'
 import formComponents from './components/formComponents.js'
 import gridTableListFormComponents from './components/gridTableListFormComponents.js'
 import eventBus from './api/global/eventBus.js'
-import QValidationSummary from './views/shared/QValidationSummary.vue'
 import App from './App.vue'
 import framework from './plugins/quidgest-ui'
 
@@ -55,42 +54,41 @@ async function retryWithDelay(maxRetries, timeout, fn)
 	{
 		if (maxRetries <= 0)
 			throw error
-		
+
 		await delay(timeout)
 		return retryWithDelay(maxRetries - 1, timeout, fn)
 	}
 }
 
 // Get config from backend
-retryWithDelay(5, 1000, () => simpleFetch('Config', 'GetConfig', currentSystem)).then(response => {
-	if (!response.data.Success)
-	{
-		// eslint-disable-next-line no-console
-		console.error('ERROR: Unable to start the application!')
-		return
-	}
+retryWithDelay(5, 1000, () => simpleFetch('Config', 'GetConfig', currentSystem))
+	.then((response) => {
+		if (!response.data.Success)
+		{
+			// eslint-disable-next-line no-console
+			console.error('ERROR: Unable to start the application!')
+			return
+		}
 
-	setAppConfig(response.data.Data)
-	app.use(i18n).use(router)
+		setAppConfig(response.data.Data)
+		app.use(i18n).use(router)
 
-	// Init global components
-	app.component('QValidationSummary', QValidationSummary)
-	app.use(Components)
-	app.use(formComponents)
-	app.use(gridTableListFormComponents)
+		// Init global components
+		app.use(components)
+		app.use(formComponents)
+		app.use(gridTableListFormComponents)
 
-	// Init external apps
-	setExternalAppsPlugin(app, router)
+		// Init external apps
+		setExternalAppsPlugin(app, router)
 
-	// Create the Global event bus
-	// To communicate between components in different levels
-	app.config.globalProperties.$eventHub = eventBus
+		// Create the Global event bus
+		// To communicate between components in different levels
+		app.config.globalProperties.$eventHub = eventBus
 
-	// Global mixin applied to every vue instance
-	app.mixin(resourcesMixin)
-	app.mount('#app')
-})
-	.catch(error => {
+		// Global mixin applied to every vue instance
+		app.mixin(resourcesMixin)
+		app.mount('#app')
+	}).catch((error) => {
 		// eslint-disable-next-line no-console
 		console.error('GetConfig error:', error)
 	})

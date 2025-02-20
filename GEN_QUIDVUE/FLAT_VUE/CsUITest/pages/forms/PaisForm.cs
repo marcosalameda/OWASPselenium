@@ -15,7 +15,7 @@ public class PaisForm : Form
 	/// <summary>
 	/// Designation:
 	/// </summary>
-	public BaseInputControl CntryCountry => new BaseInputControl(driver, ContainerLocator, "#PAIS____CNTRYCOUNTRY_");
+	public BaseInputControl CntryCountry => new BaseInputControl(driver, ContainerLocator, "container-PAIS____CNTRYCOUNTRY_", "#PAIS____CNTRYCOUNTRY_");
 
 	/// <summary>
 	/// Active
@@ -30,22 +30,22 @@ public class PaisForm : Form
 	/// <summary>
 	/// Numeric
 	/// </summary>
-	public BaseInputControl CntryCodigonr => new BaseInputControl(driver, ContainerLocator, "#PAIS____CNTRYCODIGONR");
+	public BaseInputControl CntryCodigonr => new BaseInputControl(driver, ContainerLocator, "container-PAIS____CNTRYCODIGONR", "#PAIS____CNTRYCODIGONR");
 
 	/// <summary>
 	/// Alphabetic 2:
 	/// </summary>
-	public BaseInputControl CntryAlfa2 => new BaseInputControl(driver, ContainerLocator, "#PAIS____CNTRYALFA2___");
+	public BaseInputControl CntryAlfa2 => new BaseInputControl(driver, ContainerLocator, "container-PAIS____CNTRYALFA2___", "#PAIS____CNTRYALFA2___");
 
 	/// <summary>
 	/// Alphabetic 3:
 	/// </summary>
-	public BaseInputControl CntryAlfa3 => new BaseInputControl(driver, ContainerLocator, "#PAIS____CNTRYALFA3___");
+	public BaseInputControl CntryAlfa3 => new BaseInputControl(driver, ContainerLocator, "container-PAIS____CNTRYALFA3___", "#PAIS____CNTRYALFA3___");
 
 	/// <summary>
 	/// Bandeira
 	/// </summary>
-	public BaseInputControl CntryFlag => new BaseInputControl(driver, ContainerLocator, "#PAIS____CNTRYFLAG____");
+	public BaseInputControl CntryFlag => new BaseInputControl(driver, ContainerLocator, "container-PAIS____CNTRYFLAG____", "#PAIS____CNTRYFLAG____");
 
 	/// <summary>
 	/// real estate

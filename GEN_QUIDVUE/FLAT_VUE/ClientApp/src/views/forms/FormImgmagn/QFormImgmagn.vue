@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="IMGMAGN"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.IMGMAGN_WPESSFTBACKGR.isVisible">
 					<q-control-wrapper

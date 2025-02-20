@@ -10,7 +10,7 @@ public class AbateForm : Form
 	/// <summary>
 	/// No decomission
 	/// </summary>
-	public BaseInputControl DecomDecomnr => new BaseInputControl(driver, ContainerLocator, "#ABATE___DECOMDECOMNR_");
+	public BaseInputControl DecomDecomnr => new BaseInputControl(driver, ContainerLocator, "container-ABATE___DECOMDECOMNR_", "#ABATE___DECOMDECOMNR_");
 
 	/// <summary>
 	/// Decomission

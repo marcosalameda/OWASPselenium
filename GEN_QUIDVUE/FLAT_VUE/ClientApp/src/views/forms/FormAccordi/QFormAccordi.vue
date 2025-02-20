@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ACCORDI"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ACCORDI_PSEUDNOVOGR02.isVisible">
 					<q-control-wrapper
@@ -637,7 +636,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-ACCORDI_PSEUDNOVOGR02',
+						directChildren: ['ACCORDI_CMPNYDESIGNAT', 'ACCORDI_PESS1NAME____', 'ACCORDI_EQUIPSEQUENNR'],
 						controlLimits: [
 						],
 					}, this),
@@ -650,7 +649,6 @@
 						label: computed(() => this.Resources.COMPANY_22615),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR02',
 						container: 'ACCORDI_PSEUDNOVOGR02',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -682,7 +680,6 @@
 						label: computed(() => this.Resources.PERSON10446),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR02',
 						container: 'ACCORDI_PSEUDNOVOGR02',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -720,7 +717,6 @@
 						label: computed(() => this.Resources.SEQUENTIAL_NO_38590),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR02',
 						container: 'ACCORDI_PSEUDNOVOGR02',
 						maxIntegers: 6,
 						maxDecimals: 0,
@@ -737,7 +733,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-ACCORDI_PSEUDNOVOGR06',
+						directChildren: ['ACCORDI_EQUIPPHOTOGRA'],
 						controlLimits: [
 						],
 					}, this),
@@ -750,7 +746,6 @@
 						label: computed(() => this.Resources.PHOTO51874),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR06',
 						container: 'ACCORDI_PSEUDNOVOGR06',
 						height: 50,
 						width: 100,
@@ -767,6 +762,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['ACCORDI_PSEUDNOVOGR03', 'ACCORDI_PSEUDNOVOGR04', 'ACCORDI_PSEUDNOVOGR11'],
 						controlLimits: [
 						],
 					}, this),
@@ -780,7 +776,7 @@
 						container: 'ACCORDI_PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-ACCORDI_PSEUDNOVOGR03',
+						directChildren: ['ACCORDI_PSEUDINSTALAG'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -792,7 +788,6 @@
 						label: computed(() => this.Resources.FACILITIES_23844),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR03',
 						container: 'ACCORDI_PSEUDNOVOGR03',
 						controller: 'EQUIP',
 						action: 'Accordi_ValInstalag',
@@ -1009,7 +1004,7 @@
 						container: 'ACCORDI_PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-ACCORDI_PSEUDNOVOGR04',
+						directChildren: ['ACCORDI_PSEUDINSTALAC'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1021,7 +1016,6 @@
 						label: computed(() => this.Resources.FACILITIES08876),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR04',
 						container: 'ACCORDI_PSEUDNOVOGR04',
 						controller: 'EQUIP',
 						action: 'Accordi_ValInstalac',
@@ -1148,7 +1142,7 @@
 						container: 'ACCORDI_PSEUDNOVOGR05',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-ACCORDI_PSEUDNOVOGR11',
+						directChildren: ['ACCORDI_PSEUDREPARACO'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1160,7 +1154,6 @@
 						label: computed(() => this.Resources.EQUIPMENT_REPAIRS_35392),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-ACCORDI_PSEUDNOVOGR11',
 						container: 'ACCORDI_PSEUDNOVOGR11',
 						controller: 'EQUIP',
 						action: 'Accordi_ValReparaco',

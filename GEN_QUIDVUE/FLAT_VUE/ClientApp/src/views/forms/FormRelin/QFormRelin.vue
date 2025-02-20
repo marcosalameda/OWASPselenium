@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="RELIN"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.RELIN___PSEUDNOVOGR01.isVisible"
@@ -613,6 +612,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['RELIN___RECEINUMBER__', 'RELIN___ENTITNAME____'],
 						controlLimits: [
 						],
 					}, this),
@@ -674,6 +674,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['RELIN___RELINLINENUMB', 'RELIN___PRODUPRODUCT_', 'RELIN___RELINORDERED_', 'RELIN___RELINRECEIVED', 'RELIN___RELINOUTSTAND'],
 						mustBeFilled: true,
 						controlLimits: [
 						],

@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PROPE06"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.PROPE06_PSEUDMAININF_.isVisible">
 					<q-control-wrapper
@@ -678,6 +677,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPE06_PROPEPHOTO___', 'PROPE06_PROPETITLE___', 'PROPE06_PROPEPRICE___', 'PROPE06_PROPEDESCRIPT'],
 						controlLimits: [
 						],
 					}, this),
@@ -749,6 +749,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPE06_CITY_CITY____'],
 						controlLimits: [
 						],
 					}, this),
@@ -790,6 +791,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPE06_PROPESIZE____', 'PROPE06_PROPEBATHRMS_', 'PROPE06_PROPEYEAR____'],
 						controlLimits: [
 						],
 					}, this),

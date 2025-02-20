@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="RORDF"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.RORDF___RORDFORDER___.isVisible || controls.RORDF___RORDFTITLE___.isVisible">
 					<q-control-wrapper

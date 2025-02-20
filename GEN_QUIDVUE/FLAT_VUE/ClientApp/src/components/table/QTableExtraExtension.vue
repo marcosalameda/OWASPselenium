@@ -91,10 +91,8 @@
 			'reset-column-ordering',
 			'toggle-text-wrap',
 			'add-advanced-filter',
-			'edit-advanced-filter',
+			'edit-advanced-filters',
 			'set-advanced-filter-state',
-			'set-advanced-filter-states',
-			'deactivate-all-advanced-filters',
 			'remove-advanced-filter',
 			'save-view',
 			'copy-view',
@@ -171,16 +169,14 @@
 					updateConfig: (...args) => this.$emit('update-config', ...args),
 					addAdvancedFilter: (eventData) =>
 						this.emitEvent('add-advanced-filter', eventData),
-					editAdvancedFilter: (eventData) =>
-						this.emitEvent('edit-advanced-filter', eventData),
+					editAdvancedFilters: (eventData) =>
+						this.emitEvent('edit-advanced-filters', eventData),
 					setAdvancedFilterState: (eventData) =>
 						this.emitEvent('set-advanced-filter-state', eventData),
-					setAdvancedFilterStates: (eventData) =>
-						this.emitEvent('set-advanced-filter-states', eventData),
-					deactivateAllAFilters: (eventData) =>
-						this.emitEvent('deactivate-all-advanced-filters', eventData),
 					removeAdvancedFilter: (eventData) =>
-						this.emitEvent('remove-advanced-filter', eventData)
+						this.emitEvent('remove-advanced-filter', eventData),
+					removeAllAdvancedFilters: () => 
+						this.emitEvent('remove-all-advanced-filters'),
 				},
 
 				tableViewSaveHandlers: {

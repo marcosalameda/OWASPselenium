@@ -43,6 +43,20 @@ namespace GenioMVC.ViewModels.Asset
 		public string ValCodasset { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+				// Limit "SC"
+				conditions.Equal(CSGenioAasset.FldAssettyp, "E");
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -50,6 +64,7 @@ namespace GenioMVC.ViewModels.Asset
 				CriteriaSet conds = CriteriaSet.And();
 				if (Navigation.CheckKey("asset.assettyp"))
 					conds.Equal(CSGenioAasset.FldAssettyp, Navigation.GetValue("asset.assettyp"));
+
 				return conds;
 			}
 		}
@@ -64,6 +79,15 @@ namespace GenioMVC.ViewModels.Asset
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL WMS LIST_LIMITS ASSET_CARD]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -71,21 +95,17 @@ namespace GenioMVC.ViewModels.Asset
 			var areaBase = CSGenio.business.Area.createArea("asset", user, "WMS");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet wms_menu_asset_cardConds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLASSET_CARD");
-			wms_menu_asset_cardConds.Equal(CSGenioAasset.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLASSET_CARD");
+			conditions.Equal(CSGenioAasset.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-						wms_menu_asset_cardConds.Equal(CSGenioAasset.FldAssettyp, "E");
-
-
-// USE /[MANUAL WMS OVERRQ ASSET_CARD]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAasset.FldCodasset, CSGenioAasset.FldZzstate, CSGenioAasset.FldAssetnum, CSGenioAasset.FldName, CSGenioAasset.FldCodkinde, CSGenioAkinde.FldCodkinde, CSGenioAkinde.FldDesignat, CSGenioAasset.FldIdenttyp, CSGenioAasset.FldGrai, CSGenioAasset.FldGiai, CSGenioAasset.FldPhoto, CSGenioAasset.FldCodmanuf, CSGenioAmanuf.FldCodentit, CSGenioAmanuf.FldName, CSGenioAmanuf.FldWebsite };
 
 			ListingMVC<CSGenioAasset> listing = new ListingMVC<CSGenioAasset>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(wms_menu_asset_cardConds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -167,6 +187,9 @@ namespace GenioMVC.ViewModels.Asset
 
 			if (Menu == null)
 				Menu = new TablePartial<WMS_Menu_ASSET_CARD_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -188,9 +211,9 @@ namespace GenioMVC.ViewModels.Asset
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
-			// Limit "SC"
-			crs.Equal(CSGenioAasset.FldAssettyp, "E");
 
 			if (isToExport)
 			{

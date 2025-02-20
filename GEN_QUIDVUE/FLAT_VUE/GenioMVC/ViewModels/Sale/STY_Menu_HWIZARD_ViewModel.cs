@@ -43,6 +43,20 @@ namespace GenioMVC.ViewModels.Sale
 		public string ValCodvenda { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+				// Limit "SC"
+				conditions.Equal(CSGenioAsale.FldShowrcrd, "1");
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -50,6 +64,7 @@ namespace GenioMVC.ViewModels.Sale
 				CriteriaSet conds = CriteriaSet.And();
 				if (Navigation.CheckKey("sale.showrcrd"))
 					conds.Equal(CSGenioAsale.FldShowrcrd, Navigation.GetValue("sale.showrcrd"));
+
 				return conds;
 			}
 		}
@@ -64,6 +79,15 @@ namespace GenioMVC.ViewModels.Sale
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL STY LIST_LIMITS HWIZARD]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -71,21 +95,17 @@ namespace GenioMVC.ViewModels.Sale
 			var areaBase = CSGenio.business.Area.createArea("sale", user, "STY");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet sty_menu_hwizardConds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLHWIZARD");
-			sty_menu_hwizardConds.Equal(CSGenioAsale.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLHWIZARD");
+			conditions.Equal(CSGenioAsale.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-						sty_menu_hwizardConds.Equal(CSGenioAsale.FldShowrcrd, 1);
-
-
-// USE /[MANUAL STY OVERRQ HWIZARD]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZzstate, CSGenioAsale.FldNrlide, CSGenioAsale.FldStartdt, CSGenioAsale.FldIdentifi, CSGenioAsale.FldPotcompr, CSGenioAsale.FldProspecc, CSGenioAsale.FldInteress, CSGenioAsale.FldSemrfina, CSGenioAsale.FldSemcapac, CSGenioAsale.FldDtqualif, CSGenioAsale.FldQualific, CSGenioAsale.FldPreabord, CSGenioAsale.FldHomework, CSGenioAsale.FldDtaborda, CSGenioAsale.FldApproach, CSGenioAsale.FldApresent, CSGenioAsale.FldDtaprese, CSGenioAsale.FldDtsupera, CSGenioAsale.FldTentfech, CSGenioAsale.FldDtvenda, CSGenioAsale.FldDtacompa };
 
 			ListingMVC<CSGenioAsale> listing = new ListingMVC<CSGenioAsale>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(sty_menu_hwizardConds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -178,6 +198,9 @@ namespace GenioMVC.ViewModels.Sale
 
 			if (Menu == null)
 				Menu = new TablePartial<STY_Menu_HWIZARD_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -199,9 +222,9 @@ namespace GenioMVC.ViewModels.Sale
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
-			// Limit "SC"
-			crs.Equal(CSGenioAsale.FldShowrcrd, "1");
 
 			if (isToExport)
 			{

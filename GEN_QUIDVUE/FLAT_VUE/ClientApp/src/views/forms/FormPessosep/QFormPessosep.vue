@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PESSOSEP"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.PESSOSEPPSEUDNOVOGR02.isVisible || controls.PESSOSEPPSEUDOBRIGATO.isVisible"
@@ -823,6 +822,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSOSEPPESSOIDFUNCIO', 'PESSOSEPPESSONAME____', 'PESSOSEPPESSODTNASCIM', 'PESSOSEPPESSOGENDER__', 'PESSOSEPPESSOINTERNA_', 'PESSOSEPPESSOEXTERNA_', 'PESSOSEPCATEGCATEGORY', 'PESSOSEPPESSODTULTCAT'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -1003,7 +1003,7 @@
 						label: computed(() => this.Resources.COMPANY20759),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-PESSOSEPPSEUDPESSOS00',
+						directChildren: ['PESSOS00CMPNYDESIGNAT'],
 						controlLimits: [
 						],
 					}, this),
@@ -1014,7 +1014,7 @@
 						label: computed(() => this.Resources.EVERYTHING62829),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-PESSOSEPPSEUDPESSOS01',
+						directChildren: ['PESSOS01PSEUDNOVOGR06'],
 						controlLimits: [
 						],
 					}, this),
@@ -1027,7 +1027,6 @@
 						label: computed(() => this.Resources.DESIGNATION35876),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSOSEPPSEUDPESSOS00',
 						tab: 'PESSOSEPPSEUDPESSOS00',
 						externalCallbacks: {
 							getModelField: vm.getModelField,
@@ -1055,10 +1054,10 @@
 						label: computed(() => this.Resources.ACCORDION01950),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSOSEPPSEUDPESSOS01',
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PESSOS01PSEUDNOVOGR03', 'PESSOS01PSEUDNOVOGR04', 'PESSOS01PSEUDNOVOGR05', 'PESSOS01PSEUDNOVOGR07'],
 						controlLimits: [
 						],
 					}, this),
@@ -1069,12 +1068,11 @@
 						label: computed(() => this.Resources.CONTACT05134),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSOSEPPSEUDPESSOS01',
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PESSOS01PSEUDNOVOGR03',
+						directChildren: ['PESSOS01PESSOTELEPHON', 'PESSOS01PESSOEMAIL___'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1088,7 +1086,6 @@
 						label: computed(() => this.Resources.TELEPHONE28697),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSOS01PSEUDNOVOGR03',
 						container: 'PESSOS01PSEUDNOVOGR03',
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						maxLength: 20,
@@ -1105,7 +1102,6 @@
 						label: computed(() => this.Resources.EMAIL_44228),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSOS01PSEUDNOVOGR03',
 						container: 'PESSOS01PSEUDNOVOGR03',
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						maxLength: 254,
@@ -1120,12 +1116,11 @@
 						label: computed(() => this.Resources.PHOTO32097),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSOSEPPSEUDPESSOS01',
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PESSOS01PSEUDNOVOGR04',
+						directChildren: ['PESSOS01PESSOPHOTOGRA'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1139,7 +1134,6 @@
 						label: computed(() => this.Resources.PHOTO51874),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSOS01PSEUDNOVOGR04',
 						container: 'PESSOS01PSEUDNOVOGR04',
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						height: 50,
@@ -1155,12 +1149,11 @@
 						label: computed(() => this.Resources.CAREER41490),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSOSEPPSEUDPESSOS01',
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PESSOS01PSEUDNOVOGR05',
+						directChildren: ['PESSOS01PSEUDEVOLUCAO', 'PESSOS01PSEUDFICHACAR'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1182,7 +1175,6 @@
 						label: computed(() => this.Resources.PROFESSIONAL_CATEGOR43519),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSOS01PSEUDNOVOGR05',
 						container: 'PESSOS01PSEUDNOVOGR05',
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						controller: 'PESSO',
@@ -1386,7 +1378,6 @@
 						label: computed(() => this.Resources.CAREER_RECORD36379),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSOS01PSEUDNOVOGR05',
 						container: 'PESSOS01PSEUDNOVOGR05',
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						targetTableListId: 'PESSOS01PSEUDEVOLUCAO',
@@ -1408,12 +1399,11 @@
 						label: computed(() => this.Resources.CONTACT05134),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSOSEPPSEUDPESSOS01',
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						isCollapsible: true,
 						anchored: false,
-						openingEvent: 'opened-PESSOS01PSEUDNOVOGR07',
+						directChildren: ['PESSOS01PSEUDCONTACTO'],
 						isInAccordion: true,
 						controlLimits: [
 						],
@@ -1425,7 +1415,6 @@
 						label: computed(() => this.Resources.CONTACTS55742),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PESSOS01PSEUDNOVOGR07',
 						container: 'PESSOS01PSEUDNOVOGR07',
 						tab: 'PESSOSEPPSEUDPESSOS01',
 						controller: 'PESSO',

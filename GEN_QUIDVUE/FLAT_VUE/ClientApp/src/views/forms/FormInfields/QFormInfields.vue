@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="INFIELDS"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.INFIELDSPSEUDNOVOGR02.isVisible"
@@ -1073,6 +1072,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INFIELDSFLDS_TXTFIELD', 'INFIELDSFLDS_DESCRIP_'],
 						controlLimits: [
 						],
 					}, this),
@@ -1113,6 +1113,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INFIELDSFLDS_YEAR____', 'INFIELDSFLDS_TIME____', 'INFIELDSFLDS_DATE____', 'INFIELDSFLDS_DATETIME', 'INFIELDSFLDS_DATESECO'],
 						controlLimits: [
 						],
 					}, this),
@@ -1256,6 +1257,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INFIELDSFLDS_SSNUMBER', 'INFIELDSFLDS_ZIPFIELD', 'INFIELDSFLDS_VATNUMBR', 'INFIELDSFLDS_LICPLATE', 'INFIELDSFLDS_BANKNMBR', 'INFIELDSFLDS_EMAILFLD', 'INFIELDSFLDS_IBANFIEL', 'INFIELDSFLDS_UPPRTEXT'],
 						controlLimits: [
 						],
 					}, this),
@@ -1268,6 +1270,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INFIELDSFLDS_NPASSAGE', 'INFIELDSFLDS_DURATION', 'INFIELDSFLDS_PRECOBIL', 'INFIELDSFLDS_PRICE___'],
 						controlLimits: [
 						],
 					}, this),
@@ -1400,6 +1403,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INFIELDSFLDS_PASSFLD_', 'INFIELDSFLDS_CLRPICKE'],
 						controlLimits: [
 						],
 					}, this),
@@ -1450,6 +1454,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['INFIELDSFLDS_PRIMVIAG', 'INFIELDSFLDS_LOGICENU', 'INFIELDSFLDS_RADIOB__'],
 						controlLimits: [
 						],
 					}, this),

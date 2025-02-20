@@ -27,6 +27,8 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "ClientApp", "ClientApp\Clie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocPreviewService", "DocPreviewService\DocPreviewService.csproj", "{1B3CF324-C999-41E6-AF8D-6BA6049A446A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbAdmin.Test.Unit", "DbAdmin.Test.Unit\DbAdmin.Test.Unit.csproj", "{CDFE0078-F215-469C-9A95-8C729E01D7AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

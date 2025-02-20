@@ -22,7 +22,7 @@ public class LnhdeForm : Form
 	/// <summary>
 	/// Order
 	/// </summary>
-	public BaseInputControl LnhdeOrdem => new BaseInputControl(driver, ContainerLocator, "#LNHDE___LNHDEORDEM___");
+	public BaseInputControl LnhdeOrdem => new BaseInputControl(driver, ContainerLocator, "container-LNHDE___LNHDEORDEM___", "#LNHDE___LNHDEORDEM___");
 
 	/// <summary>
 	/// Type of equipment
@@ -33,27 +33,27 @@ public class LnhdeForm : Form
 	/// <summary>
 	/// Quantity:
 	/// </summary>
-	public BaseInputControl LnhdeQuantida => new BaseInputControl(driver, ContainerLocator, "#LNHDE___LNHDEQUANTIDA");
+	public BaseInputControl LnhdeQuantida => new BaseInputControl(driver, ContainerLocator, "container-LNHDE___LNHDEQUANTIDA", "#LNHDE___LNHDEQUANTIDA");
 
 	/// <summary>
 	/// Amount
 	/// </summary>
-	public BaseInputControl LnhdeQuantdec => new BaseInputControl(driver, ContainerLocator, "#LNHDE___LNHDEQUANTDEC");
+	public BaseInputControl LnhdeQuantdec => new BaseInputControl(driver, ContainerLocator, "container-LNHDE___LNHDEQUANTDEC", "#LNHDE___LNHDEQUANTDEC");
 
 	/// <summary>
 	/// Código
 	/// </summary>
-	public BaseInputControl LnhdeCode => new BaseInputControl(driver, ContainerLocator, "#LNHDE___LNHDECODE____");
+	public BaseInputControl LnhdeCode => new BaseInputControl(driver, ContainerLocator, "container-LNHDE___LNHDECODE____", "#LNHDE___LNHDECODE____");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl LnhdeDescript => new BaseInputControl(driver, ContainerLocator, "#LNHDE___LNHDEDESCRIPT");
+	public BaseInputControl LnhdeDescript => new BaseInputControl(driver, ContainerLocator, "container-LNHDE___LNHDEDESCRIPT", "#LNHDE___LNHDEDESCRIPT");
 
 	/// <summary>
 	/// Site
 	/// </summary>
-	public BaseInputControl LnhdeUrl => new BaseInputControl(driver, ContainerLocator, "#LNHDE___LNHDEURL_____");
+	public BaseInputControl LnhdeUrl => new BaseInputControl(driver, ContainerLocator, "container-LNHDE___LNHDEURL_____", "#LNHDE___LNHDEURL_____");
 
 	/// <summary>
 	/// Equipment groupings

@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Item
 		public string ValCoditem { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Item
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS ARTIGINV_WAREHWAREHDES]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Item
 
 			if (Menu == null)
 				Menu = new TablePartial<Artiginv_WarehValWarehdes_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Item
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Item
 				artiginvwarehwarehdesConds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ ARTIGINV_WAREHDES]/
+// USE /[MANUAL GQT OVERRQ ARTIGINV_WAREHWAREHDES]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Item
 
 					Qlisting = Models.ModelBase.Where<CSGenioAwareh>(m_userContext, false, artiginvwarehwarehdesConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ARTIGINVWAREHWAREHDES", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP ARTIGINV_WAREHDES]/
+// USE /[MANUAL GQT OVERRQLSTEXP ARTIGINV_WAREHWAREHDES]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST ARTIGINV_WAREHDES]/
+// USE /[MANUAL GQT OVERRQLIST ARTIGINV_WAREHWAREHDES]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_wareh"];
 					CriteriaSet m_PagingPosEPHs = null;

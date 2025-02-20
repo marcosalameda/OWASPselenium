@@ -21,12 +21,12 @@ public class LeaflettForm : Form
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl InstaDescript => new BaseInputControl(driver, ContainerLocator, "#LEAFLETTINSTADESCRIPT");
+	public BaseInputControl InstaDescript => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTADESCRIPT", "#LEAFLETTINSTADESCRIPT");
 
 	/// <summary>
 	/// Scheduling
 	/// </summary>
-	public BaseInputControl InstaDesignat => new BaseInputControl(driver, ContainerLocator, "#LEAFLETTINSTADESIGNAT");
+	public BaseInputControl InstaDesignat => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTADESIGNAT", "#LEAFLETTINSTADESIGNAT");
 
 	/// <summary>
 	/// Start
@@ -56,22 +56,22 @@ public class LeaflettForm : Form
 	/// <summary>
 	/// Quantity of hours:
 	/// </summary>
-	public BaseInputControl InstaHours => new BaseInputControl(driver, ContainerLocator, "#LEAFLETTINSTAHOURS___");
+	public BaseInputControl InstaHours => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTAHOURS___", "#LEAFLETTINSTAHOURS___");
 
 	/// <summary>
 	/// Price per hour:
 	/// </summary>
-	public BaseInputControl InstaPrecohor => new BaseInputControl(driver, ContainerLocator, "#LEAFLETTINSTAPRECOHOR");
+	public BaseInputControl InstaPrecohor => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTAPRECOHOR", "#LEAFLETTINSTAPRECOHOR");
 
 	/// <summary>
 	/// Value
 	/// </summary>
-	public BaseInputControl InstaValue => new BaseInputControl(driver, ContainerLocator, "#LEAFLETTINSTAVALUE___");
+	public BaseInputControl InstaValue => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTAVALUE___", "#LEAFLETTINSTAVALUE___");
 
 	/// <summary>
 	/// Geographic Coordinates
 	/// </summary>
-	public BaseInputControl InstaCoordgeo => new BaseInputControl(driver, ContainerLocator, "#LEAFLETTINSTACOORDGEO");
+	public BaseInputControl InstaCoordgeo => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTACOORDGEO", "#LEAFLETTINSTACOORDGEO");
 
 	public LeaflettForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "LEAFLETT", containerLocator: containerLocator) { }

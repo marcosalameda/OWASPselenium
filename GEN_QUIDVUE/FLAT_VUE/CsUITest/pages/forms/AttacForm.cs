@@ -21,12 +21,12 @@ public class AttacForm : Form
 	/// <summary>
 	/// Note
 	/// </summary>
-	public BaseInputControl AttacNote => new BaseInputControl(driver, ContainerLocator, "#ATTAC___ATTACNOTE____");
+	public BaseInputControl AttacNote => new BaseInputControl(driver, ContainerLocator, "container-ATTAC___ATTACNOTE____", "#ATTAC___ATTACNOTE____");
 
 	/// <summary>
 	/// Document
 	/// </summary>
-	public DocumentControl AttacDocument => new DocumentControl(driver, ContainerLocator, "container-ATTAC___ATTACDOCUMENT");
+	public DocumentControl AttacDocument => new DocumentControl(driver, ContainerLocator, "ATTAC___ATTACDOCUMENT");
 
 	public AttacForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "ATTAC", containerLocator: containerLocator) { }

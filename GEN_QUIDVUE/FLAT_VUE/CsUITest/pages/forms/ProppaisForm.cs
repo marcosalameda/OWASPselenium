@@ -15,7 +15,7 @@ public class ProppaisForm : Form
 	/// <summary>
 	/// Designation:
 	/// </summary>
-	public BaseInputControl CntryCountry => new BaseInputControl(driver, ContainerLocator, "#PROPPAISCNTRYCOUNTRY_");
+	public BaseInputControl CntryCountry => new BaseInputControl(driver, ContainerLocator, "container-PROPPAISCNTRYCOUNTRY_", "#PROPPAISCNTRYCOUNTRY_");
 
 	/// <summary>
 	/// Active
@@ -30,17 +30,17 @@ public class ProppaisForm : Form
 	/// <summary>
 	/// Numeric
 	/// </summary>
-	public BaseInputControl CntryCodigonr => new BaseInputControl(driver, ContainerLocator, "#PROPPAISCNTRYCODIGONR");
+	public BaseInputControl CntryCodigonr => new BaseInputControl(driver, ContainerLocator, "container-PROPPAISCNTRYCODIGONR", "#PROPPAISCNTRYCODIGONR");
 
 	/// <summary>
 	/// Alphabetic 2:
 	/// </summary>
-	public BaseInputControl CntryAlfa2 => new BaseInputControl(driver, ContainerLocator, "#PROPPAISCNTRYALFA2___");
+	public BaseInputControl CntryAlfa2 => new BaseInputControl(driver, ContainerLocator, "container-PROPPAISCNTRYALFA2___", "#PROPPAISCNTRYALFA2___");
 
 	/// <summary>
 	/// Alphabetic 3:
 	/// </summary>
-	public BaseInputControl CntryAlfa3 => new BaseInputControl(driver, ContainerLocator, "#PROPPAISCNTRYALFA3___");
+	public BaseInputControl CntryAlfa3 => new BaseInputControl(driver, ContainerLocator, "container-PROPPAISCNTRYALFA3___", "#PROPPAISCNTRYALFA3___");
 
 	/// <summary>
 	/// Properties

@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="LISTACAM"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.LISTACAMPSEUDCAMTEXTO.isVisible || controls.LISTACAMPSEUDCAMNUM__.isVisible || controls.LISTACAMPSEUDCAMDATE_.isVisible || controls.LISTACAMPSEUDCAMMASK_.isVisible || controls.LISTACAMPSEUDCAMENUM_.isVisible || controls.LISTACAMPSEUDCAMDOCS_.isVisible || controls.LISTACAMPSEUDCAMAUDIT.isVisible">
 					<q-control-wrapper
@@ -1071,7 +1070,7 @@
 						label: computed(() => this.Resources.TEXT_FIELDS40102),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-LISTACAMPSEUDCAMTEXTO',
+						directChildren: ['CAMTEXTOFLDS_TXTFIELD', 'CAMTEXTOFLDS_DESCRIP_'],
 						controlLimits: [
 						],
 					}, this),
@@ -1082,7 +1081,7 @@
 						label: computed(() => this.Resources.NUMERIC_FIELDS45771),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-LISTACAMPSEUDCAMNUM__',
+						directChildren: ['CAMNUM__FLDS_NPASSAGE', 'CAMNUM__FLDS_DURATION', 'CAMNUM__FLDS_PRICE___', 'CAMNUM__FLDS_PRECOBIL'],
 						controlLimits: [
 						],
 					}, this),
@@ -1093,7 +1092,7 @@
 						label: computed(() => this.Resources.DATE_FIELDS55234),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-LISTACAMPSEUDCAMDATE_',
+						directChildren: ['CAMDATE_FLDS_YEAR____', 'CAMDATE_FLDS_DATE____', 'CAMDATE_FLDS_DATETIME', 'CAMDATE_FLDS_DATESECO', 'CAMDATE_FLDS_TIME____'],
 						controlLimits: [
 						],
 					}, this),
@@ -1104,7 +1103,7 @@
 						label: computed(() => this.Resources.INPUTS_WITH_MASKS08900),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-LISTACAMPSEUDCAMMASK_',
+						directChildren: ['CAMMASK_FLDS_ZIPFIELD', 'CAMMASK_FLDS_VATNUMBR', 'CAMMASK_FLDS_LICPLATE', 'CAMMASK_FLDS_SSNUMBER', 'CAMMASK_FLDS_BANKNMBR', 'CAMMASK_FLDS_EMAILFLD', 'CAMMASK_FLDS_IBANFIEL', 'CAMMASK_FLDS_UPPRTEXT'],
 						controlLimits: [
 						],
 					}, this),
@@ -1115,7 +1114,7 @@
 						label: computed(() => this.Resources.ENUMERATIONS_FIELDS36502),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-LISTACAMPSEUDCAMENUM_',
+						directChildren: ['CAMENUM_FLDS_CLASSNUM', 'CAMENUM_FLDS_CLASS___', 'CAMENUM_FLDS_LOGICENU'],
 						controlLimits: [
 						],
 					}, this),
@@ -1126,7 +1125,7 @@
 						label: computed(() => this.Resources.EXTERNAL_DOCS_FIELDS46956),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-LISTACAMPSEUDCAMDOCS_',
+						directChildren: ['CAMDOCS_FLDS_LOGO____', 'CAMDOCS_FLDS_ATTACH__'],
 						controlLimits: [
 						],
 					}, this),
@@ -1137,7 +1136,7 @@
 						label: computed(() => this.Resources.DATA_AUDIT01314),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-LISTACAMPSEUDCAMAUDIT',
+						directChildren: ['CAMAUDITFLDS_CREATUSE', 'CAMAUDITFLDS_CREATDAT', 'CAMAUDITFLDS_CREATHOU', 'CAMAUDITFLDS_CREATINS'],
 						controlLimits: [
 						],
 					}, this),
@@ -1150,7 +1149,6 @@
 						label: computed(() => this.Resources.TEXT_FIELD41810),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMTEXTO',
 						tab: 'LISTACAMPSEUDCAMTEXTO',
 						maxLength: 50,
 						labelId: 'label_CAMTEXTOFLDS_TXTFIELD',
@@ -1166,7 +1164,6 @@
 						label: computed(() => this.Resources.DESCRIPTION07383),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMTEXTO',
 						tab: 'LISTACAMPSEUDCAMTEXTO',
 						controlLimits: [
 						],
@@ -1180,7 +1177,6 @@
 						label: computed(() => this.Resources.NUMERIC19292),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMNUM__',
 						tab: 'LISTACAMPSEUDCAMNUM__',
 						maxIntegers: 3,
 						maxDecimals: 0,
@@ -1196,7 +1192,6 @@
 						label: computed(() => this.Resources.NUMERIC_DECIMAL37352),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMNUM__',
 						tab: 'LISTACAMPSEUDCAMNUM__',
 						maxIntegers: 2,
 						maxDecimals: 2,
@@ -1212,7 +1207,6 @@
 						label: computed(() => this.Resources.CURRENCY13881),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMNUM__',
 						tab: 'LISTACAMPSEUDCAMNUM__',
 						maxIntegers: 3,
 						maxDecimals: 2,
@@ -1228,7 +1222,6 @@
 						label: computed(() => this.Resources.CURRENCY_DECIMAL48296),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMNUM__',
 						tab: 'LISTACAMPSEUDCAMNUM__',
 						maxIntegers: 3,
 						maxDecimals: 2,
@@ -1250,7 +1243,6 @@
 						label: computed(() => this.Resources.YEAR61794),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDATE_',
 						tab: 'LISTACAMPSEUDCAMDATE_',
 						maxIntegers: 4,
 						maxDecimals: 0,
@@ -1272,7 +1264,6 @@
 						label: computed(() => this.Resources.DATE18475),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDATE_',
 						tab: 'LISTACAMPSEUDCAMDATE_',
 						format: 'date',
 						controlLimits: [
@@ -1293,7 +1284,6 @@
 						label: computed(() => this.Resources.DATE_TIME53960),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDATE_',
 						tab: 'LISTACAMPSEUDCAMDATE_',
 						format: 'dateTime',
 						controlLimits: [
@@ -1314,7 +1304,6 @@
 						label: computed(() => this.Resources.DATE_SECONDS65191),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDATE_',
 						tab: 'LISTACAMPSEUDCAMDATE_',
 						format: 'dateTimeSeconds',
 						controlLimits: [
@@ -1335,7 +1324,6 @@
 						label: computed(() => this.Resources.TIME15328),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDATE_',
 						tab: 'LISTACAMPSEUDCAMDATE_',
 						format: 'time',
 						controlLimits: [
@@ -1350,7 +1338,6 @@
 						label: computed(() => this.Resources.ZIPCODE21021),
 						placeholder: computed(() => this.Resources.XXXX_XXX51420),
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 8,
 						labelId: 'label_CAMMASK_FLDS_ZIPFIELD',
@@ -1366,7 +1353,6 @@
 						label: computed(() => this.Resources.VAT_NUMBER24236),
 						placeholder: computed(() => this.Resources._12345678953785),
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 9,
 						labelId: 'label_CAMMASK_FLDS_VATNUMBR',
@@ -1382,7 +1368,6 @@
 						label: computed(() => this.Resources.LICENCE_PLATE07627),
 						placeholder: computed(() => this.Resources.XX_00_XX10122),
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 8,
 						labelId: 'label_CAMMASK_FLDS_LICPLATE',
@@ -1398,7 +1383,6 @@
 						label: computed(() => this.Resources.SOCIAL_SECURITY_NO48150),
 						placeholder: computed(() => this.Resources._1234567891237929),
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 11,
 						labelId: 'label_CAMMASK_FLDS_SSNUMBER',
@@ -1414,7 +1398,6 @@
 						label: computed(() => this.Resources.BANKING_ACCOUNT_NUMB62548),
 						placeholder: computed(() => this.Resources._1234_5678_90123456761043),
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 24,
 						labelId: 'label_CAMMASK_FLDS_BANKNMBR',
@@ -1430,7 +1413,6 @@
 						label: computed(() => this.Resources.EMAIL25170),
 						placeholder: computed(() => this.Resources.QUIDGESTAT_QUIDGEST_PT47872),
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 50,
 						labelId: 'label_CAMMASK_FLDS_EMAILFLD',
@@ -1446,7 +1428,6 @@
 						label: computed(() => this.Resources.IBAN28506),
 						placeholder: computed(() => this.Resources.PT12345678901234567820477),
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 34,
 						labelId: 'label_CAMMASK_FLDS_IBANFIEL',
@@ -1462,7 +1443,6 @@
 						label: computed(() => this.Resources.UPPERCASE48238),
 						placeholder: computed(() => this.Resources.QUIDGEST56322),
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMMASK_',
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 50,
 						labelId: 'label_CAMMASK_FLDS_UPPRTEXT',
@@ -1484,7 +1464,6 @@
 						label: computed(() => this.Resources.NUMERIC_ENUMERATION46756),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMENUM_',
 						tab: 'LISTACAMPSEUDCAMENUM_',
 						maxIntegers: 1,
 						maxDecimals: 0,
@@ -1508,7 +1487,6 @@
 						label: computed(() => this.Resources.TEXT_ENUMERATION45668),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMENUM_',
 						tab: 'LISTACAMPSEUDCAMENUM_',
 						maxLength: 2,
 						labelId: 'label_CAMENUM_FLDS_CLASS___',
@@ -1533,7 +1511,6 @@
 						label: computed(() => this.Resources.LOGICAL_ENUMERATION30276),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMENUM_',
 						tab: 'LISTACAMPSEUDCAMENUM_',
 						maxIntegers: 1,
 						maxDecimals: 0,
@@ -1558,7 +1535,6 @@
 						label: computed(() => this.Resources.LOGO62483),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDOCS_',
 						tab: 'LISTACAMPSEUDCAMDOCS_',
 						height: 50,
 						width: 100,
@@ -1581,7 +1557,6 @@
 						label: computed(() => this.Resources.ATTACHMENTS19612),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMDOCS_',
 						tab: 'LISTACAMPSEUDCAMDOCS_',
 						versioningIsOn: true,
 						extensions: [],
@@ -1597,7 +1572,6 @@
 						label: computed(() => this.Resources.CREATED_BY12292),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMAUDIT',
 						tab: 'LISTACAMPSEUDCAMAUDIT',
 						maxLength: 20,
 						labelId: 'label_CAMAUDITFLDS_CREATUSE',
@@ -1613,7 +1587,6 @@
 						label: computed(() => this.Resources.DATE_OF_CREATION49487),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMAUDIT',
 						tab: 'LISTACAMPSEUDCAMAUDIT',
 						format: 'date',
 						controlLimits: [
@@ -1628,7 +1601,6 @@
 						label: computed(() => this.Resources.CREATION_HOUR49876),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMAUDIT',
 						tab: 'LISTACAMPSEUDCAMAUDIT',
 						format: 'time',
 						controlLimits: [
@@ -1643,7 +1615,6 @@
 						label: computed(() => this.Resources.COMPLETE_DATE_OF_CRE57046),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-LISTACAMPSEUDCAMAUDIT',
 						tab: 'LISTACAMPSEUDCAMAUDIT',
 						format: 'dateTimeSeconds',
 						controlLimits: [

@@ -38,7 +38,7 @@ public class ComodForm : Form
 	/// <summary>
 	/// Lending No
 	/// </summary>
-	public BaseInputControl LendiLendinnr => new BaseInputControl(driver, ContainerLocator, "#COMOD___LENDILENDINNR");
+	public BaseInputControl LendiLendinnr => new BaseInputControl(driver, ContainerLocator, "container-COMOD___LENDILENDINNR", "#COMOD___LENDILENDINNR");
 
 	/// <summary>
 	/// Start:
@@ -58,7 +58,7 @@ public class ComodForm : Form
 	/// <summary>
 	/// Observation
 	/// </summary>
-	public BaseInputControl LendiObservat => new BaseInputControl(driver, ContainerLocator, "#COMOD___LENDIOBSERVAT");
+	public BaseInputControl LendiObservat => new BaseInputControl(driver, ContainerLocator, "container-COMOD___LENDIOBSERVAT", "#COMOD___LENDIOBSERVAT");
 
 	/// <summary>
 	/// Returned

@@ -10,7 +10,7 @@ public class LnhdfForm : PopupForm
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl LnhdfName => new BaseInputControl(driver, ContainerLocator, "#LNHDF___LNHDFNAME____");
+	public BaseInputControl LnhdfName => new BaseInputControl(driver, ContainerLocator, "container-LNHDF___LNHDFNAME____", "#LNHDF___LNHDFNAME____");
 
 	public LnhdfForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "LNHDF") { }

@@ -181,6 +181,8 @@
 				mapMinZoom: this.styleVariables.minZoom?.value ?? 0,
 				mapMaxZoom: this.styleVariables.maxZoom?.value ?? 18,
 				mapOptions: {
+					zoomDelta: this.styleVariables.zoomDelta?.value ?? 1,
+					zoomSnap: 0,
 					zoomControl: !this.styleVariables.disableControls?.value,
 					gestureHandling: this.styleVariables.zoomWithCtrl?.rawValue ?? true,
 					gestureHandlingOptions: {
@@ -976,6 +978,8 @@
 						}
 
 						const layer = overlay.type === 'WMS' ? L.tileLayer.wms(overlay.url, properties) : L.tileLayer(overlay.url, properties)
+						if (overlay.name === this.defaultOverlay)
+							layer.addTo(this.map)
 						if (overlay.transparent === true)
 							this.baseLayers[overlay.name] = layer
 						else

@@ -139,8 +139,9 @@ async function handleNonOkResponse(response, fnResolve, _fnCallback, error)
  * @param {AxiosResponse} response Axios response object (data, status, statusText, headers, config, request?)
  * @param {Callback} _fnCallback The request callback to be executed to process the data received from the server
  * @param {Function} fnResolve The «promise resolve» function that will be resolved just after completely executed request
+ * @param {boolean} skipTracing Wether to capture telemetry or not
  */
-async function processRequest(response, _fnCallback, fnResolve)
+async function processRequest(response, _fnCallback, fnResolve, skipTracing)
 {
 	const tracing = useTracingDataStore()
 
@@ -148,17 +149,21 @@ async function processRequest(response, _fnCallback, fnResolve)
 	{
 		// Tracing event
 		let traceId = response.config.meta?.traceId
-		traceId = tracing.addResponseTrace({
-			traceId,
-			origin: 'processRequest',
-			requestType: response.config.method,
-			requestUrl: response.config.url,
-			requestParams: response.config.params,
-			requestData: response.config.data,
-			responseStatus: response.status,
-			responseData: response.data,
-			meta: response.config.meta
-		})
+
+		// The skip tracing is used here so the action that sends the
+		// telemetry doesn't call itself over and over again infinitely
+		if (!skipTracing)
+			traceId = tracing.addResponseTrace({
+				traceId,
+				origin: 'processRequest',
+				requestType: response.config.method,
+				requestUrl: response.config.url,
+				requestParams: response.config.params,
+				requestData: response.config.data,
+				responseStatus: response.status,
+				responseData: response.data,
+				meta: response.config.meta
+			})
 
 		if (response.status === 200)
 		{
@@ -297,23 +302,25 @@ export function fetchData(controller, action, params, _fnCallback, _fnErrorCallb
 	_merge(axiosOptions, options, { params: { ...params, nav: navigationId } })
 
 	// Tracing event
-	const tracing = useTracingDataStore()
-	tracing.addRequestTrace({
-		origin: 'fetchData',
-		requestType: 'get',
-		requestUrl: url,
-		requestParams: axiosOptions.params,
-		contextData: {
-			controller,
-			action,
-			options
-		},
-		traceId: axiosOptions.meta?.traceId
-	})
+	if(!options?.skipTracing) {
+		const tracing = useTracingDataStore()
+		tracing.addRequestTrace({
+			origin: 'fetchData',
+			requestType: 'get',
+			requestUrl: url,
+			requestParams: axiosOptions.params,
+			contextData: {
+				controller,
+				action,
+				options
+			},
+			traceId: axiosOptions.meta?.traceId
+		})
+	}
 
 	const promise = new Promise((fnResolve) => {
 		axios.axiosInstance.get(url, axiosOptions)
-			.then((response) => processRequest(response, _fnCallback, fnResolve))
+			.then((response) => processRequest(response, _fnCallback, fnResolve, options?.skipTracing))
 			.catch((error) => handleNonOkResponse(error.response, fnResolve, _fnErrorCallback, error))
 	})
 
@@ -378,24 +385,26 @@ export function postData(controller, action, data, _fnCallback, _fnErrorCallback
 	_merge(axiosOptions, options, { params: { nav: navigationId } })
 
 	// Tracing event
-	const tracing = useTracingDataStore()
-	tracing.addRequestTrace({
-		origin: 'postData',
-		requestType: 'post',
-		requestUrl: url,
-		requestParams: axiosOptions.params,
-		requestData: requestData,
-		contextData: {
-			controller,
-			action,
-			options
-		},
-		traceId: axiosOptions.meta?.traceId
-	})
+	if(!options?.skipTracing) {
+		const tracing = useTracingDataStore()
+		tracing.addRequestTrace({
+			origin: 'postData',
+			requestType: 'post',
+			requestUrl: url,
+			requestParams: axiosOptions.params,
+			requestData: requestData,
+			contextData: {
+				controller,
+				action,
+				options
+			},
+			traceId: axiosOptions.meta?.traceId
+		})
+	}
 
 	const promise = new Promise((fnResolve) => {
 		axios.axiosInstance.post(url, requestData, axiosOptions)
-			.then((response) => processRequest(response, _fnCallback, fnResolve))
+			.then((response) => processRequest(response, _fnCallback, fnResolve, options?.skipTracing))
 			.catch((error) => handleNonOkResponse(error.response, fnResolve, _fnErrorCallback, error))
 	})
 

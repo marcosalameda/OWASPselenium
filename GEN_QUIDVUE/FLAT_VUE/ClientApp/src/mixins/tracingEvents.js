@@ -10,6 +10,8 @@ import _orderBy from 'lodash-es/orderBy'
 import _toSafeInteger from 'lodash-es/toSafeInteger'
 import _uniq from 'lodash-es/uniq'
 
+import { TelemetryHandler } from './telemetryHandler'
+
 import { shallowReactive, toRaw } from 'vue'
 
 import { v4 as uuidv4 } from 'uuid'
@@ -211,6 +213,7 @@ export class EventTracker
 	 * Creates an EventTracker instance.
 	 * @param {Object} options - Tracker options.
 	 * @param {boolean} [options.active=false] - Whether event tracking is active.
+	 * @param {boolean} [options.enableTracing=false] - Wether to enable tracing or not (logs are always on)
 	 */
 	constructor(options)
 	{
@@ -220,6 +223,14 @@ export class EventTracker
 		 */
 		this.events = shallowReactive([])
 
+		/**
+		 * Helpers to link events, such as RequestEvent and ResponseEvent
+		 * where the key is the traceid (which is shared) and the value is
+		 * the span object instance.
+		 * @type {object}
+		 */
+		this.eventLinks = shallowReactive({})
+
 		this.active = _get(options, 'active', false)
 
 		/**
@@ -227,14 +238,24 @@ export class EventTracker
 		 * @type {number}
 		 */
 		this.maxEventsStack = _get(options, 'maxEventsStack', DEFAULT_MAX_EVENTS_STACK)
+
+		/**
+		 * Start telemetry handler class.
+		 */
+		this.enableTracing = _get(options, 'enableTracing', false)
+		this.telemetryHandler = new TelemetryHandler(this.enableTracing)
 	}
 
 	/**
 	 * Resets the event tracker by clearing stored events.
+	 * It also restarts the telemetryHandler instance to make sure the
+	 * enableTracing is applied correctly
 	 */
 	reset()
 	{
 		this.events.splice()
+
+		this.telemetryHandler = new TelemetryHandler(this.enableTracing)
 	}
 
 	/**
@@ -259,7 +280,11 @@ export class EventTracker
 	 */
 	addTrace(options)
 	{
-		return this.addEvent(new TraceEvent(options))
+		const event = new TraceEvent(options)
+		
+		this.telemetryHandler.registerTrace(event)
+
+		return this.addEvent(event)
 	}
 
 	/**
@@ -268,12 +293,17 @@ export class EventTracker
 	 */
 	addWarning(options)
 	{
+		const event = new WarningEvent(options)
+
 		// To facilitate debugging during development, errors will be added to the console
 		// as the debug window will only be accessible if the feature is activated.
 		if (import.meta.env.DEV)
 			// eslint-disable-next-line no-console
 			console.warn('Tracing Warning', options)
-		return this.addEvent(new WarningEvent(options))
+
+		this.telemetryHandler.registerLog(event)
+
+		return this.addEvent(event)
 	}
 
 	/**
@@ -282,12 +312,17 @@ export class EventTracker
 	 */
 	addError(options)
 	{
+		const event = new ErrorEvent(options)
+
 		// To facilitate debugging during development, warnings will be added to the console
 		// as the debug window will only be accessible if the feature is activated.
 		if (import.meta.env.DEV)
 			// eslint-disable-next-line no-console
 			console.error('Tracing Error', options)
-		return this.addEvent(new ErrorEvent(options))
+
+		this.telemetryHandler.registerLog(event)
+
+		return this.addEvent(event)
 	}
 
 	/**
@@ -296,7 +331,11 @@ export class EventTracker
 	 */
 	addRequestTrace(options)
 	{
-		return this.addEvent(new RequestEvent(options))
+		const event = new RequestEvent(options)
+		
+		this.telemetryHandler.registerTrace(event)
+
+		return this.addEvent(event)
 	}
 
 	/**
@@ -305,7 +344,11 @@ export class EventTracker
 	 */
 	addResponseTrace(options)
 	{
-		return this.addEvent(new ResponseEvent(options))
+		const event = new ResponseEvent(options)
+
+		this.telemetryHandler.registerTrace(event)
+
+		return this.addEvent(event)
 	}
 
 	/**

@@ -41,12 +41,25 @@ namespace GenioMVC.ViewModels.Prope
 		public string ValCodprope { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
 				conds.Equal(CSGenioAprope.FldCodagent, Navigation.GetValue("agent"));
+
 				return conds;
 			}
 		}
@@ -61,6 +74,15 @@ namespace GenioMVC.ViewModels.Prope
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL TRN LIST_LIMITS T16PROPERTYBYAGENT]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -68,20 +90,17 @@ namespace GenioMVC.ViewModels.Prope
 			var areaBase = CSGenio.business.Area.createArea("prope", user, "TRN");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet trn_menu_t16propertybyagentConds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLT16PROPERTYBYAGENT");
-			trn_menu_t16propertybyagentConds.Equal(CSGenioAprope.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLT16PROPERTYBYAGENT");
+			conditions.Equal(CSGenioAprope.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL TRN OVERRQ T16PROPERTYBYAGENT]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAprope.FldCodprope, CSGenioAprope.FldZzstate, CSGenioAprope.FldTitle, CSGenioAprope.FldPrice, CSGenioAprope.FldPhoto, CSGenioAprope.FldCodagent, CSGenioAagent.FldCodagent, CSGenioAagent.FldName, CSGenioAprope.FldSize, CSGenioAprope.FldBathrms, CSGenioAprope.FldYear, CSGenioAprope.FldDescript, CSGenioAprope.FldCodcity, CSGenioAcity.FldCodcity, CSGenioAcity.FldCity, CSGenioAprope.FldBuildtyp, CSGenioAprope.FldTypology };
 
 			ListingMVC<CSGenioAprope> listing = new ListingMVC<CSGenioAprope>(fields, null, 1, 1, false, user, true, string.Empty, true);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(trn_menu_t16propertybyagentConds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -193,6 +212,9 @@ namespace GenioMVC.ViewModels.Prope
 
 			if (Menu == null)
 				Menu = new TablePartial<TRN_Menu_T16PROPERTYBYAGENT_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -213,6 +235,8 @@ namespace GenioMVC.ViewModels.Prope
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Limitations
 			// Limit "DB"

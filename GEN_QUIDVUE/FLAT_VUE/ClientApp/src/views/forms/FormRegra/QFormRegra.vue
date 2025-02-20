@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="REGRA"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.REGRA___RULESTIPOCOND.isVisible || controls.REGRA___RULESDESCRIPT.isVisible || controls.REGRA___RULESLOCAL___.isVisible">
 					<q-control-wrapper

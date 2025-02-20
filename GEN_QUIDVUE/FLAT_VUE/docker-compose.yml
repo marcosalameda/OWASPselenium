@@ -1,0 +1,11 @@
+services:
+  genioapp:
+    build: .
+    container_name: genioapp
+    ports:
+      - "3030:8080"
+    volumes:
+      - ../WebAdmin/Administration/Configuracoes.xml:/app/Configuracoes.xml
+    dns: # Add Quidgest DNS resolution
+      - "172.16.0.28"
+      - "1.1.1.1"

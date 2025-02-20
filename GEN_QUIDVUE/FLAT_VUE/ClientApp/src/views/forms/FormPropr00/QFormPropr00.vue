@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PROPR00"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.PROPR00_PSEUDNOVOGR04.isVisible">
 					<q-control-wrapper
@@ -887,6 +886,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPR00_PSEUDNOVOGR02', 'PROPR00_PESSONAME____', 'PROPR00_PSEUDNOVOGR01'],
 						controlLimits: [
 						],
 					}, this),
@@ -900,6 +900,7 @@
 						container: 'PROPR00_PSEUDNOVOGR04',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPR00_PROPRNAME____', 'PROPR00_PROPRPRECOEST', 'PROPR00_TPPROTPPROPRI', 'PROPR00_PROPRMOBILADA'],
 						controlLimits: [
 						],
 					}, this),
@@ -1034,6 +1035,7 @@
 						container: 'PROPR00_PSEUDNOVOGR04',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPR00_PROPRPHOTOGRA'],
 						controlLimits: [
 						],
 					}, this),
@@ -1044,7 +1046,7 @@
 						label: computed(() => this.Resources.DETAILS19591),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-PROPR00_PSEUDPROPR02_',
+						directChildren: ['PROPR02_PROPRQTD_WC__', 'PROPR02_PROPRQTDQUART', 'PROPR02_PROPRM2______', 'PROPR02_PROPRDTDISPON'],
 						controlLimits: [
 						],
 					}, this),
@@ -1055,7 +1057,7 @@
 						label: computed(() => this.Resources.LOCALIZATION34148),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-PROPR00_PSEUDPROPR01_',
+						directChildren: ['PROPR01_PSEUDNOVOGR01', 'PROPR01_PROPRCOORDGEO'],
 						controlLimits: [
 						],
 					}, this),
@@ -1066,7 +1068,7 @@
 						label: computed(() => this.Resources.DESCRIPTION07383),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						openingEvent: 'opened-PROPR00_PSEUDPROPR03_',
+						directChildren: ['PROPR03_PROPRDESCRIPT'],
 						controlLimits: [
 						],
 					}, this),
@@ -1079,7 +1081,6 @@
 						label: computed(() => this.Resources.BATHROOM12866),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPR00_PSEUDPROPR02_',
 						tab: 'PROPR00_PSEUDPROPR02_',
 						maxIntegers: 6,
 						maxDecimals: 0,
@@ -1095,7 +1096,6 @@
 						label: computed(() => this.Resources.QUARTOS46431),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPR00_PSEUDPROPR02_',
 						tab: 'PROPR00_PSEUDPROPR02_',
 						maxIntegers: 6,
 						maxDecimals: 0,
@@ -1111,7 +1111,6 @@
 						label: computed(() => this.Resources.SQUARE_METERS28913),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPR00_PSEUDPROPR02_',
 						tab: 'PROPR00_PSEUDPROPR02_',
 						maxIntegers: 6,
 						maxDecimals: 0,
@@ -1127,7 +1126,6 @@
 						label: computed(() => this.Resources.AVAILABLE_FROM53703),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPR00_PSEUDPROPR02_',
 						tab: 'PROPR00_PSEUDPROPR02_',
 						format: 'date',
 						controlLimits: [
@@ -1140,10 +1138,10 @@
 						label: computed(() => this.Resources.ADDRESS04342),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPR00_PSEUDPROPR01_',
 						tab: 'PROPR00_PSEUDPROPR01_',
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['PROPR01_PROPRENDERECO', 'PROPR01_PROPRLOCALIDA', 'PROPR01_PROPRPOSTALCO', 'PROPR01_PROPRPOSTALLO', 'PROPR01_CNTRYCOUNTRY_', 'PROPR01_REGIOREGIAO__'],
 						controlLimits: [
 						],
 					}, this),
@@ -1156,7 +1154,6 @@
 						label: computed(() => this.Resources.ADDRESS04342),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPR00_PSEUDPROPR01_',
 						container: 'PROPR01_PSEUDNOVOGR01',
 						tab: 'PROPR00_PSEUDPROPR01_',
 						controlLimits: [
@@ -1171,7 +1168,6 @@
 						label: computed(() => this.Resources.LOCALIZATION34148),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPR00_PSEUDPROPR01_',
 						container: 'PROPR01_PSEUDNOVOGR01',
 						tab: 'PROPR00_PSEUDPROPR01_',
 						maxLength: 50,
@@ -1188,7 +1184,6 @@
 						label: computed(() => this.Resources.ZIPCODE21021),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPR00_PSEUDPROPR01_',
 						container: 'PROPR01_PSEUDNOVOGR01',
 						tab: 'PROPR00_PSEUDPROPR01_',
 						maxLength: 20,
@@ -1205,7 +1200,6 @@
 						label: computed(() => this.Resources.ZIPCODE21021),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPR00_PSEUDPROPR01_',
 						container: 'PROPR01_PSEUDNOVOGR01',
 						tab: 'PROPR00_PSEUDPROPR01_',
 						maxLength: 50,
@@ -1222,7 +1216,6 @@
 						label: computed(() => this.Resources.COUNTRY64133),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPR00_PSEUDPROPR01_',
 						container: 'PROPR01_PSEUDNOVOGR01',
 						tab: 'PROPR00_PSEUDPROPR01_',
 						externalCallbacks: {
@@ -1255,7 +1248,6 @@
 						label: computed(() => this.Resources.REGION12723),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPR00_PSEUDPROPR01_',
 						container: 'PROPR01_PSEUDNOVOGR01',
 						tab: 'PROPR00_PSEUDPROPR01_',
 						externalCallbacks: {
@@ -1296,7 +1288,6 @@
 						label: computed(() => this.Resources.GEOGRAPHIC_COORDINAT42880),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPR00_PSEUDPROPR01_',
 						tab: 'PROPR00_PSEUDPROPR01_',
 						controlLimits: [
 						],
@@ -1310,7 +1301,6 @@
 						label: computed(() => this.Resources.DESCRIPTION07383),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						parentOpeningEvent: 'opened-PROPR00_PSEUDPROPR03_',
 						tab: 'PROPR00_PSEUDPROPR03_',
 						controlLimits: [
 						],

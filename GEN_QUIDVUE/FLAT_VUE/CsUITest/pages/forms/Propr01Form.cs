@@ -15,22 +15,22 @@ public class Propr01Form : Subform
 	/// <summary>
 	/// Address
 	/// </summary>
-	public BaseInputControl ProprEndereco => new BaseInputControl(driver, ContainerLocator, "#PROPR01_PROPRENDERECO");
+	public BaseInputControl ProprEndereco => new BaseInputControl(driver, ContainerLocator, "container-PROPR01_PROPRENDERECO", "#PROPR01_PROPRENDERECO");
 
 	/// <summary>
 	/// Localization
 	/// </summary>
-	public BaseInputControl ProprLocalida => new BaseInputControl(driver, ContainerLocator, "#PROPR01_PROPRLOCALIDA");
+	public BaseInputControl ProprLocalida => new BaseInputControl(driver, ContainerLocator, "container-PROPR01_PROPRLOCALIDA", "#PROPR01_PROPRLOCALIDA");
 
 	/// <summary>
 	/// Zipcode
 	/// </summary>
-	public BaseInputControl ProprPostalco => new BaseInputControl(driver, ContainerLocator, "#PROPR01_PROPRPOSTALCO");
+	public BaseInputControl ProprPostalco => new BaseInputControl(driver, ContainerLocator, "container-PROPR01_PROPRPOSTALCO", "#PROPR01_PROPRPOSTALCO");
 
 	/// <summary>
 	/// Zipcode
 	/// </summary>
-	public BaseInputControl ProprPostallo => new BaseInputControl(driver, ContainerLocator, "#PROPR01_PROPRPOSTALLO");
+	public BaseInputControl ProprPostallo => new BaseInputControl(driver, ContainerLocator, "container-PROPR01_PROPRPOSTALLO", "#PROPR01_PROPRPOSTALLO");
 
 	/// <summary>
 	/// Country
@@ -47,7 +47,7 @@ public class Propr01Form : Subform
 	/// <summary>
 	/// Geographic Coordinates
 	/// </summary>
-	public BaseInputControl ProprCoordgeo => new BaseInputControl(driver, ContainerLocator, "#PROPR01_PROPRCOORDGEO");
+	public BaseInputControl ProprCoordgeo => new BaseInputControl(driver, ContainerLocator, "container-PROPR01_PROPRCOORDGEO", "#PROPR01_PROPRCOORDGEO");
 
 	public Propr01Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "PROPR01", "PROPR00", containerLocator: containerLocator) { }

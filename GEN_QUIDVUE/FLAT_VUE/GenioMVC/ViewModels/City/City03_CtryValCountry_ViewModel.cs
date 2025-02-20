@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.City
 		public string ValCodcity { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.City
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS CITY03_CTRYCOUNTRY]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.City
 
 			if (Menu == null)
 				Menu = new TablePartial<City03_CtryValCountry_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.City
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.City
 				city03__ctry_country_Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ CITY03_COUNTRY]/
+// USE /[MANUAL GQT OVERRQ CITY03_CTRYCOUNTRY]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.City
 
 					Qlisting = Models.ModelBase.Where<CSGenioActry>(m_userContext, false, city03__ctry_country_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_CITY03__CTRY_COUNTRY_", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP CITY03_COUNTRY]/
+// USE /[MANUAL GQT OVERRQLSTEXP CITY03_CTRYCOUNTRY]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST CITY03_COUNTRY]/
+// USE /[MANUAL GQT OVERRQLIST CITY03_CTRYCOUNTRY]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_ctry"];
 					CriteriaSet m_PagingPosEPHs = null;

@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="MLTFORM"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.MLTFORM_WAREHWAREHDES.isVisible || controls.MLTFORM_WAREHWAREHCOD.isVisible || controls.MLTFORM_PSEUDMLTFORM1.isVisible">
 					<q-control-wrapper

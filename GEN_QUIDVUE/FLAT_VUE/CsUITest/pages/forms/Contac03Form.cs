@@ -10,22 +10,22 @@ public class Contac03Form : Form
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl ProcnName => new BaseInputControl(driver, ContainerLocator, "#CONTAC03PROCNNAME____");
+	public BaseInputControl ProcnName => new BaseInputControl(driver, ContainerLocator, "container-CONTAC03PROCNNAME____", "#CONTAC03PROCNNAME____");
 
 	/// <summary>
 	/// Email
 	/// </summary>
-	public BaseInputControl ProcnEmail => new BaseInputControl(driver, ContainerLocator, "#CONTAC03PROCNEMAIL___");
+	public BaseInputControl ProcnEmail => new BaseInputControl(driver, ContainerLocator, "container-CONTAC03PROCNEMAIL___", "#CONTAC03PROCNEMAIL___");
 
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl ProcnTelephon => new BaseInputControl(driver, ContainerLocator, "#CONTAC03PROCNTELEPHON");
+	public BaseInputControl ProcnTelephon => new BaseInputControl(driver, ContainerLocator, "container-CONTAC03PROCNTELEPHON", "#CONTAC03PROCNTELEPHON");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl ProcnDescript => new BaseInputControl(driver, ContainerLocator, "#CONTAC03PROCNDESCRIPT");
+	public BaseInputControl ProcnDescript => new BaseInputControl(driver, ContainerLocator, "container-CONTAC03PROCNDESCRIPT", "#CONTAC03PROCNDESCRIPT");
 
 	/// <summary>
 	/// Date

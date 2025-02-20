@@ -42,6 +42,7 @@
 				:id="`${id}_see-more_button`"
 				:disabled="props.disabled"
 				:title="texts.viewMoreOptions"
+				data-testid="SeeMore"
 				@click="emit('see-more')">
 				<q-icon icon="list" />
 			</q-button>

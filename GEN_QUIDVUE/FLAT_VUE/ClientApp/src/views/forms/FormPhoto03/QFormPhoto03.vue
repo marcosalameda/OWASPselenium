@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="PHOTO03"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.PHOTO03_PROPHPHOTO___.isVisible || controls.PHOTO03_PROPHTITLE___.isVisible || controls.PHOTO03_PROPETITLE___.isVisible">
 					<q-control-wrapper

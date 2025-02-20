@@ -1,31 +1,14 @@
-import { createFramework } from '@quidgest/ui'
+import { createFramework } from '@quidgest/ui/framework'
 
 const framework = createFramework({
 	defaults: {
 		QIcon: {
-			type: 'font'
+			type: 'svg'
 		},
-		QIconFont: {
-			library: 'glyphicons'
-		},
-		QListItem: {
-			icons: {
-				check: {
-					icon: 'ok'
-				},
-			}
-		},
-		QCheckbox: {
-			icons: {
-				checked: {
-					icon: 'ok'
-				},
-
-				indeterminate: {
-					icon: 'minus'
-				}
-			}
-		},
+		
+		QIconSvg: {
+			bundle: 'Content/svgbundle.svg'
+		}
 	}
 })
 

@@ -915,8 +915,11 @@ namespace CSGenio.business
             }
 
             object fim;
+            //Change by TMV (2025.01.29) - For numeric fields, check if it is empty does't make sense, because zero is a number
+            bool isNumericField = Qfield.FieldFormat == FieldFormatting.FLOAT || Qfield.FieldFormat == FieldFormatting.INTEIRO;
+
             // evita-se fazer mais uma query, quando já se sabe que temos de limpar o Qvalue do Qfield de fim
-            if (Qfield.isEmptyValue(start) || (campoGrupo != null && campoGrupo.isEmptyValue(grouping)))
+            if ((!isNumericField && Qfield.isEmptyValue(start)) || (campoGrupo != null && campoGrupo.isEmptyValue(grouping)))
                 // se o start é vazio, tem de limpar o fim!
                 fim = Qfield.GetValorEmpty();
             else
@@ -2016,6 +2019,12 @@ namespace CSGenio.business
 
 		public override StatusMessage change(PersistentSupport sp, CriteriaSet condition)
 		{
+			// Prevent changes when in maintenance mode
+			if (Maintenance.Current.IsActive)
+			{
+				throw new BusinessException(Translations.Get("O Sistema encontra-se em manutenção! Pedimos desculpa pelo incómodo.", user.Language), "DbArea.change", "In maintenance mode.");
+			}
+
 			StatusMessage Qresult = StatusMessage.GetAggregator();
 			StatusMessage validationResults = null;
             try
@@ -2385,6 +2394,12 @@ namespace CSGenio.business
 		/// <returns>o status e a mensagem resposta da inserção</returns>
 		public override StatusMessage inserir_WS(PersistentSupport sp)
 		{
+			// Prevent changes when in maintenance mode
+			if (Maintenance.Current.IsActive)
+			{
+				throw new BusinessException(Translations.Get("O Sistema encontra-se em manutenção! Pedimos desculpa pelo incómodo.", user.Language), "DbArea.change", "In maintenance mode.");
+			}
+			
             StatusMessage Qresult = StatusMessage.GetAggregator();
 
             try

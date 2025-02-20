@@ -514,7 +514,7 @@
 						:filtered-rows-length="filteredRowsLength"
 						:original-rows-length="originalRowsLength"
 						:page="page"
-						v-model:perPage="perPage"
+						v-model:per-page="perPage"
 						:per-page-options="unselectedPerPageOptions"
 						:has-more="hasMore"
 						:show-rows-selected-count="showRowsSelectedCount"
@@ -580,7 +580,7 @@
 						:filtered-rows-length="filteredRowsLength"
 						:original-rows-length="originalRowsLength"
 						:page="page"
-						v-model:perPage="perPage"
+						v-model:per-page="perPage"
 						:per-page-options="unselectedPerPageOptions"
 						:has-more="hasMore"
 						:show-rows-selected-count="showRowsSelectedCount"
@@ -758,7 +758,6 @@
 			'cancel-insert',
 			'cell-action',
 			'close-view',
-			'deactivate-all-advanced-filters',
 			'execute-action',
 			'fetch-qtable-all-selected',
 			'hide-popup',
@@ -1828,7 +1827,7 @@
 			 */
 			hasAdvancedFilters()
 			{
-				return this.advancedFilters.length > 0
+				return this.advancedFilters.filter(filter => this.isValidFilter(filter, this.searchableColumns))?.length > 0
 			},
 
 			/**
@@ -1861,7 +1860,7 @@
 			 */
 			hasColumnFilters()
 			{
-				return Object.keys(this.columnFilters).length > 0
+				return Object.values(this.columnFilters).filter(filter => this.isValidFilter(filter, this.searchableColumns))?.length > 0
 			},
 
 			/**
@@ -1869,7 +1868,7 @@
 			 */
 			hasSearchBarFilters()
 			{
-				return Object.keys(this.searchBarFilters).length > 0
+				return Object.values(this.searchBarFilters).filter(filter => this.isValidFilter(filter, this.searchableColumns))?.length > 0
 			},
 
 			/**
@@ -2178,6 +2177,7 @@
 			hasExtendedAction: listFunctions.hasExtendedAction,
 			hasDataAction: listFunctions.hasDataAction,
 			rowWithoutChildren: listFunctions.rowWithoutChildren,
+			isValidFilter: listFunctions.isValidFilter,
 
 			/**
 			 * Sets all data properties from props passed in
@@ -3596,17 +3596,6 @@
 				this.$emit('remove-all-advanced-filters')
 				// Signal that the configuration changed so it will be saved when in auto-save mode
 				this.$emit('update-config')
-			},
-
-			/**
-			 * Deactivate all advanced filters and remove other custom filters
-			 */
-			deactivateAllCustomFilters()
-			{
-				this.$emit('deactivate-all-advanced-filters')
-				this.clearColumnFilters()
-				this.clearSearchBarFilters()
-				this.updateSearch()
 			},
 
 			/**

@@ -247,7 +247,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-DISPA', 'changed-PERSO', 'changed-ENTIT'],
+						changeEvents: ['changed-DISPA', 'changed-PERSO', 'changed-ENTIT', 'changed-DISST'],
 						uuid: 'Dilin_Dilin_DispaValDispanr',
 						allSelectedRows: 'false',
 						handlers: {

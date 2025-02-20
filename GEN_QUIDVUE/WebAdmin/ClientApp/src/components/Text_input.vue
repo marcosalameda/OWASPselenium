@@ -2,7 +2,10 @@
   <div :class="{'i-text--required': isRequired, 'i-text': !isRequired}">
     <div v-if="label">
       <label class="i-text__label" :for="id">{{ label }}</label>
-      <span v-if="helpText" class="field-help glyphicons glyphicons-info-sign" :title="helpText"/>
+      <q-icon
+        v-if="helpText"
+        :title="helpText"
+        icon="information-outline" />
     </div>
     <input type="text" :class="style_class" :id="id" v-model="curValue" :readonly="isReadOnly" :placeholder="placeholder">
   </div>

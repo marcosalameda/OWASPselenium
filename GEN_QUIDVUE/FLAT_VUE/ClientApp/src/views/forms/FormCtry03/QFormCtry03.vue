@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="CTRY03"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.CTRY03__CTRY_COUNTRY_.isVisible">
 					<q-control-wrapper

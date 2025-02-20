@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ATTAC"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ATTAC___ASSETNAME____.isVisible || controls.ATTAC___ATTACATTACHED.isVisible || controls.ATTAC___ATTACNOTE____.isVisible || controls.ATTAC___ATTACDOCUMENT.isVisible">
 					<q-control-wrapper

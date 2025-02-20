@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ARMAZ"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ARMAZ___WAREHWAREHCOD.isVisible || controls.ARMAZ___WAREHWAREHDES.isVisible">
 					<q-control-wrapper

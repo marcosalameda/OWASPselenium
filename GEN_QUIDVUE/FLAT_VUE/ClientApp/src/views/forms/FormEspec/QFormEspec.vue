@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="ESPEC"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.ESPEC___SPECIESPECIAL.isVisible">
 					<q-control-wrapper

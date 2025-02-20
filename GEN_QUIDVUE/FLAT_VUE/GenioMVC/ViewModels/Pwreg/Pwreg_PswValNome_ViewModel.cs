@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Pwreg
 		public string ValCodpwreg { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -59,6 +71,15 @@ namespace GenioMVC.ViewModels.Pwreg
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PWREG_PSWNOME]/
+
+			return crs;
+		}
+
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,6 +149,9 @@ namespace GenioMVC.ViewModels.Pwreg
 
 			if (Menu == null)
 				Menu = new TablePartial<Pwreg_PswValNome_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -149,6 +173,8 @@ namespace GenioMVC.ViewModels.Pwreg
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -310,7 +336,7 @@ namespace GenioMVC.ViewModels.Pwreg
 				pwreg___psw__nome____Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ PWREG_NOME]/
+// USE /[MANUAL GQT OVERRQ PWREG_PSWNOME]/
 
 				if (isToExport)
 				{
@@ -319,14 +345,14 @@ namespace GenioMVC.ViewModels.Pwreg
 
 					Qlisting = Models.ModelBase.Where<CSGenioApsw>(m_userContext, false, pwreg___psw__nome____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PWREG___PSW__NOME____", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP PWREG_NOME]/
+// USE /[MANUAL GQT OVERRQLSTEXP PWREG_PSWNOME]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST PWREG_NOME]/
+// USE /[MANUAL GQT OVERRQLIST PWREG_PSWNOME]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_psw"];
 					CriteriaSet m_PagingPosEPHs = null;

@@ -93,10 +93,9 @@
 		<div
 			class="form-flow"
 			data-key="DISPA"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.DISPA___DISPADISPADT_.isVisible || controls.DISPA___DISPADISPANR_.isVisible || controls.DISPA___DISPASTATUS__.isVisible">
+				<q-row-container v-show="controls.DISPA___DISPADISPADT_.isVisible || controls.DISPA___DISPADISPANR_.isVisible || controls.DISPA___DISSTSTATUS__.isVisible || controls.DISPA___DISPASTATUS__.isVisible">
 					<q-control-wrapper
 						v-show="controls.DISPA___DISPADISPADT_.isVisible"
 						class="control-join-group">
@@ -129,6 +128,26 @@
 								v-if="controls.DISPA___DISPADISPANR_.isVisible"
 								v-bind="controls.DISPA___DISPADISPANR_.props"
 								@update:model-value="model.ValDispanr.fnUpdateValue" />
+						</base-input-structure>
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.DISPA___DISSTSTATUS__.isVisible"
+						class="control-join-group">
+						<base-input-structure
+							class="i-text"
+							v-bind="controls.DISPA___DISSTSTATUS__"
+							v-on="controls.DISPA___DISSTSTATUS__.handlers"
+							:loading="controls.DISPA___DISSTSTATUS__.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<q-lookup
+								v-if="controls.DISPA___DISSTSTATUS__.isVisible"
+								v-bind="controls.DISPA___DISSTSTATUS__.props"
+								v-on="controls.DISPA___DISSTSTATUS__.handlers" />
+							<q-see-more-dispa-disststatus
+								v-if="controls.DISPA___DISSTSTATUS__.seeMoreIsVisible"
+								v-bind="controls.DISPA___DISSTSTATUS__.seeMoreParams"
+								v-on="controls.DISPA___DISSTSTATUS__.handlers" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -312,6 +331,7 @@
 		name: 'QFormDispa',
 
 		components: {
+			QSeeMoreDispaDisststatus: defineAsyncComponent(() => import('@/views/forms/FormDispa/dbedits/DispaDisststatusSeeMore.vue')),
 			QSeeMoreDispaEntitname: defineAsyncComponent(() => import('@/views/forms/FormDispa/dbedits/DispaEntitnameSeeMore.vue')),
 			QSeeMoreDispaPersoname: defineAsyncComponent(() => import('@/views/forms/FormDispa/dbedits/DispaPersonameSeeMore.vue')),
 		},
@@ -623,6 +643,36 @@
 						controlLimits: [
 						],
 					}, this),
+					DISPA___DISSTSTATUS__: new fieldControlClass.LookupControl({
+						modelField: 'TableDisstStatus',
+						valueChangeEvent: 'fieldChange:disst.status',
+						id: 'DISPA___DISSTSTATUS__',
+						name: 'STATUS',
+						size: 'xxlarge',
+						label: computed(() => this.Resources.STATUS62033),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCoddisst',
+							dependencyEvent: 'fieldChange:dispa.coddisst'
+						},
+						dependentFields: () => ({
+							set 'disst.coddisst'(value) { vm.model.ValCoddisst.updateValue(value) },
+							set 'disst.status'(value) { vm.model.TableDisstStatus.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'DISST',
+						controlLimits: [
+						],
+					}, this),
 					DISPA___DISPASTATUS__: new fieldControlClass.ArrayStringControl({
 						modelField: 'ValStatus',
 						valueChangeEvent: 'fieldChange:dispa.status',
@@ -647,7 +697,7 @@
 						id: 'DISPA___ENTITNAME____',
 						name: 'NAME',
 						size: 'xxlarge',
-						label: computed(() => this.Resources.CUSTOMER51658),
+						label: computed(() => this.Resources.CLIENTE40500),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						externalCallbacks: {
@@ -981,6 +1031,8 @@
 				 */
 				dataApi: {
 					Dispa: {
+						get ValCoddisst() { return vm.model.ValCoddisst.value },
+						set ValCoddisst(value) { vm.model.ValCoddisst.updateValue(value) },
 						get ValCodentit() { return vm.model.ValCodentit.value },
 						set ValCodentit(value) { vm.model.ValCodentit.updateValue(value) },
 						get ValCodperso() { return vm.model.ValCodperso.value },
@@ -996,6 +1048,10 @@
 						get ValStatus() { return vm.model.ValStatus.value },
 						set ValStatus(value) { vm.model.ValStatus.updateValue(value) },
 					},
+					Disst: {
+						get ValStatus() { return vm.model.TableDisstStatus.value },
+						set ValStatus(value) { vm.model.TableDisstStatus.updateValue(value) },
+					},
 					Entit: {
 						get ValName() { return vm.model.TableEntitName.value },
 						set ValName(value) { vm.model.TableEntitName.updateValue(value) },
@@ -1009,6 +1065,8 @@
 						get dispa() { return vm.model.ValCoddispa },
 						/** The foreign key to the ENTIT table */
 						get entit() { return vm.model.ValCodentit },
+						/** The foreign key to the DISST table */
+						get disst() { return vm.model.ValCoddisst },
 						/** The foreign key to the PERSO table */
 						get perso() { return vm.model.ValCodperso },
 					},

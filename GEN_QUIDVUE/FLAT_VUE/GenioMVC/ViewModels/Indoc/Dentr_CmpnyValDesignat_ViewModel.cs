@@ -41,11 +41,23 @@ namespace GenioMVC.ViewModels.Indoc
 		public string ValCoddentr { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
@@ -60,7 +72,16 @@ namespace GenioMVC.ViewModels.Indoc
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS DENTR_CMPNYDESIGNAT]/
+
+			return crs;
+		}
+
+
 		public string ValCodcntry { get; set; }
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -134,6 +155,9 @@ namespace GenioMVC.ViewModels.Indoc
 
 			if (Menu == null)
 				Menu = new TablePartial<Dentr_CmpnyValDesignat_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -155,6 +179,8 @@ namespace GenioMVC.ViewModels.Indoc
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)

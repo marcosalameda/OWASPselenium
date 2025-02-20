@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="TABPR"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container
 					v-show="controls.TABPR___PSEUDNOVOGR01.isVisible"
@@ -528,6 +527,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['TABPR___TPEQUTIPOEQUI', 'TABPR___TABPRSINCE___', 'TABPR___TABPRPRECOHOR'],
 						controlLimits: [
 						],
 					}, this),

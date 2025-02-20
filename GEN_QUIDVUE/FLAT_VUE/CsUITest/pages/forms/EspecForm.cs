@@ -10,7 +10,7 @@ public class EspecForm : Form
 	/// <summary>
 	/// Specialty
 	/// </summary>
-	public BaseInputControl SpeciEspecial => new BaseInputControl(driver, ContainerLocator, "#ESPEC___SPECIESPECIAL");
+	public BaseInputControl SpeciEspecial => new BaseInputControl(driver, ContainerLocator, "container-ESPEC___SPECIESPECIAL", "#ESPEC___SPECIESPECIAL");
 
 	/// <summary>
 	/// Technical  area

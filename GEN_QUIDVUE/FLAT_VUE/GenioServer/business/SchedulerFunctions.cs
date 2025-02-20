@@ -408,7 +408,7 @@ namespace GenioServer.business
             try
             {               
                 string pathReindex = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", Configuration.Program + "_ReIdx", "Reindex");
-                string pathReindexMenu = pathReindex + Path.DirectorySeparatorChar + "order2exec.xml";
+                string pathReindexMenu = pathReindex + Path.DirectorySeparatorChar + "order2Exec.xml";
 
                 ReindexOrder reindexMenu = ReindexOrder.readXML(pathReindexMenu);
 

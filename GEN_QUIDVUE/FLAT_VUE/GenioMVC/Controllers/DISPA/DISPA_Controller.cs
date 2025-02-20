@@ -73,6 +73,15 @@ namespace GenioMVC.Controllers
 			{
 				switch (string.IsNullOrEmpty(Identifier) ? "" : Identifier)
 				{
+					case "DISPA___DISSTSTATUS__":	// Field (DB)
+						{
+							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+							var model = new Dispa_ViewModel(UserContext.Current) { editable = false };							
+							model.MapFromModel(row);
+							model.Load_Dispa___disststatus__(qs);
+							result = model.TableDisstStatus;
+						}
+						break;
 					case "DISPA___ENTITNAME____":	// Field (DB)
 						{
 							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
@@ -124,6 +133,9 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.openConnection();
 				switch (string.IsNullOrEmpty(Identifier) ? "" : Identifier)
 				{
+					case "DISPA___DISSTSTATUS__":	// Field (DB)
+						values = new Dispa_ViewModel(UserContext.Current).GetDependant_DispaTableDisstStatus(Selected);
+						break;
 					case "DISPA___ENTITNAME____":	// Field (DB)
 						values = new Dispa_ViewModel(UserContext.Current).GetDependant_DispaTableEntitName(Selected);
 						break;

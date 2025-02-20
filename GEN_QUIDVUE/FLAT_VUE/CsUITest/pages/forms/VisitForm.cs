@@ -16,7 +16,7 @@ public class VisitForm : Form
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl VisitTitle => new BaseInputControl(driver, ContainerLocator, "#VISIT___VISITTITLE___");
+	public BaseInputControl VisitTitle => new BaseInputControl(driver, ContainerLocator, "container-VISIT___VISITTITLE___", "#VISIT___VISITTITLE___");
 
 	/// <summary>
 	/// Start:
@@ -41,12 +41,12 @@ public class VisitForm : Form
 	/// <summary>
 	/// Color
 	/// </summary>
-	public BaseInputControl VisitColor => new BaseInputControl(driver, ContainerLocator, "#VISIT___VISITCOLOR___");
+	public BaseInputControl VisitColor => new BaseInputControl(driver, ContainerLocator, "container-VISIT___VISITCOLOR___", "#VISIT___VISITCOLOR___");
 
 	/// <summary>
 	/// Observations
 	/// </summary>
-	public BaseInputControl VisitObservat => new BaseInputControl(driver, ContainerLocator, "#VISIT___VISITOBSERVAT");
+	public BaseInputControl VisitObservat => new BaseInputControl(driver, ContainerLocator, "container-VISIT___VISITOBSERVAT", "#VISIT___VISITOBSERVAT");
 
 	public VisitForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "VISIT", containerLocator: containerLocator) { }

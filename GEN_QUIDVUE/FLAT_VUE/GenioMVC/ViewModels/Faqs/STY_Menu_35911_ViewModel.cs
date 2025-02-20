@@ -41,12 +41,25 @@ namespace GenioMVC.ViewModels.Faqs
 		public string ValCodfaqs { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
 				conds.Equal(CSGenioAfaqs.FldCodcfaqs, Navigation.GetValue("cfaqs"));
+
 				return conds;
 			}
 		}
@@ -61,6 +74,15 @@ namespace GenioMVC.ViewModels.Faqs
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL STY LIST_LIMITS 35911]/
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -68,20 +90,17 @@ namespace GenioMVC.ViewModels.Faqs
 			var areaBase = CSGenio.business.Area.createArea("faqs", user, "STY");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet sty_menu_35911Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML35911");
-			sty_menu_35911Conds.Equal(CSGenioAfaqs.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML35911");
+			conditions.Equal(CSGenioAfaqs.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL STY OVERRQ 35911]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAfaqs.FldCodfaqs, CSGenioAfaqs.FldZzstate, CSGenioAfaqs.FldQuestion, CSGenioAfaqs.FldAnswer };
 
 			ListingMVC<CSGenioAfaqs> listing = new ListingMVC<CSGenioAfaqs>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(sty_menu_35911Conds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -159,6 +178,9 @@ namespace GenioMVC.ViewModels.Faqs
 
 			if (Menu == null)
 				Menu = new TablePartial<STY_Menu_35911_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -177,6 +199,8 @@ namespace GenioMVC.ViewModels.Faqs
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Limitations
 			// Limit "DB"

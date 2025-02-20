@@ -305,7 +305,7 @@
 
 					case 'info':
 						this.dialog.text = this.Resources.UTILIZADOR_ALTERADO_42131;
-						this.dialog.icon = { icon: 'ok-circle' };
+						this.dialog.icon = { icon: 'check-circle-outline' };
 						this.dialog.buttons = [
 							{
 								id: 'ok-btn',
@@ -421,7 +421,7 @@
 							this.dialog.icon = { icon: "alert" };
 						}
 						else {
-							this.dialog.icon = { icon: "ok-circle" };
+							this.dialog.icon = { icon: "check-circle-outline" };
 							this.dialog.text = this.dialogText;
 						}
 

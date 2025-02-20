@@ -10,12 +10,12 @@ public class CamtextoForm : Subform
 	/// <summary>
 	/// Text Field
 	/// </summary>
-	public BaseInputControl FldsTxtfield => new BaseInputControl(driver, ContainerLocator, "#CAMTEXTOFLDS_TXTFIELD");
+	public BaseInputControl FldsTxtfield => new BaseInputControl(driver, ContainerLocator, "container-CAMTEXTOFLDS_TXTFIELD", "#CAMTEXTOFLDS_TXTFIELD");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl FldsDescrip => new BaseInputControl(driver, ContainerLocator, "#CAMTEXTOFLDS_DESCRIP_");
+	public BaseInputControl FldsDescrip => new BaseInputControl(driver, ContainerLocator, "container-CAMTEXTOFLDS_DESCRIP_", "#CAMTEXTOFLDS_DESCRIP_");
 
 	public CamtextoForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "CAMTEXTO", "LISTACAM", containerLocator: containerLocator) { }

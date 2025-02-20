@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="CAMPO"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.CAMPO___AERO_NAME____.isVisible">
 					<q-control-wrapper

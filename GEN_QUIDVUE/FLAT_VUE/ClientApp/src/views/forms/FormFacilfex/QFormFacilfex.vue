@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="FACILFEX"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.FACILFEXENTITNAME____.isVisible">
 					<q-control-wrapper

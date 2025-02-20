@@ -384,7 +384,7 @@
 											fnValueSelector: (row) => row.ValCodempre
 										},
 									],
-									action: vm.openMenuAction, type: 'menu', menuName: 'GQT_611111',
+									action: vm.openMenuAction, type: 'menu', menuName: 'GQT_611111', restrictedModes: true,
 								}
 							},
 							formsDefinition: {

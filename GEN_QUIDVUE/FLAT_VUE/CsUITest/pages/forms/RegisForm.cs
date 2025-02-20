@@ -15,27 +15,27 @@ public class RegisForm : Form
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl RegisName => new BaseInputControl(driver, ContainerLocator, "#REGIS___REGISNAME____");
+	public BaseInputControl RegisName => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISNAME____", "#REGIS___REGISNAME____");
 
 	/// <summary>
 	/// Tax ID No:
 	/// </summary>
-	public BaseInputControl RegisNif => new BaseInputControl(driver, ContainerLocator, "#REGIS___REGISNIF_____");
+	public BaseInputControl RegisNif => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISNIF_____", "#REGIS___REGISNIF_____");
 
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl RegisTelephon => new BaseInputControl(driver, ContainerLocator, "#REGIS___REGISTELEPHON");
+	public BaseInputControl RegisTelephon => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISTELEPHON", "#REGIS___REGISTELEPHON");
 
 	/// <summary>
 	/// Email:
 	/// </summary>
-	public BaseInputControl RegisEmail1 => new BaseInputControl(driver, ContainerLocator, "#REGIS___REGISEMAIL1__");
+	public BaseInputControl RegisEmail1 => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISEMAIL1__", "#REGIS___REGISEMAIL1__");
 
 	/// <summary>
 	/// Alternative Email
 	/// </summary>
-	public BaseInputControl RegisEmail2 => new BaseInputControl(driver, ContainerLocator, "#REGIS___REGISEMAIL2__");
+	public BaseInputControl RegisEmail2 => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISEMAIL2__", "#REGIS___REGISEMAIL2__");
 
 	/// <summary>
 	/// @required

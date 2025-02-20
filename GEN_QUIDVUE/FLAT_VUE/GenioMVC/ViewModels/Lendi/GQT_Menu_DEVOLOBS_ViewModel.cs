@@ -43,6 +43,22 @@ namespace GenioMVC.ViewModels.Lendi
 		public string ValCodlendi { get; set; }
 
 		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+				// Limit "SC"
+				conditions.Equal(CSGenioAlendi.FldReturned, "0");
+				// Limit "SC"
+				conditions.Equal(CSGenioAlendi.FldIfoutdt, "1");
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -52,6 +68,7 @@ namespace GenioMVC.ViewModels.Lendi
 					conds.Equal(CSGenioAlendi.FldReturned, Navigation.GetValue("lendi.returned"));
 				if (Navigation.CheckKey("lendi.ifoutdt"))
 					conds.Equal(CSGenioAlendi.FldIfoutdt, Navigation.GetValue("lendi.ifoutdt"));
+
 				return conds;
 			}
 		}
@@ -66,6 +83,18 @@ namespace GenioMVC.ViewModels.Lendi
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+//Platform: MVC | Type: LIST_LIMITS | Module: GQT | Parameter: DEVOLOBS | File:  | Order: 0
+//BEGIN_MANUALCODE_CODMANUA:cec03027-11f3-4a08-8a15-3d5066ff5a65
+            crs.NotEqual(CSGenioAlendi.FldObservat, "");
+//END_MANUALCODE
+
+			return crs;
+		}
+
+
+
 
 		public override int GetCount(User user)
 		{
@@ -73,25 +102,17 @@ namespace GenioMVC.ViewModels.Lendi
 			var areaBase = CSGenio.business.Area.createArea("lendi", user, "GQT");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet gqt_menu_devolobsConds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLDEVOLOBS");
-			gqt_menu_devolobsConds.Equal(CSGenioAlendi.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLDEVOLOBS");
+			conditions.Equal(CSGenioAlendi.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-						gqt_menu_devolobsConds.Equal(CSGenioAlendi.FldReturned, 0);
-			gqt_menu_devolobsConds.Equal(CSGenioAlendi.FldIfoutdt, 1);
-
-
-//Platform: MVC | Type: OVERRQ | Module: GQT | Parameter: DEVOLOBS | File:  | Order: 0
-//BEGIN_MANUALCODE_CODMANUA:cec03027-11f3-4a08-8a15-3d5066ff5a65
-            gqt_menu_devolobsConds.NotEqual(CSGenioAlendi.FldObservat, "");
-//END_MANUALCODE
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.FldZzstate, CSGenioAlendi.FldCodpess1, CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioAlendi.FldCodequip, CSGenioAequip.FldCodequip, CSGenioAequip.FldDesignat, CSGenioAequip.FldRegistnr, CSGenioAequip.FldFrequenc, CSGenioAlendi.FldCodpess2, CSGenioApess2.FldCodpesso, CSGenioApess2.FldName, CSGenioAlendi.FldLendinnr, CSGenioAlendi.FldStart, CSGenioAlendi.FldWarndt, CSGenioAlendi.FldEnd, CSGenioAlendi.FldObservat, CSGenioAlendi.FldReturndt, CSGenioAlendi.FldDayslimi, CSGenioAlendi.FldReturned, CSGenioAlendi.FldIfoutdt };
 
 			ListingMVC<CSGenioAlendi> listing = new ListingMVC<CSGenioAlendi>(fields, null, 1, 1, false, user, true, string.Empty, true);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(gqt_menu_devolobsConds, listing);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			//Menu relations:
 			if (qs.FromTable == null)
@@ -178,6 +199,9 @@ namespace GenioMVC.ViewModels.Lendi
 
 			if (Menu == null)
 				Menu = new TablePartial<GQT_Menu_DEVOLOBS_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
 
 
@@ -203,11 +227,9 @@ namespace GenioMVC.ViewModels.Lendi
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
-			// Limit "SC"
-			crs.Equal(CSGenioAlendi.FldReturned, "0");
-			// Limit "SC"
-			crs.Equal(CSGenioAlendi.FldIfoutdt, "1");
 
 			if (isToExport)
 			{
@@ -378,23 +400,6 @@ namespace GenioMVC.ViewModels.Lendi
 				if (area_EPH_limits.Count > 0)
 					this.tableLimits.AddRange(area_EPH_limits);
 			}
-			//Tooltip for "Manual Filter" affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.OVERRQ;
-				using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("manua_exec_time", new List<KeyValuePair<string, object>>() {
-					new("Name", "OVERRQ_TOOLTIP"),
-					new("Parameter", "DEVOLOBS"),
-					new("ModuleOrSystem", "GQT")
-				}, "ms", "Time to execute the manual code.")) {
-//Platform: MVC | Type: OVERRQ_TOOLTIP | Module: GQT | Parameter: DEVOLOBS | File:  | Order: 0
-//BEGIN_MANUALCODE_CODMANUA:15a53c61-5bbe-4454-a0c9-5ac70459b2ff
-limit.ManualHTMLText = ""; //Text that will be shown to users.
-this.tableLimits.Add(limit);
-//END_MANUALCODE
-				}
-
-			}
 
 			// Tooltips: Making a tooltip for each valid limitation: 2 Limit(s) detected.
 			// Limit origin: menu 
@@ -441,17 +446,7 @@ this.tableLimits.Add(limit);
 				gqt_menu_devolobsConds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-				using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("manua_exec_time", new List<KeyValuePair<string, object>>() {
-					new("Name", "OVERRQ"),
-					new("Parameter", "DEVOLOBS"),
-					new("ModuleOrSystem", "GQT")
-				}, "ms", "Time to execute the manual code.")) {
-//Platform: MVC | Type: OVERRQ | Module: GQT | Parameter: DEVOLOBS | File:  | Order: 0
-//BEGIN_MANUALCODE_CODMANUA:cec03027-11f3-4a08-8a15-3d5066ff5a65
-            gqt_menu_devolobsConds.NotEqual(CSGenioAlendi.FldObservat, "");
-//END_MANUALCODE
-				}
-
+// USE /[MANUAL GQT OVERRQ DEVOLOBS]/
 
 				if (isToExport)
 				{

@@ -93,8 +93,7 @@
 		<div
 			class="form-flow"
 			data-key="LDSAI"
-			:data-loading="!formInitialDataLoaded"
-			:key="domVersionKey">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row-container v-show="controls.LDSAI___OUTPTDOCUMENR.isVisible">
 					<q-control-wrapper
@@ -623,6 +622,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
+						directChildren: ['LDSAI___OUTPULINE____', 'LDSAI___WAREHWAREHDES', 'LDSAI___ITEM_ITEMDES_', 'LDSAI___OUTPUEXITQNTY', 'LDSAI___OUDOCNRDOCSDA'],
 						mustBeFilled: true,
 						controlLimits: [
 						],

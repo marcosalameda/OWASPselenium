@@ -179,10 +179,11 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(11);
+			info.Pathways = new Dictionary<string, string>(12);
 			info.Pathways.Add("dispa","dispa");
 			info.Pathways.Add("produ","produ");
 			info.Pathways.Add("perso","dispa");
+			info.Pathways.Add("disst","dispa");
 			info.Pathways.Add("entit","dispa");
 			info.Pathways.Add("faci1","dispa");
 			info.Pathways.Add("faci2","dispa");

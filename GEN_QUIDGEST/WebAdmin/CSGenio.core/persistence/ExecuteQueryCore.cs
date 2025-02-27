@@ -168,6 +168,8 @@ namespace ExecuteQueryCore
         }
 
         public double Percentage() {
+            if(TotalScriptNum == 0) return 0;
+            
             return ActualScriptNum * 100 / (double)TotalScriptNum;
         }
 

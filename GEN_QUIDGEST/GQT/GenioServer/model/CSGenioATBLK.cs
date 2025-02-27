@@ -119,8 +119,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("trsb","trsb");
 			info.Pathways.Add("grpb","grpb");
+			info.Pathways.Add("trsb","trsb");
 		}
 
 		/// <summary>

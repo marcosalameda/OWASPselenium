@@ -1026,6 +1026,7 @@ namespace GenioMVC.Controllers
 		private Models.WizardStep Vendawv_Fases_GetNextStep(Models.Sale p, string currentStep)
 		{
 			Models.WizardStep nextStep = new Models.WizardStep();
+			string errorStepMessage = "";
 			switch (currentStep)
 			{
 				case "":

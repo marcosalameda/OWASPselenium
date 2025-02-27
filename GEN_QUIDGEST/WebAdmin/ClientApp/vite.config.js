@@ -2,6 +2,17 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
+// Icons
+import PackBundle from './svgstore.config'
+
+function svgBundlePlugin() 
+{
+	return {
+		name: 'svgbundle-plugin',
+		buildStart: PackBundle
+	}
+}
+
 export default defineConfig({
 	base: './',
 	root: './',
@@ -28,7 +39,10 @@ export default defineConfig({
 		modulePreload: false
 	},
 	chunkSizeWarningLimit: 500,
-	plugins: [vue()],
+	plugins: [
+		vue(),
+		svgBundlePlugin()
+	],
 	server: {
 		open: false,
 		port: 8202,

@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Tblk
         /// </summary>
         public string ValCodtblk { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Tblk
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS TBLK_TRSBNAME]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tblk_TrsbValName_ViewModel" /> class.
@@ -136,6 +156,8 @@ namespace GenioMVC.ViewModels.Tblk
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -237,7 +259,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtrsb.FldCodtrsb, CSGenioAtrsb.FldZz
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -275,7 +297,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtrsb.FldCodtrsb, CSGenioAtrsb.FldZz
 			CriteriaSet tblk____trsb_name____Conds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ TBLK_NAME]/
+// USE /[MANUAL GQT OVERRQ TBLK_TRSBNAME]/
 
             // This will happen in case there is an error
             if(tblk____trsb_name____Conds == null)
@@ -288,7 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtrsb.FldCodtrsb, CSGenioAtrsb.FldZz
 
 				Qlisting = Models.ModelBase.Where<CSGenioAtrsb>(false, tblk____trsb_name____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TBLK____TRSB_NAME____", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP TBLK_NAME]/
+// USE /[MANUAL GQT OVERRQLSTEXP TBLK_TRSBNAME]/
 
                 conditions = tblk____trsb_name____Conds;
                 return;
@@ -298,7 +320,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtrsb.FldCodtrsb, CSGenioAtrsb.FldZz
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST TBLK_NAME]/
+// USE /[MANUAL GQT OVERRQLIST TBLK_TRSBNAME]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_trsb"];

@@ -1,4 +1,5 @@
-﻿using CSGenio.framework;
+﻿using CSGenio.core;
+using CSGenio.framework;
 using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
 using System;
@@ -424,7 +425,8 @@ namespace CSGenio.business
                             SmtpServer = emailProperties.SMTPServer,
                             Port = (int)emailProperties.Port,
                             SSL = emailProperties.SSL,
-                            Auth = emailProperties.Auth,
+                            AuthType = emailProperties.AuthType,
+                            OAuth2Options = emailProperties.OAuth2Options,
                             User = emailProperties.Username,
                             Pass = decodedPass,
                             //Pathimg = path TODO.. de momento no CSmail está a ir buscar os recursos ao disco.... tenho de alterar para stream ou nos documentos da BD

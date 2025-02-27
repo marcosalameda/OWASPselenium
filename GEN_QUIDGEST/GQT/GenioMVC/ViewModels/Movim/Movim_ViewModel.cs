@@ -406,7 +406,8 @@ namespace GenioMVC.ViewModels.Movim
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAequip.FldRegistnr, query + "%");
                 }
@@ -453,7 +454,8 @@ namespace GenioMVC.ViewModels.Movim
 				}
 
 				TableEquipRegistnr.List = new SelectList(TableEquipRegistnr.Elements.ToSelectList(x => x.ValRegistnr, x => x.ValCodequip,  x => x.ValCodequip == this.ValCodequip), "Value", "Text", this.ValCodequip);
-                FillDependant_MovimTableEquipRegistnr();
+                if(!isSearchRequest)
+                    FillDependant_MovimTableEquipRegistnr();
 
                 //Check if foreignkey comes from history
                 TableEquipRegistnr.FilledByHistory = Navigation.CheckFilledByHistory("equip");
@@ -609,7 +611,8 @@ namespace GenioMVC.ViewModels.Movim
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioArooms.FldRoomnr, query + "%");
                 }
@@ -656,7 +659,8 @@ namespace GenioMVC.ViewModels.Movim
 				}
 
 				TableRoomsRoomnr.List = new SelectList(TableRoomsRoomnr.Elements.ToSelectList(x => x.ValRoomnr, x => x.ValCodrooms,  x => x.ValCodrooms == this.ValCodrooms), "Value", "Text", this.ValCodrooms);
-                FillDependant_MovimTableRoomsRoomnr();
+                if(!isSearchRequest)
+                    FillDependant_MovimTableRoomsRoomnr();
 
                 //Check if foreignkey comes from history
                 TableRoomsRoomnr.FilledByHistory = Navigation.CheckFilledByHistory("rooms");

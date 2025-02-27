@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Propr
         /// </summary>
         public string ValCodpropr { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Propr
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PROPRALL_REGIOREGIAO]/
+
+			return crs;
+		}
+
 
         public string ValCodcntry { get; set; }
 
@@ -142,6 +162,8 @@ namespace GenioMVC.ViewModels.Propr
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -243,7 +265,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregio.FldCodregia, CSGenioAregio.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

@@ -6,28 +6,26 @@
                     &#x24E7;
                 </slot>
             </span>
-            <div class="i-input-group input-xxlarge">
-                <template v-if="searchOnPressEnter">
-                    <input ref="globalSearch" type="text" class="i-input-group__field input-xxlarge" :placeholder="placeholder" @keyup.enter="$emit('emitSearch', $refs.globalSearch.value)" />
+            <q-text-field
+                class="search-input"
+                v-model="searchValue"
+                ref="globalSearch"
+                size="xlarge"
+                :placeholder="placeholder" 
+                @keyup.enter="emitSearch">
+                <template #append>
+                    <q-button
+                        b-style="tertiary"
+                        @click="emitSearch">
+                        <q-icon icon="magnify" />
+                    </q-button>
+                    <q-button
+                        b-style="tertiary"
+                        @click="resetQuery">
+                        <q-icon icon="close" />
+                    </q-button>
                 </template>
-                <template v-else>
-                    <input ref="globalSearch" type="text" class="i-input-group__field input-xxlarge" :placeholder="placeholder" />
-                </template>
-                <div class="i-input-group--right">
-                    <!-- refresh & reset button starts here -->
-                    <button v-if="showRefreshButton" type="button" class="b-icon--secondary i-input-group__button--secondary listSearchButton" @click="$emit('emitSearch', $refs.globalSearch.value)">
-                        <slot name="refresh-button-text">
-                            <i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i>
-                        </slot>
-                    </button>
-                    <button type="button" v-if="showResetButton" class="b-icon--secondary i-input-group__button--secondary" @click="resetQuery">
-                        <slot name="reset-button-text">
-                            <span class="glyphicons glyphicons-remove-sign i-input-group__tag-icon i-input-group__button-icon"></span>
-                        </slot>
-                    </button>
-                    <!-- refresh & reset button ends here -->
-                </div>
-            </div>
+            </q-text-field>
         </div>
     </div>
 </template>
@@ -73,8 +71,9 @@
                 default: 60
             }
         },
-        data: function () {
+        data() {
             return {
+                searchValue: "",
                 placeholder: this.initPlaceholder,
                 classes: this.initClasses,
                 visibility: this.initVisibility,
@@ -87,25 +86,20 @@
             }
         },
         methods: {
-
+            emitSearch() {
+                this.$emit('emitSearch', this.searchValue);
+            },
             clearGlobalSearch() {
-                this.$refs.global_search.value = "";
+                this.searchValue = "";
                 this.$emit('clearGlobalSearch');
             },
 
             resetQuery() {
-                this.$refs.globalSearch.value = "";
+                this.searchValue = "";
                 this.$emit('resetQuery');
-                //this.$eventHub.$emit('reset-query');
             }
 
         },
         emits: ['clearGlobalSearch', 'updateGlobalSearchHandler', 'updateGlobalSearch', 'emitSearch', 'resetQuery']
     };
 </script>
-
-<style scoped>
-    .vbt-global-search-clear {
-        cursor: pointer;
-    }
-</style>

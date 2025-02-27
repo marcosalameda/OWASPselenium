@@ -39,12 +39,25 @@ namespace GenioMVC.ViewModels.Decom
         /// </summary>
         public string ValCoddeco { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +71,14 @@ namespace GenioMVC.ViewModels.Decom
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS 2C111]/
+
+			return crs;
+		}
+
 
         private string dbeditTitle;
         public string DBEditTitle { get { if (string.IsNullOrEmpty(dbeditTitle)) GetTitle(); return dbeditTitle; } }
@@ -76,10 +97,8 @@ namespace GenioMVC.ViewModels.Decom
             CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, this.Identifier);
             conditions.Equal(CSGenioAdecom.FldZzstate, 0); //valid zzstate only
 
-            //Menu fixed limits and relations:
-
-            
-
+            // Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.FldZzstate, CSGenioAdecom.FldDecomnr, CSGenioAdecom.FldDtdeco, CSGenioAdecom.FldNote };
@@ -185,6 +204,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
 
 			if (isToExport)
@@ -205,7 +226,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_decom");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_decom");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Decom.AddEPH<CSGenioAdecom>(ref u, null, "ML2C111"));
 			}
@@ -288,7 +308,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

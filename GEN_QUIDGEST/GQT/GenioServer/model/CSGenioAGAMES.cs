@@ -250,7 +250,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodgames, value); }
 		}
 
-
 		/// <summary>Field : "Game date" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldGamedt { get { return m_fldGamedt; } }
 		private static FieldRef m_fldGamedt = new FieldRef("games", "gamedt");
@@ -261,7 +260,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldGamedt); }
 			set { insertNameValueField(FldGamedt, value); }
 		}
-
 
 		/// <summary>Field : ">TEAM PLAYING AT HOME" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodeqjgc { get { return m_fldCodeqjgc; } }
@@ -274,7 +272,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodeqjgc, value); }
 		}
 
-
 		/// <summary>Field : ">TEAM PLAYING AWAY" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodeqjgf { get { return m_fldCodeqjgf; } }
 		private static FieldRef m_fldCodeqjgf = new FieldRef("games", "codeqjgf");
@@ -285,7 +282,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodeqjgf); }
 			set { insertNameValueField(FldCodeqjgf, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

@@ -2,31 +2,41 @@
 	<div id="report_management_container">
 		<div class="q-stack--column">
 				<h1 class="f-header__title">
-				{{ Resources.GESTAO_DE_RELATORIOS37970 }}
+					{{ Resources.GESTAO_DE_RELATORIOS37970 }}
 				</h1>
 			</div>
 		<hr>
-		<QGroupBoxContainer>
+
+		<q-card
+			width="block">
 			<q-row-container>
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<static-text v-model="Model.ReportsPath" :label="Resources.DIRECTORIA_DE_RELATO59580"></static-text>
+						<static-text
+							v-model="Model.ReportsPath"
+							:label="Resources.DIRECTORIA_DE_RELATO59580" />
 					</base-input-structure>
 				</q-control-wrapper>
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<static-text v-model="Model.ReportsServerUrl" :label="Resources.URL_DO_SERVIDOR_DE_R44145"></static-text>
+						<static-text
+							v-model="Model.ReportsServerUrl"
+							:label="Resources.URL_DO_SERVIDOR_DE_R44145" />
 					</base-input-structure>
 				</q-control-wrapper>
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<static-text v-model="Model.ReportsServerPath" :label="Resources.SUBPATH_NO_SERVIDOR_61718"></static-text>
+						<static-text
+							v-model="Model.ReportsServerPath"
+							:label="Resources.SUBPATH_NO_SERVIDOR_61718" />
 					</base-input-structure>
 				</q-control-wrapper>
+
 				<hr />
+
 				<row class="footer-btn">
 					<q-button
 						b-style="primary"
@@ -37,20 +47,29 @@
 						:label="Resources.INSTALACAO62245"
 						@click="Deploy" />
 				</row>
+
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<select-input v-model="deployForm.scope" :options="deployScope" :size="'xlarge'"></select-input>
+						<select-input
+							v-model="deployForm.scope"
+							:options="deployScope"
+							:size="'xlarge'" />
 					</base-input-structure>
 					<base-input-structure
 						class="i-text">
-						<checkbox-input v-model="deployForm.dynamic" :label="Resources.DINAMICO34700"></checkbox-input>
+						<q-checkbox
+							v-model="deployForm.dynamic" 
+							:label="Resources.DINAMICO34700" />
 					</base-input-structure>
 					<base-input-structure
 						class="i-text">
-						<checkbox-input v-model="deployForm.delete" :label="Resources.APAGAR_NAO_USADOS55190"></checkbox-input>
+						<q-checkbox
+							v-model="deployForm.delete" 
+							:label="Resources.APAGAR_NAO_USADOS55190" />
 					</base-input-structure>
 				</q-control-wrapper>
+
 				<qtable :rows="tReportList.rows"
 					:columns="tReportList.columns"
 					:config="tReportList.config"
@@ -58,11 +77,20 @@
 					:classes="tReportList.classes">
 
 					<template #status="props">
-						<i v-if="!isEmptyObject(props.row.Error)" @click.stop="showError(props.row)" class="glyphicons glyphicons-exclamation-sign" data-toggle="tooltip" :title="props.row.Error"></i>
-						<i v-else class="glyphicons glyphicons-ok-sign"></i>
+						<q-button
+							v-if="!isEmptyObject(props.row.Error)"
+							b-style="tertiary"
+							:title="props.row.Error"
+							@click.stop="showError(props.row)">
+							<q-icon icon="alert-circle" />
+						</q-button>
+						<q-icon
+							v-else
+							:icon="check" />
 						{{ props.row.Status }}
 					</template>
 				</qtable>
+
 				<qtable :rows="tSlotReportList.rows"
 					:columns="tSlotReportList.columns"
 					:config="tSlotReportList.config"
@@ -71,34 +99,41 @@
 
 					<template #actions="props">
 						<q-button-group borderless>
-						<q-button
-							:title="Resources.EDITAR11616"
-							@click="ManageSlotReport('edit', props.row[0])">
-							<q-icon icon="pencil" />
-						</q-button>
-						<q-button
-							:title="Resources.APAGAR04097"
-							@click="ManageSlotReport('delete', props.row[0])">
-							<q-icon icon="bin" />
-						</q-button>
+							<q-button
+								:title="Resources.EDITAR11616"
+								@click="ManageSlotReport('edit', props.row[0])">
+								<q-icon icon="pencil" />
+							</q-button>
+							<q-button
+								:title="Resources.APAGAR04097"
+								@click="ManageSlotReport('delete', props.row[0])">
+								<q-icon icon="bin" />
+							</q-button>
 						</q-button-group>
 					</template>
 					<template #table-footer>
 						<tr>
-						<td colspan="4">
-							<q-button
-								:label="Resources.INSERIR43365"
-								@click="ManageSlotReport('new', '')">
-							<q-icon icon="plus-sign" />
-							</q-button>
-						</td>
+							<td colspan="4">
+								<q-button
+									:label="Resources.INSERIR43365"
+									@click="ManageSlotReport('new', '')">
+									<q-icon icon="add" />
+								</q-button>
+							</td>
 						</tr>
 					</template>
 				</qtable>
-				<slotreport :show="slotReportModal.show" :Model="slotReportModal.data" @close="reloadSlotReport"></slotreport>
-				<progress-bar :show="Model.DeployActive" :text="dataPB.text" :progress="dataPB.progress"></progress-bar>
+
+				<slotreport
+					:show="slotReportModal.show"
+					:Model="slotReportModal.data"
+					@close="reloadSlotReport" />
+				<progress-bar
+					:show="Model.DeployActive"
+					:text="dataPB.text"
+					:progress="dataPB.progress" />
 			</q-row-container>
-		</QGroupBoxContainer>	
+		</q-card>	
 	</div>
 </template>
 
@@ -111,8 +146,11 @@
 
 	export default {
 		name: 'report_management',
+
 		mixins: [reusableMixin],
+
 		components: { slotreport },
+		
 		data: function () {
 		var vm = this;
 		return {
@@ -254,128 +292,142 @@
 					}
 					}
 				}
-		};
+			};
 		},
+
 		computed: {
-		deployScope: function () {
-			var vm = this;
-			return [
-			{ Value: 'Different', Text: vm.Resources.DIFERENTES38084 },
-			{ Value: 'Newer', Text: vm.Resources.RECENTES05062 },
-			{ Value: 'All', Text: vm.Resources.TODOS59977 }
-			];
-		}
+			deployScope: function () {
+				var vm = this;
+				return [
+				{ Value: 'Different', Text: vm.Resources.DIFERENTES38084 },
+				{ Value: 'Newer', Text: vm.Resources.RECENTES05062 },
+				{ Value: 'All', Text: vm.Resources.TODOS59977 }
+				];
+			}
 		},
+
 		methods: {
-		fetchData: function () {
-			var vm = this;
-			QUtils.log("Fetch data - Report management");
-			QUtils.FetchData(QUtils.apiActionURL('ManageReports', 'Index')).done(function (data) {
-			QUtils.log("Fetch data - OK (Report management)", data);
-			$.each(data, function (propName, value) { vm.Model[propName] = value; });
-			vm.fillTReportList();
-			});
-		},
-		fillTReportList: function() {
-			var vm = this;
-			vm.tReportList.rows = vm.Model.ReportList || [];
-			vm.tReportList.total_rows = (vm.Model.ReportList || []).length;
-		},
-		/**
-		* Load slot report table data
-		*/
-		fetchReportSpotData: function () {
-			var vm = this;
-			var params = $.extend({}, vm.tSlotReportList.queryParams);
-			QUtils.log("Fetch data - Report spot management");
+			fetchData: function () {
+				var vm = this;
+				QUtils.log("Fetch data - Report management");
+				QUtils.FetchData(QUtils.apiActionURL('ManageReports', 'Index')).done(function (data) {
+				QUtils.log("Fetch data - OK (Report management)", data);
+				$.each(data, function (propName, value) { vm.Model[propName] = value; });
+				vm.fillTReportList();
+				});
+			},
 
-			QUtils.FetchData(QUtils.apiActionURL('ManageReports', 'GetReportSpot', params)).done(function (data) {
-				QUtils.log("Fetch data - OK (Report spot management)", data);
-				vm.tSlotReportList.rows = data.data || [];
-				vm.tSlotReportList.total_rows = data.recordsTotal || 0;
-			});
-		},
-		Check: function () {
-			this.fetchData();
-		},
-		Deploy: function () {
-			var vm = this;
-			QUtils.postData('ManageReports', 'StartDeploy', vm.deployForm, null, function (data) {
-			vm.Model.DeployActive = data.DeployActive;
-			vm.startMonitorProgress();
-			});
-		},
-		startMonitorProgress: function() {
-			if (this.Model.DeployActive && this.dataPB.progress === 0) {
-				setTimeout(this.checkProgress, 250);
-			}
-		},
-		checkProgress: function () {
-			var vm = this;
-			QUtils.FetchData(QUtils.apiActionURL('ManageReports', 'ProgressDeploy')).done(function (data) {
-			vm.Model.DeployActive = !data.Completed;
-			if (!data.Completed) {
-				vm.dataPB.text = 'Script: ' + data.ActualScript;
-				vm.dataPB.progress = data.Count;
-				setTimeout(vm.checkProgress, 500);
-			}
-			else {
-				if(data.Message) {
-				bootbox.alert(data.Message)
-				return;
+			fillTReportList: function() {
+				var vm = this;
+				vm.tReportList.rows = vm.Model.ReportList || [];
+				vm.tReportList.total_rows = (vm.Model.ReportList || []).length;
+			},
+
+			/**
+			* Load slot report table data
+			*/
+			fetchReportSpotData: function () {
+				var vm = this;
+				var params = $.extend({}, vm.tSlotReportList.queryParams);
+				QUtils.log("Fetch data - Report spot management");
+
+				QUtils.FetchData(QUtils.apiActionURL('ManageReports', 'GetReportSpot', params)).done(function (data) {
+					QUtils.log("Fetch data - OK (Report spot management)", data);
+					vm.tSlotReportList.rows = data.data || [];
+					vm.tSlotReportList.total_rows = data.recordsTotal || 0;
+				});
+			},
+
+			Check: function () {
+				this.fetchData();
+			},
+
+			Deploy: function () {
+				var vm = this;
+				QUtils.postData('ManageReports', 'StartDeploy', vm.deployForm, null, function (data) {
+				vm.Model.DeployActive = data.DeployActive;
+				vm.startMonitorProgress();
+				});
+			},
+
+			startMonitorProgress: function() {
+				if (this.Model.DeployActive && this.dataPB.progress === 0) {
+					setTimeout(this.checkProgress, 250);
 				}
+			},
 
-				vm.dataPB = {
-				text: '',
-				progress: 0
-				};
-				vm.fetchData();
+			checkProgress: function () {
+				var vm = this;
+				QUtils.FetchData(QUtils.apiActionURL('ManageReports', 'ProgressDeploy')).done(function (data) {
+				vm.Model.DeployActive = !data.Completed;
+				if (!data.Completed) {
+					vm.dataPB.text = 'Script: ' + data.ActualScript;
+					vm.dataPB.progress = data.Count;
+					setTimeout(vm.checkProgress, 500);
+				}
+				else {
+					if(data.Message) {
+					bootbox.alert(data.Message)
+					return;
+					}
+
+					vm.dataPB = {
+					text: '',
+					progress: 0
+					};
+					vm.fetchData();
+				}
+				});
+			},
+
+			showError: function (row) {
+				var _html = `<div class="i-textarea"><div class="i-textarea__field i-textarea">${row.Error}</div></div>`;
+				bootbox.alert(_html)
+			},
+
+			/**
+			* Load slot report table data
+			*/
+			ManageSlotReport: function (mode, id) {
+				var vm = this,
+				url = QUtils.apiActionURL('ManageReports', 'ManageSlotReport',{ mod: mode, codreport:id });
+				QUtils.FetchData(url).done(function (data) {
+					vm.slotReportModal.data = data;
+					vm.slotReportModal.data.FormMode = mode;
+					vm.slotReportModal.show = true;
+				});
+			},
+
+			/**
+			* Reload slot report table data
+			*/
+			reloadSlotReport: function (reload) {
+				this.slotReportModal.show = false;
+				this.slotReportModal.data = {};
+				if (reload) {
+					this.fetchReportSpotData();
+				}
+			},
+
+			/**
+			* Search slot report
+			*/
+			onChangeQuery: function (queryParams) {
+				var vm = this;
+				$.each(queryParams, function (propName, value) { vm.tSlotReportList.queryParams[propName] = value; });
+				vm.fetchReportSpotData();
 			}
-			});
 		},
-		showError: function (row) {
-			var _html = `<div class="i-textarea"><div class="i-textarea__field i-textarea">${row.Error}</div></div>`;
-			bootbox.alert(_html)
-		},
-		/**
-		* Load slot report table data
-		*/
-		ManageSlotReport: function (mode, id) {
-			var vm = this,
-			url = QUtils.apiActionURL('ManageReports', 'ManageSlotReport',{ mod: mode, codreport:id });
-			QUtils.FetchData(url).done(function (data) {
-				vm.slotReportModal.data = data;
-				vm.slotReportModal.data.FormMode = mode;
-				vm.slotReportModal.show = true;
-			});
-		},
-		/**
-		* Reload slot report table data
-		*/
-		reloadSlotReport: function (reload) {
-			this.slotReportModal.show = false;
-			this.slotReportModal.data = {};
-			if (reload) {
-				this.fetchReportSpotData();
-			}
-		},
-		/**
-		* Search slot report
-		*/
-		onChangeQuery: function (queryParams) {
-			var vm = this;
-			$.each(queryParams, function (propName, value) { vm.tSlotReportList.queryParams[propName] = value; });
-			vm.fetchReportSpotData();
-		}
-		},
+
 		created: function () {
-		// Ler dados
-		this.fetchData();
-		this.fetchReportSpotData();
+			// Ler dados
+			this.fetchData();
+			this.fetchReportSpotData();
 		},
+
 		watch: {
-		// call again the method if the route changes
-		'$route': 'fetchData'
+			// call again the method if the route changes
+			'$route': 'fetchData'
 		}
 	};
 </script>

@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Wareh
         /// </summary>
         public string ValCodwareh { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Wareh
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS ARMAZ03_PSEUDARTIGOS]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Armaz03_ValArtigos_ViewModel" /> class.
@@ -144,6 +164,8 @@ namespace GenioMVC.ViewModels.Wareh
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -163,7 +185,6 @@ namespace GenioMVC.ViewModels.Wareh
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_item");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_item");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Item.AddEPH<CSGenioAitem>(ref u, null, "IBL_ARMAZ03_PSEUDARTIGOS_"));
 			}
@@ -246,7 +267,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

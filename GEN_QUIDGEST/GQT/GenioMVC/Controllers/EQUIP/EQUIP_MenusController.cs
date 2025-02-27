@@ -45,7 +45,7 @@ namespace GenioMVC.Controllers
 		private static readonly NavigationLocation ACTION_PTN_MENU_251 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_251", "Equip") { vueRouteName = "menu-PTN_251" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_331 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_331", "Equip") { vueRouteName = "menu-PTN_331" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_341 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_341", "Equip") { vueRouteName = "menu-PTN_341" };
-		private static readonly NavigationLocation ACTION_PTN_MENU_351 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_351", "Equip") { vueRouteName = "menu-PTN_351" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_3511 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_3511", "Equip") { vueRouteName = "menu-PTN_3511" };
 		private static readonly NavigationLocation ACTION_PTN_MENUSE_3G1 = new NavigationLocation("SELECAO_ENTRE_LIMITE34362", "PTN_MenuSE_3G1", "Equip") { vueRouteName = "menu-PTN_3G1" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_3G11 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_3G11", "Equip") { vueRouteName = "menu-PTN_3G11" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_621 = new NavigationLocation("EQUIPMENT03632", "PTN_Menu_621", "Equip") { vueRouteName = "menu-PTN_621" };
@@ -1985,18 +1985,18 @@ namespace GenioMVC.Controllers
 
 
         //
-        // GET: /Equip/PTN_Menu_351
+        // GET: /Equip/PTN_Menu_3511
         [AuthorizeForUsers]
 		[AuthorizeForUsers]
-        [ActionName("PTN_Menu_351")]
-        public ActionResult PTN_Menu_351(bool allSelected = false)
+        [ActionName("PTN_Menu_3511")]
+        public ActionResult PTN_Menu_3511(bool allSelected = false)
         {
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
-            PTN_Menu_351_ViewModel model = new PTN_Menu_351_ViewModel(Navigation);
+            PTN_Menu_3511_ViewModel model = new PTN_Menu_3511_ViewModel(Navigation);
             bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
             if (isHomePage)
-                Navigation.SetValue("HomePage", "PTN_Menu_351");
+                Navigation.SetValue("HomePage", "PTN_Menu_3511");
             ViewBag.isHomePage = isHomePage;
             //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
             if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
@@ -2016,12 +2016,15 @@ namespace GenioMVC.Controllers
             }
 
             NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
-            CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_351.ShortDescription());
+            CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3511.ShortDescription());
+
+            if (!String.IsNullOrEmpty(querystring["rooms"]))
+                Navigation.SetValue("rooms", querystring["rooms"]);
 
 
 			model.Navigation = Navigation;
 
-// USE /[MANUAL PTN MENU_GET 351]/
+// USE /[MANUAL PTN MENU_GET 3511]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -2030,7 +2033,7 @@ namespace GenioMVC.Controllers
                 WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
  
-            return PartialView("PTN_Menu_351", model);
+            return PartialView("PTN_Menu_3511", model);
         }
 
 

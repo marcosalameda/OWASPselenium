@@ -39,12 +39,27 @@ namespace GenioMVC.ViewModels.Pesso
         /// </summary>
         public string ValCodpesso { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+				// Limit "SC"
+				conditions.Equal(CSGenioApesso.FldGender, "M");
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +73,14 @@ namespace GenioMVC.ViewModels.Pesso
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS 6111211]/
+
+			return crs;
+		}
+
 
         private string dbeditTitle;
         public string DBEditTitle { get { if (string.IsNullOrEmpty(dbeditTitle)) GetTitle(); return dbeditTitle; } }
@@ -76,11 +99,8 @@ namespace GenioMVC.ViewModels.Pesso
             CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, this.Identifier);
             conditions.Equal(CSGenioApesso.FldZzstate, 0); //valid zzstate only
 
-            //Menu fixed limits and relations:
-
-                        conditions.Equal(CSGenioApesso.FldGender, "M");
-
-
+            // Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.FldZzstate, CSGenioApesso.FldName, CSGenioApesso.FldGender, CSGenioApesso.FldDtnascim, CSGenioApesso.FldTelephon, CSGenioApesso.FldEmail, CSGenioApesso.FldPhotogra, CSGenioApesso.FldIdfuncio, CSGenioApesso.FldCodempre, CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat };
@@ -183,11 +203,11 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
 			// Limit "DB"
 			crs.Equal(CSGenioApesso.FldCodempre, Navigation.GetValue("cmpny"));
-			// Limit "SC"
-			crs.Equal(CSGenioApesso.FldGender, "M");
 
 			if (isToExport)
 			{
@@ -207,7 +227,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_pesso");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_pesso");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Pesso.AddEPH<CSGenioApesso>(ref u, null, "ML6111211"));
 			}
@@ -290,7 +309,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -502,7 +521,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
         private static readonly string[] _fieldsToSerialize =
         {
-            "Pesso", "Pesso.ValCodpesso", "Pesso.ValZzstate", "Pesso.ValName", "Pesso.ValGender", "Pesso.ValDtnascim", "Pesso.ValTelephon", "Pesso.ValEmail", "Pesso.ValPhotogra", "Pesso.ValIdfuncio", "Cmpny", "Cmpny.ValDesignat", "Pesso.ValCodempre", "Cmpny.ValCodempre", "Pesso.ValCodpaise", "Pesso.ValCodcntry", "Pesso.ValCodregia", "Pesso.ValCodcateg"
+            "Pesso", "Pesso.ValCodpesso", "Pesso.ValZzstate", "Pesso.ValName", "Pesso.ValGender", "Pesso.ValDtnascim", "Pesso.ValTelephon", "Pesso.ValEmail", "Pesso.ValPhotogra", "Pesso.ValIdfuncio", "Cmpny", "Cmpny.ValDesignat", "Pesso.ValCodempre", "Cmpny.ValCodempre", "Pesso.ValCodcateg", "Pesso.ValCodpaise", "Pesso.ValCodcntry", "Pesso.ValCodregia"
         };
 
         private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>

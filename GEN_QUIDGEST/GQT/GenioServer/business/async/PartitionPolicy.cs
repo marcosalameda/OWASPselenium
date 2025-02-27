@@ -6,110 +6,123 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace CSGenio.business.async
 {
-    using Unit = String;
-
+    /// <summary>
+    /// Represents a policy for partitioning data into units
+    /// </summary>
     public abstract class PartitionPolicy
     {
-        private List<Unit> units;
+        private IReadOnlyList<WorkUnit> _workUnits;
+        private bool _executed;
 
-        public List<Unit> GetSubUnits(PersistentSupport sp)
+        public IReadOnlyList<WorkUnit> GetWorkUnits(PersistentSupport sp)
         {
-            if (executed == false)
+            if (!_executed)
             {
-                units = Breakdown(sp);
-                executed = false;
+                _workUnits = Breakdown(sp);
+                _executed = true;
             }
-            return units;
+            return _workUnits;
         }
 
-        protected abstract List<Unit> Breakdown(PersistentSupport sp);
-
-        public virtual bool IsGlobal
-        {
-            get { return false; }
-        }
-
-        public bool executed = false;
+        protected abstract IReadOnlyList<WorkUnit> Breakdown(PersistentSupport sp);
     }
 
-
-    public class GlobalPartition : PartitionPolicy
+    /// <summary>
+    /// Represents a global partition with no sub-units
+    /// </summary>
+    public sealed class GlobalPartition : PartitionPolicy
     {
-
-        protected override List<Unit> Breakdown(PersistentSupport sp)
+        private readonly IReadOnlyList<WorkUnit> _workUnits = new List<WorkUnit>
         {
-            return new List<Unit>();
-        }
+            new WorkUnit("global")
+        };
 
-        public override bool IsGlobal
-        {
-            get { return true; }
-        }
+        protected override IReadOnlyList<WorkUnit> Breakdown(PersistentSupport sp) => _workUnits;
     }
 
-    public class SinglePartition : PartitionPolicy
+    /// <summary>
+    /// Represents a partition with a single unit
+    /// </summary>
+    public sealed class SinglePartition : PartitionPolicy
     {
-        private string identifier;
+        private readonly IReadOnlyList<WorkUnit> _workUnits;
 
         public SinglePartition(string identifier)
-        {
-            this.identifier = identifier;
-        }
+            : this(new WorkUnit(identifier ?? throw new ArgumentNullException(nameof(identifier))))
+        { }
 
-        protected override List<Unit> Breakdown(PersistentSupport sp)
+        public SinglePartition(WorkUnit workUnit)
         {
-            List<Unit> lista = new List<Unit>();
-            lista.Add(identifier);
-            return lista;
-        }
-
-    }
-
-    public class MultiplePartition : PartitionPolicy
-    {
-        private Delegate innerPolicy;
-        private List<String> identifiers;
-        public MultiplePartition(Func<String, PartitionPolicy> innerPolicy, List<String> identifiers)
-        {
-            this.innerPolicy = innerPolicy;
-            this.identifiers = identifiers;
-        }
-        protected override List<String> Breakdown(PersistentSupport sp)
-        {
-            List<Unit> list = new List<Unit>();
-            foreach (var id in identifiers)
+            _workUnits = new List<WorkUnit>
             {
-                PartitionPolicy policy = innerPolicy.DynamicInvoke(id) as PartitionPolicy;
-                list.AddRange(policy.GetSubUnits(sp));
-            }
-            return list;
+                workUnit ?? throw new ArgumentNullException(nameof(workUnit))
+            };
+        }
+
+        protected override IReadOnlyList<WorkUnit> Breakdown(PersistentSupport sp) => _workUnits;
+    }
+
+    /// <summary>
+    /// Represents a partition that combines multiple sub-partitions
+    /// </summary>
+    public sealed class MultiplePartition : PartitionPolicy
+    {
+        private readonly Func<string, PartitionPolicy> _innerPolicyFactory;
+        private readonly IReadOnlyList<string> _identifiers;
+
+        public MultiplePartition(
+            Func<string, PartitionPolicy> innerPolicyFactory,
+            IEnumerable<string> identifiers
+        )
+        {
+            _innerPolicyFactory =
+                innerPolicyFactory ?? throw new ArgumentNullException(nameof(innerPolicyFactory));
+            _identifiers = (
+                identifiers ?? throw new ArgumentNullException(nameof(identifiers))
+            ).ToList();
+        }
+
+        protected override IReadOnlyList<WorkUnit> Breakdown(PersistentSupport sp)
+        {
+            return _identifiers
+                .Select(id => _innerPolicyFactory(id))
+                .SelectMany(policy => policy.GetWorkUnits(sp))
+                .ToList();
         }
     }
 
+    /// <summary>
+    /// Base class for partitions based on database queries
+    /// </summary>
     public abstract class QueryPartition : PartitionPolicy
     {
-        protected List<Unit> ListFromMatrix(DataMatrix matrix)
+        protected static List<WorkUnit> ListFromMatrix(DataMatrix matrix)
         {
-            List<Unit> list = new List<Unit>();
+            if (matrix == null)
+                throw new ArgumentNullException(nameof(matrix));
 
-            for (int i = 0; i < matrix.NumRows; i++)
-            {
-                list.Add(matrix.GetString(i, 0));
-            }
-            return list;
+            return Enumerable
+                .Range(0, matrix.NumRows)
+                .Select(i => new WorkUnit(matrix.GetString(i, 0)))
+                .ToList();
         }
 
-        protected CriteriaSet Empty(object field)
+        protected static CriteriaSet CreateEmptyCriteria(object field)
         {
+            if (field == null)
+                throw new ArgumentNullException(nameof(field));
+
             return CriteriaSet.Or().Equal(0, field).Equal(field, null);
         }
     }
 
-    public class EmptyPolicy : PartitionPolicy
+    /// <summary>
+    /// Represents an empty partition with no units
+    /// </summary>
+    public sealed class EmptyPolicy : PartitionPolicy
     {
-        protected override List<Unit> Breakdown(PersistentSupport sp)
-        {
-            return new List<Unit>();
-        }
+        private readonly IReadOnlyList<WorkUnit> _workUnits = new List<WorkUnit>();
+
+        protected override IReadOnlyList<WorkUnit> Breakdown(PersistentSupport sp) => _workUnits;
     }
 }

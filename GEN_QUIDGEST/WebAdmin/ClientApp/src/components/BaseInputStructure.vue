@@ -18,6 +18,19 @@
 				:class="[{ disabled: disabled }, ...(classObject.labelClass || [])]">
 				{{ label }}
 			</label>
+			<!-- Button and popover for additional information -->
+			<q-button
+				v-if="showPopoverButton"
+				:id="popoverButtonId"
+				class="btn-popover"
+				b-style="plain">
+				<q-icon icon="information-outline" />
+			</q-button>
+			<q-popover
+				v-if="showPopoverButton"
+				:anchor="`#${popoverButtonId}`"
+				:title="popoverTitle"
+				:text="popoverText" />
 		</div>
 		<slot />
 	</div>
@@ -130,6 +143,18 @@
 			loading: {
 				type: Boolean,
 				default: false
+			},
+			showPopoverButton: {
+				type: Boolean,
+				default: false
+			},
+			popoverTitle: {
+				type: String,
+				default: 'Information'
+			},
+			popoverText: {
+				type: String,
+				default: ''
 			}
 		},
 
@@ -150,7 +175,8 @@
 
 				labelAttrs: this.$attrs.labelAttrs ?? {},
 
-				sortablePlugin: null
+				sortablePlugin: null,
+				popoverButtonId: `popover-btn-${this.id || this._.uid}`,
 			}
 		},
 

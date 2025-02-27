@@ -76,17 +76,14 @@ namespace GenioMVC.Controllers
             }
 
             dynamic result = null;
-            Models.Visit row = null;
-            try { row = Models.Visit.Find(navigation.GetStrValue("visit")); }
-            catch (Exception)
-            {
-                CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model visit");
-            }
-            if(row == null)
-            {
-                row = new Models.Visit();
-                row.klass.QPrimaryKey = navigation.GetStrValue("visit");
-            }
+            /*
+                Instead of loading the entire record from the database, a record will be created in memory with the keys filled in, 
+                    and additional fields from "Field" type limits will be mapped later. 
+                This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+            */
+            Models.Visit row = new Models.Visit(isEmpty: true);
+            row.klass.QPrimaryKey = navigation.GetStrValue("visit");
+            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 
             // Only the last reload request is accepted.
             var requestNumber = Request.Headers.GetValues("ReloadDBEditRequestNumber");
@@ -99,7 +96,6 @@ namespace GenioMVC.Controllers
 				{
 					case "VISIT___EQUIPREGISTNR":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Visit_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -109,7 +105,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "VISIT2__EQUIPREGISTNR":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Visit2_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits

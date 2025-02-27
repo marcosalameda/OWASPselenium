@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Repar
         /// </summary>
         public string ValCodrepar { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Repar
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS REPAR_PESSONAME]/
+
+			return crs;
+		}
+
 
 
         /// <summary>
@@ -157,6 +177,8 @@ namespace GenioMVC.ViewModels.Repar
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -258,7 +280,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -425,7 +447,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
         private static readonly string[] _fieldsToSerialize =
         {
-            "Pesso", "Pesso.ValCodpesso", "Pesso.ValZzstate", "Pesso.ValName", "Pesso.ValCodempre", "Pesso.ValCodpaise", "Pesso.ValCodcntry", "Pesso.ValCodregia", "Pesso.ValCodcateg"
+            "Pesso", "Pesso.ValCodpesso", "Pesso.ValZzstate", "Pesso.ValName", "Pesso.ValCodcateg", "Pesso.ValCodempre", "Pesso.ValCodpaise", "Pesso.ValCodcntry", "Pesso.ValCodregia"
         };
 
         private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>

@@ -92,7 +92,7 @@
                                 <div class="i-text__error mb-2">@Resources.ESTA_INFORMACAO_SO_S55226</div>
                                 <div id="qrcode"></div>
                                 <b>@Resources.CODIGO_27320</b>
-                                @Html.DisplayFor(m => m.TotpDisplayCode)
+                                @Html.TextBoxFor(m => m.TotpDisplayCode, new { @readonly = "readonly", style = "border: none; background-color: transparent;" })
                                 <p>@Resources._3__FILL_THE_6_DIGIT12132</p>
                                 @Html.TextBoxFor(m => m.Totp6Code)
                             </div>

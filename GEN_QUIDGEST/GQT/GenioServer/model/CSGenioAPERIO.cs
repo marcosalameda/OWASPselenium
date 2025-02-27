@@ -252,7 +252,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodperio, value); }
 		}
 
-
 		/// <summary>Field : "Period Start" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldPeriodstart { get { return m_fldPeriodstart; } }
 		private static FieldRef m_fldPeriodstart = new FieldRef("perio", "periodstart");
@@ -264,7 +263,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPeriodstart, value); }
 		}
 
-
 		/// <summary>Field : "Period End" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldPeriodend { get { return m_fldPeriodend; } }
 		private static FieldRef m_fldPeriodend = new FieldRef("perio", "periodend");
@@ -275,7 +273,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldPeriodend); }
 			set { insertNameValueField(FldPeriodend, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

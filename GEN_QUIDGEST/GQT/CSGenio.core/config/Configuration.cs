@@ -55,7 +55,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static int Version { get; } = 3842;
+        public static int Version { get; } = 3960;
 
         /// <summary>
         /// System id
@@ -85,32 +85,32 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const int VersionDbGen = 3842;
+        public const int VersionDbGen = 3960;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1504;
+        public const int VersionIdxDbGen = 1628;
 
         /// <summary>
         /// Version of the latest upgrade index version
         /// </summary>
-        public const int VersionUpgrIndxGen = 0;
+        public const int VersionUpgrIndxGen = 2;
 		
 		/// <summary>
 		/// Version of the latest user settings format
 		/// </summary>
-		public const int UserSettingsVersion = 1;
+		public const int UserSettingsVersion = 2;
 
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "354.08";
+        public const string GenioVersion = "362.39";
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2827;
+        public const int BuildVersionGen = 2907;
         /// <summary>
         /// Solution release version
         /// </summary>
@@ -131,6 +131,11 @@ namespace CSGenio.framework
         /// Should documents be saved on disk. False to save on the database
         /// </summary>
         public static bool Files2Disk { get; private set; } =  false;
+        //----------------------------------------------
+        // ChatBot
+        //----------------------------------------------
+        public static string APIEndpoint { get; private set; }
+		
         //----------------------------------------------
         // System services
         //----------------------------------------------
@@ -278,7 +283,7 @@ namespace CSGenio.framework
         {
             get
             {
-                return (DatabaseType)Enum.Parse(typeof(DatabaseType), DataSystems[0].Type, true);
+                return DataSystems[0].GetDatabaseType();
             }
         }
         //-----------------------------------------------
@@ -321,7 +326,7 @@ namespace CSGenio.framework
             string defaultPath = AppDomain.CurrentDomain.BaseDirectory;
 
             //Check for config in BaseDirectory first
-            string defaultConfig = Path.Combine(defaultPath, "configuracoes.xml");
+            string defaultConfig = Path.Combine(defaultPath, "Configuracoes.xml");
             if (File.Exists(defaultConfig))
                 return defaultPath;
 
@@ -333,13 +338,13 @@ namespace CSGenio.framework
                 string path = redirect.GetFullPath(defaultPath);
 
                 //Try to get the file with the default path first
-                if (File.Exists(Path.Combine(path, "configuracoes.xml")))
+                if (File.Exists(Path.Combine(path, "Configuracoes.xml")))
                     return path;
 
                 //If it does not exist, try with environment variable
                 //This will happen when the CLI is in debug
                 path = redirect.GetFullPath(Environment.CurrentDirectory);
-                if (File.Exists(Path.Combine(path, "configuracoes.xml")))
+                if (File.Exists(Path.Combine(path, "Configuracoes.xml")))
                     return path;
             }
 
@@ -408,6 +413,8 @@ namespace CSGenio.framework
             var path = readXML.GetPath(Configuration.Application.Id);
             PP_Email = readXML.email_pp;
             PP_Name = readXML.nome_pp;
+            if (readXML.ChatBotConfig != null) 
+                APIEndpoint = readXML.ChatBotConfig.apiURL;
             Log = path.pathApp;
             GoogleMapsKey = readXML.googlemapsKey;
             QAEnvironment = Convert.ToInt16(readXML.qaEnvironment);

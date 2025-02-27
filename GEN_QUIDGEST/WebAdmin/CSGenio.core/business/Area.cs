@@ -32,6 +32,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaFEECA = new AreaRef("GQT", "gqtfeeca", "feeca");
         public static AreaRef AreaNOTIF { get { return m_AreaNOTIF; } }
         private static AreaRef m_AreaNOTIF = new AreaRef("GQT", "gqtnotif", "notif");
+        public static AreaRef AreaDISST { get { return m_AreaDISST; } }
+        private static AreaRef m_AreaDISST = new AreaRef("GQT", "gqtdisst", "disst");
         public static AreaRef AreaASSET { get { return m_AreaASSET; } }
         private static AreaRef m_AreaASSET = new AreaRef("GQT", "gqtasset", "asset");
         public static AreaRef AreaLANG2 { get { return m_AreaLANG2; } }
@@ -63,7 +65,7 @@ namespace CSGenio.business
         public static AreaRef AreaTPEQU { get { return m_AreaTPEQU; } }
         private static AreaRef m_AreaTPEQU = new AreaRef("GQT", "gqttpequ", "tpequ");
         public static AreaRef AreaADDRE { get { return m_AreaADDRE; } }
-        private static AreaRef m_AreaADDRE = new AreaRef("GQT", "gqtaddress", "addre");
+        private static AreaRef m_AreaADDRE = new AreaRef("GQP", "gqpaddress", "addre");
         public static AreaRef AreaLNHPD { get { return m_AreaLNHPD; } }
         private static AreaRef m_AreaLNHPD = new AreaRef("GQT", "gqtlnhpd", "lnhpd");
         public static AreaRef AreaCFAQS { get { return m_AreaCFAQS; } }
@@ -192,6 +194,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaPRODU = new AreaRef("GQT", "gqtproduct", "produ");
         public static AreaRef AreaKINDE { get { return m_AreaKINDE; } }
         private static AreaRef m_AreaKINDE = new AreaRef("GQT", "gqtkindofequipment", "kinde");
+        public static AreaRef AreaITEMP { get { return m_AreaITEMP; } }
+        private static AreaRef m_AreaITEMP = new AreaRef("GQT", "gqtitemp", "itemp");
         public static AreaRef AreaRULES { get { return m_AreaRULES; } }
         private static AreaRef m_AreaRULES = new AreaRef("GQT", "gqtrules", "rules");
         public static AreaRef AreaS_UA { get { return m_AreaS_UA; } }
@@ -218,8 +222,6 @@ namespace CSGenio.business
         private static AreaRef m_AreaUSERS = new AreaRef("GQT", "gqtusers", "users");
         public static AreaRef AreaPAIS1 { get { return m_AreaPAIS1; } }
         private static AreaRef m_AreaPAIS1 = new AreaRef("GQT", "gqtcntry", "pais1");
-        public static AreaRef AreaCOMPA { get { return m_AreaCOMPA; } }
-        private static AreaRef m_AreaCOMPA = new AreaRef("GQT", "gqtcompany", "compa");
         public static AreaRef AreaS_NES { get { return m_AreaS_NES; } }
         private static AreaRef m_AreaS_NES = new AreaRef("GQT", "notificationemailsignature", "s_nes");
         public static AreaRef AreaUICOM { get { return m_AreaUICOM; } }
@@ -290,8 +292,6 @@ namespace CSGenio.business
         private static AreaRef m_AreaDESAM = new AreaRef("GQT", "gqtdesam", "desam");
         public static AreaRef AreaTICKT { get { return m_AreaTICKT; } }
         private static AreaRef m_AreaTICKT = new AreaRef("GQT", "gqttickt", "tickt");
-        public static AreaRef AreaPATIE { get { return m_AreaPATIE; } }
-        private static AreaRef m_AreaPATIE = new AreaRef("GQT", "gqtpatient", "patie");
         public static AreaRef AreaTRSB { get { return m_AreaTRSB; } }
         private static AreaRef m_AreaTRSB = new AreaRef("GQT", "gqttrsb", "trsb");
         public static AreaRef AreaATTAC { get { return m_AreaATTAC; } }
@@ -368,9 +368,9 @@ namespace CSGenio.business
 		//FOR: USER_TABLE_CONFIG (VueJS)
 		//BEGIN: User table configuration
         public static AreaRef AreaTBLCFG { get { return m_AreaTBLCFG; } }
-        private static AreaRef m_AreaTBLCFG = new AreaRef("GQTtblcfg", "tblcfg");
+        private static AreaRef m_AreaTBLCFG = new AreaRef("GQT", "GQTtblcfg", "tblcfg");
         public static AreaRef AreaTBLCFGSEL { get { return m_AreaTBLCFGSEL; } }
-        private static AreaRef m_AreaTBLCFGSEL = new AreaRef("GQTtblcfgsel", "tblcfgsel");
+        private static AreaRef m_AreaTBLCFGSEL = new AreaRef("GQT", "GQTtblcfgsel", "tblcfgsel");
 		//END: User table configuration
         public static AreaRef AreaLSTUSR { get { return m_AreaLSTUSR; } }
         private static AreaRef m_AreaLSTUSR = new AreaRef("GQTlstusr", "lstusr");
@@ -394,6 +394,7 @@ namespace CSGenio.business
             "genre",
             "feeca",
             "notif",
+            "disst",
             "asset",
             "lang2",
             "lendi",
@@ -474,6 +475,7 @@ namespace CSGenio.business
             "cmpki",
             "produ",
             "kinde",
+            "itemp",
             "rules",
             "s_ua",
             "ftgri",
@@ -487,7 +489,6 @@ namespace CSGenio.business
             "grpb",
             "users",
             "pais1",
-            "compa",
             "s_nes",
             "uicom",
             "cate2",
@@ -523,7 +524,6 @@ namespace CSGenio.business
             "itemc",
             "desam",
             "tickt",
-            "patie",
             "trsb",
             "attac",
             "role",
@@ -1058,18 +1058,24 @@ namespace CSGenio.business
         {
             try
             {
-                string name = fieldName.Split('.')[1];
-                var fieldInfo = DBFields[name];
+                var fieldSplit = fieldName.Split('.');
+                var area = fieldSplit[0];
+                var name = fieldSplit[1];
 
-                if (fieldInfo.IsClientSide)
+                if (Alias == area)
                 {
-                    //queries inside these calculations are not supported
-                    //using fields from other tables inside these calculations is not supported
-                    var formula = fieldInfo.Formula as InternalOperationFormula;
-                    return formula.calculateInternalFormula(this, null, null, FunctionType.ALT);
+                    var fieldInfo = DBFields[name];
+                    if (fieldInfo.IsClientSide)
+                    {
+                        //queries inside these calculations are not supported
+                        //using fields from other tables inside these calculations is not supported
+                        var formula = fieldInfo.Formula as InternalOperationFormula;
+                        return formula.calculateInternalFormula(this, null, null, FunctionType.ALT);
+                    }
                 }
-                else if (fields[fieldName] == null)
-                    return fieldInfo.GetValorEmpty();
+
+                if (fields[fieldName] == null)
+                    return DBFields[name].GetValorEmpty();
                 else
                     return ((RequestedField)fields[fieldName]).Value;
             }
@@ -1168,7 +1174,43 @@ namespace CSGenio.business
         /// <param name="fieldValue">Decrypted value of the field</param>
         public virtual void InsertNameDecryptedValueField(string fieldName, object fieldValue)
         {
-            throw new BusinessException(null, "Area.InsertNameDecryptedValueField", "Function not implemented.");
+            try
+            {
+                RequestedField campoPedido;
+                // Check if the field exists in the current table
+                if (fields.Contains(fieldName))
+                    campoPedido = (RequestedField)fields[fieldName];
+                else
+                    campoPedido = new RequestedField(fieldName, Alias);
+
+                // Currently only supported for fields in the table itself
+                if (campoPedido.BelongsArea)
+                {
+                    // The DB fields only take the field name, not the alias.
+                    // Empty value will be ignored as the decrypted value is not always filled in.
+                    // When read from the database, we will have only the encrypted value.
+                    if (!DBFields[campoPedido.Name].isEmptyValue(fieldValue))
+                    {
+                        // If we have a new decrypted value, this will override the existing encrypted one to apply the update in if it happened
+                        insertNameValueField(fieldName, new EncryptedDataType(null, fieldValue));
+                    }
+                }
+                else
+                {
+                    throw new NotSupportedException($"Field {fieldName} does not belong to area {this.Alias}");
+                }
+            }
+            catch (GenioException ex)
+            {
+                string message = $"Error inserting value in field {fieldName} in area {this.Alias}: {ex.Message}";
+                throw new BusinessException(ex.UserMessage, "Area.InsertNameDecryptedValueField", message, ex);
+
+            }
+            catch (Exception ex)
+            {
+                string message = $"Error inserting value in field {fieldName} in area {this.Alias}: {ex.Message}";
+                throw new BusinessException(message, "Area.InsertNameDecryptedValueField", message, ex);
+            }
         }
 
         /// <summary>
@@ -2275,6 +2317,39 @@ namespace CSGenio.business
                     result.MergeStatusMessage(status);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Executes the encryption formulas associated with the fields before saving the value to the database.
+        /// </summary>
+        /// <param name="sp">Persistent Support instance</param>
+        public void ExecuteFieldValueEncryption(PersistentSupport sp)
+        {
+            FormulaDbContext fdc = new FormulaDbContext(this);
+
+            foreach (RequestedField requestedField in Fields.Values)
+            {
+                if (requestedField.Name.Equals(PrimaryKeyName) || !DBFields.TryGetValue(requestedField.Name, out Field dbField))
+                    continue;
+                if (dbField.IsVirtual)
+                    continue;
+
+                // Encrypt the fields before save in the database
+                if (dbField.FieldFormat == FieldFormatting.ENCRYPTED && dbField.EncryptFieldValueFormula != null)
+                {
+                    // The encrypted field, if it does not have the value, will not change what is in the database.
+                    if (!dbField.isEmptyValue(requestedField.Value))
+                    {
+                        if (requestedField.Value is EncryptedDataType encryptedData)
+                        {
+                            var encryptedValueStr = encryptedData.EncryptedValue as string;
+                            //If we only have the decrypted value, we'll try use the encryption associated with the field.
+                            if (string.IsNullOrWhiteSpace(encryptedValueStr))
+                                encryptedData.EncryptedValue = dbField.EncryptFieldValueFormula.calculateInternalFormula(this, sp, fdc, FunctionType.EXW);
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Uicom
         /// </summary>
         public string ValCoduicom { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Uicom
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL STY LIST_LIMITS OVERVIEW]/
+
+			return crs;
+		}
+
 
         private string dbeditTitle;
         public string DBEditTitle { get { if (string.IsNullOrEmpty(dbeditTitle)) GetTitle(); return dbeditTitle; } }
@@ -76,10 +96,8 @@ namespace GenioMVC.ViewModels.Uicom
             CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, this.Identifier);
             conditions.Equal(CSGenioAuicom.FldZzstate, 0); //valid zzstate only
 
-            //Menu fixed limits and relations:
-
-            
-
+            // Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioAuicom.FldCoduicom, CSGenioAuicom.FldZzstate, CSGenioAuicom.FldName, CSGenioAuicom.FldCategory, CSGenioAuicom.FldMenuid, CSGenioAuicom.FldThumbnai };
@@ -175,6 +193,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAuicom.FldCoduicom, CSGenioAuicom.Fl
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -194,7 +214,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAuicom.FldCoduicom, CSGenioAuicom.Fl
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_uicom");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_uicom");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Uicom.AddEPH<CSGenioAuicom>(ref u, null, "MLOVERVIEW"));
 			}
@@ -277,7 +296,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAuicom.FldCoduicom, CSGenioAuicom.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

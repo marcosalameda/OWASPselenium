@@ -102,10 +102,10 @@ namespace GenioMVC.ViewModels.Equip
 		[DateAttribute("D")]
 		public DateTime? ValDtaquisi { get; set; }
 
-		/// <summary>Campo : "Decomission:" Tipo:"D"</summary>
+		/// <summary>Campo : "Decomission:" Tipo:"DT"</summary>
 		[Display(Name = "DECOMISSION_04392", ResourceType = typeof(Resources.Resources))]
 		[UIHint("HelpFixed")]
-		[DateAttribute("D")]
+		[DateAttribute("DT")]
 		public DateTime? ValDtdeco { get; set; }
 
 		/// <summary>Campo : "bought" Tipo:"L"</summary>
@@ -251,14 +251,14 @@ namespace GenioMVC.ViewModels.Equip
 		[Display(Name = "PERSON10446", ResourceType = typeof(Resources.Resources))]
 		public string ValCodpess1 { get; set; }
 
+		[Display(Name = "ROOM_NO_15796", ResourceType = typeof(Resources.Resources))]
+		public string ValCodrooms { get; set; }
+
 		[Display(Name = "TYPE_OF_EQUIPMENT64921", ResourceType = typeof(Resources.Resources))]
 		public string ValCodtpequ { get; set; }
 
 		[Display(Name = "WAREHOUSE51864", ResourceType = typeof(Resources.Resources))]
 		public string ValCodwareh { get; set; }
-
-		[Display(Name = "ROOM_NO_15796", ResourceType = typeof(Resources.Resources))]
-		public string ValCodrooms { get; set; }
 
 		#endregion
 
@@ -397,9 +397,9 @@ namespace GenioMVC.ViewModels.Equip
  				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
  				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
  				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
+ 				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
  				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
  				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
  				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
 			catch (Exception)
@@ -439,9 +439,9 @@ namespace GenioMVC.ViewModels.Equip
 				m.ValCoddeco = ViewModelConversion.ToString(ValCoddeco);
 				m.ValCoditem = ViewModelConversion.ToString(ValCoditem);
 				m.ValCodpess1 = ViewModelConversion.ToString(ValCodpess1);
+				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
 				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
 				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
-				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
 				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
 			}
 			catch (Exception)
@@ -643,7 +643,8 @@ namespace GenioMVC.ViewModels.Equip
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAcmpny.FldDesignat, query + "%");
                 }
@@ -690,7 +691,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 
 				TableCmpnyDesignat.List = new SelectList(TableCmpnyDesignat.Elements.ToSelectList(x => x.ValDesignat, x => x.ValCodempre,  x => x.ValCodempre == this.ValCodempre), "Value", "Text", this.ValCodempre);
-                FillDependant_EquipTableCmpnyDesignat();
+                if(!isSearchRequest)
+                    FillDependant_EquipTableCmpnyDesignat();
 
                 //Check if foreignkey comes from history
                 TableCmpnyDesignat.FilledByHistory = Navigation.CheckFilledByHistory("cmpny");
@@ -852,7 +854,8 @@ namespace GenioMVC.ViewModels.Equip
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApess1.FldName, query + "%");
                 }
@@ -868,21 +871,21 @@ namespace GenioMVC.ViewModels.Equip
 					weakFilters.Equal(CSGenioApess1.FldCodpesso, selectedValue);
 
                 CriteriaSet subfilters = CriteriaSet.And();
-                if (Navigation.CheckKey("filter_ValCodpess1__1") && (bool)Navigation.GetValue("filter_ValCodpess1__1") == true)
+                if (Navigation.CheckKey("filter_ValCodpess1_FILTER1_1") && (bool)Navigation.GetValue("filter_ValCodpess1_FILTER1_1") == true)
                 {
 						subfilters.Equal(CSGenioApess1.FldGender, "F");
 
                 }
                 else
-                    Navigation.SetValue("filter_ValCodpess1__1", false);
+                    Navigation.SetValue("filter_ValCodpess1_FILTER1_1", false);
 
-                if (Navigation.CheckKey("filter_ValCodpess1__2") && (bool)Navigation.GetValue("filter_ValCodpess1__2") == true)
+                if (Navigation.CheckKey("filter_ValCodpess1_FILTER2_1") && (bool)Navigation.GetValue("filter_ValCodpess1_FILTER2_1") == true)
                 {
 						subfilters.Equal(CSGenioApess1.FldGender, "M");
 
                 }
                 else
-                    Navigation.SetValue("filter_ValCodpess1__2", false);
+                    Navigation.SetValue("filter_ValCodpess1_FILTER2_1", false);
 
                 weakFilters.SubSets.Add(subfilters);
                 equip___pess1name____Conds.SubSets.Add(weakFilters);
@@ -933,7 +936,8 @@ namespace GenioMVC.ViewModels.Equip
 					this.ValCodpess1 = TablePess1Name.List.First().Value;
 					Navigation.SetValue("pess1", this.ValCodpess1);
                 }
-                FillDependant_EquipTablePess1Name();
+                if(!isSearchRequest)
+                    FillDependant_EquipTablePess1Name();
 
                 //Check if foreignkey comes from history
                 TablePess1Name.FilledByHistory = Navigation.CheckFilledByHistory("pess1");
@@ -1068,13 +1072,13 @@ namespace GenioMVC.ViewModels.Equip
             CriteriaSet subfilters = CriteriaSet.And();
             {
                 var groupFilters = CriteriaSet.Or();
-                bool filter_Equip_Pess1ValName__1 = false;
-                if (requestValues["filter_Equip_Pess1ValName_"] != null)
-                    filter_Equip_Pess1ValName__1 = requestValues["filter_Equip_Pess1ValName_"].Contains("1");
-                else if (Navigation.CheckKey("filter_Equip_Pess1ValName__1"))
-                    filter_Equip_Pess1ValName__1 = (bool)Navigation.GetValue("filter_Equip_Pess1ValName__1");
-                Navigation.SetValue("filter_Equip_Pess1ValName__1", filter_Equip_Pess1ValName__1);
-                if (filter_Equip_Pess1ValName__1)
+                bool filter_Equip_Pess1ValName_FILTER1_1 = false;
+                if (requestValues["filter_Equip_Pess1ValName_FILTER1"] != null)
+                    filter_Equip_Pess1ValName_FILTER1_1 = requestValues["filter_Equip_Pess1ValName_FILTER1"].Contains("1");
+                else if (Navigation.CheckKey("filter_Equip_Pess1ValName_FILTER1_1"))
+                    filter_Equip_Pess1ValName_FILTER1_1 = (bool)Navigation.GetValue("filter_Equip_Pess1ValName_FILTER1_1");
+                Navigation.SetValue("filter_Equip_Pess1ValName_FILTER1_1", filter_Equip_Pess1ValName_FILTER1_1);
+                if (filter_Equip_Pess1ValName_FILTER1_1)
                 {
 					groupFilters.Equal(CSGenioApess1.FldGender, "F");
 
@@ -1084,13 +1088,13 @@ namespace GenioMVC.ViewModels.Equip
             }
             {
                 var groupFilters = CriteriaSet.Or();
-                bool filter_Equip_Pess1ValName__2 = false;
-                if (requestValues["filter_Equip_Pess1ValName_"] != null)
-                    filter_Equip_Pess1ValName__2 = requestValues["filter_Equip_Pess1ValName_"].Contains("2");
-                else if (Navigation.CheckKey("filter_Equip_Pess1ValName__2"))
-                    filter_Equip_Pess1ValName__2 = (bool)Navigation.GetValue("filter_Equip_Pess1ValName__2");
-                Navigation.SetValue("filter_Equip_Pess1ValName__2", filter_Equip_Pess1ValName__2);
-                if (filter_Equip_Pess1ValName__2)
+                bool filter_Equip_Pess1ValName_FILTER2_1 = false;
+                if (requestValues["filter_Equip_Pess1ValName_FILTER2"] != null)
+                    filter_Equip_Pess1ValName_FILTER2_1 = requestValues["filter_Equip_Pess1ValName_FILTER2"].Contains("1");
+                else if (Navigation.CheckKey("filter_Equip_Pess1ValName_FILTER2_1"))
+                    filter_Equip_Pess1ValName_FILTER2_1 = (bool)Navigation.GetValue("filter_Equip_Pess1ValName_FILTER2_1");
+                Navigation.SetValue("filter_Equip_Pess1ValName_FILTER2_1", filter_Equip_Pess1ValName_FILTER2_1);
+                if (filter_Equip_Pess1ValName_FILTER2_1)
                 {
 					groupFilters.Equal(CSGenioApess1.FldGender, "M");
 
@@ -1180,7 +1184,8 @@ namespace GenioMVC.ViewModels.Equip
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAtpequ.FldTipoequi, query + "%");
                 }
@@ -1227,7 +1232,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 
 				TableTpequTipoequi.List = new SelectList(TableTpequTipoequi.Elements.ToSelectList(x => x.ValTipoequi, x => x.ValCodtpequ,  x => x.ValCodtpequ == this.ValCodtpequ), "Value", "Text", this.ValCodtpequ);
-                FillDependant_EquipTableTpequTipoequi();
+                if(!isSearchRequest)
+                    FillDependant_EquipTableTpequTipoequi();
 
                 //Check if foreignkey comes from history
                 TableTpequTipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpequ");
@@ -1430,7 +1436,8 @@ namespace GenioMVC.ViewModels.Equip
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAwareh.FldWarehdes, query + "%");
                 }
@@ -1477,7 +1484,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 
 				TableWarehWarehdes.List = new SelectList(TableWarehWarehdes.Elements.ToSelectList(x => x.ValWarehdes, x => x.ValCodwareh,  x => x.ValCodwareh == this.ValCodwareh), "Value", "Text", this.ValCodwareh);
-                FillDependant_EquipTableWarehWarehdes();
+                if(!isSearchRequest)
+                    FillDependant_EquipTableWarehWarehdes();
 
                 //Check if foreignkey comes from history
                 TableWarehWarehdes.FilledByHistory = Navigation.CheckFilledByHistory("wareh");
@@ -1639,7 +1647,8 @@ namespace GenioMVC.ViewModels.Equip
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAitem.FldItemdes, query + "%");
                 }
@@ -1686,7 +1695,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 
 				TableItemItemdes.List = new SelectList(TableItemItemdes.Elements.ToSelectList(x => x.ValItemdes, x => x.ValCoditem,  x => x.ValCoditem == this.ValCoditem), "Value", "Text", this.ValCoditem);
-                FillDependant_EquipTableItemItemdes();
+                if(!isSearchRequest)
+                    FillDependant_EquipTableItemItemdes();
 
                 //Check if foreignkey comes from history
                 TableItemItemdes.FilledByHistory = Navigation.CheckFilledByHistory("item");
@@ -1851,7 +1861,8 @@ namespace GenioMVC.ViewModels.Equip
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAroom1.FldRoomnr, query + "%");
                 }
@@ -1898,7 +1909,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 
 				TableRoom1Roomnr.List = new SelectList(TableRoom1Roomnr.Elements.ToSelectList(x => x.ValRoomnr, x => x.ValCodrooms,  x => x.ValCodrooms == this.ValCodrooms), "Value", "Text", this.ValCodrooms);
-                FillDependant_EquipTableRoom1Roomnr();
+                if(!isSearchRequest)
+                    FillDependant_EquipTableRoom1Roomnr();
 
                 //Check if foreignkey comes from history
                 TableRoom1Roomnr.FilledByHistory = Navigation.CheckFilledByHistory("room1");
@@ -2099,7 +2111,8 @@ namespace GenioMVC.ViewModels.Equip
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAdecom.FldDecomnr, query + "%");
                 }
@@ -2146,7 +2159,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 
 				TableDecomDecomnr.List = new SelectList(TableDecomDecomnr.Elements.ToSelectList(x => x.ValDecomnr, x => x.ValCoddeco,  x => x.ValCoddeco == this.ValCoddeco), "Value", "Text", this.ValCoddeco);
-                FillDependant_EquipTableDecomDecomnr();
+                if(!isSearchRequest)
+                    FillDependant_EquipTableDecomDecomnr();
 
                 //Check if foreignkey comes from history
                 TableDecomDecomnr.FilledByHistory = Navigation.CheckFilledByHistory("decom");

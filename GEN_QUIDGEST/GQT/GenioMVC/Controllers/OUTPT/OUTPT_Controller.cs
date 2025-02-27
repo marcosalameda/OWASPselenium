@@ -76,17 +76,14 @@ namespace GenioMVC.Controllers
             }
 
             dynamic result = null;
-            Models.Outpt row = null;
-            try { row = Models.Outpt.Find(navigation.GetStrValue("outpt")); }
-            catch (Exception)
-            {
-                CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model outpt");
-            }
-            if(row == null)
-            {
-                row = new Models.Outpt();
-                row.klass.QPrimaryKey = navigation.GetStrValue("outpt");
-            }
+            /*
+                Instead of loading the entire record from the database, a record will be created in memory with the keys filled in, 
+                    and additional fields from "Field" type limits will be mapped later. 
+                This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+            */
+            Models.Outpt row = new Models.Outpt(isEmpty: true);
+            row.klass.QPrimaryKey = navigation.GetStrValue("outpt");
+            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 
             // Only the last reload request is accepted.
             var requestNumber = Request.Headers.GetValues("ReloadDBEditRequestNumber");
@@ -99,7 +96,6 @@ namespace GenioMVC.Controllers
 				{
 					case "DSAID___WARE1WAREHDES":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Dsaid_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits

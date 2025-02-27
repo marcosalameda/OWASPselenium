@@ -270,7 +270,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodtradu, value); }
 		}
 
-
 		/// <summary>Field : "Reference" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldReferenc { get { return m_fldReferenc; } }
 		private static FieldRef m_fldReferenc = new FieldRef("tradu", "referenc");
@@ -281,7 +280,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldReferenc); }
 			set { insertNameValueField(FldReferenc, value); }
 		}
-
 
 		/// <summary>Field : "language" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodidio1 { get { return m_fldCodidio1; } }
@@ -294,7 +292,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodidio1, value); }
 		}
 
-
 		/// <summary>Field : "To review" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldAtraduzi { get { return m_fldAtraduzi; } }
 		private static FieldRef m_fldAtraduzi = new FieldRef("tradu", "atraduzi");
@@ -305,7 +302,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldAtraduzi); }
 			set { insertNameValueField(FldAtraduzi, value); }
 		}
-
 
 		/// <summary>Field : "Language" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodidio2 { get { return m_fldCodidio2; } }
@@ -318,7 +314,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodidio2, value); }
 		}
 
-
 		/// <summary>Field : "Translated" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTraduzid { get { return m_fldTraduzid; } }
 		private static FieldRef m_fldTraduzid = new FieldRef("tradu", "traduzid");
@@ -329,7 +324,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldTraduzid); }
 			set { insertNameValueField(FldTraduzid, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

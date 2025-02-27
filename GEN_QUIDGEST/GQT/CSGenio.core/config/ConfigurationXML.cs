@@ -213,7 +213,7 @@ namespace CSGenio
         }
 
         [XmlElement("Messaging")]
-        public MessagingXml Messaging { get; set; }
+        public MessagingXml Messaging { get; set; } = new MessagingXml();
 
 
         [XmlElement("Scheduler")]
@@ -474,6 +474,8 @@ namespace CSGenio
 
         public framework.DatabaseType GetDatabaseType()
         {
+            if (string.IsNullOrEmpty(Type) || Type == "SQLSERVER2000" || Type == "SQLSERVER2005" || Type == "SQLSERVER2008")
+                return framework.DatabaseType.SQLSERVERCOMPAT;
             return (framework.DatabaseType)Enum.Parse(typeof(framework.DatabaseType), Type, true);
         }
 
@@ -1169,11 +1171,14 @@ namespace CSGenio
         [XmlElement]
         public int Port;
 
+        /// <summary>
+        /// Use STARTTLS
+        /// </summary>
         [XmlElement]
         public bool SSL;
 
         [XmlElement]
-        public bool Auth;
+        public AuthType AuthType;
 
         [XmlElement]
         public string Username;
@@ -1181,6 +1186,8 @@ namespace CSGenio
         [XmlElement]
         public string Password;
 
+        [XmlElement(IsNullable = false)]
+        public OAuth2Options OAuth2Options = null;
 
         [XmlArray("NotificationMessages")]
         [XmlArrayItem("NotificationMessagesPK")]

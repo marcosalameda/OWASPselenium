@@ -76,6 +76,7 @@ namespace GenioMVC.ViewModels.Pesso
 		public byte[] ValPhotogra { get; set; }
 
 
+
 		#region Navigations
 		#endregion
 
@@ -85,6 +86,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 		#region Additional foreign keys
 
+		public string ValCodcateg { get; set; }
+
 		[Display(Name = "COMPANY_22615", ResourceType = typeof(Resources.Resources))]
 		public string ValCodempre { get; set; }
 
@@ -93,8 +96,6 @@ namespace GenioMVC.ViewModels.Pesso
 		public string ValCodcntry { get; set; }
 
 		public string ValCodregia { get; set; }
-
-		public string ValCodcateg { get; set; }
 
 		#endregion
 
@@ -218,11 +219,11 @@ namespace GenioMVC.ViewModels.Pesso
  				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
  				ValEmail = ViewModelConversion.ToString(m.ValEmail);
  				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
+ 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
  				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
  				ValCodpaise = ViewModelConversion.ToString(m.ValCodpaise);
  				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
  				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
- 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
  				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
  				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 			}
@@ -246,11 +247,11 @@ namespace GenioMVC.ViewModels.Pesso
 				m.ValGender = ViewModelConversion.ToString(ValGender);
 				m.ValTelephon = ViewModelConversion.ToString(ValTelephon);
 				m.ValEmail = ViewModelConversion.ToString(ValEmail);
+				m.ValCodcateg = ViewModelConversion.ToString(ValCodcateg);
 				m.ValCodempre = ViewModelConversion.ToString(ValCodempre);
 				m.ValCodpaise = ViewModelConversion.ToString(ValCodpaise);
 				m.ValCodcntry = ViewModelConversion.ToString(ValCodcntry);
 				m.ValCodregia = ViewModelConversion.ToString(ValCodregia);
-				m.ValCodcateg = ViewModelConversion.ToString(ValCodcateg);
 				m.ValEmail2 = ViewModelConversion.ToString(ValEmail2);
 				m.ValCodpesso = ViewModelConversion.ToString(ValCodpesso);
 			}
@@ -447,7 +448,8 @@ namespace GenioMVC.ViewModels.Pesso
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAcmpny.FldDesignat, query + "%");
                 }
@@ -494,7 +496,8 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 
 				TableCmpnyDesignat.List = new SelectList(TableCmpnyDesignat.Elements.ToSelectList(x => x.ValDesignat, x => x.ValCodempre,  x => x.ValCodempre == this.ValCodempre), "Value", "Text", this.ValCodempre);
-                FillDependant_ExternoTableCmpnyDesignat();
+                if(!isSearchRequest)
+                    FillDependant_ExternoTableCmpnyDesignat();
 
                 //Check if foreignkey comes from history
                 TableCmpnyDesignat.FilledByHistory = Navigation.CheckFilledByHistory("cmpny");

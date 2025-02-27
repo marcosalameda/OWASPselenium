@@ -1,8 +1,7 @@
 ﻿<template>
 	<div
 		:class="['alert', `alert--${messageType}`]"
-		role="alert"
-		@click.stop.prevent="onAlertClick">
+		role="alert">
 		<div class="c-alert__header">			
 			<h4
 				v-if="title"
@@ -11,21 +10,23 @@
 			</h4>
 
 			<div
-				v-if="text"
-				class="c-alert__text">
+				v-if="isString"
+				class="alert__text">
 				{{ text }}
+			</div>
+
+			<div v-if="isArray" class="alert__list">
+				<span v-for="(message, index) in text" :key="index" class="status-message">{{ message }}</span>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-	import isEmpty from 'lodash-es/isEmpty'
-
 	export default {
 		name: 'QAlert',
 
-		emits: ['navigate-to', 'message-dismissed'],
+		emits: ['message-dismissed'],
 
 		inheritAttrs: false,
 
@@ -50,7 +51,7 @@
 			 * The text to be displayed.
 			 */
 			text: {
-				type: String,
+				type: [String, Array],
 				required: true
 			},
 
@@ -108,6 +109,16 @@
 			messageType()
 			{
 				return this.type;
+			},
+
+			// Computed property to check if `text` is a string
+			isString() {
+				return typeof this.text === 'string';
+			},
+
+			// Computed property to check if `text` is an array
+			isArray() {
+				return Array.isArray(this.text);
 			}
 		},
 

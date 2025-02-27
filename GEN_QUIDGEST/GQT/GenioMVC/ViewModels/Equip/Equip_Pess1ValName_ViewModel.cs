@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Equip
         /// </summary>
         public string ValCodequip { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Equip
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS EQUIP_PESS1NAME]/
+
+			return crs;
+		}
+
 
         public string ValCodempre { get; set; }
 
@@ -138,11 +158,11 @@ namespace GenioMVC.ViewModels.Equip
 			CriteriaSet subfilters = CriteriaSet.And();
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_Equip_Pess1ValName__1 = false;
-				if (requestValues["filter_Equip_Pess1ValName_"] != null)
-					filter_Equip_Pess1ValName__1 = requestValues["filter_Equip_Pess1ValName_"].Contains("1");
-				Navigation.SetValue("filter_Equip_Pess1ValName__1", filter_Equip_Pess1ValName__1);
-				if (filter_Equip_Pess1ValName__1)
+				bool filter_Equip_Pess1ValName_FILTER1_1 = false;
+				if (requestValues["filter_Equip_Pess1ValName_FILTER1"] != null)
+					filter_Equip_Pess1ValName_FILTER1_1 = requestValues["filter_Equip_Pess1ValName_FILTER1"].Contains("1");
+				Navigation.SetValue("filter_Equip_Pess1ValName_FILTER1_1", filter_Equip_Pess1ValName_FILTER1_1);
+				if (filter_Equip_Pess1ValName_FILTER1_1)
 				{
 					groupFilters.Equal(CSGenioApess1.FldGender, "F");
 
@@ -152,11 +172,11 @@ namespace GenioMVC.ViewModels.Equip
 			}
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_Equip_Pess1ValName__2 = false;
-				if (requestValues["filter_Equip_Pess1ValName_"] != null)
-					filter_Equip_Pess1ValName__2 = requestValues["filter_Equip_Pess1ValName_"].Contains("2");
-				Navigation.SetValue("filter_Equip_Pess1ValName__2", filter_Equip_Pess1ValName__2);
-				if (filter_Equip_Pess1ValName__2)
+				bool filter_Equip_Pess1ValName_FILTER2_1 = false;
+				if (requestValues["filter_Equip_Pess1ValName_FILTER2"] != null)
+					filter_Equip_Pess1ValName_FILTER2_1 = requestValues["filter_Equip_Pess1ValName_FILTER2"].Contains("1");
+				Navigation.SetValue("filter_Equip_Pess1ValName_FILTER2_1", filter_Equip_Pess1ValName_FILTER2_1);
+				if (filter_Equip_Pess1ValName_FILTER2_1)
 				{
 					groupFilters.Equal(CSGenioApess1.FldGender, "M");
 
@@ -170,6 +190,8 @@ namespace GenioMVC.ViewModels.Equip
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -271,7 +293,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

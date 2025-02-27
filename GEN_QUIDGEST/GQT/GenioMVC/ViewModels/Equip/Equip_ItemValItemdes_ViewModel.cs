@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Equip
         /// </summary>
         public string ValCodequip { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Equip
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS EQUIP_ITEMITEMDES]/
+
+			return crs;
+		}
+
 
         public string ValCodwareh { get; set; }
 
@@ -143,6 +163,8 @@ namespace GenioMVC.ViewModels.Equip
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -244,7 +266,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

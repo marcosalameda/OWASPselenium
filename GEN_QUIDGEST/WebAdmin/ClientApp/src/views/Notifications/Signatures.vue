@@ -29,7 +29,7 @@
                     <q-button
                       :label="Resources.INSERIR43365"
                       @click="ManageSignature(1)">
-                      <q-icon icon="plus-sign" />
+                      <q-icon icon="add" />
                     </q-button>
                   </td>
                 </tr>

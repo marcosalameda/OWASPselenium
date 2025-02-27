@@ -83,6 +83,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  4;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 4;
 			Qfield.CavDesignation = "YEAR61794";
 
 			Qfield.Dupmsg = "";
@@ -99,6 +100,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  4;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 4;
 			Qfield.CavDesignation = "PREVIOUS_YEAR11345";
 
 			Qfield.Dupmsg = "";
@@ -137,6 +139,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "VALUE10285";
 
@@ -148,6 +151,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Previous Value";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "PREVIOUS_VALUE30042";
 
@@ -339,7 +343,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddespe, value); }
 		}
 
-
 		/// <summary>Field : ">PROJECT" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodproje { get { return m_fldCodproje; } }
 		private static FieldRef m_fldCodproje = new FieldRef("expen", "codproje");
@@ -350,7 +353,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodproje); }
 			set { insertNameValueField(FldCodproje, value); }
 		}
-
 
 		/// <summary>Field : ">ANO" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodyear { get { return m_fldCodyear; } }
@@ -363,7 +365,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodyear, value); }
 		}
 
-
 		/// <summary>Field : "Year" Tipo: "N" Formula: + "[YEAR->YEARNUM]"</summary>
 		public static FieldRef FldYearnumb { get { return m_fldYearnumb; } }
 		private static FieldRef m_fldYearnumb = new FieldRef("expen", "yearnumb");
@@ -374,7 +375,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldYearnumb); }
 			set { insertNameValueField(FldYearnumb, value); }
 		}
-
 
 		/// <summary>Field : "Previous year" Tipo: "N" Formula: + "[YEAR->YEARNUM]-1"</summary>
 		public static FieldRef FldYearprev { get { return m_fldYearprev; } }
@@ -387,7 +387,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldYearprev, value); }
 		}
 
-
 		/// <summary>Field : ">AGREGADOR" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodaggre { get { return m_fldCodaggre; } }
 		private static FieldRef m_fldCodaggre = new FieldRef("expen", "codaggre");
@@ -398,7 +397,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodaggre); }
 			set { insertNameValueField(FldCodaggre, value); }
 		}
-
 
 		/// <summary>Field : "Description" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldDescript { get { return m_fldDescript; } }
@@ -411,7 +409,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDescript, value); }
 		}
 
-
 		/// <summary>Field : "Value" Tipo: "$D" Formula:  ""</summary>
 		public static FieldRef FldValue { get { return m_fldValue; } }
 		private static FieldRef m_fldValue = new FieldRef("expen", "value");
@@ -423,7 +420,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldValue, value); }
 		}
 
-
 		/// <summary>Field : "Previous Value" Tipo: "$D" Formula: CT "EXPE1[EXPEN->YEARPREV][EXPE1->YEARNUMB][EXPE1->VALUE](DESC)"</summary>
 		public static FieldRef FldPrevval { get { return m_fldPrevval; } }
 		private static FieldRef m_fldPrevval = new FieldRef("expen", "prevval");
@@ -434,7 +430,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldPrevval); }
 			set { insertNameValueField(FldPrevval, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

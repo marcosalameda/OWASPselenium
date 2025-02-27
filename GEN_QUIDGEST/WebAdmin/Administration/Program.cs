@@ -8,17 +8,18 @@ using log4net;
 using log4net.Config;
 using SoapCore;
 using Administration.AuxClass;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
+using System.Diagnostics.Metrics;
+using OpenTelemetry.Metrics;
+using CSGenio.core.logger;
+using CSGenio.core.di;
 
 //---------------------------------
 // Setup the GenioServer services
 //---------------------------------
 CSGenio.GenioDIDefault.Use();
-
-//---------------------------------
-// Setup 3rd party services
-//---------------------------------
-var logRepository = LogManager.GetRepository(System.Reflection.Assembly.GetEntryAssembly());
-XmlConfigurator.Configure(logRepository, new FileInfo("web.config"));
 
 //---------------------------------
 // Setup the WebServer services
@@ -35,6 +36,13 @@ builder.Services.AddControllers(options =>
         options.JsonSerializerOptions.PropertyNamingPolicy = null; //leave property names unchanged
     })
     .AddXmlSerializerFormatters();
+
+
+//---------------------------------
+// Telemetry Services
+//---------------------------------
+var telemetryConfig = builder.Configuration.GetSection("TelemetryConfig").Get<TelemetryConfiguration>();
+builder.Services.ConfigureTelemetry(telemetryConfig, builder.Logging);
 
 
 //gzip compression
@@ -115,6 +123,10 @@ app.UseSession();
 
 // Configure the HTTP request pipeline.
 app.UseResponseCompression();
+
+// Use Open Telemetry Logging
+if (telemetryConfig != null && telemetryConfig.LoggerType == TelemetryConfiguration.LoggerConfigType.OTLP)
+    GenioDI.Log = new OpenTelemetryImpl(app.Services.GetRequiredService<ILoggerFactory>());
 
 // Redirection needs to come before any routing in the pipeline
 // Default will be to use http.

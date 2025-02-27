@@ -123,6 +123,7 @@ namespace DbAdmin.IntegrationTest
             Assert.IsTrue(sp.CheckIfDatabaseExists(newDb));
             Assert.AreEqual(ExecuteQueryCore.RdxProgressStatus.SUCCESS, rdxParams.Progress.State, rdxParams.Progress.Message);
             Assert.AreEqual(Configuration.VersionDbGen, Configuration.GetDbVersion(newDb));
+            Assert.AreEqual(Configuration.VersionUpgrIndxGen, Configuration.GetDbUpgrIndx(newDb));
             
             //Teardown
             sp.Drop(newDb);

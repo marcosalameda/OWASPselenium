@@ -3,6 +3,8 @@ using CSGenio.core.scheduler;
 using CSGenio.persistence;
 using CSGenio.core.di;
 using GenioServer.security;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace CSGenio
 {

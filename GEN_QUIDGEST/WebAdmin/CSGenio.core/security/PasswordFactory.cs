@@ -365,29 +365,17 @@ namespace GenioServer.security
         /// <summary>
         /// The ecription function for the password fields
         /// </summary>
-        /// <param name="value">The decrypted value of the field.</param>
-        /// <param name="field">The metainformation about a field</param>
-        /// <param name="area">The Record to which the field belongs (In case the encryption function requires the value of one more field)</param>
+        /// <param name="plainPasswordText">The decrypted value of the field.</param>
+        /// <param name="passwordType">The Password Algorithms</param>
         /// <returns>Encrypted data</returns>
-        public static string EncryptPasswordField(object value, Field field, CSGenio.persistence.IArea area)
+        public static string EncryptPasswordField(string plainPasswordText, string passwordType)
         {
             // The function will need the encryption type information that is stored in one of the fields of the record.
-            if(value != null && field != null && area != null)
+            if(plainPasswordText != null && !string.IsNullOrEmpty(passwordType))
             {
-                var encryptionTypeField = (string)CSGenio.business.CSGenioApsw.FldPswtype;
-                if(area.Fields.ContainsKey(encryptionTypeField))
-                {
-                    RequestedField pswTypeField = (RequestedField)area.Fields[encryptionTypeField];
-
-                    if(!string.IsNullOrEmpty((string)pswTypeField.Value))
-                    {
-                        Enum.TryParse((string)pswTypeField.Value, out PasswordAlgorithms pswType);
-                        string plainText = value.ToString();
-                        string encriptedString = Encrypt(plainText, pswType);
-
-                        return encriptedString;
-                    }
-                }
+                Enum.TryParse(passwordType, out PasswordAlgorithms pswType);
+                string encriptedString = Encrypt(plainPasswordText, pswType);
+                return encriptedString;
             }
 
             return null;

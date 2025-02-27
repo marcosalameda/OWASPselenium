@@ -1,35 +1,42 @@
 ﻿<template>
 	<div id="system_setup_paths_container">
-		<QGroupBoxContainer :label="GetTitle">
-			<q-row-container>
-				<q-control-wrapper class="control-row-group">
-					<base-input-structure
-						class="i-text">
-						<text-input v-model="Model.pathApp" :label="Resources.CAMINHO_PARA_A_APLIC44450"></text-input>
-					</base-input-structure>
-				</q-control-wrapper>
-				<q-control-wrapper class="control-row-group">
-					<base-input-structure
-						class="i-text">
-						<text-input v-model="Model.pathDocuments" :label="Resources.CAMINHO_PARA_DOCUMEN18456"></text-input>
-					</base-input-structure>
-				</q-control-wrapper>
-			</q-row-container>
-		</QGroupBoxContainer>
+		<row>
+			<q-card
+				class="q-card--admin-default"
+				:title="GetTitle"
+				width="block">
+				<q-row-container>
+					<q-text-field
+						v-model="Model.pathApp"
+						size="xlarge"
+						:label="Resources.CAMINHO_PARA_A_APLIC44450" />
+					<q-text-field
+						v-model="Model.pathDocuments"
+						size="xlarge"
+						:label="Resources.CAMINHO_PARA_DOCUMEN18456" />
+				</q-row-container>
+			</q-card>
+		</row>
+
 		<row class="footer-btn">
 			<q-button
 				b-style="primary"
-				:label="Resources.GRAVAR45301"
+				:label="Resources.GRAVAR_CONFIGURACAO36308"
 				@click="SavePathCfg" />
 		</row>
-		<QGroupBoxContainer :label="Resources.DESCARREGAR_FICHEIRO61580" class="c-groupbox--minor-border-top">
-			<row>
+
+		<row>
+			<q-card
+				class="q-card--admin-border-top q-card--admin-compact"
+				:title="Resources.DESCARREGAR_FICHEIRO61580"
+				variant="minor"
+				width="block">
 				<q-button
 					b-style="secondary"
 					label="Configurations.redirect.xml"
 					@click="goToDownloadRedirect" />
-			</row>
-		</QGroupBoxContainer>
+			</q-card>
+		</row>
 	</div>
 </template>
 
@@ -41,17 +48,21 @@
 
 	export default {
 		name: 'paths',
+
 		props: {
 			model: {
 				required: true
 			}
 		},
+
 		mixins: [reusableMixin],
+
 		data() {
 			return {
 				Model: this.model,
 			};
 		},
+
 		methods: {
 			goToDownloadRedirect() {
 				window.location.href = this.DownloadRedirect;
@@ -70,10 +81,12 @@
 				})
  			}
 		},
+
 		computed: {
 			DownloadRedirect() {
 				return QUtils.apiActionURL('Config', 'DownloadRedirect');
 			},
+			
 			GetTitle() {
 				return this.Resources.CAMINHOS41141 + ' ' + '(' + this.currentApp +')';
 			}

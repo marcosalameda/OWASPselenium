@@ -39,12 +39,25 @@ namespace GenioMVC.ViewModels.Equip
         /// </summary>
         public string ValCodequip { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +71,14 @@ namespace GenioMVC.ViewModels.Equip
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS 2D111]/
+
+			return crs;
+		}
+
 
         private string dbeditTitle;
         public string DBEditTitle { get { if (string.IsNullOrEmpty(dbeditTitle)) GetTitle(); return dbeditTitle; } }
@@ -76,10 +97,8 @@ namespace GenioMVC.ViewModels.Equip
             CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, this.Identifier);
             conditions.Equal(CSGenioAequip.FldZzstate, 0); //valid zzstate only
 
-            //Menu fixed limits and relations:
-
-            
-
+            // Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.FldZzstate, CSGenioAequip.FldRegistnr, CSGenioAequip.FldDesignat, CSGenioAequip.FldPhotogra, CSGenioAequip.FldCodrooms, CSGenioAroom1.FldCodrooms, CSGenioAroom1.FldRoomnr, CSGenioAequip.FldCodtpequ, CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.FldTipoequi, CSGenioAequip.FldCodwareh, CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes, CSGenioAequip.FldCoditem, CSGenioAitem.FldCoditem, CSGenioAitem.FldItemdes };
@@ -181,6 +200,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
 			// Limit "DM"
 			//Limiting DMs can now be used without filters, thanks to the implementation of the selectAll option
@@ -208,7 +229,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_equip");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_equip");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Equip.AddEPH<CSGenioAequip>(ref u, null, "ML2D111"));
 			}
@@ -291,7 +311,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -494,7 +514,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
         private static readonly string[] _fieldsToSerialize =
         {
-            "Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Equip.ValRegistnr", "Equip.ValDesignat", "Equip.ValPhotogra", "Room1", "Room1.ValRoomnr", "Tpequ", "Tpequ.ValTipoequi", "Wareh", "Wareh.ValWarehdes", "Item", "Item.ValItemdes", "Equip.ValCodempre", "Equip.ValCoddeco", "Equip.ValCoditem", "Equip.ValCodpess1", "Equip.ValCodtpequ", "Equip.ValCodwareh", "Equip.ValCodrooms"
+            "Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Equip.ValRegistnr", "Equip.ValDesignat", "Equip.ValPhotogra", "Room1", "Room1.ValRoomnr", "Tpequ", "Tpequ.ValTipoequi", "Wareh", "Wareh.ValWarehdes", "Item", "Item.ValItemdes", "Equip.ValCodempre", "Equip.ValCoddeco", "Equip.ValCoditem", "Equip.ValCodpess1", "Equip.ValCodrooms", "Equip.ValCodtpequ", "Equip.ValCodwareh"
         };
 
         private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>

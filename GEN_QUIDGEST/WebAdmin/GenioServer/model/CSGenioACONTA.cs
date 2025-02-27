@@ -126,10 +126,11 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(7);
+			info.Pathways = new Dictionary<string, string>(8);
 			info.Pathways.Add("genre","genre");
 			info.Pathways.Add("tpcon","tpcon");
 			info.Pathways.Add("pesso","pesso");
+			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("cntry","pesso");
 			info.Pathways.Add("cmpny","pesso");
 			info.Pathways.Add("pais1","pesso");
@@ -266,7 +267,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodconta, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodpesso { get { return m_fldCodpesso; } }
 		private static FieldRef m_fldCodpesso = new FieldRef("conta", "codpesso");
@@ -277,7 +277,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodpesso); }
 			set { insertNameValueField(FldCodpesso, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodgenre { get { return m_fldCodgenre; } }
@@ -290,7 +289,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodgenre, value); }
 		}
 
-
 		/// <summary>Field : "Contact type" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodtpcon { get { return m_fldCodtpcon; } }
 		private static FieldRef m_fldCodtpcon = new FieldRef("conta", "codtpcon");
@@ -302,7 +300,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodtpcon, value); }
 		}
 
-
 		/// <summary>Field : "Contact" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldContacto { get { return m_fldContacto; } }
 		private static FieldRef m_fldContacto = new FieldRef("conta", "contacto");
@@ -313,7 +310,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldContacto); }
 			set { insertNameValueField(FldContacto, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

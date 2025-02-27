@@ -68,11 +68,11 @@ namespace GenioMVC.ViewModels.Equip
 
 		public string ValCodpess1 { get; set; }
 
+		public string ValCodrooms { get; set; }
+
 		public string ValCodtpequ { get; set; }
 
 		public string ValCodwareh { get; set; }
-
-		public string ValCodrooms { get; set; }
 
 		#endregion
 
@@ -195,9 +195,9 @@ namespace GenioMVC.ViewModels.Equip
  				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
  				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
  				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
+ 				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
  				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
  				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
  				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
  				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
@@ -221,9 +221,9 @@ namespace GenioMVC.ViewModels.Equip
 				m.ValCoddeco = ViewModelConversion.ToString(ValCoddeco);
 				m.ValCoditem = ViewModelConversion.ToString(ValCoditem);
 				m.ValCodpess1 = ViewModelConversion.ToString(ValCodpess1);
+				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
 				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
 				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
-				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
 				m.ValRegistnr = ViewModelConversion.ToString(ValRegistnr);
 				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
 			}

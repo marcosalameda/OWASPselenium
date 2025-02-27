@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Cmpki
         /// </summary>
         public string ValCodcmpki { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Cmpki
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS CMPKI_TPEQ1TIPOEQUI]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cmpki_Tpeq1ValTipoequi_ViewModel" /> class.
@@ -136,6 +156,8 @@ namespace GenioMVC.ViewModels.Cmpki
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -237,7 +259,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpeq1.FldCodtpequ, CSGenioAtpeq1.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -285,7 +307,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpeq1.FldCodtpequ, CSGenioAtpeq1.Fl
 			CriteriaSet cmpki___tpeq1tipoequiConds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ CMPKI_TIPOEQUI]/
+// USE /[MANUAL GQT OVERRQ CMPKI_TPEQ1TIPOEQUI]/
 
             // This will happen in case there is an error
             if(cmpki___tpeq1tipoequiConds == null)
@@ -298,7 +320,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpeq1.FldCodtpequ, CSGenioAtpeq1.Fl
 
 				Qlisting = Models.ModelBase.Where<CSGenioAtpeq1>(false, cmpki___tpeq1tipoequiConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_CMPKI___TPEQ1TIPOEQUI", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP CMPKI_TIPOEQUI]/
+// USE /[MANUAL GQT OVERRQLSTEXP CMPKI_TPEQ1TIPOEQUI]/
 
                 conditions = cmpki___tpeq1tipoequiConds;
                 return;
@@ -308,7 +330,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpeq1.FldCodtpequ, CSGenioAtpeq1.Fl
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST CMPKI_TIPOEQUI]/
+// USE /[MANUAL GQT OVERRQLIST CMPKI_TPEQ1TIPOEQUI]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_tpeq1"];

@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Pwreg
         /// </summary>
         public string ValCodpwreg { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Pwreg
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PWREG_REGIOREGIAO]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Pwreg_RegioValRegiao_ViewModel" /> class.
@@ -136,6 +156,8 @@ namespace GenioMVC.ViewModels.Pwreg
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -237,7 +259,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregio.FldCodregia, CSGenioAregio.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -275,7 +297,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregio.FldCodregia, CSGenioAregio.Fl
 			CriteriaSet pwreg___regioregiao__Conds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ PWREG_REGIAO]/
+// USE /[MANUAL GQT OVERRQ PWREG_REGIOREGIAO]/
 
             // This will happen in case there is an error
             if(pwreg___regioregiao__Conds == null)
@@ -288,7 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregio.FldCodregia, CSGenioAregio.Fl
 
 				Qlisting = Models.ModelBase.Where<CSGenioAregio>(false, pwreg___regioregiao__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PWREG___REGIOREGIAO__", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP PWREG_REGIAO]/
+// USE /[MANUAL GQT OVERRQLSTEXP PWREG_REGIOREGIAO]/
 
                 conditions = pwreg___regioregiao__Conds;
                 return;
@@ -298,7 +320,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregio.FldCodregia, CSGenioAregio.Fl
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST PWREG_REGIAO]/
+// USE /[MANUAL GQT OVERRQLIST PWREG_REGIOREGIAO]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_regio"];

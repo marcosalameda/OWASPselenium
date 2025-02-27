@@ -80,12 +80,6 @@ namespace GenioMVC.ViewModels.Flds
 		[JsonIgnore]
 		public SelectList List_ValRadiob { get; set; }
 
-		/// <summary>Campo : "Manual filling field" Tipo:"PM"</summary>
-		[Display(Name = "MANUAL_FILLING_FIELD38373", ResourceType = typeof(Resources.Resources))]
-		public object PseudValField001 { get { return funcPseudValField001 != null ? funcPseudValField001() : _auxPseudValField001; } set { funcPseudValField001 = () => value; } }
-		[JsonIgnore]
-		public Func<object> funcPseudValField001 { get; set; }
-		private object _auxPseudValField001 { get; set; }
 
 		/// <summary>Campo : "Year" Tipo:"N"</summary>
 		[Display(Name = "YEAR61794", ResourceType = typeof(Resources.Resources))]
@@ -210,10 +204,6 @@ namespace GenioMVC.ViewModels.Flds
 		[StringLength(50, ErrorMessageResourceName = "O_COMPRIMENTO_MAXIMO21747", ErrorMessageResourceType = typeof(Resources.Resources))]
 		public string ValClrpicke { get; set; }
 
-		/// <summary>Campo : "Logo (External File Image)" Tipo:"IX"</summary>
-		[Display(Name = "LOGO__EXTERNAL_FILE_58162", ResourceType = typeof(Resources.Resources))]
-		public string ValLogoexte { get; set; }
-
 		/// <summary>Campo : "Logo" Tipo:"IJ"</summary>
 		[Display(Name = "LOGO62483", ResourceType = typeof(Resources.Resources))]
 		[UIHint("DBJpegImage")]
@@ -291,6 +281,13 @@ namespace GenioMVC.ViewModels.Flds
 		#endregion
 
 		#region Fields for formulas
+		// Field to formula
+		/// <summary>Field : "Enforce table conditions" Tipo: "L"</summary>
+		public bool ValTblcond { get; set; }
+		// Field to formula
+		/// <summary>Field : "Field state" Tipo: "AC"</summary>
+		[AllowHtml]
+		public string ValCond { get; set; }
 		#endregion
 
 		public string ValCodflds { get; set; }
@@ -423,7 +420,6 @@ namespace GenioMVC.ViewModels.Flds
  				ValUpprtext = ViewModelConversion.ToString(m.ValUpprtext);
  				ValPassfld = ViewModelConversion.ToString(m.ValPassfld);
  				ValClrpicke = ViewModelConversion.ToString(m.ValClrpicke);
- 				ValLogoexte = ViewModelConversion.ToString(m.ValLogoexte);
  				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
  				ValAttach = ViewModelConversion.ToString(m.ValAttach);
 				ValAttachfk = ViewModelConversion.ToString(m.ValAttachfk);
@@ -435,6 +431,8 @@ namespace GenioMVC.ViewModels.Flds
  				ValClass = ViewModelConversion.ToString(m.ValClass);
  				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
  				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+ 				ValTblcond = ViewModelConversion.ToLogic(m.ValTblcond);
+ 				ValCond = ViewModelConversion.ToString(m.ValCond);
  				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
 			}
 			catch (Exception)
@@ -479,7 +477,6 @@ namespace GenioMVC.ViewModels.Flds
 				m.ValUpprtext = ViewModelConversion.ToString(ValUpprtext);
 				m.ValPassfld = ViewModelConversion.ToString(ValPassfld);
 				m.ValClrpicke = ViewModelConversion.ToString(ValClrpicke);
-				m.ValLogoexte = ViewModelConversion.ToString(ValLogoexte);
 				m.ValAttach = ViewModelConversion.ToString(ValAttach);
 				m.ValAttachfk = ViewModelConversion.ToString(ValAttachfk);
 
@@ -491,6 +488,8 @@ namespace GenioMVC.ViewModels.Flds
 				m.ValClass = ViewModelConversion.ToString(ValClass);
 				m.ValCodaero = ViewModelConversion.ToString(ValCodaero);
 				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
+				m.ValTblcond = ViewModelConversion.ToLogic(ValTblcond);
+				m.ValCond = ViewModelConversion.ToString(ValCond);
 				m.ValCodflds = ViewModelConversion.ToString(ValCodflds);
 			}
 			catch (Exception)
@@ -703,7 +702,8 @@ namespace GenioMVC.ViewModels.Flds
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAaero.FldName, query + "%");
                 }
@@ -750,7 +750,8 @@ namespace GenioMVC.ViewModels.Flds
 				}
 
 				TableAeroName.List = new SelectList(TableAeroName.Elements.ToSelectList(x => x.ValName, x => x.ValCodaero,  x => x.ValCodaero == this.ValCodaero), "Value", "Text", this.ValCodaero);
-                FillDependant_FieldhlpTableAeroName();
+                if(!isSearchRequest)
+                    FillDependant_FieldhlpTableAeroName();
 
                 //Check if foreignkey comes from history
                 TableAeroName.FilledByHistory = Navigation.CheckFilledByHistory("aero");

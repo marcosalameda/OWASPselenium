@@ -463,7 +463,8 @@ namespace GenioMVC.ViewModels.Tpeq1
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAfami1.FldFamily, query + "%");
                 }
@@ -510,7 +511,8 @@ namespace GenioMVC.ViewModels.Tpeq1
 				}
 
 				TableFami1Family.List = new SelectList(TableFami1Family.Elements.ToSelectList(x => x.ValFamily, x => x.ValCodfamil,  x => x.ValCodfamil == this.ValCodfamil), "Value", "Text", this.ValCodfamil);
-                FillDependant_Tpeq1TableFami1Family();
+                if(!isSearchRequest)
+                    FillDependant_Tpeq1TableFami1Family();
 
                 //Check if foreignkey comes from history
                 TableFami1Family.FilledByHistory = Navigation.CheckFilledByHistory("fami1");

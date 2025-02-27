@@ -481,7 +481,8 @@ namespace GenioMVC.ViewModels.Insta
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAequip.FldRegistnr, query + "%");
                 }
@@ -528,7 +529,8 @@ namespace GenioMVC.ViewModels.Insta
 				}
 
 				TableEquipRegistnr.List = new SelectList(TableEquipRegistnr.Elements.ToSelectList(x => x.ValRegistnr, x => x.ValCodequip,  x => x.ValCodequip == this.ValCodequip), "Value", "Text", this.ValCodequip);
-                FillDependant_LeafletdTableEquipRegistnr();
+                if(!isSearchRequest)
+                    FillDependant_LeafletdTableEquipRegistnr();
 
                 //Check if foreignkey comes from history
                 TableEquipRegistnr.FilledByHistory = Navigation.CheckFilledByHistory("equip");

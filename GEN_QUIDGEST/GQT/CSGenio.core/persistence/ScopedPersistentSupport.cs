@@ -47,7 +47,9 @@ namespace CSGenio.persistence
             if (!transactionWasOpen)
                 persistentSupport.closeTransaction();
 
-            if (!connectionWasOpen)
+            if (connectionWasOpen && persistentSupport.ConnectionIsClosed)
+                persistentSupport.openConnection();
+            else if (!connectionWasOpen)
                 persistentSupport.closeConnection();
         }
 

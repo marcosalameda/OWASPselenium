@@ -47,8 +47,8 @@ namespace GenioMVC.Models
 		public bool ValActive { get { return Convert.ToBoolean(klass.ValActive); } set { klass.ValActive = Convert.ToInt32(value); } }
 		public bool ShouldSerializeValActive() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Cntry.ValActive");
 
-		[DisplayName("Numeric")]
-		/// <summary>Field : "Numeric" Tipo: "C" Formula:  ""</summary>
+		[DisplayName("Numeric ISO-3166")]
+		/// <summary>Field : "Numeric ISO-3166" Tipo: "C" Formula:  ""</summary>
 		public string ValCodigonr { get { return klass.ValCodigonr; } set { klass.ValCodigonr = value; } }
 		public bool ShouldSerializeValCodigonr() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Cntry.ValCodigonr");
 

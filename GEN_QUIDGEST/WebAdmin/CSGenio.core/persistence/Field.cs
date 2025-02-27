@@ -168,18 +168,9 @@ namespace CSGenio.framework
         public ConditionFormula BlockWhen { get; set; }
 
         /// <summary>
-        /// The ecription function for this field
+        /// The ecription formula/function for this field
         /// </summary>
-        /// <param name="value">The decrypted value of the field.</param>
-        /// <param name="field">The metainformation about a field</param>
-        /// <param name="area">The Record to which the field belongs (In case the encryption function requires the value of one more field)</param>
-        /// <returns>Encrypted data</returns>
-        public delegate object EncryptFieldValue(object value, Field field, persistence.IArea area);
-
-        /// <summary>
-        /// The ecription function for this field
-        /// </summary>
-        public EncryptFieldValue EncryptFieldValueFunction { get; set; }
+        public InternalOperationFormula EncryptFieldValueFormula { get; set; }
 
         /// <summary>
         /// Formating rules
@@ -207,6 +198,11 @@ namespace CSGenio.framework
         /// Decimal places for numeric fields
         /// </summary>
         public int Decimals { get; set; }
+
+        /// <summary>
+        /// Whole number places for numeric fields
+        /// </summary>
+        public int IntegerDigits { get; set; }
 
         /// <summary>
         /// Its a virtual field in the database and should not be written to
@@ -297,7 +293,7 @@ namespace CSGenio.framework
                         return true;
                     break;
                 case FieldFormatting.ENCRYPTED:
-                    return (Qvalue as EncryptedDataType ?? new EncryptedDataType()).IsEmpty();
+                    return (Qvalue as EncryptedDataType ?? new EncryptedDataType(null, Qvalue)).IsEmpty();
                 default:
                     return false;
             }

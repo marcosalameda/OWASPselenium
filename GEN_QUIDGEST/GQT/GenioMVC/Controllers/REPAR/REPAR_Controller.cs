@@ -76,17 +76,14 @@ namespace GenioMVC.Controllers
             }
 
             dynamic result = null;
-            Models.Repar row = null;
-            try { row = Models.Repar.Find(navigation.GetStrValue("repar")); }
-            catch (Exception)
-            {
-                CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model repar");
-            }
-            if(row == null)
-            {
-                row = new Models.Repar();
-                row.klass.QPrimaryKey = navigation.GetStrValue("repar");
-            }
+            /*
+                Instead of loading the entire record from the database, a record will be created in memory with the keys filled in, 
+                    and additional fields from "Field" type limits will be mapped later. 
+                This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+            */
+            Models.Repar row = new Models.Repar(isEmpty: true);
+            row.klass.QPrimaryKey = navigation.GetStrValue("repar");
+            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 
             // Only the last reload request is accepted.
             var requestNumber = Request.Headers.GetValues("ReloadDBEditRequestNumber");
@@ -99,7 +96,6 @@ namespace GenioMVC.Controllers
 				{
 					case "REPAR___EQUIPREGISTNR":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Repar_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -109,7 +105,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "REPAR___SPECIESPECIAL":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Repar_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -119,7 +114,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "REPAR___PESSONAME____":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Repar_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits

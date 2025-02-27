@@ -90,11 +90,11 @@ namespace GenioMVC.ViewModels.Equip
 		[Display(Name = "PERSON10446", ResourceType = typeof(Resources.Resources))]
 		public string ValCodpess1 { get; set; }
 
+		public string ValCodrooms { get; set; }
+
 		public string ValCodtpequ { get; set; }
 
 		public string ValCodwareh { get; set; }
-
-		public string ValCodrooms { get; set; }
 
 		#endregion
 
@@ -219,9 +219,9 @@ namespace GenioMVC.ViewModels.Equip
  				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
  				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
  				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
+ 				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
  				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
  				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
  				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
  				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
@@ -246,9 +246,9 @@ namespace GenioMVC.ViewModels.Equip
 				m.ValCoddeco = ViewModelConversion.ToString(ValCoddeco);
 				m.ValCoditem = ViewModelConversion.ToString(ValCoditem);
 				m.ValCodpess1 = ViewModelConversion.ToString(ValCodpess1);
+				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
 				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
 				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
-				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
 				m.ValRegistnr = ViewModelConversion.ToString(ValRegistnr);
 				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
 			}
@@ -443,7 +443,8 @@ namespace GenioMVC.ViewModels.Equip
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAcmpny.FldDesignat, query + "%");
                 }
@@ -490,7 +491,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 
 				TableCmpnyDesignat.List = new SelectList(TableCmpnyDesignat.Elements.ToSelectList(x => x.ValDesignat, x => x.ValCodempre,  x => x.ValCodempre == this.ValCodempre), "Value", "Text", this.ValCodempre);
-                FillDependant_AccordiTableCmpnyDesignat();
+                if(!isSearchRequest)
+                    FillDependant_AccordiTableCmpnyDesignat();
 
                 //Check if foreignkey comes from history
                 TableCmpnyDesignat.FilledByHistory = Navigation.CheckFilledByHistory("cmpny");
@@ -652,7 +654,8 @@ namespace GenioMVC.ViewModels.Equip
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApess1.FldName, query + "%");
                 }
@@ -668,21 +671,21 @@ namespace GenioMVC.ViewModels.Equip
 					weakFilters.Equal(CSGenioApess1.FldCodpesso, selectedValue);
 
                 CriteriaSet subfilters = CriteriaSet.And();
-                if (Navigation.CheckKey("filter_ValCodpess1__1") && (bool)Navigation.GetValue("filter_ValCodpess1__1") == true)
+                if (Navigation.CheckKey("filter_ValCodpess1_FILTER1_1") && (bool)Navigation.GetValue("filter_ValCodpess1_FILTER1_1") == true)
                 {
 						subfilters.Equal(CSGenioApess1.FldGender, "F");
 
                 }
                 else
-                    Navigation.SetValue("filter_ValCodpess1__1", false);
+                    Navigation.SetValue("filter_ValCodpess1_FILTER1_1", false);
 
-                if (Navigation.CheckKey("filter_ValCodpess1__2") && (bool)Navigation.GetValue("filter_ValCodpess1__2") == true)
+                if (Navigation.CheckKey("filter_ValCodpess1_FILTER2_1") && (bool)Navigation.GetValue("filter_ValCodpess1_FILTER2_1") == true)
                 {
 						subfilters.Equal(CSGenioApess1.FldGender, "M");
 
                 }
                 else
-                    Navigation.SetValue("filter_ValCodpess1__2", false);
+                    Navigation.SetValue("filter_ValCodpess1_FILTER2_1", false);
 
                 weakFilters.SubSets.Add(subfilters);
                 accordi_pess1name____Conds.SubSets.Add(weakFilters);
@@ -733,7 +736,8 @@ namespace GenioMVC.ViewModels.Equip
 					this.ValCodpess1 = TablePess1Name.List.First().Value;
 					Navigation.SetValue("pess1", this.ValCodpess1);
                 }
-                FillDependant_AccordiTablePess1Name();
+                if(!isSearchRequest)
+                    FillDependant_AccordiTablePess1Name();
 
                 //Check if foreignkey comes from history
                 TablePess1Name.FilledByHistory = Navigation.CheckFilledByHistory("pess1");
@@ -868,13 +872,13 @@ namespace GenioMVC.ViewModels.Equip
             CriteriaSet subfilters = CriteriaSet.And();
             {
                 var groupFilters = CriteriaSet.Or();
-                bool filter_Accordi_Pess1ValName__1 = false;
-                if (requestValues["filter_Accordi_Pess1ValName_"] != null)
-                    filter_Accordi_Pess1ValName__1 = requestValues["filter_Accordi_Pess1ValName_"].Contains("1");
-                else if (Navigation.CheckKey("filter_Accordi_Pess1ValName__1"))
-                    filter_Accordi_Pess1ValName__1 = (bool)Navigation.GetValue("filter_Accordi_Pess1ValName__1");
-                Navigation.SetValue("filter_Accordi_Pess1ValName__1", filter_Accordi_Pess1ValName__1);
-                if (filter_Accordi_Pess1ValName__1)
+                bool filter_Accordi_Pess1ValName_FILTER1_1 = false;
+                if (requestValues["filter_Accordi_Pess1ValName_FILTER1"] != null)
+                    filter_Accordi_Pess1ValName_FILTER1_1 = requestValues["filter_Accordi_Pess1ValName_FILTER1"].Contains("1");
+                else if (Navigation.CheckKey("filter_Accordi_Pess1ValName_FILTER1_1"))
+                    filter_Accordi_Pess1ValName_FILTER1_1 = (bool)Navigation.GetValue("filter_Accordi_Pess1ValName_FILTER1_1");
+                Navigation.SetValue("filter_Accordi_Pess1ValName_FILTER1_1", filter_Accordi_Pess1ValName_FILTER1_1);
+                if (filter_Accordi_Pess1ValName_FILTER1_1)
                 {
 					groupFilters.Equal(CSGenioApess1.FldGender, "F");
 
@@ -884,13 +888,13 @@ namespace GenioMVC.ViewModels.Equip
             }
             {
                 var groupFilters = CriteriaSet.Or();
-                bool filter_Accordi_Pess1ValName__2 = false;
-                if (requestValues["filter_Accordi_Pess1ValName_"] != null)
-                    filter_Accordi_Pess1ValName__2 = requestValues["filter_Accordi_Pess1ValName_"].Contains("2");
-                else if (Navigation.CheckKey("filter_Accordi_Pess1ValName__2"))
-                    filter_Accordi_Pess1ValName__2 = (bool)Navigation.GetValue("filter_Accordi_Pess1ValName__2");
-                Navigation.SetValue("filter_Accordi_Pess1ValName__2", filter_Accordi_Pess1ValName__2);
-                if (filter_Accordi_Pess1ValName__2)
+                bool filter_Accordi_Pess1ValName_FILTER2_1 = false;
+                if (requestValues["filter_Accordi_Pess1ValName_FILTER2"] != null)
+                    filter_Accordi_Pess1ValName_FILTER2_1 = requestValues["filter_Accordi_Pess1ValName_FILTER2"].Contains("1");
+                else if (Navigation.CheckKey("filter_Accordi_Pess1ValName_FILTER2_1"))
+                    filter_Accordi_Pess1ValName_FILTER2_1 = (bool)Navigation.GetValue("filter_Accordi_Pess1ValName_FILTER2_1");
+                Navigation.SetValue("filter_Accordi_Pess1ValName_FILTER2_1", filter_Accordi_Pess1ValName_FILTER2_1);
+                if (filter_Accordi_Pess1ValName_FILTER2_1)
                 {
 					groupFilters.Equal(CSGenioApess1.FldGender, "M");
 

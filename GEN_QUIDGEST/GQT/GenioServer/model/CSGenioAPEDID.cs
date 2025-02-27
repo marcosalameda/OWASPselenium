@@ -70,6 +70,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "No.";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 6;
 			Qfield.CavDesignation = "NO_14817";
 
             Qfield.NotNull = true;
@@ -257,7 +258,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodpedid, value); }
 		}
 
-
 		/// <summary>Field : "Date" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldDtpedido { get { return m_fldDtpedido; } }
 		private static FieldRef m_fldDtpedido = new FieldRef("pedid", "dtpedido");
@@ -268,7 +268,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDtpedido); }
 			set { insertNameValueField(FldDtpedido, value); }
 		}
-
 
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldNrpedido { get { return m_fldNrpedido; } }
@@ -281,7 +280,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldNrpedido, value); }
 		}
 
-
 		/// <summary>Field : "Reason" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldMotivo { get { return m_fldMotivo; } }
 		private static FieldRef m_fldMotivo = new FieldRef("pedid", "motivo");
@@ -292,7 +290,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldMotivo); }
 			set { insertNameValueField(FldMotivo, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

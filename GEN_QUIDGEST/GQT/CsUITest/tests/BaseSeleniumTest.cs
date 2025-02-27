@@ -1,4 +1,4 @@
-namespace SeleniumWebTest;
+namespace quidgest.uitests.tests;
 
 /// <summary>
 /// Basic test setup that helps deal with selenium driver setup and cleanup

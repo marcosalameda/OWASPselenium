@@ -76,17 +76,14 @@ namespace GenioMVC.Controllers
             }
 
             dynamic result = null;
-            Models.Insta row = null;
-            try { row = Models.Insta.Find(navigation.GetStrValue("insta")); }
-            catch (Exception)
-            {
-                CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model insta");
-            }
-            if(row == null)
-            {
-                row = new Models.Insta();
-                row.klass.QPrimaryKey = navigation.GetStrValue("insta");
-            }
+            /*
+                Instead of loading the entire record from the database, a record will be created in memory with the keys filled in, 
+                    and additional fields from "Field" type limits will be mapped later. 
+                This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+            */
+            Models.Insta row = new Models.Insta(isEmpty: true);
+            row.klass.QPrimaryKey = navigation.GetStrValue("insta");
+            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 
             // Only the last reload request is accepted.
             var requestNumber = Request.Headers.GetValues("ReloadDBEditRequestNumber");
@@ -99,7 +96,6 @@ namespace GenioMVC.Controllers
 				{
 					case "INSTA___TPEQUTIPOEQUI":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Insta_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -109,7 +105,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "INSTA___EQUIPREGISTNR":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Insta_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -119,7 +114,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "LEAFLETDEQUIPREGISTNR":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Leafletd_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -129,7 +123,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "LEAFLETTEQUIPREGISTNR":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Leaflett_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits

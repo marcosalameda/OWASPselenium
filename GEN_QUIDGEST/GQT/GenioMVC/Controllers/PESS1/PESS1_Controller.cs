@@ -48,7 +48,7 @@ namespace GenioMVC.Controllers
             {
                 var isServerReports = !Configuration.SSRSServer.isLocalReports;
                 var reportName = "comodatos";
-                var reportFileName = reportName + (isServerReports ? "" : ".rdl");
+                var reportFileName = reportName + (isServerReports ? "" : ".rdlc");
                 var reportPath = isServerReports ? Configuration.SSRSServer.path : Configuration.PathReports;
                 var reportFullPath = reportPath + (isServerReports ? "/" : "\\") + reportFileName;
                 if(isServerReports) reportFullPath = (reportFullPath.StartsWith("/") ? "" : "/") + reportFullPath;
@@ -111,7 +111,7 @@ namespace GenioMVC.Controllers
             {
                 var isServerReports = !Configuration.SSRSServer.isLocalReports;
                 var reportName = "comodatos";
-                var reportFileName = reportName + (isServerReports ? "" : ".rdl");
+                var reportFileName = reportName + (isServerReports ? "" : ".rdlc");
                 var reportPath = isServerReports ? Configuration.SSRSServer.path : Configuration.PathReports;
                 var reportFullPath = reportPath + (isServerReports ? "/" : "\\") + reportFileName;
                 if(isServerReports) reportFullPath = (reportFullPath.StartsWith("/") ? "" : "/") + reportFullPath;
@@ -174,7 +174,7 @@ namespace GenioMVC.Controllers
             {
                 var isServerReports = !Configuration.SSRSServer.isLocalReports;
                 var reportName = "comodatos";
-                var reportFileName = reportName + (isServerReports ? "" : ".rdl");
+                var reportFileName = reportName + (isServerReports ? "" : ".rdlc");
                 var reportPath = isServerReports ? Configuration.SSRSServer.path : Configuration.PathReports;
                 var reportFullPath = reportPath + (isServerReports ? "/" : "\\") + reportFileName;
                 if(isServerReports) reportFullPath = (reportFullPath.StartsWith("/") ? "" : "/") + reportFullPath;
@@ -236,7 +236,7 @@ namespace GenioMVC.Controllers
             {
                 var isServerReports = !Configuration.SSRSServer.isLocalReports;
                 var reportName = "comodatos";
-                var reportFileName = reportName + (isServerReports ? "" : ".rdl");
+                var reportFileName = reportName + (isServerReports ? "" : ".rdlc");
                 var reportPath = isServerReports ? Configuration.SSRSServer.path : Configuration.PathReports;
                 var reportFullPath = reportPath + (isServerReports ? "/" : "\\") + reportFileName;
                 if(isServerReports) reportFullPath = (reportFullPath.StartsWith("/") ? "" : "/") + reportFullPath;
@@ -303,7 +303,7 @@ namespace GenioMVC.Controllers
             {
                 var isServerReports = !Configuration.SSRSServer.isLocalReports;
                 var reportName = "comodatos";
-                var reportFileName = reportName + (isServerReports ? "" : ".rdl");
+                var reportFileName = reportName + (isServerReports ? "" : ".rdlc");
                 var reportPath = isServerReports ? Configuration.SSRSServer.path : Configuration.PathReports;
                 var reportFullPath = reportPath + (isServerReports ? "/" : "\\") + reportFileName;
                 if(isServerReports) reportFullPath = (reportFullPath.StartsWith("/") ? "" : "/") + reportFullPath;
@@ -341,6 +341,73 @@ namespace GenioMVC.Controllers
                 }
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 52311]/
+
+                Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
+                if (result.FileNameExtension == "pdf") // If pass file extension, browser will download file instead of opening it in PDF Viewer.
+                    return File(result.File, result.MimeType);
+                else
+                    return File(result.File, result.MimeType, "comodatos." + result.FileNameExtension);
+            }
+            catch (Exception e)
+            {
+                CSGenio.framework.Log.Error("Erro_Report: " + e.Message + "; " + (e.InnerException != null ? e.InnerException.Message : ""));
+                if (!preview)
+                {
+                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + e.Message);
+                }
+                else
+                {
+                    return PartialView("_ErrorReport", model: Resources.Resources.OCORREU_UM_ERRO_INES30674);
+                }
+            }
+        }
+		[AuthorizeForUsers]
+        [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+        public ActionResult PTN_Report_5311(bool allSelected = false)
+        {
+            bool preview = false;
+            try
+            {
+                var isServerReports = !Configuration.SSRSServer.isLocalReports;
+                var reportName = "comodatos";
+                var reportFileName = reportName + (isServerReports ? "" : ".rdlc");
+                var reportPath = isServerReports ? Configuration.SSRSServer.path : Configuration.PathReports;
+                var reportFullPath = reportPath + (isServerReports ? "/" : "\\") + reportFileName;
+                if(isServerReports) reportFullPath = (reportFullPath.StartsWith("/") ? "" : "/") + reportFullPath;
+
+                string area = "pess1";
+                var limitation = new List<ReportLimitParameter>();
+                // This find is necessary to check: if the value exists, if the record is invalid, and if the user can view it (EPH).
+                string id = Navigation.GetStrValue("pess1");
+                var record = Models.Pess1.Find(id, fieldsToSerialize: new string[] { "zzstate" });
+                if (record == null || record.ValZzstate != 0)
+                    throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_5311", "Cannot access the specified record");
+
+
+                string[] historicFieldNames = new string[1]{"pess1"};
+                string[] historicFieldValues = new string[1]{Navigation.GetStrValue("pess1")};
+                Dictionary<string, string> arrayFieldsList = new Dictionary<string, string>();
+
+                string[] globFields = new string[1]{"glob.pricolor"};
+
+                string[] specialFormulasFields = new string[0]{};
+                string[] areasReport = new string[0]{};
+
+
+// USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 5311]/
+                ReportSSRS_Result result;
+                using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
+                {
+                    // MH (11/10/2017) - Report Server credentials
+                    if (Configuration.SSRSServer.ContainsCredentials())
+                    {
+                        renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
+                    }
+                    renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
+                    result = renderer.Render("EXCELOPENXML");
+                }
+
+// USE /[MANUAL GQT OVERRIDE_REPORT 5311]/
 
                 Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
                 if (result.FileNameExtension == "pdf") // If pass file extension, browser will download file instead of opening it in PDF Viewer.
@@ -399,17 +466,14 @@ namespace GenioMVC.Controllers
             }
 
             dynamic result = null;
-            Models.Pess1 row = null;
-            try { row = Models.Pess1.Find(navigation.GetStrValue("pess1")); }
-            catch (Exception)
-            {
-                CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model pess1");
-            }
-            if(row == null)
-            {
-                row = new Models.Pess1();
-                row.klass.QPrimaryKey = navigation.GetStrValue("pess1");
-            }
+            /*
+                Instead of loading the entire record from the database, a record will be created in memory with the keys filled in, 
+                    and additional fields from "Field" type limits will be mapped later. 
+                This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+            */
+            Models.Pess1 row = new Models.Pess1(isEmpty: true);
+            row.klass.QPrimaryKey = navigation.GetStrValue("pess1");
+            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 
             // Only the last reload request is accepted.
             var requestNumber = Request.Headers.GetValues("ReloadDBEditRequestNumber");
@@ -422,7 +486,6 @@ namespace GenioMVC.Controllers
 				{
 					case "PESS1___CMPNYDESIGNAT":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Pess1_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -432,7 +495,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESS1___STAKEDESIGNAT":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Pess1_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits

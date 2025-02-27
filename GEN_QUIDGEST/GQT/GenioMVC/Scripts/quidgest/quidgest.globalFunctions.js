@@ -2680,7 +2680,7 @@ function bootbox2FA(data) {
 	});
 	form.append('<div id="error" class="validation-summary-errors hidden"></div>');
 	form.append('<label class=\"i-text__label\">' + quidgestGlobals.Resources.DLG2FAMSG + '</label>');
-	form.append('<input id="value2fa" placeholder="000000" class="i-text__field i-text input-xxlarge"/>');
+	form.append('<input id="value2fa" placeholder="000000" class="i-text__field i-text input-mini"/>');
 
 	var form2FA = bootbox.dialog({
 		message: form,

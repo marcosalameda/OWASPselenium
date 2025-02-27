@@ -39,6 +39,18 @@ namespace GenioMVC.ViewModels.Cmpki
         /// </summary>
         public string ValCodcmpki { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
@@ -46,6 +58,7 @@ namespace GenioMVC.ViewModels.Cmpki
             {
                 CriteriaSet conds = CriteriaSet.And();
                 conds.Equal(CSGenioAcmpki.FldCodtpequ, Navigation.GetValue("tpequ"));
+
                 return conds;
             }
         }
@@ -59,6 +72,14 @@ namespace GenioMVC.ViewModels.Cmpki
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS 2A11]/
+
+			return crs;
+		}
+
 
         private string dbeditTitle;
         public string DBEditTitle { get { if (string.IsNullOrEmpty(dbeditTitle)) GetTitle(); return dbeditTitle; } }
@@ -77,10 +98,8 @@ namespace GenioMVC.ViewModels.Cmpki
             CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, this.Identifier);
             conditions.Equal(CSGenioAcmpki.FldZzstate, 0); //valid zzstate only
 
-            //Menu fixed limits and relations:
-
-            
-
+            // Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioAcmpki.FldCodcmpki, CSGenioAcmpki.FldZzstate, CSGenioAcmpki.FldOrder, CSGenioAcmpki.FldCodtpequ, CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.FldTipoequi, CSGenioAcmpki.FldCodtpeq1, CSGenioAtpeq1.FldCodtpequ, CSGenioAtpeq1.FldTipoequi, CSGenioAcmpki.FldQuantida };
@@ -179,6 +198,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpki.FldCodcmpki, CSGenioAcmpki.Fl
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
 			// Limit "DB"
 			crs.Equal(CSGenioAcmpki.FldCodtpequ, Navigation.GetValue("tpequ"));
@@ -201,7 +222,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpki.FldCodcmpki, CSGenioAcmpki.Fl
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_cmpki");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_cmpki");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Cmpki.AddEPH<CSGenioAcmpki>(ref u, null, "ML2A11"));
 			}
@@ -284,7 +304,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpki.FldCodcmpki, CSGenioAcmpki.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

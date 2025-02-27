@@ -399,7 +399,7 @@ export default {
     }
   },
   methods: {
-     /**
+    /**
      * Case insensitve comparison of two values
      * @param  {Object||String||Integer||Number} fValue passed first value
      * @param  {Object||String||Integer||Number} sValue passed second value
@@ -414,7 +414,7 @@ export default {
           _sValue = sValue.toLowerCase();
       }
       return _fValue == _sValue;
-  },
+    },
     /**
      * Returns the internalValue in a way it can be emited to the parent
      * @returns {Object||Array||String||Integer}

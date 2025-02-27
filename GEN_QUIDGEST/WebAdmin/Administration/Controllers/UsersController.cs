@@ -253,10 +253,16 @@ namespace Administration.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage ExportToExcel()
+        public IActionResult ExportToExcel()
         {
             User user = SysConfiguration.CreateWebAdminUser();
-            System.IO.File.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\temp\" + "user-list.xlsx"); //Delete any leftovers
+            var filePath = AppDomain.CurrentDomain.BaseDirectory + @"\temp\" + "user-list.xlsx";
+
+            //verify if exist temp file
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath); //Delete any leftovers
+            }
 
             /* Build Select Queries */
 
@@ -328,17 +334,12 @@ namespace Administration.Controllers
             QueryToExcel toExcel = new QueryToExcel(sp, user);
             toExcel.AddWorksheet(new QueryToExcel.WorksheetQueries(Resources.Resources.NOME_DE_UTILIZADOR58858, new QueryInfo(p1Query)));
             toExcel.AddWorksheet(new QueryToExcel.WorksheetQueries(Resources.Resources.USER_ROLES25359, new QueryInfo(finalData.DbDataSet)));
-            toExcel.Convert(AppDomain.CurrentDomain.BaseDirectory + @"\temp\" + "user-list.xlsx");
+            toExcel.Convert(filePath);
             /* ------------- */
 
-            //Build and return response
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Content = new StreamContent(new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"\temp\" + "user-list.xlsx", FileMode.Open));
-            response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
-            response.Content.Headers.ContentDisposition.FileName = "user-list.xlsx";
-            response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-
-            return response;
+            //Build and return file
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "user-list.xlsx");
         }
     }
 }

@@ -67,7 +67,7 @@ namespace GenioMVC.Controllers
             // Retrieve the user configuration of the dashboard
             // If there is a user configuration, the original definition is ignored
             // and the position and visibility information of the user configuration is used
-            List<CSGenioAusrwid> userWidgets = UserUiSettings
+            List<CSGenioAusrwid> userWidgets = DashboardUiSettingsDbRec
                 .Load(sp, lstusr.ValDescric, user)
                 .UserWidgets;
 
@@ -103,13 +103,17 @@ namespace GenioMVC.Controllers
                         changes = true;
 
                         // Remove the widget from the user configuration
-                        sp.openConnection();
-                        userWidget.delete(sp);
-                        sp.closeConnection();
+						// Only if not in maintenance mode
+						if (!Maintenance.Current.IsActive)
+						{
+							sp.openConnection();
+							userWidget.delete(sp);
+							sp.closeConnection();
+						}
                     }
                 }
 
-                if (changes) UserUiSettings.Invalidate(lstusr.ValDescric, user);
+                if (changes) DashboardUiSettingsDbRec.Invalidate(lstusr.ValDescric, user);
             }
 
             if (isHomePage)
@@ -137,6 +141,20 @@ namespace GenioMVC.Controllers
             return PartialView("Widgets/PTN_Menu_3L1_Widget_COLAB", vm);
         }
 
+        // GET: "/Dashboard/PTN_Menu_3L1_Widget_WID_EQUI"
+		[HttpGet]
+        [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+        public ActionResult PTN_Menu_3L1_Widget_WID_EQUI()
+        {
+            // Custom widget based on an empty form
+            ViewModels.Wid_equi_ViewModel vm = new ViewModels.Wid_equi_ViewModel(Navigation);
+
+            vm.setModes("v");
+            vm.Load(Request.Form);
+
+            return PartialView("Widgets/PTN_Menu_3L1_Widget_WID_EQUI", vm);
+        }
+
         // GET: "/Dashboard/PTN_Menu_3L1_Widget_EMPLOY"
 		[HttpGet]
         [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
@@ -149,6 +167,21 @@ namespace GenioMVC.Controllers
             vm.Load(Request.Form);
 
             return PartialView("Widgets/PTN_Menu_3L1_Widget_EMPLOY", vm);
+        }
+
+        // GET: "/Dashboard/PTN_Menu_3L1_Widget_WID_INFO_EQUIP"
+		[HttpGet]
+        [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+        public ActionResult PTN_Menu_3L1_Widget_WID_INFO_EQUIP(string fk)
+        {
+            ViewModels.Equip.Wid_iequ_ViewModel vm = new ViewModels.Equip.Wid_iequ_ViewModel(Navigation);
+            // Custom widget based on a form with base area
+            vm.Navigation.SetValue("equip", fk);
+
+            vm.setModes("v");
+            vm.Load(Request.Form, false, Request.IsAjaxRequest());
+
+            return PartialView("Widgets/PTN_Menu_3L1_Widget_WID_INFO_EQUIP", vm);
         }
 
         // GET: "/Dashboard/PTN_Menu_3L1_Widget_GRAPH_COUNT"

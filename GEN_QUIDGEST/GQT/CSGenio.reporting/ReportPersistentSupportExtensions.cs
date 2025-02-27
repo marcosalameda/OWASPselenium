@@ -1,4 +1,4 @@
-﻿using CSGenio.framework;
+using CSGenio.framework;
 using CSGenio.persistence;
 using System;
 using System.Data;
@@ -16,6 +16,7 @@ namespace CSGenio.reporting
                 IDbDataAdapter da = sp.CreateAdapter(ds.Query.CommandText);
 
                 if (ds.Query.QueryParameters.Count != 0)
+                {
                     foreach (var param in ds.Query.QueryParameters)
                     {
                         string paramName = param.Name.Replace("@", "");
@@ -40,6 +41,10 @@ namespace CSGenio.reporting
                         }
                         da.SelectCommand.Parameters.Add(p);
                     }
+                }
+
+                if(ds.Query.CommandType== "StoredProcedure")
+                    da.SelectCommand.CommandType = CommandType.StoredProcedure;
 
                 var dataSet = new DataSet();
                 da.Fill(dataSet);

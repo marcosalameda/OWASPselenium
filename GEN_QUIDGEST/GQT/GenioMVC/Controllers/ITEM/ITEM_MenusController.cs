@@ -524,13 +524,13 @@ namespace GenioMVC.Controllers
 			}
             Models.Item item = Models.Item.Find(id, "MLLIST_DB_MC_F");
             Navigation.SetValue("item", id);
-            if(item != null && ((item.ValValid ? 1 : 0)==0))
+            if(item != null && (((Logical)item.ValValid)==0))
             {
                 if(String.IsNullOrEmpty(formMode))
                     formMode = "Edit";
                 return RedirectToAction("Artigval_" + formMode, "Item", formMode.Equals("New") ? (object)new { nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] } : new { id = item.ValCoditem, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
             }
-            if(item != null && ((item.ValValid ? 1 : 0)==1))
+            if(item != null && (((Logical)item.ValValid)==1))
             {
                 if(String.IsNullOrEmpty(formMode))
                     formMode = "Edit";
@@ -628,13 +628,13 @@ namespace GenioMVC.Controllers
 			}
             Models.Item item = Models.Item.Find(id, "MLLIST_DB_MB_MC_F");
             Navigation.SetValue("item", id);
-            if(item != null && ((item.ValValid ? 1 : 0)==0))
+            if(item != null && (((Logical)item.ValValid)==0))
             {
                 if(String.IsNullOrEmpty(formMode))
                     formMode = "Edit";
                 return RedirectToAction("Artigval_" + formMode, "Item", formMode.Equals("New") ? (object)new { nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] } : new { id = item.ValCoditem, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
             }
-            if(item != null && ((item.ValValid ? 1 : 0)==1))
+            if(item != null && (((Logical)item.ValValid)==1))
             {
                 if(String.IsNullOrEmpty(formMode))
                     formMode = "Edit";
@@ -732,11 +732,11 @@ namespace GenioMVC.Controllers
 			}
             Models.Item item = Models.Item.Find(id, "MLLIST_DB_MC_R");
             Navigation.SetValue("item", id);
-            if(item != null && ((item.ValValid ? 1 : 0)==0))
+            if(item != null && (((Logical)item.ValValid)==0))
             {
                 return RedirectToAction("PTN_Menu_LIST_DB_MC_R_MenuR_OPENARTIGVAL", "Item", new { id = item.ValCoditem, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
             }
-            if(item != null && ((item.ValValid ? 1 : 0)==1))
+            if(item != null && (((Logical)item.ValValid)==1))
             {
                 return RedirectToAction("PTN_Menu_LIST_DB_MC_R_MenuR_OPENARTIGINV", "Item", new { id = item.ValCoditem, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
             }
@@ -832,11 +832,11 @@ namespace GenioMVC.Controllers
 			}
             Models.Item item = Models.Item.Find(id, "MLLIST_DB_MB_MC_R");
             Navigation.SetValue("item", id);
-            if(item != null && ((item.ValValid ? 1 : 0)==0))
+            if(item != null && (((Logical)item.ValValid)==0))
             {
                 return RedirectToAction("PTN_Menu_LIST_DB_MB_MC_R_MenuR_OPENARTIGVAL", "Item", new { id = item.ValCoditem, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
             }
-            if(item != null && ((item.ValValid ? 1 : 0)==1))
+            if(item != null && (((Logical)item.ValValid)==1))
             {
                 return RedirectToAction("PTN_Menu_LIST_DB_MB_MC_R_MenuR_OPENARTIGINV", "Item", new { id = item.ValCoditem, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
             }

@@ -396,7 +396,8 @@ namespace GenioMVC.ViewModels.Roigf
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioArogl1.FldTitle, query + "%");
                 }
@@ -443,7 +444,8 @@ namespace GenioMVC.ViewModels.Roigf
 				}
 
 				TableRogl1Title.List = new SelectList(TableRogl1Title.Elements.ToSelectList(x => x.ValTitle, x => x.ValCodrogl1,  x => x.ValCodrogl1 == this.ValCodrogl1), "Value", "Text", this.ValCodrogl1);
-                FillDependant_RoigfTableRogl1Title();
+                if(!isSearchRequest)
+                    FillDependant_RoigfTableRogl1Title();
 
                 //Check if foreignkey comes from history
                 TableRogl1Title.FilledByHistory = Navigation.CheckFilledByHistory("rogl1");

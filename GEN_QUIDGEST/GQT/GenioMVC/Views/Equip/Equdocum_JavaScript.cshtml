@@ -235,7 +235,7 @@
 		@* Default of the 'ValDesignat' field *@
 		window.Form_Equdocum.SetFormulaDefault('LED_EQUDOCUMEQUIPDESIGNAT', function() {
 						return ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ItemValItemdes', $('[data-form="Equdocum"]'))));
-		}, 'ITEMVALITEMDES_CHANGE');
+		}, 'ITEMVALITEMDES_CHANGE VALCODITEM_CHANGE');
 		
 
 

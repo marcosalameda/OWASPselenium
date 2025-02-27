@@ -106,13 +106,14 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(14);
+			info.Pathways = new Dictionary<string, string>(15);
 			info.Pathways.Add("flds","flds");
 			info.Pathways.Add("aero","flds");
 			info.Pathways.Add("equip","flds");
 			info.Pathways.Add("decom","flds");
 			info.Pathways.Add("wareh","flds");
 			info.Pathways.Add("tpequ","flds");
+			info.Pathways.Add("room1","flds");
 			info.Pathways.Add("cmpny","flds");
 			info.Pathways.Add("item","flds");
 			info.Pathways.Add("pess1","flds");
@@ -253,7 +254,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodfeeca, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodflds { get { return m_fldCodflds; } }
 		private static FieldRef m_fldCodflds = new FieldRef("feeca", "codflds");
@@ -265,7 +265,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodflds, value); }
 		}
 
-
 		/// <summary>Field : "Feedback" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldFeedback { get { return m_fldFeedback; } }
 		private static FieldRef m_fldFeedback = new FieldRef("feeca", "feedback");
@@ -276,7 +275,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldFeedback); }
 			set { insertNameValueField(FldFeedback, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

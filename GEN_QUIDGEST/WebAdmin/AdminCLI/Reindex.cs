@@ -49,11 +49,13 @@ namespace AdminCLI
         {
             ManualResetEvent Wait = new ManualResetEvent(false);
 
+            RdxParamUpgradeSchema RdxItem = null;
+
             ChangedEventHandler rdxEvent = (sender, eventArgs, status) =>
             {
                 double percStatus = status.Percentage();
-
-                if(status.State == RdxProgressStatus.RUNNING)
+                RdxItem.Progress = status;
+                if (status.State == RdxProgressStatus.RUNNING)
                 {
                     string curr_script = "Unknown Script...";
                     if (!string.IsNullOrEmpty(status.ActualScript))
@@ -62,32 +64,33 @@ namespace AdminCLI
                         curr_script = "Starting...";
                     else if (percStatus == 100)
                         curr_script = "Done :)";
-
+                    
                     Console.WriteLine(string.Format("{0}% - {1}", percStatus.ToString("0"), curr_script));
                     return;
                 }
 
                 if (status.State == RdxProgressStatus.SUCCESS)
                     Console.WriteLine("Done :)");
-                else if (status.State == RdxProgressStatus.ERROR) //There was an error, show it
-                    Console.WriteLine($"An error ocurred on script {status.ActualScript}:\n{status.Message}");
+                else if (status.State == RdxProgressStatus.ERROR)
+                {
+                    //There was an error, show it                    
+                    Console.Error.WriteLine($"An error ocurred on script {status.ActualScript}:\n{status.Message}");
+                }
                 else if (status.State == RdxProgressStatus.CANCELLED)
                     Console.WriteLine("Operation Cancelled");
+                
                 Wait.Set();
             };
 
-            RdxParamUpgradeSchema RdxItem = dBMaintenance.StartReindexation(options.Username, options.Password, 
+            RdxItem = dBMaintenance.StartReindexation(options.Username, options.Password, 
                 options.SingleScript, options.MultiScript.ToList(), options.Category, options.Full, rdxEvent);
 
+            Wait.WaitOne(); //Wait for the reindexation to finish
             //In case there was an error
             if(RdxItem != null && RdxItem.Progress.State == RdxProgressStatus.ERROR)
-            {
-                Console.WriteLine("Error: " + RdxItem.Progress.Message);
                 return 1;
-            }
-            
-            Wait.WaitOne(); //Wait for the reindexation to finish
-            return 0;
+            else
+                return 0;
         }
 
         /// <summary>

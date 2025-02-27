@@ -47,7 +47,7 @@ namespace GenioMVC.Controllers
             {
                 var isServerReports = !Configuration.SSRSServer.isLocalReports;
                 var reportName = "comodato";
-                var reportFileName = reportName + (isServerReports ? "" : ".rdl");
+                var reportFileName = reportName + (isServerReports ? "" : ".rdlc");
                 var reportPath = isServerReports ? Configuration.SSRSServer.path : Configuration.PathReports;
                 var reportFullPath = reportPath + (isServerReports ? "/" : "\\") + reportFileName;
                 if(isServerReports) reportFullPath = (reportFullPath.StartsWith("/") ? "" : "/") + reportFullPath;
@@ -251,17 +251,14 @@ namespace GenioMVC.Controllers
             }
 
             dynamic result = null;
-            Models.Lendi row = null;
-            try { row = Models.Lendi.Find(navigation.GetStrValue("lendi")); }
-            catch (Exception)
-            {
-                CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model lendi");
-            }
-            if(row == null)
-            {
-                row = new Models.Lendi();
-                row.klass.QPrimaryKey = navigation.GetStrValue("lendi");
-            }
+            /*
+                Instead of loading the entire record from the database, a record will be created in memory with the keys filled in, 
+                    and additional fields from "Field" type limits will be mapped later. 
+                This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+            */
+            Models.Lendi row = new Models.Lendi(isEmpty: true);
+            row.klass.QPrimaryKey = navigation.GetStrValue("lendi");
+            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 
             // Only the last reload request is accepted.
             var requestNumber = Request.Headers.GetValues("ReloadDBEditRequestNumber");
@@ -274,7 +271,6 @@ namespace GenioMVC.Controllers
 				{
 					case "COMOD___PESS1NAME____":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Comod_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -284,7 +280,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "COMOD___PESS2NAME____":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Comod_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -294,7 +289,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "COMOD___EQUIPREGISTNR":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Comod_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits

@@ -61,10 +61,6 @@ namespace CSGenio.business
         /// total de registos da Qlisting
         /// </summary>
         public int TotalRecords;
-		/// <summary>
-        /// Aplicar o comando NoLock nas queries
-        /// </summary>
-		private Boolean m_noLock;
 
         /// <summary>
         /// Lista de fields pedidos to esta Qlisting
@@ -113,29 +109,13 @@ namespace CSGenio.business
             this.area = area;
             condicoesEphQuery = CalculateConditionsEphGeneric(area, identifier);
 
-            //NH(2016.07.21) - The NoLock command is only applied to SQL SERVER connections
-            if (sp.DatabaseType == DatabaseType.SQLSERVER2000 || sp.DatabaseType == DatabaseType.SQLSERVER2005 || sp.DatabaseType == DatabaseType.SQLSERVER2008)
-                this.m_noLock = true;
-            else
-                this.m_noLock = false;
+            NoLock = true;
         }
 
-		public Boolean NoLock
-		{
-			get
-            {
-                return m_noLock;
-            }
-            set
-            {
-                if (sp.DatabaseType != DatabaseType.SQLSERVER2000  && sp.DatabaseType != DatabaseType.SQLSERVER2005 && sp.DatabaseType != DatabaseType.SQLSERVER2008 && value==true)
-                {
-                    throw new BusinessException(null, "Listing.NoLock", "Current connection has unknown type: " + sp.DatabaseType.ToString());
-                }
-
-                m_noLock = value;
-            }
-        }
+		/// <summary>
+        /// Aplicar o comando NoLock nas queries
+        /// </summary>
+		public Boolean NoLock { get; set;}
 
         /// <summary>
         /// Calcula uma condição em SQL que vai aplicar a uma area os filtros indicados nos EPH
@@ -460,7 +440,7 @@ namespace CSGenio.business
                 {
                     if (area == null || area.Information.PersistenceType == PersistenceType.Database || area.Information.PersistenceType == PersistenceType.View)
                     {
-                        Qlisting = sp.select(identifier, this, condition, nrRecords, m_noLock);
+                        Qlisting = sp.select(identifier, this, condition, nrRecords, NoLock);
                     }
                     else //if (area.Information.PersistenceType == PersistenceType.Codebase)
                     {

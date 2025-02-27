@@ -390,7 +390,8 @@ namespace GenioMVC.ViewModels.Esppe
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApesso.FldName, query + "%");
                 }
@@ -437,7 +438,8 @@ namespace GenioMVC.ViewModels.Esppe
 				}
 
 				TablePessoName.List = new SelectList(TablePessoName.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpesso), "Value", "Text", this.ValCodpesso);
-                FillDependant_EsppeTablePessoName();
+                if(!isSearchRequest)
+                    FillDependant_EsppeTablePessoName();
 
                 //Check if foreignkey comes from history
                 TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
@@ -593,7 +595,8 @@ namespace GenioMVC.ViewModels.Esppe
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAspeci.FldEspecial, query + "%");
                 }
@@ -640,7 +643,8 @@ namespace GenioMVC.ViewModels.Esppe
 				}
 
 				TableSpeciEspecial.List = new SelectList(TableSpeciEspecial.Elements.ToSelectList(x => x.ValEspecial, x => x.ValCodespec,  x => x.ValCodespec == this.ValCodespec), "Value", "Text", this.ValCodespec);
-                FillDependant_EsppeTableSpeciEspecial();
+                if(!isSearchRequest)
+                    FillDependant_EsppeTableSpeciEspecial();
 
                 //Check if foreignkey comes from history
                 TableSpeciEspecial.FilledByHistory = Navigation.CheckFilledByHistory("speci");

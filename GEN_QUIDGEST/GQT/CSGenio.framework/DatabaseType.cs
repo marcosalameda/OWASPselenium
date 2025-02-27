@@ -1,26 +1,23 @@
-using System;
+﻿using System;
 
 namespace CSGenio.framework
 {
 	/// <summary>
-	/// Guarda os tipos possíveis de ligação a gestores de Base de Dados.
+	/// Database vendor
 	/// </summary>
     public enum DatabaseType
 	{
-        ACCESS,
         ORACLE,
-        SQLSERVER2000,
-        SQLSERVER2005,
-        SQLSERVER2008,
+        SQLSERVER,
+        SQLSERVERCOMPAT,
         SQLITE,
 		MYSQL,
         ERRO
 	}
 	
 	/// <summary>
-    /// Guarda os tipos de key primária possiveis.
+    /// Primary key types
     /// </summary>
-    /// 
     public enum CodeType
     {
         NOT_KEY = 0,

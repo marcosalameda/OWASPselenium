@@ -303,21 +303,7 @@ namespace CSGenio.persistence
 					if (campoBD.IsVirtual)
                         continue;
 
-                    // Encrypt the password fields before save in the database
-                    if(campoBD.FieldType.Equals(FieldType.PASSWORD))
-                    {
-                        // The password field, if it does not have the value, will not change what is in the database.
-                        if (!campoBD.isEmptyValue(campoPedido.Value))
-                        {
-                            var encryptedData = (EncryptedDataType)campoPedido.Value;
-                            //If we only have the decrypted value, we'll try use the encryption associated with the field.
-                            if (string.IsNullOrWhiteSpace(encryptedData.EncryptedValue as string) && campoBD.EncryptFieldValueFunction != null)
-                                encryptedData.EncryptedValue = campoBD.EncryptFieldValueFunction(encryptedData.DecryptedValue, campoBD, area);
-
-                            query.Set(campoPedido.Name, ToValidDbValue(encryptedData, campoBD));
-                        }
-                    }
-                    else if (!campoBD.FieldType.Equals(FieldType.IMAGEM_JPEG) && !campoBD.FieldType.Equals(FieldType.PATH)
+                    if (!campoBD.FieldType.Equals(FieldType.IMAGEM_JPEG) && !campoBD.FieldType.Equals(FieldType.PATH)
                         && !campoBD.FieldType.Equals(FieldType.DATACRIA) && !campoBD.FieldType.Equals(FieldType.OPERCRIA)
                         && !campoBD.FieldType.Equals(FieldType.HORACRIA) && !campoBD.FieldType.Equals(FieldType.INSTANTECRIA) /*&& !campoBD.FieldType.Equals(FieldType.FICHEIRO_BD)*/)
                     {

@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Pwreg
         /// </summary>
         public string ValCodpwreg { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Pwreg
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PWREG_PSWNOME]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Pwreg_PswValNome_ViewModel" /> class.
@@ -136,6 +156,8 @@ namespace GenioMVC.ViewModels.Pwreg
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -237,7 +259,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApsw.FldCodpsw, CSGenioApsw.FldZzsta
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -275,7 +297,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApsw.FldCodpsw, CSGenioApsw.FldZzsta
 			CriteriaSet pwreg___psw__nome____Conds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ PWREG_NOME]/
+// USE /[MANUAL GQT OVERRQ PWREG_PSWNOME]/
 
             // This will happen in case there is an error
             if(pwreg___psw__nome____Conds == null)
@@ -288,7 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApsw.FldCodpsw, CSGenioApsw.FldZzsta
 
 				Qlisting = Models.ModelBase.Where<CSGenioApsw>(false, pwreg___psw__nome____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PWREG___PSW__NOME____", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP PWREG_NOME]/
+// USE /[MANUAL GQT OVERRQLSTEXP PWREG_PSWNOME]/
 
                 conditions = pwreg___psw__nome____Conds;
                 return;
@@ -298,7 +320,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApsw.FldCodpsw, CSGenioApsw.FldZzsta
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST PWREG_NOME]/
+// USE /[MANUAL GQT OVERRQLIST PWREG_PSWNOME]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_psw"];

@@ -69,7 +69,7 @@ namespace CSGenio.business
 
         protected override void LogError()
         {
-            LogError(exceptionName);
+            Log.Info(FormatLog(exceptionName));
         }
     }
 }

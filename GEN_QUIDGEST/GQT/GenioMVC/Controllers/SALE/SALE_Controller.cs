@@ -76,17 +76,14 @@ namespace GenioMVC.Controllers
             }
 
             dynamic result = null;
-            Models.Sale row = null;
-            try { row = Models.Sale.Find(navigation.GetStrValue("sale")); }
-            catch (Exception)
-            {
-                CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model sale");
-            }
-            if(row == null)
-            {
-                row = new Models.Sale();
-                row.klass.QPrimaryKey = navigation.GetStrValue("sale");
-            }
+            /*
+                Instead of loading the entire record from the database, a record will be created in memory with the keys filled in, 
+                    and additional fields from "Field" type limits will be mapped later. 
+                This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+            */
+            Models.Sale row = new Models.Sale(isEmpty: true);
+            row.klass.QPrimaryKey = navigation.GetStrValue("sale");
+            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 
             // Only the last reload request is accepted.
             var requestNumber = Request.Headers.GetValues("ReloadDBEditRequestNumber");
@@ -99,7 +96,6 @@ namespace GenioMVC.Controllers
 				{
 					case "VENDA___ORGANORGANIZA":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Venda_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -109,7 +105,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "VENDAW01ORGANORGANIZA":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Vendaw01_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits

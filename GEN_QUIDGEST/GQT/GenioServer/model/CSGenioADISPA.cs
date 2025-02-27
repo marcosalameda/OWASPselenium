@@ -67,6 +67,17 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("coddisst", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield.FieldDescription = ">> STATUS";
+			Qfield.FieldSize =  36;
+			Qfield.Alias = info.Alias;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "___STATUS46938";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("isprepar", FieldType.LOGICO);
 			Qfield.FieldDescription = "Is prepared";
 			Qfield.FieldSize =  1;
@@ -98,6 +109,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "DISPATCH_NUMBER23616";
 
             Qfield.NotNull = true;
@@ -174,6 +186,7 @@ namespace CSGenio.business
 			// Mother Relations
 			//------------------------------
 			info.ParentTables = new Dictionary<string, Relation>();
+			info.ParentTables.Add("disst", new Relation("GQT", "gqtdispatch", "dispa", "coddispa", "coddisst", "GQT", "gqtdisst", "disst", "coddisst", "coddisst"));
 			info.ParentTables.Add("entit", new Relation("GQT", "gqtdispatch", "dispa", "coddispa", "codentit", "GQT", "gqtentity", "entit", "codentit", "codentit"));
 			info.ParentTables.Add("perso", new Relation("GQT", "gqtdispatch", "dispa", "coddispa", "codperso", "GQT", "gqtperson", "perso", "codperso", "codperso"));
 		}
@@ -185,8 +198,9 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(4);
+			info.Pathways = new Dictionary<string, string>(5);
 			info.Pathways.Add("perso","perso");
+			info.Pathways.Add("disst","disst");
 			info.Pathways.Add("entit","entit");
 			info.Pathways.Add("faci1","entit");
 			info.Pathways.Add("faci2","entit");
@@ -336,7 +350,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddispa, value); }
 		}
 
-
 		/// <summary>Field : ">>CUSTOMER" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodentit { get { return m_fldCodentit; } }
 		private static FieldRef m_fldCodentit = new FieldRef("dispa", "codentit");
@@ -348,6 +361,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodentit, value); }
 		}
 
+		/// <summary>Field : ">> STATUS" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldCoddisst { get { return m_fldCoddisst; } }
+		private static FieldRef m_fldCoddisst = new FieldRef("dispa", "coddisst");
+
+		/// <summary>Field : ">> STATUS" Tipo: "CE" Formula:  ""</summary>
+		public string ValCoddisst
+		{
+			get { return (string)returnValueField(FldCoddisst); }
+			set { insertNameValueField(FldCoddisst, value); }
+		}
 
 		/// <summary>Field : "Is prepared" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldIsprepar { get { return m_fldIsprepar; } }
@@ -360,7 +383,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldIsprepar, value); }
 		}
 
-
 		/// <summary>Field : "Dispatch date" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDispadt { get { return m_fldDispadt; } }
 		private static FieldRef m_fldDispadt = new FieldRef("dispa", "dispadt");
@@ -371,7 +393,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDispadt); }
 			set { insertNameValueField(FldDispadt, value); }
 		}
-
 
 		/// <summary>Field : "Dispatch number" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldDispanr { get { return m_fldDispanr; } }
@@ -384,7 +405,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDispanr, value); }
 		}
 
-
 		/// <summary>Field : "Prepared" Tipo: "DT" Formula: DF "iif(emptyL([DISPA->ISPREPAR])==1,[ZEROD],[Today])"</summary>
 		public static FieldRef FldPrepared { get { return m_fldPrepared; } }
 		private static FieldRef m_fldPrepared = new FieldRef("dispa", "prepared");
@@ -395,7 +415,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldPrepared); }
 			set { insertNameValueField(FldPrepared, value); }
 		}
-
 
 		/// <summary>Field : ">>PERSON RESPONSIBLE" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodperso { get { return m_fldCodperso; } }
@@ -408,7 +427,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodperso, value); }
 		}
 
-
 		/// <summary>Field : "Status" Tipo: "AC" Formula: + "iif(emptyD([DISPA->DISPADT])==0,"D",iif(emptyD([DISPA->PREPARED])==0,"P","I"))"</summary>
 		public static FieldRef FldStatus { get { return m_fldStatus; } }
 		private static FieldRef m_fldStatus = new FieldRef("dispa", "status");
@@ -419,7 +437,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldStatus); }
 			set { insertNameValueField(FldStatus, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -517,7 +534,7 @@ namespace CSGenio.business
 
      
 
-         
+          
 
 	}
 }

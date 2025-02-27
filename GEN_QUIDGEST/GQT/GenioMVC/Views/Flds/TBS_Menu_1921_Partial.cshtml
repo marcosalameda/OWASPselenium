@@ -73,6 +73,10 @@
         .DBEdit()
         .Filters(this.Model.Menu.Filters)
         .Form("Campo", false, false)
+        .UpdateConditions((item)=>Campo_ViewModel.UpdateConditions(item))
+        .ViewConditions((item)=>Campo_ViewModel.ViewConditions(item))
+        .DeleteConditions((item)=>Campo_ViewModel.DeleteConditions(item))
+        .InsertConditions((item)=>Campo_ViewModel.InsertConditions(this.Model.Navigation))
         .SetFollowUp("Campo_Show", "Flds" , (Func<GenioMVC.Models.Flds, object>)(item => new { id = item.ValCodflds }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
         .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
 		;

@@ -119,8 +119,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("grpb","grpb");
 			info.Pathways.Add("trsb","trsb");
+			info.Pathways.Add("grpb","grpb");
 		}
 
 		/// <summary>
@@ -253,7 +253,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodtblk, value); }
 		}
 
-
 		/// <summary>Field : "Foreign Key 1" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldFkey1 { get { return m_fldFkey1; } }
 		private static FieldRef m_fldFkey1 = new FieldRef("tblk", "fkey1");
@@ -264,7 +263,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldFkey1); }
 			set { insertNameValueField(FldFkey1, value); }
 		}
-
 
 		/// <summary>Field : "Foreign Key 2" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldFkey2 { get { return m_fldFkey2; } }
@@ -277,7 +275,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldFkey2, value); }
 		}
 
-
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("tblk", "name");
@@ -288,7 +285,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldName); }
 			set { insertNameValueField(FldName, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

@@ -159,6 +159,9 @@ namespace CSGenio.framework
 				sp.closeConnection();
                 Log.Error(string.Format("[Audit.registLoginOut] Erro ao escrever na tabela de log '{0}mem'.", Configuration.Program));
             }
+
+            // Log with logger system
+            Log.Info(String.Format("User {0} on host {1}: {2} - {3}", userToSave, hostName, routine, obs));
         }
 
 	   /// <summary>

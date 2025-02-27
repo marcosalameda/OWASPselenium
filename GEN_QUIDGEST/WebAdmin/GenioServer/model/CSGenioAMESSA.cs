@@ -175,6 +175,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "DOCUMENT_NUMBER28451";
 
 			Qfield.Dupmsg = "";
@@ -354,7 +355,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodmessa, value); }
 		}
 
-
 		/// <summary>Field : "Notification ID" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldIdnotif { get { return m_fldIdnotif; } }
 		private static FieldRef m_fldIdnotif = new FieldRef("messa", "idnotif");
@@ -365,7 +365,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldIdnotif); }
 			set { insertNameValueField(FldIdnotif, value); }
 		}
-
 
 		/// <summary>Field : "Message ID" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldIdmsg { get { return m_fldIdmsg; } }
@@ -378,7 +377,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldIdmsg, value); }
 		}
 
-
 		/// <summary>Field : "To whom the message was sent" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldDesignat { get { return m_fldDesignat; } }
 		private static FieldRef m_fldDesignat = new FieldRef("messa", "designat");
@@ -389,7 +387,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldDesignat); }
 			set { insertNameValueField(FldDesignat, value); }
 		}
-
 
 		/// <summary>Field : "E-mail to whom the message was sent" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldEmail { get { return m_fldEmail; } }
@@ -402,7 +399,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldEmail, value); }
 		}
 
-
 		/// <summary>Field : "Message" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldMessage { get { return m_fldMessage; } }
 		private static FieldRef m_fldMessage = new FieldRef("messa", "message");
@@ -413,7 +409,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldMessage); }
 			set { insertNameValueField(FldMessage, value); }
 		}
-
 
 		/// <summary>Field : "E-mail sent?" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldMailsent { get { return m_fldMailsent; } }
@@ -426,7 +421,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldMailsent, value); }
 		}
 
-
 		/// <summary>Field : "Error sending mail" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldMailerr { get { return m_fldMailerr; } }
 		private static FieldRef m_fldMailerr = new FieldRef("messa", "mailerr");
@@ -437,7 +431,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldMailerr); }
 			set { insertNameValueField(FldMailerr, value); }
 		}
-
 
 		/// <summary>Field : "Created by" Tipo: "ON" Formula:  ""</summary>
 		public static FieldRef FldCreatope { get { return m_fldCreatope; } }
@@ -450,7 +443,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCreatope, value); }
 		}
 
-
 		/// <summary>Field : "Created on" Tipo: "OD" Formula:  ""</summary>
 		public static FieldRef FldCreatdat { get { return m_fldCreatdat; } }
 		private static FieldRef m_fldCreatdat = new FieldRef("messa", "creatdat");
@@ -461,7 +453,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldCreatdat); }
 			set { insertNameValueField(FldCreatdat, value); }
 		}
-
 
 		/// <summary>Field : "'Entity'" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodentit { get { return m_fldCodentit; } }
@@ -474,7 +465,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodentit, value); }
 		}
 
-
 		/// <summary>Field : "'Person'" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodperso { get { return m_fldCodperso; } }
 		private static FieldRef m_fldCodperso = new FieldRef("messa", "codperso");
@@ -486,7 +476,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodperso, value); }
 		}
 
-
 		/// <summary>Field : "Document number" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldDocum_nr { get { return m_fldDocum_nr; } }
 		private static FieldRef m_fldDocum_nr = new FieldRef("messa", "docum_nr");
@@ -497,7 +486,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldDocum_nr); }
 			set { insertNameValueField(FldDocum_nr, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

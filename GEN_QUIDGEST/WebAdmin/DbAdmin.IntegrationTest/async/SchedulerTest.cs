@@ -48,7 +48,10 @@ namespace DbAdmin.IntegrationTest
         public void JobExecutes()
         {
             var job = new TestSuccessProcess();
+
+            sp.openTransaction();
             var jobId = job.Schedule(sp, _user);
+            sp.closeTransaction();
 
             Assert.That(jobId, Is.Not.Null);
             Assert.That(jobId, Is.Not.Empty);
@@ -67,7 +70,10 @@ namespace DbAdmin.IntegrationTest
         public void JobExecutesAsync()
         {
             var job = new TestAsyncProcess();
+
+            sp.openTransaction();
             var jobId = job.Schedule(sp, _user);
+            sp.closeTransaction();
 
             Assert.That(jobId, Is.Not.Null);
             Assert.That(jobId, Is.Not.Empty);

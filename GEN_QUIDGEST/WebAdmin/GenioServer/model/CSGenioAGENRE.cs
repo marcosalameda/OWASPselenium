@@ -261,7 +261,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodgenre, value); }
 		}
 
-
 		/// <summary>Field : "Genre" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldGender { get { return m_fldGender; } }
 		private static FieldRef m_fldGender = new FieldRef("genre", "gender");
@@ -272,7 +271,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldGender); }
 			set { insertNameValueField(FldGender, value); }
 		}
-
 
 		/// <summary>Field : "Gender contact" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldAgencont { get { return m_fldAgencont; } }
@@ -285,7 +283,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldAgencont, value); }
 		}
 
-
 		/// <summary>Field : "Background color" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldBackcolo { get { return m_fldBackcolo; } }
 		private static FieldRef m_fldBackcolo = new FieldRef("genre", "backcolo");
@@ -297,7 +294,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldBackcolo, value); }
 		}
 
-
 		/// <summary>Field : "Text color" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTextcolo { get { return m_fldTextcolo; } }
 		private static FieldRef m_fldTextcolo = new FieldRef("genre", "textcolo");
@@ -308,7 +304,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldTextcolo); }
 			set { insertNameValueField(FldTextcolo, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

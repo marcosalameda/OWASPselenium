@@ -403,7 +403,8 @@ namespace GenioMVC.ViewModels.Pwcom
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApsw.FldNome, query + "%");
                 }
@@ -450,7 +451,8 @@ namespace GenioMVC.ViewModels.Pwcom
 				}
 
 				TablePswNome.List = new SelectList(TablePswNome.Elements.ToSelectList(x => x.ValNome, x => x.ValCodpsw,  x => x.ValCodpsw == this.ValCodpsw), "Value", "Text", this.ValCodpsw);
-                FillDependant_PwcomTablePswNome();
+                if(!isSearchRequest)
+                    FillDependant_PwcomTablePswNome();
 
                 //Check if foreignkey comes from history
                 TablePswNome.FilledByHistory = Navigation.CheckFilledByHistory("psw");
@@ -606,7 +608,8 @@ namespace GenioMVC.ViewModels.Pwcom
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApess1.FldName, query + "%");
                 }
@@ -653,7 +656,8 @@ namespace GenioMVC.ViewModels.Pwcom
 				}
 
 				TablePess1Name.List = new SelectList(TablePess1Name.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpess1), "Value", "Text", this.ValCodpess1);
-                FillDependant_PwcomTablePess1Name();
+                if(!isSearchRequest)
+                    FillDependant_PwcomTablePess1Name();
 
                 //Check if foreignkey comes from history
                 TablePess1Name.FilledByHistory = Navigation.CheckFilledByHistory("pess1");

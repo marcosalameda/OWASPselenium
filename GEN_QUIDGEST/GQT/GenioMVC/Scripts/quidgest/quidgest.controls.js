@@ -1928,7 +1928,8 @@ QDbeditControl.prototype._reloadDBEditContent = function (searchInput, searchRes
     $.each(dbeditControl.ParentForm.getAllForeignKeySelectors(), function (area, selector) { values[area.toLowerCase()] = getFieldValue(selector); });
 
     var searchText = "";
-    if (searchInput !== undefined) {
+    var isSearching = searchInput !== undefined;
+    if (isSearching) {
         var searchId = "qTable" + $(dbeditControl.element).data('main-field').replace(".Val", "");
         searchText = searchInput.val();
         values[searchId] = searchText;
@@ -2014,6 +2015,9 @@ QDbeditControl.prototype._reloadDBEditContent = function (searchInput, searchRes
                     //not(:first) -> A primeira opção do chosen coresponde uma opção "Vazio", mas deve ser revisto se é preciso está opção.
                     //not([value=]) -> preenchido pela persistencia client-side
                     let optionPersistence = filledByPersistence ? ':not([value="' + newValue + '"])' : '';
+                    // If it was a search request, the currently selected option needs to be restored since the unnecessary select on the server side has been removed.
+                    const selectedOptionValue = isSearching ? dbeditControl.Value : data.Selected;
+                    const selectedOptionText = isSearching ? dbeditControl.Text : data.Value;
                     $("option:not(:first)" + optionPersistence, dbeditControl.element).remove();
                     jQuery.each(data.List, function (_, row) {
                         // Se a opção for a mesma que é preenchida pela persistencia, substituir o HTML só para ter o Texto atualizado caso se esse mudou
@@ -2034,16 +2038,17 @@ QDbeditControl.prototype._reloadDBEditContent = function (searchInput, searchRes
                                 optionText = '';
                         }
 
-                        dbeditControl.element.append($('<option ' + (row.key === data.Selected ? 'selected="selected" ' : '') + 'value="' + row.key + '"></option>').text(optionText));
+                        dbeditControl.element.append($('<option ' + (row.key === selectedOptionValue ? 'selected="selected" ' : '') + 'value="' + row.key + '"></option>').text(optionText));
                     });
 
-                    if (!filledByPersistence && data.Selected) {
-                        var option = $('option[value="' + data.Selected + '"]', dbeditControl.element);
+                    if (!filledByPersistence && selectedOptionValue) {
+                        // We only need to include the option if it is not retrieved from the server.
+                        const option = $('option[value="' + selectedOptionValue + '"]', dbeditControl.element);
                         if (option.length == 0) {
-                            var formatedVal = dbeditControl._getFormatedTextValue(data.Value);
-                            dbeditControl.element.append($('<option selected="selected" value="' + data.Selected + '"></option>').text(formatedVal));
+                            var formatedVal = dbeditControl._getFormatedTextValue(selectedOptionText);
+                            dbeditControl.element.append($('<option selected="selected" value="' + selectedOptionValue + '"></option>').text(formatedVal));
                         }
-                        newValue = data.Selected;
+                        newValue = selectedOptionValue;
                     }
 
                     if (searchInput === undefined)

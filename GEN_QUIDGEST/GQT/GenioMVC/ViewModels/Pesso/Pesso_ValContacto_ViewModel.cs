@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Pesso
         /// </summary>
         public string ValCodpesso { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Pesso
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PESSO_PSEUDCONTACTO]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Pesso_ValContacto_ViewModel" /> class.
@@ -140,6 +160,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -159,7 +181,6 @@ namespace GenioMVC.ViewModels.Pesso
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_conta");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_conta");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Conta.AddEPH<CSGenioAconta>(ref u, null, "IBL_PESSO___PSEUDCONTACTO"));
 			}
@@ -242,7 +263,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAconta.FldCodconta, CSGenioAconta.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

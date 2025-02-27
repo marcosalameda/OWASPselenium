@@ -82,6 +82,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Order";
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ORDER39632";
 
             Qfield.NotNull = true;
@@ -106,6 +107,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Amount";
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "AMOUNT46885";
 
 			Qfield.Dupmsg = "";
@@ -162,6 +164,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "AMOUNT46885";
 
@@ -368,7 +371,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodlnhde, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodlnhpd { get { return m_fldCodlnhpd; } }
 		private static FieldRef m_fldCodlnhpd = new FieldRef("lnhde", "codlnhpd");
@@ -379,7 +381,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodlnhpd); }
 			set { insertNameValueField(FldCodlnhpd, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula: ++ "[LNHPD->CODPEDID]"</summary>
 		public static FieldRef FldCodpedid { get { return m_fldCodpedid; } }
@@ -392,7 +393,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodpedid, value); }
 		}
 
-
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldOrdem { get { return m_fldOrdem; } }
 		private static FieldRef m_fldOrdem = new FieldRef("lnhde", "ordem");
@@ -403,7 +403,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldOrdem); }
 			set { insertNameValueField(FldOrdem, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodtpequ { get { return m_fldCodtpequ; } }
@@ -416,7 +415,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodtpequ, value); }
 		}
 
-
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldQuantida { get { return m_fldQuantida; } }
 		private static FieldRef m_fldQuantida = new FieldRef("lnhde", "quantida");
@@ -427,7 +425,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldQuantida); }
 			set { insertNameValueField(FldQuantida, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodlnhag { get { return m_fldCodlnhag; } }
@@ -440,7 +437,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodlnhag, value); }
 		}
 
-
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldDescript { get { return m_fldDescript; } }
 		private static FieldRef m_fldDescript = new FieldRef("lnhde", "descript");
@@ -451,7 +447,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldDescript); }
 			set { insertNameValueField(FldDescript, value); }
 		}
-
 
 		/// <summary>Field : "Code" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldCode { get { return m_fldCode; } }
@@ -464,7 +459,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCode, value); }
 		}
 
-
 		/// <summary>Field : "Site" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldUrl { get { return m_fldUrl; } }
 		private static FieldRef m_fldUrl = new FieldRef("lnhde", "url");
@@ -476,7 +470,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldUrl, value); }
 		}
 
-
 		/// <summary>Field : "Amount" Tipo: "ND" Formula: DF "[LNHPD->QUANTDEC]"</summary>
 		public static FieldRef FldQuantdec { get { return m_fldQuantdec; } }
 		private static FieldRef m_fldQuantdec = new FieldRef("lnhde", "quantdec");
@@ -487,7 +480,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldQuantdec); }
 			set { insertNameValueField(FldQuantdec, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

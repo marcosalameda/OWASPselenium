@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Equip
         /// </summary>
         public string ValCodequip { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Equip
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS EQUIP_PSEUDREPARACO]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Equip_ValReparaco_ViewModel" /> class.
@@ -79,6 +99,7 @@ namespace GenioMVC.ViewModels.Equip
                 new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXTO, Resources.Resources.EXPERT27393, 30, 0, true),
                 new Exports.QColumn(CSGenioArepar.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION_OF_THE_R26085, 30, 3, true),
                 new Exports.QColumn(CSGenioArepar.FldHours, FieldType.NUMERO, Resources.Resources.SPENT_ON_HOURS19285, 10, 0, true),
+                new Exports.QColumn(CSGenioArepar.FldTipoarea, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TECHNICAL_AREA50773, 1, 0, true, "AreaTecn"),
             };
 
             columns.RemoveAll(item => item == null);
@@ -121,7 +142,7 @@ namespace GenioMVC.ViewModels.Equip
 
 			if(Menu == null)
 				Menu = new TablePartial<GenioMVC.Models.Repar>();
-			Menu.SetFilters(bool.Parse(requestValues["ValReparaco_tableFilters"] ?? "false"), false);
+			Menu.SetFilters(bool.Parse(requestValues["ValReparaco_tableFilters"] ?? "false"), true);
 
 
 			//FOR: MENU LIST SORTING
@@ -135,6 +156,40 @@ namespace GenioMVC.ViewModels.Equip
 
 			//Subfilters
 			CriteriaSet subfilters = CriteriaSet.And();
+			{
+				var groupFilters = CriteriaSet.Or();
+				bool filter_ValReparaco_STARTED_1 = false;
+				if (requestValues["filter_ValReparaco_STARTED"] != null)
+					filter_ValReparaco_STARTED_1 = requestValues["filter_ValReparaco_STARTED"].Contains("1");
+				Navigation.SetValue("filter_ValReparaco_STARTED_1", filter_ValReparaco_STARTED_1);
+				if (filter_ValReparaco_STARTED_1)
+				{
+					groupFilters.NotEqual(CSGenioArepar.FldTipoarea, "");
+
+				}
+
+				bool filter_ValReparaco_STARTED_2 = false;
+				if (requestValues["filter_ValReparaco_STARTED"] != null)
+					filter_ValReparaco_STARTED_2 = requestValues["filter_ValReparaco_STARTED"].Contains("2");
+				Navigation.SetValue("filter_ValReparaco_STARTED_2", filter_ValReparaco_STARTED_2);
+				if (filter_ValReparaco_STARTED_2)
+				{
+					groupFilters.NotEqual(CSGenioArepar.FldDescript, "");
+
+				}
+
+				bool filter_ValReparaco_STARTED_3 = false;
+				if (requestValues["filter_ValReparaco_STARTED"] != null)
+					filter_ValReparaco_STARTED_3 = requestValues["filter_ValReparaco_STARTED"].Contains("3");
+				Navigation.SetValue("filter_ValReparaco_STARTED_3", filter_ValReparaco_STARTED_3);
+				if (filter_ValReparaco_STARTED_3)
+				{
+					groupFilters.Greater(CSGenioArepar.FldHours, 0);
+
+				}
+
+				subfilters.SubSets.Add(groupFilters);
+			}
 
 			crs.SubSets.Add(subfilters);
 
@@ -143,6 +198,8 @@ namespace GenioMVC.ViewModels.Equip
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -163,7 +220,6 @@ namespace GenioMVC.ViewModels.Equip
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_repar");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_repar");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Repar.AddEPH<CSGenioArepar>(ref u, null, "IBL_EQUIP___PSEUDREPARACO"));
 			}
@@ -242,11 +298,11 @@ namespace GenioMVC.ViewModels.Equip
 
 			}
 
-FieldRef[] fields = new FieldRef[] { CSGenioArepar.FldCodrepar, CSGenioArepar.FldZzstate, CSGenioArepar.FldNrrepara, CSGenioArepar.FldDtrepara, CSGenioArepar.FldCodcateg, CSGenioAcate1.FldCodcateg, CSGenioAcate1.FldCategoria, CSGenioArepar.FldCodpesso, CSGenioApesso.FldCodpesso, CSGenioApesso.FldName, CSGenioArepar.FldDescript, CSGenioArepar.FldHours };
+FieldRef[] fields = new FieldRef[] { CSGenioArepar.FldCodrepar, CSGenioArepar.FldZzstate, CSGenioArepar.FldNrrepara, CSGenioArepar.FldDtrepara, CSGenioArepar.FldCodcateg, CSGenioAcate1.FldCodcateg, CSGenioAcate1.FldCategoria, CSGenioArepar.FldCodpesso, CSGenioApesso.FldCodpesso, CSGenioApesso.FldName, CSGenioArepar.FldDescript, CSGenioArepar.FldHours, CSGenioArepar.FldTipoarea };
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -428,7 +484,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioArepar.FldCodrepar, CSGenioArepar.Fl
 
         private static readonly string[] _fieldsToSerialize =
         {
-            "Repar", "Repar.ValCodrepar", "Repar.ValZzstate", "Repar.ValNrrepara", "Repar.ValDtrepara", "Cate1", "Cate1.ValCategoria", "Pesso", "Pesso.ValName", "Repar.ValDescript", "Repar.ValHours", "Repar.ValCodcateg", "Repar.ValCodempre", "Repar.ValCodequip", "Repar.ValCodpesso", "Repar.ValCodespec"
+            "Repar", "Repar.ValCodrepar", "Repar.ValZzstate", "Repar.ValNrrepara", "Repar.ValDtrepara", "Cate1", "Cate1.ValCategoria", "Pesso", "Pesso.ValName", "Repar.ValDescript", "Repar.ValHours", "Repar.ValTipoarea", "Repar.ValCodcateg", "Repar.ValCodempre", "Repar.ValCodequip", "Repar.ValCodpesso", "Repar.ValCodespec"
         };
 
         private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>
@@ -438,7 +494,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioArepar.FldCodrepar, CSGenioArepar.Fl
             new TableSearchColumn("Cate1_ValCategoria", CSGenioAcate1.FldCategoria, typeof(string)),
             new TableSearchColumn("Pesso_ValName", CSGenioApesso.FldName, typeof(string)),
             new TableSearchColumn("ValDescript", CSGenioArepar.FldDescript, typeof(string)),
-            new TableSearchColumn("ValHours", CSGenioArepar.FldHours, typeof(decimal?))
+            new TableSearchColumn("ValHours", CSGenioArepar.FldHours, typeof(decimal?)),
+            new TableSearchColumn("ValTipoarea", CSGenioArepar.FldTipoarea, typeof(string), array : "AreaTecn")
         };
 
     }

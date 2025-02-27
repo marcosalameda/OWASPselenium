@@ -41,7 +41,7 @@ public class AsyncProcessScheduledTask : IScheduledTask
         catch (Exception ex)
         {
             sp?.rollbackTransaction();
-            Log.Error($"Error handling WebApi call: {ex.Message}");
+            Log.Error($"Error handling WebApi call: {ex}");
         }
         return Task.CompletedTask;
     }

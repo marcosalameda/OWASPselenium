@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Lnhde
         /// </summary>
         public string ValCodlnhde { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Lnhde
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS LNHDE_PEDIDNRPEDIDO]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Lnhde_PedidValNrpedido_ViewModel" /> class.
@@ -134,6 +154,8 @@ namespace GenioMVC.ViewModels.Lnhde
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -227,7 +249,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -275,7 +297,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
 			CriteriaSet lnhde___pedidnrpedidoConds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ LNHDE_NRPEDIDO]/
+// USE /[MANUAL GQT OVERRQ LNHDE_PEDIDNRPEDIDO]/
 
             // This will happen in case there is an error
             if(lnhde___pedidnrpedidoConds == null)
@@ -288,7 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
 
 				Qlisting = Models.ModelBase.Where<CSGenioApedid>(false, lnhde___pedidnrpedidoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LNHDE___PEDIDNRPEDIDO", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP LNHDE_NRPEDIDO]/
+// USE /[MANUAL GQT OVERRQLSTEXP LNHDE_PEDIDNRPEDIDO]/
 
                 conditions = lnhde___pedidnrpedidoConds;
                 return;
@@ -298,7 +320,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST LNHDE_NRPEDIDO]/
+// USE /[MANUAL GQT OVERRQLIST LNHDE_PEDIDNRPEDIDO]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_pedid"];

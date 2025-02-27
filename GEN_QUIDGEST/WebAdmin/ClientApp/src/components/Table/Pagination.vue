@@ -8,7 +8,7 @@
                     b-style="secondary"
                     :disabled="!prevButtonEnabled"
                     @click="pageHandler(1)">
-                    <span class="mdi mdi-chevron-double-left"></span>
+                    <q-icon icon="chevron-double-left" />
                 </q-button>
                 <!-- END: First page button -->
                 <!-- BEGIN: Previous page button -->
@@ -16,7 +16,7 @@
                     b-style="secondary"
                     :disabled="!prevButtonEnabled"
                     @click="pageHandler(page - 1)">
-                    <span class="mdi mdi-chevron-left"></span>
+                    <q-icon icon="chevron-left" />
                 </q-button>
                 <!-- END: Previous page button -->
                 <!-- BEGIN: Visible page number buttons -->
@@ -37,7 +37,7 @@
                     b-style="secondary"
                     :disabled="!nextButtonEnabled"
                     @click="pageHandler(page + 1)">
-                    <span class="mdi mdi-chevron-right"></span>
+                    <q-icon icon="chevron-right" />
                 </q-button>
                 <!-- END: Next page button -->
                 <!-- BEGIN: Last page button -->
@@ -45,7 +45,7 @@
                     b-style="secondary"
                     :disabled="!nextButtonEnabled"
                     @click="pageHandler(totalPages)">
-                    <span class="mdi mdi-chevron-double-right"></span>
+                    <q-icon icon="chevron-double-right" />
                 </q-button>
                 <!-- END: Last page button -->
                 <!-- END: Page navigation buttons -->

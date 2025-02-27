@@ -68,6 +68,15 @@ namespace Administration.Models
         [Display(Name = "UTILIZADOR_DE_DOMINI41043", ResourceType = typeof(Resources.Resources))]
         public bool Log_ConnWithDomainUser { get; set; }
 
+        [Display(Name = "GQP shared tables")]
+        [Required]
+        public string GQP_Schema { get; set; }
+        
+        [Display(Name = "ENCRIPTAR_LIGACAO12834", ResourceType = typeof(Resources.Resources))]
+        public bool GQP_ConnEncrypt { get; set; }
+
+        [Display(Name = "UTILIZADOR_DE_DOMINI41043", ResourceType = typeof(Resources.Resources))]
+        public bool GQP_ConnWithDomainUser { get; set; }
 
 
         [Display(Name = "O_ANO_DEFAULT_NAO_ES52509", ResourceType = typeof(Resources.Resources))]

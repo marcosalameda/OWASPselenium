@@ -72,6 +72,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  2;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 2;
 			Qfield.CavDesignation = "CODE49225";
 
 			Qfield.Dupmsg = "";
@@ -244,7 +245,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodaero, value); }
 		}
 
-
 		/// <summary>Field : "Airline name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("aero", "name");
@@ -256,7 +256,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldName, value); }
 		}
 
-
 		/// <summary>Field : "Code" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldCodcmaer { get { return m_fldCodcmaer; } }
 		private static FieldRef m_fldCodcmaer = new FieldRef("aero", "codcmaer");
@@ -267,7 +266,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldCodcmaer); }
 			set { insertNameValueField(FldCodcmaer, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

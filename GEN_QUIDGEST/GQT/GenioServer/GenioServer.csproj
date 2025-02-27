@@ -68,7 +68,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libs\DocumentEngine.dll</HintPath>
     </Reference>
-    <PackageReference Include="DotNetZip" Version="1.16.0" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.11.2" />
     <!-- It has to be this version. The lastest version of Types only works with the new Microsoft.Data.SqlClient provider -->
     <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.1016.290">
@@ -117,6 +116,7 @@
     <Compile Include="model\CSGenioAGENRE.cs" />
     <Compile Include="model\CSGenioAFEECA.cs" />
     <Compile Include="model\CSGenioANOTIF.cs" />
+    <Compile Include="model\CSGenioADISST.cs" />
     <Compile Include="model\CSGenioAASSET.cs" />
     <Compile Include="model\CSGenioALANG2.cs" />
     <Compile Include="model\CSGenioALENDI.cs" />
@@ -196,6 +196,7 @@
     <Compile Include="model\CSGenioACMPKI.cs" />
     <Compile Include="model\CSGenioAPRODU.cs" />
     <Compile Include="model\CSGenioAKINDE.cs" />
+    <Compile Include="model\CSGenioAITEMP.cs" />
     <Compile Include="model\CSGenioARULES.cs" />
     <Compile Include="model\CSGenioAS_UA.cs" />
     <Compile Include="model\CSGenioAFTGRI.cs" />
@@ -209,7 +210,6 @@
     <Compile Include="model\CSGenioAGRPB.cs" />
     <Compile Include="model\CSGenioAUSERS.cs" />
     <Compile Include="model\CSGenioAPAIS1.cs" />
-    <Compile Include="model\CSGenioACOMPA.cs" />
     <Compile Include="model\CSGenioAS_NES.cs" />
     <Compile Include="model\CSGenioAUICOM.cs" />
     <Compile Include="model\CSGenioACATE2.cs" />
@@ -244,7 +244,6 @@
     <Compile Include="model\CSGenioAITEMC.cs" />
     <Compile Include="model\CSGenioADESAM.cs" />
     <Compile Include="model\CSGenioATICKT.cs" />
-    <Compile Include="model\CSGenioAPATIE.cs" />
     <Compile Include="model\CSGenioATRSB.cs" />
     <Compile Include="model\CSGenioAATTAC.cs" />
     <Compile Include="model\CSGenioAROLE.cs" />

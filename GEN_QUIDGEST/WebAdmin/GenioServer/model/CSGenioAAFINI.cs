@@ -292,7 +292,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodafini, value); }
 		}
 
-
 		/// <summary>Field : "Beginning" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldIniafini { get { return m_fldIniafini; } }
 		private static FieldRef m_fldIniafini = new FieldRef("afini", "iniafini");
@@ -303,7 +302,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldIniafini); }
 			set { insertNameValueField(FldIniafini, value); }
 		}
-
 
 		/// <summary>Field : "End" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldEndafini { get { return m_fldEndafini; } }
@@ -316,7 +314,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldEndafini, value); }
 		}
 
-
 		/// <summary>Field : ">AFFINITY GENRE" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldCodgafin { get { return m_fldCodgafin; } }
 		private static FieldRef m_fldCodgafin = new FieldRef("afini", "codgafin");
@@ -327,7 +324,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodgafin); }
 			set { insertNameValueField(FldCodgafin, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodpess2 { get { return m_fldCodpess2; } }
@@ -340,7 +336,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodpess2, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodpess1 { get { return m_fldCodpess1; } }
 		private static FieldRef m_fldCodpess1 = new FieldRef("afini", "codpess1");
@@ -351,7 +346,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodpess1); }
 			set { insertNameValueField(FldCodpess1, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

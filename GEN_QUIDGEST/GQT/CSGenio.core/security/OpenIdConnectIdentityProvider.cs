@@ -255,16 +255,12 @@ namespace GenioServer.security
                     data["client_id"] = Options.ClientId;
                     data["client_secret"] = Options.ClientSecret;
                     data["redirect_uri"] = tokenCredential.OriginUrl; //HydrateURL(Options.CallbackPath);
-                    //If the post message have error try put this header (Only microsoft recommend that but works with default one)
-                    //wb.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
                     try
                     {
                         var response = wb.UploadValues(Options.TokenEndpoint, "POST", data);
                         string responseInString = Encoding.UTF8.GetString(response);
-                        Log.Error("resposta:" + responseInString);
-                        //var jsonMsg = JsonConvert.DeserializeObject(responseInString); //If the user are succefull authenticated the return message have to be a good json
-
+                        
                         var json = JsonNode.Parse(responseInString);
                         var jwtstring = json["id_token"].GetValue<string>();
                         var jwt = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(jwtstring);
@@ -350,7 +346,7 @@ namespace GenioServer.security
             return id;
         }
 
-        private IIdentity Authenticate(string ext_username, PersistentSupport sp)
+        protected virtual IIdentity Authenticate(string ext_username, PersistentSupport sp)
         {
             try
             {

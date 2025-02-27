@@ -34,12 +34,24 @@ namespace GenioMVC.ViewModels
         /// <inheritdoc/>
         protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -53,6 +65,14 @@ namespace GenioMVC.ViewModels
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS WID_GRAP_PSEUDFIELD001]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Wid_grap_ValField001_ViewModel" /> class.
@@ -130,6 +150,8 @@ namespace GenioMVC.ViewModels
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -149,7 +171,6 @@ namespace GenioMVC.ViewModels
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_cmpny");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_cmpny");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Cmpny.AddEPH<CSGenioAcmpny>(ref u, null, "IBL_WID_GRAPPSEUDFIELD001"));
 			}
@@ -224,7 +245,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

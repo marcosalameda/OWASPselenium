@@ -39,6 +39,17 @@ namespace GenioMVC.ViewModels.Indoc
         /// </summary>
         public string ValCoddentr { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
@@ -46,6 +57,7 @@ namespace GenioMVC.ViewModels.Indoc
             {
                 CriteriaSet conds = CriteriaSet.And();
                 conds.Equal(CSGenioAldent.FldCoddentr, this.ValCoddentr ?? Navigation.GetStrValue("indoc"));
+
                 return conds;
             }
         }
@@ -63,6 +75,14 @@ namespace GenioMVC.ViewModels.Indoc
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS DENTR_PSEUDENTRADAS]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Dentr_ValEntradas_ViewModel" /> class.
@@ -148,6 +168,8 @@ namespace GenioMVC.ViewModels.Indoc
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -167,7 +189,6 @@ namespace GenioMVC.ViewModels.Indoc
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_ldent");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_ldent");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Ldent.AddEPH<CSGenioAldent>(ref u, null, "IBL_DENTR___PSEUDENTRADAS"));
 			}
@@ -250,7 +271,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAldent.FldCodldent, CSGenioAldent.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

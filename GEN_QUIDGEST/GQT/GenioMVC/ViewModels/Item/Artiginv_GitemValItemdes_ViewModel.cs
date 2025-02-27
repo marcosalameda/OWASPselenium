@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Item
         /// </summary>
         public string ValCoditem { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Item
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS ARTIGINV_GITEMITEMDES]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Artiginv_GitemValItemdes_ViewModel" /> class.
@@ -136,6 +156,8 @@ namespace GenioMVC.ViewModels.Item
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -237,7 +259,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgitem.FldCodgitem, CSGenioAgitem.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -275,7 +297,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgitem.FldCodgitem, CSGenioAgitem.Fl
 			CriteriaSet artiginvgitemitemdes_Conds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ ARTIGINV_ITEMDES]/
+// USE /[MANUAL GQT OVERRQ ARTIGINV_GITEMITEMDES]/
 
             // This will happen in case there is an error
             if(artiginvgitemitemdes_Conds == null)
@@ -288,7 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgitem.FldCodgitem, CSGenioAgitem.Fl
 
 				Qlisting = Models.ModelBase.Where<CSGenioAgitem>(false, artiginvgitemitemdes_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ARTIGINVGITEMITEMDES_", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP ARTIGINV_ITEMDES]/
+// USE /[MANUAL GQT OVERRQLSTEXP ARTIGINV_GITEMITEMDES]/
 
                 conditions = artiginvgitemitemdes_Conds;
                 return;
@@ -298,7 +320,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgitem.FldCodgitem, CSGenioAgitem.Fl
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST ARTIGINV_ITEMDES]/
+// USE /[MANUAL GQT OVERRQLIST ARTIGINV_GITEMITEMDES]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_gitem"];

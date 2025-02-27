@@ -1,27 +1,38 @@
 ﻿<template>
 	<div id="message_queue_messages_container">
-		<QGroupBoxContainer>
+		<q-card
+			width="block">
 			<q-row-container>
+				<data-system-badge
+					:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<select-input v-model="statusType" :options="statusTypes" :label="Resources.STATUS62033"></select-input>
+						<select-input
+							v-model="statusType"
+							:options="statusTypes"
+							:label="Resources.STATUS62033" />
 					</base-input-structure>
 					<base-input-structure
 						class="i-text">
-						<select-input v-model="queueType" :options="queueTypes" :label="Resources.QUEUE45251"></select-input>
+						<select-input
+							v-model="queueType"
+							:options="queueTypes"
+							:label="Resources.QUEUE45251" />
 					</base-input-structure>
 				</q-control-wrapper>
+
 				<br>
+
 				<qtable
 					:rows="tQueuesMSG.rows"
 					:columns="tQueuesMSG.columns"
 					:config="tQueuesMSG.config"
 					@on-change-query="onChangeQuery"
-					:totalRows="tQueuesMSG.total_rows">
-				</qtable>
-				</q-row-container>
-		</QGroupBoxContainer>
+					:totalRows="tQueuesMSG.total_rows" />
+			</q-row-container>
+		</q-card>
 	</div>
 </template>
 
@@ -33,12 +44,15 @@
 
 	export default {
 		name: 'message_queue_messages',
+
 		mixins: [reusableMixin],
+
 		props: {
 			model: {
 				required: true
 			}
 		},
+
 		data() {
 			var vm = this;
 			return {
@@ -135,6 +149,7 @@
 				}
 			};
 		},
+
 		methods: {
 			fetchData() {
 				var vm = this;
@@ -152,11 +167,13 @@
 					}
 				});
 			},
+
 			onChangeQuery(queryParams) {
 				var vm = this;
 				$.each(queryParams, function (propName, value) { vm.tQueuesMSG.queryParams[propName] = value; });
 				vm.fetchData();
 			},
+
 			fillQueueTypes() {
 				var vm = this, acks = [];
 				$.each(vm.model.MQueues.Queues, function (index, q) {
@@ -173,13 +190,16 @@
 				});
 			}
 		},
+
 		created() {
 			// Ler dados
 			this.fetchData();
 			this.fillQueueTypes();
 		},
+
 		watch: {
 			'statusType': 'fetchData',
+			
 			'queueType': 'fetchData'
 		}
 	};

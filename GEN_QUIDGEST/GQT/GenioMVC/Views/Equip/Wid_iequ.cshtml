@@ -1,0 +1,148 @@
+﻿@model GenioMVC.ViewModels.Equip.Wid_iequ_ViewModel
+
+@{
+    ViewBag.Title = @Resources.EQUIPMENT03632;
+}
+
+@LoadDefault()
+
+@helper LoadDefault() {
+<div class="form-horizontal" area="Equip" data-form="Wid_iequ">
+	<fieldset>
+		<legend class="form-header">@ViewBag.Title</legend>
+        <div class="form-flow">
+            @form_content_body()
+        </div>
+		@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Wid_iequ" })
+		@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Wid_iequ" })
+        @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Wid_iequ" })
+        @Html.AntiForgeryToken()
+	</fieldset>
+</div>
+
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_WID_IEQUEQUIPSEQUENNR">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValSequennr, new { label_id="LED_WID_IEQUEQUIPSEQUENNR", @class = " i-text__label", id="LABEL_LED_WID_IEQUEQUIPSEQUENNR"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_WID_IEQUEQUIPSEQUENNR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValSequennr, new {help_id = "LED_WID_IEQUEQUIPSEQUENNR", @class = "Number text-right i-text__field i-text input-small", data_sequencial = "M1", data_identifier = "LED_WID_IEQUEQUIPSEQUENNR", @pers_cs_area = "Equip", @pers_cs_field = "ValSequennr", @db_field = "ValSequennr", title = @Resources.SEQUENTIAL_NO_38590, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
+								@Html.ValidationMessageFor(model => model.ValSequennr)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_WID_IEQUEQUIPREGISTNR">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValRegistnr, new { label_id="LED_WID_IEQUEQUIPREGISTNR", @class = " i-text__label", id="LABEL_LED_WID_IEQUEQUIPREGISTNR"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_WID_IEQUEQUIPREGISTNR','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.TextBoxFor(model => model.ValRegistnr, new {help_id = "LED_WID_IEQUEQUIPREGISTNR", @class = "i-text__field i-text input-small", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_WID_IEQUEQUIPREGISTNR", @pers_cs_area = "Equip", @pers_cs_field = "ValRegistnr", @db_field = "ValRegistnr", fixed_field = "true", @readonly = "readonly", title = @Resources.NO__REGISTER04207, maxlength = "6", rows = "6" })
+								@Html.ValidationMessageFor(model => model.ValRegistnr)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_WID_IEQUTPEQUTIPOEQUI">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableTpequTipoequi, new { label_id="IFF_WID_IEQUTPEQUTIPOEQUI", @class = " i-text__label", id="LABEL_IFF_WID_IEQUTPEQUTIPOEQUI"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_WID_IEQUTPEQUTIPOEQUI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodtpequ, Model.TableTpequTipoequi.List , "", new {help_id = "IFF_WID_IEQUTPEQUTIPOEQUI", @class = "i-select chosen-dropdown input-xlarge", data_identifier = "IFF_WID_IEQUTPEQUTIPOEQUI", @pers_cs_area = "Tpequ", @pers_cs_field = "ValCodtpequ", @db_field = "ValCodtpequ", @db_full_field_name = "equip.codtpequ", data_has_more = Model.TableTpequTipoequi.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableTpequTipoequi.Selected, data_dbedit_value = Model.TableTpequTipoequi.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodequip, @data_see_more = "Wid_iequ_TpequValTipoequi", title = @Resources.TYPE_OF_EQUIPMENT18080, data_see_more_url = @Url.Action("Wid_iequ_TpequValTipoequi","Equip"), data_is_dbedit = "true", data_fields = "tpequ.codtpequ,tpequ.tipoequi", data_main_field = "Tpequ.ValTipoequi", data_elements = 0, data_filled_by_history = Model.TableTpequTipoequi.FilledByHistory, @dependant_fields = "tpequ.codtpequ,tpequ.tipoequi" })
+								@Html.ValidationMessageFor(model => model.TableTpequTipoequi)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-dbedit draggable " id="CONTAINER_IFF_WID_IEQUWAREHWAREHDES">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.TableWarehWarehdes, new { label_id="IFF_WID_IEQUWAREHWAREHDES", @class = " i-text__label", id="LABEL_IFF_WID_IEQUWAREHWAREHDES"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('IFF_WID_IEQUWAREHWAREHDES','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DropDownListFor(model => model.ValCodwareh, Model.TableWarehWarehdes.List , "", new {help_id = "IFF_WID_IEQUWAREHWAREHDES", @class = "i-select chosen-dropdown input-xlarge", data_identifier = "IFF_WID_IEQUWAREHWAREHDES", @pers_cs_area = "Wareh", @pers_cs_field = "ValCodwareh", @db_field = "ValCodwareh", @db_full_field_name = "equip.codwareh", data_has_more = Model.TableWarehWarehdes.HasMore(), data_has_more_text = @Resources.PROCURE_PARA_MAIS_RE41208, data_placeholder = @Resources.ESCOLHA___40245, data_value = Model.TableWarehWarehdes.Selected, data_dbedit_value = Model.TableWarehWarehdes.Value, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_form_key = @Model.ValCodequip, @data_see_more = "Wid_iequ_WarehValWarehdes", title = @Resources.WAREHOUSE51864, data_see_more_url = @Url.Action("Wid_iequ_WarehValWarehdes","Equip"), data_is_dbedit = "true", data_fields = "wareh.codwareh,wareh.warehdes", data_main_field = "Wareh.ValWarehdes", data_elements = 0, data_filled_by_history = Model.TableWarehWarehdes.FilledByHistory, @dependant_fields = "wareh.codwareh,wareh.warehdes" })
+								@Html.ValidationMessageFor(model => model.TableWarehWarehdes)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_WID_IEQUEQUIPVALORTOT">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValValortot, new { label_id="LED_WID_IEQUEQUIPVALORTOT", @class = " i-text__label", id="LABEL_LED_WID_IEQUEQUIPVALORTOT"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_WID_IEQUEQUIPVALORTOT','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValValortot, new {help_id = "LED_WID_IEQUEQUIPVALORTOT", @class = "i-input-group__field text-right i-text__field i-text input-medium", data_refresh = "true", data_tipoform = "SR", data_identifier = "LED_WID_IEQUEQUIPVALORTOT", @pers_cs_area = "Equip", @pers_cs_field = "ValValortot", @db_field = "ValValortot", fixed_field = "true", @readonly = "readonly", title = @Resources.TOTAL_VALUE30570, data_currency = "True", data_number_integer = "9", data_number_decimals = "2", data_number_format = "999999999.99" })
+								@Html.ValidationMessageFor(model => model.ValValortot)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_WID_IEQUEQUIPDTAQUISI">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValDtaquisi, new { label_id="LED_WID_IEQUEQUIPDTAQUISI", @class = " i-text__label", id="LABEL_LED_WID_IEQUEQUIPDTAQUISI"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_WID_IEQUEQUIPDTAQUISI','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValDtaquisi, new {help_id = "LED_WID_IEQUEQUIPDTAQUISI", @class = "i-input-group__field b-icon-text input-small", data_identifier = "LED_WID_IEQUEQUIPDTAQUISI", @pers_cs_area = "Equip", @pers_cs_field = "ValDtaquisi", @db_field = "ValDtaquisi", title = @Resources.ACQUISITION44180 })
+								@Html.ValidationMessageFor(model => model.ValDtaquisi)
+							</div>
+						</div>
+						<div class="control-join-group">
+						<div class="i-date-picker draggable " id="CONTAINER_LED_WID_IEQUEQUIPDTDECO__">
+								<div class="d-inline-flex">
+								@Html.LabelFor(model => model.ValDtdeco, new { label_id="LED_WID_IEQUEQUIPDTDECO__", @class = " i-text__label", id="LABEL_LED_WID_IEQUEQUIPDTDECO__"}, true, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_WID_IEQUEQUIPDTDECO__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.DateFor(model => model.ValDtdeco, new {help_id = "LED_WID_IEQUEQUIPDTDECO__", @class = "i-input-group__field b-icon-text input-small", data_refresh = "true", data_tipoform = "++", data_identifier = "LED_WID_IEQUEQUIPDTDECO__", @pers_cs_area = "Equip", @pers_cs_field = "ValDtdeco", @db_field = "ValDtdeco", fixed_field = "true", @readonly = "readonly", title = @Resources.DECOMISSION14486 })
+								@Html.ValidationMessageFor(model => model.ValDtdeco)
+							</div>
+						</div>
+						<div class="control-join-group row-group-checkbox">
+						<div class="i-checkbox draggable " id="CONTAINER_LED_WID_IEQUEQUIPBOUGHT__">
+								@Html.CheckBoxFor(model => model.ValBought, new {help_id = "LED_WID_IEQUEQUIPBOUGHT__", @class = "i-checkbox__field i-checkbox input-mini", data_refresh = "true", data_tipoform = "+", data_identifier = "LED_WID_IEQUEQUIPBOUGHT__", @pers_cs_area = "Equip", @pers_cs_field = "ValBought", @db_field = "ValBought", fixed_field = "true", @disabled = "disabled", @readonly = "readonly", title = @Resources.BOUGHT32044 }, @Model.IsEditableMode, false)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								@Html.ValidationMessageFor(model => model.ValBought)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+}
+
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT WID_IEQU]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_WID_IEQU" data-form-javascript="true">
+@Html.Partial("~/Views/Equip/Wid_iequ_JavaScript.cshtml", Model, ViewData)
+<script>
+    $(document).ready(function (e) {
+        InitSpecialControls($('[data-form]'));
+    });
+
+
+
+
+
+
+// USE /[MANUAL GQT FORM_CODEJS WID_IEQU]/
+</script>
+</div>
+}
+
+@codeJavascript()

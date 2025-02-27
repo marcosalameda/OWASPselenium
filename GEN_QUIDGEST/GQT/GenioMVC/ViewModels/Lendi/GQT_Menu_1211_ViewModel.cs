@@ -39,12 +39,28 @@ namespace GenioMVC.ViewModels.Lendi
         /// </summary>
         public string ValCodlendi { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+				// Limit "HM"
+				if (!AddHistoryLimit(conditions, CSGenioAlendi.FldCodpess1, "user"))
+					return null;
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +74,14 @@ namespace GenioMVC.ViewModels.Lendi
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS 1211]/
+
+			return crs;
+		}
+
 
         private string dbeditTitle;
         public string DBEditTitle { get { if (string.IsNullOrEmpty(dbeditTitle)) GetTitle(); return dbeditTitle; } }
@@ -76,12 +100,8 @@ namespace GenioMVC.ViewModels.Lendi
             CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, this.Identifier);
             conditions.Equal(CSGenioAlendi.FldZzstate, 0); //valid zzstate only
 
-            //Menu fixed limits and relations:
-
-            
-            AddHistoryLimit(conditions, CSGenioAlendi.FldCodpess1, "user");
-
-
+            // Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.FldZzstate, CSGenioAlendi.FldCodpess1, CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioAlendi.FldCodequip, CSGenioAequip.FldCodequip, CSGenioAequip.FldRegistnr, CSGenioAlendi.FldCodpess2, CSGenioApess2.FldCodpesso, CSGenioApess2.FldName, CSGenioAlendi.FldLendinnr, CSGenioAlendi.FldStart, CSGenioAequip.FldFrequenc, CSGenioAlendi.FldWarndt, CSGenioAlendi.FldEnd, CSGenioAlendi.FldObservat, CSGenioAlendi.FldReturndt, CSGenioAlendi.FldReturned, CSGenioAlendi.FldDayslimi };
@@ -185,25 +205,15 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
 			CriteriaSet subfilters = CriteriaSet.And();
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_GQT_Menu_1211_DEVOLUCAO_0 = false;
-				if (requestValues["filter_GQT_Menu_1211_DEVOLUCAO"] != null)
-					filter_GQT_Menu_1211_DEVOLUCAO_0 = requestValues["filter_GQT_Menu_1211_DEVOLUCAO"].Contains("0");
-				else if (requestValues["filter_GQT_Menu_1211_DEVOLUCAO"] == null)
-					filter_GQT_Menu_1211_DEVOLUCAO_0 = true;
-				Navigation.SetValue("filter_GQT_Menu_1211_DEVOLUCAO_0", filter_GQT_Menu_1211_DEVOLUCAO_0);
-				if (filter_GQT_Menu_1211_DEVOLUCAO_0)
-				{
-					groupFilters.Equal(CSGenioAlendi.FldReturned, 0);
-
-				}
-
 				bool filter_GQT_Menu_1211_DEVOLUCAO_1 = false;
 				if (requestValues["filter_GQT_Menu_1211_DEVOLUCAO"] != null)
 					filter_GQT_Menu_1211_DEVOLUCAO_1 = requestValues["filter_GQT_Menu_1211_DEVOLUCAO"].Contains("1");
+				else if (requestValues["filter_GQT_Menu_1211_DEVOLUCAO"] == null)
+					filter_GQT_Menu_1211_DEVOLUCAO_1 = true;
 				Navigation.SetValue("filter_GQT_Menu_1211_DEVOLUCAO_1", filter_GQT_Menu_1211_DEVOLUCAO_1);
 				if (filter_GQT_Menu_1211_DEVOLUCAO_1)
 				{
-					groupFilters.Equal(CSGenioAlendi.FldReturned, 1);
+					groupFilters.Equal(CSGenioAlendi.FldReturned, 0);
 
 				}
 
@@ -212,6 +222,16 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
 					filter_GQT_Menu_1211_DEVOLUCAO_2 = requestValues["filter_GQT_Menu_1211_DEVOLUCAO"].Contains("2");
 				Navigation.SetValue("filter_GQT_Menu_1211_DEVOLUCAO_2", filter_GQT_Menu_1211_DEVOLUCAO_2);
 				if (filter_GQT_Menu_1211_DEVOLUCAO_2)
+				{
+					groupFilters.Equal(CSGenioAlendi.FldReturned, 1);
+
+				}
+
+				bool filter_GQT_Menu_1211_DEVOLUCAO_3 = false;
+				if (requestValues["filter_GQT_Menu_1211_DEVOLUCAO"] != null)
+					filter_GQT_Menu_1211_DEVOLUCAO_3 = requestValues["filter_GQT_Menu_1211_DEVOLUCAO"].Contains("3");
+				Navigation.SetValue("filter_GQT_Menu_1211_DEVOLUCAO_3", filter_GQT_Menu_1211_DEVOLUCAO_3);
+				if (filter_GQT_Menu_1211_DEVOLUCAO_3)
 				{
 
 				}
@@ -224,10 +244,9 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
-			// Limit "HM"
-			if (!AddHistoryLimit(crs, CSGenioAlendi.FldCodpess1, "user"))
-				return null;
 
 			if (isToExport)
 			{
@@ -247,7 +266,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_lendi");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_lendi");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Lendi.AddEPH<CSGenioAlendi>(ref u, null, "ML1211"));
 			}
@@ -336,7 +354,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

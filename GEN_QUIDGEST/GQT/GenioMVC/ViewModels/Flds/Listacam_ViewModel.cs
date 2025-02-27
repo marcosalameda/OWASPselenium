@@ -241,6 +241,13 @@ namespace GenioMVC.ViewModels.Flds
 		#endregion
 
 		#region Fields for formulas
+		// Field to formula
+		/// <summary>Field : "Enforce table conditions" Tipo: "L"</summary>
+		public bool ValTblcond { get; set; }
+		// Field to formula
+		/// <summary>Field : "Field state" Tipo: "AC"</summary>
+		[AllowHtml]
+		public string ValCond { get; set; }
 		#endregion
 
 		public string ValCodflds { get; set; }
@@ -378,6 +385,8 @@ namespace GenioMVC.ViewModels.Flds
  				ValCreatins = ViewModelConversion.ToDateTime(m.ValCreatins);
  				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
  				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+ 				ValTblcond = ViewModelConversion.ToLogic(m.ValTblcond);
+ 				ValCond = ViewModelConversion.ToString(m.ValCond);
  				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
 			}
 			catch (Exception)
@@ -427,6 +436,8 @@ namespace GenioMVC.ViewModels.Flds
 				m.ValCreatins = ViewModelConversion.ToDateTime(ValCreatins);
 				m.ValCodaero = ViewModelConversion.ToString(ValCodaero);
 				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
+				m.ValTblcond = ViewModelConversion.ToLogic(ValTblcond);
+				m.ValCond = ViewModelConversion.ToString(ValCond);
 				m.ValCodflds = ViewModelConversion.ToString(ValCodflds);
 			}
 			catch (Exception)

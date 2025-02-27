@@ -1,5 +1,10 @@
 ﻿@model GenioMVC.ViewModels.Dashboard.DashboardViewModel
 
+@{
+    bool inMaintenance = CSGenio.framework.Maintenance.Current.IsActive;
+    string editDisabled = inMaintenance ? "disabled" : string.Empty;
+}
+
 <div id="dashboard">
 	<div class="c-action-bar d-flex">
 		<span class="form-header">
@@ -7,7 +12,7 @@
 		</span>
 		<div class="dashboard-controls">
 			<div id="dashboard-view-mode-controls" class="b-btn-group">
-				<button id="dashboard-edit-btn" class="b-btn b-icon b-icon--secondary" title="@Resources.EDITAR11616" type="button">
+				<button id="dashboard-edit-btn" class="b-btn b-icon b-icon--secondary @editDisabled" title="@Resources.EDITAR11616" type="button" @editDisabled>
 					<i class="glyphicons glyphicons-pencil e-icon"></i>
 				</button>
 			</div>

@@ -67,12 +67,16 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Save(List<WidgetDto> grid, string uuid)
 		{
+			// Don't allow changes in maintenance mode
+			if (Maintenance.Current.IsActive)
+				return Json(new { Success = false, Message = Resources.Resources.O_SISTEMA_ENCONTRA_S37912 });
+
 			User user = UserContext.Current.User;
 			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
 			CSGenioAlstusr lstusr = GetOrInitLstusr(uuid);
 
 			// Gets the current list of user widgets for this viewmodel
-			List<CSGenioAusrwid> userWidgets = UserUiSettings.Load(sp, lstusr.ValDescric, user).UserWidgets;
+			List<CSGenioAusrwid> userWidgets = DashboardUiSettingsDbRec.Load(sp, lstusr.ValDescric, user).UserWidgets;
 
 			foreach (CSGenioAusrwid userWidget in userWidgets)
 			{
@@ -122,7 +126,7 @@ namespace GenioMVC.Controllers
 				sp.closeConnection();
 			}
 
-			UserUiSettings.Invalidate(lstusr.ValDescric, user);
+			DashboardUiSettingsDbRec.Invalidate(lstusr.ValDescric, user);
 
 			return Json(new { Success = true, Operation = "Save" });
 		}
@@ -149,11 +153,15 @@ namespace GenioMVC.Controllers
 					ValDescric = uuid
 				};
 
-				sp.openConnection();
-				model.insert(sp);
-				sp.closeConnection();
+				// Only save the record to the database if not in maintenance mode
+				if (!Maintenance.Current.IsActive)
+				{
+					sp.openConnection();
+					model.insert(sp);
+					sp.closeConnection();
+				}
 
-				UserUiSettings.Invalidate(model.ValDescric, user);
+				DashboardUiSettingsDbRec.Invalidate(model.ValDescric, user);
 			}
 
 			return model;

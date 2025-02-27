@@ -39,12 +39,25 @@ namespace GenioMVC.ViewModels.Rooms
         /// </summary>
         public string ValCodrooms { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +71,14 @@ namespace GenioMVC.ViewModels.Rooms
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS 2511]/
+
+			return crs;
+		}
+
 
         private string dbeditTitle;
         public string DBEditTitle { get { if (string.IsNullOrEmpty(dbeditTitle)) GetTitle(); return dbeditTitle; } }
@@ -76,10 +97,8 @@ namespace GenioMVC.ViewModels.Rooms
             CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, this.Identifier);
             conditions.Equal(CSGenioArooms.FldZzstate, 0); //valid zzstate only
 
-            //Menu fixed limits and relations:
-
-            
-
+            // Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioArooms.FldCodrooms, CSGenioArooms.FldZzstate, CSGenioArooms.FldRoomnr, CSGenioArooms.FldDesignat };
@@ -188,6 +207,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioArooms.FldCodrooms, CSGenioArooms.Fl
 			//DbEdit N:N Limits
 			crs.SubSets.Add(GetConditionsToNN(CSGenio.business.Area.AreaROOMS, CSGenioArooms.FldCodrooms, CSGenio.business.Area.AreaMOVIM, CSGenio.business.Area.AreaEQUIP, CSGenioAequip.FldCodequip, (string)Navigation.GetValue("equip"), "ML2511"));
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
 
 			if (isToExport)
@@ -208,7 +229,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioArooms.FldCodrooms, CSGenioArooms.Fl
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_rooms");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_rooms");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Rooms.AddEPH<CSGenioArooms>(ref u, null, "ML2511"));
 			}
@@ -294,7 +314,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioArooms.FldCodrooms, CSGenioArooms.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

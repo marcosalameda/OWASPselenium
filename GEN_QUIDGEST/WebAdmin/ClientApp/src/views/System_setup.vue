@@ -9,12 +9,13 @@
 
 		<QAlert
 			v-if="alert.isVisible"
+			ref="alertBox"
             :type="alert.alertType"
             :text="alert.message"
             :icon="alert.icon"
 			:title="Resources.ESTADO_DA_OPERACAO38065"
-            :dismissTime="5"
-            @message-dismissed="handleAlertDismissed" />
+			:dismissTime="5"
+			@message-dismissed="handleAlertDismissed" />
 
 		<div>
 			<QTabContainer
@@ -25,7 +26,7 @@
 						v-for="tab in tabGroup.tabsList"
 						:key="tab.id">
 							<div v-if="tabGroup.selectedTab === tab.id" class="tab-pane c-tab__item-content" :id="tab.componentId">
-								<component :is="tab.componentId" v-if="tab.props.model"  v-bind="tab.props" v-on="tab.events || {}"></component>
+								<component :is="tab.componentId" v-if="tab.props"  v-bind="tab.props" v-on="tab.events || {}"></component>
 							</div>
 					</template>
 				</template>
@@ -40,19 +41,19 @@
 	import { QUtils } from '@/utils/mainUtils';
 	import { reactive, computed } from 'vue';
 	import database from './System_setup/Database.vue';
-	import audit from './System_setup/Audit.vue';
-	import advanced from './System_setup/Advanced.vue';
 	import display from './System_setup/Display.vue';
-	import reporting from './System_setup/Reporting.vue';
-	import messaging from './System_setup/Messaging.vue';
-	import elasticsearch from './System_setup/ElasticSearch.vue';
-	import scheduler from './System_setup/Scheduler.vue';
+	import externalservices from './System_setup/ExternalServices.vue';
+	import integration from './System_setup/Integration.vue';
+	import datasystems from './System_setup/DataSystems.vue';
+	import system from './System_setup/System.vue';
+	import extra from './System_setup/Extra.vue';
 	import QAlert from '@/components/QAlert.vue';
 
 	export default {
 		name: 'system_setup',
 		mixins: [reusableMixin],
-		components: { QAlert, database, audit, display, reporting, advanced, elasticsearch, messaging, scheduler 		},
+		components: { QAlert, database, display, externalservices, datasystems, integration, system, extra
+},
 
 		props: {
 			/**
@@ -91,6 +92,29 @@
 							events: { 'connection-tested': vm.handleConnectionTested, 'updateModal': vm.setModel, 'alertClass': vm.updateAlert }
 						},
 						{
+							id: 'datasystems-tab',
+							componentId: 'datasystems',
+							name: 'datasystems',
+							label: vm.$t('SISTEMAS_DE_DADOS45551'),
+							disabled: false,
+							isVisible: true,
+							props: {
+								model: computed(() => vm.Model),
+								texts: computed(() => vm.Resources)
+							},
+							events: { 'changeTab': vm.changeTab, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'system-tab',
+							componentId: 'system',
+							name: 'system',
+							label: vm.$t('SISTEMA05814'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model), Scheduler: computed(() => vm.Model?.Scheduler), TaskList: computed(() => vm.Model?.SelectLists.SchedulerTaskList) },
+							events: { 'updateModal': () => vm.fetchData() || vm.setModel(), 'alertClass': vm.updateAlert }
+						},
+						{
 							id: 'display-tab',
 							componentId: 'display',
 							name: 'display',
@@ -101,64 +125,35 @@
 							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
 						},
 						{
-							id: 'advanced-tab',
-							componentId: 'advanced',
-							name: 'advanced',
-							label: vm.$t('PROPRIEDADES_AVANCAD23972'),
+							id: 'externalservices-tab',
+							componentId: 'externalservices',
+							name: 'externalservices',
+							label: vm.$t('IA_E_SERVICOS_EXTERN49145'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model), Cores: computed(() => vm.Cores), SelectLists: computed(() => vm.Model?.SelectLists) },
+							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'integration-tab',
+							componentId: 'integration',
+							name: 'integration',
+							label: vm.$t('INTEGRACAO28978'),
+							disabled: false,
+							isVisible: true,
+							props: { model: computed(() => vm.Model), Messaging: computed(() => vm.Model?.Messaging),
+								Metadata: computed(() => vm.Model?.MessagingMetadata), reloadMQueues: vm.reloadMQueues },
+							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+						},
+						{
+							id: 'extra-tab',
+							componentId: 'extra',
+							name: 'extra',
+							label: vm.$t('PROPRIEDADES_EXTRA18082'),
 							disabled: false,
 							isVisible: true,
 							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists) },
 							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
-						},
-						{
-							id: 'elasticsearch-tab',
-							componentId: 'elasticsearch',
-							name: 'elasticsearch',
-							label: vm.$t('ELASTICSEARCH49143'),
-							disabled: false,
-							isVisible: true,
-							props: { model: computed(() => vm.Model), Cores: computed(() => vm.Cores), SelectLists: computed(() => vm.Model?.SelectLists) },
-							events: { 'updateModal': vm.fetchData }
-						},
-						{
-							id: 'reporting-tab',
-							componentId: 'reporting',
-							name: 'reporting',
-							label: vm.$t('RELATORIOS37339'),
-							disabled: false,
-							isVisible: true,
-							props: { model: computed(() => vm.Model) },
-							events: { 'updateModal': vm.fetchData }
-						},
-						{
-							id: 'scheduler-tab',
-							componentId: 'scheduler',
-							name: 'scheduler',
-							label: vm.$t('AGENDADOR40611'),
-							disabled: false,
-							isVisible: true,
-							props: { model: computed(() => vm.Model?.Scheduler),  TaskList: computed(() => vm.Model?.SelectLists.SchedulerTaskList) },
-							events: { 'updateModal': vm.fetchData }
-						},
-						{
-							id: 'messaging-tab',
-							componentId: 'messaging',
-							name: 'messaging',
-							label: vm.$t('MENSAGENS53948'),
-							disabled: false,
-							isVisible: true,
-							props: { model: computed(() => vm.Model?.Messaging),  Metadata: computed(() => vm.Model?.MessagingMetadata) },
-							events: { 'updateModal': vm.fetchData }
-						},
-						{
-							id: 'audit-tab',
-							componentId: 'audit',
-							name: 'audit',
-							label: vm.$t('AUDITORIA29703'),
-							disabled: false,
-							isVisible: true,
-							props: { model: computed(() => vm.Model) },
-							events: { 'updateModal': vm.setModel }
 						},
 					]
 				}
@@ -254,6 +249,12 @@
 				this.alert.isVisible = true;
 				this.alert.alertType = type;
 				this.alert.message = message;
+
+				this.$nextTick(() => {
+					if (this.$refs.alertBox) {
+						this.$refs.alertBox.$el.scrollIntoView({ behavior: 'smooth' });
+					}
+				});
 			},
 			handleAlertDismissed() {
 				this.alert.isVisible = false;

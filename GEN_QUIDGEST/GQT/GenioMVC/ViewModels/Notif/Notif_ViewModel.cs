@@ -478,7 +478,8 @@ namespace GenioMVC.ViewModels.Notif
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApess2.FldName, query + "%");
                 }
@@ -525,7 +526,8 @@ namespace GenioMVC.ViewModels.Notif
 				}
 
 				TablePess2Name.List = new SelectList(TablePess2Name.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpesso), "Value", "Text", this.ValCodpesso);
-                FillDependant_NotifTablePess2Name();
+                if(!isSearchRequest)
+                    FillDependant_NotifTablePess2Name();
 
                 //Check if foreignkey comes from history
                 TablePess2Name.FilledByHistory = Navigation.CheckFilledByHistory("pess2");

@@ -38,6 +38,7 @@ namespace GenioMVC.ViewModels.Decom
 		[Newtonsoft.Json.JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+
 		/// <summary>Campo : "Number" Tipo:"N"</summary>
 		[Display(Name = "NUMBER35625", ResourceType = typeof(Resources.Resources))]
 		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]

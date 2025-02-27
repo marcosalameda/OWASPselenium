@@ -103,11 +103,6 @@
 		/// The group that contains this widget
 		/// </summary>
 		public string Group { get; set; }
-		
-		/// <summary>
-		/// The style of the widget
-		/// </summary>
-		public string Style { get; set; }
 
 		/// <summary>
 		/// The refresh mode of the widget

@@ -56,7 +56,7 @@ namespace GenioMVC.Controllers.SpecialRendering
                 model.insert(sp);
                 sp.closeConnection();
 
-                UserUiSettings.Invalidate(model.ValDescric, user);
+                TableUiSettingsDbRec.Invalidate(model.ValDescric, user);
 
                 viewModel.FormMode = "1";
             }
@@ -213,7 +213,7 @@ namespace GenioMVC.Controllers.SpecialRendering
                 }
 
                 sp.closeConnection();
-                UserUiSettings.Invalidate(model.ValDescric, user);
+                TableUiSettingsDbRec.Invalidate(model.ValDescric, user);
                 Navigation.RemoveHistoryLevel();
                 var location = Navigation.CurrentLevel.Location;
                 return Json(new { Success = true, Operation = "Save", newURL = Url.Action(location.Action, location.Controller) });
@@ -260,7 +260,7 @@ namespace GenioMVC.Controllers.SpecialRendering
             }
             sp.closeConnection();
 
-            UserUiSettings.Invalidate(lstusr.ValDescric, user);
+            TableUiSettingsDbRec.Invalidate(lstusr.ValDescric, user);
 
             var location = Navigation.CurrentLevel.Location;
             return Json(new { Success = true, Operation = "ToggleViewMode", newURL = Url.Action(location.Action, location.Controller) });
@@ -300,7 +300,7 @@ namespace GenioMVC.Controllers.SpecialRendering
 
                 sp.closeConnection();
 
-                UserUiSettings.Invalidate(lstusr.ValDescric, user);
+                TableUiSettingsDbRec.Invalidate(lstusr.ValDescric, user);
             }
 
             return new JsonResult() { Data = new { success = true, loading = false } };
@@ -315,7 +315,7 @@ namespace GenioMVC.Controllers.SpecialRendering
             string uuid = GetViewModelUUID(idlist, idlistController);
 			
             // User preferences (might not exist yet)
-            List<CSGenioAlstren> userRenderings = UserUiSettings.Load(sp, uuid, user).UserRenderings;
+            List<CSGenioAlstren> userRenderings = TableUiSettingsDbRec.Load(sp, uuid, user).UserRenderings;
 
             // Inserts new view modes that are not present in the current user configuration
             int pos = 1;
@@ -353,8 +353,8 @@ namespace GenioMVC.Controllers.SpecialRendering
 
                 if (different)
                 {
-                    UserUiSettings.Invalidate(uuid, user);
-                    userRenderings = UserUiSettings.Load(sp, uuid, user).UserRenderings;
+                    TableUiSettingsDbRec.Invalidate(uuid, user);
+                    userRenderings = TableUiSettingsDbRec.Load(sp, uuid, user).UserRenderings;
                 }
             }
             else
@@ -385,7 +385,7 @@ namespace GenioMVC.Controllers.SpecialRendering
                 sp.closeConnection();
             }
 
-            UserUiSettings.Invalidate(uuid, user);
+            TableUiSettingsDbRec.Invalidate(uuid, user);
         }
 
         // Check (and remove) view mode configurations that no longer exist

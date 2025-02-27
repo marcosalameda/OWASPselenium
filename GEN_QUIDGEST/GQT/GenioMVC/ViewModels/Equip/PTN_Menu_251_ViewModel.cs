@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Equip
         /// </summary>
         public string ValCodequip { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Equip
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL PTN LIST_LIMITS 251]/
+
+			return crs;
+		}
+
 
         private string dbeditTitle;
         public string DBEditTitle { get { if (string.IsNullOrEmpty(dbeditTitle)) GetTitle(); return dbeditTitle; } }
@@ -76,10 +96,8 @@ namespace GenioMVC.ViewModels.Equip
             CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, this.Identifier);
             conditions.Equal(CSGenioAequip.FldZzstate, 0); //valid zzstate only
 
-            //Menu fixed limits and relations:
-
-            
-
+            // Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.FldZzstate, CSGenioAequip.FldCodempre, CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAequip.FldCodpess1, CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioAequip.FldSequennr, CSGenioAequip.FldRegistnr, CSGenioAequip.FldCodtpequ, CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.FldTipoequi, CSGenioAequip.FldCodwareh, CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes, CSGenioAequip.FldCoditem, CSGenioAitem.FldCoditem, CSGenioAitem.FldItemdes, CSGenioAequip.FldDesignat, CSGenioAequip.FldDtaquisi, CSGenioAequip.FldCoddeco, CSGenioAdecom.FldCoddeco, CSGenioAdecom.FldDecomnr, CSGenioAequip.FldDtdeco, CSGenioAequip.FldIfabatif, CSGenioAequip.FldPhotogra, CSGenioAequip.FldValortot, CSGenioAequip.FldFrequenc, CSGenioAequip.FldBought, CSGenioAequip.FldCodrooms, CSGenioAroom1.FldCodrooms, CSGenioAroom1.FldRoomnr, CSGenioAequip.FldDtrefere, CSGenioAequip.FldFirst, CSGenioAequip.FldBefore, CSGenioAequip.FldFollowin, CSGenioAequip.FldLast, CSGenioAequip.FldSitefabr, CSGenioAequip.FldLastpho, CSGenioAequip.FldMoviment, CSGenioAequip.FldQtdmovim, CSGenioAequip.FldShowrc };
@@ -120,7 +138,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
                 new Exports.QColumn(CSGenioAequip.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 30, 0, true),
                 new Exports.QColumn(CSGenioAequip.FldDtaquisi, FieldType.DATA, Resources.Resources.ACQUISITION44180, 8, 0, true),
                 new Exports.QColumn(CSGenioAdecom.FldDecomnr, FieldType.NUMERO, Resources.Resources.NO_BATE21045, 10, 0, true),
-                new Exports.QColumn(CSGenioAequip.FldDtdeco, FieldType.DATA, Resources.Resources.DECOMISSION14486, 8, 0, true),
+                new Exports.QColumn(CSGenioAequip.FldDtdeco, FieldType.DATAHORA, Resources.Resources.DECOMISSION14486, 8, 0, true),
                 new Exports.QColumn(CSGenioAequip.FldIfabatif, FieldType.LOGICO, Resources.Resources.DOWNED_EQUIPMENT43331, 1, 0, true),
                 !ajaxRequest ? new Exports.QColumn(CSGenioAequip.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
                 new Exports.QColumn(CSGenioAequip.FldValortot, FieldType.VALOR, Resources.Resources.TOTAL_VALUE30570, 12, 0, true),
@@ -198,6 +216,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -217,7 +237,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_equip");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_equip");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Equip.AddEPH<CSGenioAequip>(ref u, null, "ML251"));
 			}
@@ -300,7 +319,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -493,7 +512,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
         private static readonly string[] _fieldsToSerialize =
         {
-            "Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Cmpny", "Cmpny.ValDesignat", "Pess1", "Pess1.ValName", "Equip.ValSequennr", "Equip.ValRegistnr", "Tpequ", "Tpequ.ValTipoequi", "Wareh", "Wareh.ValWarehdes", "Item", "Item.ValItemdes", "Equip.ValDesignat", "Equip.ValDtaquisi", "Decom", "Decom.ValDecomnr", "Equip.ValDtdeco", "Equip.ValIfabatif", "Equip.ValPhotogra", "Equip.ValValortot", "Equip.ValFrequenc", "Equip.ValBought", "Room1", "Room1.ValRoomnr", "Equip.ValDtrefere", "Equip.ValFirst", "Equip.ValBefore", "Equip.ValFollowin", "Equip.ValLast", "Equip.ValSitefabr", "Equip.ValLastpho", "Equip.ValMoviment", "Equip.ValQtdmovim", "Equip.ValShowrc", "Equip.ValCodempre", "Equip.ValCoddeco", "Equip.ValCoditem", "Equip.ValCodpess1", "Equip.ValCodtpequ", "Equip.ValCodwareh", "Equip.ValCodrooms"
+            "Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Cmpny", "Cmpny.ValDesignat", "Pess1", "Pess1.ValName", "Equip.ValSequennr", "Equip.ValRegistnr", "Tpequ", "Tpequ.ValTipoequi", "Wareh", "Wareh.ValWarehdes", "Item", "Item.ValItemdes", "Equip.ValDesignat", "Equip.ValDtaquisi", "Decom", "Decom.ValDecomnr", "Equip.ValDtdeco", "Equip.ValIfabatif", "Equip.ValPhotogra", "Equip.ValValortot", "Equip.ValFrequenc", "Equip.ValBought", "Room1", "Room1.ValRoomnr", "Equip.ValDtrefere", "Equip.ValFirst", "Equip.ValBefore", "Equip.ValFollowin", "Equip.ValLast", "Equip.ValSitefabr", "Equip.ValLastpho", "Equip.ValMoviment", "Equip.ValQtdmovim", "Equip.ValShowrc", "Equip.ValCodempre", "Equip.ValCoddeco", "Equip.ValCoditem", "Equip.ValCodpess1", "Equip.ValCodrooms", "Equip.ValCodtpequ", "Equip.ValCodwareh"
         };
 
         private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>

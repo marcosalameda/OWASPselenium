@@ -61,7 +61,7 @@ export function setupRouter(i18n) {
       props: true
     },
     {
-      path: '/:culture/:system/DbAdmin',
+      path: '/:culture/:system/DbAdmin/:tabId?', // The tabId is now a dynamic parameter (optional)
       name: 'maintenance',
       component: () => import(/* webpackChunkName: "maintenance" */ './views/Maintenance.vue'),
       props: true
@@ -137,12 +137,6 @@ export function setupRouter(i18n) {
         name: 'manage_message',
         component: () => import(/* webpackChunkName: "manage_message" */ './views/Notifications/ManageMessage.vue'),
         props: true
-    },
-    {
-      path: '/:culture/:system/ManageBlacklist',
-      name: 'manage_blacklist',
-      component: () => import(/* webpackChunkName: "manage_blacklist" */ './views/System_setup/ManageBlacklist.vue'),
-      props: true
     },
   ];
 

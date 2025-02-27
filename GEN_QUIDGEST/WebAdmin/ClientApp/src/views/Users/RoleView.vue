@@ -16,9 +16,10 @@
                     :rows="Model.UserAboveList"
                     :columns="userListColumns">
                     <template #role="props">
-                        <span class="role-tag">
+                        <q-badge
+                            variant="bold" >
                             {{$t(props.row.Designation)}}
-                        </span>
+                        </q-badge>
                     </template>
                 </qtable>
 			</q-row-container>

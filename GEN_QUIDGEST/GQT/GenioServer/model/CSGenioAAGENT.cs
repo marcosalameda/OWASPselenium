@@ -290,7 +290,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodagent, value); }
 		}
 
-
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("agent", "name");
@@ -301,7 +300,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldName); }
 			set { insertNameValueField(FldName, value); }
 		}
-
 
 		/// <summary>Field : "Birthdate" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldBirthdat { get { return m_fldBirthdat; } }
@@ -314,7 +312,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldBirthdat, value); }
 		}
 
-
 		/// <summary>Field : "Email" Tipo: "C" Formula: DF ""@agency.com""</summary>
 		public static FieldRef FldEmail { get { return m_fldEmail; } }
 		private static FieldRef m_fldEmail = new FieldRef("agent", "email");
@@ -325,7 +322,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldEmail); }
 			set { insertNameValueField(FldEmail, value); }
 		}
-
 
 		/// <summary>Field : "Photo" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldPhoto { get { return m_fldPhoto; } }
@@ -338,7 +334,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPhoto, value); }
 		}
 
-
 		/// <summary>Field : "Telephone" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTelephon { get { return m_fldTelephon; } }
 		private static FieldRef m_fldTelephon = new FieldRef("agent", "telephon");
@@ -349,7 +344,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldTelephon); }
 			set { insertNameValueField(FldTelephon, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

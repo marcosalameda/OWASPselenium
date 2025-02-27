@@ -84,6 +84,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Sequential no.";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 6;
 			Qfield.CavDesignation = "SEQUENTIAL_NO_38590";
 
 			Qfield.Dupmsg = "";
@@ -174,9 +175,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dtdeco", FieldType.DATA);
+			Qfield = new Field("dtdeco", FieldType.DATAHORA);
 			Qfield.FieldDescription = "Decomission";
-			Qfield.FieldSize =  8;
+			Qfield.FieldSize =  16;
 			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
@@ -215,6 +216,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Total value";
 			Qfield.FieldSize =  12;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 9;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "TOTAL_VALUE30570";
 
@@ -352,6 +354,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "QTD__MOVIMENTACOES28400";
 
 			Qfield.Dupmsg = "";
@@ -400,9 +403,9 @@ namespace CSGenio.business
 			info.ParentTables.Add("decom", new Relation("GQT", "gqtequip", "equip", "codequip", "coddeco", "GQT", "gqtdecom", "decom", "coddeco", "coddeco"));
 			info.ParentTables.Add("item", new Relation("GQT", "gqtequip", "equip", "codequip", "coditem", "GQT", "gqtitem", "item", "coditem", "coditem"));
 			info.ParentTables.Add("pess1", new Relation("GQT", "gqtequip", "equip", "codequip", "codpess1", "GQT", "gqtpessoas", "pess1", "codpesso", "codpesso"));
+			info.ParentTables.Add("room1", new Relation("GQT", "gqtequip", "equip", "codequip", "codrooms", "GQT", "gqtrooms", "room1", "codrooms", "codrooms"));
 			info.ParentTables.Add("tpequ", new Relation("GQT", "gqtequip", "equip", "codequip", "codtpequ", "GQT", "gqttpequ", "tpequ", "codtpequ", "codtpequ"));
 			info.ParentTables.Add("wareh", new Relation("GQT", "gqtequip", "equip", "codequip", "codwareh", "GQT", "gqtwareh", "wareh", "codwareh", "codwareh"));
-			info.ParentTables.Add("room1", new Relation("GQT", "gqtequip", "equip", "codequip", "codrooms", "GQT", "gqtrooms", "room1", "codrooms", "codrooms"));
 			info.ParentTables.Add("_replicRel_coddeco", new Relation("GQT", "gqtequip", "equip", "codequip", "coddeco", "GQT", "gqtdecom", "decom", "coddeco", "coddeco"));
 		}
 
@@ -413,10 +416,11 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(11);
+			info.Pathways = new Dictionary<string, string>(12);
 			info.Pathways.Add("decom","decom");
 			info.Pathways.Add("wareh","wareh");
 			info.Pathways.Add("tpequ","tpequ");
+			info.Pathways.Add("room1","room1");
 			info.Pathways.Add("cmpny","cmpny");
 			info.Pathways.Add("item","item");
 			info.Pathways.Add("pess1","pess1");
@@ -425,7 +429,6 @@ namespace CSGenio.business
 			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("stake","pess1");
 			info.Pathways.Add("cate2","pess1");
-			info.Pathways.Add("room1","room1");
 		}
 
 		/// <summary>
@@ -604,7 +607,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodequip, value); }
 		}
 
-
 		/// <summary>Field : ">COMPANY" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodempre { get { return m_fldCodempre; } }
 		private static FieldRef m_fldCodempre = new FieldRef("equip", "codempre");
@@ -615,7 +617,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodempre); }
 			set { insertNameValueField(FldCodempre, value); }
 		}
-
 
 		/// <summary>Field : ">COMOMODOR" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodpess1 { get { return m_fldCodpess1; } }
@@ -628,7 +629,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodpess1, value); }
 		}
 
-
 		/// <summary>Field : "Sequential no." Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldSequennr { get { return m_fldSequennr; } }
 		private static FieldRef m_fldSequennr = new FieldRef("equip", "sequennr");
@@ -639,7 +639,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldSequennr); }
 			set { insertNameValueField(FldSequennr, value); }
 		}
-
 
 		/// <summary>Field : "No. register" Tipo: "C" Formula: + "RIGHT("000000"+NumericToString([EQUIP->SEQUENNR],0),6)"</summary>
 		public static FieldRef FldRegistnr { get { return m_fldRegistnr; } }
@@ -652,7 +651,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldRegistnr, value); }
 		}
 
-
 		/// <summary>Field : ">TYPE OF EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodtpequ { get { return m_fldCodtpequ; } }
 		private static FieldRef m_fldCodtpequ = new FieldRef("equip", "codtpequ");
@@ -663,7 +661,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodtpequ); }
 			set { insertNameValueField(FldCodtpequ, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodwareh { get { return m_fldCodwareh; } }
@@ -676,7 +673,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodwareh, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCoditem { get { return m_fldCoditem; } }
 		private static FieldRef m_fldCoditem = new FieldRef("equip", "coditem");
@@ -687,7 +683,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCoditem); }
 			set { insertNameValueField(FldCoditem, value); }
 		}
-
 
 		/// <summary>Field : "Designation" Tipo: "C" Formula: DF "[ITEM->ITEMDES]"</summary>
 		public static FieldRef FldDesignat { get { return m_fldDesignat; } }
@@ -700,7 +695,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDesignat, value); }
 		}
 
-
 		/// <summary>Field : "Acquisition" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldDtaquisi { get { return m_fldDtaquisi; } }
 		private static FieldRef m_fldDtaquisi = new FieldRef("equip", "dtaquisi");
@@ -711,7 +705,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDtaquisi); }
 			set { insertNameValueField(FldDtaquisi, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCoddeco { get { return m_fldCoddeco; } }
@@ -724,18 +717,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddeco, value); }
 		}
 
-
-		/// <summary>Field : "Decomission" Tipo: "D" Formula: ++ "[DECOM->DTDECO]"</summary>
+		/// <summary>Field : "Decomission" Tipo: "DT" Formula: ++ "[DECOM->DTDECO]"</summary>
 		public static FieldRef FldDtdeco { get { return m_fldDtdeco; } }
 		private static FieldRef m_fldDtdeco = new FieldRef("equip", "dtdeco");
 
-		/// <summary>Field : "Decomission" Tipo: "D" Formula: ++ "[DECOM->DTDECO]"</summary>
+		/// <summary>Field : "Decomission" Tipo: "DT" Formula: ++ "[DECOM->DTDECO]"</summary>
 		public DateTime ValDtdeco
 		{
 			get { return (DateTime)returnValueField(FldDtdeco); }
 			set { insertNameValueField(FldDtdeco, value); }
 		}
-
 
 		/// <summary>Field : "Downed equipment" Tipo: "L" Formula: + "iif(emptyD([EQUIP->DTDECO])==1,0,1)"</summary>
 		public static FieldRef FldIfabatif { get { return m_fldIfabatif; } }
@@ -748,7 +739,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldIfabatif, value); }
 		}
 
-
 		/// <summary>Field : "Photo" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldPhotogra { get { return m_fldPhotogra; } }
 		private static FieldRef m_fldPhotogra = new FieldRef("equip", "photogra");
@@ -759,7 +749,6 @@ namespace CSGenio.business
 			get { return (byte[])returnValueField(FldPhotogra); }
 			set { insertNameValueField(FldPhotogra, value); }
 		}
-
 
 		/// <summary>Field : "Total value" Tipo: "$D" Formula: SR "[INSTA->VALUE]"</summary>
 		public static FieldRef FldValortot { get { return m_fldValortot; } }
@@ -772,7 +761,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldValortot, value); }
 		}
 
-
 		/// <summary>Field : "Loan frequency" Tipo: "AN" Formula:  ""</summary>
 		public static FieldRef FldFrequenc { get { return m_fldFrequenc; } }
 		private static FieldRef m_fldFrequenc = new FieldRef("equip", "frequenc");
@@ -783,7 +771,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldFrequenc); }
 			set { insertNameValueField(FldFrequenc, value); }
 		}
-
 
 		/// <summary>Field : "Bought" Tipo: "L" Formula: + "iif(emptyD([EQUIP->DTAQUISI])==1,0,1)"</summary>
 		public static FieldRef FldBought { get { return m_fldBought; } }
@@ -796,7 +783,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldBought, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula: U1 "MOVIM[MOVIM->DHMUDANC][MOVIM->CODROOMS][Today]"</summary>
 		public static FieldRef FldCodrooms { get { return m_fldCodrooms; } }
 		private static FieldRef m_fldCodrooms = new FieldRef("equip", "codrooms");
@@ -807,7 +793,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodrooms); }
 			set { insertNameValueField(FldCodrooms, value); }
 		}
-
 
 		/// <summary>Field : "Reference" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDtrefere { get { return m_fldDtrefere; } }
@@ -820,7 +805,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDtrefere, value); }
 		}
 
-
 		/// <summary>Field : "First" Tipo: "C" Formula: CT "MOVIM[EQUIP->DTREFERE][MOVIM->DHMUDANC][MOVIM->ROOMNR][EQUIP->CODEQUIP][MOVIM->CODEQUIP](ASC)"</summary>
 		public static FieldRef FldFirst { get { return m_fldFirst; } }
 		private static FieldRef m_fldFirst = new FieldRef("equip", "first");
@@ -831,7 +815,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldFirst); }
 			set { insertNameValueField(FldFirst, value); }
 		}
-
 
 		/// <summary>Field : "Before" Tipo: "C" Formula: CT "MOVIM[EQUIP->DTREFERE][MOVIM->DHMUDANC][MOVIM->ROOMNR](DESC)"</summary>
 		public static FieldRef FldBefore { get { return m_fldBefore; } }
@@ -844,7 +827,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldBefore, value); }
 		}
 
-
 		/// <summary>Field : "Following" Tipo: "C" Formula: CS "MOVIM[EQUIP->DTREFERE][MOVIM->DHMUDANC][MOVIM->ROOMNR][EQUIP->CODEQUIP][MOVIM->CODEQUIP](ASC)"</summary>
 		public static FieldRef FldFollowin { get { return m_fldFollowin; } }
 		private static FieldRef m_fldFollowin = new FieldRef("equip", "followin");
@@ -855,7 +837,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldFollowin); }
 			set { insertNameValueField(FldFollowin, value); }
 		}
-
 
 		/// <summary>Field : "Last" Tipo: "C" Formula: CS "MOVIM[EQUIP->DTREFERE][MOVIM->DHMUDANC][MOVIM->ROOMNR][EQUIP->CODEQUIP][MOVIM->CODEQUIP](DESC)"</summary>
 		public static FieldRef FldLast { get { return m_fldLast; } }
@@ -868,7 +849,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldLast, value); }
 		}
 
-
 		/// <summary>Field : "Manufacturer's website" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSitefabr { get { return m_fldSitefabr; } }
 		private static FieldRef m_fldSitefabr = new FieldRef("equip", "sitefabr");
@@ -879,7 +859,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldSitefabr); }
 			set { insertNameValueField(FldSitefabr, value); }
 		}
-
 
 		/// <summary>Field : "Last photo attached" Tipo: "IJ" Formula: U1 "PHOTO[PHOTO->ANEXED][PHOTO->PHOTOGRA][Today]"</summary>
 		public static FieldRef FldLastpho { get { return m_fldLastpho; } }
@@ -892,7 +871,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldLastpho, value); }
 		}
 
-
 		/// <summary>Field : "Drives" Tipo: "MO" Formula: CL "MOVIM[MOVIM->ROOMNR][MOVIM->DHMUDANC](; )"</summary>
 		public static FieldRef FldMoviment { get { return m_fldMoviment; } }
 		private static FieldRef m_fldMoviment = new FieldRef("equip", "moviment");
@@ -903,7 +881,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldMoviment); }
 			set { insertNameValueField(FldMoviment, value); }
 		}
-
 
 		/// <summary>Field : "Qtd. movimentações" Tipo: "N" Formula: SR "[MOVIM->1]"</summary>
 		public static FieldRef FldQtdmovim { get { return m_fldQtdmovim; } }
@@ -916,7 +893,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldQtdmovim, value); }
 		}
 
-
 		/// <summary>Field : "Show record" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldShowrc { get { return m_fldShowrc; } }
 		private static FieldRef m_fldShowrc = new FieldRef("equip", "showrc");
@@ -927,7 +903,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldShowrc); }
 			set { insertNameValueField(FldShowrc, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

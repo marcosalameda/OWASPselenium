@@ -38,7 +38,7 @@ namespace GenioMVC.Helpers.Cav
 			FieldType.GEOGRAPHY,
 			FieldType.GEO_SHAPE,
 			FieldType.GEOMETRIC,
-			FieldType.PASSWORD
+			FieldType.ENCRYPTED
 		};
 
 		private readonly Dictionary<FieldType, string> fieldTypeMap = GetFieldTypeMap();
@@ -666,10 +666,15 @@ namespace GenioMVC.Helpers.Cav
 					report.ValDataxml = writer.ToString();
 				}
 
-				if (id == null)
-					report.insert(sp);
-				else
-					report.update(sp);
+				// Update database record
+				// Should not be done in maintenance mode
+				if (!Maintenance.Current.IsActive)
+				{
+					if (id == null)
+						report.insert(sp);
+					else
+						report.update(sp);
+				}
 
 				sp.closeConnection();
 

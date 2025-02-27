@@ -396,7 +396,8 @@ namespace GenioMVC.ViewModels.Itemc
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAitem.FldItemdes, query + "%");
                 }
@@ -443,7 +444,8 @@ namespace GenioMVC.ViewModels.Itemc
 				}
 
 				TableItemItemdes.List = new SelectList(TableItemItemdes.Elements.ToSelectList(x => x.ValItemdes, x => x.ValCoditem,  x => x.ValCoditem == this.ValCoditem), "Value", "Text", this.ValCoditem);
-                FillDependant_CatarTableItemItemdes();
+                if(!isSearchRequest)
+                    FillDependant_CatarTableItemItemdes();
 
                 //Check if foreignkey comes from history
                 TableItemItemdes.FilledByHistory = Navigation.CheckFilledByHistory("item");
@@ -599,7 +601,8 @@ namespace GenioMVC.ViewModels.Itemc
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAcattp.FldTpcatego, query + "%");
                 }
@@ -646,7 +649,8 @@ namespace GenioMVC.ViewModels.Itemc
 				}
 
 				TableCattpTpcatego.List = new SelectList(TableCattpTpcatego.Elements.ToSelectList(x => x.ValTpcatego, x => x.ValCodtpcat,  x => x.ValCodtpcat == this.ValCodtpcat), "Value", "Text", this.ValCodtpcat);
-                FillDependant_CatarTableCattpTpcatego();
+                if(!isSearchRequest)
+                    FillDependant_CatarTableCattpTpcatego();
 
                 //Check if foreignkey comes from history
                 TableCattpTpcatego.FilledByHistory = Navigation.CheckFilledByHistory("cattp");

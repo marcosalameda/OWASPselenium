@@ -9,7 +9,11 @@
           <br />
       </row>
       <row>
+					<data-system-badge
+						:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+
           <br />
+          
           <qtable :rows="tPMail.rows"
                   :columns="tPMail.columns"
                   :config="tPMail.config"
@@ -29,12 +33,12 @@
                 </q-button-group>
               </template>
               <template #ValSsl="props">
-                  <span v-if="props.row.ValSsl" class='glyphicons glyphicons-check' />
-                  <span v-else class='glyphicons glyphicons-unchecked' />
+                  <q-icon v-if="props.row.ValSsl" icon="check" />
+                  <q-icon v-else icon="close" />
               </template>
               <template #ValAuth="props">
-                  <span v-if="props.row.ValAuth" class='glyphicons glyphicons-check' />
-                  <span v-else class='glyphicons glyphicons-unchecked' />
+                  <q-icon v-if="props.row.ValAuth" icon="check" />
+                  <q-icon v-else icon="close" />
               </template>
               <template #table-footer>
                 <tr>
@@ -42,7 +46,7 @@
                     <q-button
                       :label="Resources.INSERIR43365"
                       @click="ManageProperties(1)">
-                        <q-icon icon="plus-sign" />
+                        <q-icon icon="add" />
                       </q-button>
                     </td>
                 </tr>
@@ -116,9 +120,9 @@
                 },
                 {
                     label: () => vm.$t('REQUER_AUTENTICACAO_31938'),
-                    name: "ValAuth",
+                    name: "ValAuthType",
                     sort: true,
-                    slot_name: 'ValAuth'
+                    slot_name: 'ValAuthType'
                 },
                 {
                     label: () => vm.$t('UTILIZADOR52387'),

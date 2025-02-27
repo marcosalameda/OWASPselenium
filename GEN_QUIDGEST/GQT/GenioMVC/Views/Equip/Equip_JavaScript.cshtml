@@ -340,7 +340,7 @@
 		@* Default of the 'ValDesignat' field *@
 		window.Form_Equip.SetFormulaDefault('LED_EQUIP___EQUIPDESIGNAT', function() {
 						return ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValCoditem', $('[data-form="Equip"]')), true));
-		}, 'ITEMVALITEMDES_CHANGE');
+		}, 'ITEMVALITEMDES_CHANGE VALCODITEM_CHANGE');
 		
 		@* Formula of the 'ValBought' field *@
 		$(qForm).bind('VALDTAQUISI_CHANGE', function(event, eTarget) {

@@ -12,7 +12,7 @@ namespace WebTest
         [SetUp]
         public void Setup()
         {
-            var sp = new PersistentSupportSQLServer2000();
+            var sp = new PersistentSupportSQLServer();
             renderer = new QueryRenderer(sp);
         }
 

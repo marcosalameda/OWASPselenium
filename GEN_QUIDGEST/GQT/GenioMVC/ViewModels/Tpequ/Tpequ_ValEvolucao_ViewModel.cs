@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Tpequ
         /// </summary>
         public string ValCodtpequ { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Tpequ
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS TPEQU_PSEUDEVOLUCAO]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tpequ_ValEvolucao_ViewModel" /> class.
@@ -138,6 +158,8 @@ namespace GenioMVC.ViewModels.Tpequ
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -157,7 +179,6 @@ namespace GenioMVC.ViewModels.Tpequ
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_tabpr");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_tabpr");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Tabpr.AddEPH<CSGenioAtabpr>(ref u, null, "IBL_TPEQU___PSEUDEVOLUCAO"));
 			}
@@ -232,7 +253,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtabpr.FldCodtabpr, CSGenioAtabpr.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

@@ -60,6 +60,9 @@ namespace CSGenio.business.Triggers
 			Relation rel = _context.Area.ParentTables[parent.ToLower()];
 			string id = (string)_context.Area.returnValueField(_context.Area.Alias + "." + rel.SourceRelField);
 
+			if (string.IsNullOrEmpty(id))
+				return null;
+
 			// Try to get row from the context of previous actions
 			DbArea area = GetDirtyRow(parent, id);
 
@@ -119,7 +122,7 @@ namespace CSGenio.business.Triggers
 			if (target == _context.Area.Alias)
 				return new List<DbArea>() { _context.Area };
 			else if (_context.Area.ParentTables.ContainsKey(target))
-				return new List<DbArea>() { GetParentRow(target) };
+				return (GetParentRow(target) is DbArea ParentRow) ? new List<DbArea> { ParentRow } : new List<DbArea>();
 			else if (target == "glob")
 				return new List<DbArea>() { new GlobalFunctions(_context.User, _context.User.CurrentModule, _context.PersistentSupport).GetGlob() };
 			return GetChildRows(target);

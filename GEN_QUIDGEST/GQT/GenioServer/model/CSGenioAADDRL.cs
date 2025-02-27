@@ -85,6 +85,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  9;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 9;
 			Qfield.CavDesignation = "ADDRESS_NUMBER36138";
 
 			Qfield.Dupmsg = "";
@@ -303,7 +304,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCustomeraddressid, value); }
 		}
 
-
 		/// <summary>Field : "Parent" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldParentid { get { return m_fldParentid; } }
 		private static FieldRef m_fldParentid = new FieldRef("addrl", "parentid");
@@ -314,7 +314,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldParentid); }
 			set { insertNameValueField(FldParentid, value); }
 		}
-
 
 		/// <summary>Field : "parentId Type" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldParentidtypecode { get { return m_fldParentidtypecode; } }
@@ -327,7 +326,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldParentidtypecode, value); }
 		}
 
-
 		/// <summary>Field : "Address Number" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldAddressnumber { get { return m_fldAddressnumber; } }
 		private static FieldRef m_fldAddressnumber = new FieldRef("addrl", "addressnumber");
@@ -338,7 +336,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldAddressnumber); }
 			set { insertNameValueField(FldAddressnumber, value); }
 		}
-
 
 		/// <summary>Field : "Object Type" Tipo: "AN" Formula:  ""</summary>
 		public static FieldRef FldObjecttypecode { get { return m_fldObjecttypecode; } }
@@ -351,7 +348,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldObjecttypecode, value); }
 		}
 
-
 		/// <summary>Field : "objectTypeCode_display" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldObjecttypecode_display { get { return m_fldObjecttypecode_display; } }
 		private static FieldRef m_fldObjecttypecode_display = new FieldRef("addrl", "objecttypecode_display");
@@ -363,7 +359,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldObjecttypecode_display, value); }
 		}
 
-
 		/// <summary>Field : "Address Type Code" Tipo: "AN" Formula:  ""</summary>
 		public static FieldRef FldAddresstypecode { get { return m_fldAddresstypecode; } }
 		private static FieldRef m_fldAddresstypecode = new FieldRef("addrl", "addresstypecode");
@@ -374,7 +369,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldAddresstypecode); }
 			set { insertNameValueField(FldAddresstypecode, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

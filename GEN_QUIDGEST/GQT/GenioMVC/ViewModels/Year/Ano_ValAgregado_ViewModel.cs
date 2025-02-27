@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Year
         /// </summary>
         public string ValCodyear { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Year
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS ANO_PSEUDAGREGADO]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Ano_ValAgregado_ViewModel" /> class.
@@ -137,6 +157,8 @@ namespace GenioMVC.ViewModels.Year
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -156,7 +178,6 @@ namespace GenioMVC.ViewModels.Year
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_agreg");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_agreg");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Agreg.AddEPH<CSGenioAagreg>(ref u, null, "IBL_ANO_____PSEUDAGREGADO"));
 			}
@@ -231,7 +252,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAagreg.FldCodaggre, CSGenioAagreg.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

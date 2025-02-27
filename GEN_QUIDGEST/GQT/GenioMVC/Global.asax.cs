@@ -27,6 +27,8 @@ namespace GenioMVC
 
     public class MvcApplication : System.Web.HttpApplication
     {
+        private IDisposable _loggerContext;
+        
         protected void Application_Start()
         {
 
@@ -115,21 +117,27 @@ namespace GenioMVC
 
                 //Note: When a SameIP security policy is active this kind of Location resetting is invalid
                 //In fact the user should be forbidden to continue to use the application, needing to log out of his previous location to login to the new one.
-				var user = UserContext.Current.User;
+                var user = UserContext.Current.User;
                 user.Location = HttpContext.Current.Request.UserHostAddress;
 
                 // Sets the language for the c# server
                 user.Language = System.Threading.Thread.CurrentThread.CurrentCulture.Name.Replace("-","").ToUpperInvariant();
 
                 // Assign the system (year) from the route data (or default) to the user object associated with the current request.
-				user.Year = UserContext.Current.GetYearFromRoute();
+                user.Year = UserContext.Current.GetYearFromRoute();
 
                 //Check for maintenance Status
                 Maintenance.GetMaintenanceStatus(UserContext.Current.PersistentSupport);
 
-                CSGenio.framework.Log.SetContext("utilizador", AdaptivePropertyProvider.Create("utilizador", user.Name));
+                _loggerContext = Log.SetContext(new { user = AdaptivePropertyProvider.Create("user", user.Name) });
                 CSGenio.framework.Log.Debug(Context.Request.RequestType + " " + Context.Request.Url.ToString());
             }
+        }
+
+        protected void Application_EndRequest(object sender, EventArgs e)
+        {
+            // Dispose of the logger scope context
+            _loggerContext?.Dispose();
         }
 
         protected void Application_AcquireRequestState(object sender, EventArgs e)

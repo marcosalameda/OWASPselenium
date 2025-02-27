@@ -7,9 +7,6 @@
 	  </Scripts>
 	</Function>
     <Function Id="CREATESP" Name="Create Base StoredProcedures" Help="" Connection="Normal" Selected="true" Selectable="true">
-	  <Dependencies>
-		<Dependencie>CREATESCHEMA</Dependencie><!--TESTE APAGAR-->
-	  </Dependencies>
 	  <Scripts>
 		<Script>FuncoesAuxCheckTable.sql</Script>
 	  </Scripts>
@@ -37,7 +34,15 @@
 	</Function>
 	<Function Id="UPGRADECLIENT1" Name="Upgrade Client" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="false">
 	  <Scripts>
-   </Scripts>
+ 		<Script Type="SQL" Version="1" MinDbVersion="0" MaxDbVersion="0">UpgradeClient.sql</Script>
+     </Scripts>
+	</Function>
+
+
+    <Function Id="UPDATEFUNCTIONS" Name="Update Functions" Help="" Connection="Normal" Selected="true" Selectable="true">
+	  <Scripts>
+		<Script>UpdateFunctions.sql</Script>
+	  </Scripts>
 	</Function>
 
     <Function Id="CREATESCHEMA" Name="Create Schema" Help="" Connection="Normal" Selected="true" Selectable="true">
@@ -120,7 +125,8 @@
 
 	<Function Id="UPGRADECLIENT2" Name="Upgrade Client" Type="SQL" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="false">
 	  <Scripts>
- 		<!-- User defined ReIndexItems -->
+		<Script Type="SQL" Version="2" MinDbVersion="0" MaxDbVersion="0">UpgradeClient.sql</Script>
+    		<!-- User defined ReIndexItems -->
      </Scripts>
 	</Function>
 	
@@ -196,6 +202,7 @@
 		<GroupItems>
 			<ReIndexItem>CREATEDB</ReIndexItem>
 			<ReIndexItem>CREATESP</ReIndexItem>
+			<ReIndexItem>UPDATEFUNCTIONS</ReIndexItem>
 			<ReIndexItem>CREATESCHEMA</ReIndexItem>
 			<ReIndexItem>CREATEHRDSCHEMA</ReIndexItem>
 			<ReIndexItem>UPGRADECLIENTS</ReIndexItem>
@@ -239,6 +246,8 @@
 			<ReIndexItem>DELETELOGTRIGGERS</ReIndexItem>
 			<ReIndexItem>CREATELOGTRIGGERS</ReIndexItem>
 			<ReIndexItem>CREATELOGVIEWS</ReIndexItem>
+			<ReIndexItem>DISABLECT</ReIndexItem>
+			<ReIndexItem>ENABLECT</ReIndexItem>
 		</GroupItems>
     </ReIndexGroup>
     <ReIndexGroup Name="Extra Options">

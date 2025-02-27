@@ -16,6 +16,23 @@ namespace WebTest
         BadInput
     };
 
+
+    /// <summary>
+    /// One time setup for the tests
+    /// </summary>
+    [SetUpFixture]
+    public class TestStartup
+    {
+        [OneTimeSetUp]
+        public static void AssemblyInit()
+        {
+            // Initalization code goes here
+            CSGenio.GenioDIDefault.Use();
+
+        }
+    }
+
+
     /// <summary>
     ///This is a test class for Test and is intended
     ///to contain all Test Unit Tests

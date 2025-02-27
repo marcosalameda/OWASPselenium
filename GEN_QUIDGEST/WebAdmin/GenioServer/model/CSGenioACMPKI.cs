@@ -71,6 +71,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Order";
 			Qfield.FieldSize =  5;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 1;
 			Qfield.CavDesignation = "ORDER39632";
 
@@ -102,6 +103,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Amount";
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "AMOUNT46885";
 
 			Qfield.Dupmsg = "";
@@ -315,7 +317,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodcmpki, value); }
 		}
 
-
 		/// <summary>Field : "TYPE OF EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodtpequ { get { return m_fldCodtpequ; } }
 		private static FieldRef m_fldCodtpequ = new FieldRef("cmpki", "codtpequ");
@@ -326,7 +327,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodtpequ); }
 			set { insertNameValueField(FldCodtpequ, value); }
 		}
-
 
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldOrder { get { return m_fldOrder; } }
@@ -339,7 +339,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldOrder, value); }
 		}
 
-
 		/// <summary>Field : "TYPE OF COMPONENT EQUIPMENT" Tipo: "CE" Formula: DF "[CMPKI->CODTPEQU]"</summary>
 		public static FieldRef FldCodtpeq1 { get { return m_fldCodtpeq1; } }
 		private static FieldRef m_fldCodtpeq1 = new FieldRef("cmpki", "codtpeq1");
@@ -350,7 +349,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodtpeq1); }
 			set { insertNameValueField(FldCodtpeq1, value); }
 		}
-
 
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldQuantida { get { return m_fldQuantida; } }
@@ -363,7 +361,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldQuantida, value); }
 		}
 
-
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldDescript { get { return m_fldDescript; } }
 		private static FieldRef m_fldDescript = new FieldRef("cmpki", "descript");
@@ -374,7 +371,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldDescript); }
 			set { insertNameValueField(FldDescript, value); }
 		}
-
 
 		/// <summary>Field : "Code" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldCode { get { return m_fldCode; } }
@@ -387,7 +383,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCode, value); }
 		}
 
-
 		/// <summary>Field : "Site" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldUrl { get { return m_fldUrl; } }
 		private static FieldRef m_fldUrl = new FieldRef("cmpki", "url");
@@ -398,7 +393,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldUrl); }
 			set { insertNameValueField(FldUrl, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

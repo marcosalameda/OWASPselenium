@@ -119,6 +119,15 @@ namespace GenioMVC.Models
 		public string ValGeocoord { get { return klass.ValGeocoord; } set { klass.ValGeocoord = value; } }
 		public bool ShouldSerializeValGeocoord() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Facil.ValGeocoord");
 
+		[DisplayName(">> Country")]
+		/// <summary>Field : ">> Country" Tipo: "CE" Formula:  ""</summary>
+		public string ValCodcntry { get { return klass.ValCodcntry; } set { klass.ValCodcntry = value; } }
+		public bool ShouldSerializeValCodcntry() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Facil.ValCodcntry");
+		private Cntry _cntry;
+		[DisplayName("Cntry")]
+		public virtual Cntry Cntry { get { if (!this.isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodcntry) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodcntry)))) _cntry = Models.Cntry.Find(ValCodcntry, Identifier, _fieldsToSerialize); if (_cntry == null) _cntry = new Models.Cntry(true, _fieldsToSerialize); return _cntry; } set { _cntry = value; } }
+		public bool ShouldSerializeCntry () => this.SerializeAllFields || this.FieldsToSerialize.Contains("Cntry");
+
 		[DisplayName("ZZSTATE")]
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
@@ -177,6 +186,11 @@ namespace GenioMVC.Models
 						if (_facty == null)
 							_facty = new Facty(true, _fieldsToSerialize);
 						_facty.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
+						break;
+					case "cntry":
+						if (_cntry == null)
+							_cntry = new Cntry(true, _fieldsToSerialize);
+						_cntry.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:
 						break;

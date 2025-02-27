@@ -19,10 +19,16 @@ namespace CSGenio.reporting.serialization
         {
             foreach (QueryParameter param in this.Query.QueryParameters)
             {
-                string paramName = param.Name.Replace("@", "");
-                //if this report param was passed as an arg to the report, then populate it
-                if (webParameters[paramName] != null)
-                    param.Value = webParameters[paramName].ToString();
+                //If the parameter is a literal, the value is already defined
+                if(param.Value.StartsWith("="))
+                {
+                    //gets the mapped report parameter (mapping is in the following format =Parameters!gproc_codgproc.Value)
+                    string mappedParameter = param.Value.Replace("=Parameters!", "").Replace(".Value", "");
+
+                    //if the mapped parameter was passed to the report, then populate it
+                    if (webParameters.ContainsKey(mappedParameter) && webParameters[mappedParameter]!=null)
+                        param.Value = webParameters[mappedParameter].ToString();
+                }
             }
         }
 

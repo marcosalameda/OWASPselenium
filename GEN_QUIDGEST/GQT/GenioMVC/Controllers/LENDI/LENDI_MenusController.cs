@@ -37,6 +37,7 @@ namespace GenioMVC.Controllers
 		private static readonly NavigationLocation ACTION_GQT_MENUSE_151 = new NavigationLocation("SELECAO_ENTRE_LIMITE34362", "GQT_MenuSE_151", "Lendi") { vueRouteName = "menu-GQT_151" };
 		private static readonly NavigationLocation ACTION_GQT_MENU_DEVOL = new NavigationLocation("OUT_OF_DATE_LENDINGS05506", "GQT_Menu_DEVOL", "Lendi") { vueRouteName = "menu-GQT_DEVOL" };
 		private static readonly NavigationLocation ACTION_GQT_MENU_1711 = new NavigationLocation("LENDINGS_OF__EQUIP__22198", "GQT_Menu_1711", "Lendi") { vueRouteName = "menu-GQT_1711" };
+		private static readonly NavigationLocation ACTION_GQT_MENU_DEVOLOBS = new NavigationLocation("OUT_OF_DATE_LENDINGS05506", "GQT_Menu_DEVOLOBS", "Lendi") { vueRouteName = "menu-GQT_DEVOLOBS" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_3111 = new NavigationLocation("LENDING18782", "PTN_Menu_3111", "Lendi") { vueRouteName = "menu-PTN_3111" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_3121 = new NavigationLocation("LENDING18782", "PTN_Menu_3121", "Lendi") { vueRouteName = "menu-PTN_3121" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_LIST_DM_MB_R = new NavigationLocation("LENDING18782", "PTN_Menu_LIST_DM_MB_R", "Lendi") { vueRouteName = "menu-PTN_LIST_DM_MB_R" };
@@ -691,6 +692,107 @@ namespace GenioMVC.Controllers
                 return View(model);
             else
                 return PartialView("GQT_Menu_1711_Partial", model);
+        }
+
+
+
+        //
+        // GET: /Lendi/GQT_Menu_DEVOLOBS
+        [AuthorizeForUsers]
+		[AuthorizeForUsers]
+        [ActionName("GQT_Menu_DEVOLOBS")]
+        public ActionResult GQT_Menu_DEVOLOBS(bool allSelected = false)
+        {
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+
+            GQT_Menu_DEVOLOBS_ViewModel model = new GQT_Menu_DEVOLOBS_ViewModel(Navigation);
+            bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+            if (isHomePage)
+                Navigation.SetValue("HomePage", "GQT_Menu_DEVOLOBS");
+            ViewBag.isHomePage = isHomePage;
+            //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+            if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_lendi")))
+                UserContext.Current.SetPersistenceReadOnly(true);
+            else
+			{
+                Navigation.DestroyEntry("ForcePrimaryRead_lendi");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+            CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
+            if (result.Status.Equals(CSGenio.framework.Status.E))
+            {
+                if (!Request.IsAjaxRequest() && !isHomePage)
+                    return View("_PermissionError", model: result.Message);
+                else
+                    return PartialView("_PermissionError", model: result.Message);
+            }
+
+            NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
+			if (!isHomePage && !Request.IsAjaxRequest())
+            {
+                if (Navigation.CurrentLevel == null || !ACTION_GQT_MENU_DEVOLOBS.IsSameAction(Navigation.CurrentLevel.Location))
+                {
+                    // reset the selections for this new navigation flow
+                    // TODO: This change still requires more testing
+                    Navigation.RemoveHistoryLevel(ACTION_GQT_MENU_DEVOLOBS);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_GQT_MENU_DEVOLOBS.Action)
+                    {
+                        Navigation.AddHistoryLevel(ACTION_GQT_MENU_DEVOLOBS, FormMode.List);
+                        CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
+                    }
+				}
+            }
+            else if (isHomePage)
+            {
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_GQT_MENU_DEVOLOBS.ShortDescription());
+                Navigation.SetValue("HomePageContainsList", true);
+            }
+
+
+            Navigation.SetValue("lendi.returned", "0");
+            Navigation.SetValue("lendi.ifoutdt", "1");
+
+			model.Navigation = Navigation;
+
+// USE /[MANUAL GQT MENU_GET DEVOLOBS]/
+
+            // Table List Export - check if user is exporting the Qlisting
+            if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)
+            {
+				string exportType = querystring["ExportType"];
+                string file = "GQT_Menu_DEVOLOBS_" + DateTime.Now.ToString("ddMMyyyyhhmmss") + "." + exportType;
+                ListingMVC<CSGenioAlendi> listing = null;
+                CriteriaSet conditions = null;
+                List<CSGenio.framework.Exports.QColumn> columns = null;
+                model.LoadToExport(out listing, out conditions, out columns, querystring, Request.IsAjaxRequest());
+
+                // Validate export format
+                if (querystring["ExportValidate"] == "true")
+                {
+                    bool isValidExport = new CSGenio.framework.Exports(UserContext.Current.User).ExportListValidation(listing, conditions, columns, exportType);
+                    return Json(new { ValidFormat = isValidExport }, JsonRequestBehavior.AllowGet);
+                }
+
+				byte[] fileBytes = null;
+// USE /[MANUAL GQT OVERRQEXPORT DEVOLOBS]/
+                fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportList(listing, conditions, columns, exportType, file,ACTION_GQT_MENU_DEVOLOBS.Name);
+
+                QCache.Instance.ExportFiles.Put(file, fileBytes);
+                return Json(getJsonForDownloadExportFile(file, querystring["ExportType"]), JsonRequestBehavior.AllowGet);
+            }
+
+			model.Load(perPage, querystring, Request.IsAjaxRequest());
+
+            if(model.CheckForZzstate())
+                WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
+
+ 
+            if(isHomePage)
+                return PartialView("GQT_Menu_DEVOLOBS", model);
+            else if (!Request.IsAjaxRequest())
+                return View(model);
+            else
+                return PartialView("GQT_Menu_DEVOLOBS_Partial", model);
         }
 
 

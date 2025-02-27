@@ -398,7 +398,8 @@ namespace GenioMVC.ViewModels.Agreg
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAproje.FldProjecto, query + "%");
                 }
@@ -445,7 +446,8 @@ namespace GenioMVC.ViewModels.Agreg
 				}
 
 				TableProjeProjecto.List = new SelectList(TableProjeProjecto.Elements.ToSelectList(x => x.ValProjecto, x => x.ValCodproje,  x => x.ValCodproje == this.ValCodproje), "Value", "Text", this.ValCodproje);
-                FillDependant_AgregTableProjeProjecto();
+                if(!isSearchRequest)
+                    FillDependant_AgregTableProjeProjecto();
 
                 //Check if foreignkey comes from history
                 TableProjeProjecto.FilledByHistory = Navigation.CheckFilledByHistory("proje");
@@ -601,7 +603,8 @@ namespace GenioMVC.ViewModels.Agreg
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAyear.FldYear, query + "%");
                 }
@@ -648,7 +651,8 @@ namespace GenioMVC.ViewModels.Agreg
 				}
 
 				TableYearYear.List = new SelectList(TableYearYear.Elements.ToSelectList(x => x.ValYear, x => x.ValCodyear,  x => x.ValCodyear == this.ValCodyear), "Value", "Text", this.ValCodyear);
-                FillDependant_AgregTableYearYear();
+                if(!isSearchRequest)
+                    FillDependant_AgregTableYearYear();
 
                 //Check if foreignkey comes from history
                 TableYearYear.FilledByHistory = Navigation.CheckFilledByHistory("year");

@@ -433,7 +433,8 @@ namespace GenioMVC.ViewModels.Outpu
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAoutpt.FldDocumenr, query + "%");
                 }
@@ -480,7 +481,8 @@ namespace GenioMVC.ViewModels.Outpu
 				}
 
 				TableOutptDocumenr.List = new SelectList(TableOutptDocumenr.Elements.ToSelectList(x => x.ValDocumenr, x => x.ValCodoutpt,  x => x.ValCodoutpt == this.ValCodoutpt), "Value", "Text", this.ValCodoutpt);
-                FillDependant_LdsaiTableOutptDocumenr();
+                if(!isSearchRequest)
+                    FillDependant_LdsaiTableOutptDocumenr();
 
                 //Check if foreignkey comes from history
                 TableOutptDocumenr.FilledByHistory = Navigation.CheckFilledByHistory("outpt");
@@ -640,7 +642,8 @@ namespace GenioMVC.ViewModels.Outpu
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAwareh.FldWarehdes, query + "%");
                 }
@@ -687,7 +690,8 @@ namespace GenioMVC.ViewModels.Outpu
 				}
 
 				TableWarehWarehdes.List = new SelectList(TableWarehWarehdes.Elements.ToSelectList(x => x.ValWarehdes, x => x.ValCodwareh,  x => x.ValCodwareh == this.ValCodwareh), "Value", "Text", this.ValCodwareh);
-                FillDependant_LdsaiTableWarehWarehdes();
+                if(!isSearchRequest)
+                    FillDependant_LdsaiTableWarehWarehdes();
 
                 //Check if foreignkey comes from history
                 TableWarehWarehdes.FilledByHistory = Navigation.CheckFilledByHistory("wareh");
@@ -849,7 +853,8 @@ namespace GenioMVC.ViewModels.Outpu
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAitem.FldItemdes, query + "%");
                 }
@@ -896,7 +901,8 @@ namespace GenioMVC.ViewModels.Outpu
 				}
 
 				TableItemItemdes.List = new SelectList(TableItemItemdes.Elements.ToSelectList(x => x.ValItemdes, x => x.ValCoditem,  x => x.ValCoditem == this.ValCoditem), "Value", "Text", this.ValCoditem);
-                FillDependant_LdsaiTableItemItemdes();
+                if(!isSearchRequest)
+                    FillDependant_LdsaiTableItemItemdes();
 
                 //Check if foreignkey comes from history
                 TableItemItemdes.FilledByHistory = Navigation.CheckFilledByHistory("item");
@@ -1062,7 +1068,8 @@ namespace GenioMVC.ViewModels.Outpu
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAoudoc.FldNrdocsda, query + "%");
                 }
@@ -1109,7 +1116,8 @@ namespace GenioMVC.ViewModels.Outpu
 				}
 
 				TableOudocNrdocsda.List = new SelectList(TableOudocNrdocsda.Elements.ToSelectList(x => x.ValNrdocsda, x => x.ValCoddocsd,  x => x.ValCoddocsd == this.ValCoddocsd), "Value", "Text", this.ValCoddocsd);
-                FillDependant_LdsaiTableOudocNrdocsda();
+                if(!isSearchRequest)
+                    FillDependant_LdsaiTableOudocNrdocsda();
 
                 //Check if foreignkey comes from history
                 TableOudocNrdocsda.FilledByHistory = Navigation.CheckFilledByHistory("oudoc");

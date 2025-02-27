@@ -45,17 +45,27 @@ namespace GenioMVC.ViewModels.Decom
 		[NumericAttribute(0)]
 		public decimal? ValDecomnr { get; set; }
 
+		/// <summary>Campo : "New Static" Tipo:"C"</summary>
+		[Display(Name = "NEW_STATIC34114", ResourceType = typeof(Resources.Resources))]
+		[AllowHtml]
+		[StringLength(15, ErrorMessageResourceName = "O_COMPRIMENTO_MAXIMO21747", ErrorMessageResourceType = typeof(Resources.Resources))]
+		public string PseudValField002 { get { return funcPseudValField002 != null ? funcPseudValField002() : _auxPseudValField002; } set { funcPseudValField002 = () => value; } }
+		[JsonIgnore]
+		public Func<string> funcPseudValField002 { get; set; }
+		private string _auxPseudValField002 { get; set; }
+
+		/// <summary>Campo : "New Static" Tipo:"PM"</summary>
+		[Display(Name = "NEW_STATIC34114", ResourceType = typeof(Resources.Resources))]
+		public object PseudValField001 { get { return funcPseudValField001 != null ? funcPseudValField001() : _auxPseudValField001; } set { funcPseudValField001 = () => value; } }
+		[JsonIgnore]
+		public Func<object> funcPseudValField001 { get; set; }
+		private object _auxPseudValField001 { get; set; }
+
 		/// <summary>Campo : "Decomission" Tipo:"DT"</summary>
 		[Display(Name = "DECOMISSION14486", ResourceType = typeof(Resources.Resources))]
 		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
 		[DateAttribute("DT")]
 		public DateTime? ValDtdeco { get; set; }
-
-		/// <summary>Campo : "Notes" Tipo:"MO"</summary>
-		[Display(Name = "NOTES05274", ResourceType = typeof(Resources.Resources))]
-		[AllowHtml]
-		[DataType(DataType.MultilineText)]
-		public string ValNote { get; set; }
 
 
 		#region Navigations
@@ -182,7 +192,6 @@ namespace GenioMVC.ViewModels.Decom
 			{
  				ValDecomnr = ViewModelConversion.ToNumeric(m.ValDecomnr);
  				ValDtdeco = ViewModelConversion.ToDateTime(m.ValDtdeco);
- 				ValNote = ViewModelConversion.ToString(m.ValNote);
  				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
 			}
 			catch (Exception)
@@ -203,7 +212,6 @@ namespace GenioMVC.ViewModels.Decom
 			{
 				m.ValDecomnr = ViewModelConversion.ToNumeric(ValDecomnr);
 				m.ValDtdeco = ViewModelConversion.ToDateTime(ValDtdeco);
-				m.ValNote = ViewModelConversion.ToString(ValNote);
 				m.ValCoddeco = ViewModelConversion.ToString(ValCoddeco);
 			}
 			catch (Exception)

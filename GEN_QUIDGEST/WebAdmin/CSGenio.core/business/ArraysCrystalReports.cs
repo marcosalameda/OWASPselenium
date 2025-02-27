@@ -48,6 +48,13 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"C\" then \"Não existe CC (contabilidade de custos)\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("accustos", Qresult.ToString());
+			// acondtst
+            Qresult = new StringBuilder();
+			            Qresult.AppendLine("if {{{0}}} = \"BLOCK\" then \"Block field\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"HIDE\" then \"Hide field\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"REQUIRE\" then \"Require field\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("acondtst", Qresult.ToString());
 			// active
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"Y\" then \"Yes\" else");

@@ -125,11 +125,12 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(12);
+			info.Pathways = new Dictionary<string, string>(13);
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");
+			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
@@ -281,7 +282,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodphoto, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodequip { get { return m_fldCodequip; } }
 		private static FieldRef m_fldCodequip = new FieldRef("photo", "codequip");
@@ -292,7 +292,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodequip); }
 			set { insertNameValueField(FldCodequip, value); }
 		}
-
 
 		/// <summary>Field : "Photo" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldPhotogra { get { return m_fldPhotogra; } }
@@ -305,7 +304,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPhotogra, value); }
 		}
 
-
 		/// <summary>Field : "Title" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTitle { get { return m_fldTitle; } }
 		private static FieldRef m_fldTitle = new FieldRef("photo", "title");
@@ -317,7 +315,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldTitle, value); }
 		}
 
-
 		/// <summary>Field : "Attached" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldAnexed { get { return m_fldAnexed; } }
 		private static FieldRef m_fldAnexed = new FieldRef("photo", "anexed");
@@ -328,7 +325,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldAnexed); }
 			set { insertNameValueField(FldAnexed, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

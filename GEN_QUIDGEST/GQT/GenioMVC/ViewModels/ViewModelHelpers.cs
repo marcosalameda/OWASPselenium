@@ -54,9 +54,10 @@ namespace GenioMVC.ViewModels
 
 		public TablePartial()
 		{
-			this.Distincts = new Dictionary<string, SelectList>();
-			this.Elements = new List<A>();
-			this.Pagination = new TablePagination(1, 0, false, false, 0);
+			Elements = new List<A>();
+			Distincts = new Dictionary<string, SelectList>();
+			Pagination = new TablePagination(1, 0, false, false, 0);
+			Filters = new TableFiltering();
 		}
 
 		public void SetPagination(int pageNumber, int itemsNumber, bool hasMore, bool showTotal, int totalRows)
@@ -170,7 +171,10 @@ namespace GenioMVC.ViewModels
 		/// <summary>
 		/// Parameterless constructor for deserializing
 		/// </summary>
-		public TableFiltering() { }
+		public TableFiltering()
+		{
+			this.FiltersValues = new Dictionary<string, string>();
+		}
 
 		public TableFiltering(bool showTableFilters, bool hasFilters, Dictionary<string, string> filtersValues)
 		{

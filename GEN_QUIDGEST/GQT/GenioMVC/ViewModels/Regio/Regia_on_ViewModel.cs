@@ -402,7 +402,8 @@ namespace GenioMVC.ViewModels.Regio
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAcntry.FldCountry, query + "%");
                 }
@@ -449,7 +450,8 @@ namespace GenioMVC.ViewModels.Regio
 				}
 
 				TableCntryCountry.List = new SelectList(TableCntryCountry.Elements.ToSelectList(x => x.ValCountry, x => x.ValCodcntry,  x => x.ValCodcntry == this.ValCodcntry), "Value", "Text", this.ValCodcntry);
-                FillDependant_Regia_onTableCntryCountry();
+                if(!isSearchRequest)
+                    FillDependant_Regia_onTableCntryCountry();
 
                 //Check if foreignkey comes from history
                 TableCntryCountry.FilledByHistory = Navigation.CheckFilledByHistory("cntry");
@@ -605,7 +607,8 @@ namespace GenioMVC.ViewModels.Regio
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApais1.FldCountry, query + "%");
                 }
@@ -652,7 +655,8 @@ namespace GenioMVC.ViewModels.Regio
 				}
 
 				TablePais1Country.List = new SelectList(TablePais1Country.Elements.ToSelectList(x => x.ValCountry, x => x.ValCodcntry,  x => x.ValCodcntry == this.ValCodpais1), "Value", "Text", this.ValCodpais1);
-                FillDependant_Regia_onTablePais1Country();
+                if(!isSearchRequest)
+                    FillDependant_Regia_onTablePais1Country();
 
                 //Check if foreignkey comes from history
                 TablePais1Country.FilledByHistory = Navigation.CheckFilledByHistory("pais1");

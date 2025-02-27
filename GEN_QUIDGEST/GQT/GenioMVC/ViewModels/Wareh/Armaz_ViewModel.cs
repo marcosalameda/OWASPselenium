@@ -66,6 +66,7 @@ namespace GenioMVC.ViewModels.Wareh
 		public TablePartial<GenioMVC.Models.Wpess> ValPessarma { get; set; }
 
 
+
 		#region Navigations
 		#endregion
 

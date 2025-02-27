@@ -440,7 +440,8 @@ namespace GenioMVC.ViewModels.Expen
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAproje.FldProjecto, query + "%");
                 }
@@ -487,7 +488,8 @@ namespace GenioMVC.ViewModels.Expen
 				}
 
 				TableProjeProjecto.List = new SelectList(TableProjeProjecto.Elements.ToSelectList(x => x.ValProjecto, x => x.ValCodproje,  x => x.ValCodproje == this.ValCodproje), "Value", "Text", this.ValCodproje);
-                FillDependant_DespeTableProjeProjecto();
+                if(!isSearchRequest)
+                    FillDependant_DespeTableProjeProjecto();
 
                 //Check if foreignkey comes from history
                 TableProjeProjecto.FilledByHistory = Navigation.CheckFilledByHistory("proje");
@@ -643,7 +645,8 @@ namespace GenioMVC.ViewModels.Expen
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAyear.FldYear, query + "%");
                 }
@@ -690,7 +693,8 @@ namespace GenioMVC.ViewModels.Expen
 				}
 
 				TableYearYear.List = new SelectList(TableYearYear.Elements.ToSelectList(x => x.ValYear, x => x.ValCodyear,  x => x.ValCodyear == this.ValCodyear), "Value", "Text", this.ValCodyear);
-                FillDependant_DespeTableYearYear();
+                if(!isSearchRequest)
+                    FillDependant_DespeTableYearYear();
 
                 //Check if foreignkey comes from history
                 TableYearYear.FilledByHistory = Navigation.CheckFilledByHistory("year");
@@ -861,7 +865,8 @@ namespace GenioMVC.ViewModels.Expen
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAagreg.FldValue, query + "%");
                 }
@@ -908,7 +913,8 @@ namespace GenioMVC.ViewModels.Expen
 				}
 
 				TableAgregValue.List = new SelectList(TableAgregValue.Elements.ToSelectList(x => x.ValValue, x => x.ValCodaggre,  x => x.ValCodaggre == this.ValCodaggre), "Value", "Text", this.ValCodaggre);
-                FillDependant_DespeTableAgregValue();
+                if(!isSearchRequest)
+                    FillDependant_DespeTableAgregValue();
 
                 //Check if foreignkey comes from history
                 TableAgregValue.FilledByHistory = Navigation.CheckFilledByHistory("agreg");

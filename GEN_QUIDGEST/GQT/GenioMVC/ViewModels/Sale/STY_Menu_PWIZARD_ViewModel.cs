@@ -39,12 +39,27 @@ namespace GenioMVC.ViewModels.Sale
         /// </summary>
         public string ValCodvenda { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+				// Limit "SC"
+				conditions.Equal(CSGenioAsale.FldShowrcrd, "1");
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +73,14 @@ namespace GenioMVC.ViewModels.Sale
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL STY LIST_LIMITS PWIZARD]/
+
+			return crs;
+		}
+
 
         private string dbeditTitle;
         public string DBEditTitle { get { if (string.IsNullOrEmpty(dbeditTitle)) GetTitle(); return dbeditTitle; } }
@@ -76,11 +99,8 @@ namespace GenioMVC.ViewModels.Sale
             CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, this.Identifier);
             conditions.Equal(CSGenioAsale.FldZzstate, 0); //valid zzstate only
 
-            //Menu fixed limits and relations:
-
-                        conditions.Equal(CSGenioAsale.FldShowrcrd, 1);
-
-
+            // Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZzstate, CSGenioAsale.FldNrlide, CSGenioAsale.FldStartdt, CSGenioAsale.FldIdentifi, CSGenioAsale.FldPotcompr, CSGenioAsale.FldProspecc, CSGenioAsale.FldInteress, CSGenioAsale.FldSemrfina, CSGenioAsale.FldSemcapac, CSGenioAsale.FldDtqualif, CSGenioAsale.FldQualific, CSGenioAsale.FldPreabord, CSGenioAsale.FldHomework, CSGenioAsale.FldDtaborda, CSGenioAsale.FldApproach, CSGenioAsale.FldApresent, CSGenioAsale.FldDtaprese, CSGenioAsale.FldDtsupera, CSGenioAsale.FldTentfech, CSGenioAsale.FldDtvenda, CSGenioAsale.FldDtacompa };
@@ -192,9 +212,9 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZ
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
-			// Limit "SC"
-			crs.Equal(CSGenioAsale.FldShowrcrd, "1");
 
 			if (isToExport)
 			{
@@ -214,7 +234,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZ
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_sale");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_sale");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Sale.AddEPH<CSGenioAsale>(ref u, null, "MLPWIZARD"));
 			}
@@ -297,7 +316,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAsale.FldCodvenda, CSGenioAsale.FldZ
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

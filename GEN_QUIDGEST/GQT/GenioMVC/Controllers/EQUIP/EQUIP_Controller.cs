@@ -76,17 +76,14 @@ namespace GenioMVC.Controllers
             }
 
             dynamic result = null;
-            Models.Equip row = null;
-            try { row = Models.Equip.Find(navigation.GetStrValue("equip")); }
-            catch (Exception)
-            {
-                CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model equip");
-            }
-            if(row == null)
-            {
-                row = new Models.Equip();
-                row.klass.QPrimaryKey = navigation.GetStrValue("equip");
-            }
+            /*
+                Instead of loading the entire record from the database, a record will be created in memory with the keys filled in, 
+                    and additional fields from "Field" type limits will be mapped later. 
+                This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+            */
+            Models.Equip row = new Models.Equip(isEmpty: true);
+            row.klass.QPrimaryKey = navigation.GetStrValue("equip");
+            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 
             // Only the last reload request is accepted.
             var requestNumber = Request.Headers.GetValues("ReloadDBEditRequestNumber");
@@ -99,7 +96,6 @@ namespace GenioMVC.Controllers
 				{
 					case "ACCORDI_CMPNYDESIGNAT":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Accordi_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -109,7 +105,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "ACCORDI_PESS1NAME____":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Accordi_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -119,7 +114,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIGROUPESS1NAME____":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Equigrou_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -129,7 +123,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIGROUTPEQUTIPOEQUI":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Equigrou_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -139,7 +132,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___CMPNYDESIGNAT":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Equip_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -149,7 +141,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___PESS1NAME____":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Equip_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -159,7 +150,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___TPEQUTIPOEQUI":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Equip_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -169,7 +159,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___WAREHWAREHDES":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Equip_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -179,7 +168,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___ITEM_ITEMDES_":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Equip_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -189,7 +177,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___ROOM1ROOMNR__":	// Field (F1)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Equip_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -199,7 +186,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___DECOMDECOMNR_":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Equip_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -209,7 +195,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_TPEQUTIPOEQUI":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Groupbx_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -219,7 +204,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_WAREHWAREHDES":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Groupbx_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -229,7 +213,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_ITEM_ITEMDES_":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Groupbx_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -239,12 +222,29 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_ROOM1ROOMNR__":	// Field (F1)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Groupbx_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 						    model.Load_Groupbx_room1roomnr__(qs);
 						    result = model.TableRoom1Roomnr;
+                        }
+						break;
+					case "WID_IEQUTPEQUTIPOEQUI":	// Field (DB)
+                        {
+						    var model = new Wid_iequ_ViewModel(navigation) { editable = false };
+						    model.MapFromModel(row);
+                            TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
+						    model.Load_Wid_iequtpequtipoequi(qs);
+						    result = model.TableTpequTipoequi;
+                        }
+						break;
+					case "WID_IEQUWAREHWAREHDES":	// Field (DB)
+                        {
+						    var model = new Wid_iequ_ViewModel(navigation) { editable = false };
+						    model.MapFromModel(row);
+                            TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
+						    model.Load_Wid_iequwarehwarehdes(qs);
+						    result = model.TableWarehWarehdes;
                         }
 						break;
 					default: break;
@@ -328,6 +328,12 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_ROOM1ROOMNR__":	// Field (F1)
 						values = Groupbx_ViewModel.GetDependant_GroupbxTableRoom1Roomnr(Selected, navigation);
+						break;
+					case "WID_IEQUTPEQUTIPOEQUI":	// Field (DB)
+						values = Wid_iequ_ViewModel.GetDependant_Wid_iequTableTpequTipoequi(Selected, navigation);
+						break;
+					case "WID_IEQUWAREHWAREHDES":	// Field (DB)
+						values = Wid_iequ_ViewModel.GetDependant_Wid_iequTableWarehWarehdes(Selected, navigation);
 						break;
 					default: break;
 				}
@@ -476,6 +482,22 @@ namespace GenioMVC.Controllers
         {
             return GenericRecalculateFormulas(form_data, "equip",
                 (primaryKey) => Models.Equip.Find(primaryKey, "FTIMEQUIP"),
+                (model) => form_data.MapToModel(model as Models.Equip)
+            );
+        }
+
+        /// <summary>
+        /// Recalculate formulas of the "Wid_iequ" form. (++, CT, SR, CL and U1)
+        /// </summary>
+        /// <param name="form_data">Current form data</param>
+        /// <returns></returns>
+        [HttpPost]
+		[AuthorizeForUsers]
+        [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+        public JsonResult RecalculateFormulas_Wid_iequ(Wid_iequ_ViewModel form_data)
+        {
+            return GenericRecalculateFormulas(form_data, "equip",
+                (primaryKey) => Models.Equip.Find(primaryKey, "FWID_IEQU"),
                 (model) => form_data.MapToModel(model as Models.Equip)
             );
         }

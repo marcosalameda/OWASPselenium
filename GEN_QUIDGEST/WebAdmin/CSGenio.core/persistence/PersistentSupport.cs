@@ -639,13 +639,6 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             if (!int.TryParse(param.Year, out year))
                 param.Year = "0";
 
-			//change some parameters to replace depend datatype
-            /*DatabaseType actualType = (DatabaseType)Enum.Parse(typeof(DatabaseType), dataSystem.Type, true);
-            var schemaDB = schema;
-            if (actualType == DatabaseType.ORACLE)
-                if (schemaDB.IndexOf("C##") != 0)
-                    schemaDB = "C##" + schemaDB; //on oracle 12 the user must start with C##*/
-
             //configure the list of replaces to the scripts
             List<KeyValuePair<string, string>> result = new List<KeyValuePair<string, string>>();
             result.Add(new KeyValuePair<string, string>("W_GnBD", schema));
@@ -683,7 +676,8 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
             try
             {
-                using(IDbConnection conn = getPersistentSupport(dataSystem.Name, param.Username, param.Password).Connection,
+                PersistentSupport sp = getPersistentSupport(dataSystem.Name, param.Username, param.Password);
+                using(IDbConnection conn = sp.Connection,
                     AdmConn = getPersistentSupportMaster(dataSystem.Name, param.Username, param.Password).Connection,
                     LogConn = getPersistentSupportLog(dataSystem.Name, param.Username, param.Password).Connection)
                 {
@@ -699,7 +693,8 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                         param.OnChangedExecutionScript(EventArgs.Empty, status);
                     };
 
-                    eq.ExecuteServer(paramEx, cToken);
+                    bool dbExists = sp.CheckIfDatabaseExists();
+                    eq.ExecuteServer(paramEx, cToken, dbExists);
 				}
             }
             catch (OperationCanceledException e) { throw e; }
@@ -3396,19 +3391,6 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             return controlQueriesOverride;
         }
 
-        /// <summary>
-        /// Query for formula to concatenate rows
-        /// </summary>
-        /// <param name="tableName">Source table name</param>
-        /// <param name="argLG">List Aggregate Argument</param>
-        /// <param name="relation">Relation</param>
-        /// <param name="relValue">Foreign key</param>
-        /// <remarks>Moved into the Persistent Support with the purpose of override to support MySQL syntax</remarks>
-        /// <returns>Final concatenated text.</returns>
-        public virtual string getLGQuery(string tableName, ListAggregateArgument argLG, Relation relation, object relValue)
-        {
-            return "dbo.GetListAggregate '" + relation.SourceRelField + "', '" + relValue.ToString() + "', '" + tableName + "', '" + argLG.ArgField + "', '" + argLG.SortField + "', '" + argLG.SeparatorField + "'";
-        }
 
         /*****************************Tabelas shadow***********************************/
 
@@ -3551,6 +3533,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                 Type funcObj = typeof(GenioServer.framework.OverrideQuery);
                 MethodInfo funcOver = null;
 
+                // TODO: Tem em conta a possibilidade da existencia do Override ao obter os valores das colunas abaixo
                 if(!string.IsNullOrEmpty(listing.identifier))
                     funcOver = funcObj.GetMethod(listing.identifier);
 
@@ -3804,16 +3787,20 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// Gets data from a record from the primary key
         /// </summary>
         /// <param name="area">The area to be filled with the values</param>
-        /// <param name="valorCodigoInterno">The value of the primary key with which we position the record</param>
-        /// <param name="campos">The fields to fill in the area. Null to get all fields</param>
+        /// <param name="internalCodeValue">The value of the primary key with which we position the record</param>
+        /// <param name="fields">The fields to fill in the area. Null to get all fields</param>
+        /// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>True if the record was correctly positioned, false otherwise</returns>
-        public virtual bool getRecord(IArea area, object internalCodeValue, string[] fields)
+        public virtual bool getRecord(IArea area, object internalCodeValue, string[] fields=null, bool forUpdate=false)
         {
             try
             {
                 bool result = false;
 
                 SelectQuery select = new SelectQuery();
+                if (forUpdate)
+                    select.updateLock = true;
+
                 select.SelectDatabaseFields(area, fields);
 
                 select.From(area.QSystem, area.TableName, area.Alias);
@@ -4123,51 +4110,14 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         }
 
         /// <summary>
-        /// Function that executes a query that returns a database record
+        /// read a single database record into a business area
         /// </summary>
-        /// <param name="query">query to be executed</param>
-        /// <returns>Area with filled values</returns>
-        public virtual void getRecord(IArea area, object internalCodeValue, bool forUpdate=false)
+        /// <param name="area">The area to read</param>
+        /// <param name="internalCodeValue">The primary key of the record</param>
+        /// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
+        public virtual void getRecord(IArea area, object internalCodeValue, bool forUpdate)
         {
-            try
-            {
-                Log.Debug(string.Format("Executa query getRecord. [valorCodigoInterno] {0}", DBConversion.FromKey(internalCodeValue.ToString())));
-
-                SelectQuery select = new SelectQuery();
-
-                if (forUpdate)
-                    select.updateLock = true;
-
-                select.SelectDatabaseFields(area);
-
-                select.From(area.QSystem, area.TableName, area.Alias);
-                select.Where(CriteriaSet.And()
-                    .Equal(area.Alias, area.PrimaryKeyName, internalCodeValue));
-
-                DataMatrix mx = Execute(select);
-
-                for (int i = 0; i < mx.NumCols; i++)
-                {
-                    area.insertNameValueField(select.SelectFields[i].Alias, mx.GetDirect(0, i));
-                }
-
-                return;
-            }
-			catch (GenioException ex)
-            {
-				if (ex.UserMessage == null)
-					throw new PersistenceException("Erro ao obter registo.", "PersistentSupport.getRecord",
-				                                   "Error selecting record from table " + area.TableName + " where code is " + internalCodeValue.ToString() + ": " + ex.Message, ex);
-				else
-					throw new PersistenceException("Erro ao obter registo: " + ex.UserMessage, "PersistentSupport.getRecord",
-				                                   "Error selecting record from table " + area.TableName + " where code is " + internalCodeValue.ToString() + ": " + ex.Message, ex);
-            }
-            catch (Exception ex)
-            {
-                // closeConnection(); to have a uniform behavior with other catch of other sp functions and not close the connection for no apparent reason to this.
-				throw new PersistenceException("Erro ao obter registo.", "PersistentSupport.getRecord",
-				                               "Error selecting record from table " + area.TableName + " where code is " + internalCodeValue.ToString() + ": " + ex.Message, ex);
-            }
+            getRecord(area, internalCodeValue, null, forUpdate);
         }
 
         /// <summary>

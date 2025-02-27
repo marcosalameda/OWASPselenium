@@ -236,7 +236,7 @@ namespace Administration.Controllers
                 model.MQueues.Queues = new List<Models.QueueCfg>();
 
                 model.ResultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
-                model.AlertType = "error";
+                model.AlertType = "danger";
             }
 
             return Ok(model);
@@ -282,6 +282,14 @@ namespace Administration.Controllers
                 model.ConnEncrypt = dataSystem.Schemas[0].ConnEncrypt;
                 model.ConnWithDomainUser = dataSystem.Schemas[0].ConnWithDomainUser;
 
+                //Add GQP shared system
+                var GQPSchema = dataSystem.Schemas.Find(s => s.Id == "GQP");
+                if (GQPSchema != null)
+                {
+                    model.GQP_Schema = GQPSchema.Schema;
+                    model.GQP_ConnEncrypt = GQPSchema.ConnEncrypt;
+                    model.GQP_ConnWithDomainUser = GQPSchema.ConnWithDomainUser;
+                }
                 model.HideYears = conf.omiteAnos.ToUpper() == "S";  //<-- Only this one goes to the conf? does that make sense?
                 model.DbUser = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.Login ?? string.Empty));
                 
@@ -293,7 +301,7 @@ namespace Administration.Controllers
                 model.ServiceName = dataSystem.ServiceName;
                 model.Port = dataSystem.Port;
 
-                Enum.TryParse(dataSystem.Type, out HardCodedLists.DBMS serverType);// Default: SQLSERVER2008
+                Enum.TryParse(dataSystem.GetDatabaseType().ToString(), out HardCodedLists.DBMS serverType);// Default: SQLSERVER
                 model.ServerType = serverType;
 
                 /*
@@ -337,6 +345,7 @@ namespace Administration.Controllers
             model.PasswordAlgorithms = security.PasswordAlgorithms;
             model.SessionTimeOut = security.SessionTimeOut;
             model.UsePasswordBlacklist = security.UsePasswordBlacklist;
+            model.MaxAttempts = security.MaxAttempts;
 
             model.IdentityProviders = new List<Models.IdentityProviderCfg>();
             int rownum = 0;
@@ -349,7 +358,7 @@ namespace Administration.Controllers
                 model.RoleProviders.Add(new Models.RoleProviderCfg(rp) { Rownum = rownum++ });
 
             model.Users = new List<Models.UserCfg>();
-
+            rownum = 0;
             foreach (var u in security.Users)
                 model.Users.Add(new Models.UserCfg(u) { Rownum = rownum++ });
 
@@ -374,19 +383,21 @@ namespace Administration.Controllers
             ConfigurationXML conf = configManager.GetExistingConfig();
             string year = (string)data["year"];
             string schema = (string)data["schema"];
-            createDataSystem(year, schema, conf);
+            string type = (string)data["type"] ?? "";
+            string server = (string)data["server"] ?? "";
+            createDataSystem(year, schema, conf, type, server);
             configManager.StoreConfig(conf);
             Configuration.ReadConfiguration(conf);
             return Json(new { system = year });
         }
 
-        private DataSystemXml createDataSystem(string year, string schemaName, ConfigurationXML conf)
+        private DataSystemXml createDataSystem(string year, string schemaName, ConfigurationXML conf, string dsType = "", string dsServer = "")
         {
             var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == year);
             if (dataSystem != null)
                 return dataSystem;
-            else 
-                dataSystem = new DataSystemXml() { Name = year };
+            else
+                dataSystem = new DataSystemXml() { Name = year, Type = dsType, Server = dsServer }; // Type and server are set when duplicating a data system
 
             var schema = new DataXml();
             schema.Id = CSGenio.framework.Configuration.Program;
@@ -397,6 +408,30 @@ namespace Administration.Controllers
 
             conf.DataSystems.Add(dataSystem);
             return dataSystem;
+        }
+
+        [HttpPost]
+        public IActionResult SaveConfigDataSystems([FromBody] Models.ConfigModel model)
+        {
+            var conf = configManager.GetExistingConfig();
+
+            conf.anoDefault = model.DefaultYear ?? "0";
+
+            // In case the default data system changes, reorder databases
+            if (conf.anoDefault != Configuration.DefaultYear)
+            {
+                DataSystemXml tempDefDS = conf.DataSystems.FirstOrDefault(ds => ds.Name == conf.anoDefault);
+                conf.DataSystems.Remove(tempDefDS);
+                conf.DataSystems.Insert(0, tempDefDS);
+            }
+
+            conf.omiteAnos = model.HideYears ? "S" : "";
+
+            configManager.StoreConfig(conf);
+            // Reload Configuration static instance in server with the new Configuracoes.xml data
+            CSGenio.framework.Configuration.ReadConfiguration(conf);
+
+            return Json(new { Success = true });
         }
 
         [HttpPost]
@@ -435,6 +470,7 @@ namespace Administration.Controllers
                 model.ResultMsg = string.Empty;
 				if (!ModelState.IsValid)
                 {
+                    model.AlertType = "danger";
                     string err = Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860 + Environment.NewLine + string.Join(Environment.NewLine, ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
                     throw new BusinessException(err, "ConfigController.reindex", err);
                 }
@@ -478,6 +514,8 @@ namespace Administration.Controllers
                         sysConfiguration.SaveLogDatabaseConfig(model.Log_DbUser, model.Log_DbPsw, model.Log_Server, model.ServerType.ToString(), 
                             model.Log_Schema, model.Log_Port, model.ConnEncrypt, model.ConnWithDomainUser, year);                    
                     }
+                    //Configure Shared Tables
+                    SaveSharedTables(model, sysConfiguration.ReadDatabaseConfig(year));
                     model.AlertType = "success";
                     model.ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR18806 + " " + Resources.Resources.SERA_REDIRECIONADO_E06592;
                 }
@@ -487,9 +525,44 @@ namespace Administration.Controllers
                 return Index(Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper()), appId, "danger");
             }
 
-			return Index(model.ResultMsg, appId);
+			return Index(model.ResultMsg, appId, model.AlertType);
         }
 
+        private void SaveSharedTables(Models.ConfigModel model, DataSystemXml db)
+        {
+            ConfigurationXML conf = configManager.GetExistingConfig();
+            DataXml res = null;
+
+            res = db.Schemas.Find(x => x.Id == "GQP");
+            if(res != null)
+            {
+                res.Schema = model.Schema;
+                res.ConnEncrypt = model.ConnEncrypt;
+                res.ConnWithDomainUser = model.ConnWithDomainUser;
+            }
+            else
+            {
+                db.Schemas.Add(new DataXml
+                {
+                    Id = "GQP",
+                    Schema = model.GQP_Schema,
+                    ConnEncrypt = model.GQP_ConnEncrypt,
+                    ConnWithDomainUser = model.GQP_ConnWithDomainUser
+                });
+            }
+
+            int indexDS = conf.DataSystems.FindIndex(confDS => confDS.Name == db.Name);
+            if (indexDS != -1)
+                conf.DataSystems[indexDS] = db;
+            else
+                conf.DataSystems.Add(db);
+
+            //Save configuration
+            configManager.StoreConfig(conf);
+
+            // Reload configuration
+            CSGenio.framework.Configuration.ReadConfiguration(conf);
+        }
 
         [HttpPost]
         public IActionResult SaveIdentityProvider([FromBody]Models.IdentityProviderCfg model)
@@ -517,6 +590,7 @@ namespace Administration.Controllers
             security = conf.GetSecurity(appId);
             var rownum = security.IdentityProviders.FindIndex(u => u.Name == model.Name);
             Models.IdentityProviderCfg identityProvider = model.FormMode != "delete" ? new Models.IdentityProviderCfg(security.IdentityProviders[rownum]) { Rownum = rownum } : null;
+            
 
             return Json(new { success = true, identityProvider });
         }
@@ -782,6 +856,9 @@ namespace Administration.Controllers
                     break;
                 case "new":
                 case "edit":
+                    //verify Cron is not empty
+                    if (row.Cron == "")
+                        return Json(new { Success = false, Message = Resources.Resources.CRON_E_NECESSARIO07773 });
                     //validate Cron
                     if(!Cronos.CronExpression.TryParse(row.Cron, Cronos.CronFormat.IncludeSeconds, out var _))
                         return Json(new { Success = false, Message = Resources.Resources.EXPRESSAO_CRON_INVAL33136  });
@@ -1110,13 +1187,8 @@ namespace Administration.Controllers
         public FileResult DownloadRedirect()
         {
             string path = AppDomain.CurrentDomain.BaseDirectory;
-            RedirectXML redirect = new RedirectXML();
-            redirect.files = new FileRedirect[1];
-            var fileRedirect = new FileRedirect();
-            fileRedirect.file = "Configuracoes.xml";
-            fileRedirect.relative = false;
-            fileRedirect.path = path;
-            redirect.files[0] = fileRedirect;
+            var sysConfig = new SysConfiguration(configManager);
+            var redirect = sysConfig.CreateRedirect(path);
 
             var dataStream = new MemoryStream();
             var serializer = new System.Xml.Serialization.XmlSerializer(typeof(RedirectXML));
@@ -1168,9 +1240,7 @@ namespace Administration.Controllers
 
             using var stream = new StreamReader(file.OpenReadStream());
 
-            if(sp.DatabaseType == DatabaseType.SQLSERVER2008 
-                || sp.DatabaseType == DatabaseType.SQLSERVER2005
-                || sp.DatabaseType == DatabaseType.SQLSERVER2000)
+            if(sp.DatabaseType == DatabaseType.SQLSERVER || sp.DatabaseType == DatabaseType.SQLSERVERCOMPAT)
             {
                 string ?line;
                 DataTable dt = new DataTable();

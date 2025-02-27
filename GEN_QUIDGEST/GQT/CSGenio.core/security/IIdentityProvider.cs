@@ -1,5 +1,6 @@
 ﻿using CSGenio.framework;
 using System;
+using System.Collections.Generic;
 using System.Security.Principal;
 
 namespace GenioServer.security
@@ -67,7 +68,6 @@ namespace GenioServer.security
         /// <param name="user">The user where the credential will be associated</param>
         /// <returns>True if the registration is sucessfull, false otherwise</returns>
         bool RegisterExternalId(Credential credential, User user);
-
     }
 
     /// <summary>

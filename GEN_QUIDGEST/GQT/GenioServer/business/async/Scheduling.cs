@@ -141,17 +141,6 @@ namespace CSGenio.business.async
             return arguments;
         }
 
-        //public static string GetIdentificadorAtraso(PersistentSupport sp, User user, string codatras)
-        //{
-        //    CSGenioAatras atras = CSGenioAatras.search(sp, codatras, user);
-        //    CSGenioAfunci funci = CSGenioAfunci.search(sp, atras.ValCodfunci, user);
-
-        //    if (atras != null)
-        //        return $"{funci.ValNome} - {atras.ValDataini.ToShortDateString()} das {atras.ValHoraini} às {atras.ValHorafim}";
-        //    else
-        //        return codatras;
-        //}
-
         /// <summary>
         /// Returns a list of members containing the attribute ProcessArg
         /// </summary>

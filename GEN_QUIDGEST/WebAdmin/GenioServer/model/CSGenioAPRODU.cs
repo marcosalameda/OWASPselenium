@@ -140,6 +140,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "WEIGHT36329";
 
@@ -152,6 +153,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  12;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 4;
 			Qfield.CavDesignation = "PRICE06900";
 
@@ -164,6 +166,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "INPUTS19315";
 
 			Qfield.Dupmsg = "";
@@ -175,6 +178,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "OUTPUTS47833";
 
 			Qfield.Dupmsg = "";
@@ -186,6 +190,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "STOCK37618";
 
 			Qfield.Dupmsg = "";
@@ -250,12 +255,13 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(7);
+			info.Pathways = new Dictionary<string, string>(8);
 			info.Pathways.Add("locat","locat");
 			info.Pathways.Add("lcext","lcext");
 			info.Pathways.Add("facil","locat");
 			info.Pathways.Add("entit","locat");
 			info.Pathways.Add("facty","locat");
+			info.Pathways.Add("cntry","locat");
 			info.Pathways.Add("faci1","locat");
 			info.Pathways.Add("faci2","locat");
 		}
@@ -394,7 +400,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodprodu, value); }
 		}
 
-
 		/// <summary>Field : ">>LOCATION" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodlocat { get { return m_fldCodlocat; } }
 		private static FieldRef m_fldCodlocat = new FieldRef("produ", "codlocat");
@@ -405,7 +410,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodlocat); }
 			set { insertNameValueField(FldCodlocat, value); }
 		}
-
 
 		/// <summary>Field : ">>LOCATION EXTENSION" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodlcext { get { return m_fldCodlcext; } }
@@ -418,7 +422,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodlcext, value); }
 		}
 
-
 		/// <summary>Field : "Product" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldProduct { get { return m_fldProduct; } }
 		private static FieldRef m_fldProduct = new FieldRef("produ", "product");
@@ -429,7 +432,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldProduct); }
 			set { insertNameValueField(FldProduct, value); }
 		}
-
 
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldDescript { get { return m_fldDescript; } }
@@ -442,7 +444,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDescript, value); }
 		}
 
-
 		/// <summary>Field : "SKU" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSku { get { return m_fldSku; } }
 		private static FieldRef m_fldSku = new FieldRef("produ", "sku");
@@ -453,7 +454,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldSku); }
 			set { insertNameValueField(FldSku, value); }
 		}
-
 
 		/// <summary>Field : "GTIN" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldGtin { get { return m_fldGtin; } }
@@ -466,7 +466,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGtin, value); }
 		}
 
-
 		/// <summary>Field : "Size" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSize { get { return m_fldSize; } }
 		private static FieldRef m_fldSize = new FieldRef("produ", "size");
@@ -477,7 +476,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldSize); }
 			set { insertNameValueField(FldSize, value); }
 		}
-
 
 		/// <summary>Field : "Weight" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldWeight { get { return m_fldWeight; } }
@@ -490,7 +488,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldWeight, value); }
 		}
 
-
 		/// <summary>Field : "Price" Tipo: "$D" Formula:  ""</summary>
 		public static FieldRef FldPrice { get { return m_fldPrice; } }
 		private static FieldRef m_fldPrice = new FieldRef("produ", "price");
@@ -501,7 +498,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldPrice); }
 			set { insertNameValueField(FldPrice, value); }
 		}
-
 
 		/// <summary>Field : "Inputs" Tipo: "N" Formula: SR "[RELIN->RECEIVED]"</summary>
 		public static FieldRef FldInputs { get { return m_fldInputs; } }
@@ -514,7 +510,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldInputs, value); }
 		}
 
-
 		/// <summary>Field : "Outputs" Tipo: "N" Formula: SR "[DILIN->DELIVERE]"</summary>
 		public static FieldRef FldOutputs { get { return m_fldOutputs; } }
 		private static FieldRef m_fldOutputs = new FieldRef("produ", "outputs");
@@ -525,7 +520,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldOutputs); }
 			set { insertNameValueField(FldOutputs, value); }
 		}
-
 
 		/// <summary>Field : "Stock" Tipo: "N" Formula: SR "[RELIN->RECEIVED]-[DILIN->DELIVERE]"</summary>
 		public static FieldRef FldStock { get { return m_fldStock; } }
@@ -538,7 +532,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldStock, value); }
 		}
 
-
 		/// <summary>Field : "Image" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldImage { get { return m_fldImage; } }
 		private static FieldRef m_fldImage = new FieldRef("produ", "image");
@@ -550,7 +543,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldImage, value); }
 		}
 
-
 		/// <summary>Field : "In use" Tipo: "AL" Formula:  ""</summary>
 		public static FieldRef FldIn_use { get { return m_fldIn_use; } }
 		private static FieldRef m_fldIn_use = new FieldRef("produ", "in_use");
@@ -561,7 +553,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldIn_use); }
 			set { insertNameValueField(FldIn_use, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

@@ -61,6 +61,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "AIRPLANE_ID43994";
 
 			Qfield.Dupmsg = "";
@@ -95,6 +96,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "SEATING_CAPACITY08355";
 
 			Qfield.Dupmsg = "";
@@ -274,7 +276,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodairpl, value); }
 		}
 
-
 		/// <summary>Field : "Airplane ID" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldAirplid { get { return m_fldAirplid; } }
 		private static FieldRef m_fldAirplid = new FieldRef("airpl", "airplid");
@@ -285,7 +286,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldAirplid); }
 			set { insertNameValueField(FldAirplid, value); }
 		}
-
 
 		/// <summary>Field : "Airplane Name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldAirplnm { get { return m_fldAirplnm; } }
@@ -298,7 +298,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldAirplnm, value); }
 		}
 
-
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldAirpdsc { get { return m_fldAirpdsc; } }
 		private static FieldRef m_fldAirpdsc = new FieldRef("airpl", "airpdsc");
@@ -309,7 +308,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldAirpdsc); }
 			set { insertNameValueField(FldAirpdsc, value); }
 		}
-
 
 		/// <summary>Field : "Seating Capacity" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldSeatcap { get { return m_fldSeatcap; } }
@@ -322,7 +320,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSeatcap, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodairln { get { return m_fldCodairln; } }
 		private static FieldRef m_fldCodairln = new FieldRef("airpl", "codairln");
@@ -333,7 +330,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodairln); }
 			set { insertNameValueField(FldCodairln, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

@@ -39,6 +39,17 @@ namespace GenioMVC.ViewModels.Outpt
         /// </summary>
         public string ValCodoutpt { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
@@ -46,6 +57,7 @@ namespace GenioMVC.ViewModels.Outpt
             {
                 CriteriaSet conds = CriteriaSet.And();
                 conds.Equal(CSGenioAoutpu.FldCodoutpt, this.ValCodoutpt ?? Navigation.GetStrValue("outpt"));
+
                 return conds;
             }
         }
@@ -63,6 +75,14 @@ namespace GenioMVC.ViewModels.Outpt
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS DSAID_PSEUDSAIDAS]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Dsaid_ValSaidas_ViewModel" /> class.
@@ -148,6 +168,8 @@ namespace GenioMVC.ViewModels.Outpt
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -167,7 +189,6 @@ namespace GenioMVC.ViewModels.Outpt
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_outpu");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_outpu");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Outpu.AddEPH<CSGenioAoutpu>(ref u, null, "IBL_DSAID___PSEUDSAIDAS__"));
 			}
@@ -250,7 +271,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAoutpu.FldCodoutpu, CSGenioAoutpu.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

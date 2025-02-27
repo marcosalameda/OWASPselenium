@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Equip
         /// </summary>
         public string ValCodequip { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Equip
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS EQUIGROU_PESS1NAME]/
+
+			return crs;
+		}
+
 
         public string ValCodempre { get; set; }
 
@@ -140,6 +160,8 @@ namespace GenioMVC.ViewModels.Equip
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -233,7 +255,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -296,7 +318,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.Fl
 			CriteriaSet equigroupess1name____Conds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ EQUIGROU_NAME]/
+// USE /[MANUAL GQT OVERRQ EQUIGROU_PESS1NAME]/
 
             // This will happen in case there is an error
             if(equigroupess1name____Conds == null)
@@ -309,7 +331,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.Fl
 
 				Qlisting = Models.ModelBase.Where<CSGenioApess1>(false, equigroupess1name____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIGROUPESS1NAME____", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP EQUIGROU_NAME]/
+// USE /[MANUAL GQT OVERRQLSTEXP EQUIGROU_PESS1NAME]/
 
                 conditions = equigroupess1name____Conds;
                 return;
@@ -319,7 +341,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.Fl
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST EQUIGROU_NAME]/
+// USE /[MANUAL GQT OVERRQLIST EQUIGROU_PESS1NAME]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_pess1"];

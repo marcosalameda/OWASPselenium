@@ -192,20 +192,6 @@ namespace CSGenio.persistence
             }
         }
 
-        /// <summary>
-        /// Query for formula to concatenate rows
-        /// </summary>
-        /// <param name="tableName">Source table name</param>
-        /// <param name="argLG">List Aggregate Argument</param>
-        /// <param name="relation">Relation</param>
-        /// <param name="relValue">Foreign key</param>
-        /// <remarks>Moved into the Persistent Support with the purpose of override to support MySQL syntax</remarks>
-        /// <returns>Final concatenated text.</returns>
-        public override string getLGQuery(string tableName, business.ListAggregateArgument argLG, Relation relation, object relValue)
-        {
-            return "CALL GetListAggregate('" + relation.SourceRelField + "', '" + relValue.ToString() + "', '" + tableName + "', '" + argLG.ArgField + "', '" + argLG.SortField + "', '" + argLG.SeparatorField + "')";
-        }
-
         public override IDbConnection GetConnectionToServer()
         {
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder(Connection.ConnectionString);

@@ -242,7 +242,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodcateg, value); }
 		}
 
-
 		/// <summary>Field : "Technical category" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldCategoria { get { return m_fldCategoria; } }
 		private static FieldRef m_fldCategoria = new FieldRef("cate3", "categoria");
@@ -254,7 +253,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCategoria, value); }
 		}
 
-
 		/// <summary>Field : "Abbreviation" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldAbbreviation { get { return m_fldAbbreviation; } }
 		private static FieldRef m_fldAbbreviation = new FieldRef("cate3", "abbreviation");
@@ -265,7 +263,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldAbbreviation); }
 			set { insertNameValueField(FldAbbreviation, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

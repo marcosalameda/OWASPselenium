@@ -115,6 +115,7 @@ namespace GenioMVC.ViewModels.Equip
 		public Func<string> funcPess1ValEmail2 { get; set; }
 		private string _auxPess1ValEmail2 { get; set; }
 
+
 		/// <summary>Campo : "Logo" Tipo:"IJ"</summary>
 		[Display(Name = "LOGO62483", ResourceType = typeof(Resources.Resources))]
 		[UIHint("DBJpegImage")]
@@ -306,12 +307,12 @@ namespace GenioMVC.ViewModels.Equip
 		[Display(Name = "NAME31974", ResourceType = typeof(Resources.Resources))]
 		public string ValCodpess1 { get; set; }
 
+		public string ValCodrooms { get; set; }
+
 		[Display(Name = "TYPE_OF_EQUIPMENT18080", ResourceType = typeof(Resources.Resources))]
 		public string ValCodtpequ { get; set; }
 
 		public string ValCodwareh { get; set; }
-
-		public string ValCodrooms { get; set; }
 
 		#endregion
 
@@ -469,9 +470,9 @@ namespace GenioMVC.ViewModels.Equip
  				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
  				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
  				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
+ 				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
  				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
  				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
  				funcItemValItemdes = () => ViewModelConversion.ToString(m.Item.ValItemdes);
  				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
@@ -505,9 +506,9 @@ namespace GenioMVC.ViewModels.Equip
 				m.ValCoddeco = ViewModelConversion.ToString(ValCoddeco);
 				m.ValCoditem = ViewModelConversion.ToString(ValCoditem);
 				m.ValCodpess1 = ViewModelConversion.ToString(ValCodpess1);
+				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
 				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
 				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
-				m.ValCodrooms = ViewModelConversion.ToString(ValCodrooms);
 				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
 			}
 			catch (Exception)
@@ -712,7 +713,8 @@ namespace GenioMVC.ViewModels.Equip
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApess1.FldName, query + "%");
                 }
@@ -759,7 +761,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 
 				TablePess1Name.List = new SelectList(TablePess1Name.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpess1), "Value", "Text", this.ValCodpess1);
-                FillDependant_EquigrouTablePess1Name();
+                if(!isSearchRequest)
+                    FillDependant_EquigrouTablePess1Name();
 
                 //Check if foreignkey comes from history
                 TablePess1Name.FilledByHistory = Navigation.CheckFilledByHistory("pess1");
@@ -973,7 +976,8 @@ namespace GenioMVC.ViewModels.Equip
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAtpequ.FldTipoequi, query + "%");
                 }
@@ -1020,7 +1024,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 
 				TableTpequTipoequi.List = new SelectList(TableTpequTipoequi.Elements.ToSelectList(x => x.ValTipoequi, x => x.ValCodtpequ,  x => x.ValCodtpequ == this.ValCodtpequ), "Value", "Text", this.ValCodtpequ);
-                FillDependant_EquigrouTableTpequTipoequi();
+                if(!isSearchRequest)
+                    FillDependant_EquigrouTableTpequTipoequi();
 
                 //Check if foreignkey comes from history
                 TableTpequTipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpequ");

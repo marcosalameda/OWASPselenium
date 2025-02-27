@@ -16,13 +16,13 @@
                             :disabled="props.row.InRole"
                             :title='Resources.ASSOCIAR58485'
                             @click="addUser(props.row.Cod)">
-                            <q-icon icon="plus" />
+                            <q-icon icon="add" />
                         </q-button>
                         <q-button
                             :disabled="!props.row.InRole"
                             :title='Resources.REMOVER14367'
                             @click="removeUser(props.row.Cod)">
-                            <q-icon icon="remove" />
+                            <q-icon icon="close" />
                         </q-button>
                     </q-button-group>
                 </template>

@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Lendi
         /// </summary>
         public string ValCodlendi { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Lendi
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS COMOD_EQUIPREGISTNR]/
+
+			return crs;
+		}
+
 
         public string ValCodpess1 { get; set; }
 
@@ -79,7 +99,7 @@ namespace GenioMVC.ViewModels.Lendi
                 new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE00312, 30, 0, true),
                 new Exports.QColumn(CSGenioAequip.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 30, 0, true),
                 new Exports.QColumn(CSGenioAequip.FldDtaquisi, FieldType.DATA, Resources.Resources.ACQUISITION44180, 8, 0, true),
-                new Exports.QColumn(CSGenioAequip.FldDtdeco, FieldType.DATA, Resources.Resources.DECOMISSION14486, 8, 0, true),
+                new Exports.QColumn(CSGenioAequip.FldDtdeco, FieldType.DATAHORA, Resources.Resources.DECOMISSION14486, 8, 0, true),
                 !ajaxRequest ? new Exports.QColumn(CSGenioAequip.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
                 new Exports.QColumn(CSGenioAequip.FldValortot, FieldType.VALOR, Resources.Resources.TOTAL_VALUE30570, 12, 0, true),
             };
@@ -148,6 +168,8 @@ namespace GenioMVC.ViewModels.Lendi
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -249,7 +271,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -443,7 +465,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
         private static readonly string[] _fieldsToSerialize =
         {
-            "Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Equip.ValRegistnr", "Tpequ", "Tpequ.ValTipoequi", "Equip.ValDesignat", "Equip.ValDtaquisi", "Equip.ValDtdeco", "Equip.ValPhotogra", "Equip.ValValortot", "Equip.ValCodempre", "Equip.ValCoddeco", "Equip.ValCoditem", "Equip.ValCodpess1", "Equip.ValCodtpequ", "Equip.ValCodwareh", "Equip.ValCodrooms"
+            "Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Equip.ValRegistnr", "Tpequ", "Tpequ.ValTipoequi", "Equip.ValDesignat", "Equip.ValDtaquisi", "Equip.ValDtdeco", "Equip.ValPhotogra", "Equip.ValValortot", "Equip.ValCodempre", "Equip.ValCoddeco", "Equip.ValCoditem", "Equip.ValCodpess1", "Equip.ValCodrooms", "Equip.ValCodtpequ", "Equip.ValCodwareh"
         };
 
         private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>

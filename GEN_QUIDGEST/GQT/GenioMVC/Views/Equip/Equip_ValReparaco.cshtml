@@ -8,6 +8,36 @@
 	<div class="col">
 		<div elem-identifier="List"  help-id="IFF_EQUIP___PSEUDREPARACO" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2 list-header>@Resources.EQUIPMENT_REPAIRS62266</h2 list-header> </label></div>
 	</div>
+	<div class="col-auto search">
+	</div>
+	<div class="col-auto"  style="padding: 0; padding-right: 15px">
+		<div class="b-btn-group">
+			<button type="button" class="b-btn b-icon b-icon--secondary" onclick="hideShowDiv('ValReparaco_filters')"><i class="glyphicons glyphicons-filter e-icon"></i></button>
+			@if(!GenioMVC.Models.Navigation.UserContext.Current.User.IsGuest())
+			{
+				<button class="b-btn b-icon b-icon--secondary" type="button" data-modal-form="Lstusr" data-modal-id="lstusr-edit-modal" data-table="ValReparaco" data-modal-url="@Url.Action("ChangeListProperties", "Lstusr", new { idlist = "Equip_ValReparaco", idlistController = "Equip", idlistArea = "Repar" , codlista =""  })" title="@Resources.ALTERAR_A_APRESENTAC58401"><i class="glyphicons glyphicons-list e-icon"></i></button>
+			}
+		</div>
+	</div>
+</div>
+<div class="clearfix"></div>
+<div id="ValReparaco_filters">
+	<div class="filter-box">
+		<div class="form-check-inline">
+			<label class="i-checkbox i-checkbox__label i-checkbox--inline"> @Resources.SPECIALTY09304
+				@Html.CheckBox("filter_ValReparaco_STARTED", Model.Navigation.CheckKey("filter_ValReparaco_STARTED_1") ? (bool) Model.Navigation.GetValue("filter_ValReparaco_STARTED_1") : false, new { @class="input-filter", value = "1", onclick="window.ValReparaco.Search();" }) 
+				<span class="i-checkbox__field"></span>
+			</label>
+			<label class="i-checkbox i-checkbox__label i-checkbox--inline"> @Resources.DESCRIPTION07383
+				@Html.CheckBox("filter_ValReparaco_STARTED", Model.Navigation.CheckKey("filter_ValReparaco_STARTED_2") ? (bool) Model.Navigation.GetValue("filter_ValReparaco_STARTED_2") : false, new { @class="input-filter", value = "2", onclick="window.ValReparaco.Search();" }) 
+				<span class="i-checkbox__field"></span>
+			</label>
+			<label class="i-checkbox i-checkbox__label i-checkbox--inline"> @Resources.SPENT_ON_HOURS19285
+				@Html.CheckBox("filter_ValReparaco_STARTED", Model.Navigation.CheckKey("filter_ValReparaco_STARTED_3") ? (bool) Model.Navigation.GetValue("filter_ValReparaco_STARTED_3") : false, new { @class="input-filter", value = "3", onclick="window.ValReparaco.Search();" }) 
+				<span class="i-checkbox__field"></span>
+			</label>
+		</div>
+	</div>
 </div>
 
 @* USE /[MANUAL GQT TABLE_FOR EQUIP_REPARACO]/ *@
@@ -31,6 +61,8 @@
 		column.Expression(p => p.ValDescript).Title(@Resources.DESCRIPTION_OF_THE_R26085).Field("ValDescript").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_REPARACO_REPAR_HOURS]/
 		column.Expression(p => p.ValHours).Title(@Resources.SPENT_ON_HOURS19285).Field("ValHours").Size(10);
+// USE /[MANUAL GQT CUSTOM_COLUMN EQUIP_REPARACO_REPAR_TIPOAREA]/
+		column.Expression(p => p.ArrayValtipoarea).Title(@Resources.TECHNICAL_AREA50773).Field("ValTipoarea", "ArrayAreatecn").Size(1);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
         })
         .SetLimits(this.Model.tableLimits)

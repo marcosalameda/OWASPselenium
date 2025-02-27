@@ -72,6 +72,7 @@ namespace CSGenio.business
 				PrefNDup = "codpsw"
 			});
 			info.RegisterFieldDB(new Field("config", FieldType.TEXTO));
+			info.RegisterFieldDB(new Field("usrsetv", FieldType.INTEIRO));
             info.RegisterFieldDB(new Field("date", FieldType.DATACRIA));
             info.RegisterFieldDB(new Field("zzstate", FieldType.INTEIRO));
 
@@ -191,6 +192,17 @@ namespace CSGenio.business
         {
             get { return (string)returnValueField(FldConfig); }
             set { insertNameValueField(FldConfig, value); }
+        }
+		
+		/// <summary>Campo : "User settings version" Tipo: "INT" Formula:  ""</summary>
+        public static FieldRef FldUsrsetv { get { return m_fldUsrsetv; } }
+        private static FieldRef m_fldUsrsetv = new FieldRef("tblcfg", "usrsetv");
+
+        /// <summary>Campo : "User settings version" Tipo: "INT"</summary>
+        public int ValUsrsetv
+        {
+            get { return (int)returnValueField(FldUsrsetv); }
+            set { insertNameValueField(FldUsrsetv, value); }
         }
 
         /// <summary>Campo : "Criação: Date" Tipo: "OD" Formula:  ""</summary>

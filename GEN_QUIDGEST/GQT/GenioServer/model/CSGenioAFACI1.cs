@@ -151,6 +151,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Latitude";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 6;
 			Qfield.CavDesignation = "LATITUDE11291";
 
@@ -162,6 +163,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Longitude";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 6;
 			Qfield.CavDesignation = "LONGITUDE01015";
 
@@ -192,6 +194,16 @@ namespace CSGenio.business
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 4, delegate(object[] args, User user, string module, PersistentSupport sp) {
 				return ((((string)args[0])=="L")?(new GlobalFunctions(user,module,sp).GetGeoFromLatLng(((decimal)args[1]),((decimal)args[2]))):(((string)args[3])));
 			});
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field("codcntry", FieldType.CHAVE_FALSA_GUID);
+			Qfield.FieldDescription = ">> Country";
+			Qfield.FieldSize =  36;
+			Qfield.Alias = info.Alias;
+			Qfield.CavDesignation = "___COUNTRY10061";
+
+			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -392,7 +404,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodfacil, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldCodentit { get { return m_fldCodentit; } }
 		private static FieldRef m_fldCodentit = new FieldRef("faci1", "codentit");
@@ -403,7 +414,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodentit); }
 			set { insertNameValueField(FldCodentit, value); }
 		}
-
 
 		/// <summary>Field : "Incorporation" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldIncorpor { get { return m_fldIncorpor; } }
@@ -416,7 +426,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldIncorpor, value); }
 		}
 
-
 		/// <summary>Field : "Facility name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("faci1", "name");
@@ -427,7 +436,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldName); }
 			set { insertNameValueField(FldName, value); }
 		}
-
 
 		/// <summary>Field : "Facility type" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldFaciltyp { get { return m_fldFaciltyp; } }
@@ -440,7 +448,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldFaciltyp, value); }
 		}
 
-
 		/// <summary>Field : "Address" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldAddress { get { return m_fldAddress; } }
 		private static FieldRef m_fldAddress = new FieldRef("faci1", "address");
@@ -451,7 +458,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldAddress); }
 			set { insertNameValueField(FldAddress, value); }
 		}
-
 
 		/// <summary>Field : ">>Facility type" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldCodfacty { get { return m_fldCodfacty; } }
@@ -464,7 +470,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodfacty, value); }
 		}
 
-
 		/// <summary>Field : "Image" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldImage { get { return m_fldImage; } }
 		private static FieldRef m_fldImage = new FieldRef("faci1", "image");
@@ -475,7 +480,6 @@ namespace CSGenio.business
 			get { return (byte[])returnValueField(FldImage); }
 			set { insertNameValueField(FldImage, value); }
 		}
-
 
 		/// <summary>Field : "GPS input" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldGpsinput { get { return m_fldGpsinput; } }
@@ -488,7 +492,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGpsinput, value); }
 		}
 
-
 		/// <summary>Field : "Latitude" Tipo: "ND" Formula:  ""</summary>
 		public static FieldRef FldLatitude { get { return m_fldLatitude; } }
 		private static FieldRef m_fldLatitude = new FieldRef("faci1", "latitude");
@@ -499,7 +502,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldLatitude); }
 			set { insertNameValueField(FldLatitude, value); }
 		}
-
 
 		/// <summary>Field : "Longitude" Tipo: "ND" Formula:  ""</summary>
 		public static FieldRef FldLongitud { get { return m_fldLongitud; } }
@@ -512,7 +514,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldLongitud, value); }
 		}
 
-
 		/// <summary>Field : "Geographical coordinate" Tipo: "GG" Formula:  ""</summary>
 		public static FieldRef FldGeocoori { get { return m_fldGeocoori; } }
 		private static FieldRef m_fldGeocoori = new FieldRef("faci1", "geocoori");
@@ -523,7 +524,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldGeocoori); }
 			set { insertNameValueField(FldGeocoori, value); }
 		}
-
 
 		/// <summary>Field : "Geographical coordinate" Tipo: "GG" Formula: + "iif([FACI1->GPSINPUT]=="L",GetGeoFromLatLng([FACI1->LATITUDE],[FACI1->LONGITUD]),[FACI1->GEOCOORI])"</summary>
 		public static FieldRef FldGeocoord { get { return m_fldGeocoord; } }
@@ -536,6 +536,16 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGeocoord, value); }
 		}
 
+		/// <summary>Field : ">> Country" Tipo: "CF" Formula:  ""</summary>
+		public static FieldRef FldCodcntry { get { return m_fldCodcntry; } }
+		private static FieldRef m_fldCodcntry = new FieldRef("faci1", "codcntry");
+
+		/// <summary>Field : ">> Country" Tipo: "CF" Formula:  ""</summary>
+		public string ValCodcntry
+		{
+			get { return (string)returnValueField(FldCodcntry); }
+			set { insertNameValueField(FldCodcntry, value); }
+		}
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -633,7 +643,7 @@ namespace CSGenio.business
 
      
 
-              
+               
 
 	}
 }

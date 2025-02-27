@@ -410,17 +410,13 @@ namespace CSGenio.business.async
         {
             try
             {
-                sp.openTransaction();
                 //Agendar os processos, escrevendo os argumentos
                 var arguments = agendamento.GetArgumentsValues();
-                string jobId = ScheduleProcess(agendamento.getProcessType(), agendamento.getMode(), userid, codpsw, arguments);
-                sp.closeTransaction();
-                return jobId;
+                return ScheduleProcess(agendamento.getProcessType(), agendamento.getMode(), userid, codpsw, arguments);
             }
             catch (Exception e)
             {                
                 Log.Error(string.Format("Excepção de Negócio. [mensagem] {0} [local] {1} [causa] {2}", $"Error scheduling process {agendamento.getProcessType()}", "ProcessManagerPersistor.Agenda", e.Message));
-                sp.rollbackTransaction();
                 throw;
             }
         }

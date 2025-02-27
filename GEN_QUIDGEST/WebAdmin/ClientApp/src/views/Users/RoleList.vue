@@ -8,7 +8,10 @@
                     @on-single-select-row="viewRole"
                     >
             <template #Designation="props">
-                <span class="role-tag">{{$t(props.row.Designation)}}</span>
+                <q-badge
+					variant="bold" >
+					{{$t(props.row.Designation)}}
+				</q-badge>
             </template>
             </qtable>
         </row>
@@ -348,6 +351,6 @@
 
     .graph {
         width: 100%;
-        border: 1px solid #EEE;
+		border: none;
     }
 </style>

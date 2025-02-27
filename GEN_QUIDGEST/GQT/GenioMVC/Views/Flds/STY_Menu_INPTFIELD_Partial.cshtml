@@ -69,6 +69,10 @@
         .DBEdit()
         .Filters(this.Model.Menu.Filters)
         .Form("Infields", false, false)
+        .UpdateConditions((item)=>Infields_ViewModel.UpdateConditions(item))
+        .ViewConditions((item)=>Infields_ViewModel.ViewConditions(item))
+        .DeleteConditions((item)=>Infields_ViewModel.DeleteConditions(item))
+        .InsertConditions((item)=>Infields_ViewModel.InsertConditions(this.Model.Navigation))
         .SetFollowUp("Infields_Show", "Flds" , (Func<GenioMVC.Models.Flds, object>)(item => new { id = item.ValCodflds }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
         .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
 		;

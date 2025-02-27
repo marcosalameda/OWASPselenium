@@ -128,6 +128,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Level";
 			Qfield.FieldSize =  15;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 15;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "LEVEL06184";
 
@@ -356,7 +357,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodua, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodpsw { get { return m_fldCodpsw; } }
 		private static FieldRef m_fldCodpsw = new FieldRef("s_ua", "codpsw");
@@ -367,7 +367,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodpsw); }
 			set { insertNameValueField(FldCodpsw, value); }
 		}
-
 
 		/// <summary>Field : "System" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSistema { get { return m_fldSistema; } }
@@ -380,7 +379,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSistema, value); }
 		}
 
-
 		/// <summary>Field : "Module" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldModulo { get { return m_fldModulo; } }
 		private static FieldRef m_fldModulo = new FieldRef("s_ua", "modulo");
@@ -391,7 +389,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldModulo); }
 			set { insertNameValueField(FldModulo, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "C" Formula: + "KeyToString([S_UA->CODPSW]) + [S_UA->MODULO]"</summary>
 		public static FieldRef FldNaodupli { get { return m_fldNaodupli; } }
@@ -404,7 +401,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldNaodupli, value); }
 		}
 
-
 		/// <summary>Field : "Role" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldRole { get { return m_fldRole; } }
 		private static FieldRef m_fldRole = new FieldRef("s_ua", "role");
@@ -415,7 +411,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldRole); }
 			set { insertNameValueField(FldRole, value); }
 		}
-
 
 		/// <summary>Field : "Level" Tipo: "N" Formula: + "GetLevelFromRole([S_UA->NIVEL], [S_UA->ROLE])"</summary>
 		public static FieldRef FldNivel { get { return m_fldNivel; } }
@@ -428,7 +423,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldNivel, value); }
 		}
 
-
 		/// <summary>Field : "Created by" Tipo: "ON" Formula:  ""</summary>
 		public static FieldRef FldOpercria { get { return m_fldOpercria; } }
 		private static FieldRef m_fldOpercria = new FieldRef("s_ua", "opercria");
@@ -439,7 +433,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldOpercria); }
 			set { insertNameValueField(FldOpercria, value); }
 		}
-
 
 		/// <summary>Field : "Created on" Tipo: "OD" Formula:  ""</summary>
 		public static FieldRef FldDatacria { get { return m_fldDatacria; } }
@@ -452,7 +445,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDatacria, value); }
 		}
 
-
 		/// <summary>Field : "Changed by" Tipo: "EN" Formula:  ""</summary>
 		public static FieldRef FldOpermuda { get { return m_fldOpermuda; } }
 		private static FieldRef m_fldOpermuda = new FieldRef("s_ua", "opermuda");
@@ -464,7 +456,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldOpermuda, value); }
 		}
 
-
 		/// <summary>Field : "Changed on" Tipo: "ED" Formula:  ""</summary>
 		public static FieldRef FldDatamuda { get { return m_fldDatamuda; } }
 		private static FieldRef m_fldDatamuda = new FieldRef("s_ua", "datamuda");
@@ -475,7 +466,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDatamuda); }
 			set { insertNameValueField(FldDatamuda, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

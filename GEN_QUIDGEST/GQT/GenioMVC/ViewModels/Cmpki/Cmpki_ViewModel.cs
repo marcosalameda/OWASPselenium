@@ -432,7 +432,8 @@ namespace GenioMVC.ViewModels.Cmpki
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAtpequ.FldTipoequi, query + "%");
                 }
@@ -479,7 +480,8 @@ namespace GenioMVC.ViewModels.Cmpki
 				}
 
 				TableTpequTipoequi.List = new SelectList(TableTpequTipoequi.Elements.ToSelectList(x => x.ValTipoequi, x => x.ValCodtpequ,  x => x.ValCodtpequ == this.ValCodtpequ), "Value", "Text", this.ValCodtpequ);
-                FillDependant_CmpkiTableTpequTipoequi();
+                if(!isSearchRequest)
+                    FillDependant_CmpkiTableTpequTipoequi();
 
                 //Check if foreignkey comes from history
                 TableTpequTipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpequ");
@@ -635,7 +637,8 @@ namespace GenioMVC.ViewModels.Cmpki
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAtpeq1.FldTipoequi, query + "%");
                 }
@@ -682,7 +685,8 @@ namespace GenioMVC.ViewModels.Cmpki
 				}
 
 				TableTpeq1Tipoequi.List = new SelectList(TableTpeq1Tipoequi.Elements.ToSelectList(x => x.ValTipoequi, x => x.ValCodtpequ,  x => x.ValCodtpequ == this.ValCodtpeq1), "Value", "Text", this.ValCodtpeq1);
-                FillDependant_CmpkiTableTpeq1Tipoequi();
+                if(!isSearchRequest)
+                    FillDependant_CmpkiTableTpeq1Tipoequi();
 
                 //Check if foreignkey comes from history
                 TableTpeq1Tipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpeq1");

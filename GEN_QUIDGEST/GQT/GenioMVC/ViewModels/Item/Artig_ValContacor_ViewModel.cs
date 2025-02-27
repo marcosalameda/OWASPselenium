@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Item
         /// </summary>
         public string ValCoditem { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Item
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS ARTIG_PSEUDCONTACOR]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Artig_ValContacor_ViewModel" /> class.
@@ -144,6 +164,8 @@ namespace GenioMVC.ViewModels.Item
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -163,7 +185,6 @@ namespace GenioMVC.ViewModels.Item
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_ccorr");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_ccorr");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Ccorr.AddEPH<CSGenioAccorr>(ref u, null, "IBL_ARTIG___PSEUDCONTACOR"));
 			}
@@ -246,7 +267,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAccorr.FldCodccorr, CSGenioAccorr.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

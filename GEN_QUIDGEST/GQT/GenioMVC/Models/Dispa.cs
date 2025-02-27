@@ -46,6 +46,15 @@ namespace GenioMVC.Models
 		public virtual Entit Entit { get { if (!this.isEmptyModel && (_entit == null || (!string.IsNullOrEmpty(ValCodentit) && (_entit.isEmptyModel || _entit.klass.QPrimaryKey != ValCodentit)))) _entit = Models.Entit.Find(ValCodentit, Identifier, _fieldsToSerialize); if (_entit == null) _entit = new Models.Entit(true, _fieldsToSerialize); return _entit; } set { _entit = value; } }
 		public bool ShouldSerializeEntit () => this.SerializeAllFields || this.FieldsToSerialize.Contains("Entit");
 
+		[DisplayName(">> STATUS")]
+		/// <summary>Field : ">> STATUS" Tipo: "CE" Formula:  ""</summary>
+		public string ValCoddisst { get { return klass.ValCoddisst; } set { klass.ValCoddisst = value; } }
+		public bool ShouldSerializeValCoddisst() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Dispa.ValCoddisst");
+		private Disst _disst;
+		[DisplayName("Disst")]
+		public virtual Disst Disst { get { if (!this.isEmptyModel && (_disst == null || (!string.IsNullOrEmpty(ValCoddisst) && (_disst.isEmptyModel || _disst.klass.QPrimaryKey != ValCoddisst)))) _disst = Models.Disst.Find(ValCoddisst, Identifier, _fieldsToSerialize); if (_disst == null) _disst = new Models.Disst(true, _fieldsToSerialize); return _disst; } set { _disst = value; } }
+		public bool ShouldSerializeDisst () => this.SerializeAllFields || this.FieldsToSerialize.Contains("Disst");
+
 		[DisplayName("Is prepared")]
 		/// <summary>Field : "Is prepared" Tipo: "L" Formula:  ""</summary>
 		public bool ValIsprepar { get { return Convert.ToBoolean(klass.ValIsprepar); } set { klass.ValIsprepar = Convert.ToInt32(value); } }
@@ -141,6 +150,11 @@ namespace GenioMVC.Models
 						if (_entit == null)
 							_entit = new Entit(true, _fieldsToSerialize);
 						_entit.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
+						break;
+					case "disst":
+						if (_disst == null)
+							_disst = new Disst(true, _fieldsToSerialize);
+						_disst.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "perso":
 						if (_perso == null)

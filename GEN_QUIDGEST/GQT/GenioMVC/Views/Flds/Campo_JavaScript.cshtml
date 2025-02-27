@@ -155,6 +155,10 @@
 			this.Controls.LED_CAMPO___FLDS_CODFLDS_ = new QHiddenControl($('[data-identifier="LED_CAMPO___FLDS_CODFLDS_"]', this.element), window.Form_Campo);
 
 	@* Hidden Required Form Fields Controls for Formulas *@
+			this.Controls.LED_CAMPO___FLDS_TBLCOND_ = new QSpecialControl($('[data-identifier="LED_CAMPO___FLDS_TBLCOND_"]', this.element), window.Form_Campo);
+			this.Controls.LED_CAMPO___FLDS_TBLCOND_.InitData(@JavaScriptConversion.ToLogic(@Model.ValTblcond));
+			this.Controls.LED_CAMPO___FLDS_COND____ = new QSpecialControl($('[data-identifier="LED_CAMPO___FLDS_COND____"]', this.element), window.Form_Campo);
+			this.Controls.LED_CAMPO___FLDS_COND____.InitData(@JavaScriptConversion.ToString(@Model.ValCond));
 
 @if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
 {

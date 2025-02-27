@@ -61,10 +61,10 @@ namespace CSGenio.framework
 		public static readonly FieldType GEOMETRIC = new FieldType("GC", FieldFormatting.GEOMETRIC, typeof(byte[]));
 
         /// <summary>
-        /// Encrypted field type - Password.
+        /// Encrypted field type.
         /// Will have to manage two values (encrypted and decrypted) in memory at the same time.
         /// </summary>
-        public static readonly FieldType PASSWORD = new FieldType("PW", FieldFormatting.ENCRYPTED, typeof(EncryptedDataType));
+        public static readonly FieldType ENCRYPTED = new FieldType("ENCRYPTED", FieldFormatting.ENCRYPTED, typeof(EncryptedDataType));
 
         /// <summary>
         /// Id do tipo de Qfield

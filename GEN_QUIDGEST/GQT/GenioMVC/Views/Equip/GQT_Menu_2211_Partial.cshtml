@@ -23,7 +23,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2211_EQUIP_DTAQUISI]/
 		column.Expression(p => p.ValDtaquisi).Title(@Resources.ACQUISITION44180).Field("ValDtaquisi").Size(8).Format("{0:d}");
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2211_EQUIP_DTDECO]/
-		column.Expression(p => p.ValDtdeco).Title(@Resources.DECOMISSION14486).Field("ValDtdeco").Size(8).Format("{0:d}");
+		column.Expression(p => p.ValDtdeco).Title(@Resources.DECOMISSION14486).Field("ValDtdeco").Size(8);
             column.Expression(p => p.ValZzstate).Field("ValZzstate").Hidden();
         })
         .SetLimits(this.Model.tableLimits)

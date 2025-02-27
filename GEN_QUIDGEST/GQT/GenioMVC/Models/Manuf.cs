@@ -134,8 +134,8 @@ namespace GenioMVC.Models
 		public bool ShouldSerializeValContact() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Manuf.ValContact");
 
 		[DisplayName("Owner")]
-		/// <summary>Field : "Owner" Tipo: "L" Formula:  ""</summary>
-		public bool ValOwner { get { return Convert.ToBoolean(klass.ValOwner); } set { klass.ValOwner = Convert.ToInt32(value); } }
+		/// <summary>Field : "Owner" Tipo: "C" Formula:  ""</summary>
+		public string ValOwner { get { return klass.ValOwner; } set { klass.ValOwner = value; } }
 		public bool ShouldSerializeValOwner() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Manuf.ValOwner");
 
 		[DisplayName("Carrier")]

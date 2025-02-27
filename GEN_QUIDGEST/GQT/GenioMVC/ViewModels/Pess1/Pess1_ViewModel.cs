@@ -489,7 +489,8 @@ namespace GenioMVC.ViewModels.Pess1
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAcmpny.FldDesignat, query + "%");
                 }
@@ -536,7 +537,8 @@ namespace GenioMVC.ViewModels.Pess1
 				}
 
 				TableCmpnyDesignat.List = new SelectList(TableCmpnyDesignat.Elements.ToSelectList(x => x.ValDesignat, x => x.ValCodempre,  x => x.ValCodempre == this.ValCodempre), "Value", "Text", this.ValCodempre);
-                FillDependant_Pess1TableCmpnyDesignat();
+                if(!isSearchRequest)
+                    FillDependant_Pess1TableCmpnyDesignat();
 
                 //Check if foreignkey comes from history
                 TableCmpnyDesignat.FilledByHistory = Navigation.CheckFilledByHistory("cmpny");
@@ -692,7 +694,8 @@ namespace GenioMVC.ViewModels.Pess1
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAstake.FldDesignat, query + "%");
                 }
@@ -739,7 +742,8 @@ namespace GenioMVC.ViewModels.Pess1
 				}
 
 				TableStakeDesignat.List = new SelectList(TableStakeDesignat.Elements.ToSelectList(x => x.ValDesignat, x => x.ValCodparte,  x => x.ValCodparte == this.ValCodparte), "Value", "Text", this.ValCodparte);
-                FillDependant_Pess1TableStakeDesignat();
+                if(!isSearchRequest)
+                    FillDependant_Pess1TableStakeDesignat();
 
                 //Check if foreignkey comes from history
                 TableStakeDesignat.FilledByHistory = Navigation.CheckFilledByHistory("stake");

@@ -246,7 +246,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodpworg, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodpsw { get { return m_fldCodpsw; } }
 		private static FieldRef m_fldCodpsw = new FieldRef("pworg", "codpsw");
@@ -258,7 +257,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodpsw, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodorgan { get { return m_fldCodorgan; } }
 		private static FieldRef m_fldCodorgan = new FieldRef("pworg", "codorgan");
@@ -269,7 +267,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodorgan); }
 			set { insertNameValueField(FldCodorgan, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

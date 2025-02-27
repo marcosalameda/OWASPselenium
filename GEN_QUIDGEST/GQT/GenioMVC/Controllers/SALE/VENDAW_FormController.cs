@@ -1032,6 +1032,7 @@ namespace GenioMVC.Controllers
 					nextStep = new Models.WizardStep("VENDAW01", "FASES", 1);
 					break;
 				case "wizard-step-FASES-1":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValProspecc))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW02", "FASES", 2);
@@ -1068,8 +1069,9 @@ namespace GenioMVC.Controllers
 						break;
 					}
 					CSGenio.framework.Log.Error("Wizard FASES - On GetNextStep, all conditions were false, couldn't find the next step.");
-					throw new Exception(Resources.Resources.PEDIMOS_DESCULPA__OC63848);
+					throw new Exception(errorStepMessage);
 				case "wizard-step-FASES-2":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValQualific))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW03", "FASES", 3);
@@ -1101,8 +1103,9 @@ namespace GenioMVC.Controllers
 						break;
 					}
 					CSGenio.framework.Log.Error("Wizard FASES - On GetNextStep, all conditions were false, couldn't find the next step.");
-					throw new Exception(Resources.Resources.PEDIMOS_DESCULPA__OC63848);
+					throw new Exception(errorStepMessage);
 				case "wizard-step-FASES-3":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValHomework))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW04", "FASES", 4);
@@ -1129,8 +1132,9 @@ namespace GenioMVC.Controllers
 						break;
 					}
 					CSGenio.framework.Log.Error("Wizard FASES - On GetNextStep, all conditions were false, couldn't find the next step.");
-					throw new Exception(Resources.Resources.PEDIMOS_DESCULPA__OC63848);
+					throw new Exception(errorStepMessage);
 				case "wizard-step-FASES-4":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValApproach))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW05", "FASES", 5);
@@ -1152,8 +1156,9 @@ namespace GenioMVC.Controllers
 						break;
 					}
 					CSGenio.framework.Log.Error("Wizard FASES - On GetNextStep, all conditions were false, couldn't find the next step.");
-					throw new Exception(Resources.Resources.PEDIMOS_DESCULPA__OC63848);
+					throw new Exception(errorStepMessage);
 				case "wizard-step-FASES-5":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValApresent))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW06", "FASES", 6);
@@ -1170,8 +1175,9 @@ namespace GenioMVC.Controllers
 						break;
 					}
 					CSGenio.framework.Log.Error("Wizard FASES - On GetNextStep, all conditions were false, couldn't find the next step.");
-					throw new Exception(Resources.Resources.PEDIMOS_DESCULPA__OC63848);
+					throw new Exception(errorStepMessage);
 				case "wizard-step-FASES-6":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtsupera))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW07", "FASES", 7);
@@ -1183,16 +1189,18 @@ namespace GenioMVC.Controllers
 						break;
 					}
 					CSGenio.framework.Log.Error("Wizard FASES - On GetNextStep, all conditions were false, couldn't find the next step.");
-					throw new Exception(Resources.Resources.PEDIMOS_DESCULPA__OC63848);
+					throw new Exception(errorStepMessage);
 				case "wizard-step-FASES-7":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW08", "FASES", 8);
 						break;
 					}
 					CSGenio.framework.Log.Error("Wizard FASES - On GetNextStep, all conditions were false, couldn't find the next step.");
-					throw new Exception(Resources.Resources.PEDIMOS_DESCULPA__OC63848);
+					throw new Exception(errorStepMessage);
 				case "wizard-step-FASES-8":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					CSGenio.framework.Log.Error("Wizard FASES - Forward action is disabled for step 'wizard-step-FASES-8'.");
 					// Throw exception as the last step doesn't have a forward action.
 					throw new Exception(Resources.Resources.PEDIMOS_DESCULPA__OC63848);

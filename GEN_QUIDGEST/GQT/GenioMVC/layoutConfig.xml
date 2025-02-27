@@ -12,7 +12,7 @@
 	<RowActionDisplay>dropdown</RowActionDisplay> <!-- inline, dropdown -->
 	<DefaultSidebarState>opened</DefaultSidebarState> <!-- opened, closed -->
 	<ModulesStyle>dropdown</ModulesStyle> <!-- list, dropdown, collapsible -->
-	<MenuSearchEnable>true</MenuSearchEnable> <!-- true, false -->
+	<MenuSearchEnable>false</MenuSearchEnable> <!-- true, false -->
 	<BookmarkEnable>true</BookmarkEnable> <!-- true, false -->
 	<ShowPasswordToggle>true</ShowPasswordToggle> <!-- true, false -->
 	<AuthenticationStyle>default</AuthenticationStyle> <!-- default, light, secondary -->

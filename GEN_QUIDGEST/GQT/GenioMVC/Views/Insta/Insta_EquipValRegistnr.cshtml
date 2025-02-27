@@ -39,7 +39,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN INSTA_REGISTNR_EQUIP_DTAQUISI]/
 		column.Expression(p => p.ValDtaquisi).Title(@Resources.ACQUISITION44180).Field("ValDtaquisi").Size(8).Format("{0:d}");
 // USE /[MANUAL GQT CUSTOM_COLUMN INSTA_REGISTNR_EQUIP_DTDECO]/
-		column.Expression(p => p.ValDtdeco).Title(@Resources.DECOMISSION14486).Field("ValDtdeco").Size(8).Format("{0:d}");
+		column.Expression(p => p.ValDtdeco).Title(@Resources.DECOMISSION14486).Field("ValDtdeco").Size(8);
 // USE /[MANUAL GQT CUSTOM_COLUMN INSTA_REGISTNR_EQUIP_PHOTOGRA]/
 		column.Expression(p => Html.ImageMagnifierZoom(p.ValPhotogra, new {alt=@Resources.PHOTO51874,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Equip", "ValPhotogra", "", p.ValCodequip, null) }))).Title(@Resources.PHOTO51874).Field("ValPhotogra").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN INSTA_REGISTNR_EQUIP_VALORTOT]/

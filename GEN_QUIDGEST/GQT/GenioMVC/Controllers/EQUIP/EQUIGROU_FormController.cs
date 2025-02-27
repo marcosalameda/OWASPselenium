@@ -1002,7 +1002,7 @@ namespace GenioMVC.Controllers
 			return PartialView(partialView, model);
 		}
 
-                
+                 
 		//
 		// GET: /Equip/Equigrou_TpequValTipoequi
 		// POST: /Equip/Equigrou_TpequValTipoequi

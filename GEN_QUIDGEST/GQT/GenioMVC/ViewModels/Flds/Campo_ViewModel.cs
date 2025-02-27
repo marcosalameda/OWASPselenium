@@ -190,6 +190,13 @@ namespace GenioMVC.ViewModels.Flds
 		#endregion
 
 		#region Fields for formulas
+		// Field to formula
+		/// <summary>Field : "Enforce table conditions" Tipo: "L"</summary>
+		public bool ValTblcond { get; set; }
+		// Field to formula
+		/// <summary>Field : "Field state" Tipo: "AC"</summary>
+		[AllowHtml]
+		public string ValCond { get; set; }
 		#endregion
 
 		public string ValCodflds { get; set; }
@@ -320,6 +327,8 @@ namespace GenioMVC.ViewModels.Flds
  				ValCreatins = ViewModelConversion.ToDateTime(m.ValCreatins);
  				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
  				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+ 				ValTblcond = ViewModelConversion.ToLogic(m.ValTblcond);
+ 				ValCond = ViewModelConversion.ToString(m.ValCond);
  				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
 			}
 			catch (Exception)
@@ -362,6 +371,8 @@ namespace GenioMVC.ViewModels.Flds
 				m.ValCreatins = ViewModelConversion.ToDateTime(ValCreatins);
 				m.ValCodaero = ViewModelConversion.ToString(ValCodaero);
 				m.ValCodequip = ViewModelConversion.ToString(ValCodequip);
+				m.ValTblcond = ViewModelConversion.ToLogic(ValTblcond);
+				m.ValCond = ViewModelConversion.ToString(ValCond);
 				m.ValCodflds = ViewModelConversion.ToString(ValCodflds);
 			}
 			catch (Exception)
@@ -571,7 +582,8 @@ namespace GenioMVC.ViewModels.Flds
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAaero.FldName, query + "%");
                 }
@@ -618,7 +630,8 @@ namespace GenioMVC.ViewModels.Flds
 				}
 
 				TableAeroName.List = new SelectList(TableAeroName.Elements.ToSelectList(x => x.ValName, x => x.ValCodaero,  x => x.ValCodaero == this.ValCodaero), "Value", "Text", this.ValCodaero);
-                FillDependant_CampoTableAeroName();
+                if(!isSearchRequest)
+                    FillDependant_CampoTableAeroName();
 
                 //Check if foreignkey comes from history
                 TableAeroName.FilledByHistory = Navigation.CheckFilledByHistory("aero");

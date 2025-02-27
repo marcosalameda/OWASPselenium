@@ -455,7 +455,8 @@ namespace GenioMVC.ViewModels.Insta
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAtpequ.FldTipoequi, query + "%");
                 }
@@ -502,7 +503,8 @@ namespace GenioMVC.ViewModels.Insta
 				}
 
 				TableTpequTipoequi.List = new SelectList(TableTpequTipoequi.Elements.ToSelectList(x => x.ValTipoequi, x => x.ValCodtpequ,  x => x.ValCodtpequ == this.ValCodtpequ), "Value", "Text", this.ValCodtpequ);
-                FillDependant_InstaTableTpequTipoequi();
+                if(!isSearchRequest)
+                    FillDependant_InstaTableTpequTipoequi();
 
                 //Check if foreignkey comes from history
                 TableTpequTipoequi.FilledByHistory = Navigation.CheckFilledByHistory("tpequ");
@@ -711,7 +713,8 @@ namespace GenioMVC.ViewModels.Insta
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAequip.FldRegistnr, query + "%");
                 }
@@ -764,7 +767,8 @@ namespace GenioMVC.ViewModels.Insta
 					this.ValCodequip = TableEquipRegistnr.List.First().Value;
 					Navigation.SetValue("equip", this.ValCodequip);
                 }
-                FillDependant_InstaTableEquipRegistnr();
+                if(!isSearchRequest)
+                    FillDependant_InstaTableEquipRegistnr();
 
                 //Check if foreignkey comes from history
                 TableEquipRegistnr.FilledByHistory = Navigation.CheckFilledByHistory("equip");

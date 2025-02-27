@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Roigf
         /// </summary>
         public string ValCodroigf { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Roigf
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS ROIGF_ROGL1TITLE]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Roigf_Rogl1ValTitle_ViewModel" /> class.
@@ -136,6 +156,8 @@ namespace GenioMVC.ViewModels.Roigf
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -237,7 +259,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioArogl1.FldCodrogl1, CSGenioArogl1.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -275,7 +297,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioArogl1.FldCodrogl1, CSGenioArogl1.Fl
 			CriteriaSet roigf___rogl1title___Conds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ ROIGF_TITLE]/
+// USE /[MANUAL GQT OVERRQ ROIGF_ROGL1TITLE]/
 
             // This will happen in case there is an error
             if(roigf___rogl1title___Conds == null)
@@ -288,7 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioArogl1.FldCodrogl1, CSGenioArogl1.Fl
 
 				Qlisting = Models.ModelBase.Where<CSGenioArogl1>(false, roigf___rogl1title___Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ROIGF___ROGL1TITLE___", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP ROIGF_TITLE]/
+// USE /[MANUAL GQT OVERRQLSTEXP ROIGF_ROGL1TITLE]/
 
                 conditions = roigf___rogl1title___Conds;
                 return;
@@ -298,7 +320,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioArogl1.FldCodrogl1, CSGenioArogl1.Fl
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST ROIGF_TITLE]/
+// USE /[MANUAL GQT OVERRQLIST ROIGF_ROGL1TITLE]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_rogl1"];

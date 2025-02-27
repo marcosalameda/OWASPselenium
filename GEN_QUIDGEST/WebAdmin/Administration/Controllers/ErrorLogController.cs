@@ -25,7 +25,6 @@ namespace Administration.Controllers
             if (string.IsNullOrEmpty(appId)) appId = "Admin";
 
             model.Applications = ClientApplication.Applications.ToList();
-            model.Applications.Insert(0, new ClientApplication("Admin", Resources.Resources.WEBADMIN59136));
 
             string path = "";
 

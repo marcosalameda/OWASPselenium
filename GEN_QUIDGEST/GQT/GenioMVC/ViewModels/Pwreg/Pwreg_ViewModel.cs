@@ -390,7 +390,8 @@ namespace GenioMVC.ViewModels.Pwreg
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApsw.FldNome, query + "%");
                 }
@@ -437,7 +438,8 @@ namespace GenioMVC.ViewModels.Pwreg
 				}
 
 				TablePswNome.List = new SelectList(TablePswNome.Elements.ToSelectList(x => x.ValNome, x => x.ValCodpsw,  x => x.ValCodpsw == this.ValCodpsw), "Value", "Text", this.ValCodpsw);
-                FillDependant_PwregTablePswNome();
+                if(!isSearchRequest)
+                    FillDependant_PwregTablePswNome();
 
                 //Check if foreignkey comes from history
                 TablePswNome.FilledByHistory = Navigation.CheckFilledByHistory("psw");
@@ -593,7 +595,8 @@ namespace GenioMVC.ViewModels.Pwreg
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAregio.FldRegiao, query + "%");
                 }
@@ -640,7 +643,8 @@ namespace GenioMVC.ViewModels.Pwreg
 				}
 
 				TableRegioRegiao.List = new SelectList(TableRegioRegiao.Elements.ToSelectList(x => x.ValRegiao, x => x.ValCodregia,  x => x.ValCodregia == this.ValCodregia), "Value", "Text", this.ValCodregia);
-                FillDependant_PwregTableRegioRegiao();
+                if(!isSearchRequest)
+                    FillDependant_PwregTableRegioRegiao();
 
                 //Check if foreignkey comes from history
                 TableRegioRegiao.FilledByHistory = Navigation.CheckFilledByHistory("regio");

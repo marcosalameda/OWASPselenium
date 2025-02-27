@@ -453,10 +453,7 @@ namespace WebTest
         {
             string res = null;
 
-            res = DBConversion.FromDateTime(DateTime.MinValue, DatabaseType.ACCESS);
-            Assert.AreEqual("NULL", res);
-
-            res = DBConversion.FromDateTime(new DateTime(1900, 2, 1), DatabaseType.SQLSERVER2000);
+            res = DBConversion.FromDateTime(new DateTime(1900, 2, 1), DatabaseType.SQLSERVER);
             Assert.AreEqual("convert(datetime, '1/2/1900 00:00:00', 103)", res);
 
             res = DBConversion.FromDateTime(new DateTime(1900, 2, 1), DatabaseType.ORACLE);

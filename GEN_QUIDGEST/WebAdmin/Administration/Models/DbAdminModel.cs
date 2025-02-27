@@ -7,6 +7,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Administration.Models
 {
+    [JsonConverter(typeof(JsonStringEnumConverter<AlertTypeEnum>))]
+    public enum AlertTypeEnum
+    {
+        info,
+        success,
+        danger,
+        warning
+    }
+
     public class DbAdminModel : ModelBase
     {
         [Display(Name = "BASE_DE_DADOS58234", ResourceType = typeof(Resources.Resources))]
@@ -37,6 +46,8 @@ namespace Administration.Models
         [Required]
         public string DbUser { get; set; }
 
+        public AlertTypeEnum AlertType { get; set; }
+
         [Display(Name = "PALAVRA_PASSE44126", ResourceType = typeof(Resources.Resources))]
         [Required]
         public string DbPsw { get; set; }
@@ -61,6 +72,10 @@ namespace Administration.Models
         public string AppSystem { get; set; }
 
         public string BaseLang { get; set; }
+
+        public string DSName { get; set; }
+
+        public RdxOperationInfo LastLogInfo { get; set; }
     }
 
 
@@ -93,6 +108,8 @@ namespace Administration.Models
         public string DbPsw { get; set; }
 
         public string BackupItem { get; set; }
+
+        public AlertTypeEnum AlertType { get; set; }
 
         [Display(Name = "ESTADO07788", ResourceType = typeof(Resources.Resources))]
         public string ResultMsg { get; set; }
@@ -139,6 +156,7 @@ namespace Administration.Models
     {
         [Display(Name = "ESTADO07788", ResourceType = typeof(Resources.Resources))]
         public string ResultMsg { get; set; }
+        public AlertTypeEnum AlertType { get; set; }
         public List<IncoherencyModel> Incoherencies { get; set; }
     }
 
@@ -146,6 +164,7 @@ namespace Administration.Models
     {
         [Display(Name = "ESTADO07788", ResourceType = typeof(Resources.Resources))]
         public string ResultMsg { get; set; }
+        public AlertTypeEnum AlertType { get; set; }
         public List<IndexModel> Indexes { get; set; }
     }
     public class IndexModel
@@ -168,6 +187,8 @@ namespace Administration.Models
         public string Year { get; set; }
 
         public string IndexType { get; set; }
+
+        public AlertTypeEnum AlertType { get; set; }
 
         public string IndexTitle { get; set; }
 
@@ -198,6 +219,8 @@ namespace Administration.Models
         public string IncoherenceType { get; set; }
 
         public string IncoherenceTitle { get; set; }
+
+        public AlertTypeEnum AlertType { get; set; }
 
         //description of checkbox 
         [Display(Name = "ULTIMA_VERIFICACAO35305", ResourceType = typeof(Resources.Resources))]
@@ -356,6 +379,8 @@ namespace Administration.Models
         [Display(Name = "PALAVRA_PASSE44126", ResourceType = typeof(Resources.Resources))]
         [Required]
         public string DbPsw { get; set; }
+        
+        public AlertTypeEnum AlertType { get; set; }
 
         [Display(Name = "BASES_DE_DADOS_DISPO02109", ResourceType = typeof(Resources.Resources))]
         public IEnumerable<SelectListItem> Years { get; set; }
@@ -408,6 +433,8 @@ namespace Administration.Models
         [Display(Name = "CRIACAO_DA_CHAVE_MES19380", ResourceType = typeof(Resources.Resources))]
         public bool MasterKey { get; set; }
 
+        public AlertTypeEnum AlertType { get; set; }
+
         public object SelectLists
         {
             get
@@ -428,6 +455,8 @@ namespace Administration.Models
         public List<MigrateFileItem> MigrateFiles { get; set; }
 
         public int FileCount { get; set; }
+
+        public AlertTypeEnum AlertType { get; set; }
 
         public void Load(string year)
         {

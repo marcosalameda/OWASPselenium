@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Feeca
         /// </summary>
         public string ValCodfeeca { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Feeca
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS FEECA_FLDSDESCRIP]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Feeca_FldsValDescrip_ViewModel" /> class.
@@ -134,6 +154,8 @@ namespace GenioMVC.ViewModels.Feeca
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -227,7 +249,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -265,7 +287,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
 			CriteriaSet feeca___flds_descrip_Conds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ FEECA_DESCRIP]/
+// USE /[MANUAL GQT OVERRQ FEECA_FLDSDESCRIP]/
 
             // This will happen in case there is an error
             if(feeca___flds_descrip_Conds == null)
@@ -278,7 +300,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
 
 				Qlisting = Models.ModelBase.Where<CSGenioAflds>(false, feeca___flds_descrip_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_FEECA___FLDS_DESCRIP_", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP FEECA_DESCRIP]/
+// USE /[MANUAL GQT OVERRQLSTEXP FEECA_FLDSDESCRIP]/
 
                 conditions = feeca___flds_descrip_Conds;
                 return;
@@ -288,7 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST FEECA_DESCRIP]/
+// USE /[MANUAL GQT OVERRQLIST FEECA_FLDSDESCRIP]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_flds"];

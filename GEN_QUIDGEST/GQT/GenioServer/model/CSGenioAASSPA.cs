@@ -108,6 +108,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  1;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 1;
 			Qfield.CavDesignation = "DECIMAL_PLACES62575";
 
 			Qfield.Dupmsg = "";
@@ -130,6 +131,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  12;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 4;
 			Qfield.CavDesignation = "QUANTITY06415";
 
@@ -334,7 +336,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodasspa, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodasset { get { return m_fldCodasset; } }
 		private static FieldRef m_fldCodasset = new FieldRef("asspa", "codasset");
@@ -345,7 +346,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodasset); }
 			set { insertNameValueField(FldCodasset, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CF" Formula:  ""</summary>
 		public static FieldRef FldCodkinde { get { return m_fldCodkinde; } }
@@ -358,7 +358,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodkinde, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodparam { get { return m_fldCodparam; } }
 		private static FieldRef m_fldCodparam = new FieldRef("asspa", "codparam");
@@ -369,7 +368,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodparam); }
 			set { insertNameValueField(FldCodparam, value); }
 		}
-
 
 		/// <summary>Field : "Data type" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldDatatype { get { return m_fldDatatype; } }
@@ -382,7 +380,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDatatype, value); }
 		}
 
-
 		/// <summary>Field : "Decimal places" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldDecimalplaces { get { return m_fldDecimalplaces; } }
 		private static FieldRef m_fldDecimalplaces = new FieldRef("asspa", "decimalplaces");
@@ -393,7 +390,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldDecimalplaces); }
 			set { insertNameValueField(FldDecimalplaces, value); }
 		}
-
 
 		/// <summary>Field : "Text" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldText { get { return m_fldText; } }
@@ -406,7 +402,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldText, value); }
 		}
 
-
 		/// <summary>Field : "Quantity" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldQuantity { get { return m_fldQuantity; } }
 		private static FieldRef m_fldQuantity = new FieldRef("asspa", "quantity");
@@ -417,7 +412,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldQuantity); }
 			set { insertNameValueField(FldQuantity, value); }
 		}
-
 
 		/// <summary>Field : "Date" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldDate { get { return m_fldDate; } }
@@ -430,7 +424,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDate, value); }
 		}
 
-
 		/// <summary>Field : "To show" Tipo: "C" Formula: + "iif([ASSPA->DATATYPE]=="T",[ASSPA->TEXT],iif([ASSPA->DATATYPE]=="N",NumericToString([ASSPA->QUANTITY],0),iif([ASSPA->DATATYPE]=="D",NumericToString(Year([ASSPA->DATE]),0)+"-"+RIGHT("00"+NumericToString(Month([ASSPA->DATE]),0),2)+"-"+RIGHT("00"+NumericToString(Day([ASSPA->DATE]),0),2),"") ) )"</summary>
 		public static FieldRef FldToshow { get { return m_fldToshow; } }
 		private static FieldRef m_fldToshow = new FieldRef("asspa", "toshow");
@@ -441,7 +434,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldToshow); }
 			set { insertNameValueField(FldToshow, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

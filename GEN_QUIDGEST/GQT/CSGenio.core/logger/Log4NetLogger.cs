@@ -1,5 +1,8 @@
-﻿using System;
+﻿using CSGenio.framework;
+using DocumentFormat.OpenXml.InkML;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace CSGenio.core.di
 {
@@ -73,6 +76,24 @@ namespace CSGenio.core.di
         }
 
         /// <summary>
+        /// Adds an info message to the log system.
+        /// </summary>
+        /// <param name="msg">The info message to be logged.</param>
+        public void Info(string msg)
+        {
+            log.Info(msg);
+        }
+
+        /// <summary>
+        /// Adds an warning message to the log system.
+        /// </summary>
+        /// <param name="msg">The warning message to be logged.</param>
+        public void Warning(string msg)
+        {
+            log.Warn(msg);
+        }
+
+        /// <summary>
         /// Verifica se queremos mesmo tentar por mensagens de tracing
         /// Evita o peso de construir a mensagem à custa de um if extra
         /// </summary>
@@ -88,6 +109,56 @@ namespace CSGenio.core.di
         /// Inicializa um marcador de estado desta thread de processamento
         /// Permite às mensagens de erro subsequentes saber em que contexto foram invocadas
         /// </summary>
+        /// <param name="context">O contexto a inicializar no formato key:object ou string</param>
+        /// <example>
+        /// Um bom sitio to usar é to marcar o user que está no contexto
+        /// </example>
+        /// <remarks>
+        /// Em ASP.Net tem de se ter cuidado com thread agility:
+        /// http://blog.marekstoj.com/2011/12/log4net-contextual-properties-and.html
+        /// </remarks>
+        public IDisposable SetContext(object context)
+        {
+            try
+            {
+                if (context is string)
+                {
+                    log4net.ThreadContext.Properties["other"] = context.ToString();
+                    log4net.LogicalThreadContext.Properties["other"] = context.ToString();
+                }
+                else if (context is Dictionary<string, object>)
+                {
+                    var tCtx = (Dictionary<string, object>)context;
+                    foreach (var keyValue in tCtx)
+                    {
+                        tCtx.TryGetValue(keyValue.Key, out object val);
+
+                        log4net.ThreadContext.Properties[keyValue.Key] = val;
+                        log4net.LogicalThreadContext.Properties[keyValue.Key] = val;
+                    }
+                }
+                else
+                {
+                    // Log4Net properties are read only so unfortunately we need this contraption
+                    foreach (PropertyInfo prop in context.GetType().GetProperties())
+                    {
+                        log4net.ThreadContext.Properties[prop.Name] = prop.GetValue(context, null);
+                        log4net.LogicalThreadContext.Properties[prop.Name] = prop.GetValue(context, null);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw new FrameworkException("Unsupported context format", "Log4NetLogger.SetContext", "Unsupported context format");
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Inicializa um marcador de estado desta thread de processamento
+        /// Permite às mensagens de erro subsequentes saber em que contexto foram invocadas
+        /// </summary>
         /// <param name="context">O contexto a inicializar</param>
         /// <param name="value">O Qvalue a por no contexto</param>
         /// <example>
@@ -96,11 +167,10 @@ namespace CSGenio.core.di
         /// <remarks>
         /// Em ASP.Net tem de se ter cuidado com thread agility:
         /// http://blog.marekstoj.com/2011/12/log4net-contextual-properties-and.html
-        /// </remarks>		
-        public void SetContext(string context, object value)
+        /// </remarks>	
+        public IDisposable SetContext(string value, object context)
         {
-            log4net.ThreadContext.Properties[context] = value;
-            log4net.LogicalThreadContext.Properties[context] = value;
+            return SetContext(new Dictionary<string, object> { { value, context } });
         }
 
         /// <summary>

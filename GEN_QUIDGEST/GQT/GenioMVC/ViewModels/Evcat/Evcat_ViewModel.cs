@@ -428,7 +428,8 @@ namespace GenioMVC.ViewModels.Evcat
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApesso.FldName, query + "%");
                 }
@@ -475,7 +476,8 @@ namespace GenioMVC.ViewModels.Evcat
 				}
 
 				TablePessoName.List = new SelectList(TablePessoName.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpesso), "Value", "Text", this.ValCodpesso);
-                FillDependant_EvcatTablePessoName();
+                if(!isSearchRequest)
+                    FillDependant_EvcatTablePessoName();
 
                 //Check if foreignkey comes from history
                 TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
@@ -631,7 +633,8 @@ namespace GenioMVC.ViewModels.Evcat
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAcate1.FldCategoria, query + "%");
                 }
@@ -678,7 +681,8 @@ namespace GenioMVC.ViewModels.Evcat
 				}
 
 				TableCate1Category.List = new SelectList(TableCate1Category.Elements.ToSelectList(x => x.ValCategoria, x => x.ValCodcateg,  x => x.ValCodcateg == this.ValCodcateg), "Value", "Text", this.ValCodcateg);
-                FillDependant_EvcatTableCate1Category();
+                if(!isSearchRequest)
+                    FillDependant_EvcatTableCate1Category();
 
                 //Check if foreignkey comes from history
                 TableCate1Category.FilledByHistory = Navigation.CheckFilledByHistory("cate1");

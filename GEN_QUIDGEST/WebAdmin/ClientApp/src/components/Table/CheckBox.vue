@@ -1,8 +1,8 @@
 ﻿<template>
     <td class="text-center" v-on="!rowsSelectable ? { click: (event) => selectCheckbox(event)} : {}">
         <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input vbt-checkbox" v-model="checkboxSelected"/>
-          <label class="custom-control-label"></label>
+            <input type="checkbox" class="custom-control-input vbt-checkbox" v-model="checkboxSelected"/>
+            <label class="custom-control-label"></label>
         </div>
     </td>
 </template>

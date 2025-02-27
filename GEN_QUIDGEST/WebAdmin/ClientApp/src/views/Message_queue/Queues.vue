@@ -1,25 +1,34 @@
 ﻿<template>
 	<div id="message_queue_queues_container">
-		<QGroupBoxContainer>
+		<q-card
+			width="block">
 			<q-row-container>
-				<qtable :rows="tQueues.rows"
+				<data-system-badge
+					:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+
+				<qtable
+					:rows="tQueues.rows"
 					:columns="tQueues.columns"
 					:config="tQueues.config"
 					:totalRows="tQueues.total_rows">
 
-				<template #actions="props">
-					<q-button
-						borderless
-						:title="Resources.EXPORTAR35632"
-						@click="exportQueue(props.row)">
-						<q-icon icon="share" />
-					</q-button>
-				</template>
-			</qtable>
-			<!-- Modal -->
-			<export_queue :Model="exportForm.data" :show="exportForm.show" @close="closeExportQueue"></export_queue>
-		</q-row-container>
-		</QGroupBoxContainer>
+					<template #actions="props">
+						<q-button
+							borderless
+							:title="Resources.EXPORTAR35632"
+							@click="exportQueue(props.row)">
+							<q-icon icon="export" />
+						</q-button>
+					</template>
+				</qtable>
+				
+				<!-- Modal -->
+				<export_queue
+					:Model="exportForm.data"
+					:show="exportForm.show"
+					@close="closeExportQueue" />
+			</q-row-container>
+		</q-card>
 	</div>
 </template>
 
@@ -31,13 +40,17 @@
 
 	export default {
 		name: 'message_queue_queues',
+
 		mixins: [reusableMixin],
+
 		components: { export_queue },
+
 		props: {
 			model: {
 				required: true
 			}
 		},
+
 		data() {
 			var vm = this;
 			return {
@@ -95,16 +108,19 @@
 				}
 			};
 		},
+
 		methods: {
 			exportQueue(queue) {
 				this.exportForm.data = queue;
 				this.exportForm.show = true;
 			},
+
 			closeExportQueue() {
 				this.exportForm.show = false;
 				this.exportForm.data = { };
 			}
 		},
+		
 		created() {
 			this.tQueues.rows = this.model?.MQueues?.Queues || [];
 			this.tQueues.total_rows = this.tQueues.rows.length;

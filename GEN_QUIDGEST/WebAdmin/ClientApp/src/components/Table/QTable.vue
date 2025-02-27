@@ -35,15 +35,18 @@
               <!-- global search text ends here -->
               
               <!-- export to excel button -->
-              <div v-if="enableExport" class="col-md-auto my-auto">
-                <button class="form-group b-icon-text b-icon-text--primary" @click="exportExcel">
-                    {{ exportLabel }}
-                </button>
-              </div>
+                <q-button
+                    class="form-group c-table__export-btn"
+                    v-if="enableExport"
+                    b-style="secondary"
+                    :label="exportLabel"
+                    @click="exportExcel">
+                    <q-icon icon="file-export" />
+                </q-button>
               <!--  export to excel button ends here -->
 
               <!-- action buttons starts here -->
-              <div class="col-md-8">
+              <div>
                 <slot name="vbt-action-buttons">
                   <div class="btn-group float-right" role="group" aria-label="Basic example">
                     <button v-for="(action, ac_key, index) in actions"
@@ -184,9 +187,9 @@
                         <div class="text-right justify-content-center">
                           <template v-if="pagination_info">
                             <slot name="pagination-info" :currentPageRowsLength="currentPageRowsLength" :filteredRowsLength="filteredRowsLength" :originalRowsLength="originalRowsLength">
-                              <template v-if="currentPageRowsLength != 0">
-                                From 1 to {{currentPageRowsLength}} of {{filteredRowsLength}} entries
-                              </template>
+                                <template v-if="currentPageRowsLength != 0">
+                                    From {{currentPageFirstRow}} to {{currentPageRowsLength}} of {{filteredRowsLength}} entries
+                                </template>
                               <template v-else>
                                 No results found
                               </template>
@@ -1051,7 +1054,6 @@ export default {
 
         },
         emitSearch(search_value) {
-            //this.query.global_search = this.$refs.global_search.value;
             this.query.global_search = search_value;
         },  
 
@@ -1147,9 +1149,29 @@ export default {
             return (column.visibility == undefined || column.visibility) ? true : false;
         },
 
-        exportExcel() {                        
-            //Download file
-            window.location.href = QUtils.apiActionURL('Users', 'ExportToExcel');
+        exportExcel() {
+            fetch(QUtils.apiActionURL('Users', 'ExportToExcel'), {
+                method: 'GET'
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    const messageError = `Resources.${Genio.GetSymbolFromString("Erro ao exportar o ficheiro")}`
+                    throw new Error(messageError);
+                }
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'user-list.xlsx';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
     },
     computed: {
@@ -1196,9 +1218,12 @@ export default {
         },
 
         // pagination info computed properties - start
+        currentPageFirstRow() {
+			return ((this.page - 1) * this.per_page) + 1
+        },
 
         currentPageRowsLength() {
-            return this.vbt_rows.length;
+			return (this.currentPageFirstRow - 1) + this.vbt_rows.length
         },
 
         filteredRowsLength() {

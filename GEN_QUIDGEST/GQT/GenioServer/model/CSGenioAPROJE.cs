@@ -95,6 +95,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "FIRST42972";
 
@@ -108,6 +109,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "BEFORE60156";
 
@@ -121,6 +123,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "FOLLOWING22170";
 
@@ -134,6 +137,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "LAST49207";
 
@@ -147,6 +151,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "NEXT___PREVIOUS__58212";
 
@@ -164,6 +169,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "LAST___FIRST__42481";
 
@@ -354,7 +360,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodproje, value); }
 		}
 
-
 		/// <summary>Field : "Project" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldProjecto { get { return m_fldProjecto; } }
 		private static FieldRef m_fldProjecto = new FieldRef("proje", "projecto");
@@ -365,7 +370,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldProjecto); }
 			set { insertNameValueField(FldProjecto, value); }
 		}
-
 
 		/// <summary>Field : ">REFERENCE YEAR" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodyear { get { return m_fldCodyear; } }
@@ -378,7 +382,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodyear, value); }
 		}
 
-
 		/// <summary>Field : "Year" Tipo: "C" Formula: ++ "[YEAR1->YEAR]"</summary>
 		public static FieldRef FldYear { get { return m_fldYear; } }
 		private static FieldRef m_fldYear = new FieldRef("proje", "year");
@@ -389,7 +392,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldYear); }
 			set { insertNameValueField(FldYear, value); }
 		}
-
 
 		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		public static FieldRef FldPrimeiro { get { return m_fldPrimeiro; } }
@@ -402,7 +404,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPrimeiro, value); }
 		}
 
-
 		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		public static FieldRef FldBefore { get { return m_fldBefore; } }
 		private static FieldRef m_fldBefore = new FieldRef("proje", "before");
@@ -413,7 +414,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldBefore); }
 			set { insertNameValueField(FldBefore, value); }
 		}
-
 
 		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		public static FieldRef FldFollowin { get { return m_fldFollowin; } }
@@ -426,7 +426,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldFollowin, value); }
 		}
 
-
 		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		public static FieldRef FldUltimo { get { return m_fldUltimo; } }
 		private static FieldRef m_fldUltimo = new FieldRef("proje", "ultimo");
@@ -437,7 +436,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldUltimo); }
 			set { insertNameValueField(FldUltimo, value); }
 		}
-
 
 		/// <summary>Field : "Next - Previous =" Tipo: "$D" Formula: + "[PROJE->FOLLOWIN]-[PROJE->BEFORE]"</summary>
 		public static FieldRef FldSaldo1 { get { return m_fldSaldo1; } }
@@ -450,7 +448,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSaldo1, value); }
 		}
 
-
 		/// <summary>Field : "Last - First =" Tipo: "$D" Formula: + "[PROJE->ULTIMO]-[PROJE->PRIMEIRO]"</summary>
 		public static FieldRef FldSaldo2 { get { return m_fldSaldo2; } }
 		private static FieldRef m_fldSaldo2 = new FieldRef("proje", "saldo2");
@@ -461,7 +458,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldSaldo2); }
 			set { insertNameValueField(FldSaldo2, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

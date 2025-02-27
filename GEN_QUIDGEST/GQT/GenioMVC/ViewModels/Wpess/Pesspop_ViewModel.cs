@@ -481,7 +481,8 @@ namespace GenioMVC.ViewModels.Wpess
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAwareh.FldWarehdes, query + "%");
                 }
@@ -528,7 +529,8 @@ namespace GenioMVC.ViewModels.Wpess
 				}
 
 				TableWarehWarehdes.List = new SelectList(TableWarehWarehdes.Elements.ToSelectList(x => x.ValWarehdes, x => x.ValCodwareh,  x => x.ValCodwareh == this.ValCodwareh), "Value", "Text", this.ValCodwareh);
-                FillDependant_PesspopTableWarehWarehdes();
+                if(!isSearchRequest)
+                    FillDependant_PesspopTableWarehWarehdes();
 
                 //Check if foreignkey comes from history
                 TableWarehWarehdes.FilledByHistory = Navigation.CheckFilledByHistory("wareh");

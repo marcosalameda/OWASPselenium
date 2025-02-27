@@ -2,6 +2,9 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>
@@ -91,7 +94,7 @@
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt">
-      <Version>6.35.0</Version>
+      <Version>8.2.0</Version>
     </PackageReference>
     <PackageReference Include="System.Web.Optimization.Less">
       <Version>1.3.4</Version>
@@ -301,6 +304,8 @@
     <Compile Include="Controllers\Feeca\*.cs" />
     <Compile Include="ViewModels\Notif\*_ViewModel.cs" />
     <Compile Include="Controllers\Notif\*.cs" />
+    <Compile Include="ViewModels\Disst\*_ViewModel.cs" />
+    <Compile Include="Controllers\Disst\*.cs" />
     <Compile Include="ViewModels\Asset\*_ViewModel.cs" />
     <Compile Include="Controllers\Asset\*.cs" />
     <Compile Include="ViewModels\Lang2\*_ViewModel.cs" />
@@ -461,6 +466,8 @@
     <Compile Include="Controllers\Produ\*.cs" />
     <Compile Include="ViewModels\Kinde\*_ViewModel.cs" />
     <Compile Include="Controllers\Kinde\*.cs" />
+    <Compile Include="ViewModels\Itemp\*_ViewModel.cs" />
+    <Compile Include="Controllers\Itemp\*.cs" />
     <Compile Include="ViewModels\Rules\*_ViewModel.cs" />
     <Compile Include="Controllers\Rules\*.cs" />
     <Compile Include="ViewModels\S_ua\*_ViewModel.cs" />
@@ -487,8 +494,6 @@
     <Compile Include="Controllers\Users\*.cs" />
     <Compile Include="ViewModels\Pais1\*_ViewModel.cs" />
     <Compile Include="Controllers\Pais1\*.cs" />
-    <Compile Include="ViewModels\Compa\*_ViewModel.cs" />
-    <Compile Include="Controllers\Compa\*.cs" />
     <Compile Include="ViewModels\S_nes\*_ViewModel.cs" />
     <Compile Include="Controllers\S_nes\*.cs" />
     <Compile Include="ViewModels\Uicom\*_ViewModel.cs" />
@@ -559,8 +564,6 @@
     <Compile Include="Controllers\Desam\*.cs" />
     <Compile Include="ViewModels\Tickt\*_ViewModel.cs" />
     <Compile Include="Controllers\Tickt\*.cs" />
-    <Compile Include="ViewModels\Patie\*_ViewModel.cs" />
-    <Compile Include="Controllers\Patie\*.cs" />
     <Compile Include="ViewModels\Trsb\*_ViewModel.cs" />
     <Compile Include="Controllers\Trsb\*.cs" />
     <Compile Include="ViewModels\Attac\*_ViewModel.cs" />
@@ -642,6 +645,7 @@
     <Compile Include="ViewModels\Home_*_ViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="ViewModels\ListPropertiesViewModel.cs" />
+	<Compile Include="ViewModels\SvMenu\*.cs" />
     <Compile Include="ViewModels\SuggestionViewModel.cs" />
     <Compile Include="ViewModels\Lstusr\*.cs" />
     <Compile Include="ViewModels\SpecialRendering\*.cs" />

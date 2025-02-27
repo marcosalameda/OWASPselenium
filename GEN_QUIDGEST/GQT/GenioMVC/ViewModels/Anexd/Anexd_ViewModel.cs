@@ -442,7 +442,8 @@ namespace GenioMVC.ViewModels.Anexd
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAequip.FldRegistnr, query + "%");
                 }
@@ -489,7 +490,8 @@ namespace GenioMVC.ViewModels.Anexd
 				}
 
 				TableEquipRegistnr.List = new SelectList(TableEquipRegistnr.Elements.ToSelectList(x => x.ValRegistnr, x => x.ValCodequip,  x => x.ValCodequip == this.ValCodequip), "Value", "Text", this.ValCodequip);
-                FillDependant_AnexdTableEquipRegistnr();
+                if(!isSearchRequest)
+                    FillDependant_AnexdTableEquipRegistnr();
 
                 //Check if foreignkey comes from history
                 TableEquipRegistnr.FilledByHistory = Navigation.CheckFilledByHistory("equip");
@@ -645,7 +647,8 @@ namespace GenioMVC.ViewModels.Anexd
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAlangu.FldLangua, query + "%");
                 }
@@ -692,7 +695,8 @@ namespace GenioMVC.ViewModels.Anexd
 				}
 
 				TableLanguLangua.List = new SelectList(TableLanguLangua.Elements.ToSelectList(x => x.ValLangua, x => x.ValCodlang,  x => x.ValCodlang == this.ValCodlang), "Value", "Text", this.ValCodlang);
-                FillDependant_AnexdTableLanguLangua();
+                if(!isSearchRequest)
+                    FillDependant_AnexdTableLanguLangua();
 
                 //Check if foreignkey comes from history
                 TableLanguLangua.FilledByHistory = Navigation.CheckFilledByHistory("langu");

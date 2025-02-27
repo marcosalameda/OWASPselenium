@@ -71,6 +71,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Line";
 			Qfield.FieldSize =  5;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 1;
 			Qfield.CavDesignation = "LINE27983";
 
@@ -112,6 +113,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Qtd entry";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "QTD_ENTRY35144";
 
 			Qfield.Dupmsg = "";
@@ -171,7 +173,7 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(10);
+			info.Pathways = new Dictionary<string, string>(11);
 			info.Pathways.Add("wareh","wareh");
 			info.Pathways.Add("item","item");
 			info.Pathways.Add("indoc","indoc");
@@ -180,6 +182,7 @@ namespace CSGenio.business
 			info.Pathways.Add("ware1","indoc");
 			info.Pathways.Add("cmpny","indoc");
 			info.Pathways.Add("pesso","indoc");
+			info.Pathways.Add("categ","indoc");
 			info.Pathways.Add("pais1","indoc");
 			info.Pathways.Add("regi1","indoc");
 		}
@@ -329,7 +332,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodldent, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCoddentr { get { return m_fldCoddentr; } }
 		private static FieldRef m_fldCoddentr = new FieldRef("ldent", "coddentr");
@@ -340,7 +342,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCoddentr); }
 			set { insertNameValueField(FldCoddentr, value); }
 		}
-
 
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldLine { get { return m_fldLine; } }
@@ -353,7 +354,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldLine, value); }
 		}
 
-
 		/// <summary>Field : ">ARMAZEM" Tipo: "CE" Formula: DF "[INDOC->CODWAREH]"</summary>
 		public static FieldRef FldCodwareh { get { return m_fldCodwareh; } }
 		private static FieldRef m_fldCodwareh = new FieldRef("ldent", "codwareh");
@@ -364,7 +364,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodwareh); }
 			set { insertNameValueField(FldCodwareh, value); }
 		}
-
 
 		/// <summary>Field : ">ARTICLE" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCoditem { get { return m_fldCoditem; } }
@@ -377,7 +376,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoditem, value); }
 		}
 
-
 		/// <summary>Field : "Qtd entry" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldQtdentra { get { return m_fldQtdentra; } }
 		private static FieldRef m_fldQtdentra = new FieldRef("ldent", "qtdentra");
@@ -388,7 +386,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldQtdentra); }
 			set { insertNameValueField(FldQtdentra, value); }
 		}
-
 
 		/// <summary>Field : "Instant entrance" Tipo: "DT" Formula: ++ "[INDOC->DHDOCUME]"</summary>
 		public static FieldRef FldDhentra { get { return m_fldDhentra; } }
@@ -401,7 +398,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDhentra, value); }
 		}
 
-
 		/// <summary>Field : "Articles in use" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldEmuso { get { return m_fldEmuso; } }
 		private static FieldRef m_fldEmuso = new FieldRef("ldent", "emuso");
@@ -412,7 +408,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldEmuso); }
 			set { insertNameValueField(FldEmuso, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Wareh
         /// </summary>
         public string ValCodwareh { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Wareh
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS MLTFORM_PSEUDMLTFORM1]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Mltform_ValMltform1_ViewModel" /> class.
@@ -139,6 +159,8 @@ namespace GenioMVC.ViewModels.Wareh
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -158,7 +180,6 @@ namespace GenioMVC.ViewModels.Wareh
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_wpess");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_wpess");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Wpess.AddEPH<CSGenioAwpess>(ref u, null, "IBL_MLTFORM_PSEUDMLTFORM1"));
 			}
@@ -233,7 +254,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -337,7 +358,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
                     //Clone by line to prevent history values propagating through lines on list
                     NavigationContext clonedNavigation = Navigation.Clone();
                     clonedNavigation.AddHistoryLevel(new NavigationLocation("", "Armapess_Show", "Wpess") { vueRouteName = "form-ARMAPESS", mode = "CANCEL" }, FormMode.Show);
-                    tempList.Add(new GenioMVC.ViewModels.Wpess.Armapess_ViewModel(Wpess, Navigation));
+                    tempList.Add(new GenioMVC.ViewModels.Wpess.Armapess_ViewModel(Wpess, clonedNavigation));
                 }
 
 				this.Menu.Elements = tempList;

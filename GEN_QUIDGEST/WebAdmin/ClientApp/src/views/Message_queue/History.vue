@@ -1,11 +1,18 @@
 ﻿<template>
 	<div id="message_queue_history_container">
-		<QGroupBoxContainer>
+		<q-card
+			width="block">
 			<q-row-container>
+				<data-system-badge
+					:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<select-input v-model="queryParamQueue" :options="queuesFilter" :label="Resources.QUEUE45251"></select-input>
+						<select-input
+							v-model="queryParamQueue"
+							:options="queuesFilter"
+							:label="Resources.QUEUE45251" />
 					</base-input-structure>
 				</q-control-wrapper>
 				<q-control-wrapper>
@@ -17,43 +24,66 @@
 							@click="Arquivar" />
 					</base-input-structure>
 				</q-control-wrapper>
+
 				<qtable :rows="tQueuesSend.rows"
 					:columns="tQueuesSend.columns"
 					:config="tQueuesSend.config"
 					@on-change-query="onChangeQuerySend"
-					:totalRows="tQueuesSend.total_rows">
-				</qtable>
+					:totalRows="tQueuesSend.total_rows" />
+
 				<q-control-wrapper v-if="model.LogDatabaseExists">
 					<base-input-structure
 						class="i-text">
 						<radio-input
 							:value="model.LogDatabaseSelected"
 							:options="logDatabase"
-							:label="Resources.DADOS_43180"></radio-input>
+							:label="Resources.DADOS_43180" />
 						<q-button
 							:label="Resources.TRANSFERIR_DADOS_PAR38484"
 							@click="exportDataToHistory" />
 					</base-input-structure>
 				</q-control-wrapper>
-			</q-row-container>
-			<qtable :rows="tQueuesHist.rows"
+
+				<qtable :rows="tQueuesHist.rows"
 					:columns="tQueuesHist.columns"
 					:config="tQueuesHist.config"
 					@on-change-query="onChangeQueryHist"
 					:totalRows="tQueuesHist.total_rows">
-				<template #actions="props">
-					<div elem-identifier="BtnGroup">
-						<button class="b-icon b-icon--secondary dropdown" data-toggle="dropdown" title="Actions" aria-expanded="true">
-							<i class="glyphicons glyphicons-option-horizontal e-icon"></i>
-						</button>
-						<div class="pull-left dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(4px, 100px, 0px); top: 0px; left: 0px; will-change: transform;">
-							<a class="dropdown-item" @click.stop="ProcessBTClick(props.row, 'SEND')"><i class="glyphicons glyphicons-eye-open dropdown__icon"></i>Reenviar</a>
-							<a class="dropdown-item" @click.stop="ProcessBTClick(props.row, 'END')"><i class="glyphicons glyphicons-eye-open dropdown__icon"></i>Finalizar</a>
+
+					<template #actions="props">
+						<div elem-identifier="BtnGroup">
+							<button
+								data-toggle="dropdown"
+								title="Actions"
+								aria-expanded="true">
+								<q-icon icon="dots-horizontal" />
+							</button>
+							<div
+								class="pull-left dropdown-menu"
+								x-placement="bottom-start"
+								style="position: absolute; transform: translate3d(4px, 100px, 0px); top: 0px; left: 0px; will-change: transform;">
+								<a
+									class="dropdown-item"
+									@click.stop="ProcessBTClick(props.row, 'SEND')">
+									<q-icon
+										class= "dropdown__icon"
+										icon="view" />
+									{{ Resources.REENVIAR02385 }}
+								</a>
+								<a
+									class="dropdown-item"
+									@click.stop="ProcessBTClick(props.row, 'END')">
+									<q-icon
+										class="dropdown__icon"
+										icon="view" />
+									{{ Resources.FINALIZAR53456 }}
+								</a>
+							</div>
 						</div>
-					</div>
-				</template>
-			</qtable>
-		</QGroupBoxContainer>
+					</template>
+				</qtable>
+			</q-row-container>
+		</q-card>
 	</div>
 </template>
 
@@ -65,12 +95,15 @@
 
 	export default {
 		name: 'message_queue_history',
+
 		mixins: [reusableMixin],
+
 		props: {
 			model: {
 				required: true
 			}
 		},
+
 		data() {
 			var vm = this;
 			return {
@@ -222,8 +255,7 @@
 				queryParamQueue: ''
 			};
 		},
-		computed: {
-		},
+
 		methods: {
 			fetchDataSend() {
 				var vm = this;
@@ -241,6 +273,7 @@
 					}
 				});
 			},
+			
 			fetchDataHist() {
 				var vm = this;
 				var params = $.extend({}, vm.tQueuesHist.queryParams, { LogHistory: vm.model.LogDatabaseSelected, queue: vm.queryParamQueue });
@@ -257,16 +290,19 @@
 					}
 				});
 			},
+
 			onChangeQuerySend(queryParams) {
 				var vm = this;
 				$.each(queryParams, function (propName, value) { vm.tQueuesSend.queryParams[propName] = value; });
 				this.fetchDataSend();
 			},
+
 			onChangeQueryHist(queryParams) {
 				var vm = this;
 				$.each(queryParams, function (propName, value) { vm.tQueuesHist.queryParams[propName] = value; });
 				this.fetchDataHist();
 			},
+
 			fillQueuesFilter() {
 				var vm = this, acks = [];
 				$.each(vm.model.MQueues.Queues, function(index, q) {
@@ -282,6 +318,7 @@
 					vm.queuesFilter.push({ Text: ack, Value: ack });
 				});
 			},
+
 			Arquivar() {
 				var vm = this;
 				bootbox.confirm({
@@ -311,11 +348,13 @@
 					}
 				});
 			},
+
 			exportDataToHistory() {
 				QUtils.FetchData(QUtils.apiActionURL('MessageQueue', 'exportDataToHistory')).done(function (data) {
 					bootbox.alert("The process started successfully.");
 				});
 			},
+
 			ProcessBTClick(row, accao) {
 				var vm = this;
 				QUtils.postData('MessageQueue', 'QueueProcessActions', null, { action: accao, key: row[9] }, function (data) {
@@ -327,24 +366,29 @@
 					}
 				});
 			},
+
 			reloadTables() {
 				this.fetchDataSend();
 				this.fetchDataHist();
 			}
 		},
+
 		created() {
 			// Ler dados
 			this.fillQueuesFilter();
 			this.fetchDataSend();
 			this.fetchDataHist();
 		},
+
 		watch: {
 			'queryParamQueue'() {
 				this.reloadTables();
 			},
+
 			'logDatabase'() {
 				this.reloadTables();
 			},
+			
 			'model.LogDatabaseSelected'() {
 				this.reloadTables();
 			}

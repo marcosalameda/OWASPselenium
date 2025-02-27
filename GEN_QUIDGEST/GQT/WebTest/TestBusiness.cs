@@ -12,17 +12,8 @@ namespace WebTest
     ///This is a test class for Test and is intended
     ///to contain all Test Unit Tests
     ///</summary>
-    [SetUpFixture]
     public class TestNegocio
     {
-	    [OneTimeSetUp]
-        public static void AssemblyInit()
-        {
-            // Initalization code goes here
-            CSGenio.GenioDIDefault.Use();
-
-        }
-
 		// USE /[MANUAL GQT TESTNEGOCIO]/
     }
 }

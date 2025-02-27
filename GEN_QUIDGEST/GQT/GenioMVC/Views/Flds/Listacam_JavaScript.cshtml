@@ -182,6 +182,10 @@
 			this.Controls.LED_LISTACAMFLDS_CODFLDS_ = new QHiddenControl($('[data-identifier="LED_LISTACAMFLDS_CODFLDS_"]', this.element), window.Form_Listacam);
 
 	@* Hidden Required Form Fields Controls for Formulas *@
+			this.Controls.LED_LISTACAMFLDS_TBLCOND_ = new QSpecialControl($('[data-identifier="LED_LISTACAMFLDS_TBLCOND_"]', this.element), window.Form_Listacam);
+			this.Controls.LED_LISTACAMFLDS_TBLCOND_.InitData(@JavaScriptConversion.ToLogic(@Model.ValTblcond));
+			this.Controls.LED_LISTACAMFLDS_COND____ = new QSpecialControl($('[data-identifier="LED_LISTACAMFLDS_COND____"]', this.element), window.Form_Listacam);
+			this.Controls.LED_LISTACAMFLDS_COND____.InitData(@JavaScriptConversion.ToString(@Model.ValCond));
 
 @if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
 {

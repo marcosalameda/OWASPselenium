@@ -481,7 +481,8 @@ namespace GenioMVC.ViewModels.Repar
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAequip.FldRegistnr, query + "%");
                 }
@@ -528,7 +529,8 @@ namespace GenioMVC.ViewModels.Repar
 				}
 
 				TableEquipRegistnr.List = new SelectList(TableEquipRegistnr.Elements.ToSelectList(x => x.ValRegistnr, x => x.ValCodequip,  x => x.ValCodequip == this.ValCodequip), "Value", "Text", this.ValCodequip);
-                FillDependant_ReparTableEquipRegistnr();
+                if(!isSearchRequest)
+                    FillDependant_ReparTableEquipRegistnr();
 
                 //Check if foreignkey comes from history
                 TableEquipRegistnr.FilledByHistory = Navigation.CheckFilledByHistory("equip");
@@ -694,7 +696,8 @@ namespace GenioMVC.ViewModels.Repar
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAspeci.FldEspecial, query + "%");
                 }
@@ -741,7 +744,8 @@ namespace GenioMVC.ViewModels.Repar
 				}
 
 				TableSpeciEspecial.List = new SelectList(TableSpeciEspecial.Elements.ToSelectList(x => x.ValEspecial, x => x.ValCodespec,  x => x.ValCodespec == this.ValCodespec), "Value", "Text", this.ValCodespec);
-                FillDependant_ReparTableSpeciEspecial();
+                if(!isSearchRequest)
+                    FillDependant_ReparTableSpeciEspecial();
 
                 //Check if foreignkey comes from history
                 TableSpeciEspecial.FilledByHistory = Navigation.CheckFilledByHistory("speci");
@@ -921,7 +925,8 @@ namespace GenioMVC.ViewModels.Repar
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApesso.FldName, query + "%");
                 }
@@ -968,7 +973,8 @@ namespace GenioMVC.ViewModels.Repar
 				}
 
 				TablePessoName.List = new SelectList(TablePessoName.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpesso), "Value", "Text", this.ValCodpesso);
-                FillDependant_ReparTablePessoName();
+                if(!isSearchRequest)
+                    FillDependant_ReparTablePessoName();
 
                 //Check if foreignkey comes from history
                 TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");

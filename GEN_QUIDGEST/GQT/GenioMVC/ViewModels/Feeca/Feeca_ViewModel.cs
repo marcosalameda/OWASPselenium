@@ -418,7 +418,8 @@ namespace GenioMVC.ViewModels.Feeca
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAflds.FldDescrip, query + "%");
                 }
@@ -465,7 +466,8 @@ namespace GenioMVC.ViewModels.Feeca
 				}
 
 				TableFldsDescrip.List = new SelectList(TableFldsDescrip.Elements.ToSelectList(x => x.ValDescrip, x => x.ValCodflds,  x => x.ValCodflds == this.ValCodflds), "Value", "Text", this.ValCodflds);
-                FillDependant_FeecaTableFldsDescrip();
+                if(!isSearchRequest)
+                    FillDependant_FeecaTableFldsDescrip();
 
                 //Check if foreignkey comes from history
                 TableFldsDescrip.FilledByHistory = Navigation.CheckFilledByHistory("flds");

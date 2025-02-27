@@ -484,6 +484,40 @@ namespace CSGenio.business
         }
 
         /// <summary>
+        /// Validate if a text is filled with lower letters.
+        /// This method only considers letter characters.
+        /// Symbols and special characters are ignored.
+        /// </summary>
+        /// <param name="text">text</param>
+        /// <returns>true if valid, false otherwise</returns>
+        public static bool validateLO(string text)
+        {
+            // If null or empty it does not have invalid chars
+            if (String.IsNullOrEmpty(text))
+                return true;
+
+            char[] accepted_chars = { 'º', 'ª' };
+
+            // Validate if each character is lowercase
+            for (int i = 0; i < text.Length; i++)
+            {
+                // Skip non-letter characters
+                if (!Char.IsLetter(text[i]))
+                    continue;
+
+                // Skip some special characters considered letters
+                if (Array.Exists(accepted_chars, c => c == text[i]))
+                    continue;
+
+                // Only validates the characters if it is a letter
+                if (!Char.IsLower(text[i]))
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Validate a portuguese license plate
         /// </summary>
         /// <param name="license">license plate</param>
@@ -575,6 +609,9 @@ namespace CSGenio.business
             // Since C# already validates the email address in the MailAdress constructor, implementing our own regex expression, that works in every case, is probably not worth the hassle.
             try
             {
+                if(string.IsNullOrEmpty(email))
+                    return true;
+				
                 var address = new System.Net.Mail.MailAddress(email);
                 return address.Address == email;
             }

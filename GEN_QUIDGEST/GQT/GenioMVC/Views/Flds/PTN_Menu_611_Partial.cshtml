@@ -99,6 +99,10 @@
         .DBEdit()
         .Filters(this.Model.Menu.Filters)
         .Form("Fieldhlp", false, true)
+        .UpdateConditions((item)=>Fieldhlp_ViewModel.UpdateConditions(item))
+        .ViewConditions((item)=>Fieldhlp_ViewModel.ViewConditions(item))
+        .DeleteConditions((item)=>Fieldhlp_ViewModel.DeleteConditions(item))
+        .InsertConditions((item)=>Fieldhlp_ViewModel.InsertConditions(this.Model.Navigation))
         .SetFollowUp("Fieldhlp_Show", "Flds" , (Func<GenioMVC.Models.Flds, object>)(item => new { id = item.ValCodflds }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
         .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
 		;

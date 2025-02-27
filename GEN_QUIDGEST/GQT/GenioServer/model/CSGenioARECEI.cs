@@ -72,6 +72,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "RECEIPT_NUMBER31380";
 
             Qfield.NotNull = true;
@@ -342,7 +343,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodrecei, value); }
 		}
 
-
 		/// <summary>Field : ">>SUPPLIER" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodentit { get { return m_fldCodentit; } }
 		private static FieldRef m_fldCodentit = new FieldRef("recei", "codentit");
@@ -353,7 +353,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodentit); }
 			set { insertNameValueField(FldCodentit, value); }
 		}
-
 
 		/// <summary>Field : "Receipt number" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldNumber { get { return m_fldNumber; } }
@@ -366,7 +365,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldNumber, value); }
 		}
 
-
 		/// <summary>Field : "Receipt date" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDtreceip { get { return m_fldDtreceip; } }
 		private static FieldRef m_fldDtreceip = new FieldRef("recei", "dtreceip");
@@ -377,7 +375,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDtreceip); }
 			set { insertNameValueField(FldDtreceip, value); }
 		}
-
 
 		/// <summary>Field : "Receipt verification" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDtcheck { get { return m_fldDtcheck; } }
@@ -390,7 +387,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDtcheck, value); }
 		}
 
-
 		/// <summary>Field : "Checked" Tipo: "L" Formula: + "iif(isEmptyD([RECEI->DTCHECK]),0,1)"</summary>
 		public static FieldRef FldChecked { get { return m_fldChecked; } }
 		private static FieldRef m_fldChecked = new FieldRef("recei", "checked");
@@ -401,7 +397,6 @@ namespace CSGenio.business
 			get { return (int)returnValueField(FldChecked); }
 			set { insertNameValueField(FldChecked, value); }
 		}
-
 
 		/// <summary>Field : "To check" Tipo: "L" Formula: + "iif(!isEmptyD([RECEI->DTRECEIP]) && isEmptyD([RECEI->DTCHECK]),1,0)"</summary>
 		public static FieldRef FldTocheck { get { return m_fldTocheck; } }
@@ -414,7 +409,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldTocheck, value); }
 		}
 
-
 		/// <summary>Field : "Stored" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldStored { get { return m_fldStored; } }
 		private static FieldRef m_fldStored = new FieldRef("recei", "stored");
@@ -426,7 +420,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldStored, value); }
 		}
 
-
 		/// <summary>Field : "Storage date" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDtstorag { get { return m_fldDtstorag; } }
 		private static FieldRef m_fldDtstorag = new FieldRef("recei", "dtstorag");
@@ -437,7 +430,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDtstorag); }
 			set { insertNameValueField(FldDtstorag, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

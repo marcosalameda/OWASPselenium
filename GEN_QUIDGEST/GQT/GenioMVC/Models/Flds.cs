@@ -263,6 +263,71 @@ namespace GenioMVC.Models
 		public SelectList ArrayValradiob { get { return new SelectList(CSGenio.business.ArrayRadiobtn.GetDictionary(), "Key", "Value", ValRadiob); } set { ValRadiob = value.SelectedValue as string; } }
 		public bool ShouldSerializeValRadiob() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValRadiob");
 
+		[DisplayName("Numeric")]
+		/// <summary>Field : "Numeric" Tipo: "N" Formula:  ""</summary>
+		[NumericAttribute(0)]
+		public decimal? ValNrcntry { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrcntry, 0)); } set { klass.ValNrcntry = Convert.ToDecimal(value); } }
+		public bool ShouldSerializeValNrcntry() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValNrcntry");
+
+		[DisplayName("Field state")]
+		/// <summary>Field : "Field state" Tipo: "AC" Formula:  ""</summary>
+		[DataArray("Acondtst", GenioMVC.Helpers.ArrayType.Character)]
+		public string ValCond { get { return klass.ValCond; } set { klass.ValCond = value; } }
+		[JsonIgnore]
+		public SelectList ArrayValcond { get { return new SelectList(CSGenio.business.ArrayAcondtst.GetDictionary(), "Key", "Value", ValCond); } set { ValCond = value.SelectedValue as string; } }
+		public bool ShouldSerializeValCond() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValCond");
+
+		[DisplayName("Field with client-side conditions")]
+		/// <summary>Field : "Field with client-side conditions" Tipo: "C" Formula:  ""</summary>
+		public string ValFclient1 { get { return klass.ValFclient1; } set { klass.ValFclient1 = value; } }
+		public bool ShouldSerializeValFclient1() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValFclient1");
+
+		[DisplayName("Field with server-side conditions")]
+		/// <summary>Field : "Field with server-side conditions" Tipo: "DT" Formula:  ""</summary>
+		[DataType(DataType.Date)]
+		[DateAttribute("DT")]
+		public DateTime? ValFserver1 { get { return klass.ValFserver1; } set { klass.ValFserver1 = value ?? DateTime.MinValue; } }
+		public bool ShouldSerializeValFserver1() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValFserver1");
+
+		[DisplayName("Field with client-side conditions")]
+		/// <summary>Field : "Field with client-side conditions" Tipo: "L" Formula:  ""</summary>
+		public bool ValFclient2 { get { return Convert.ToBoolean(klass.ValFclient2); } set { klass.ValFclient2 = Convert.ToInt32(value); } }
+		public bool ShouldSerializeValFclient2() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValFclient2");
+
+		[DisplayName("Field with server-side conditions")]
+		/// <summary>Field : "Field with server-side conditions" Tipo: "N" Formula:  ""</summary>
+		[NumericAttribute(2)]
+		public decimal? ValFserver2 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValFserver2, 2)); } set { klass.ValFserver2 = Convert.ToDecimal(value); } }
+		public bool ShouldSerializeValFserver2() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValFserver2");
+
+		[DisplayName("Field with client-side conditions")]
+		/// <summary>Field : "Field with client-side conditions" Tipo: "IB" Formula:  ""</summary>
+		[Document("ValFclient3", false, false, false, false)]
+		public string ValFclient3 { get { return klass.ValFclient3; } set { klass.ValFclient3 = value; } }
+		public string ValFclient3fk { get { return klass.ValFclient3fk; } set { klass.ValFclient3fk = value; } }
+		public bool ShouldSerializeValFclient3() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValFclient3");
+
+		[DisplayName("Field with server-side conditions")]
+		/// <summary>Field : "Field with server-side conditions" Tipo: "IJ" Formula:  ""</summary>
+		[Newtonsoft.Json.JsonConverter(typeof(Helpers.ResizeImageSerializer), 75, 75, true)]
+		public byte[] ValFserver3 { get { return klass.ValFserver3; } set { klass.ValFserver3 = value; } }
+		public bool ShouldSerializeValFserver3() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValFserver3");
+
+		[DisplayName("Enforce table conditions")]
+		/// <summary>Field : "Enforce table conditions" Tipo: "L" Formula:  ""</summary>
+		public bool ValTblcond { get { return Convert.ToBoolean(klass.ValTblcond); } set { klass.ValTblcond = Convert.ToInt32(value); } }
+		public bool ShouldSerializeValTblcond() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValTblcond");
+
+		[DisplayName("Enforce form conditions")]
+		/// <summary>Field : "Enforce form conditions" Tipo: "L" Formula:  ""</summary>
+		public bool ValFormcond { get { return Convert.ToBoolean(klass.ValFormcond); } set { klass.ValFormcond = Convert.ToInt32(value); } }
+		public bool ShouldSerializeValFormcond() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValFormcond");
+
+		[DisplayName("Field with Fill when condition")]
+		/// <summary>Field : "Field with Fill when condition" Tipo: "C" Formula:  ""</summary>
+		public string ValFfillwhn { get { return klass.ValFfillwhn; } set { klass.ValFfillwhn = value; } }
+		public bool ShouldSerializeValFfillwhn() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Flds.ValFfillwhn");
+
 		[DisplayName("ZZSTATE")]
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }

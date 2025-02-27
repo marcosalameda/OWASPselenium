@@ -209,12 +209,12 @@
 		@* Default of the 'ValItemdes' field *@
 		window.Form_Artigext.SetFormulaDefault('LED_ARTIGEXTITEM_ITEMDES_', function() {
 						return ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValCodgitem', $('[data-form="Artigext"]')), true));
-		}, 'GITEMVALITEMDES_CHANGE');
+		}, 'GITEMVALITEMDES_CHANGE VALCODGITEM_CHANGE');
 		
 		@* Default of the 'ValItemcod' field *@
 		window.Form_Artigext.SetFormulaDefault('LED_ARTIGEXTITEM_ITEMCOD_', function() {
 						return ( getFieldValue($(':not([elem-identifier="Multiform"]) > #GitemValItemgcod', $('[data-form="Artigext"]'))));
-		}, 'GITEMVALITEMGCOD_CHANGE');
+		}, 'GITEMVALITEMGCOD_CHANGE VALCODGITEM_CHANGE');
 		
 
 

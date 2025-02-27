@@ -1,0 +1,63 @@
+﻿@model GenioMVC.ViewModels.Wid_equi_ViewModel
+
+@{
+    ViewBag.Title = @Resources.EQUIP40887;
+}
+
+@LoadDefault()
+
+@helper LoadDefault() {
+<div class="form-horizontal" area="Home" data-form="Wid_equi">
+	<fieldset>
+		<legend class="form-header">@ViewBag.Title</legend>
+        <div class="form-flow">
+            @form_content_body()
+        </div>
+		@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Wid_equi" })
+		@Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "Wid_equi" })
+        @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "Wid_equi" })
+        @Html.AntiForgeryToken()
+	</fieldset>
+</div>
+
+}
+
+@helper form_content_body() {
+			<div class="row">
+				<div class="col-12">
+					<div class="row-large-control">
+						<div class="row-line-group" id="CONTAINER_IFF_WID_EQUIPSEUDWIDEQUI_">
+								<div id="Wid_equi_ValWidequi" data-identifier="IFF_WID_EQUIPSEUDWIDEQUI_"  data-extra-options="" > 
+									@{ Html.RenderAction("Wid_equi_ValWidequi", "Home", new {  partialView = "Wid_equi_ValWidequi"}); }
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+}
+
+
+@* USE /[MANUAL GQT FORM_VIEW_ADDITIONAL_CONTENT WID_EQUI]/ *@
+
+@helper codeJavascript()
+{
+<div class="hidden" id="FormJavaScript_WID_EQUI" data-form-javascript="true">
+<script>
+    $(document).ready(function (e) {
+        InitSpecialControls($('[data-form]'));
+    });
+
+
+
+
+
+
+// USE /[MANUAL GQT FORM_CODEJS WID_EQUI]/
+</script>
+</div>
+}
+
+@codeJavascript()

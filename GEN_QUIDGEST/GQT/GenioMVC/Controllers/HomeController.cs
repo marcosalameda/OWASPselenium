@@ -28,6 +28,8 @@ namespace GenioMVC.Controllers
 		private static readonly NavigationLocation ACTION_LSTUSR_EDIT = new NavigationLocation("LISTA_DE_UTILIZADORE37232", "ChangeListProperties", "Home");
 		private static readonly NavigationLocation ACTION_PEOPLE_SHOW = new NavigationLocation("CONSULTA40695", "People_Show", "Home")  { vueRouteName = "form-PEOPLE", mode = "SHOW" };
 		private static readonly NavigationLocation ACTION_PEOPLE_EDIT = new NavigationLocation("EDITAR11616", "People_Edit", "Home")  { vueRouteName = "form-PEOPLE", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_WID_EQUI_SHOW = new NavigationLocation("CONSULTA40695", "Wid_equi_Show", "Home")  { vueRouteName = "form-WID_EQUI", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_WID_EQUI_EDIT = new NavigationLocation("EDITAR11616", "Wid_equi_Edit", "Home")  { vueRouteName = "form-WID_EQUI", mode = "EDIT" };
 		private static readonly NavigationLocation ACTION_WID_GRAP_SHOW = new NavigationLocation("CONSULTA40695", "Wid_grap_Show", "Home")  { vueRouteName = "form-WID_GRAP", mode = "SHOW" };
 		private static readonly NavigationLocation ACTION_WID_GRAP_EDIT = new NavigationLocation("EDITAR11616", "Wid_grap_Edit", "Home")  { vueRouteName = "form-WID_GRAP", mode = "EDIT" };
 		private static readonly NavigationLocation ACTION_WID_PESS_SHOW = new NavigationLocation("CONSULTA40695", "Wid_pess_Show", "Home")  { vueRouteName = "form-WID_PESS", mode = "SHOW" };
@@ -277,6 +279,99 @@ namespace GenioMVC.Controllers
 			model.Load(2, requestValues, Request.IsAjaxRequest());
 
 			return PartialView("People_ValPeoplels", model);
+		}
+
+		#endregion
+		#region Form Methods -> Wid_equi (Equip)
+
+		// GET: /Home/Wid_equi_Show
+		[AuthorizeForUsers]
+		public ActionResult Wid_equi_Show()
+		{
+			var qs = Request.QueryString;
+			var nestedForm = qs["nestedForm"] == "true";
+			var model = new Wid_equi_ViewModel(Navigation, nestedForm);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Show);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "Wid_equi");
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+			{
+				if (!Request.IsAjaxRequest() && !isHomePage)
+					return View("_PermissionError", model: permission.Message);
+				else
+					return PartialView("_PermissionError", model: permission.Message);
+			}
+
+			if (!isHomePage && IsNewLocation(ACTION_WID_EQUI_SHOW))
+				Navigation.AddHistoryLevel(ACTION_WID_EQUI_SHOW.SetRoutedValues(new { m = Request.QueryString["m"] }), FormMode.Show, nestedForm);
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_WID_EQUI_SHOW.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_SHOW WID_EQUI]/
+
+			model.Load(qs);
+
+// USE /[MANUAL GQT AFTER_LOAD_SHOW WID_EQUI]/
+
+			if (!Request.IsAjaxRequest() && !isHomePage)
+				return View("Wid_equi", model);
+			else
+				return PartialView("Wid_equi", model);
+		}
+
+		// GET: /Home/Wid_equi_Edit
+		[AuthorizeForUsers]
+		public ActionResult Wid_equi_Edit()
+		{
+			var qs = Request.QueryString;
+			var nestedForm = qs["nestedForm"] == "true";
+			var model = new Wid_equi_ViewModel(Navigation, nestedForm);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Edit);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "Wid_equi");
+
+			if (!isHomePage && IsNewLocation(ACTION_WID_EQUI_EDIT))
+				Navigation.AddHistoryLevel(ACTION_WID_EQUI_EDIT.SetRoutedValues(new { m = Request.QueryString["m"] }), FormMode.Show, nestedForm);
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_WID_EQUI_EDIT.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_EDIT WID_EQUI]/
+
+			model.Load(qs);
+
+// USE /[MANUAL GQT AFTER_LOAD_EDIT WID_EQUI]/
+
+			return JsonOK(model);
+		}
+
+		//
+		// GET: /Home/Wid_equi_Cancel
+// USE /[MANUAL GQT CONTROLLER_CANCEL_GET WID_EQUI]/
+		[AuthorizeForUsers]
+		public ActionResult Wid_equi_Cancel()
+		{
+			return JsonOK(new { Success = true });
+		}
+
+		//
+		// GET: /Home/Wid_equi_ValWidequi
+		// POST: /Home/Wid_equi_ValWidequi
+		[AuthorizeForUsers]
+		[ActionName("Wid_equi_ValWidequi")]
+		public ActionResult Wid_equi_ValWidequi()
+		{
+			NameValueCollection requestValues = Request.Unvalidated.Form.Count > 0 ? Request.Unvalidated.Form : Request.QueryString; //TSX (01.07.2020) Can not access directly to the FormCollection or made Request.Form otherwise the tags on viewmodel will be ignored
+
+			Wid_equi_ValWidequi_ViewModel model = new Wid_equi_ValWidequi_ViewModel(Navigation);
+
+
+			model.Load(5, requestValues, Request.IsAjaxRequest());
+
+			return PartialView("Wid_equi_ValWidequi", model);
 		}
 
 		#endregion
@@ -613,7 +708,7 @@ namespace GenioMVC.Controllers
 		{
 			if (model.HasTotp == 1)
 			{
-				var secret = UserContext.Current.User.Code;
+				var secret = model.TotpDisplayCode;
 				//Only save if the user has correctly inserted the 6 code, otherwise they may be locked out of the system
 				if (new TOTPIdentityProvider().IsOk(secret, model.Totp6Code))
 				{
@@ -659,10 +754,9 @@ namespace GenioMVC.Controllers
 			model.HasWebAuthN = 0;
 			model.ShowTotp = true;
 
-			var qrUrl = getUrlQrCodeTOTP(secret);
-			var codeToReturn = qrUrl.Substring(qrUrl.IndexOf("secret=") + 7, qrUrl.IndexOf("&", qrUrl.IndexOf("secret=") + 7) - (qrUrl.IndexOf("secret=") + 7));
+			var qrUrl = getUrlQrCodeTOTP(secret);			
 			model.TotpUrl = qrUrl;
-			model.TotpDisplayCode = codeToReturn;
+			model.TotpDisplayCode = secret;
 		}
 
 		[AuthorizeForUsers]

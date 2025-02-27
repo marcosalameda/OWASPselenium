@@ -39,9 +39,9 @@ namespace Administration.Controllers
                 model.ModForm = mod.ToString();
 
             if (model.ModForm == "3")
-                model.SubmitValue = "DESEJA_ELIMINAR_ESTA24564";
+                model.SubmitValue = "DESEJA_ELIMINAR_ESTA45806";
             else
-                model.SubmitValue = "GRAVAR45301";
+                model.SubmitValue = "GRAVAR_CONFIGURACAO36308";
 
             //caso o mode do form for inválido
             if (model.ModForm == null || (model.ModForm != "1" && model.ModForm != "2" && model.ModForm != "3"))
@@ -281,6 +281,11 @@ namespace Administration.Controllers
                 sp.closeConnection();
                 return Json(new { Success = true , ignoredRoles});
             }
+            catch (BusinessException e)
+            {
+                model.ResultMsg = Translations.Get(e.UserMessage, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
+                return Json(new { Success = false, model = new { model.ResultMsg } });
+            }
             catch (Exception e)
             {
                 model.ResultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
@@ -402,6 +407,48 @@ namespace Administration.Controllers
             userPsw.delete(sp);
         }
 
+        [HttpPost]
+        public IActionResult UserDeleteFromTable(string cod)
+        {
+            if (string.IsNullOrEmpty(cod))
+            {
+                return Json(new { Success = false, Message = Resources.Resources.O_CODIGO_NAO_PODE_SE62260 });
+            }
+
+            CSGenio.persistence.PersistentSupport sp = null;
+
+            try
+            {
+                var conf = configManager.GetExistingConfig();
+                var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == CurrentYear);
+
+                if (dataSystem == null)
+                {
+                    return Json(new { Success = false, Message = Resources.Resources.CONFIGURACOES_NAO_EN22975 });
+                }
+
+                sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(dataSystem.Name);
+                sp.openConnection();
+
+                // Config model with user ID
+                var model = new ManageUsersModel { CodUser = cod };
+                deleteUser(model, sp);
+
+                return Json(new { Success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message });
+            }
+
+            finally {
+                if (sp != null)
+                {
+                    sp.closeConnection();
+                }
+            }
+        }
+
         private string saveUser(ref ManageUsersModel model, PersistentSupport sp)
         {
             User user = SysConfiguration.CreateWebAdminUser();
@@ -461,6 +508,26 @@ namespace Administration.Controllers
             return ""; //sucesso
         }
 
+        [HttpGet]
+        public IActionResult GetModules()
+        {
+            try
+            {
+                var model = new ManageUsersModel();
+                addModules(ref model);
 
+                string search = FromQuery("global_search");
+
+                var filteredModules = string.IsNullOrEmpty(search)
+                    ? model.Modules
+                    : model.Modules.Where(m => m.Description.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                return Json(new { recordsTotal = filteredModules.Count, data = filteredModules });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message, recordsTotal = 0 });
+            }
+        }
     }
 }

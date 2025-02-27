@@ -3,7 +3,6 @@ using CSGenio.framework;
 using CSGenio.framework.Geography;
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 
 namespace CSGenio.core.messaging
 {
@@ -42,7 +41,7 @@ namespace CSGenio.core.messaging
                 queueTable.Id = tab.Key;
 
                 var pubtab = pub.Tables.Find(x => x.Table == tab.Key);
-                var areainfo = business.Area.GetInfoArea(pubtab.Table);
+                var areainfo = Area.GetInfoArea(pubtab.Table);
                 foreach (var col in pubtab.Fields)
                 {
                     var fieldinfo = areainfo.DBFields[col];
@@ -112,7 +111,7 @@ namespace CSGenio.core.messaging
                 foreach (var row in table.Rows)
                 {
                     var areaname = st.Name;
-                    var area = business.Area.createArea(areaname, user, user.CurrentModule);
+                    var area = Area.createArea(areaname, user, user.CurrentModule);
                     for (int i = 0; i < row.Length; i++)
                     {
                         var value = ParseFieldValue(row[i], coltypes[i]);

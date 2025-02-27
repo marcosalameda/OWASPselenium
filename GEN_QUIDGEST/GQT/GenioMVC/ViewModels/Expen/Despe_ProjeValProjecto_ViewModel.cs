@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Expen
         /// </summary>
         public string ValCoddespe { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Expen
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS DESPE_PROJEPROJECTO]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Despe_ProjeValProjecto_ViewModel" /> class.
@@ -136,6 +156,8 @@ namespace GenioMVC.ViewModels.Expen
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -237,7 +259,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAproje.FldCodproje, CSGenioAproje.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -275,7 +297,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAproje.FldCodproje, CSGenioAproje.Fl
 			CriteriaSet despe___projeprojectoConds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ DESPE_PROJECTO]/
+// USE /[MANUAL GQT OVERRQ DESPE_PROJEPROJECTO]/
 
             // This will happen in case there is an error
             if(despe___projeprojectoConds == null)
@@ -288,7 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAproje.FldCodproje, CSGenioAproje.Fl
 
 				Qlisting = Models.ModelBase.Where<CSGenioAproje>(false, despe___projeprojectoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DESPE___PROJEPROJECTO", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP DESPE_PROJECTO]/
+// USE /[MANUAL GQT OVERRQLSTEXP DESPE_PROJEPROJECTO]/
 
                 conditions = despe___projeprojectoConds;
                 return;
@@ -298,7 +320,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAproje.FldCodproje, CSGenioAproje.Fl
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST DESPE_PROJECTO]/
+// USE /[MANUAL GQT OVERRQLIST DESPE_PROJEPROJECTO]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_proje"];

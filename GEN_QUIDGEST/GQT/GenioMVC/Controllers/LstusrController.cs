@@ -62,7 +62,7 @@ namespace GenioMVC.Controllers.Lstusr
                     model.insert(sp);
                     sp.closeConnection();
 
-                    UserUiSettings.Invalidate(model.ValDescric, user);
+                    TableUiSettingsDbRec.Invalidate(model.ValDescric, user);
                 }
                 catch
                 {}
@@ -114,7 +114,7 @@ namespace GenioMVC.Controllers.Lstusr
                 }
                 sp.closeConnection();
 
-                UserUiSettings.Invalidate(model.ValDescric, user);
+                TableUiSettingsDbRec.Invalidate(model.ValDescric, user);
             }
 
             return new JsonResult() { Data = new { success = true, loading = false } };
@@ -171,7 +171,7 @@ namespace GenioMVC.Controllers.Lstusr
 
                 sp.closeConnection();
 
-                UserUiSettings.Invalidate(model.ValDescric, user);
+                TableUiSettingsDbRec.Invalidate(model.ValDescric, user);
 
                 //Navigation.RemoveHistoryLevel();
                 var location = Navigation.CurrentLevel.Location;
@@ -375,7 +375,7 @@ namespace GenioMVC.Controllers.Lstusr
 
             string uuid = vm.Uuid;
             var listColumns = vm.GetColumnsToExport();
-            List<CSGenioAlstcol> userColumns = UserUiSettings.Load(sp, uuid, user).UserColumns;
+            List<CSGenioAlstcol> userColumns = TableUiSettingsDbRec.Load(sp, uuid, user).UserColumns;
 
             //inserts new columns that are not present in the user list configuration
             int pos = 0;
@@ -416,8 +416,8 @@ namespace GenioMVC.Controllers.Lstusr
                 }
                 if (different) //reloads user columns
                 {
-                    UserUiSettings.Invalidate(uuid, user);
-                    userColumns = UserUiSettings.Load(sp, uuid, user).UserColumns;
+                    TableUiSettingsDbRec.Invalidate(uuid, user);
+                    userColumns = TableUiSettingsDbRec.Load(sp, uuid, user).UserColumns;
                 }
             }
             //in case it doesnt have any list loaded (BD) yet, loads the list defaults
@@ -448,13 +448,13 @@ namespace GenioMVC.Controllers.Lstusr
                         //todo
                     }
                 }
-                UserUiSettings.Invalidate(uuid, user);
+                TableUiSettingsDbRec.Invalidate(uuid, user);
             }
 
             //checks (and remove) from the list configuration columns that no longer exist
             {
 
-                model.Load(100, requestValues, false); //100 should be enough
+                model.Load(-1, requestValues, false);
                 List<Lstcol> current_List = new List<Lstcol>();
                 foreach (var column in model.Menu.Elements)
                 {

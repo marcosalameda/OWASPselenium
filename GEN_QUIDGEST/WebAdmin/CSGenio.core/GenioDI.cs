@@ -39,6 +39,11 @@ namespace CSGenio.core.di
         /// </summary>
         public static IUserBusinessManager EphManager { get; set; } = null;
 
+        /// <summary>
+        /// EPH association manager for user registration functions
+        /// </summary>
+        public static IMetricsOtlp MetricsOtlp { get; set; } = null;
+
         //-----------
         // TODO:
         // 1 - Configuration needs to be moved from static class to instance and its singleton kept here

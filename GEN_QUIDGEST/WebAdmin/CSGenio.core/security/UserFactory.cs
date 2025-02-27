@@ -781,7 +781,12 @@ namespace GenioServer.security
                     foreach (var iephValue in iephCache.EPHValues)
                     {
                         if(!user.hasEph(iephCache.Module, iephValue.Key))
+                        {
+                            if(user.Ephs == null)
+                                user.Ephs = new Hashtable();
+
                             user.Ephs.Add(iephCache.Module + "_" + iephValue.Key, iephValue.Value);
+                        }
                     }
                 }
                 user.RevalidateEPHRuntime();

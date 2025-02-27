@@ -509,7 +509,8 @@ namespace GenioMVC.ViewModels.Sale
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAorgan.FldOrganiza, query + "%");
                 }
@@ -556,7 +557,8 @@ namespace GenioMVC.ViewModels.Sale
 				}
 
 				TableOrganOrganiza.List = new SelectList(TableOrganOrganiza.Elements.ToSelectList(x => x.ValOrganiza, x => x.ValCodorgan,  x => x.ValCodorgan == this.ValCodorgan), "Value", "Text", this.ValCodorgan);
-                FillDependant_Vendaw01TableOrganOrganiza();
+                if(!isSearchRequest)
+                    FillDependant_Vendaw01TableOrganOrganiza();
 
                 //Check if foreignkey comes from history
                 TableOrganOrganiza.FilledByHistory = Navigation.CheckFilledByHistory("organ");

@@ -144,6 +144,7 @@ namespace GenioMVC.ViewModels.Pesso
 		/// <summary>Campo : "" Tipo:"DP"</summary>
 		public TablePartial<GenioMVC.Models.Evcat> ValEvolucao { get; set; }
 
+
 		/// <summary>Campo : "Alternative Email" Tipo:"C"</summary>
 		[Display(Name = "ALTERNATIVE_EMAIL17444", ResourceType = typeof(Resources.Resources))]
 		[AllowHtml]
@@ -247,6 +248,9 @@ namespace GenioMVC.ViewModels.Pesso
 
 		#region Additional foreign keys
 
+		[Display(Name = "CATEGORY18978", ResourceType = typeof(Resources.Resources))]
+		public string ValCodcateg { get; set; }
+
 		[Display(Name = "COMPANY52963", ResourceType = typeof(Resources.Resources))]
 		public string ValCodempre { get; set; }
 
@@ -257,9 +261,6 @@ namespace GenioMVC.ViewModels.Pesso
 
 		[Display(Name = "REGION_OF_THE_PERSON14756", ResourceType = typeof(Resources.Resources))]
 		public string ValCodregia { get; set; }
-
-		[Display(Name = "CATEGORY18978", ResourceType = typeof(Resources.Resources))]
-		public string ValCodcateg { get; set; }
 
 		#endregion
 
@@ -412,11 +413,11 @@ namespace GenioMVC.ViewModels.Pesso
  				ValCanrot = ViewModelConversion.ToLogic(m.ValCanrot);
  				ValCanremov = ViewModelConversion.ToLogic(m.ValCanremov);
  				ValTerrain = ViewModelConversion.ToGeographicShape(m.ValTerrain);
+ 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
  				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
  				ValCodpaise = ViewModelConversion.ToString(m.ValCodpaise);
  				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
  				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
- 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
  				funcCmpnyValHeadloc = () => ViewModelConversion.ToString(m.Cmpny.ValHeadloc);
  				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 			}
@@ -465,11 +466,11 @@ namespace GenioMVC.ViewModels.Pesso
 				m.ValCanrot = ViewModelConversion.ToLogic(ValCanrot);
 				m.ValCanremov = ViewModelConversion.ToLogic(ValCanremov);
 				m.ValTerrain = ViewModelConversion.ToGeographicShape(ValTerrain);
+				m.ValCodcateg = ViewModelConversion.ToString(ValCodcateg);
 				m.ValCodempre = ViewModelConversion.ToString(ValCodempre);
 				m.ValCodpaise = ViewModelConversion.ToString(ValCodpaise);
 				m.ValCodcntry = ViewModelConversion.ToString(ValCodcntry);
 				m.ValCodregia = ViewModelConversion.ToString(ValCodregia);
-				m.ValCodcateg = ViewModelConversion.ToString(ValCodcateg);
 				m.ValCodpesso = ViewModelConversion.ToString(ValCodpesso);
 			}
 			catch (Exception)
@@ -669,7 +670,8 @@ namespace GenioMVC.ViewModels.Pesso
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAcateg.FldCategoria, query + "%");
                 }
@@ -716,7 +718,8 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 
 				TableCategCategory.List = new SelectList(TableCategCategory.Elements.ToSelectList(x => x.ValCategoria, x => x.ValCodcateg,  x => x.ValCodcateg == this.ValCodcateg), "Value", "Text", this.ValCodcateg);
-                FillDependant_PessoTableCategCategory();
+                if(!isSearchRequest)
+                    FillDependant_PessoTableCategCategory();
 
                 //Check if foreignkey comes from history
                 TableCategCategory.FilledByHistory = Navigation.CheckFilledByHistory("categ");
@@ -872,7 +875,8 @@ namespace GenioMVC.ViewModels.Pesso
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApais1.FldCountry, query + "%");
                 }
@@ -919,7 +923,8 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 
 				TablePais1Country.List = new SelectList(TablePais1Country.Elements.ToSelectList(x => x.ValCountry, x => x.ValCodcntry,  x => x.ValCodcntry == this.ValCodcntry), "Value", "Text", this.ValCodcntry);
-                FillDependant_PessoTablePais1Country();
+                if(!isSearchRequest)
+                    FillDependant_PessoTablePais1Country();
 
                 //Check if foreignkey comes from history
                 TablePais1Country.FilledByHistory = Navigation.CheckFilledByHistory("pais1");
@@ -1118,7 +1123,8 @@ namespace GenioMVC.ViewModels.Pesso
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAcmpny.FldDesignat, query + "%");
                 }
@@ -1165,7 +1171,8 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 
 				TableCmpnyDesignat.List = new SelectList(TableCmpnyDesignat.Elements.ToSelectList(x => x.ValDesignat, x => x.ValCodempre,  x => x.ValCodempre == this.ValCodempre), "Value", "Text", this.ValCodempre);
-                FillDependant_PessoTableCmpnyDesignat();
+                if(!isSearchRequest)
+                    FillDependant_PessoTableCmpnyDesignat();
 
                 //Check if foreignkey comes from history
                 TableCmpnyDesignat.FilledByHistory = Navigation.CheckFilledByHistory("cmpny");
@@ -1339,7 +1346,8 @@ namespace GenioMVC.ViewModels.Pesso
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAregi1.FldRegiao, query + "%");
                 }
@@ -1386,7 +1394,8 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 
 				TableRegi1Regiao.List = new SelectList(TableRegi1Regiao.Elements.ToSelectList(x => x.ValRegiao, x => x.ValCodregia,  x => x.ValCodregia == this.ValCodregia), "Value", "Text", this.ValCodregia);
-                FillDependant_PessoTableRegi1Regiao();
+                if(!isSearchRequest)
+                    FillDependant_PessoTableRegi1Regiao();
 
                 //Check if foreignkey comes from history
                 TableRegi1Regiao.FilledByHistory = Navigation.CheckFilledByHistory("regi1");

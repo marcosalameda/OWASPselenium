@@ -1,0 +1,161 @@
+﻿
+@using GenioMVC.Resources
+@model GenioMVC.ViewModels.Rooms.PTN_Menu_351_ViewModel
+@using System.Web.Script.Serialization
+@{
+    var Navigation = Model.Navigation;
+    //Layout = "~/Views/Shared/Layouts/TopMenu_BT4/_Layout.cshtml";
+ } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+
+@{
+	GenioMVC.ViewModels.Rooms.PTN_Menu_351_ViewModel modelPTN_Menu_351 = new GenioMVC.ViewModels.Rooms.PTN_Menu_351_ViewModel(Navigation);
+	var columns = modelPTN_Menu_351.GetSearchColumns();
+
+	Dictionary<string, TableFilterField> fields = new Dictionary<string, TableFilterField>();
+
+
+	foreach (var col in columns)
+	{
+		var areaField = col.AreaField;
+		if (areaField.Area == "rooms" && areaField.Field == "roomnr")
+		{
+			fields.Add("ROOMS.ROOMNR", new TableFilterField("ROOMS", "ROOMNR", Resources.N_R__ROOM43805, "text", defaultSearch : true));
+		}
+		if (areaField.Area == "rooms" && areaField.Field == "designat")
+		{
+			fields.Add("ROOMS.DESIGNAT", new TableFilterField("ROOMS", "DESIGNAT", Resources.ROOM_DESIGNATION37895, "text"));
+		}
+	}
+
+	JavaScriptSerializer serializer = new JavaScriptSerializer();
+	string fieldsStr = serializer.Serialize(fields);
+}
+
+<script>
+	//Fields with information for search filters
+	var fields = @Html.Raw(fieldsStr);
+	//Table List Search Filters
+	var searchFilterGroups = [];
+</script>
+
+<div data-form="PTN_Menu_351" id="Menu_tabs">
+    <div elem-identifier="Tabbable" class="tabbable">
+        <ul class="nav c-tab c-tab__divider">
+            <li class="nav-item c-tab__item active"><a class="nav-link" data-toggle="tab" href="#FirstTab">@Resources.ROOMS06809</a></li>
+            <li class="nav-item c-tab__item"> <a class="nav-link" data-toggle="tab" href="#SecondTab">
+					@Resources.EQUIPMENT03632
+			</a></li>
+        </ul>
+
+        <div class="c-tab__item-container">
+            <div id="FirstTab" class="c-tab__item-content fade in active">
+                @using (Ajax.BeginForm("PTN_Menu_351", "Rooms", new AjaxOptions
+                {
+                    HttpMethod= "POST",
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "PTN_Menu_351_Container",
+                    OnSuccess = "InitMenuSpecialControls"
+                }, new { @class = "form-horizontal", area="Rooms", data_form="PTN_Menu_351" }))
+                {
+                    <div id="Menu">
+                        
+                            <div class="row">
+                               <div class="col"></div>
+                               <div class="col-auto search" style="padding:0; padding-right: 15px">
+                                    <div class="i-input-group input-xxlarge" id="PTN_Menu_351_simple_filter">
+                                       <div data-search-filter-menu-elem="filter-box-list"></div>
+                                        @Html.TextBox("qPTN_Menu_351", Navigation.GetStrValue("qPTN_Menu_351"), new { @class="i-input-group__field input-xxlarge dropdown-toggle", @title=@Resources.CAIXA_DE_PESQUISA53870, @onfocus="ToggleSearchFilterBox('PTN_Menu_351');" ,@onkeydown = "ListSearchEnter(event)", @autocomplete = "off" ,@data_toggle = "dropdown",@data_search_field_menu_elem = "show", @onblur = "HideSearchFieldMenuOnUnfocus('PTN_Menu_351');",@placeholder = Resources.PESQUISAR34506 + " " + Resources.N_R__ROOM43805})                                        <div class="i-input-group--right">
+                                        <button id="qPTN_Menu_351-clearBtn" class="clear-search d-none" type="button">
+                                            <i class="glyphicons glyphicons-remove mr-1"></i>
+                                        </button>
+
+                                        @Html.SearchFieldMenu("PTN_Menu_351", fields, "ROOMS")
+
+
+                                            <button type="button" class="b-icon--secondary i-input-group__button--secondary listSearchButton" title="@Resources.PESQUISAR34506"><i class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></i></button>
+                                            <button id="PTN_Menu_351_extra" class="b-icon--secondary i-input-group__button--secondary" type="button" onclick="changeFilters('#PTN_Menu_351_complex_filter', 'PTN_Menu_351_tableFilters');applyComplexFilterIDs();" title="@Resources.PESQUISA_AVANCADA06198"><span class="glyphicons glyphicons-zoom-in i-input-group__tag-icon i-input-group__button-icon"></span></button>
+                                        </div>
+                                    </div>  
+                                </div>
+                            
+                            </div>
+                        <div class="row-fluid">
+                            <div class="span3 row-large-control pull-right">
+								</div>
+                        </div>
+
+                        <div id="row">
+                            <div id="col-12">
+                                <div data-identifier="PTN_Menu_351" id="PTN_Menu_351_Container" class="noselect">
+                                    @{ Html.RenderPartial("PTN_Menu_351_Partial"); }
+                                </div>
+                            </div>
+                        </div>
+                        @Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "PTN_Menu_351" })
+                        @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "PTN_Menu_351" })
+                        @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "PTN_Menu_351" })
+                        @Html.AntiForgeryToken()
+                    </div>
+                }
+            </div>
+            <div id="SecondTab" class="c-tab__item-content fade">
+                <div class="row">
+                    <div class="col-12">
+                        <div data-identifier="PTN_Menu_3511" id="PTN_Menu_3511_Container" class="noselect">
+                            @{ Html.RenderAction("PTN_Menu_3511", "Equip"); }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 mt-1 mb-1">
+                        <button elem-identifier="ButtonPrimary" id="secondTabApply" class="b-icon-text b-icon-text--secondary" onclick="window.PTN_Menu_351_Control.Send('@HttpUtility.JavaScriptStringEncode(Url.Action("PTN_Menu_351_Execute"))', '@Url.Action("PTN_Menu_351", Helpers.ToRouteValues(Request.QueryString))')" qbutton="apply"><i class="glyphicons glyphicons-bring-forward e-icon"></i>@Resources.APLICAR33981</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="PreviewTable" class="col-12">
+                        <span class="f-header__title">@Resources.SELECIONADOS52011</span>
+                        <div class="table-responsive">
+                            <p id="PreviewTableCaption"></p>
+                            <table  class="c-table table-resizable">
+                                <thead class="c-table__head">
+                                    <tr>
+                                        <th class="thead-actions pull-right"><button class="b-icon-text b-icon-text--secondary" title="Reset" type="reset" id="btnExTableReset" qbutton="reset"><i class="glyphicons glyphicons-refresh e-icon"></i></button></th>
+                                        <th><a>@Resources.DESIGNATION35876</a></th>
+                                </thead>
+                                <tbody class="c-table__body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    </div></div>
+@section code_javascript
+{
+<script>
+    QLocalStorage.remLocalStorage("savedInfo");
+    function InitMenuSpecialControls() {
+        InitSpecialControls($('[data-form="PTN_Menu_351"]'));
+    }
+    $(document).ready(function (e) { 
+        InitMenuSpecialControls();
+        var activeTab = QLocalStorage.getLocalStorage("Tab");
+        if(!$.isEmptyObject(activeTab)) { $('a[href="#' + activeTab + '"]').click(); }
+        else { $('a[href="#FirstTab"]').click(); }
+        var saveTabState = function(tabEvent) {
+            QLocalStorage.setLocalStorage("Tab", tabEvent.data);
+        };
+        $('a[href="#FirstTab"]').click('FirstTab', saveTabState);
+        $('a[href="#SecondTab"]').click('SecondTab', saveTabState);
+        window.PTN_Menu_351_Control = new QMenuDFControl('#PTN_Menu_351_Container', '#PTN_Menu_3511_Container');
+        window.PTN_Menu_351_Control.Init();
+        $(document).trigger('PTN_Menu_351_FirstTabInit');
+
+        window.Form_PTN_Menu_351 = new QMenuForm($('[data-form="PTN_Menu_351"]'), "Form_PTN_Menu_351");
+        window.Form_PTN_Menu_351.Init();
+    });
+
+    InitSearchFieldMenu("qPTN_Menu_351");
+    RegisterClearEvents("PTN_Menu_351");
+	$(document).ready(applyComplexFilterIDs());
+</script>
+}

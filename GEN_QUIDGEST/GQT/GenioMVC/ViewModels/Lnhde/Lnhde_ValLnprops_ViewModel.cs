@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Lnhde
         /// </summary>
         public string ValCodlnhde { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Lnhde
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS LNHDE_PSEUDLNPROPS]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Lnhde_ValLnprops_ViewModel" /> class.
@@ -137,6 +157,8 @@ namespace GenioMVC.ViewModels.Lnhde
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -156,7 +178,6 @@ namespace GenioMVC.ViewModels.Lnhde
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_lnhdf");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_lnhdf");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Lnhdf.AddEPH<CSGenioAlnhdf>(ref u, null, "IBL_LNHDE___PSEUDLNPROPS_"));
 			}
@@ -231,7 +252,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlnhdf.FldCodlnhdf, CSGenioAlnhdf.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

@@ -8,7 +8,7 @@
 		<hr />
 		<div v-if="!loaded" class="card text-center">
 			<div class="card-body">
-				<span class="feature-icon glyphicons glyphicons-hourglass"></span>
+				<q-spinner-loader id="tab-loader" />
 				<h4>{{ Resources.A_CARREGAR___34906 }}</h4>
 			</div>
 		</div>
@@ -26,8 +26,7 @@
 				<p></p>
 				<p><b>{{ Resources.AMBIENTE_DE_QUALIDAD42119 }}</b></p>
 			</div>
-
-																																																																																																																																																																										</div>
+		</div>
 	</div>
 </template>
 
@@ -80,21 +79,6 @@ export default {
 		},
 		showDBButton() {
 			return this.Model.HasDiffVersion || this.Model.VersionDb != -1
-		},
-		getCardClass(cardId) {
-			switch (cardId) {
-				case 'card-system':
-					return this.Model.HasConfig ? 'c-card-dashboard done' : 'c-card-dashboard disabled';
-				
-				case 'card-database':
-					return this.Model.DBSize > 0 ? 'c-card-dashboard done' : 'c-card-dashboard disabled';
-
-				case 'card-user':
-					return this.UsersCount > 0 ? 'c-card-dashboard done' : 'c-card-dashboard disabled';
-
-				default:
-					return this.Model.HasConfig ? 'c-card-dashboard' : 'c-card-dashboard disabled';
-			}
 		},
 		createNewConfig() {
 			var vm = this;

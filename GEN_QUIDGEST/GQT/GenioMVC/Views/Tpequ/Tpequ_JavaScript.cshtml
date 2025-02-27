@@ -279,6 +279,7 @@
 
 		window.Form_Tpequ.Init();
 
+		TPEQU_FormTriggers();
 
 		// Element we want to become "sticky"
 		var header = $('#c-stickyHeader');
@@ -368,6 +369,35 @@
 	</text>
 }
   
+	/// <summary>
+	/// Execute the triggers of form TPEQU.
+	/// <param name="id">The primary key of the record.</param>
+	/// </summary>
+	function TPEQU_FormTriggers(id)
+	{
+		const verifyCondition = () => {
+			return (( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValTipoequi', $('[data-form="Tpequ"]'))) == ""))
+		}
+		
+
+		const run = () => { if (verifyCondition()) TPEQU_FormTriggers_FILLTYPEEQUIP_1(id); }
+
+		run()
+	}
+
+	/// <summary>
+	/// Client-side component of action #1 (FLDUPDT) of trigger FILLTYPEEQUIP.
+	/// <param name="id">The primary key of the record.</param>
+	/// </summary>
+	function TPEQU_FormTriggers_FILLTYPEEQUIP_1(id)
+	{
+		// Compute the value using the data available on the client-side
+		const value = ("*undefined*");
+
+		// Update the value on the client-side
+		setFieldValue($(':not([elem-identifier="Multiform"]) > #ValTipoequi[pers-cs-area="Tpequ"]', $('[data-form="Tpequ"]')), value);
+
+	}
 
     $($('[elem-identifier="FormActions"]'), $('[data-form="Tpequ"]')).click(function(event){
         var form = $(this).closest('[data-form]').data('form');

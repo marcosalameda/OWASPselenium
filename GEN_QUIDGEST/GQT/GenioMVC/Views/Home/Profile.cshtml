@@ -170,8 +170,10 @@
 
 @helper form_content_buttons()
 {
+	bool inMaintenance = CSGenio.framework.Maintenance.Current.IsActive;
+	string editDisabled = inMaintenance ? "disabled" : string.Empty;
 
-    <button type="submit" class="b-icon-text b-icon-text--primary">
+    <button type="submit" class="b-icon-text b-icon-text--primary" @editDisabled>
         <i class="glyphicons glyphicons-rotation-lock e-icon"></i>@Resources.ALTERAR_PASSWORD32166
     </button>
     <button id="RegistrationCanceltButton" type="button" class="b-icon-text b-icon-text--secondary" onclick="window.Form.Cancel()">
@@ -182,11 +184,14 @@
 
 @helper form_content_2FA()
 {
+	bool inMaintenance = CSGenio.framework.Maintenance.Current.IsActive;
+	string editDisabled = inMaintenance ? "disabled" : string.Empty;
+	
     <div class="c-card c-card__body mb-4">
         <span class="f-header__title mb-2">@Resources.TWO_FACTOR_AUTHENTIC05303</span>
         <p>@Resources.TWO_FACTOR_AUTHENTIC35091 @CSGenio.framework.Configuration.Application.Name</p>
         <p>@Resources.THE_FIRST_FACTOR_IS_45516</p>
-        <button id="Change2FAButton" type="button" class="b-icon-text b-icon-text--secondary fit-content" onclick="QUtils.NavigateTo = '@Url.Action("Change2FA")'">
+        <button id="Change2FAButton" type="button" class="b-icon-text b-icon-text--secondary fit-content" onclick="QUtils.NavigateTo = '@Url.Action("Change2FA")'" @editDisabled>
             <i class="glyphicons glyphicons-arrow-right e-icon"></i>
             @Resources.SETUP_2FA29281
         </button>

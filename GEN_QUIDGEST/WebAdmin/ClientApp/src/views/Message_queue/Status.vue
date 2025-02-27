@@ -7,7 +7,7 @@
               <row>
                   <card>
                       <template #header>
-                          <i class="glyphicons glyphicons-hand-up x4"></i>
+                          <q-icon icon="send" />
                       </template>
                       <template #body>
                           <div class="huge">{{ Model.ToSend }}</div>
@@ -16,7 +16,7 @@
                   </card>
                   <card>
                       <template #header>
-                          <i class="glyphicons glyphicons-thumbs-up x4"></i>
+                          <q-icon icon="thumb-up-outline" />
                       </template>
                       <template #body>
                           <div class="huge">{{ Model.Sended }}%</div>
@@ -25,7 +25,7 @@
                   </card>
                   <card>
                       <template #header>
-                          <i class="glyphicons glyphicons-thumbs-down x4"></i>
+                          <q-icon icon="thumb-down-outline" />
                       </template>
                       <template #body>
                           <div class="huge">{{ Model.Errors }}%</div>
@@ -34,7 +34,7 @@
                   </card>
                   <card>
                       <template #header>
-                          <i class="glyphicons glyphicons-shopping-bag x4"></i>
+                          <q-icon icon="shopping" />
                       </template>
                       <template #body>
                           <div class="huge">{{ Model.Total }}</div>

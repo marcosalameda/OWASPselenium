@@ -261,7 +261,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoduicom, value); }
 		}
 
-
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("uicom", "name");
@@ -272,7 +271,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldName); }
 			set { insertNameValueField(FldName, value); }
 		}
-
 
 		/// <summary>Field : "Category" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldCategory { get { return m_fldCategory; } }
@@ -285,7 +283,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCategory, value); }
 		}
 
-
 		/// <summary>Field : "Fixed menu name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldMenuid { get { return m_fldMenuid; } }
 		private static FieldRef m_fldMenuid = new FieldRef("uicom", "menuid");
@@ -297,7 +294,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldMenuid, value); }
 		}
 
-
 		/// <summary>Field : "Thumbnail" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldThumbnai { get { return m_fldThumbnai; } }
 		private static FieldRef m_fldThumbnai = new FieldRef("uicom", "thumbnai");
@@ -308,7 +304,6 @@ namespace CSGenio.business
 			get { return (byte[])returnValueField(FldThumbnai); }
 			set { insertNameValueField(FldThumbnai, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

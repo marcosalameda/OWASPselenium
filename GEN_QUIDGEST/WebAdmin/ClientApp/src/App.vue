@@ -4,7 +4,7 @@
 			<nav class="main-header navbar navbar-expand c-header--sidebar">
 				<ul class="navbar-nav ml-auto n-menu__aside">
 					<li class="nav-item dropdown n-menu__aside-item">
-						<template v-if="Years && Years.length > 1">
+						<template v-if="Years && isMultiYearApp">
 							<q-select
 								id="system-years"
 								v-model="currentYear"
@@ -13,7 +13,10 @@
 								item-label="Text"
 								size="fit-content">
 								<template #prepend>
-									<span class="mdi mdi-calendar-month"></span>
+									<q-icon icon="data-systems" />
+									<span class="navbar__data-systems">
+										{{ `${Resources.SISTEMA_DE_DADOS12710}: ` }}
+									</span>
 								</template>
 							</q-select>
 						</template>
@@ -28,7 +31,7 @@
 								item-label="Text"
 								size="fit-content">
 								<template #prepend>
-									<span class="mdi mdi-earth"></span>
+									<q-icon icon="earth" />
 								</template>
 							</q-select>
 						</template>
@@ -54,20 +57,20 @@
 							<ul class="nav nav-pills nav-sidebar flex-column n-sidebar__nav" data-widget="treeview" role="menu" data-accordion="true">
 								<li class="nav-item n-sidebar__nav-item">
 									<a class="nav-link n-sidebar__nav-link d-none" @click.stop="navigateTo($event, 'no_configuration')">
-										<span class="mdi mdi-gauge"></span>
+										<q-icon icon ="gauge" />
 										<p>&nbsp;{{ Resources.CONFIGURACOES19326 }}</p>
 									</a>
 								</li>
 								<li class="nav-item n-sidebar__nav-item">
 									<a class="nav-link n-sidebar__nav-link" @click.stop="navigateTo($event, 'dashboard')">
-										<span class="mdi mdi-gauge"></span>
+										<q-icon icon ="gauge" />
 										<p>&nbsp;{{ Resources.DASHBOARD51597 }}</p>
 									</a>
 								</li>
 
 								<li class="nav-item n-sidebar__nav-item">
 									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'system_setup')">
-										<span class="mdi mdi-tools"></span>
+										<q-icon icon ="tools" />
 										<p>&nbsp;{{ Resources.CONFIGURACAO_DO_SIST39343 }}</p>
 									</a>
 								</li>
@@ -75,10 +78,12 @@
 								<li class="nav-item n-sidebar__nav-item">
 									<a :class="['nav-link', 'n-sidebar__nav-link', {'level-0': true, 'selected': isSelected}]"
 										@click.stop="tryNavigate($event, 'app_configuration', true)">
-										<span class="mdi mdi-application-cog-outline"></span>
+										<q-icon icon ="application-cog-outline" />
 										<p>
 											&nbsp;{{ Resources.CONFIGURACAO_DA_APLI59110 }}
-											<span class="mdi mdi-chevron-down openSelect"></span>
+											<q-icon
+												class="openSelect"
+												icon ="chevron-down" />
 										</p>
 									</a>
 
@@ -94,33 +99,33 @@
 
 								<li class="nav-item n-sidebar__nav-item">
 									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'maintenance')" style="white-space: nowrap !important;">
-										<span class="mdi mdi-database-cog"></span>
+										<q-icon icon ="database-cog" />
 										<p>&nbsp;{{ Resources.MANUTENCAO_DA_BASE_D10092 }}</p>
 									</a>
 								</li>
 
 								<li class="nav-item n-sidebar__nav-item">
 									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'users')">
-										<span class="mdi mdi-account-cog"></span>
+										<q-icon icon ="account-cog" />
 										<p>&nbsp;{{ Resources.GESTAO_DE_UTILIZADOR20428 }}</p>
 									</a>
 								</li>
 								<hr>
 								<li class="nav-item n-sidebar__nav-item">
 									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'email')">
-										<span class="mdi mdi-email"></span>
+										<q-icon icon ="email" />
 										<p>&nbsp;{{ Resources.SERVIDOR_DE_EMAIL19063 }}</p>
 									</a>
 								</li>
 								<li class="nav-item n-sidebar__nav-item">
 									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'report_management')">
-										<span class="mdi mdi-file-chart"></span>
+										<q-icon icon ="file-chart" />
 										<p>&nbsp;{{ Resources.GESTAO_DE_RELATORIOS37970 }}</p>
 									</a>
 								</li>
 								<li class="nav-item n-sidebar__nav-item">
 									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'notifications')">
-										<span class="mdi mdi-bell-cog"></span>
+										<q-icon icon ="bell-cog" />
 										<p>&nbsp;{{ Resources.GESTAO_DE_NOTIFICACO14803 }}</p>
 									</a>
 								</li>
@@ -187,6 +192,8 @@ export default {
 			});
 			vm.DefaultYear = defaultYear;
 			if ($.isEmptyObject(vm.currentYear) || !$.isArray(vm.currentYear, _years)) { vm.currentYear = vm.DefaultYear; }
+
+			vm.isMultiYearApp = vm.Years.length > 1
 		},
 		getYears() {
 			var vm = this;

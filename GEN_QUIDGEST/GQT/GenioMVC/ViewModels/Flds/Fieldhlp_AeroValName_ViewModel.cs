@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Flds
         /// </summary>
         public string ValCodflds { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Flds
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS FIELDHLP_AERONAME]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Fieldhlp_AeroValName_ViewModel" /> class.
@@ -136,6 +156,8 @@ namespace GenioMVC.ViewModels.Flds
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -237,7 +259,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAaero.FldCodaero, CSGenioAaero.FldZz
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -275,7 +297,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAaero.FldCodaero, CSGenioAaero.FldZz
 			CriteriaSet fieldhlpaero_name____Conds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ FIELDHLP_NAME]/
+// USE /[MANUAL GQT OVERRQ FIELDHLP_AERONAME]/
 
             // This will happen in case there is an error
             if(fieldhlpaero_name____Conds == null)
@@ -288,7 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAaero.FldCodaero, CSGenioAaero.FldZz
 
 				Qlisting = Models.ModelBase.Where<CSGenioAaero>(false, fieldhlpaero_name____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_FIELDHLPAERO_NAME____", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP FIELDHLP_NAME]/
+// USE /[MANUAL GQT OVERRQLSTEXP FIELDHLP_AERONAME]/
 
                 conditions = fieldhlpaero_name____Conds;
                 return;
@@ -298,7 +320,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAaero.FldCodaero, CSGenioAaero.FldZz
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST FIELDHLP_NAME]/
+// USE /[MANUAL GQT OVERRQLIST FIELDHLP_AERONAME]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_aero"];

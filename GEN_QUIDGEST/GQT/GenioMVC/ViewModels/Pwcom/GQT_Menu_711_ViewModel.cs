@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Pwcom
         /// </summary>
         public string ValCodpwcom { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Pwcom
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS 711]/
+
+			return crs;
+		}
+
 
         private string dbeditTitle;
         public string DBEditTitle { get { if (string.IsNullOrEmpty(dbeditTitle)) GetTitle(); return dbeditTitle; } }
@@ -76,10 +96,8 @@ namespace GenioMVC.ViewModels.Pwcom
             CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, this.Identifier);
             conditions.Equal(CSGenioApwcom.FldZzstate, 0); //valid zzstate only
 
-            //Menu fixed limits and relations:
-
-            
-
+            // Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioApwcom.FldCodpwcom, CSGenioApwcom.FldZzstate, CSGenioApwcom.FldCodpsw, CSGenioApsw.FldCodpsw, CSGenioApsw.FldNome, CSGenioApwcom.FldCodpess1, CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioApwcom.FldFoto, CSGenioApwcom.FldNridenti };
@@ -173,6 +191,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApwcom.FldCodpwcom, CSGenioApwcom.Fl
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -192,7 +212,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApwcom.FldCodpwcom, CSGenioApwcom.Fl
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_pwcom");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_pwcom");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Pwcom.AddEPH<CSGenioApwcom>(ref u, null, "ML711"));
 			}
@@ -267,7 +286,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApwcom.FldCodpwcom, CSGenioApwcom.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

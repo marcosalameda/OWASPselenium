@@ -97,36 +97,28 @@ namespace CSGenio.business.Triggers
 		/// <exception cref="CSGenio.business.BusinessException">Trigger.ExecuteActions</exception>
 		private void ExecuteActionsInternal(IEnumerable<IAction> actions)
 		{
-			try
+			if (CheckPermissions() && VerifyCondition())
 			{
-				if (CheckPermissions() && VerifyCondition())
-				{
-					// Execute the actions
-					foreach (IAction action in actions)
-						action.Execute();
+				// Execute the actions
+				foreach (IAction action in actions)
+					action.Execute();
 
-					// Apply the changes
-					foreach (var area in _context.DirtyRows.Keys)
+				// Apply the changes
+				foreach (var area in _context.DirtyRows.Keys)
+				{
+					/*
+						It is necessary to update if:
+						(1)	the affected area is different from the one
+							that triggered the action
+						(2)	the affected area is the one that triggered the action
+							and the action is executed after the main event
+					*/
+					if (!IsRedundantUpdate(area))
 					{
-						/*
-							It is necessary to update if:
-							(1)	the affected area is different from the one
-								that triggered the action
-							(2)	the affected area is the one that triggered the action
-								and the action is executed after the main event
-						*/
-						if (!IsRedundantUpdate(area))
-						{
-							foreach (var row in _context.DirtyRows[area].Values)
-								row.update(_context.PersistentSupport);
-						}
+						foreach (var row in _context.DirtyRows[area].Values)
+							row.update(_context.PersistentSupport);
 					}
 				}
-			}
-			catch (Exception e)
-			{
-				string message = $"Error executing actions for trigger {_id}: {e.Message}";
-				throw new BusinessException(message, "Trigger.ExecuteActions", message, e);
 			}
 		}
 

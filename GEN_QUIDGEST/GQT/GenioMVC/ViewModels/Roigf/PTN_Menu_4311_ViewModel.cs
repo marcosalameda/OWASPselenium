@@ -39,6 +39,18 @@ namespace GenioMVC.ViewModels.Roigf
         /// </summary>
         public string ValCodroigf { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
@@ -46,6 +58,7 @@ namespace GenioMVC.ViewModels.Roigf
             {
                 CriteriaSet conds = CriteriaSet.And();
                 conds.Equal(CSGenioAroigf.FldCodrogl1, Navigation.GetValue("rogl1"));
+
                 return conds;
             }
         }
@@ -59,6 +72,14 @@ namespace GenioMVC.ViewModels.Roigf
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL PTN LIST_LIMITS 4311]/
+
+			return crs;
+		}
+
 
         private string dbeditTitle;
         public string DBEditTitle { get { if (string.IsNullOrEmpty(dbeditTitle)) GetTitle(); return dbeditTitle; } }
@@ -77,10 +98,8 @@ namespace GenioMVC.ViewModels.Roigf
             CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, this.Identifier);
             conditions.Equal(CSGenioAroigf.FldZzstate, 0); //valid zzstate only
 
-            //Menu fixed limits and relations:
-
-            
-
+            // Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioAroigf.FldCodroigf, CSGenioAroigf.FldZzstate, CSGenioAroigf.FldOrder, CSGenioAroigf.FldTitle, CSGenioAroigf.FldCodrogl1, CSGenioArogl1.FldCodrogl1, CSGenioArogl1.FldTitle };
@@ -178,6 +197,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAroigf.FldCodroigf, CSGenioAroigf.Fl
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
 			// Limit "DB"
 			crs.Equal(CSGenioAroigf.FldCodrogl1, Navigation.GetValue("rogl1"));
@@ -200,7 +221,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAroigf.FldCodroigf, CSGenioAroigf.Fl
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_roigf");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_roigf");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Roigf.AddEPH<CSGenioAroigf>(ref u, null, "ML4311"));
 			}
@@ -283,7 +303,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAroigf.FldCodroigf, CSGenioAroigf.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

@@ -1,88 +1,130 @@
 ﻿<template>
-	<div class="module-container panel panel-default">
-		<div class="panel-heading">{{ Resources.MODULOS17298 }}</div>
-		<div class="form-check-inline">
-				<input type="checkbox" class="i-checkbox" v-model="selectModules" />
-				<label>{{ Resources.TODOS59977 }}</label>
-			</div>
-		<div class="form-check-inline" v-for="module in Modules" :key="module.Cod">
-			<input type="checkbox" class="i-checkbox" v-model="module.active" />
-			<label>{{Resources[module.Description]}}</label>
+	<div>
+		<div class="title-container--with-badge">
+			<h5>{{ Resources.TODOS_OS_UTILIZADORE41512 }}</h5>
+			<data-system-badge
+				:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+		</div>
+
+		<hr>
+
+		<span>
+			{{ Resources.FILTRAR_POR_MODULOS26042 }} 
+		</span>
+
+		<div class="all-users-checkboxes">
+			<q-checkbox
+				v-model="selectModules"
+				:label="Resources.TODOS59977" />
+
+			<div class="all-users-checkboxes__divider" />
+
+			<q-checkbox
+				v-for="module in Modules" 
+				:key="module.Cod"
+				v-model="module.active"
+				:label="Resources[module.Description]" />
 		</div>
 	</div>
-	<qtable :rows="Users.rows"
-			:columns="Users.columns"
-			:config="Users.config"
-			@on-change-query="onChangeQuery"
-			:totalRows="Users.total_rows"
-			:exportLabel="Resources.EXPORT_TO_EXCEL22478"
-			:enableExport="true">
+
+	<qtable 
+		:rows="Users.rows"
+		:columns="Users.columns"
+		:config="Users.config"
+		:totalRows="Users.total_rows"
+		:exportLabel="Resources.EXPORT_TO_EXCEL22478"
+		:enableExport="true"
+		@on-change-query="onChangeQuery"
+		class="q-table--borderless">
 		<!--Action column-->
 		<template #actions="props">
 		<q-button-group borderless>
 			<q-button
-			:title="Resources.EDITAR11616"
-			@click="editUser(props.row)">
-			<q-icon icon="pencil" />
+				:title="Resources.EDITAR11616"
+				@click="editUser(props.row)">
+				<q-icon icon="pencil" />
 			</q-button>
 			<q-button
-			:title="Resources.ELIMINAR21155"
-			@click="deleteUser(props.row)">
-			<q-icon icon="bin" />
+				:title="Resources.ELIMINAR21155"
+				@click="deleteUser(props.row)">
+				<q-icon icon="bin" />
 			</q-button>
 		</q-button-group>
 		</template>
-		<!--All roles slot -->
+
 		<template #user-roles="props">
-			<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="Modules[userRole.Module].active" class="role-tag">{{Resources[userRole.Designation]}}</span>
-			</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #GQT="props">
-		<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'GQT'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-		</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'GQT' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #PTN="props">
-		<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'PTN'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-		</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'PTN' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #STY="props">
-		<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'STY'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-		</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'STY' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #TBS="props">
-		<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'TBS'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-		</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'TBS' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #REG="props">
-		<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'REG'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-		</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'REG' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #IMO="props">
-		<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'IMO'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-		</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'IMO' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #WMS="props">
-		<template v-for="userRole in props.row.UserRoles" :key="userRole.Role">
-				<span v-if="userRole.Module === 'WMS'" class="role-tag">{{Resources[userRole.Designation]}}</span>
-		</template>
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'WMS' && Modules[role.Module].active)"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
 		</template>
 		<template #table-footer>
-		<tr>
-			<td colspan="2">
-			<q-button
-				:label="Resources.INSERIR43365"
-				@click="createUser">
-				<q-icon icon="plus-sign" />
-			</q-button>
-			</td>
-		</tr>
+			<tr>
+				<td colspan="2">
+				<q-button
+					:label="Resources.INSERIR43365"
+					@click="createUser">
+				</q-button>
+				</td>
+			</tr>
 		</template>
 	</qtable>
 
@@ -93,21 +135,35 @@
 			:label="Resources.IMPORTAR_UTILIZADORE27134"
 			@click="ImportarUsersAD" />
 	</row>
+	<q-dialog
+		v-model="showConfirmDialog"
+		:text="Resources.DESEJA_ELIMINAR_ESTA24564"
+		:buttons="confirmBtns" />
+	<q-dialog
+		v-model="showDialog"
+		:text="Resources.UTILIZADOR_EXCLUIDO_17794"
+		:icon='{"icon":"check-circle-outline"}'
+		:buttons="dialogBtns" />
 </template>
 
 <script>
 	// @ is an alias to /src
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
-	import bootbox from 'bootbox';
 
 	export default {
 		name: 'allUsers',
 		mixins: [reusableMixin],
+		emits: ['alertClass'],
 		data() {
 			var vm = this;
 			return {
 				Model: {},
+				showConfirmDialog: false,
+				showDialog: false,
+				dialogBtns: [],
+				confirmBtns: [],
+				userId: '',
 				Modules: {
 					GQT : { active: true, Cod: "GQT", Description: 'GENIO_QUALITY_TESTS30896'},
 					PTN : { active: true, Cod: "PTN", Description: 'PATTERNS16056'},
@@ -124,7 +180,7 @@
 					config: {
 						global_search: {
 							classes: "qtable-global-search",
-							placeholder : vm.$t('PESQUISAR_NOME_DE_UT55805'),
+							placeholder : vm.$t('PESQUISAR_NOME07780'),
 							searchOnPressEnter: true,
 							showRefreshButton: true,
 							searchDebounceRate: 1000
@@ -200,7 +256,10 @@
 				this.$router.push({ name: 'manage_users', params: { mod: 2, cod: row.Codpsw, culture: this.currentLang, system: this.currentYear } });
 			},
 			deleteUser(row) {
-				this.$router.push({ name: 'manage_users', params: { mod: 3, cod: row.Codpsw, culture: this.currentLang, system: this.currentYear } });
+				this.userId = row.Codpsw;
+				this.getConfirmBtns()
+				this.showConfirmDialog = true;
+
 			},
 			GetUserList() {
 				var vm = this;
@@ -239,6 +298,59 @@
 			onChangeQuery(queryParams) {
 				this.Users.queryParams = queryParams;
 				this.fetchData();
+			},
+			getShowDialog() {
+				this.dialogBtns = [
+					{
+						id: 'confirm-btn',
+						props: {
+							label: this.Resources.OK57387,
+							bStyle: "primary"
+						},
+						action: () => {
+							if (!this.Model.Username) {
+								this.$router.replace({ name: 'users', params: { culture: this.currentLang, system: this.currentYear } });
+								return;
+							}
+							this.$router.replace({ name: 'users', params: { culture: this.currentLang, system: this.currentYear } });
+						}
+					}
+				]
+				this.showDialog = true
+			},
+			getConfirmBtns() {
+				this.confirmBtns = [
+					{
+						id: 'confirm-btn',
+						props: {
+							label: this.Resources.SIM28552,
+							bStyle: "primary"
+						},
+						action: () => {
+							this.submit()
+							
+						}
+					},
+					{
+						id: 'cancel-btn',
+						props: {
+							label: this.Resources.NAO06521,
+							bStyle: "secondary"
+						}
+					}
+				]
+			},
+			submit() {
+				const cod = this.userId;
+				QUtils.postData('ManageUsers', 'UserDeleteFromTable', null, { cod }, (data) => {
+					if (data.Success) {
+						this.fetchData()
+						this.getShowDialog();
+					}
+					else {
+						this.$emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+					}
+				});
 			},
 			userColumns() {
 				var vm = this;

@@ -76,6 +76,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "VALUE10285";
 
@@ -88,6 +89,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  4;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 4;
 			Qfield.CavDesignation = "YEAR__NUMBERS_29394";
 
 			Qfield.Dupmsg = "";
@@ -264,7 +266,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodyear, value); }
 		}
 
-
 		/// <summary>Field : "Year" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldYear { get { return m_fldYear; } }
 		private static FieldRef m_fldYear = new FieldRef("year1", "year");
@@ -275,7 +276,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldYear); }
 			set { insertNameValueField(FldYear, value); }
 		}
-
 
 		/// <summary>Field : "Value" Tipo: "$D" Formula:  ""</summary>
 		public static FieldRef FldValue { get { return m_fldValue; } }
@@ -288,7 +288,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldValue, value); }
 		}
 
-
 		/// <summary>Field : "Year (numbers)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldYearnum { get { return m_fldYearnum; } }
 		private static FieldRef m_fldYearnum = new FieldRef("year1", "yearnum");
@@ -299,7 +298,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldYearnum); }
 			set { insertNameValueField(FldYearnum, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

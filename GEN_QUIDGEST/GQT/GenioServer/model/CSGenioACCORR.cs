@@ -60,6 +60,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Order";
 			Qfield.FieldSize =  6;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 6;
 			Qfield.CavDesignation = "ORDER39632";
 
 			Qfield.Dupmsg = "";
@@ -110,6 +111,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Amount";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "AMOUNT46885";
 
 			Qfield.Dupmsg = "";
@@ -120,6 +122,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Balance";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "BALANCE13297";
 
 			Qfield.Dupmsg = "";
@@ -165,7 +168,7 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(10);
+			info.Pathways = new Dictionary<string, string>(11);
 			info.Pathways.Add("item","item");
 			info.Pathways.Add("indoc","indoc");
 			info.Pathways.Add("wareh","item");
@@ -174,6 +177,7 @@ namespace CSGenio.business
 			info.Pathways.Add("ware1","indoc");
 			info.Pathways.Add("cmpny","indoc");
 			info.Pathways.Add("pesso","indoc");
+			info.Pathways.Add("categ","indoc");
 			info.Pathways.Add("pais1","indoc");
 			info.Pathways.Add("regi1","indoc");
 		}
@@ -308,7 +312,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodccorr, value); }
 		}
 
-
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldNorder { get { return m_fldNorder; } }
 		private static FieldRef m_fldNorder = new FieldRef("ccorr", "norder");
@@ -319,7 +322,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldNorder); }
 			set { insertNameValueField(FldNorder, value); }
 		}
-
 
 		/// <summary>Field : "Instant" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDate { get { return m_fldDate; } }
@@ -332,7 +334,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDate, value); }
 		}
 
-
 		/// <summary>Field : "Type" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldType { get { return m_fldType; } }
 		private static FieldRef m_fldType = new FieldRef("ccorr", "type");
@@ -343,7 +344,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldType); }
 			set { insertNameValueField(FldType, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCoditem { get { return m_fldCoditem; } }
@@ -356,7 +356,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoditem, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCoddentr { get { return m_fldCoddentr; } }
 		private static FieldRef m_fldCoddentr = new FieldRef("ccorr", "coddentr");
@@ -367,7 +366,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCoddentr); }
 			set { insertNameValueField(FldCoddentr, value); }
 		}
-
 
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldQnty { get { return m_fldQnty; } }
@@ -380,7 +378,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldQnty, value); }
 		}
 
-
 		/// <summary>Field : "Balance" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldBalance { get { return m_fldBalance; } }
 		private static FieldRef m_fldBalance = new FieldRef("ccorr", "balance");
@@ -392,7 +389,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldBalance, value); }
 		}
 
-
 		/// <summary>Field : "Ref" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldReferenc { get { return m_fldReferenc; } }
 		private static FieldRef m_fldReferenc = new FieldRef("ccorr", "referenc");
@@ -403,7 +399,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldReferenc); }
 			set { insertNameValueField(FldReferenc, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

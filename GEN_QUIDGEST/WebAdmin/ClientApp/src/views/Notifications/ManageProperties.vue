@@ -8,7 +8,11 @@
 		<hr>
 		<template v-if="!isEmptyObject(Model.ResultMsg)">
 			<div class="alert alert-info">
-				<p><b class="status-message">{{ Model.ResultMsg }}</b></p>
+				<p>
+					<b class="status-message">
+						{{ Model.ResultMsg }}
+					</b>
+				</p>
 			</div>
 			<br />
 		</template>
@@ -19,87 +23,193 @@
 			</div>
 		</template>
 
-		<QGroupBoxContainer :label="Resources.DADOS_DO_REGISTO10198">
+		<q-card
+			class="q-card--admin-default"
+			:title="Resources.DADOS_DO_REGISTO10198"
+			width="block">
 			<q-row-container>
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<text-input v-model="Model.ValId" :label="Resources.ID36840" :isReadOnly="blockForm"></text-input>
+						<text-input
+							v-model="Model.ValId"
+							:label="Resources.ID36840"
+							:isReadOnly="blockForm" />
 					</base-input-structure>
 				</q-control-wrapper>
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<text-input v-model="Model.ValDispname" :label="Resources.NOME_DO_REMETENTE60175" :isReadOnly="blockForm"></text-input>
+						<text-input
+							v-model="Model.ValDispname"
+							:label="Resources.NOME_DO_REMETENTE60175"
+							:isReadOnly="blockForm" />
 					</base-input-structure>
 				</q-control-wrapper>
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<text-input v-model="Model.ValFrom" :label="Resources.REMETENTE47685" :isReadOnly="blockForm"></text-input>
+						<text-input
+							v-model="Model.ValFrom"
+							:label="Resources.REMETENTE47685"
+							:isReadOnly="blockForm" />
 					</base-input-structure>
 				</q-control-wrapper>
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<text-input v-model="Model.ValSmtpserver" :label="Resources.SERVIDOR_DE_SMTP00309" :isReadOnly="blockForm"></text-input>
+						<text-input
+							v-model="Model.ValSmtpserver"
+							:label="Resources.SERVIDOR_DE_SMTP00309"
+							:isReadOnly="blockForm" />
 					</base-input-structure>
 				</q-control-wrapper>
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<numeric-input v-model="Model.ValPort" :label="Resources.PORTA55707" :isReadOnly="blockForm"></numeric-input>
+						<numeric-input
+							v-model="Model.ValPort"
+							:label="Resources.PORTA55707"
+							:isReadOnly="blockForm" />
 					</base-input-structure>
 				</q-control-wrapper>
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<checkbox-input v-model="Model.ValSsl" :label="Resources.USE_STARTTLS07856" :isReadOnly="blockForm"></checkbox-input>
+						<q-checkbox
+							v-model="Model.ValSsl"
+							:label="Resources.USE_STARTTLS07856"
+							:readonly="blockForm" />
 					</base-input-structure>
 				</q-control-wrapper>
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<checkbox-input v-model="Model.ValAuth" :label="Resources.REQUER_AUTENTICACAO_31938" :isReadOnly="blockForm"></checkbox-input>
+						<select-input
+							v-model="Model.ValAuthType"
+							v-if="Model.SelectLists"
+							size="xlarge"
+							:options="Model.SelectLists.AuthType" 
+							:label="Resources.REQUER_AUTENTICACAO_31938"
+							:isReadOnly="blockForm" />
 					</base-input-structure>
 				</q-control-wrapper>
-				<q-control-wrapper class="row-line-group">
+				<q-control-wrapper
+					v-if="Model.ValAuthType && Model.ValAuthType != 'None'"
+					class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<text-input v-model="Model.ValUsername" :label="Resources.UTILIZADOR52387" :isReadOnly="blockForm || !Model.ValAuth"></text-input>
+						<text-input
+							v-model="Model.ValUsername"
+							:label="Resources.UTILIZADOR52387"
+							:isReadOnly="blockForm" />
 					</base-input-structure>
 				</q-control-wrapper>
-				<q-control-wrapper class="row-line-group">
-					<base-input-structure
-						class="i-text">
-						<password-input v-model="Model.ValPassword" :label="Resources.PASSWORD09467" :isReadOnly="blockForm || !Model.ValAuth" :showFiller="Model.HasPassword"></password-input>
-					</base-input-structure>
-				</q-control-wrapper>
-				<row v-show="!blockForm && Model.ValAuth && Model.ValPassword">
-					<div id="passMeter" ref="PassMeter">
-						<meter ref="pswStrengthMeter" max="4" id="password-strength-meter" value="0"></meter>
-						<br />
-						<span ref="pswStrengthText" id="password-strength-text"></span>
-					</div>
+
+				<template v-if="Model.ValAuthType == 'OAuth2'">
+					<q-control-wrapper class="row-line-group">
+						<base-input-structure
+							class="i-text">
+							<text-input
+								v-model="Model.ValOAuth2Options.ClientId"
+								label="Client Id"
+								:isReadOnly="blockForm" />
+						</base-input-structure>
+					</q-control-wrapper>
+					<q-control-wrapper class="row-line-group">
+						<base-input-structure
+							class="i-text">
+							<password-input
+								v-model="Model.OAuth2ClientSecret"
+								label="Client Secret"
+								:isReadOnly="blockForm"
+								:showFiller="Model.HasOAuth2ClientSecret" />
+						</base-input-structure>
+					</q-control-wrapper>
+					<q-control-wrapper class="row-line-group">
+						<base-input-structure
+							class="i-text">
+							<password-input
+								v-model="Model.OAuth2CertificateThumbprint"
+								label="Certificate Thumbprint"
+								:isReadOnly="blockForm"
+								:showFiller="Model.HasOAuth2Certificate" />
+						</base-input-structure>
+					</q-control-wrapper>
+					<q-control-wrapper class="row-line-group">
+						<span>
+							{{ Resources.IF_THE_CERTIFICATE_I34537 }}
+						</span>
+					</q-control-wrapper>
+					<q-control-wrapper class="row-line-group">
+						<base-input-structure
+							class="i-text">
+							<text-input
+								v-model="Model.ValOAuth2Options.TokenEndpoint"
+								label="Token Endpoint"
+								:isReadOnly="blockForm" />
+						</base-input-structure>
+					</q-control-wrapper>
+					<q-control-wrapper class="row-line-group">
+						<base-input-structure
+							class="i-text">
+							<q-list-editor 
+								v-model="Model.ValOAuth2Options.Scope" 
+								label="Scope" 
+								addText="Add new scope"
+								removeText="Remove scope"
+								editText="Edit scope"
+								:isReadOnly="blockForm" />
+						</base-input-structure>
+					</q-control-wrapper>
+				</template>
+
+				<template v-else-if="Model.ValAuthType == 'BasicAuth'">
+					<q-control-wrapper class="row-line-group">
+						<base-input-structure
+							class="i-text">
+							<password-input
+								v-model="Model.ValPassword"
+								:label="Resources.PASSWORD09467"
+								:isReadOnly="blockForm"
+								:showFiller="Model.HasPassword" />
+						</base-input-structure>
+					</q-control-wrapper>
+					<row v-show="!blockForm && Model.ValPassword">
+						<div
+							id="passMeter"
+							ref="PassMeter">
+							<meter
+								ref="pswStrengthMeter"
+								max="4"
+								id="password-strength-meter"
+								value="0" />
+							<br />
+							<span
+								ref="pswStrengthText"
+								id="password-strength-text" />
+						</div>
+					</row>
+				</template>
+
+				<row class="footer-btn">
+					<q-button
+						v-if="Model.FormMode !== 3"
+						b-style="primary"
+						:label="Resources.GRAVAR_CONFIGURACAO36308"
+						@click="SaveProperties" />
+					<q-button
+						v-else
+						b-style="danger"
+						:label="Resources.APAGAR04097"
+						@click="SaveProperties" />
+					<q-button
+						:label="Resources.CANCELAR49513"
+						@click="cancel" />
 				</row>
 			</q-row-container>
-		</QGroupBoxContainer>
 
-		<row class="footer-btn">
-			<q-button
-				v-if="Model.FormMode !== 3"
-				b-style="primary"
-				:label="Resources.GRAVAR_CONFIGURACAO36308"
-				@click="SaveProperties" />
-			<q-button
-				v-else
-				b-style="danger"
-				:label="Resources.APAGAR04097"
-				@click="SaveProperties" />
-			<q-button
-				:label="Resources.CANCELAR49513"
-				@click="cancel" />
-		</row>
+		</q-card>
 	</div>
 </template>
 
@@ -113,16 +223,20 @@ import _get from "lodash-es/get";
 
 	export default {
 		name: 'notifications_properties',
+
 		mixins: [reusableMixin],
+
 		data: function () {
 			//var vm = this;
 			return {
 				Model: {}
 			};
 		},
+
 		computed: {
 			blockForm: function () { return this.Model.FormMode == 3; }
 		},
+
 		methods: {
 			fetchData: function () {
 				var vm = this,
@@ -136,10 +250,12 @@ import _get from "lodash-es/get";
 					}
 				});
 			},
+
 			cancel: function () {
 				var vm = this;
 				vm.$router.replace({ name: 'email', params: { culture: vm.currentLang, system: vm.currentYear } });
 			},
+
 			SaveProperties: function () {
 				var vm = this;
 				QUtils.log("ManageProperties - Request", QUtils.apiActionURL('Notifications', 'SaveProperties'));
@@ -153,6 +269,7 @@ import _get from "lodash-es/get";
 					}
 				});
 			},
+
 			scorePassword: function (pass)
 			{
 				var score = 0;
@@ -183,14 +300,16 @@ import _get from "lodash-es/get";
 				return parseInt(score);
 			}
 		},
+
 		created: function () {
 			// Ler dados
 			this.fetchData();
 		},
+
 		watch: {
 			'Model.ValPassword': {
 				handler() {
-				var vm = this,
+					var vm = this,
 					// calculates the password strength
 					score = vm.scorePassword(vm.Model.ValPassword),
 					scoreStrength = 0,
@@ -225,67 +344,67 @@ import _get from "lodash-es/get";
 					pswStrengthMeter.val(scoreStrength);
 				},
 				deep: true
-		}
+			}
 		}
 	};
 </script>
 
 <style scoped>
-meter {
-	width: 100%;
-	height: 10px;
-}
+	meter {
+		width: 100%;
+		height: 10px;
+	}
 
 	/* WebKit */
 	meter::-webkit-meter-bar {
-	background: #EEE;
-	box-shadow: 0 2px 3px rgba(0,0,0,0.2) inset;
-	border-radius: 3px;
+		background: #EEE;
+		box-shadow: 0 2px 3px rgba(0,0,0,0.2) inset;
+		border-radius: 3px;
 	}
 
 	/* Webkit based browsers */
 	meter::-webkit-meter-optimum-value {
-	transition: width .4s linear;
+		transition: width .4s linear;
 	}
 
 	meter[value="0"]::-webkit-meter-optimum-value {
-	background: grey;
+		background: grey;
 	}
 
 	meter[value="1"]::-webkit-meter-optimum-value {
-	background: red;
+		background: red;
 	}
 
 	meter[value="2"]::-webkit-meter-optimum-value {
-	background: orange;
+		background: orange;
 	}
 
 	meter[value="3"]::-webkit-meter-optimum-value {
-	background: yellow;
+		background: yellow;
 	}
 
 	meter[value="4"]::-webkit-meter-optimum-value {
-	background: green;
+		background: green;
 	}
 
 	/* Gecko based browsers */
 	meter[value="0"]::-moz-meter-bar {
-	background: grey;
+		background: grey;
 	}
 
 	meter[value="1"]::-moz-meter-bar {
-	background: red;
+		background: red;
 	}
 
 	meter[value="2"]::-moz-meter-bar {
-	background: orange;
+		background: orange;
 	}
 
 	meter[value="3"]::-moz-meter-bar {
-	background: yellow;
+		background: yellow;
 	}
 
 	meter[value="4"]::-moz-meter-bar {
-	background: green;
+		background: green;
 	}
 </style>

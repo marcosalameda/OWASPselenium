@@ -75,8 +75,10 @@ namespace GenioServer.business
             }
             catch (Exception ex)
             {
-                Log.SetContext("utilizador", "MessageQueueProcessor_ProcessMessage");
+                var scopeContext = Log.SetContext(new {user = "MessageQueueProcessor_ProcessMessage"});
                 Log.Error("Queue " + channelId + ". " + ex.Message);
+                
+                if(scopeContext != null) scopeContext.Dispose();
                 return null;
             }
         }
@@ -98,8 +100,7 @@ namespace GenioServer.business
             }
             catch (Exception ex)
             {
-                Log.SetContext("ACKStateRetry", key);
-                Log.Error("Error: " + ex.Message);
+                Log.Error(string.Format("[{0}] ACKStateRetry error: {1}", key, ex.Message));
             }           
         }
 
@@ -120,8 +121,7 @@ namespace GenioServer.business
             }
             catch (Exception ex)
             {
-                Log.SetContext("ACKStateResolved", key);
-                Log.Error("Error: " + ex.Message);
+                Log.Error(string.Format("[{0}] ACKStateResolved error: {1}", key, ex.Message));
             }
         }
         

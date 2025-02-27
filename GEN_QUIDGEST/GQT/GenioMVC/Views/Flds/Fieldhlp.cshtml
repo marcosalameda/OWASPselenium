@@ -92,13 +92,7 @@ else {
                                 </div>
                             </div>
  						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-12">
-					<div class="row-large-control">
-						<div class="row-line-group" id="CONTAINER_IFF_FIELDHLPPSEUDNOVOGR06">
+						<div class="control-join-group">
                             <div class="c-groupbox " id="GROUPBOX_FIELDHLP_NOVOGR06">
                                 <div class="form-flow">
 									<div class="row">
@@ -157,22 +151,6 @@ else {
 												<div class="i-static-text draggable " id="CONTAINER_IFF_FIELDHLPPSEUDFIELD002">
 														@Html.StaticText(@Resources.STATIC_TEXT_17624, "ValField002", new {help_id = "IFF_FIELDHLPPSEUDFIELD002", data_toggle = "tooltip", title = @Resources._112047598, data_placement = "top", description = @Resources._1120_VERBOSE06198, @class = "input-medium list-static-text" })
 													</div>
-												</div>
-												<div class="control-join-group">
-													@Html.StaticImage("pexels-polat-eyyüp-albayrak-13933341.jpg", new {id = "ValField003", data_identifier = "IFF_FIELDHLPPSEUDFIELD003", title = @Resources.STATIC_IMAGE44130 })
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="control-join-group">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.PseudValField001, new { label_id="IFF_FIELDHLPPSEUDFIELD001", @class = " i-text__label", id="LABEL_IFF_FIELDHLPPSEUDFIELD001"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('IFF_FIELDHLPPSEUDFIELD001','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.EditorFor(model => model.PseudValField001, new {help_id = "IFF_FIELDHLPPSEUDFIELD001", data_toggle = "tooltip", title = @Resources._114327896, data_placement = "top", description = @Resources._1143_VERBOSE20952, @class = "input-medium", data_identifier = "IFF_FIELDHLPPSEUDFIELD001" })
 												</div>
 											</div>
 										</div>
@@ -471,24 +449,6 @@ else {
 										<div class="col-12">
 											<div class="control-row-group">
 												<div class="control-join-group">
-													<div class="d-flex">
-													@Html.LabelFor(model => model.ValLogoexte, new { label_id="LED_FIELDHLPFLDS_LOGOEXTE", @class = " i-text__label", id="LABEL_LED_FIELDHLPFLDS_LOGOEXTE"}, true, false)
-													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-													<a href="javascript:OpenSuggestion('LED_FIELDHLPFLDS_LOGOEXTE','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@if(Model.IsEditableMode) {
-														@Html.EditorFor(m => m.ValLogoexte, new {help_id = "LED_FIELDHLPFLDS_LOGOEXTE", data_toggle = "tooltip", title = @Resources._112047598, data_placement = "top", description = @Resources._1120_VERBOSE06198, @class = "input-mini", data_identifier = "LED_FIELDHLPFLDS_LOGOEXTE", @pers_cs_area = "Flds", @pers_cs_field = "ValLogoexte", @db_field = "ValLogoexte" })
-													} else {
-														@Html.ShowImageStatic(@Model.ValLogoexte, new {id = "ValLogoexte", data_identifier = "LED_FIELDHLPFLDS_LOGOEXTE" })
-													}
-													@Html.ValidationMessageFor(model => model.ValLogoexte)
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-12">
-											<div class="control-row-group">
-												<div class="control-join-group">
 												<div class="i-image draggable " id="CONTAINER_LED_FIELDHLPFLDS_LOGO____">
 													<div class="d-flex">
 													@Html.LabelFor(model => model.ValLogo, new { label_id="LED_FIELDHLPFLDS_LOGO____", @class = " i-text__label", id="LABEL_LED_FIELDHLPFLDS_LOGO____"}, true, false)
@@ -597,6 +557,8 @@ else {
 			</div>
 
 
+		@Html.HiddenFor(model=> model.ValTblcond, new { @pers_cs_area = "Flds", @pers_cs_field = "ValTblcond", @data_identifier = "LED_FIELDHLPFLDS_TBLCOND_" })
+		@Html.HiddenFor(model=> model.ValCond, new { @pers_cs_area = "Flds", @pers_cs_field = "ValCond", @data_identifier = "LED_FIELDHLPFLDS_COND____" })
 
 			@Html.HiddenFor(model => model.ValCodequip, new { @pers_cs_field="ValCodequip", @pers_cs_area="Flds", @data_value = Model.ValCodequip, @db_field="ValCodequip", @trelate="Equip", @tfrelate="Codequip", @data_identifier="LED_FIELDHLPEQUIPCODEQUIP" })
 

@@ -105,6 +105,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ICON_ANCHOR__X_AXIS_18664";
 
 			Qfield.Dupmsg = "";
@@ -116,6 +117,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ICON_ANCHOR__Y_AXIS_63725";
 
 			Qfield.Dupmsg = "";
@@ -127,6 +129,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ICON_HEIGHT61896";
 
 			Qfield.Dupmsg = "";
@@ -138,6 +141,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ICON_WIDTH02295";
 
 			Qfield.Dupmsg = "";
@@ -149,6 +153,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "POPUP_ANCHOR__X_AXIS15060";
 
 			Qfield.Dupmsg = "";
@@ -160,6 +165,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "POPUP_ANCHOR__Y_AXIS64670";
 
 			Qfield.Dupmsg = "";
@@ -171,6 +177,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "SHADOW_ANCHOR__X_AXI31230";
 
 			Qfield.Dupmsg = "";
@@ -182,6 +189,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "SHADOW_ANCHOR__Y_AXI51495";
 
 			Qfield.Dupmsg = "";
@@ -193,6 +201,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "SHADOW_HEIGHT64343";
 
 			Qfield.Dupmsg = "";
@@ -204,6 +213,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "SHADOW_WIDTH01769";
 
 			Qfield.Dupmsg = "";
@@ -373,7 +383,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodfacty, value); }
 		}
 
-
 		/// <summary>Field : "Facility type" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldType { get { return m_fldType; } }
 		private static FieldRef m_fldType = new FieldRef("facty", "type");
@@ -384,7 +393,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldType); }
 			set { insertNameValueField(FldType, value); }
 		}
-
 
 		/// <summary>Field : "Layer name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldLayrname { get { return m_fldLayrname; } }
@@ -397,7 +405,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldLayrname, value); }
 		}
 
-
 		/// <summary>Field : "Icon URL" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldIconurl { get { return m_fldIconurl; } }
 		private static FieldRef m_fldIconurl = new FieldRef("facty", "iconurl");
@@ -408,7 +415,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldIconurl); }
 			set { insertNameValueField(FldIconurl, value); }
 		}
-
 
 		/// <summary>Field : "Shadow URL" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldShadowur { get { return m_fldShadowur; } }
@@ -421,7 +427,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldShadowur, value); }
 		}
 
-
 		/// <summary>Field : "Icon anchor (x-axis)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldIconancx { get { return m_fldIconancx; } }
 		private static FieldRef m_fldIconancx = new FieldRef("facty", "iconancx");
@@ -432,7 +437,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldIconancx); }
 			set { insertNameValueField(FldIconancx, value); }
 		}
-
 
 		/// <summary>Field : "Icon anchor (y-axis)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldIconancy { get { return m_fldIconancy; } }
@@ -445,7 +449,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldIconancy, value); }
 		}
 
-
 		/// <summary>Field : "Icon height" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldIconheig { get { return m_fldIconheig; } }
 		private static FieldRef m_fldIconheig = new FieldRef("facty", "iconheig");
@@ -456,7 +459,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldIconheig); }
 			set { insertNameValueField(FldIconheig, value); }
 		}
-
 
 		/// <summary>Field : "Icon width" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldIconwid { get { return m_fldIconwid; } }
@@ -469,7 +471,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldIconwid, value); }
 		}
 
-
 		/// <summary>Field : "Popup anchor (x-axis)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPopupanx { get { return m_fldPopupanx; } }
 		private static FieldRef m_fldPopupanx = new FieldRef("facty", "popupanx");
@@ -480,7 +481,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldPopupanx); }
 			set { insertNameValueField(FldPopupanx, value); }
 		}
-
 
 		/// <summary>Field : "Popup anchor (y-axis)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldPopupany { get { return m_fldPopupany; } }
@@ -493,7 +493,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPopupany, value); }
 		}
 
-
 		/// <summary>Field : "Shadow anchor (x-axis)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldShadowax { get { return m_fldShadowax; } }
 		private static FieldRef m_fldShadowax = new FieldRef("facty", "shadowax");
@@ -504,7 +503,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldShadowax); }
 			set { insertNameValueField(FldShadowax, value); }
 		}
-
 
 		/// <summary>Field : "Shadow anchor (y-axis)" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldShadoway { get { return m_fldShadoway; } }
@@ -517,7 +515,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldShadoway, value); }
 		}
 
-
 		/// <summary>Field : "Shadow height" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldShadowhe { get { return m_fldShadowhe; } }
 		private static FieldRef m_fldShadowhe = new FieldRef("facty", "shadowhe");
@@ -529,7 +526,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldShadowhe, value); }
 		}
 
-
 		/// <summary>Field : "Shadow width" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldShadowwi { get { return m_fldShadowwi; } }
 		private static FieldRef m_fldShadowwi = new FieldRef("facty", "shadowwi");
@@ -540,7 +536,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldShadowwi); }
 			set { insertNameValueField(FldShadowwi, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

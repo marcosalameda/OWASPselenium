@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Pworg
         /// </summary>
         public string ValCodpworg { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Pworg
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PWORG_ORGANORGANIZA]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Pworg_OrganValOrganiza_ViewModel" /> class.
@@ -136,6 +156,8 @@ namespace GenioMVC.ViewModels.Pworg
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -237,7 +259,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAorgan.FldCodorgan, CSGenioAorgan.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -275,7 +297,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAorgan.FldCodorgan, CSGenioAorgan.Fl
 			CriteriaSet pworg___organorganizaConds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ PWORG_ORGANIZA]/
+// USE /[MANUAL GQT OVERRQ PWORG_ORGANORGANIZA]/
 
             // This will happen in case there is an error
             if(pworg___organorganizaConds == null)
@@ -288,7 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAorgan.FldCodorgan, CSGenioAorgan.Fl
 
 				Qlisting = Models.ModelBase.Where<CSGenioAorgan>(false, pworg___organorganizaConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PWORG___ORGANORGANIZA", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP PWORG_ORGANIZA]/
+// USE /[MANUAL GQT OVERRQLSTEXP PWORG_ORGANORGANIZA]/
 
                 conditions = pworg___organorganizaConds;
                 return;
@@ -298,7 +320,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAorgan.FldCodorgan, CSGenioAorgan.Fl
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST PWORG_ORGANIZA]/
+// USE /[MANUAL GQT OVERRQLIST PWORG_ORGANORGANIZA]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_organ"];

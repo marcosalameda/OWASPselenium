@@ -253,7 +253,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodairpt, value); }
 		}
 
-
 		/// <summary>Field : "Airport Name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldAirptnam { get { return m_fldAirptnam; } }
 		private static FieldRef m_fldAirptnam = new FieldRef("airfr", "airptnam");
@@ -264,7 +263,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldAirptnam); }
 			set { insertNameValueField(FldAirptnam, value); }
 		}
-
 
 		/// <summary>Field : "IATA Code" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldIatacode { get { return m_fldIatacode; } }
@@ -277,7 +275,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldIatacode, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodcntry { get { return m_fldCodcntry; } }
 		private static FieldRef m_fldCodcntry = new FieldRef("airfr", "codcntry");
@@ -288,7 +285,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodcntry); }
 			set { insertNameValueField(FldCodcntry, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

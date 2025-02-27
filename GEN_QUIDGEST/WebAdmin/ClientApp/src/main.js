@@ -49,6 +49,14 @@ app.mixin({
         },
         set: function (newValue) { this.$store.dispatch('changeApp', newValue); }
     },
+    isMultiYearApp:
+    {
+      get: function () {
+        if ($.isEmptyObject(this.$store)) { return ''; }
+        return this.$store.getters.MultiYearStatus;
+      },
+      set: function (newValue) { this.$store.dispatch('changeMultiYearStatus', newValue); }
+    },
     currentYear:
     {
         get: function () {

@@ -525,7 +525,8 @@ namespace GenioMVC.ViewModels.Item
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAwareh.FldWarehdes, query + "%");
                 }
@@ -578,7 +579,8 @@ namespace GenioMVC.ViewModels.Item
 					this.ValCodwareh = TableWarehWarehdes.List.First().Value;
 					Navigation.SetValue("wareh", this.ValCodwareh);
                 }
-                FillDependant_ArtigTableWarehWarehdes();
+                if(!isSearchRequest)
+                    FillDependant_ArtigTableWarehWarehdes();
 
                 //Check if foreignkey comes from history
                 TableWarehWarehdes.FilledByHistory = Navigation.CheckFilledByHistory("wareh");
@@ -734,7 +736,8 @@ namespace GenioMVC.ViewModels.Item
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAgitem.FldItemdes, query + "%");
                 }
@@ -781,7 +784,8 @@ namespace GenioMVC.ViewModels.Item
 				}
 
 				TableGitemItemdes.List = new SelectList(TableGitemItemdes.Elements.ToSelectList(x => x.ValItemdes, x => x.ValCodgitem,  x => x.ValCodgitem == this.ValCodgitem), "Value", "Text", this.ValCodgitem);
-                FillDependant_ArtigTableGitemItemdes();
+                if(!isSearchRequest)
+                    FillDependant_ArtigTableGitemItemdes();
 
                 //Check if foreignkey comes from history
                 TableGitemItemdes.FilledByHistory = Navigation.CheckFilledByHistory("gitem");

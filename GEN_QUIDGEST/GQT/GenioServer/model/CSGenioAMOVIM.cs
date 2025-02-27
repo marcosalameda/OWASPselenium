@@ -143,12 +143,13 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(13);
+			info.Pathways = new Dictionary<string, string>(14);
 			info.Pathways.Add("rooms","rooms");
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");
+			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
@@ -313,7 +314,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodmovim, value); }
 		}
 
-
 		/// <summary>Field : "Change" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDhmudanc { get { return m_fldDhmudanc; } }
 		private static FieldRef m_fldDhmudanc = new FieldRef("movim", "dhmudanc");
@@ -324,7 +324,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDhmudanc); }
 			set { insertNameValueField(FldDhmudanc, value); }
 		}
-
 
 		/// <summary>Field : ">EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodequip { get { return m_fldCodequip; } }
@@ -337,7 +336,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodequip, value); }
 		}
 
-
 		/// <summary>Field : ">ROOM" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodrooms { get { return m_fldCodrooms; } }
 		private static FieldRef m_fldCodrooms = new FieldRef("movim", "codrooms");
@@ -348,7 +346,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodrooms); }
 			set { insertNameValueField(FldCodrooms, value); }
 		}
-
 
 		/// <summary>Field : "Observation" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldObservat { get { return m_fldObservat; } }
@@ -361,7 +358,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldObservat, value); }
 		}
 
-
 		/// <summary>Field : "N.R. Room" Tipo: "C" Formula: + "[ROOMS->ROOMNR]+" "+[ROOMS->DESIGNAT]"</summary>
 		public static FieldRef FldRoomnr { get { return m_fldRoomnr; } }
 		private static FieldRef m_fldRoomnr = new FieldRef("movim", "roomnr");
@@ -372,7 +368,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldRoomnr); }
 			set { insertNameValueField(FldRoomnr, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

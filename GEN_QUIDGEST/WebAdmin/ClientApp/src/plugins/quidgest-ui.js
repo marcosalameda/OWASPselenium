@@ -1,12 +1,13 @@
-import { createFramework } from '@quidgest/ui'
+import { createFramework } from '@quidgest/ui/framework'
 
 const framework = createFramework({
 	defaults: {
 		QIcon: {
-			type: 'font'
+			type: 'svg'
 		},
-		QIconFont: {
-			library: 'glyphicons'
+		
+		QIconSvg: {
+			bundle: 'Content/svgbundle.svg'
 		}
 	}
 })

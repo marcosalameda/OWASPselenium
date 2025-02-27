@@ -19,8 +19,6 @@ public class FieldhlpForm: PageObject {
 	public EnumControl LED_FIELDHLPFLDS_CLASSNUM => new EnumControl(driver, "CONTAINER_LED_FIELDHLPFLDS_CLASSNUM", "ValClassnum_chzn_Fieldhlp");
 	public EnumControl LED_FIELDHLPFLDS_RADIOB__ => new EnumControl(driver, "CONTAINER_LED_FIELDHLPFLDS_RADIOB__", "ValRadiob_chzn_Fieldhlp");
 	public BaseInputControl IFF_FIELDHLPPSEUDFIELD002 => new BaseInputControl(driver, "[data-identifier='IFF_FIELDHLPPSEUDFIELD002']");
-	public BaseInputControl IFF_FIELDHLPPSEUDFIELD003 => new BaseInputControl(driver, "[data-identifier='IFF_FIELDHLPPSEUDFIELD003']");
-	public BaseInputControl IFF_FIELDHLPPSEUDFIELD001 => new BaseInputControl(driver, "[data-identifier='IFF_FIELDHLPPSEUDFIELD001']");
 	public BaseInputControl LED_FIELDHLPFLDS_YEAR____ => new BaseInputControl(driver, "[data-identifier='LED_FIELDHLPFLDS_YEAR____']");
 	public BaseInputControl LED_FIELDHLPFLDS_TIME____ => new BaseInputControl(driver, "[data-identifier='LED_FIELDHLPFLDS_TIME____']");
 	public BaseInputControl LED_FIELDHLPFLDS_DATE____ => new BaseInputControl(driver, "[data-identifier='LED_FIELDHLPFLDS_DATE____']");
@@ -40,7 +38,6 @@ public class FieldhlpForm: PageObject {
 	public BaseInputControl LED_FIELDHLPFLDS_UPPRTEXT => new BaseInputControl(driver, "[data-identifier='LED_FIELDHLPFLDS_UPPRTEXT']");
 	public BaseInputControl LED_FIELDHLPFLDS_PASSFLD_ => new BaseInputControl(driver, "[data-identifier='LED_FIELDHLPFLDS_PASSFLD_']");
 	public BaseInputControl LED_FIELDHLPFLDS_CLRPICKE => new BaseInputControl(driver, "[data-identifier='LED_FIELDHLPFLDS_CLRPICKE']");
-	public BaseInputControl LED_FIELDHLPFLDS_LOGOEXTE => new BaseInputControl(driver, "[data-identifier='LED_FIELDHLPFLDS_LOGOEXTE']");
 	public BaseInputControl LED_FIELDHLPFLDS_LOGO____ => new BaseInputControl(driver, "[data-identifier='LED_FIELDHLPFLDS_LOGO____']");
 	public BaseInputControl LED_FIELDHLPFLDS_ATTACH__ => new BaseInputControl(driver, "[data-identifier='LED_FIELDHLPFLDS_ATTACH__']");
 	public BaseInputControl LED_FIELDHLPFLDS_CREATDAT => new BaseInputControl(driver, "[data-identifier='LED_FIELDHLPFLDS_CREATDAT']");
@@ -53,10 +50,10 @@ public class FieldhlpForm: PageObject {
 
 	private IWebElement saveBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='ok']"));
 	private IWebElement cancelBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='cancel']"));
-	public FORM_MODE mode {get; private set;}
+	public FORM_MODE mode { get; private set; }
 
 	public FieldhlpForm(IWebDriver driver, FORM_MODE mode): base(driver) {
-		this.mode = mode;		
+		this.mode = mode;
 		wait.Until(c => form.GetAttribute("qform-loaded").Contains("true"));
 	}
 

@@ -72,7 +72,7 @@ namespace Administration.Controllers
 
             //leitura do configuracaoXML to colocar nas variaveis visiveis ao cliente
             DatabaseType tpConn = dataSystem.GetDatabaseType();
-            model.TpSGBD = dataSystem.Type;
+            model.TpSGBD = tpConn.ToString();
             model.SGBDServer = dataSystem.Server;
             if (!string.IsNullOrEmpty(dataSystem.Service) || !string.IsNullOrEmpty(dataSystem.ServiceName))
             {

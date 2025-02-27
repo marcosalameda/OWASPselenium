@@ -122,11 +122,19 @@ namespace CSGenio.framework
         }
 
         /// <summary>
+        /// Formats the log messages.
+        /// </summary>
+        protected string FormatLog(string exceptionName)
+        {
+            return string.Format("{0}. [message] {1} [site] {2} [cause] {3}", exceptionName, userMessage, exceptionSite, Message);
+        }
+
+        /// <summary>
         /// Logs the error.
         /// </summary>
         protected void LogError(string exceptionName)
         {
-            Log.Error(string.Format("{0}. [message] {1} [site] {2} [cause] {3}", exceptionName, userMessage, exceptionSite, Message));
+            Log.Error(FormatLog(exceptionName));
         }
 
         protected abstract void LogError();

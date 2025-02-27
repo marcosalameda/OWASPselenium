@@ -105,9 +105,10 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(6);
+			info.Pathways = new Dictionary<string, string>(7);
 			info.Pathways.Add("speci","speci");
 			info.Pathways.Add("pesso","pesso");
+			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("cntry","pesso");
 			info.Pathways.Add("cmpny","pesso");
 			info.Pathways.Add("pais1","pesso");
@@ -244,7 +245,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodesppe, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodpesso { get { return m_fldCodpesso; } }
 		private static FieldRef m_fldCodpesso = new FieldRef("esppe", "codpesso");
@@ -256,7 +256,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodpesso, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodespec { get { return m_fldCodespec; } }
 		private static FieldRef m_fldCodespec = new FieldRef("esppe", "codespec");
@@ -267,7 +266,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodespec); }
 			set { insertNameValueField(FldCodespec, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

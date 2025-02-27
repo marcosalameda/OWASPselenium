@@ -71,6 +71,7 @@ namespace GenioMVC.ViewModels.Regis
 		public string ValEmail2 { get; set; }
 
 
+
 		#region Navigations
 		#endregion
 

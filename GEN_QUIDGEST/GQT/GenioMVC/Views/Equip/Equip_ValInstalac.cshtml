@@ -73,8 +73,8 @@
 }
 
 @{ renderings.Clear(); }
-@{ renderings.Add(Model.GetViewModePosition("MAP"), map.ToSpecialRenderingHtml(hidden: Model.IsViewModeHidden("MAP"))); }
 @{ renderings.Add(Model.GetViewModePosition("LIST"), @tbl.ToGoogleMapsHtml()); }
+@{ renderings.Add(Model.GetViewModePosition("MAP"), map.ToSpecialRenderingHtml(hidden: Model.IsViewModeHidden("MAP"))); }
 
 
 @foreach (var render in renderings.ToList().OrderBy(r => r.Key))

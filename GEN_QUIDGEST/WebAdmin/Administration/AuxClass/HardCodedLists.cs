@@ -48,7 +48,9 @@ namespace Administration.AuxClass
         public enum DBMS
         {
             [Display(Name = @"SQL Server")]
-            SQLSERVER2008,
+            SQLSERVER,
+            [Display(Name = @"SQL Server(compat)")]
+            SQLSERVERCOMPAT,
             [Display(Name = @"Access")]
             ACCESS,
             [Display(Name = @"Oracle")]

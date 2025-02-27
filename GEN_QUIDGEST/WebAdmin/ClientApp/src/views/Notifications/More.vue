@@ -1,16 +1,26 @@
 ﻿<template>
 	<div>
 		<row>
-			<select-input  v-model="Model.userRegistration" :options="Model.emailPropertiesList" :label="Resources.REGISTO_DE_UTILIZADO37378"></select-input>
+			<q-select
+				v-model="model.userRegistration"
+				:items="model.emailPropertiesList"
+				item-value="Value"
+				item-label="Text"
+				:label="Resources.REGISTO_DE_UTILIZADO37378" />
 		</row>
 		<row>
-			<select-input  v-model="Model.passwordRecovery" :options="Model.emailPropertiesList" :label="Resources.PASSWORD_RECOVERY53114"></select-input>
+			<q-select
+				v-model="model.passwordRecovery"
+				:items="model.emailPropertiesList"
+				item-value="Value"
+				item-label="Text"
+				:label="Resources.PASSWORD_RECOVERY53114" />
 		</row>
 		<row>
 			<q-button
-			b-style="primary"
-			:label="Resources.GRAVAR45301"
-			@click="SaveEmail" />
+				b-style="primary"
+				:label="Resources.GRAVAR45301"
+				@click="SaveEmail" />
 		</row>
     </div>
 </template>
@@ -22,18 +32,18 @@
 	export default {
 		name: "more",
 		mixins: [reusableMixin],
-		data() {
-			return {
-				Model: {},
+		props: {
+			model: {
+				required: true
 			}
 		},
 		methods: {
 			SaveEmail() {
 				var vm = this;
 				QUtils.log("ManageProperties - Request", QUtils.apiActionURL('Email', 'SaveEmail'));
-				var params = { userRegistration: vm.Model.userRegistration, passwordRecovery : vm.Model.passwordRecovery};
+				var params = { userRegistration: vm.model.userRegistration, passwordRecovery : vm.model.passwordRecovery};
 				QUtils.postData('Email', 'SaveEmail', null, params, function (data) {
-					vm.Model.ResultMsg = data.ResultMsg;
+					vm.model.ResultMsg = data.ResultMsg;
 				});
 			},
 		}

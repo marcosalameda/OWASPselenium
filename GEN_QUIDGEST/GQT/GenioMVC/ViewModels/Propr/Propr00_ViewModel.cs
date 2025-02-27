@@ -521,7 +521,8 @@ namespace GenioMVC.ViewModels.Propr
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAtppro.FldTppropri, query + "%");
                 }
@@ -568,7 +569,8 @@ namespace GenioMVC.ViewModels.Propr
 				}
 
 				TableTpproTppropri.List = new SelectList(TableTpproTppropri.Elements.ToSelectList(x => x.ValTppropri, x => x.ValCodtppro,  x => x.ValCodtppro == this.ValCodtppro), "Value", "Text", this.ValCodtppro);
-                FillDependant_Propr00TableTpproTppropri();
+                if(!isSearchRequest)
+                    FillDependant_Propr00TableTpproTppropri();
 
                 //Check if foreignkey comes from history
                 TableTpproTppropri.FilledByHistory = Navigation.CheckFilledByHistory("tppro");
@@ -724,7 +726,8 @@ namespace GenioMVC.ViewModels.Propr
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApesso.FldName, query + "%");
                 }
@@ -771,7 +774,8 @@ namespace GenioMVC.ViewModels.Propr
 				}
 
 				TablePessoName.List = new SelectList(TablePessoName.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpesso), "Value", "Text", this.ValCodpesso);
-                FillDependant_Propr00TablePessoName();
+                if(!isSearchRequest)
+                    FillDependant_Propr00TablePessoName();
 
                 //Check if foreignkey comes from history
                 TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
@@ -928,7 +932,8 @@ namespace GenioMVC.ViewModels.Propr
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAcntry.FldCountry, query + "%");
                 }
@@ -975,7 +980,8 @@ namespace GenioMVC.ViewModels.Propr
 				}
 
 				TableCntryCountry.List = new SelectList(TableCntryCountry.Elements.ToSelectList(x => x.ValCountry, x => x.ValCodcntry,  x => x.ValCodcntry == this.ValCodcntry), "Value", "Text", this.ValCodcntry);
-                FillDependant_Propr01TableCntryCountry();
+                if(!isSearchRequest)
+                    FillDependant_Propr01TableCntryCountry();
 
                 //Check if foreignkey comes from history
                 TableCntryCountry.FilledByHistory = Navigation.CheckFilledByHistory("cntry");
@@ -1137,7 +1143,8 @@ namespace GenioMVC.ViewModels.Propr
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAregio.FldRegiao, query + "%");
                 }
@@ -1184,7 +1191,8 @@ namespace GenioMVC.ViewModels.Propr
 				}
 
 				TableRegioRegiao.List = new SelectList(TableRegioRegiao.Elements.ToSelectList(x => x.ValRegiao, x => x.ValCodregia,  x => x.ValCodregia == this.ValCodregia), "Value", "Text", this.ValCodregia);
-                FillDependant_Propr01TableRegioRegiao();
+                if(!isSearchRequest)
+                    FillDependant_Propr01TableRegioRegiao();
 
                 //Check if foreignkey comes from history
                 TableRegioRegiao.FilledByHistory = Navigation.CheckFilledByHistory("regio");

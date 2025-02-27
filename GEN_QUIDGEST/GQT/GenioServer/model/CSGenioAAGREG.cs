@@ -95,6 +95,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "VALUE10285";
 
@@ -107,6 +108,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  4;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 4;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
@@ -293,7 +295,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodaggre, value); }
 		}
 
-
 		/// <summary>Field : ">PROJECT" Tipo: "CE" Formula: ST "[EXPEN->CODPROJE]"</summary>
 		public static FieldRef FldCodproje { get { return m_fldCodproje; } }
 		private static FieldRef m_fldCodproje = new FieldRef("agreg", "codproje");
@@ -304,7 +305,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodproje); }
 			set { insertNameValueField(FldCodproje, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula: ST "[EXPEN->CODYEAR]"</summary>
 		public static FieldRef FldCodyear { get { return m_fldCodyear; } }
@@ -317,7 +317,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodyear, value); }
 		}
 
-
 		/// <summary>Field : "Year" Tipo: "C" Formula: ++ "[YEAR->YEAR]"</summary>
 		public static FieldRef FldYear { get { return m_fldYear; } }
 		private static FieldRef m_fldYear = new FieldRef("agreg", "year");
@@ -328,7 +327,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldYear); }
 			set { insertNameValueField(FldYear, value); }
 		}
-
 
 		/// <summary>Field : "Value" Tipo: "$D" Formula: SR "[EXPEN->VALUE]"</summary>
 		public static FieldRef FldValue { get { return m_fldValue; } }
@@ -341,7 +339,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldValue, value); }
 		}
 
-
 		/// <summary>Field : "Year NUMBER" Tipo: "N" Formula: ++ "[YEAR->YEARNUM]"</summary>
 		public static FieldRef FldYearnumb { get { return m_fldYearnumb; } }
 		private static FieldRef m_fldYearnumb = new FieldRef("agreg", "yearnumb");
@@ -352,7 +349,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldYearnumb); }
 			set { insertNameValueField(FldYearnumb, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

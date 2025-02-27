@@ -80,6 +80,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Price-by-hour";
 			Qfield.FieldSize =  12;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 9;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "PRICE_BY_HOUR01060";
 
@@ -269,7 +270,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodtabpr, value); }
 		}
 
-
 		/// <summary>Field : ">TYPE OF EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodtpeq1 { get { return m_fldCodtpeq1; } }
 		private static FieldRef m_fldCodtpeq1 = new FieldRef("tabpr", "codtpeq1");
@@ -280,7 +280,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodtpeq1); }
 			set { insertNameValueField(FldCodtpeq1, value); }
 		}
-
 
 		/// <summary>Field : "Since" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldSince { get { return m_fldSince; } }
@@ -293,7 +292,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSince, value); }
 		}
 
-
 		/// <summary>Field : "Price-by-hour" Tipo: "$D" Formula:  ""</summary>
 		public static FieldRef FldPrecohor { get { return m_fldPrecohor; } }
 		private static FieldRef m_fldPrecohor = new FieldRef("tabpr", "precohor");
@@ -304,7 +302,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldPrecohor); }
 			set { insertNameValueField(FldPrecohor, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

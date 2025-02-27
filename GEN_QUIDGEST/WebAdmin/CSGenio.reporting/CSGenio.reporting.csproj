@@ -16,6 +16,10 @@
     -->
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.10.3" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.10.3" />
+    
+    <PackageReference Include="System.Threading.ThreadPool" Version="4.3.0" />
+    <PackageReference Include="System.Net.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
   </ItemGroup>
 
   <!-- Framework specific libraries -->

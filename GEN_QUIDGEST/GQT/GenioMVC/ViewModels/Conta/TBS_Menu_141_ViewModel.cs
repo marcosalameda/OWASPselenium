@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Conta
         /// </summary>
         public string ValCodconta { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Conta
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL TBS LIST_LIMITS 141]/
+
+			return crs;
+		}
+
 
         private string dbeditTitle;
         public string DBEditTitle { get { if (string.IsNullOrEmpty(dbeditTitle)) GetTitle(); return dbeditTitle; } }
@@ -76,10 +96,8 @@ namespace GenioMVC.ViewModels.Conta
             CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, this.Identifier);
             conditions.Equal(CSGenioAconta.FldZzstate, 0); //valid zzstate only
 
-            //Menu fixed limits and relations:
-
-            
-
+            // Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioAconta.FldCodconta, CSGenioAconta.FldZzstate, CSGenioAconta.FldCodpesso, CSGenioApesso.FldCodpesso, CSGenioApesso.FldName, CSGenioAconta.FldCodtpcon, CSGenioAtpcon.FldCodtpcon, CSGenioAtpcon.FldTipocont, CSGenioAconta.FldContacto };
@@ -174,6 +192,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAconta.FldCodconta, CSGenioAconta.Fl
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -193,7 +213,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAconta.FldCodconta, CSGenioAconta.Fl
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_conta");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_conta");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Conta.AddEPH<CSGenioAconta>(ref u, null, "ML141"));
 			}
@@ -276,7 +295,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAconta.FldCodconta, CSGenioAconta.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

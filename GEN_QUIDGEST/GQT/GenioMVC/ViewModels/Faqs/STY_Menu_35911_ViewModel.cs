@@ -39,12 +39,25 @@ namespace GenioMVC.ViewModels.Faqs
         /// </summary>
         public string ValCodfaqs { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +71,14 @@ namespace GenioMVC.ViewModels.Faqs
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL STY LIST_LIMITS 35911]/
+
+			return crs;
+		}
+
 
         private string dbeditTitle;
         public string DBEditTitle { get { if (string.IsNullOrEmpty(dbeditTitle)) GetTitle(); return dbeditTitle; } }
@@ -76,10 +97,8 @@ namespace GenioMVC.ViewModels.Faqs
             CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, this.Identifier);
             conditions.Equal(CSGenioAfaqs.FldZzstate, 0); //valid zzstate only
 
-            //Menu fixed limits and relations:
-
-            
-
+            // Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioAfaqs.FldCodfaqs, CSGenioAfaqs.FldZzstate, CSGenioAfaqs.FldQuestion, CSGenioAfaqs.FldAnswer };
@@ -174,6 +193,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfaqs.FldCodfaqs, CSGenioAfaqs.FldZz
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 			// Limitations
 			// Limit "DB"
 			crs.Equal(CSGenioAfaqs.FldCodcfaqs, Navigation.GetValue("cfaqs"));
@@ -196,7 +217,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfaqs.FldCodfaqs, CSGenioAfaqs.FldZz
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_faqs");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_faqs");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Faqs.AddEPH<CSGenioAfaqs>(ref u, null, "ML35911"));
 			}
@@ -271,7 +291,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfaqs.FldCodfaqs, CSGenioAfaqs.FldZz
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)

@@ -268,7 +268,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodparam, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodkinde { get { return m_fldCodkinde; } }
 		private static FieldRef m_fldCodkinde = new FieldRef("param", "codkinde");
@@ -279,7 +278,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodkinde); }
 			set { insertNameValueField(FldCodkinde, value); }
 		}
-
 
 		/// <summary>Field : "Parameter" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldParameter { get { return m_fldParameter; } }
@@ -292,7 +290,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldParameter, value); }
 		}
 
-
 		/// <summary>Field : "Data type" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldDatatype { get { return m_fldDatatype; } }
 		private static FieldRef m_fldDatatype = new FieldRef("param", "datatype");
@@ -304,7 +301,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDatatype, value); }
 		}
 
-
 		/// <summary>Field : "Decimal places" Tipo: "AN" Formula:  ""</summary>
 		public static FieldRef FldDecimalplaces { get { return m_fldDecimalplaces; } }
 		private static FieldRef m_fldDecimalplaces = new FieldRef("param", "decimalplaces");
@@ -315,7 +311,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldDecimalplaces); }
 			set { insertNameValueField(FldDecimalplaces, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

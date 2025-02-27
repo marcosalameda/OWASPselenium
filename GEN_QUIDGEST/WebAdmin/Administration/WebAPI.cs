@@ -65,6 +65,7 @@ namespace Administration
             {
                 user = SysConfiguration.CreateWebAdminUser(yearApp);
                 user.Language = GlobalFunctions.emptyC(language) == 1 ? DEFAULTLANGUAGE.Replace("-", "").ToUpper() : language;
+                Log.SetContext("utilizador", "WebAPI_QApi");
 
                 sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
                 sp.openTransaction();
@@ -307,7 +308,7 @@ namespace Administration
             //Get order2execPath
             var dbMaintenance = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory);
             string reindexScriptsPath = dbMaintenance.GetReindexPath();
-            string order2execPath = System.IO.Path.Combine(reindexScriptsPath, "order2exec.xml");
+            string order2execPath = System.IO.Path.Combine(reindexScriptsPath, "order2Exec.xml");
             
             try
             {

@@ -1146,7 +1146,7 @@ qapi.prototype.isGuid = function (key)
 }
 /*********** Support data structures ***********/
 
-var FLAT_MVC_THEME_VARIABLES = {
+const FLAT_MVC_THEME_VARIABLES = {
 	'$footer-bg': "transparent",
 	'$menu-sidebar-width': "16rem",
 	'$menu-behaviour': "partial_collapse",
@@ -1191,15 +1191,20 @@ var FLAT_MVC_THEME_VARIABLES = {
 	'$gray-dark': "#40474F",
 	'$navbar-font-size': "0.9rem",
 	'$navbar-font-weight': "400",
-	'$custom-tab-navigation': "false",
+	'$tab-style': "line",
 	'$group-border-top': "none",
 	'$group-border-bottom': "none",
+	'$input-bg': "transparent",
+	'$input-bg-readonly': "rgb($neutral-light-rgb / 0.25)",
 	'$hover-item': "rgb($primary-light-rgb / 0.5)",
 	'$header-bg': "$background",
+	'$header-color': "$on-background",
+	'$navbar-bg': "$primary",
+	'$navbar-color': "$on-primary",
 	'$menu-multi-level-border': "false"
 };
 
-var GQT_THEME_VARIABLES = {
+const GQT_THEME_VARIABLES = {
 	'$footer-bg': "transparent",
 	'$menu-sidebar-width': "16rem",
 	'$menu-behaviour': "partial_collapse",
@@ -1244,15 +1249,20 @@ var GQT_THEME_VARIABLES = {
 	'$gray-dark': "#40474F",
 	'$navbar-font-size': "0.9rem",
 	'$navbar-font-weight': "400",
-	'$custom-tab-navigation': "false",
+	'$tab-style': "line",
 	'$group-border-top': "none",
 	'$group-border-bottom': "none",
+	'$input-bg': "transparent",
+	'$input-bg-readonly': "rgb($neutral-light-rgb / 0.25)",
 	'$hover-item': "rgb($primary-light-rgb / 0.5)",
 	'$header-bg': "$background",
+	'$header-color': "$on-background",
+	'$navbar-bg': "$primary",
+	'$navbar-color': "$on-primary",
 	'$menu-multi-level-border': "false"
 };
 
-var WMS_THEME_VARIABLES = {
+const WMS_THEME_VARIABLES = {
 	'$footer-bg': "transparent",
 	'$menu-sidebar-width': "16rem",
 	'$menu-behaviour': "partial_collapse",
@@ -1297,15 +1307,20 @@ var WMS_THEME_VARIABLES = {
 	'$gray-dark': "#40474F",
 	'$navbar-font-size': "0.9rem",
 	'$navbar-font-weight': "400",
-	'$custom-tab-navigation': "false",
+	'$tab-style': "line",
 	'$group-border-top': "none",
 	'$group-border-bottom': "none",
+	'$input-bg': "transparent",
+	'$input-bg-readonly': "rgb($neutral-light-rgb / 0.25)",
 	'$hover-item': "rgb($primary-light-rgb / 0.5)",
 	'$header-bg': "$background",
+	'$header-color': "$on-background",
+	'$navbar-bg': "$primary",
+	'$navbar-color': "$on-primary",
 	'$menu-multi-level-border': "false"
 };
 
-var HORIZONTAL_MVC_THEME_VARIABLES = {
+const HORIZONTAL_MVC_THEME_VARIABLES = {
 	'$footer-bg': "transparent",
 	'$menu-sidebar-width': "16rem",
 	'$menu-behaviour': "partial_collapse",
@@ -1350,11 +1365,16 @@ var HORIZONTAL_MVC_THEME_VARIABLES = {
 	'$gray-dark': "#40474F",
 	'$navbar-font-size': "0.9rem",
 	'$navbar-font-weight': "400",
-	'$custom-tab-navigation': "false",
+	'$tab-style': "line",
 	'$group-border-top': "none",
 	'$group-border-bottom': "none",
+	'$input-bg': "transparent",
+	'$input-bg-readonly': "rgb($neutral-light-rgb / 0.25)",
 	'$hover-item': "rgb($primary-light-rgb / 0.5)",
 	'$header-bg': "$background",
+	'$header-color': "$on-background",
+	'$navbar-bg': "$primary",
+	'$navbar-color': "$on-primary",
 	'$menu-multi-level-border': "false"
 };
 

@@ -2723,6 +2723,40 @@ namespace GenioMVC.Controllers
 				}
 			}
 		}
+		
+		[HttpPost]
+        [AuthorizeForUsers]
+        public JsonResult syncLimits(string limits)
+        {
+            var _limits = Newtonsoft.Json.Linq.JObject.Parse(limits);
+            _syncLimits(_limits);
+            return Json(new { Success = "OK" });
+        }
+
+        protected void _syncLimits(Newtonsoft.Json.Linq.JObject limits)
+        {
+            if (limits != null)
+            {
+                try
+                {
+                    foreach (var areaKey in limits)
+                    {   //Sincronizar as chaves das areas no form com Historial do GenioServer
+                        if (Navigation.CheckFilledByHistory(areaKey.Key)) continue;
+
+                        if (areaKey.Value == null)
+                            Navigation.SetValue(areaKey.Key, null);
+                        else if (areaKey.Value is Newtonsoft.Json.Linq.JArray)
+                            Navigation.SetValue(areaKey.Key, areaKey.Value.Select(jv => (string)jv).ToArray());
+                        else
+                            Navigation.SetValue(areaKey.Key, areaKey.Value.ToObject<string>());
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error("_syncronizeFormKeys: " + e.Message);
+                }
+            }
+        }
 
 		#endregion
 

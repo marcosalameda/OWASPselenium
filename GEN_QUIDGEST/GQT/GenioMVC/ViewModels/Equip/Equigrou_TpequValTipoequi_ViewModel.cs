@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Equip
         /// </summary>
         public string ValCodequip { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Equip
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS EQUIGROU_TPEQUTIPOEQUI]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Equigrou_TpequValTipoequi_ViewModel" /> class.
@@ -134,6 +154,8 @@ namespace GenioMVC.ViewModels.Equip
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -227,7 +249,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -275,7 +297,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 			CriteriaSet equigroutpequtipoequiConds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ EQUIGROU_TIPOEQUI]/
+// USE /[MANUAL GQT OVERRQ EQUIGROU_TPEQUTIPOEQUI]/
 
             // This will happen in case there is an error
             if(equigroutpequtipoequiConds == null)
@@ -288,7 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 				Qlisting = Models.ModelBase.Where<CSGenioAtpequ>(false, equigroutpequtipoequiConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIGROUTPEQUTIPOEQUI", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP EQUIGROU_TIPOEQUI]/
+// USE /[MANUAL GQT OVERRQLSTEXP EQUIGROU_TPEQUTIPOEQUI]/
 
                 conditions = equigroutpequtipoequiConds;
                 return;
@@ -298,7 +320,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.Fl
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST EQUIGROU_TIPOEQUI]/
+// USE /[MANUAL GQT OVERRQLIST EQUIGROU_TPEQUTIPOEQUI]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_tpequ"];

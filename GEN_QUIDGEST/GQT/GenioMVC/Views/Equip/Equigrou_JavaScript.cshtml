@@ -359,7 +359,7 @@
 		@* Default of the 'ValDesignat' field *@
 		window.Form_Equigrou.SetFormulaDefault('LED_EQUIGROUEQUIPDESIGNAT', function() {
 						return ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ItemValItemdes', $('[data-form="Equigrou"]'))));
-		}, 'ITEMVALITEMDES_CHANGE');
+		}, 'ITEMVALITEMDES_CHANGE VALCODITEM_CHANGE');
 		
 		@* Recalculate formulas (server side) *@
 		$(qForm).bind('VALDTREFERE_CHANGE VALCODEQUIP_CHANGE', function(event, eTarget) {

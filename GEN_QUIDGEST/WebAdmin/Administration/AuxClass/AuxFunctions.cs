@@ -29,7 +29,7 @@ namespace Administration.AuxClass
                 }
                 else
                 {
-                    qs = "SELECT (size * 8) / 1024 SizeMB FROM sys.master_files WHERE Name = '" + Schema + "'";
+                    qs = "SELECT (size * 8) / 1024 SizeMB FROM sys.master_files WHERE database_id = DB_ID('" + Schema + "')";
                 }
 
                 sizeIdxDb = CSGenio.persistence.DBConversion.ToNumeric(sp.executeScalar(qs));

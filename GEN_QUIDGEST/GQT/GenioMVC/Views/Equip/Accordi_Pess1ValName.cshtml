@@ -35,7 +35,7 @@
                 <div class="filter-box">
                     <div class ="form-check-inline">
                         <label class="i-checkbox i-checkbox__label i-checkbox--inline">@Resources.FEMALE46107
-                            @Html.CheckBox("filter_Accordi_Pess1ValName_", Model.Navigation.CheckKey("filter_Accordi_Pess1ValName__1") ? (bool)Model.Navigation.GetValue("filter_Accordi_Pess1ValName__1") : false, new { @class="input-filter", value = "1", onclick="window.Accordi_Pess1ValName.Search()" })
+                            @Html.CheckBox("filter_Accordi_Pess1ValName_FILTER1", Model.Navigation.CheckKey("filter_Accordi_Pess1ValName_FILTER1_1") ? (bool)Model.Navigation.GetValue("filter_Accordi_Pess1ValName_FILTER1_1") : false, new { @class="input-filter", value = "1", onclick="window.Accordi_Pess1ValName.Search()" })
                             <span class="i-checkbox__field"></span>
                         </label>
                     </div>
@@ -43,7 +43,7 @@
                 <div class="filter-box">
                     <div class ="form-check-inline">
                         <label class="i-checkbox i-checkbox__label i-checkbox--inline">@Resources.MALE32397
-                            @Html.CheckBox("filter_Accordi_Pess1ValName_", Model.Navigation.CheckKey("filter_Accordi_Pess1ValName__2") ? (bool)Model.Navigation.GetValue("filter_Accordi_Pess1ValName__2") : false, new { @class="input-filter", value = "2", onclick="window.Accordi_Pess1ValName.Search()" })
+                            @Html.CheckBox("filter_Accordi_Pess1ValName_FILTER2", Model.Navigation.CheckKey("filter_Accordi_Pess1ValName_FILTER2_1") ? (bool)Model.Navigation.GetValue("filter_Accordi_Pess1ValName_FILTER2_1") : false, new { @class="input-filter", value = "1", onclick="window.Accordi_Pess1ValName.Search()" })
                             <span class="i-checkbox__field"></span>
                         </label>
                     </div>
@@ -54,6 +54,7 @@
 </div>
 
 <div class="normal-view">
+@using GenioMVC.ViewModels.Pess1;    
 @{
     var data = Html.newTableFor<GenioMVC.Models.Pess1>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
         .Columns(column =>
@@ -79,7 +80,12 @@
         .TableList(hasFilters: true)
         .RequestLink(@Url.Action("Accordi_Pess1ValName", new { id = Model.ValCodequip, partialView = "Accordi_Pess1ValName", CmpnyValCodempre = Model.ValCodempre}))
         .Filters(this.Model.Menu.Filters)
-        .Permissions(canView: false, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
+        .Form("Pess1", false, false, new { data_skip_prevalida = "true" })
+        .UpdateConditions((item)=>Pess1_ViewModel.UpdateConditions(item))
+        .ViewConditions((item)=>Pess1_ViewModel.ViewConditions(item))
+        .DeleteConditions((item)=>Pess1_ViewModel.DeleteConditions(item))
+        .InsertConditions((item)=>Pess1_ViewModel.InsertConditions(this.Model.Navigation))
+        .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
 		;
         
 }

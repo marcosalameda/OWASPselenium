@@ -388,7 +388,8 @@ namespace GenioMVC.ViewModels.Cattp
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAsbcat.FldSubcateg, query + "%");
                 }
@@ -435,7 +436,8 @@ namespace GenioMVC.ViewModels.Cattp
 				}
 
 				TableSbcatSubcateg.List = new SelectList(TableSbcatSubcateg.Elements.ToSelectList(x => x.ValSubcateg, x => x.ValCodsbcat,  x => x.ValCodsbcat == this.ValCodsbcat), "Value", "Text", this.ValCodsbcat);
-                FillDependant_TpcatTableSbcatSubcateg();
+                if(!isSearchRequest)
+                    FillDependant_TpcatTableSbcatSubcateg();
 
                 //Check if foreignkey comes from history
                 TableSbcatSubcateg.FilledByHistory = Navigation.CheckFilledByHistory("sbcat");

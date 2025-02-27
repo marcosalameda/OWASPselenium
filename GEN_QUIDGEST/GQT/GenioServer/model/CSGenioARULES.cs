@@ -352,7 +352,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodregra, value); }
 		}
 
-
 		/// <summary>Field : "Condition type" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldTipocond { get { return m_fldTipocond; } }
 		private static FieldRef m_fldTipocond = new FieldRef("rules", "tipocond");
@@ -363,7 +362,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldTipocond); }
 			set { insertNameValueField(FldTipocond, value); }
 		}
-
 
 		/// <summary>Field : "Description" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldDescript { get { return m_fldDescript; } }
@@ -376,7 +374,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDescript, value); }
 		}
 
-
 		/// <summary>Field : "Place where you run" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldLocal { get { return m_fldLocal; } }
 		private static FieldRef m_fldLocal = new FieldRef("rules", "local");
@@ -387,7 +384,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldLocal); }
 			set { insertNameValueField(FldLocal, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

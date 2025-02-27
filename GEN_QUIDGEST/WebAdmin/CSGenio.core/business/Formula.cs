@@ -49,7 +49,8 @@ namespace CSGenio.business
                     else //é outra área
                     {
 						//Aqui já só tenho de ler o que foi preenchido pelo FormulaDbContext, se estiver vazia usamos os Qvalues nulos to as sources das formulas
-						area = fdc.GetArea(argumentosPorArea.AliasName, sp, areaField.User);
+                        var fk = fdc.GetForeignKeyValue(argumentosPorArea.AliasName, argumentosPorArea.KeyName, sp);
+						area = fdc.ReadRecord(argumentosPorArea.AliasName, fk, sp);
                         for (int i = 0; i < argumentosPorArea.FieldNames.Length; i++)
                             fieldsValue[argumentosPorArea.FieldsPosition[i]] = area.returnValueField(area.Alias + "." + argumentosPorArea.FieldNames[i]);
                     }

@@ -72,6 +72,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "ASSET_NUMBER52372";
 
             Qfield.NotNull = true;
@@ -355,7 +356,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodasset, value); }
 		}
 
-
 		/// <summary>Field : "Identification name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("asset", "name");
@@ -366,7 +366,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldName); }
 			set { insertNameValueField(FldName, value); }
 		}
-
 
 		/// <summary>Field : "Asset number" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldAssetnum { get { return m_fldAssetnum; } }
@@ -379,7 +378,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldAssetnum, value); }
 		}
 
-
 		/// <summary>Field : "Asset type" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldAssettyp { get { return m_fldAssettyp; } }
 		private static FieldRef m_fldAssettyp = new FieldRef("asset", "assettyp");
@@ -390,7 +388,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldAssettyp); }
 			set { insertNameValueField(FldAssettyp, value); }
 		}
-
 
 		/// <summary>Field : "Identifier type" Tipo: "AC" Formula:  ""</summary>
 		public static FieldRef FldIdenttyp { get { return m_fldIdenttyp; } }
@@ -403,7 +400,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldIdenttyp, value); }
 		}
 
-
 		/// <summary>Field : "GRAI – Global Returnable Asset Identifier" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldGrai { get { return m_fldGrai; } }
 		private static FieldRef m_fldGrai = new FieldRef("asset", "grai");
@@ -414,7 +410,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldGrai); }
 			set { insertNameValueField(FldGrai, value); }
 		}
-
 
 		/// <summary>Field : "GIAI – Global Individual Asset Identifier" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldGiai { get { return m_fldGiai; } }
@@ -427,7 +422,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGiai, value); }
 		}
 
-
 		/// <summary>Field : "Photo" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldPhoto { get { return m_fldPhoto; } }
 		private static FieldRef m_fldPhoto = new FieldRef("asset", "photo");
@@ -438,7 +432,6 @@ namespace CSGenio.business
 			get { return (byte[])returnValueField(FldPhoto); }
 			set { insertNameValueField(FldPhoto, value); }
 		}
-
 
 		/// <summary>Field : ">>Kind of equipment" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodkinde { get { return m_fldCodkinde; } }
@@ -451,7 +444,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodkinde, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodmanuf { get { return m_fldCodmanuf; } }
 		private static FieldRef m_fldCodmanuf = new FieldRef("asset", "codmanuf");
@@ -462,7 +454,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodmanuf); }
 			set { insertNameValueField(FldCodmanuf, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

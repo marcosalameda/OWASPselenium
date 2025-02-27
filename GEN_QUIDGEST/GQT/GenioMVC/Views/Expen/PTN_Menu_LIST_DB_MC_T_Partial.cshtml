@@ -50,6 +50,94 @@
 
 <script>
 
+	/// <summary>
+	/// Execute the triggers of the trigger button 3B111.
+	/// Event triggered by a click on the trigger button 3B111.
+	/// <param name="row">The row that triggered the action.</param>
+	/// </summary>
+	function PTN_MenuTR_3B111(row)
+	{
+
+		const run = () => { PTN_MenuTR_3B111_EMPTYDESCRIPTIO2_1(row); }
+
+		run()
+	}
+
+	/// <summary>
+	/// Client-side component of action #1 (FLDUPDT) of trigger EMPTYDESCRIPTIO2.
+	/// <param name="row">The row that triggered the action.</param>
+	/// </summary>
+	function PTN_MenuTR_3B111_EMPTYDESCRIPTIO2_1(row)
+	{
+
+		$.ajax({
+			url: '@Url.Action("PTN_MenuTR_3B111_EMPTYDESCRIPTIO2_1")',
+			type: "POST",
+			data: { key: row.id }
+		}).done(function(data) {
+			if (data.success == "OK") {
+				PTN_MenuTR_3B111_EMPTYDESCRIPTIO2_2(row)
+			} else {
+				bootbox.alert(data.message);
+			}
+		}).fail(function(data) {
+			bootbox.alert(data.message);
+		});
+	}
+
+	/// <summary>
+	/// Client-side component of action #2 (PREFRESH) of trigger EMPTYDESCRIPTIO2.
+	/// <param name="row">The row that triggered the action.</param>
+	/// </summary>
+	function PTN_MenuTR_3B111_EMPTYDESCRIPTIO2_2(row)
+	{
+		QUtils.WindowReload();
+
+	}
+	/// <summary>
+	/// Execute the triggers of the trigger button 3B121.
+	/// Event triggered by a click on the trigger button 3B121.
+	/// <param name="row">The row that triggered the action.</param>
+	/// </summary>
+	function PTN_MenuTR_3B121(row)
+	{
+
+		const run = () => { PTN_MenuTR_3B121_FILLDESCRIPTION2_1(row); }
+
+		run()
+	}
+
+	/// <summary>
+	/// Client-side component of action #1 (FLDUPDT) of trigger FILLDESCRIPTION2.
+	/// <param name="row">The row that triggered the action.</param>
+	/// </summary>
+	function PTN_MenuTR_3B121_FILLDESCRIPTION2_1(row)
+	{
+
+		$.ajax({
+			url: '@Url.Action("PTN_MenuTR_3B121_FILLDESCRIPTION2_1")',
+			type: "POST",
+			data: { key: row.id }
+		}).done(function(data) {
+			if (data.success == "OK") {
+				PTN_MenuTR_3B121_FILLDESCRIPTION2_2(row)
+			} else {
+				bootbox.alert(data.message);
+			}
+		}).fail(function(data) {
+			bootbox.alert(data.message);
+		});
+	}
+
+	/// <summary>
+	/// Client-side component of action #2 (PREFRESH) of trigger FILLDESCRIPTION2.
+	/// <param name="row">The row that triggered the action.</param>
+	/// </summary>
+	function PTN_MenuTR_3B121_FILLDESCRIPTION2_2(row)
+	{
+		QUtils.WindowReload();
+
+	}
 
 
 $(document).ready(function() {

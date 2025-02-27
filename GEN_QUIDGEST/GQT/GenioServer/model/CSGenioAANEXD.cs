@@ -161,12 +161,13 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(13);
+			info.Pathways = new Dictionary<string, string>(14);
 			info.Pathways.Add("langu","langu");
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");
+			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
@@ -315,7 +316,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodanexd, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodequip { get { return m_fldCodequip; } }
 		private static FieldRef m_fldCodequip = new FieldRef("anexd", "codequip");
@@ -326,7 +326,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodequip); }
 			set { insertNameValueField(FldCodequip, value); }
 		}
-
 
 		/// <summary>Field : "Attached" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldDthranex { get { return m_fldDthranex; } }
@@ -339,7 +338,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDthranex, value); }
 		}
 
-
 		/// <summary>Field : "Title" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldTitle { get { return m_fldTitle; } }
 		private static FieldRef m_fldTitle = new FieldRef("anexd", "title");
@@ -350,7 +348,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldTitle); }
 			set { insertNameValueField(FldTitle, value); }
 		}
-
 
 		/// <summary>Field : "Document" Tipo: "IB" Formula:  ""</summary>
 		public static FieldRef FldDocument { get { return m_fldDocument; } }
@@ -385,7 +382,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodlang, value); }
 		}
 
-
 		/// <summary>Field : "Translated title" Tipo: "C" Formula: CT "TRADU[ANEXD->TITLE][TRADU->ATRADUZI][TRADU->TRADUZID][ANEXD->CODLANG][TRADU->CODIDIO2](DESC)"</summary>
 		public static FieldRef FldTittradu { get { return m_fldTittradu; } }
 		private static FieldRef m_fldTittradu = new FieldRef("anexd", "tittradu");
@@ -397,7 +393,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldTittradu, value); }
 		}
 
-
 		/// <summary>Field : "Reference" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldReferenc { get { return m_fldReferenc; } }
 		private static FieldRef m_fldReferenc = new FieldRef("anexd", "referenc");
@@ -408,7 +403,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldReferenc); }
 			set { insertNameValueField(FldReferenc, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

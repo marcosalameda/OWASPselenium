@@ -38,6 +38,7 @@ namespace GenioMVC.ViewModels.Pesso
 		[Newtonsoft.Json.JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
+
 		/// <summary>Campo : "Official No." Tipo:"N"</summary>
 		[Display(Name = "OFFICIAL_NO_34819", ResourceType = typeof(Resources.Resources))]
 		[DisplayFormat( ApplyFormatInEditMode=true, DataFormatString="{0:N0}" )]
@@ -65,6 +66,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 		#region Additional foreign keys
 
+		public string ValCodcateg { get; set; }
+
 		public string ValCodempre { get; set; }
 
 		public string ValCodpaise { get; set; }
@@ -72,8 +75,6 @@ namespace GenioMVC.ViewModels.Pesso
 		public string ValCodcntry { get; set; }
 
 		public string ValCodregia { get; set; }
-
-		public string ValCodcateg { get; set; }
 
 		#endregion
 
@@ -198,11 +199,11 @@ namespace GenioMVC.ViewModels.Pesso
 			{
  				ValIdfuncio = ViewModelConversion.ToNumeric(m.ValIdfuncio);
  				ValName = ViewModelConversion.ToString(m.ValName);
+ 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
  				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
  				ValCodpaise = ViewModelConversion.ToString(m.ValCodpaise);
  				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
  				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
- 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
  				ValEmail = ViewModelConversion.ToString(m.ValEmail);
  				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
  				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
@@ -225,11 +226,11 @@ namespace GenioMVC.ViewModels.Pesso
 			{
 				m.ValIdfuncio = ViewModelConversion.ToNumeric(ValIdfuncio);
 				m.ValName = ViewModelConversion.ToString(ValName);
+				m.ValCodcateg = ViewModelConversion.ToString(ValCodcateg);
 				m.ValCodempre = ViewModelConversion.ToString(ValCodempre);
 				m.ValCodpaise = ViewModelConversion.ToString(ValCodpaise);
 				m.ValCodcntry = ViewModelConversion.ToString(ValCodcntry);
 				m.ValCodregia = ViewModelConversion.ToString(ValCodregia);
-				m.ValCodcateg = ViewModelConversion.ToString(ValCodcateg);
 				m.ValEmail = ViewModelConversion.ToString(ValEmail);
 				m.ValEmail2 = ViewModelConversion.ToString(ValEmail2);
 				m.ValCodpesso = ViewModelConversion.ToString(ValCodpesso);

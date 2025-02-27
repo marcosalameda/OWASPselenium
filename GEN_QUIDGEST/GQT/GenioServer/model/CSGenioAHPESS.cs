@@ -141,10 +141,11 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(5);
+			info.Pathways = new Dictionary<string, string>(6);
 			info.Pathways.Add("cmpny","cmpny");
 			info.Pathways.Add("pesso","pesso");
 			info.Pathways.Add("cntry","cmpny");
+			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("pais1","pesso");
 			info.Pathways.Add("regi1","pesso");
 		}
@@ -282,7 +283,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodhpess, value); }
 		}
 
-
 		/// <summary>Field : "> PERSON" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodpesso { get { return m_fldCodpesso; } }
 		private static FieldRef m_fldCodpesso = new FieldRef("hpess", "codpesso");
@@ -293,7 +293,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodpesso); }
 			set { insertNameValueField(FldCodpesso, value); }
 		}
-
 
 		/// <summary>Field : ">COMPANY" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodempre { get { return m_fldCodempre; } }
@@ -306,7 +305,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodempre, value); }
 		}
 
-
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldName { get { return m_fldName; } }
 		private static FieldRef m_fldName = new FieldRef("hpess", "name");
@@ -317,7 +315,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldName); }
 			set { insertNameValueField(FldName, value); }
 		}
-
 
 		/// <summary>Field : "Date" Tipo: "OD" Formula:  ""</summary>
 		public static FieldRef FldDate { get { return m_fldDate; } }
@@ -330,7 +327,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDate, value); }
 		}
 
-
 		/// <summary>Field : "Author" Tipo: "ON" Formula:  ""</summary>
 		public static FieldRef FldAuthor { get { return m_fldAuthor; } }
 		private static FieldRef m_fldAuthor = new FieldRef("hpess", "author");
@@ -341,7 +337,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldAuthor); }
 			set { insertNameValueField(FldAuthor, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

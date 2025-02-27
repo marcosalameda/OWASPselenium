@@ -128,12 +128,17 @@ namespace GenioServer.security
                     // To turn on TLS 1.2 without affecting other protocols. It is preferred that it be configured at application startup.
                     System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls12;
 
-                if(emailServer.Auth)
+                if(emailServer.AuthType == CSGenio.config.AuthType.BasicAuth)
                 {
                     client.UseDefaultCredentials = false;
                     byte[] data = Convert.FromBase64String(emailServer.Password);
                     string decodedPass = Encoding.UTF8.GetString(data);
                     client.Credentials = new NetworkCredential(emailServer.Username, decodedPass);
+                }
+                else if (emailServer.AuthType == CSGenio.config.AuthType.OAuth2)
+                {
+                    // TODO: For some reason, the user registration and password recovery didn't use the CSmail class. In the next phase, it would be refactored to use CSMail.
+                    throw new NotImplementedException();
                 }
                 else
                 {

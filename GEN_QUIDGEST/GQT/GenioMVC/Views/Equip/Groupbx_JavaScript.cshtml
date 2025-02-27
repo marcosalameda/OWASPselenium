@@ -272,7 +272,7 @@
 		@* Default of the 'ValDesignat' field *@
 		window.Form_Groupbx.SetFormulaDefault('LED_GROUPBX_EQUIPDESIGNAT', function() {
 						return ( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValCoditem', $('[data-form="Groupbx"]')), true));
-		}, 'ITEMVALITEMDES_CHANGE');
+		}, 'ITEMVALITEMDES_CHANGE VALCODITEM_CHANGE');
 		
 		@* Formula of the 'ValBought' field *@
 		$(qForm).bind('VALDTAQUISI_CHANGE', function(event, eTarget) {

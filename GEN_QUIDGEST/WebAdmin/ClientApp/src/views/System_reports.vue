@@ -24,9 +24,12 @@
             <div class="input-group i-input-group">
                 <input type="text" v-model="searchError" ref="searchError" class="form-control i-input-group__field" placeholder="Search for..." v-on:keyup="searchErro">
                 <div class="input-group-append i-input-group--right">
-                    <button class="btn b-icon-text--primary i-input-group__button--primary" type="button" id="searchErrorBtn" ref="searchErrorBtn" @click.stop="highlightSearchErro">
-                      <span class="glyphicons glyphicons-search i-input-group__tag-icon i-input-group__button-icon"></span>
-                    </button>
+                    <q-button
+                      b-style="primary"
+                      ref="searchErrorBtn" 
+                      @click="highlightSearchErro">
+                      <q-icon icon=magnify />
+                    </q-button>
                 </div>
             </div>
         </row>

@@ -61,6 +61,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  12;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 12;
 			Qfield.CavDesignation = "BOARDING_PASS_ID53965";
 
 			Qfield.Dupmsg = "";
@@ -339,7 +340,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodbrdps, value); }
 		}
 
-
 		/// <summary>Field : "Boarding Pass ID" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldBrdpsid { get { return m_fldBrdpsid; } }
 		private static FieldRef m_fldBrdpsid = new FieldRef("brdps", "brdpsid");
@@ -350,7 +350,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldBrdpsid); }
 			set { insertNameValueField(FldBrdpsid, value); }
 		}
-
 
 		/// <summary>Field : "Emission Date" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldEmitdate { get { return m_fldEmitdate; } }
@@ -363,7 +362,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldEmitdate, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodfligh { get { return m_fldCodfligh; } }
 		private static FieldRef m_fldCodfligh = new FieldRef("brdps", "codfligh");
@@ -374,7 +372,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodfligh); }
 			set { insertNameValueField(FldCodfligh, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodpsngr { get { return m_fldCodpsngr; } }
@@ -387,7 +384,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodpsngr, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodtickt { get { return m_fldCodtickt; } }
 		private static FieldRef m_fldCodtickt = new FieldRef("brdps", "codtickt");
@@ -398,7 +394,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodtickt); }
 			set { insertNameValueField(FldCodtickt, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodfltsc { get { return m_fldCodfltsc; } }
@@ -411,7 +406,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodfltsc, value); }
 		}
 
-
 		/// <summary>Field : "Boarding Gate" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldGate { get { return m_fldGate; } }
 		private static FieldRef m_fldGate = new FieldRef("brdps", "gate");
@@ -422,7 +416,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldGate); }
 			set { insertNameValueField(FldGate, value); }
 		}
-
 
 		/// <summary>Field : "Seat" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSeat { get { return m_fldSeat; } }
@@ -435,7 +428,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldSeat, value); }
 		}
 
-
 		/// <summary>Field : "Has Checkin?" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldHaschkin { get { return m_fldHaschkin; } }
 		private static FieldRef m_fldHaschkin = new FieldRef("brdps", "haschkin");
@@ -447,7 +439,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldHaschkin, value); }
 		}
 
-
 		/// <summary>Field : "Checkin Date/Time" Tipo: "DT" Formula:  ""</summary>
 		public static FieldRef FldCkndtime { get { return m_fldCkndtime; } }
 		private static FieldRef m_fldCkndtime = new FieldRef("brdps", "ckndtime");
@@ -458,7 +449,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldCkndtime); }
 			set { insertNameValueField(FldCkndtime, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

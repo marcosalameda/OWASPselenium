@@ -120,10 +120,6 @@
 
 			this.Controls.IFF_FIELDHLPPSEUDFIELD002 = new QTextControl($('[data-identifier="IFF_FIELDHLPPSEUDFIELD002"]', this.element), window.Form_Fieldhlp);
 
-			this.Controls.IFF_FIELDHLPPSEUDFIELD003 = new QStaticImageControl($('[data-identifier="IFF_FIELDHLPPSEUDFIELD003"]', this.element), window.Form_Fieldhlp);
-
-			this.Controls.IFF_FIELDHLPPSEUDFIELD001 = new QGenericControl($('[data-identifier="IFF_FIELDHLPPSEUDFIELD001"]', this.element), window.Form_Fieldhlp);
-
 			this.Controls.IFF_FIELDHLPPSEUDNOVOGR01 = new QGenericControl($('[data-identifier="IFF_FIELDHLPPSEUDNOVOGR01"]', this.element), window.Form_Fieldhlp);
 
 			this.Controls.LED_FIELDHLPFLDS_YEAR____ = new QNumericControl($('[data-identifier="LED_FIELDHLPFLDS_YEAR____"]', this.element), window.Form_Fieldhlp);
@@ -172,8 +168,6 @@
 
 			this.Controls.IFF_FIELDHLPPSEUDNOVOGR07 = new QGenericControl($('[data-identifier="IFF_FIELDHLPPSEUDNOVOGR07"]', this.element), window.Form_Fieldhlp);
 
-			this.Controls.LED_FIELDHLPFLDS_LOGOEXTE = new QTextControl($('[data-identifier="LED_FIELDHLPFLDS_LOGOEXTE"]', this.element), window.Form_Fieldhlp);
-
 			this.Controls.LED_FIELDHLPFLDS_LOGO____ = new QImageControl($('[data-identifier="LED_FIELDHLPFLDS_LOGO____"]', this.element), window.Form_Fieldhlp, '@Html.Raw(Url.Action("ImageDelete", "Flds", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Flds", "ValLogo", "", Model.ValCodflds, null) }))', '@Html.Raw(Url.Action("ImageCropper", "Flds", new { ticket = Helpers.GetFileTicket(GenioMVC.Models.Navigation.UserContext.Current.User, "Flds", "ValLogo", "", Model.ValCodflds, null), identifier= "FFIELDHLP", FormName= "Fieldhlp", FieldId= "LED_FIELDHLPFLDS_LOGO____" }))',@Html.IsImageEmpty(Model.ValLogo));
 
 			this.Controls.LED_FIELDHLPFLDS_ATTACH__ = new QTextControl($('[data-identifier="LED_FIELDHLPFLDS_ATTACH__"]', this.element), window.Form_Fieldhlp);
@@ -205,6 +199,10 @@
 			this.Controls.LED_FIELDHLPFLDS_CODFLDS_ = new QHiddenControl($('[data-identifier="LED_FIELDHLPFLDS_CODFLDS_"]', this.element), window.Form_Fieldhlp);
 
 	@* Hidden Required Form Fields Controls for Formulas *@
+			this.Controls.LED_FIELDHLPFLDS_TBLCOND_ = new QSpecialControl($('[data-identifier="LED_FIELDHLPFLDS_TBLCOND_"]', this.element), window.Form_Fieldhlp);
+			this.Controls.LED_FIELDHLPFLDS_TBLCOND_.InitData(@JavaScriptConversion.ToLogic(@Model.ValTblcond));
+			this.Controls.LED_FIELDHLPFLDS_COND____ = new QSpecialControl($('[data-identifier="LED_FIELDHLPFLDS_COND____"]', this.element), window.Form_Fieldhlp);
+			this.Controls.LED_FIELDHLPFLDS_COND____.InitData(@JavaScriptConversion.ToString(@Model.ValCond));
 
 @if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
 {

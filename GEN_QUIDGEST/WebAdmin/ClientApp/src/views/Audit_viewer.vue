@@ -2,7 +2,7 @@
 	<div id="audit_viewer_container">
 		<div class="q-stack--column">
 			<h1 class="f-header__title">
-			{{ Resources.AUDITORIA_DO_SISTEMA08460 }}
+				{{ Resources.AUDITORIA_DO_SISTEMA08460 }}
 			</h1>
 		</div>
 		<hr>
@@ -10,70 +10,98 @@
 		<row v-if="!isEmptyObject(Model.ResultMsg)">
 			<div class="alert alert--danger">
 				<span>
-					<b class="status-message">{{ Model.ResultMsg }}</b>
+					<b class="status-message">
+						{{ Model.ResultMsg }}
+					</b>
 				</span>
 			</div>
 			<br />
 		</row>
-		<QGroupBoxContainer>
+
+		<q-card
+			width="block">
 			<q-row-container>
-				<q-control-wrapper class="row-line-group" v-if="!Model.LockTable">
-					<base-input-structure
-						class="i-text">
-						<select-input v-model="Model.LogTable" v-if="Model.SelectLists" :options="Model.SelectLists.LogTables" :label="Resources.SELECIONE_A_TABELA_A28300" style="width: 350px;"></select-input>
-					</base-input-structure>
-				</q-control-wrapper>
-				<template v-if="Model.LogDatabaseExists">
-					<radio-input 
-						v-model="Model.LogDatabaseSelected"
-						:options="logDatabase"
-						:label="Resources.DADOS_43180">
-					</radio-input>
-					<select-simple
-						v-if="Model.LogTable == logTables.logGQTall"
-						:side="'left'"
-						class="float-right"
-						:options="transferLogOptions"
-						:showValue="false"
-						:staticText="Resources.TRANSFERIR_DADOS_PAR38484"
-						@update:modelValue="TransferLog">
-					</select-simple>
-				</template>
-				<q-control-wrapper class="row-line-group">
-					<select-simple
-						class="float-right"
-						:side="'left'"
-						:options="logExportType"
-						:showValue="false"
-						:staticText="Resources.EXPORTAR35632"
-						@update:modelValue="LogExport">
-					</select-simple>
-				</q-control-wrapper>
-				<qtable :rows="tAudit.rows"
+				<q-select
+					v-if="Model.SelectLists && !Model.LockTable"
+					v-model="Model.LogTable"
+					:label="Resources.SELECIONE_A_TABELA_A28300"
+					size="xlarge"
+					item-label="Text"
+					item-value="Value"
+					:items="Model.SelectLists.LogTables" />
+
+				<radio-input
+					v-if="Model.LogDatabaseExists"
+					v-model="Model.LogDatabaseSelected"
+					:options="logDatabase"
+					:label="Resources.DADOS_43180" />
+
+				<qtable 
+					:rows="tAudit.rows"
 					:columns="tAudit.columns"
 					:config="tAudit.config"
 					@on-change-query="onChangeQuery"
 					:totalRows="tAudit.total_rows"
-					@on-single-select-row="handleSingleSelect"
-					:enableExport="true">
-				</qtable>
+					@on-single-select-row="handleSingleSelect" />
+
+					<row class="footer-btn">
+						<q-button
+							id="logExportActivator"
+							b-style="primary"
+							:label="Resources.EXPORTAR35632" />
+						<q-dropdown-menu
+							:activator="`#logExportActivator`"
+							item-label="Text"
+							item-value="Value"
+							:items="logExportType"
+							@select="LogExport" />
+
+						<template 
+							v-if="Model.LogDatabaseExists">
+							<q-button
+								id="logTransferActivator"
+								b-style="primary"
+								:label="Resources.TRANSFERIR_DADOS_PAR38484" />
+							<q-dropdown-menu
+								:activator="`#logTransferActivator`"
+								item-label="Text"
+								item-value="Value"
+								:items="transferLogOptions"
+								@select="TransferLog" />
+						</template>
+					</row>
 				<template v-if="Model && !isEmptyObject(Model.SelectedRow)">
 					<row>
 						<h3>{{ Resources.VALORES_CURRENTES_21555 }}</h3>
 					</row>
-					<template v-for="(column, index) in Model.Result.ColumnNames" :key="column">
-						<dl class="row" v-if="index >= 4">
-							<dt v-bind:class="style.dtClass">{{ column }}</dt>
-							<dd v-bind:class="style.ddClass" v-if="isEmptyObject(Model.SelectedRowValues) || isEmptyObject(Model.SelectedRowValues[index-3])">
-							<span class="glyphicons glyphicons-minus"></span>
+					<template
+						v-for="(column, index) in Model.Result.ColumnNames"
+						:key="column">
+						<dl
+							v-if="index >= 4"
+							class="row">
+							<dt :class="style.dtClass">
+								{{ column }}
+							</dt>
+							<dd 
+								v-if="isEmptyObject(Model.SelectedRowValues) || isEmptyObject(Model.SelectedRowValues[index-3])"
+								:class="style.ddClass">
+								<q-icon icon=minus />
 							</dd>
-							<dd v-bind:class="style.ddClass" v-else>{{ Model.SelectedRowValues[index-3] }}</dd>
+							<dd 
+								v-else
+								:class="style.ddClass">
+								{{ Model.SelectedRowValues[index-3] }}
+							</dd>
 						</dl>
 					</template>
 				</template>
 			</q-row-container>
-			<progress-bar :show="dataPB.show" :text="dataPB.text" :progress="dataPB.progress"></progress-bar>
-		</QGroupBoxContainer>
+			<progress-bar
+				:show="dataPB.show"
+				:text="dataPB.text"
+				:progress="dataPB.progress" />
+		</q-card>
 	</div>
 </template>
 
@@ -86,7 +114,9 @@
 
 	export default {
 		name: 'audit_viewer',
+
 		mixins: [reusableMixin],
+
 		data: function () {
 			var vm = this;
 			return {
@@ -119,6 +149,7 @@
 					total_rows: 0,
 					columns: vm.getColumns(),
 					config: {
+						table_title: vm.$t('REGISTO_DE_EVENTOS65341'),
 						global_search: {
 							classes: "qtable-global-search",
 							searchOnPressEnter: true,
@@ -144,6 +175,7 @@
 				curSelectedRowIndex: ''
 			};
 		},
+
 		computed: {
 			transferLogOptions: function () {
 				var vm = this,
@@ -160,6 +192,7 @@
 				return options;
 			}
 		},
+
 		methods: {
 			fetchData: function () {
 				var vm = this, params = {};
@@ -185,6 +218,7 @@
 					vm.tAudit.total_rows = vm.Model.TotalRows;
 				});
 			},
+
 			getColumns: function () {
 				var columns = [],
 					vm = this;
@@ -202,15 +236,18 @@
 
 				return columns;
 			},
+
 			onChangeQuery: function (queryParams) {
 				this.tAudit.queryParams = queryParams;
 				this.fetchData();
 			},
-			handleSingleSelect: function (eventData) {
+
+			handleSingleSelect(eventData) {
 				var id = eventData.row[3];
 				if (this.curSelectedRowIndex == eventData.rowIndex) { this.unSelectRow(); }
 				else { this.SelectRow(id, eventData.rowIndex); }
 			},
+			
 			SelectRow: function (id, rowIndex) {
 				if (this.Model.LogTable != 0) {
 					this.curSelectedRowIndex = rowIndex;
@@ -222,12 +259,14 @@
 				this.curSelectedRowIndex = '';
 				this.Model.SelectedRow = '';
 			},
+
 			DataSubmit: function () {
 				var vm = this;
 				QUtils.postData('AuditViewer', 'Refresh', vm.Model, null, function (data) {
 					$.each(data, function (propName, value) { vm.Model[propName] = value; });
 				});
 			},
+
 			RunExport: function (exportType) {
 				// var msg = vm.Resources.A_EXPORTAR___20494;.
 				var vm = this, params = {};
@@ -243,10 +282,11 @@
 						var downloadUrl = QUtils.apiActionURL('AuditViewer', 'downloadExportFile', { id: data.fileId, type: exportType });
 						window.open(downloadUrl, "_self");
 					} else {
-						bootbox.alert(data.Message);
+						bootbox.alert(data.ResultMsg);
 					}
 				});
 			},
+
 			LogExport: function (exportType) {
 				var vm = this;
 				if (vm.tAudit.total_rows > 5000) {
@@ -258,6 +298,7 @@
 					vm.RunExport(exportType);
 				}
 			},
+
 			TransferLog: function (all) {
 				var vm = this;
 				QUtils.postData('AuditViewer', 'TransferLog', null, { transferAll: all }, function (data) { 
@@ -265,6 +306,7 @@
 					setTimeout(vm.checkProgress(data.RequestId), 250);
 				});
 			},
+
 			checkProgress: function (requestId) {
 				const vm = this;
 
@@ -288,12 +330,15 @@
 				});
 			},
 		},
+
 		watch: {
 			// call again the method if the route changes
 			'$route': 'fetchData',
+
 			'Model.LogTable': function (newValue, oldValue) {
 				if (newValue != oldValue) { this.Model.SelectedRow = ''; this.fetchData(); }
 			},
+
 			'Model.LogDatabaseSelected': function (newValue, oldValue) {
 				if (newValue != oldValue) { this.Model.SelectedRow = ''; this.fetchData(); }
 			}

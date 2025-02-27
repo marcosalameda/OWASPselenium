@@ -76,17 +76,14 @@ namespace GenioMVC.Controllers
             }
 
             dynamic result = null;
-            Models.Flds row = null;
-            try { row = Models.Flds.Find(navigation.GetStrValue("flds")); }
-            catch (Exception)
-            {
-                CSGenio.framework.Log.Error("ReloadDBEdit - " + Identifier + " Not found Model flds");
-            }
-            if(row == null)
-            {
-                row = new Models.Flds();
-                row.klass.QPrimaryKey = navigation.GetStrValue("flds");
-            }
+            /*
+                Instead of loading the entire record from the database, a record will be created in memory with the keys filled in, 
+                    and additional fields from "Field" type limits will be mapped later. 
+                This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+            */
+            Models.Flds row = new Models.Flds(isEmpty: true);
+            row.klass.QPrimaryKey = navigation.GetStrValue("flds");
+            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 
             // Only the last reload request is accepted.
             var requestNumber = Request.Headers.GetValues("ReloadDBEditRequestNumber");
@@ -99,7 +96,6 @@ namespace GenioMVC.Controllers
 				{
 					case "CAMPO___AERO_NAME____":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Campo_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
@@ -109,11 +105,19 @@ namespace GenioMVC.Controllers
 						break;
 					case "FIELDHLPAERO_NAME____":	// Field (DB)
                         {
-                            row.LoadKeysFormHistory(navigation, navigation.CurrentLevel.Level, false, true, true, true);
 						    var model = new Fieldhlp_ViewModel(navigation) { editable = false };
 						    model.MapFromModel(row);
                             TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
 						    model.Load_Fieldhlpaero_name____(qs);
+						    result = model.TableAeroName;
+                        }
+						break;
+					case "FLDSTBL_AERO_NAME____":	// Field (DB)
+                        {
+						    var model = new Fldstbl_ViewModel(navigation) { editable = false };
+						    model.MapFromModel(row);
+                            TryUpdateModel(model); // Map recived values to fields - The 'field' type limits
+						    model.Load_Fldstbl_aero_name____(qs);
 						    result = model.TableAeroName;
                         }
 						break;
@@ -159,6 +163,9 @@ namespace GenioMVC.Controllers
 						break;
 					case "FIELDHLPAERO_NAME____":	// Field (DB)
 						values = Fieldhlp_ViewModel.GetDependant_FieldhlpTableAeroName(Selected, navigation);
+						break;
+					case "FLDSTBL_AERO_NAME____":	// Field (DB)
+						values = Fldstbl_ViewModel.GetDependant_FldstblTableAeroName(Selected, navigation);
 						break;
 					default: break;
 				}
@@ -211,6 +218,392 @@ namespace GenioMVC.Controllers
         {
             return GenericRecalculateFormulas(form_data, "flds",
                 (primaryKey) => Models.Flds.Find(primaryKey, "FFIELDHLP"),
+                (model) => form_data.MapToModel(model as Models.Flds)
+            );
+        }
+
+		// POST: /Flds/FLDSCOND_FLDS_FSERVER1_ShowWhen
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDS_FSERVER1_ShowWhen(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !(!isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "HIDE") && HasRole("A")
+				var result = !(!(((Logical)p.ValTblcond) == 0)&&((string)p.ValCond)=="HIDE")&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A");
+				return Json(new { Success = true, Result = result });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDS_FSERVER1_BlockWhen
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDS_FSERVER1_BlockWhen(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "BLOCK" && HasRole("A")
+				var result = !(((Logical)p.ValTblcond) == 0)&&((string)p.ValCond)=="BLOCK"&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A");
+				return Json(new { Success = true, Result = result });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER2_ShowWhen
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER2_ShowWhen(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !(!isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "HIDE") && HasRole("A")
+				var result = !(!(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="HIDE")&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A");
+				return Json(new { Success = true, Result = result });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER2_BlockWhen
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER2_BlockWhen(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "BLOCK" && HasRole("A")
+				var result = !(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="BLOCK"&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A");
+				return Json(new { Success = true, Result = result });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER3_ShowWhen
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER3_ShowWhen(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !(!isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "HIDE") && HasRole("A")
+				var result = !(!(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="HIDE")&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A");
+				return Json(new { Success = true, Result = result });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER3_BlockWhen
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER3_BlockWhen(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "BLOCK" && HasRole("A")
+				var result = !(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="BLOCK"&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A");
+				return Json(new { Success = true, Result = result });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDS_FSERVER3_ShowWhen
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDS_FSERVER3_ShowWhen(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !(!isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "HIDE") && HasRole("A")
+				var result = !(!(((Logical)p.ValTblcond) == 0)&&((string)p.ValCond)=="HIDE")&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A");
+				return Json(new { Success = true, Result = result });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDS_FSERVER3_BlockWhen
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDS_FSERVER3_BlockWhen(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "BLOCK" && HasRole("A")
+				var result = !(((Logical)p.ValTblcond) == 0)&&((string)p.ValCond)=="BLOCK"&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A");
+				return Json(new { Success = true, Result = result });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDPSEUDSTATICTX_ShowWhen
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDSCONDPSEUDSTATICTX_ShowWhen(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !(!isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "HIDE") && HasRole("A")
+				var result = !(!(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="HIDE")&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A");
+				return Json(new { Success = true, Result = result });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDPSEUDSTATICTX_BlockWhen
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDSCONDPSEUDSTATICTX_BlockWhen(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "BLOCK" && HasRole("A")
+				var result = !(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="BLOCK"&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A");
+				return Json(new { Success = true, Result = result });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDPSEUDLISTBTN__ShowWhen
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDSCONDPSEUDLISTBTN__ShowWhen(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !(!isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "HIDE") && HasRole("A")
+				var result = !(!(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="HIDE")&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A");
+				return Json(new { Success = true, Result = result });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDPSEUDLISTBTN__BlockWhen
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDSCONDPSEUDLISTBTN__BlockWhen(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "BLOCK" && HasRole("A")
+				var result = !(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="BLOCK"&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A");
+				return Json(new { Success = true, Result = result });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER1_RequiredCondition
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER1_RequiredCondition(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
+				if ((Logical)(!(((Logical)p.ValTblcond) == 0)&&((string)p.ValCond)=="REQUIRE"&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A")))
+					return Json(new { Success = true, Result = true });
+
+				return Json(new { Success = true, Result = false });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER2_RequiredCondition
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER2_RequiredCondition(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
+				if ((Logical)(!(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="REQUIRE"&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A")))
+					return Json(new { Success = true, Result = true });
+
+				return Json(new { Success = true, Result = false });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER3_RequiredCondition
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER3_RequiredCondition(Fldscond_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Flds();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
+				if ((Logical)(!(((Logical)p.ValTblcond) == 0)&&((string)p.ValCond)=="REQUIRE"&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A")))
+					return Json(new { Success = true, Result = true });
+				// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
+				if ((Logical)(!(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="REQUIRE"&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A")))
+					return Json(new { Success = true, Result = true });
+
+				return Json(new { Success = true, Result = false });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
+        /// <summary>
+        /// Recalculate formulas of the "Fldscond" form. (++, CT, SR, CL and U1)
+        /// </summary>
+        /// <param name="form_data">Current form data</param>
+        /// <returns></returns>
+        [HttpPost]
+		[AuthorizeForUsers]
+        [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+        public JsonResult RecalculateFormulas_Fldscond(Fldscond_ViewModel form_data)
+        {
+            return GenericRecalculateFormulas(form_data, "flds",
+                (primaryKey) => Models.Flds.Find(primaryKey, "FFLDSCOND"),
+                (model) => form_data.MapToModel(model as Models.Flds)
+            );
+        }
+
+        /// <summary>
+        /// Recalculate formulas of the "Fldstbl" form. (++, CT, SR, CL and U1)
+        /// </summary>
+        /// <param name="form_data">Current form data</param>
+        /// <returns></returns>
+        [HttpPost]
+		[AuthorizeForUsers]
+        [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+        public JsonResult RecalculateFormulas_Fldstbl(Fldstbl_ViewModel form_data)
+        {
+            return GenericRecalculateFormulas(form_data, "flds",
+                (primaryKey) => Models.Flds.Find(primaryKey, "FFLDSTBL"),
                 (model) => form_data.MapToModel(model as Models.Flds)
             );
         }

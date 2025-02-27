@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Item
         /// </summary>
         public string ValCoditem { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Item
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS ARTIGVAL_WAREHWAREHDES]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Artigval_WarehValWarehdes_ViewModel" /> class.
@@ -136,6 +156,8 @@ namespace GenioMVC.ViewModels.Item
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -237,7 +259,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -275,7 +297,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 			CriteriaSet artigvalwarehwarehdesConds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ ARTIGVAL_WAREHDES]/
+// USE /[MANUAL GQT OVERRQ ARTIGVAL_WAREHWAREHDES]/
 
             // This will happen in case there is an error
             if(artigvalwarehwarehdesConds == null)
@@ -288,7 +310,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 				Qlisting = Models.ModelBase.Where<CSGenioAwareh>(false, artigvalwarehwarehdesConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ARTIGVALWAREHWAREHDES", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP ARTIGVAL_WAREHDES]/
+// USE /[MANUAL GQT OVERRQLSTEXP ARTIGVAL_WAREHWAREHDES]/
 
                 conditions = artigvalwarehwarehdesConds;
                 return;
@@ -298,7 +320,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST ARTIGVAL_WAREHDES]/
+// USE /[MANUAL GQT OVERRQLIST ARTIGVAL_WAREHWAREHDES]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_wareh"];

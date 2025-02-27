@@ -18,10 +18,10 @@ public class CamauditForm: PageObject {
 
 	private IWebElement saveBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='ok']"));
 	private IWebElement cancelBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='cancel']"));
-	public FORM_MODE mode {get; private set;}
+	public FORM_MODE mode { get; private set; }
 
 	public CamauditForm(IWebDriver driver, FORM_MODE mode): base(driver) {
-		this.mode = mode;		
+		this.mode = mode;
 		wait.Until(c => form.GetAttribute("qform-loaded").Contains("true"));
 	}
 

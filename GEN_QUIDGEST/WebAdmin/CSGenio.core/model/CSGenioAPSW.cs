@@ -71,7 +71,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("password", FieldType.PASSWORD);
+			Qfield = new Field("password", FieldType.ENCRYPTED);
 			Qfield.FieldDescription = "Password";
 			Qfield.FieldSize =  150;
 			Qfield.Alias = info.Alias;
@@ -79,7 +79,11 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "PASSWORD09467";
 
 			Qfield.Dupmsg = "";
-            Qfield.EncryptFieldValueFunction = GenioServer.security.PasswordFactory.EncryptPasswordField;
+			argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"password","pswtype"}, new int[] {0,1}, "psw", "codpsw"));
+			Qfield.EncryptFieldValueFormula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return GenioServer.security.PasswordFactory.EncryptPasswordField((string)(args[0] as EncryptedDataType)?.DecryptedValue, (string)args[1]);
+			});
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -186,6 +190,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Login attempts";
 			Qfield.FieldSize =  2;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 2;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "LOGIN_ATTEMPTS62337";
 
@@ -208,6 +213,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Status";
 			Qfield.FieldSize =  2;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 2;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "STATUS62033";
 
@@ -449,7 +455,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodpsw, value); }
 		}
 
-
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldNome { get { return m_fldNome; } }
 		private static FieldRef m_fldNome = new FieldRef("psw", "nome");
@@ -460,7 +465,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldNome); }
 			set { insertNameValueField(FldNome, value); }
 		}
-
 
 		/// <summary>Field : "Password" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldPassword { get { return m_fldPassword; } }
@@ -473,6 +477,12 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPassword, value); }
 		}
 
+        /// <summary>Field : "Password | Decrypted value" Type: "C"</summary>
+        public string ValPasswordDecrypted
+        {
+            get { return (string)ReturnDecryptedValueField(FldPassword); }
+            set { InsertNameDecryptedValueField(FldPassword, value); }
+        }
 
 		/// <summary>Field : "Certified Series Number" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldCertsn { get { return m_fldCertsn; } }
@@ -485,7 +495,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCertsn, value); }
 		}
 
-
 		/// <summary>Field : "Email" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldEmail { get { return m_fldEmail; } }
 		private static FieldRef m_fldEmail = new FieldRef("psw", "email");
@@ -496,7 +505,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldEmail); }
 			set { insertNameValueField(FldEmail, value); }
 		}
-
 
 		/// <summary>Field : "Password type" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldPswtype { get { return m_fldPswtype; } }
@@ -509,7 +517,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPswtype, value); }
 		}
 
-
 		/// <summary>Field : "Salt" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldSalt { get { return m_fldSalt; } }
 		private static FieldRef m_fldSalt = new FieldRef("psw", "salt");
@@ -520,7 +527,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldSalt); }
 			set { insertNameValueField(FldSalt, value); }
 		}
-
 
 		/// <summary>Field : "Password date" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldDatapsw { get { return m_fldDatapsw; } }
@@ -533,7 +539,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDatapsw, value); }
 		}
 
-
 		/// <summary>Field : "User ID" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldUserid { get { return m_fldUserid; } }
 		private static FieldRef m_fldUserid = new FieldRef("psw", "userid");
@@ -544,7 +549,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldUserid); }
 			set { insertNameValueField(FldUserid, value); }
 		}
-
 
 		/// <summary>Field : "" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldPsw2favl { get { return m_fldPsw2favl; } }
@@ -557,7 +561,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPsw2favl, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldPsw2fatp { get { return m_fldPsw2fatp; } }
 		private static FieldRef m_fldPsw2fatp = new FieldRef("psw", "psw2fatp");
@@ -568,7 +571,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldPsw2fatp); }
 			set { insertNameValueField(FldPsw2fatp, value); }
 		}
-
 
 		/// <summary>Field : "Expiration date" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldDatexp { get { return m_fldDatexp; } }
@@ -581,7 +583,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDatexp, value); }
 		}
 
-
 		/// <summary>Field : "Login attempts" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldAttempts { get { return m_fldAttempts; } }
 		private static FieldRef m_fldAttempts = new FieldRef("psw", "attempts");
@@ -592,7 +593,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldAttempts); }
 			set { insertNameValueField(FldAttempts, value); }
 		}
-
 
 		/// <summary>Field : "Phone number" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldPhone { get { return m_fldPhone; } }
@@ -605,7 +605,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldPhone, value); }
 		}
 
-
 		/// <summary>Field : "Status" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldStatus { get { return m_fldStatus; } }
 		private static FieldRef m_fldStatus = new FieldRef("psw", "status");
@@ -616,7 +615,6 @@ namespace CSGenio.business
 			get { return (decimal)returnValueField(FldStatus); }
 			set { insertNameValueField(FldStatus, value); }
 		}
-
 
 		/// <summary>Field : "Has login?" Tipo: "L" Formula:  ""</summary>
 		public static FieldRef FldAssocia { get { return m_fldAssocia; } }
@@ -629,7 +627,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldAssocia, value); }
 		}
 
-
 		/// <summary>Field : "Created by" Tipo: "ON" Formula:  ""</summary>
 		public static FieldRef FldOpercria { get { return m_fldOpercria; } }
 		private static FieldRef m_fldOpercria = new FieldRef("psw", "opercria");
@@ -640,7 +637,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldOpercria); }
 			set { insertNameValueField(FldOpercria, value); }
 		}
-
 
 		/// <summary>Field : "Created on" Tipo: "OD" Formula:  ""</summary>
 		public static FieldRef FldDatacria { get { return m_fldDatacria; } }
@@ -653,7 +649,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDatacria, value); }
 		}
 
-
 		/// <summary>Field : "Changed by" Tipo: "EN" Formula:  ""</summary>
 		public static FieldRef FldOpermuda { get { return m_fldOpermuda; } }
 		private static FieldRef m_fldOpermuda = new FieldRef("psw", "opermuda");
@@ -665,7 +660,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldOpermuda, value); }
 		}
 
-
 		/// <summary>Field : "Changed on" Tipo: "ED" Formula:  ""</summary>
 		public static FieldRef FldDatamuda { get { return m_fldDatamuda; } }
 		private static FieldRef m_fldDatamuda = new FieldRef("psw", "datamuda");
@@ -676,7 +670,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDatamuda); }
 			set { insertNameValueField(FldDatamuda, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
@@ -775,13 +768,6 @@ namespace CSGenio.business
      
 
                        
-          /// <summary>Field : "Password | Decrypted value" Type: "Password"</summary>
-        public string ValPasswordDecrypted
-        {
-            get { return (string)ReturnDecryptedValueField(FldPassword); }
-            set { InsertNameDecryptedValueField(FldPassword, value); }
-        }
-
         public string[] getModules()
         {
         

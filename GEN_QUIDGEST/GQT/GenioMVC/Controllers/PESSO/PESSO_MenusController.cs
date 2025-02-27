@@ -130,13 +130,13 @@ namespace GenioMVC.Controllers
 			}
             Models.Pesso pesso = Models.Pesso.Find(id, "ML271");
             Navigation.SetValue("pesso", id);
-            if(pesso != null && ((pesso.ValInterna ? 1 : 0)==1))
+            if(pesso != null && (((Logical)pesso.ValInterna)==1))
             {
                 if(String.IsNullOrEmpty(formMode))
                     formMode = "Edit";
                 return RedirectToAction("Pessosep_" + formMode, "Pesso", formMode.Equals("New") ? (object)new { nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] } : new { id = pesso.ValCodpesso, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
             }
-            if(pesso != null && ((pesso.ValExterna ? 1 : 0)==1))
+            if(pesso != null && (((Logical)pesso.ValExterna)==1))
             {
                 if(String.IsNullOrEmpty(formMode))
                     formMode = "Edit";

@@ -254,7 +254,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodcfaqs, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "IJ" Formula:  ""</summary>
 		public static FieldRef FldIcon { get { return m_fldIcon; } }
 		private static FieldRef m_fldIcon = new FieldRef("cfaqs", "icon");
@@ -265,7 +264,6 @@ namespace CSGenio.business
 			get { return (byte[])returnValueField(FldIcon); }
 			set { insertNameValueField(FldIcon, value); }
 		}
-
 
 		/// <summary>Field : "Category" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldCategory { get { return m_fldCategory; } }
@@ -278,7 +276,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCategory, value); }
 		}
 
-
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldDescript { get { return m_fldDescript; } }
 		private static FieldRef m_fldDescript = new FieldRef("cfaqs", "descript");
@@ -289,7 +286,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldDescript); }
 			set { insertNameValueField(FldDescript, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

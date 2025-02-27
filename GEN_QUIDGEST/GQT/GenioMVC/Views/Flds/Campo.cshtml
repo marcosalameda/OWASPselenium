@@ -357,6 +357,8 @@ else {
 			</div>
 
 
+		@Html.HiddenFor(model=> model.ValTblcond, new { @pers_cs_area = "Flds", @pers_cs_field = "ValTblcond", @data_identifier = "LED_CAMPO___FLDS_TBLCOND_" })
+		@Html.HiddenFor(model=> model.ValCond, new { @pers_cs_area = "Flds", @pers_cs_field = "ValCond", @data_identifier = "LED_CAMPO___FLDS_COND____" })
 
 			@Html.HiddenFor(model => model.ValCodequip, new { @pers_cs_field="ValCodequip", @pers_cs_area="Flds", @data_value = Model.ValCodequip, @db_field="ValCodequip", @trelate="Equip", @tfrelate="Codequip", @data_identifier="LED_CAMPO___EQUIPCODEQUIP" })
 

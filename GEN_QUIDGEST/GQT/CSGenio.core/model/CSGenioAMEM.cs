@@ -283,7 +283,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodmem, value); }
 		}
 
-
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldLogin { get { return m_fldLogin; } }
 		private static FieldRef m_fldLogin = new FieldRef("mem", "login");
@@ -294,7 +293,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldLogin); }
 			set { insertNameValueField(FldLogin, value); }
 		}
-
 
 		/// <summary>Field : "Routine" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldRotina { get { return m_fldRotina; } }
@@ -307,7 +305,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldRotina, value); }
 		}
 
-
 		/// <summary>Field : "Date" Tipo: "D" Formula:  ""</summary>
 		public static FieldRef FldAltura { get { return m_fldAltura; } }
 		private static FieldRef m_fldAltura = new FieldRef("mem", "altura");
@@ -318,7 +315,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldAltura); }
 			set { insertNameValueField(FldAltura, value); }
 		}
-
 
 		/// <summary>Field : "Obs" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldObs { get { return m_fldObs; } }
@@ -331,7 +327,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldObs, value); }
 		}
 
-
 		/// <summary>Field : "Host" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldHostid { get { return m_fldHostid; } }
 		private static FieldRef m_fldHostid = new FieldRef("mem", "hostid");
@@ -343,7 +338,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldHostid, value); }
 		}
 
-
 		/// <summary>Field : "Client ip address" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldClientid { get { return m_fldClientid; } }
 		private static FieldRef m_fldClientid = new FieldRef("mem", "clientid");
@@ -354,7 +348,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldClientid); }
 			set { insertNameValueField(FldClientid, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

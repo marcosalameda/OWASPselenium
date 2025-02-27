@@ -698,11 +698,19 @@ input:checked + .slider:before {
     height: 0;
 }
 
+.radioimage {
+	padding-top: 5px;
+    display: inline-table;
+    height: auto;
+    max-width: 30%;
+}
+
 .radioimage + .imgchoice {
     cursor: pointer;
 }
 
 .imgchoice {
+	max-width: 100%;
     border: 2px solid $container-bg-color;
 	border-radius: 10px;
     filter: grayscale(100%);

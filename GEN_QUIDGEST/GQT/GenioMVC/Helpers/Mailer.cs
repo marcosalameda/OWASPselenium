@@ -15,12 +15,12 @@ namespace GenioMVC.Helpers
 			new Thread(() =>
 			{
 				// Send the emails here
-				CSGenio.framework.CSmail mail = new CSGenio.framework.CSmail();
+				CSGenio.core.CSmail mail = new CSGenio.core.CSmail();
 				mail.SmtpServer = "your.smtp.server";
 				mail.Port = 25;
 				mail.User = "username@mail.com";
 				mail.Pass = "XXXXXXX";
-				mail.Auth = true;
+				mail.AuthType = CSGenio.config.AuthType.BasicAuth;
 
 				mail.From = "senders@address.com";
 				mail.To = "receiver@address.com";

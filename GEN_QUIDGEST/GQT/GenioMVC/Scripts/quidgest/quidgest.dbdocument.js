@@ -393,7 +393,7 @@ DBDocument = (function () {
 
 	DBDocument.prototype.initSubmitVersion = function (setFileUrl, fieldContainer) {
 	    EventResize();
-        $('button[data-bb-handler="ok"]').click(function () {
+        $('button.bootbox-accept').click(function () {
 			var obj = $("#submitVersionFile");
 			var ticket = obj.data('ticket');
 			var action = $("#action:checked").val();
@@ -448,7 +448,7 @@ DBDocument = (function () {
 			$(this).fileupload({
                 add: function (e, data) {
                     var $this = $(this);
-                    data.context = $('button[data-bb-handler="ok"]')
+                    data.context = $('button.bootbox-accept')
                         .unbind("click").click(function () {
                             data.process(function () {
                                 return $this.fileupload('process', data);

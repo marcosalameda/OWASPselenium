@@ -79,6 +79,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "No bate";
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "NO_BATE21045";
 
             Qfield.NotNull = true;
@@ -317,7 +318,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddeco, value); }
 		}
 
-
 		/// <summary>Field : "Decomission" Tipo: "DT" Formula: DF "[Now]"</summary>
 		public static FieldRef FldDtdeco { get { return m_fldDtdeco; } }
 		private static FieldRef m_fldDtdeco = new FieldRef("decom", "dtdeco");
@@ -328,7 +328,6 @@ namespace CSGenio.business
 			get { return (DateTime)returnValueField(FldDtdeco); }
 			set { insertNameValueField(FldDtdeco, value); }
 		}
-
 
 		/// <summary>Field : "No bate" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldDecomnr { get { return m_fldDecomnr; } }
@@ -341,7 +340,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldDecomnr, value); }
 		}
 
-
 		/// <summary>Field : "Notes" Tipo: "MO" Formula:  ""</summary>
 		public static FieldRef FldNote { get { return m_fldNote; } }
 		private static FieldRef m_fldNote = new FieldRef("decom", "note");
@@ -352,7 +350,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldNote); }
 			set { insertNameValueField(FldNote, value); }
 		}
-
 
 		/// <summary>Field : "Creation date" Tipo: "OD" Formula:  ""</summary>
 		public static FieldRef FldCreatdat { get { return m_fldCreatdat; } }
@@ -365,7 +362,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCreatdat, value); }
 		}
 
-
 		/// <summary>Field : "Created by" Tipo: "ON" Formula:  ""</summary>
 		public static FieldRef FldCreatope { get { return m_fldCreatope; } }
 		private static FieldRef m_fldCreatope = new FieldRef("decom", "creatope");
@@ -376,7 +372,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCreatope); }
 			set { insertNameValueField(FldCreatope, value); }
 		}
-
 
 		/// <summary>Field : "Changed on" Tipo: "ED" Formula:  ""</summary>
 		public static FieldRef FldChngdate { get { return m_fldChngdate; } }
@@ -389,7 +384,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldChngdate, value); }
 		}
 
-
 		/// <summary>Field : "Changed by" Tipo: "EN" Formula:  ""</summary>
 		public static FieldRef FldOperchng { get { return m_fldOperchng; } }
 		private static FieldRef m_fldOperchng = new FieldRef("decom", "operchng");
@@ -400,7 +394,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldOperchng); }
 			set { insertNameValueField(FldOperchng, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

@@ -408,7 +408,8 @@ namespace GenioMVC.ViewModels.Conta
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioApesso.FldName, query + "%");
                 }
@@ -455,7 +456,8 @@ namespace GenioMVC.ViewModels.Conta
 				}
 
 				TablePessoName.List = new SelectList(TablePessoName.Elements.ToSelectList(x => x.ValName, x => x.ValCodpesso,  x => x.ValCodpesso == this.ValCodpesso), "Value", "Text", this.ValCodpesso);
-                FillDependant_ContaTablePessoName();
+                if(!isSearchRequest)
+                    FillDependant_ContaTablePessoName();
 
                 //Check if foreignkey comes from history
                 TablePessoName.FilledByHistory = Navigation.CheckFilledByHistory("pesso");
@@ -611,7 +613,8 @@ namespace GenioMVC.ViewModels.Conta
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAgenre.FldGender, query + "%");
                 }
@@ -658,7 +661,8 @@ namespace GenioMVC.ViewModels.Conta
 				}
 
 				TableGenreGender.List = new SelectList(TableGenreGender.Elements.ToSelectList(x => x.ValGender, x => x.ValCodgenre,  x => x.ValCodgenre == this.ValCodgenre), "Value", "Text", this.ValCodgenre);
-                FillDependant_ContaTableGenreGender();
+                if(!isSearchRequest)
+                    FillDependant_ContaTableGenreGender();
 
                 //Check if foreignkey comes from history
                 TableGenreGender.FilledByHistory = Navigation.CheckFilledByHistory("genre");
@@ -820,7 +824,8 @@ namespace GenioMVC.ViewModels.Conta
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAtpcon.FldTipocont, query + "%");
                 }
@@ -867,7 +872,8 @@ namespace GenioMVC.ViewModels.Conta
 				}
 
 				TableTpconTipocont.List = new SelectList(TableTpconTipocont.Elements.ToSelectList(x => x.ValTipocont, x => x.ValCodtpcon,  x => x.ValCodtpcon == this.ValCodtpcon), "Value", "Text", this.ValCodtpcon);
-                FillDependant_ContaTableTpconTipocont();
+                if(!isSearchRequest)
+                    FillDependant_ContaTableTpconTipocont();
 
                 //Check if foreignkey comes from history
                 TableTpconTipocont.FilledByHistory = Navigation.CheckFilledByHistory("tpcon");

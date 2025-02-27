@@ -422,7 +422,8 @@ namespace GenioMVC.ViewModels.Ldent
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAindoc.FldDocumenr, query + "%");
                 }
@@ -469,7 +470,8 @@ namespace GenioMVC.ViewModels.Ldent
 				}
 
 				TableIndocDocumenr.List = new SelectList(TableIndocDocumenr.Elements.ToSelectList(x => x.ValDocumenr, x => x.ValCoddentr,  x => x.ValCoddentr == this.ValCoddentr), "Value", "Text", this.ValCoddentr);
-                FillDependant_LdentnorTableIndocDocumenr();
+                if(!isSearchRequest)
+                    FillDependant_LdentnorTableIndocDocumenr();
 
                 //Check if foreignkey comes from history
                 TableIndocDocumenr.FilledByHistory = Navigation.CheckFilledByHistory("indoc");
@@ -629,7 +631,8 @@ namespace GenioMVC.ViewModels.Ldent
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAwareh.FldWarehdes, query + "%");
                 }
@@ -676,7 +679,8 @@ namespace GenioMVC.ViewModels.Ldent
 				}
 
 				TableWarehWarehdes.List = new SelectList(TableWarehWarehdes.Elements.ToSelectList(x => x.ValWarehdes, x => x.ValCodwareh,  x => x.ValCodwareh == this.ValCodwareh), "Value", "Text", this.ValCodwareh);
-                FillDependant_LdentnorTableWarehWarehdes();
+                if(!isSearchRequest)
+                    FillDependant_LdentnorTableWarehWarehdes();
 
                 //Check if foreignkey comes from history
                 TableWarehWarehdes.FilledByHistory = Navigation.CheckFilledByHistory("wareh");
@@ -838,7 +842,8 @@ namespace GenioMVC.ViewModels.Ldent
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAitem.FldItemdes, query + "%");
                 }
@@ -885,7 +890,8 @@ namespace GenioMVC.ViewModels.Ldent
 				}
 
 				TableItemItemdes.List = new SelectList(TableItemItemdes.Elements.ToSelectList(x => x.ValItemdes, x => x.ValCoditem,  x => x.ValCoditem == this.ValCoditem), "Value", "Text", this.ValCoditem);
-                FillDependant_LdentnorTableItemItemdes();
+                if(!isSearchRequest)
+                    FillDependant_LdentnorTableItemItemdes();
 
                 //Check if foreignkey comes from history
                 TableItemItemdes.FilledByHistory = Navigation.CheckFilledByHistory("item");

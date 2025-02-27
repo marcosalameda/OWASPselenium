@@ -398,7 +398,8 @@ namespace GenioMVC.ViewModels.Tblk
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAgrpb.FldName, query + "%");
                 }
@@ -445,7 +446,8 @@ namespace GenioMVC.ViewModels.Tblk
 				}
 
 				TableGrpbName.List = new SelectList(TableGrpbName.Elements.ToSelectList(x => x.ValName, x => x.ValCodgrpb,  x => x.ValCodgrpb == this.ValFkey1), "Value", "Text", this.ValFkey1);
-                FillDependant_TblkTableGrpbName();
+                if(!isSearchRequest)
+                    FillDependant_TblkTableGrpbName();
 
                 //Check if foreignkey comes from history
                 TableGrpbName.FilledByHistory = Navigation.CheckFilledByHistory("grpb");
@@ -601,7 +603,8 @@ namespace GenioMVC.ViewModels.Tblk
                 // O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
                 //  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
                 CriteriaSet search_filters = CriteriaSet.And();
-                if (!String.IsNullOrEmpty(query))
+                bool isSearchRequest = !String.IsNullOrEmpty(query);
+                if (isSearchRequest)
                 {
 					search_filters.Like(CSGenioAtrsb.FldName, query + "%");
                 }
@@ -648,7 +651,8 @@ namespace GenioMVC.ViewModels.Tblk
 				}
 
 				TableTrsbName.List = new SelectList(TableTrsbName.Elements.ToSelectList(x => x.ValName, x => x.ValCodtrsb,  x => x.ValCodtrsb == this.ValFkey2), "Value", "Text", this.ValFkey2);
-                FillDependant_TblkTableTrsbName();
+                if(!isSearchRequest)
+                    FillDependant_TblkTableTrsbName();
 
                 //Check if foreignkey comes from history
                 TableTrsbName.FilledByHistory = Navigation.CheckFilledByHistory("trsb");

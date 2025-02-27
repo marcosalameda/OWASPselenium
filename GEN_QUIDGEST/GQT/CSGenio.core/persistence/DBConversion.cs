@@ -149,15 +149,11 @@ namespace CSGenio.persistence
             string dataString;
             switch (link)
             {
-                case DatabaseType.ACCESS:
-                    dataString = "#" + data.Month + "/" + data.Day + "/" + data.Year + "#";
-                    break;
                 case DatabaseType.ORACLE:
                     dataString = "TO_DATE('" + data.Year + "/" + data.Month + "/" + data.Day + " " + data.Hour + ":" + data.Minute + ":" + data.Second + "', 'YYYY/MM/DD hh24:mi:ss')";
                     break;
-                case DatabaseType.SQLSERVER2000:
-                case DatabaseType.SQLSERVER2005:
-				case DatabaseType.SQLSERVER2008:
+                case DatabaseType.SQLSERVER:
+                case DatabaseType.SQLSERVERCOMPAT:
                     dataString = "convert(datetime, '" + data.Day + "/" + data.Month + "/" + data.Year + " " + data.ToLongTimeString() + "', 103)";
                     break;
                 default:
@@ -284,7 +280,7 @@ namespace CSGenio.persistence
                 return new EncryptedDataType();
             else
                 return new EncryptedDataType(value, null);
-        }   
+        }
 
         /// <summary>
         /// Converte uma binário to um objecto de base de dados

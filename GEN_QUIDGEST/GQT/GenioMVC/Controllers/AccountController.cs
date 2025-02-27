@@ -843,7 +843,7 @@ namespace GenioMVC.Controllers
                     return Json(new { Success = false, Form = "Form_Pess1", Operation = "New", View = RenderPartialViewToString(this, "Register", returnModel), Message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 });
                 }
 
-                factory.CreateEph_COMODANTE(user, area.ValCodpesso);
+				factory.CreateEph_COMODANTE(user, area.ValCodpesso);
 
                 string lang = "";
                 try

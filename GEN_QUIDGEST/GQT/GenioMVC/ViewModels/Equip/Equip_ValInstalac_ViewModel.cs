@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Equip
         /// </summary>
         public string ValCodequip { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Equip
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS EQUIP_PSEUDINSTALAC]/
+
+			return crs;
+		}
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Equip_ValInstalac_ViewModel" /> class.
@@ -142,6 +162,8 @@ namespace GenioMVC.ViewModels.Equip
 
 
 
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
+
 
 			if (isToExport)
 			{
@@ -161,7 +183,6 @@ namespace GenioMVC.ViewModels.Equip
 			if (tableReload)
 			{
 				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_insta");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_insta");
 				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
 					crs.Equals(Models.Insta.AddEPH<CSGenioAinsta>(ref u, null, "IBL_EQUIP___PSEUDINSTALAC"));
 			}
@@ -236,7 +257,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -433,6 +454,18 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
             {
                 new SpecialRendering
                 {
+                    Id = "LIST",
+                    Ordem = 1,
+                    Subtipo = "",
+                    MappingVariables = new List<SpecialRenderingVariable>()
+                    {
+                    },
+                    StyleVariables = new List<SpecialRenderingVariable>()
+                    {
+                    },
+                },
+                new SpecialRendering
+                {
                     Id = "MAP",
                     Ordem = 2,
                     Subtipo = "leaflet-map",
@@ -454,6 +487,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
                         new SpecialRenderingVariable { Variable = "max-zoom", Value = "18" },
                         new SpecialRenderingVariable { Variable = "zoom-with-ctrl", Value = "true" },
                         new SpecialRenderingVariable { Variable = "fit-zoom", Value = "true" },
+                        new SpecialRenderingVariable { Variable = "zoom-delta", Value = "1" },
                         new SpecialRenderingVariable { Variable = "bound-south-west", Value = "" },
                         new SpecialRenderingVariable { Variable = "bound-north-east", Value = "" },
                         new SpecialRenderingVariable { Variable = "disable-search", Value = "false" },
@@ -477,18 +511,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
                         new SpecialRenderingVariable { Variable = "allow-exporting", Value = "true" },
                         new SpecialRenderingVariable { Variable = "background-overlay", Value = "OpenStreetMap" },
                         new SpecialRenderingVariable { Variable = "open-popup-on-hover", Value = "false" },
-                    },
-                },
-                new SpecialRendering
-                {
-                    Id = "LIST",
-                    Ordem = 1,
-                    Subtipo = "",
-                    MappingVariables = new List<SpecialRenderingVariable>()
-                    {
-                    },
-                    StyleVariables = new List<SpecialRenderingVariable>()
-                    {
                     },
                 },
             }

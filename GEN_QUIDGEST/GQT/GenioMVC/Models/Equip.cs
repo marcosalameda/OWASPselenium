@@ -115,9 +115,9 @@ namespace GenioMVC.Models
 		public bool ShouldSerializeDecom () => this.SerializeAllFields || this.FieldsToSerialize.Contains("Decom");
 
 		[DisplayName("Decomission")]
-		/// <summary>Field : "Decomission" Tipo: "D" Formula: ++ "[DECOM->DTDECO]"</summary>
+		/// <summary>Field : "Decomission" Tipo: "DT" Formula: ++ "[DECOM->DTDECO]"</summary>
 		[DataType(DataType.Date)]
-		[DateAttribute("D")]
+		[DateAttribute("DT")]
 		public DateTime? ValDtdeco { get { return klass.ValDtdeco; } set { klass.ValDtdeco = value ?? DateTime.MinValue; } }
 		public bool ShouldSerializeValDtdeco() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Equip.ValDtdeco");
 

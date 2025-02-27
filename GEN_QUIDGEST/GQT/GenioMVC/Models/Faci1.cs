@@ -111,6 +111,11 @@ namespace GenioMVC.Models
 		public string ValGeocoord { get { return klass.ValGeocoord; } set { klass.ValGeocoord = value; } }
 		public bool ShouldSerializeValGeocoord() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Faci1.ValGeocoord");
 
+		[DisplayName(">> Country")]
+		/// <summary>Field : ">> Country" Tipo: "CF" Formula:  ""</summary>
+		public string ValCodcntry { get { return klass.ValCodcntry; } set { klass.ValCodcntry = value; } }
+		public bool ShouldSerializeValCodcntry() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Faci1.ValCodcntry");
+
 		[DisplayName("ZZSTATE")]
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }

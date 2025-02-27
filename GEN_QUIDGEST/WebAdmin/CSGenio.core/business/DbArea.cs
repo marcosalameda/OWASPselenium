@@ -89,6 +89,7 @@ namespace CSGenio.business
             this.IsEmptyFile = false;
 		}
 
+
         public DBFile(string name, string extension, string Qversion, string filepath, int size)
         {
             this.Name = name;
@@ -97,6 +98,12 @@ namespace CSGenio.business
             this.File = System.IO.File.ReadAllBytes(System.IO.Path.Combine(Configuration.PathDocuments, filepath));
             this.Size = size;
             this.IsEmptyFile = false;
+        }
+
+        public DBFile(string name, string extension, string Qversion, byte[] file, int size, string coddocums)
+            :this(name,extension,Qversion,file, size)
+        {
+            Coddocums = coddocums;
         }
 
         public DBFile(string coddocums, string name, string extension, string Qversion, int size, string author, string createdAt, string documId, SortedList<String, String> versions, bool isCheckout, string checkoutEditor, string currentUser)
@@ -243,6 +250,8 @@ namespace CSGenio.business
             set { m_QueueMode = value; }
         }
 
+        protected bool textTrim = false;
+
 		/// <summary>
 		/// função que preenche o Qfield com o name do file e uma ficha da table docums com o conteúdo
 		/// </summary>
@@ -350,7 +359,7 @@ namespace CSGenio.business
                 if (extensionIndex >= 0)
                     extension = fileName.Substring(extensionIndex);
 
-                return new DBFile(fileName, extension, Qversion, file, file.Length);
+                return new DBFile(fileName, extension, Qversion, file, file.Length, coddocums);
 			}
 			catch (GenioException ex)
 			{
@@ -618,6 +627,15 @@ namespace CSGenio.business
                         value = value.PadLeft(Qfield.FieldSize);
                         insertNameValueField(Alias + "." + Qfield.Name, value);
                     }
+                }//Text trim
+                else if (textTrim && (Qfield.FieldType.Equals(FieldType.TEXTO) || Qfield.FieldType.Equals(FieldType.MUITAS_LINHAS)))
+                {
+                    string value = returnValueField(Alias + "." + Qfield.Name) as string;
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        value = value.Trim();
+                        insertNameValueField(Alias + "." + Qfield.Name, value);
+                    }
                 }
             }
         }
@@ -629,12 +647,15 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="sp">Um suporte persistente com uma conexão aberta</param>
         /// <param name="oldvalues">Os Qvalues anteriores do registo ou null caso estejasmos numa inserção</param>
-        public void fillInternalOperations(PersistentSupport sp, Area oldvalues)
+        /// <param name="fdc">O contexto de fichas posicionadas existente ou null para alocar um apenas localmente</param>
+        public void fillInternalOperations(PersistentSupport sp, Area oldvalues, FormulaDbContext fdc = null)
         {
-			FormulaDbContext fdc = new FormulaDbContext(this);
-            fdc.AddInternalOperations();
-            fdc.AddReplicas();
-            fdc.AddDefaults();
+            //FormulaDbContext fdc = new FormulaDbContext(this);
+            if (fdc is null)
+            {
+                fdc = new FormulaDbContext(this);
+                fdc.AddInternalOperations();
+            }
 
             foreach (Field Qfield in Information.DBFieldsList)
             {
@@ -720,7 +741,11 @@ namespace CSGenio.business
             ReplicaFormula formula = Qfield.Formula as ReplicaFormula;
             System.Diagnostics.Debug.Assert(formula != null);
 
-            Area target = fdc.GetRelation(formula.Alias, sp, User);
+            //replicas use their own physical relation declaration so they work even in areas without the logical fk
+            var rel = ParentTables[formula.Alias];
+            var targetname = rel.AliasTargetTab;
+            string fkvalue = fdc.GetForeignKeyValue(targetname, rel.SourceRelField, sp);
+            Area target = fdc.ReadRecord(targetname, fkvalue, sp);
             object replica = target.returnValueField(target.Alias + "." + formula.Field);
             insertNameValueField(Alias + "." + Qfield.Name, replica);
         }
@@ -729,49 +754,53 @@ namespace CSGenio.business
         /// Recalcula uma consulta a table (CT)
         /// </summary>
         /// <param name="sp">Suporte persistente com a conexão aberta</param>
-        /// <param name="campo">O Qfield a ser recalculado</param>
-        private void preencherConsultaTabela(PersistentSupport sp, Field Qfield)
+        /// <param name="field">O campo a ser recalculado</param>
+        private void preencherConsultaTabela(PersistentSupport sp, Field field)
         {
-            QueryTableFormula formula = Qfield.Formula as QueryTableFormula;
+            QueryTableFormula formula = field.Formula as QueryTableFormula;
             System.Diagnostics.Debug.Assert(formula != null);
 
-            object valorDataPreenchida = returnValueField(Alias + "." + formula.FilledDateFields);
-            Field filledDateField = (Field)this.DBFields[formula.FilledDateFields];
-            //se o Qvalue do Qfield é null
-            if (valorDataPreenchida != null)
+            object ct = null; //result
+            object dateValue = returnValueField(Alias + "." + formula.FilledDateFields);
+            Field dateInfo = DBFields[formula.FilledDateFields];
+            //se o valor do campo e null
+            if (!dateInfo.isEmptyValue(dateValue))
             {
-                //se a formula tem Qfield que agrupa
+                //se a formula tem campo que agrupa
                 if (formula.IsGroup)
                 {
-                    //Qvalue do Qfield que agrupa
-                    object campoAgruparObj = Fields[Alias + "." + formula.FilledGroupField];
-                    if (campoAgruparObj != null)//se não exists Qvalue, não há nada to change
+                    //valor do campo que agrupa
+                    object group1Value = returnValueField(Alias + "." + formula.FilledGroupField);
+                    Field group1Info = DBFields[formula.FilledGroupField];
+                    if (!group1Info.isEmptyValue(group1Value))//se não existe valor, nao ha nada para mudar
                     {
-                        RequestedField campoAgrupar = (RequestedField)campoAgruparObj;
                         if (formula.IsGroup2)
                         {
-                            //Qvalue do Qfield que agrupa
-                            object campoAgruparObj2 = Fields[Alias + "." + formula.Filled2GroupField];
-                            if (campoAgruparObj2 != null)//se não exists Qvalue, não há nada to change
+                            //valor do campo que agrupa
+                            object group2Value = returnValueField(Alias + "." + formula.Filled2GroupField);
+                            Field group2Info = DBFields[formula.Filled2GroupField];
+                            if (!group2Info.isEmptyValue(group2Value))//se não existe valor, nao ha nada para mudar
                             {
-                                RequestedField campoAgrupar2 = (RequestedField)campoAgruparObj2;
-                                object ct = formula.getGroupedCTValue(valorDataPreenchida, filledDateField.FieldFormat, campoAgrupar.Value, campoAgrupar.FieldType.Formatting, campoAgrupar2.Value, campoAgrupar2.FieldType.Formatting, sp);
-                                insertNameValueField(Alias + "." + Qfield.Name, ct);
+                                ct = formula.getGroupedCTValue(dateValue, dateInfo.FieldFormat, 
+                                    group1Value, group1Info.FieldType.Formatting, 
+                                    group2Value, group2Info.FieldType.Formatting,
+                                    sp);
                             }
                         }
                         else
 						{
-                            object ct = formula.getGroupedCTValue(valorDataPreenchida, filledDateField.FieldFormat, campoAgrupar.Value, campoAgrupar.FieldType.Formatting, sp);
-                            insertNameValueField(Alias + "." + Qfield.Name, ct);
+                            ct = formula.getGroupedCTValue(dateValue, dateInfo.FieldFormat,
+                                group1Value, group1Info.FieldType.Formatting,
+                                sp);
                         }
                     }
                 }
-                else//se não exists Qfield a agrupar
+                else//se não existe campo a agrupar
                 {
-                    object ct = formula.getCTValue(valorDataPreenchida, filledDateField.FieldFormat, sp);
-                    insertNameValueField(Alias + "." + Qfield.Name, ct);
+                    ct = formula.getCTValue(dateValue, dateInfo.FieldFormat, sp);
                 }
             }
+            insertNameValueField(Alias + "." + field.Name, ct);
         }
 
         /// <summary>
@@ -886,8 +915,11 @@ namespace CSGenio.business
             }
 
             object fim;
+            //Change by TMV (2025.01.29) - For numeric fields, check if it is empty does't make sense, because zero is a number
+            bool isNumericField = Qfield.FieldFormat == FieldFormatting.FLOAT || Qfield.FieldFormat == FieldFormatting.INTEIRO;
+
             // evita-se fazer mais uma query, quando já se sabe que temos de limpar o Qvalue do Qfield de fim
-            if (Qfield.isEmptyValue(start) || (campoGrupo != null && campoGrupo.isEmptyValue(grouping)))
+            if ((!isNumericField && Qfield.isEmptyValue(start)) || (campoGrupo != null && campoGrupo.isEmptyValue(grouping)))
                 // se o start é vazio, tem de limpar o fim!
                 fim = Qfield.GetValorEmpty();
             else
@@ -903,7 +935,7 @@ namespace CSGenio.business
         /// <param name="sp">O suporte persistente</param>
         /// <param name="oldvalues">Os Qvalues originais do registo to optimizar e poder lidar com mudanças da relação</param>
         /// <param name="deleted">True quando o registo foi apagado, false quando foi actualizado</param>
-        private void propagarUltimosValores(PersistentSupport sp, Area oldvalues, bool deleted)
+        private void propagarUltimosValores(FormulaDbContext context, PersistentSupport sp, Area oldvalues, bool deleted)
         {
             if (LastValueArgs == null)
                 return;
@@ -932,11 +964,11 @@ namespace CSGenio.business
 
                 //se a nova relação não é nula é preciso actualizar a nova
                 if (!Field.isEmptyValue(newrel, formatacaoRelacao))
-                    auxActualizarUltimoValor(sp, arg, rel.SourceRelField, rel.TargetRelField, newrel, formatacaoRelacao);
+                    auxActualizarUltimoValor(context, sp, arg, rel.SourceRelField, rel.TargetRelField, newrel, formatacaoRelacao);
 
                 //se a relação mudou e a antiga não era nula é preciso actualizar a antiga
                 if (!Field.isEmptyValue(oldrel, formatacaoRelacao) && !oldrel.Equals(newrel))
-                    auxActualizarUltimoValor(sp, arg, rel.SourceRelField, rel.TargetRelField, oldrel, formatacaoRelacao);
+                    auxActualizarUltimoValor(context, sp, arg, rel.SourceRelField, rel.TargetRelField, oldrel, formatacaoRelacao);
             }
         }
 
@@ -948,46 +980,35 @@ namespace CSGenio.business
         /// <param name="campoRelacao">O Qfield que estabeleca a relação com a table acima</param>
         /// <param name="valorRelacao">O Qvalue da key to a table acima</param>
         /// <param name="formatacaoRelacao">A formatação do tipo de Qfield da relação</param>
-        private void auxActualizarUltimoValor(PersistentSupport sp, LastValueArgument arg, string relationalField, string TargetRelField, object relationValue, FieldFormatting formatacaoRelacao)
+        private void auxActualizarUltimoValor(FormulaDbContext context, PersistentSupport sp, LastValueArgument arg, string relationalField, string TargetRelField, object relationValue, FieldFormatting formatacaoRelacao)
         {
-            FieldFormatting formatacaoDataConsultada = DBFields[arg.ConsultedDateFields].FieldFormat;
-
             //ler a data de encerramento da ficha acima
             //TODO: arg.EndDateField
 
-            //descobrir quais o Qvalues mais recentes
-            ArrayList valoresConsultados = arg.ReadLvr(sp, this, relationalField, relationValue, formatacaoRelacao, formatacaoDataConsultada, TargetRelField);
+            //calcular os valores da uv
+            FieldFormatting formatacaoDataConsultada = DBFields[arg.ConsultedDateFields].FieldFormat;
+            ArrayList valoresCalculados = arg.ReadLvr(sp, this, relationalField, relationValue, formatacaoRelacao, formatacaoDataConsultada, TargetRelField);
+            //se não existem valores inicializar com valores vazios
+            if(valoresCalculados.Count == 0)
+                foreach (string Qfield in arg.ConsultedFields)
+                    valoresCalculados.Add(DBFields[Qfield].GetValorEmpty());
 
-            //posicionamos a área da relação
-            DbArea areaRuv = (DbArea)Area.createArea(arg.AliasRUV, user, module);
-            areaRuv.UserRecord = false;
-            sp.getRecord(areaRuv, relationValue);
-            int i = 0;
-            //so actualizamos quando existem mudanças de Qvalue
-            bool updateNeeded = false;
-
-            //se encontramos uma ficha
-            foreach (string Qfield in arg.ConsultedFields)
-            {
-                if (valoresConsultados.Count > 0)
+            //nao actualizar se todos os valores de destino forem iguais aos valores calculados            
+            var readArea = context.ReadRecord(arg.AliasRUV, relationValue as string, sp);
+            bool needsUpdate = false;            
+            for(int i = 0; i < arg.ConsultedFields.Length; i++)
+                if(!valoresCalculados[i].Equals(readArea.returnValueField(readArea.Alias + "." + arg.LVRFields[i])))
                 {
-                    FieldFormatting formatting = DBFields[Qfield].FieldFormat;
-                    object Qvalue = DBConversion.ToInternal(valoresConsultados[i], formatting);
-                    if (!Qvalue.Equals(areaRuv.returnValueField(areaRuv.Alias + "." + arg.LVRFields[i])))
-                        updateNeeded = true;
-                    areaRuv.insertNameValueField(areaRuv.Alias + "." + arg.LVRFields[i], Qvalue);
+                    needsUpdate = true;
+                    break;
                 }
-                else //temos de limpar os Qvalues
-                {
-                    areaRuv.insertNameValueField(areaRuv.Alias + "." + arg.LVRFields[i], null);
-                    updateNeeded = true;
-                }
-                i++;
-            }
+            if (!needsUpdate)
+                return;
 
-            //actualizar a area da relacao caso necessário
-            if (updateNeeded)
-                areaRuv.update(sp);
+            //precisa de update, por isso vamos mudar os valores
+            Area areaRuv = context.UpdateRecord(arg.AliasRUV, relationValue as string);
+            for (int i = 0; i < arg.ConsultedFields.Length; i++)
+                areaRuv.insertNameValueField(areaRuv.Alias + "." + arg.LVRFields[i], valoresCalculados[i]);
         }
 
         /// <summary>
@@ -996,7 +1017,7 @@ namespace CSGenio.business
         /// <param name="sp">O suporte persistente</param>
         /// <param name="oldvalues">Os Qvalues antigos do registo</param>
         /// <param name="deleted">True se o registo está a ser apagado</param>
-        private void propagarFimPeriodo(PersistentSupport sp, Area oldvalues, bool deleted)
+        private void propagarFimPeriodo(FormulaDbContext context, PersistentSupport sp, Area oldvalues, bool deleted)
         {
             if (this.EndofPeriodFields == null)
                 return;
@@ -1048,7 +1069,7 @@ namespace CSGenio.business
                 {
                     string chaveAnterior = formula.getPreviousRecord(sp, this, start, grouping);
                     if (!string.IsNullOrEmpty(chaveAnterior))
-                        auxActualizaFimPeriodo(sp, campoFp, formula, chaveAnterior);
+                        auxActualizaFimPeriodo(context, sp, campoFp, formula, chaveAnterior);
                 }
 
                 //actualiza a ficha que estava atras dos Qvalues antigos
@@ -1056,28 +1077,18 @@ namespace CSGenio.business
                 {
                     string chaveAnterior = formula.getPreviousRecord(sp, this, oldinicio, oldagrupamento);
                     if (!string.IsNullOrEmpty(chaveAnterior))
-                        auxActualizaFimPeriodo(sp, campoFp, formula, chaveAnterior);
+                        auxActualizaFimPeriodo(context, sp, campoFp, formula, chaveAnterior);
                 }
             }
         }
 
-        private void auxActualizaFimPeriodo(PersistentSupport sp, string campoFp, EndPeriodFormula formula, object chaveAnterior)
+        private void auxActualizaFimPeriodo(FormulaDbContext context, PersistentSupport sp, string campoFp, EndPeriodFormula formula, object chaveAnterior)
         {
-			DbArea outra = (DbArea)Area.createArea(Alias, user, module);
-            outra.UserRecord = false;
-            sp.getRecord(outra, chaveAnterior);
-            // enquanto o cálculo de FP's não estiver protegido com um test se o Qvalue de start mudou ou não
-            // as próximas 6 instruções até ao update são desnecessárias, porque o Qvalue é recalculado pelas fórmulas internas
-            // ao gravar a ficha de target (a query to ler o FP vai ser feita duas vezes)
-            object start = outra.returnValueField(Alias + "." + formula.DateField);
-            object grouping = null;
-            if (formula.GroupField != null)
-                grouping = outra.returnValueField(Alias + "." + formula.GroupField);
-
-            object fim = formula.readEndPeriod(sp, this, start, grouping, chaveAnterior);
+            Area outra = context.UpdateRecord(Alias, chaveAnterior as string);
+            //If the internal operations will recalculate this value anyway, then just add a dummy value to the column
+            //object fim = formula.readEndPeriod(sp, this, start, grouping, chaveAnterior);
+            object fim = Information.DBFields[campoFp].GetValorEmpty();
             outra.insertNameValueField(Alias + "." + campoFp, fim);
-
-            outra.update(sp);
         }
 
 		/// <summary>
@@ -1086,7 +1097,7 @@ namespace CSGenio.business
         /// <param name="sp">O suporte persistente</param>
         /// <param name="oldvalues">Os Qvalues antigos do registo</param>
         /// <param name="deleted">True se o registo está a ser apagado</param>
-        public void propagateLinkedSum(PersistentSupport sp, Area oldValues, bool delete)
+        public void propagateLinkedSum(FormulaDbContext context, PersistentSupport sp, Area oldValues, bool delete)
         {
             if (RelatedSumArgs == null)//fields argumentos de fórmulas do tipo soma relacionada
                 return;
@@ -1158,39 +1169,32 @@ namespace CSGenio.business
 
                     //ao novo Qvalue da relação adicionamos a diferença
                     if (newdiff != 0 && !Field.isEmptyValue(valorRel, formatacaoRel))
-                        AuxUpdateSr(sp, argSR, relacao, valorRel, newdiff, areasPosicionadas);
+                        AuxUpdateSr(context, sp, argSR, relacao, valorRel, newdiff, areasPosicionadas);
 
                     //ao Qvalue antigo da relação
                     if (olddiff != 0 && !Field.isEmptyValue(oldValorRel, formatacaoRel))
-                        AuxUpdateSr(sp, argSR, relacao, oldValorRel, olddiff, areasPosicionadas);
+                        AuxUpdateSr(context, sp, argSR, relacao, oldValorRel, olddiff, areasPosicionadas);
                 }
-
-                // at the end, update all records on areasPosicionadas
-                foreach (DbArea a in areasPosicionadas.Values)
-                    a.update(sp);
-
-                // reset areasPosicionadas after updating affected rows
-                areasPosicionadas.Clear();
             }
         }
 
-        private void AuxUpdateSr(PersistentSupport sp, RelatedSumArgument argSR, Relation relacao, object valorRel, decimal diff, Dictionary<string, DbArea> areasPosicionadas)
+        private void AuxUpdateSr(FormulaDbContext context, PersistentSupport sp, RelatedSumArgument argSR, Relation relacao, object valorRel, decimal diff, Dictionary<string, DbArea> areasPosicionadas)
         {
-            DbArea outra = null;
-            areasPosicionadas.TryGetValue(relacao.AliasTargetTab + "_" + valorRel.ToString(), out outra);
-            if (outra == null)
+            Area other = context.UpdateRecord(relacao.AliasTargetTab, valorRel.ToString());
+            var srFieldName = other.Alias + "." + argSR.SRField;
+
+            //if the field is not already set in the target record we need to fetch it from the database values
+            if (!other.Fields.ContainsKey(argSR.SRField))
             {
-                outra = (DbArea)Area.createArea(relacao.AliasTargetTab, user, module);
-                outra.UserRecord = false;
-                sp.getRecord(outra, valorRel, true);
-                areasPosicionadas.Add(relacao.AliasTargetTab + "_" + valorRel.ToString(), outra);
+                var dboutra = context.ReadRecord(relacao.AliasTargetTab, valorRel as string, sp);
+                other.insertNameValueField(srFieldName, dboutra.returnValueField(srFieldName));
             }
-            decimal valorSR = Convert.ToDecimal(outra.returnValueField(outra.Alias + "." + argSR.SRField));
+            decimal valorSR = Convert.ToDecimal(other.returnValueField(srFieldName));
             if (argSR.Signal == '+')
                 valorSR += diff;
             else
                 valorSR -= diff;
-            outra.insertNameValueField(outra.Alias + "." + argSR.SRField, valorSR);
+            other.insertNameValueField(srFieldName, valorSR);
         }
 
         //created by [AJA] at [2014.06.06] - concatenha linhas
@@ -1202,7 +1206,7 @@ namespace CSGenio.business
         /// <param name="sp">O suporte persistente</param>
         /// <param name="oldvalues">Os Qvalues antigos do registo</param>
         /// <param name="deleted">True se o registo está a ser apagado</param>
-        public void propagateListAggregate(PersistentSupport sp, Area oldValues, bool delete)
+        public void propagateListAggregate(FormulaDbContext context, PersistentSupport sp, Area oldValues, bool delete)
         {
             if (ArgsListAggregate == null)//fields argumentos de fórmulas do tipo soma relacionada
                 return;
@@ -1220,6 +1224,7 @@ namespace CSGenio.business
                 object valorRel = returnValueField(Alias + "." + relacao.SourceRelField);
                 object oldValorRel = oldValues.returnValueField(Alias + "." + relacao.SourceRelField);
 
+                Field infoValorLG = source.DBFields[argLG.ArgField];
                 object novoValorLG = returnValueField(Alias + "." + argLG.ArgField);
                 object oldValorLG = oldValues.returnValueField(Alias + "." + argLG.ArgField);
 
@@ -1228,32 +1233,49 @@ namespace CSGenio.business
 
                 // To the new value of the relationship, we add the difference.
                 if (!Equals(valorRel, oldValorRel) || !Equals(novoValorLG, oldValorLG) || !Equals(novoValorOrdenacao, oldValorOrdenacao)
-                // We must always process records that change from the pseudo new state (zzstate 1 or 11) to the valid one and those that are removed.
-                    || delete || oldValues.Zzstate != 0)
+                    //we are deleting this value and we has something that was propagated
+                    || (delete && !infoValorLG.isEmptyValue(oldValorLG))
+                    //zzstate was pseudo new state and we have something to actually propagate
+                    || (oldValues.Zzstate != 0 && !infoValorLG.isEmptyValue(novoValorLG)))
                 {
                     //AJA 2016-04-06 - Verifica se a relação exists. Se estiver fazia não calcula a formula.
                     if (!Field.isEmptyValue(valorRel, formatacaoRel))
-                        AuxUpdateLG(sp, argLG, relacao, valorRel);
+                        AuxUpdateLG(context, sp, argLG, relacao, valorRel);
                     if (!delete && !Field.isEmptyValue(oldValorRel, formatacaoRel) && !Equals(valorRel, oldValorRel))
-                        AuxUpdateLG(sp, argLG, relacao, oldValorRel);
+                        AuxUpdateLG(context, sp, argLG, relacao, oldValorRel);
                 }
             }
         }
 
-        private void AuxUpdateLG(PersistentSupport sp, ListAggregateArgument argLG, Relation relacao, object valorRel)
+        private void AuxUpdateLG(FormulaDbContext context, PersistentSupport sp, ListAggregateArgument argLG, Relation relacao, object valorRel)
         {
-            DbArea outra = (DbArea)Area.createArea(relacao.AliasTargetTab, user, module);
-            outra.UserRecord = false;
-            sp.getRecord(outra, valorRel);
+            Area outra = context.UpdateRecord(relacao.AliasTargetTab, valorRel as string);
 
-            var sql = sp.getLGQuery(this.TableName, argLG, relacao, valorRel);
-            object Qvalue = sp.executeScalar(sql);
-            string valorLG = "";
-            if (Qvalue != DBNull.Value)
-                valorLG = (string)Qvalue;
+            SelectQuery sql = new SelectQuery()
+                .Select(Alias, argLG.ArgField)
+                .From(TableName, Alias)
+                .Where(CriteriaSet.And()
+                    .Equal(Alias, relacao.SourceRelField, valorRel)
+                    .Equal(Alias, "zzstate", 0))
+                .OrderBy(Alias, argLG.SortField, SortOrder.Ascending);
+            var values = sp.executeReaderOneColumn(sql);
+
+            var trimmedValues = new List<string>();
+            foreach (var v in values)
+            {
+                var strValue = DBConversion.ToString(v);
+                if (!string.IsNullOrEmpty(strValue))
+                    trimmedValues.Add(strValue);
+            }
+
+            var valorLG = "";
+            if (trimmedValues.Count > 0)
+                valorLG = string.Join(argLG.SeparatorField, trimmedValues);
+            var maxlen = outra.DBFields[argLG.LGField].FieldSize;
+            if(valorLG.Length > maxlen)
+                valorLG = valorLG.Substring(0, maxlen);
 
             outra.insertNameValueField(outra.Alias + "." + argLG.LGField, valorLG);
-            outra.update(sp);
         }
 
 		/// <summary>
@@ -1631,10 +1653,16 @@ namespace CSGenio.business
 
             if (Zzstate == 0)
             {
-				propagateLinkedSum(sp, oldvalues, true);
-				propagarUltimosValores(sp, oldvalues, true);
-				propagarFimPeriodo(sp, oldvalues, true);
-                propagateListAggregate(sp, oldvalues, true); //AJA concatena linhas
+                FormulaDbContext fdc = new FormulaDbContext(this);
+                fdc.AddPropagations();
+
+				propagateLinkedSum(fdc, sp, oldvalues, true);
+				propagarUltimosValores(fdc, sp, oldvalues, true);
+				propagarFimPeriodo(fdc, sp, oldvalues, true);
+                propagateListAggregate(fdc, sp, oldvalues, true); //AJA concatena linhas
+
+                fdc.RunPropagations(sp);
+
             }
             //  updateOnDelete
         }
@@ -1991,6 +2019,12 @@ namespace CSGenio.business
 
 		public override StatusMessage change(PersistentSupport sp, CriteriaSet condition)
 		{
+			// Prevent changes when in maintenance mode
+			if (Maintenance.Current.IsActive)
+			{
+				throw new BusinessException(Translations.Get("O Sistema encontra-se em manutenção! Pedimos desculpa pelo incómodo.", user.Language), "DbArea.change", "In maintenance mode.");
+			}
+
 			StatusMessage Qresult = StatusMessage.GetAggregator();
 			StatusMessage validationResults = null;
             try
@@ -2042,7 +2076,10 @@ namespace CSGenio.business
 
                 //calcular formulas internas (+, +H, ++, CT, FP)
                 //os numeros sequenciais são recalculados sempre que se detecta que estão a vazio ou que não são únicos
-				fillInternalOperations(sp, oldvalues);
+                var fdc = new FormulaDbContext(this);
+                fdc.AddInternalOperations();
+                fdc.AddPropagations();
+				fillInternalOperations(sp, oldvalues, fdc);
 
                 // validar o registo
                 // (RS 2011.06.30) Quando não é o user a gravar a ficha não devemos validar as outras fichas porque podem ainda estar incompletas
@@ -2082,6 +2119,9 @@ namespace CSGenio.business
                     }
                 }
 
+                // Executes the encryption formulas associated with the fields before saving the value to the database
+                ExecuteFieldValueEncryption(sp);
+
                 //persistir o registo, optimizando to só gravar as mudanças
 				sp.change(this);
 
@@ -2090,10 +2130,11 @@ namespace CSGenio.business
 
                 //propagar alterações to outros registos
                 propagateReplicas(sp, oldvalues);
-                propagarUltimosValores(sp, oldvalues, false);
-                propagateLinkedSum(sp, oldvalues, false);
-                propagarFimPeriodo(sp, oldvalues, false);
-                propagateListAggregate(sp, oldvalues, false); //concatena linhas
+                propagarUltimosValores(fdc, sp, oldvalues, false);
+                propagateLinkedSum(fdc, sp, oldvalues, false);
+                propagarFimPeriodo(fdc, sp, oldvalues, false);
+                propagateListAggregate(fdc, sp, oldvalues, false); //concatena linhas
+                fdc.RunPropagations(sp);
 
                 //criar fichas de shadow e de history
                 createHistory(sp, oldvalues);
@@ -2208,6 +2249,9 @@ namespace CSGenio.business
                 //5 - preencher operações internas
 				fillInternalOperations(sp, null);
 
+                // Executes the encryption formulas associated with the fields before saving the value to the database
+                ExecuteFieldValueEncryption(sp);
+
 				base.insertPseud(sp, fieldNames, fieldsvalues);
 
                 afterInsert(sp);
@@ -2298,22 +2342,29 @@ namespace CSGenio.business
             if (Zzstate == 0)
                 fillStampChange();
 
-            fillInternalOperations(sp, oldvalues);
+            FormulaDbContext fdc = new FormulaDbContext(this);
+            fdc.AddInternalOperations();
+            fdc.AddPropagations();
+            fillInternalOperations(sp, oldvalues, fdc);
 
             var validationResults = Validation.validateFieldsChange(this, sp, User, true);
             if (Zzstate != 0)
                 calculateTemporarySequentials();
+
+            // Executes the encryption formulas associated with the fields before saving the value to the database
+            ExecuteFieldValueEncryption(sp);
 
             CheckErrorMessages(StatusMessage.GetAggregator(), validationResults, "DbArea.apply");
             updateDirect(sp);
 
 			// Propagate changes to other records
             propagateReplicas(sp, oldvalues);
-            propagarUltimosValores(sp, oldvalues, false);
-            propagateLinkedSum(sp, oldvalues, false);
-            propagarFimPeriodo(sp, oldvalues, false);
+            propagarUltimosValores(fdc, sp, oldvalues, false);
+            propagateLinkedSum(fdc, sp, oldvalues, false);
+            propagarFimPeriodo(fdc, sp, oldvalues, false);
             // To test in the future
-            //propagateListAggregate(sp, oldvalues, false);
+            //propagateListAggregate(fdc, sp, oldvalues, false);
+            fdc.RunPropagations(sp);
         }
 
         /// <summary>
@@ -2343,6 +2394,12 @@ namespace CSGenio.business
 		/// <returns>o status e a mensagem resposta da inserção</returns>
 		public override StatusMessage inserir_WS(PersistentSupport sp)
 		{
+			// Prevent changes when in maintenance mode
+			if (Maintenance.Current.IsActive)
+			{
+				throw new BusinessException(Translations.Get("O Sistema encontra-se em manutenção! Pedimos desculpa pelo incómodo.", user.Language), "DbArea.change", "In maintenance mode.");
+			}
+			
             StatusMessage Qresult = StatusMessage.GetAggregator();
 
             try
@@ -2418,7 +2475,10 @@ namespace CSGenio.business
 
                 //calcular formulas internas (+, +H, ++, CT, FP)
                 //os numeros sequenciais são recalculados sempre que se detecta que estão a vazio ou que não são únicos
-                fillInternalOperations(sp, oldvalues);
+                FormulaDbContext fdc = new FormulaDbContext(this);
+                fdc.AddInternalOperations();
+                fdc.AddPropagations();
+                fillInternalOperations(sp, oldvalues, fdc);
 
                 // validar o registo
                 // (RS 2011.06.30) Quando não é o user a gravar a ficha não devemos validar as outras fichas porque podem ainda estar incompletas
@@ -2442,14 +2502,18 @@ namespace CSGenio.business
                 // actualizar os Qvalues das chaves estrangeiras to a area da ST
                 criarRegistosST(sp);
 
+                // Executes the encryption formulas associated with the fields before saving the value to the database
+                ExecuteFieldValueEncryption(sp);
+
                 sp.insertPseud(this);
 
                 //propagar alterações to outros registos
                 // propagateReplicas(sp, oldvalues); //<-- Numa insercao nunca precisamos de propagar replicas pois não existem fichas abaixo
-                propagarUltimosValores(sp, oldvalues, false);
-                propagateLinkedSum(sp, oldvalues, false);
-                propagarFimPeriodo(sp, oldvalues, false);
-                propagateListAggregate(sp, oldvalues, false); //concatena linhas
+                propagarUltimosValores(fdc, sp, oldvalues, false);
+                propagateLinkedSum(fdc, sp, oldvalues, false);
+                propagarFimPeriodo(fdc, sp, oldvalues, false);
+                propagateListAggregate(fdc, sp, oldvalues, false); //concatena linhas
+                fdc.RunPropagations(sp);
 
                 //criar fichas de shadow e de history
                 createHistory(sp, oldvalues);
@@ -2520,6 +2584,10 @@ namespace CSGenio.business
 
                 //6 - duplicate os documentos na db
                 sp.duplicateFilesDB(this, codInt, false);
+
+                // Executes the encryption formulas associated with the fields before saving the value to the database
+                ExecuteFieldValueEncryption(sp);
+
                 sp.insertPseud(this);
 
                 //duplicate as fichas relacionadas
@@ -2558,10 +2626,10 @@ namespace CSGenio.business
                     Field campoBD = (Field)DBFields[campoPedido.Name];
                     //RMR(2017-06-01) - Whenever a record is duplicated, every DATAMUDA/HORAMUDA/OPERMUDA should also be reseted
                     if (campoBD.ZeroDuplication || campoBD.FieldType == FieldType.DATAMUDA || campoBD.FieldType == FieldType.OPERMUDA || campoBD.FieldType == FieldType.HORAMUDA
-                        //MH(2018-03-14) - The target fields of the SRs must be reseted
+                        // The target fields of the SRs must be reseted
                         || camposSR.Contains(campoBD.Name)
-                        //MH(2023-03-17) - The password fields can never be duplicated!
-                        || campoBD.FieldType == FieldType.PASSWORD)
+                        // The encrypted fields can never be duplicated!
+                        || campoBD.FieldType == FieldType.ENCRYPTED)
                         camposToZero.Add(campoBD.Alias + "." + campoBD.Name);
                 }
             }
@@ -2783,6 +2851,9 @@ namespace CSGenio.business
             fillInternalOperations(sp, null);
             //Duplicate docums
             string newcodDocums = sp.duplicateFilesDB(this, codInt, false);
+
+            // Executes the encryption formulas associated with the fields before saving the value to the database
+            ExecuteFieldValueEncryption(sp);
             
             //RS 24.04.2017 Passa a efectuar todas as regras de business durante a duplicação.
             insert(sp);
@@ -3200,6 +3271,9 @@ namespace CSGenio.business
 
 						//4 - preenche Qvalues default
                         fillValuesDefault(sp, FunctionType.INS);
+
+                        // Executes the encryption formulas associated with the fields before saving the value to the database
+                        ExecuteFieldValueEncryption(sp);
 
                         sp.insertPseud(this);
                         change(sp, (CriteriaSet)null);

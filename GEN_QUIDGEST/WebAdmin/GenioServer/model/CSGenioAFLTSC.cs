@@ -61,6 +61,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "SCALE_ID07487";
 
 			Qfield.Dupmsg = "";
@@ -247,7 +248,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodfltsc, value); }
 		}
 
-
 		/// <summary>Field : "Scale ID" Tipo: "N" Formula:  ""</summary>
 		public static FieldRef FldScaleid { get { return m_fldScaleid; } }
 		private static FieldRef m_fldScaleid = new FieldRef("fltsc", "scaleid");
@@ -259,7 +259,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldScaleid, value); }
 		}
 
-
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		public static FieldRef FldCodfligh { get { return m_fldCodfligh; } }
 		private static FieldRef m_fldCodfligh = new FieldRef("fltsc", "codfligh");
@@ -270,7 +269,6 @@ namespace CSGenio.business
 			get { return (string)returnValueField(FldCodfligh); }
 			set { insertNameValueField(FldCodfligh, value); }
 		}
-
 
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }

@@ -39,12 +39,24 @@ namespace GenioMVC.ViewModels.Propr
         /// </summary>
         public string ValCodpropr { get; set; }
 
+		/// <inheritdoc/>
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
         /// <inheritdoc/>
         public override CriteriaSet baseConditions
         {
             get
             {
                 CriteriaSet conds = CriteriaSet.And();
+
                 return conds;
             }
         }
@@ -58,6 +70,14 @@ namespace GenioMVC.ViewModels.Propr
                 return relations;
             }
         }
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PROPRALL_PESSONAME]/
+
+			return crs;
+		}
+
 
         public string ValCodpaise { get; set; }
 
@@ -142,6 +162,8 @@ namespace GenioMVC.ViewModels.Propr
 
 
 
+
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 
 			if (isToExport)
@@ -243,7 +265,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
 
 			//columns by users list (TemplateDBEditViewModel)
-			userColumns = UserUiSettings.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
+			userColumns = TableUiSettingsDbRec.Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User).UserColumns;
 			FieldRef firstVisibleColumn = null;
 
 			if (sorts == null)
@@ -281,7 +303,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 			CriteriaSet proprallpessoname____Conds = BuildCriteriaSet(requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
             tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ PROPRALL_NAME]/
+// USE /[MANUAL GQT OVERRQ PROPRALL_PESSONAME]/
 
             // This will happen in case there is an error
             if(proprallpessoname____Conds == null)
@@ -294,7 +316,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
 				Qlisting = Models.ModelBase.Where<CSGenioApesso>(false, proprallpessoname____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PROPRALLPESSONAME____", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP PROPRALL_NAME]/
+// USE /[MANUAL GQT OVERRQLSTEXP PROPRALL_PESSONAME]/
 
                 conditions = proprallpessoname____Conds;
                 return;
@@ -304,7 +326,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
 			if (tableReload)
 			{
-// USE /[MANUAL GQT OVERRQLIST PROPRALL_NAME]/
+// USE /[MANUAL GQT OVERRQLIST PROPRALL_PESSONAME]/
 
 
 				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_pesso"];
@@ -410,7 +432,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 
         private static readonly string[] _fieldsToSerialize =
         {
-            "Pesso", "Pesso.ValCodpesso", "Pesso.ValZzstate", "Pesso.ValName", "Pesso.ValCodempre", "Pesso.ValCodpaise", "Pesso.ValCodcntry", "Pesso.ValCodregia", "Pesso.ValCodcateg"
+            "Pesso", "Pesso.ValCodpesso", "Pesso.ValZzstate", "Pesso.ValName", "Pesso.ValCodcateg", "Pesso.ValCodempre", "Pesso.ValCodpaise", "Pesso.ValCodcntry", "Pesso.ValCodregia"
         };
 
         private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>

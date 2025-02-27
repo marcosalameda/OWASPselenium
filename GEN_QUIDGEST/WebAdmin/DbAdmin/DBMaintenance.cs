@@ -220,7 +220,7 @@ namespace DbAdmin
         public ReindexOrder GetReindexScripts(string path = "")
         {            
             if (string.IsNullOrEmpty(path))
-                path = Path.Combine(GetReindexPath(), "order2exec.xml");
+                path = Path.Combine(GetReindexPath(), "order2Exec.xml");
 
             try
             { 

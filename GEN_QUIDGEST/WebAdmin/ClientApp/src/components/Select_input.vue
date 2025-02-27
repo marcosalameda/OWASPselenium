@@ -2,7 +2,10 @@
     <div class="i-dbedit">
         <div class="d-flex">
             <label :for="id" v-if="label" class="i-text__label">{{ label }}</label>
-            <span v-if="helpText" class="field-help glyphicons glyphicons-info-sign" :title="helpText"/>
+            <q-icon
+              v-if="helpText"
+              :title="helpText"
+              icon="information-outline" />
         </div>
         <div :class="style_class" :id="'select_input_container_' + id">
             <multiselect v-model="curValue" :options="options" :id="id" label="Text" :disabled="isReadOnly"></multiselect>

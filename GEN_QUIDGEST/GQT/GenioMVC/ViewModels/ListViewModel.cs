@@ -75,6 +75,11 @@ namespace GenioMVC.ViewModels
         /// Gets the searchable columns.
         /// </summary>
         abstract protected List<TableSearchColumn> SearchableColumns { get; }
+		
+		/// <summary>
+		/// Gets the tables limits that are always applied.
+		/// </summary>
+		abstract public CriteriaSet StaticLimits { get; }
 
         /// <summary>
         /// Gets the list base conditions.
@@ -129,6 +134,14 @@ namespace GenioMVC.ViewModels
         {
             Navigation = current_navigation;
         }
+		
+		/// <summary>
+		/// Applies manual code to change the static limits property
+		/// </summary>
+		public virtual CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+			return crs;
+		}
 
         /// <summary>
         /// Sets the table limits display property.
@@ -411,7 +424,7 @@ namespace GenioMVC.ViewModels
                 return SearchableColumns;
 
             //JGF 2021.09.01 Moved this line nearer the usage, it was going to the server a lot needlessly
-            var userColumns = UserUiSettings
+            var userColumns = TableUiSettingsDbRec
                 .Load(UserContext.Current.PersistentSupport, Uuid, UserContext.Current.User)
                 .UserColumns;
 
@@ -425,7 +438,7 @@ namespace GenioMVC.ViewModels
         {
             if (_userViewModes == null)
             {
-                _userViewModes = UserUiSettings.Load(
+                _userViewModes = TableUiSettingsDbRec.Load(
                     UserContext.Current.PersistentSupport,
                     Uuid,
                     UserContext.Current.User

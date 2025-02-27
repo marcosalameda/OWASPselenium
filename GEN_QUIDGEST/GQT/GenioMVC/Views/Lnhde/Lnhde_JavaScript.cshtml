@@ -234,7 +234,7 @@
 		@* Default of the 'ValQuantdec' field *@
 		window.Form_Lnhde.SetFormulaDefault('LED_LNHDE___LNHDEQUANTDEC', function() {
 						return ( getFieldValue($(':not([elem-identifier="Multiform"]) > #LnhpdValQuantdec', $('[data-form="Lnhde"]'))));
-		}, 'LNHPDVALQUANTDEC_CHANGE');
+		}, 'LNHPDVALQUANTDEC_CHANGE VALCODLNHPD_CHANGE');
 		
 		@* Recalculate formulas (server side) *@
 		$(qForm).bind('VALCODLNHPD_CHANGE', function(event, eTarget) {

@@ -531,8 +531,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
                     {
                         new SpecialRenderingVariable { Variable = "title", Value = "WPESS.NAME", AllowMultiple = false },
                         new SpecialRenderingVariable { Variable = "text", Value = "WPESS.NACIONAL", AllowMultiple = true },
-                        new SpecialRenderingVariable { Variable = "text", Value = "WPESS.NFUNC", AllowMultiple = true },
                         new SpecialRenderingVariable { Variable = "text", Value = "WPESS.DATE", AllowMultiple = true },
+                        new SpecialRenderingVariable { Variable = "text", Value = "WPESS.NFUNC", AllowMultiple = true },
                         new SpecialRenderingVariable { Variable = "image", Value = "WPESS.FTTHUMB", AllowMultiple = false },
                     },
                     StyleVariables = new List<SpecialRenderingVariable>()

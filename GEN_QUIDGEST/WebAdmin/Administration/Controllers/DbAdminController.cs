@@ -121,6 +121,45 @@ namespace Administration.Controllers
             AreaPathwaysList = new List<AreaPathways>()
         };
 
+        [HttpPost]
+        public IActionResult GetMaintenanceLogDetails([FromBody] int logIndex)
+        {
+            try
+            {
+                DBMaintenance dbMaintenance = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory);
+                var logDetails = dbMaintenance.GetMaintenanceLogDetails(logIndex);
+
+                return Json(logDetails);
+            }
+            catch (DBMaintenance.DBMaintenanceException ex)
+            {
+                Log.Error(ex.Message);
+                return Json(new { ResultMsg = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return Json(new { ResultMsg = Resources.Resources.AN_ERROR_OCCURED_WHI37264 });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult GetMaintenanceLogs([FromBody] int numLogs)
+        {
+            try
+            {
+                DBMaintenance dbMaintenance = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory);
+                List<RdxOperationInfo> logInfo = dbMaintenance.GetMaintenanceLogsInfo(numLogs);
+
+                return Json(logInfo);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return Json(new { ResultMsg = Resources.Resources.AN_ERROR_OCCURED_WHI37264 });
+            }
+        }
+
         public DbAdminModel initDbModel(DataSystemXml dataSystem, ConfigurationXML conf, string year)
         {
             //read cfg table from the database
@@ -145,56 +184,21 @@ namespace Administration.Controllers
 
             model.DSName = dataSystem.Name;
 
-            var scriptLog = RdxOperationLog.readAggregateXML(PersistentSupport.LogReindexPath());
-            var lastLog = scriptLog.Count > 0 ? scriptLog.Last() : null;
+            List<RdxOperationLog> scriptLog = RdxOperationLog.readAggregateXML(PersistentSupport.LogReindexPath());
+            RdxOperationLog lastLog = scriptLog.Count > 0 ? scriptLog.Last() : null;
 
-            foreach (ReIndexFunction item in model.reindexMenu.ReIndexItems)
-            {
-                ReindexFunctionItem obj = new ReindexFunctionItem(){
-                    Description = item.Name,
-                    Id = item.Id,
-                    Value = item.Selected,
-                    Duration = 0,
-                    Result = "",
-                    LastRun = DateTime.MinValue,
-                    Origin = lastLog != null ? lastLog.Origin : "",
-                    Details = new List<RdxScriptLog>(),
-                    Selectable = item.Selectable
-                };
+            List<ReIndexFunction> modelItems = model.reindexMenu.ReIndexItems
+                .Where(item =>
+                    // Log database options only appear if the log database is configured
+                    item.Connection != ConnectionType.Log || (dataSystem.DataSystemLog != null && dataSystem.DataSystemLog.Schemas.Count != 0)
+                )
+                .ToList();
 
-                if (lastLog != null)
-                {
-                    foreach (var script in item.Scripts)
-                    {
-                        var l = lastLog.ScriptDetails.Find(x => x.ScriptId == script.Name);
-                        if (l != null)
-                        {
-                            if (obj.LastRun == DateTime.MinValue)
-                                obj.LastRun = l.StartTime;
-                            obj.Duration += l.Duration;
-                            obj.Result += l.Result ?? "";
-                            obj.Details.Add(l);
-                        }
-                    }
-                }
-
-                // Log database options only appear if the log database is configured
-                if (item.Connection != ConnectionType.Log || (dataSystem.DataSystemLog != null && dataSystem.DataSystemLog.Schemas.Count != 0))
-                    model.Items.Add(obj);
-            }
+            model.Items.AddRange(DBMaintenance.LoadReindexFunctionItems(lastLog, modelItems));
 
             // Gather the essential information of the latest reindex operation, if there is one
             if (lastLog != null)
-            {
-                model.LastLogInfo = new RdxOperationInfo
-                {
-                    Database = lastLog.Database,
-                    Duration = lastLog.Duration,
-                    StartTime = lastLog.StartTime.ToString(CultureInfo.CurrentCulture),
-                    Origin = lastLog.Origin,
-                    Success = model.Items.All(item => item.Result.Length == 0)
-                };
-            }
+                model.LastLogInfo = DBMaintenance.CreateOperationInfo(lastLog, (scriptLog.Count - 1), model.Items);
 
             // read upgrade scripts version
             model.VersionUpgrScripts = CSGenio.framework.Configuration.VersionUpgrIndxGen;
@@ -297,7 +301,7 @@ namespace Administration.Controllers
                 Year = Year,
                 DirFilestream = model.DirFilestream,
                 Zero = model.Zero,
-                Origin = "Database Maintenace Interface"
+                Origin = "Database Maintenance Interface"
             };
 
             if (!ModelState.IsValid) {

@@ -687,6 +687,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                     paramEx.LogConn = LogConn;
                     paramEx.ContinueAfterError = false;
                     paramEx.Origin = param.Origin;
+                    paramEx.DataSystem = dataSystem.Name;
 
                     paramEx.ChangedExecuteServer += (sender, eventArgs, status) =>
                     {

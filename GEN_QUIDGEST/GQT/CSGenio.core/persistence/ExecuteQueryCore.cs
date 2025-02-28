@@ -198,6 +198,7 @@ namespace ExecuteQueryCore
         public IDbConnection DefConn { get; set; }
         public bool ContinueAfterError { get; set; }
         public string Origin { get; set; }
+        public string DataSystem { get; set; }
     }
 
     /**
@@ -205,8 +206,10 @@ namespace ExecuteQueryCore
      */
     public class RdxOperationInfo
     {
+        public int Id { get; set; }
         public string StartTime { get; set; }
         public int Duration { get; set; }
+        public string DataSystem { get; set; }
         public string Database { get; set; }
         public string Origin { get; set; }
         public bool Success { get; set; }
@@ -217,6 +220,7 @@ namespace ExecuteQueryCore
         public DateTime StartTime { get; set; }
         public int Duration { get; set; }
         public string Database { get; set; }
+        public string DataSystem { get; set; }
         public string Origin { get; set; }
         public List<RdxScriptLog> ScriptDetails { get; set; }
 
@@ -243,6 +247,16 @@ namespace ExecuteQueryCore
                 //We just ignore any error here and just return whatever we were able to read
             }
             return res;
+        }
+
+        public static RdxOperationLog FindXML(int logIndex, string filename)
+        {
+            if (logIndex < 0)
+                return null;
+
+            List<RdxOperationLog> logs = readAggregateXML(filename);
+
+            return logIndex >= logs.Count ? null : logs[logIndex];
         }
 
         public void appendXML(string filename)
@@ -746,6 +760,7 @@ namespace ExecuteQueryCore
             log.Database = param.Conn.Database;
             log.ScriptDetails = new List<RdxScriptLog>();
             log.Origin = param.Origin;
+            log.DataSystem = param.DataSystem;
 
             RdxScriptLog scriptLog;
             RdxScriptLog blockLog;
@@ -1192,6 +1207,54 @@ namespace ExecuteQueryCore
         [XmlArray("Scripts")]
         [XmlArrayItem("Script")]
         public List<ReIndexFile> Scripts { get; set; }
+    }
+
+    /**
+     * Class that structures information of a ReindexFunction that was run during maintenance (based on its RdxOperationLog).
+     */
+    public class ReindexFunctionItem
+    {
+        public string Description { get; set; }
+        public string Id { get; set; }
+        public bool Value { get; set; }
+        public string Type { get; set; }
+        [JsonIgnore]
+        public Action Callback { get; set; }
+        public DateTime LastRun { get; set; }
+        public int Duration { get; set; }
+        public string Origin { get; set; }
+        public string Result { get; set; }
+        public bool Selectable { get; set; }
+        public List<RdxScriptLog> Details { get; set; }
+
+        public void Load(ReIndexFunction function, RdxOperationLog log = null)
+        {
+            Description = function.Name;
+            Id = function.Id;
+            Value = function.Selected;
+            Duration = 0;
+            Result = "";
+            LastRun = DateTime.MinValue;
+            Origin = log != null ? log.Origin : "";
+            Details = new List<RdxScriptLog>();
+            Selectable = function.Selectable;
+
+            if (log != null)
+            {
+                foreach (var script in function.Scripts)
+                {
+                    var l = log.ScriptDetails.Find(x => x.ScriptId == script.Name);
+                    if (l != null)
+                    {
+                        if (LastRun == DateTime.MinValue)
+                            LastRun = l.StartTime;
+                        Duration += l.Duration;
+                        Result += l.Result ?? "";
+                        Details.Add(l);
+                    }
+                }
+            }
+        }
     }
 
     public class ReIndexFile

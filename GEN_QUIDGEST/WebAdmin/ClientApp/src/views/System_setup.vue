@@ -276,7 +276,6 @@
 		created() {
 			// Ler dados
 			this.fetchData();
-			this.$eventHub.on('alertClass', this.updateAlert);
 		},
 		watch: {
 			// call again the method if the route changes

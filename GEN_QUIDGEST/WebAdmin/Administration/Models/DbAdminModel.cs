@@ -78,25 +78,6 @@ namespace Administration.Models
         public RdxOperationInfo LastLogInfo { get; set; }
     }
 
-
-    public class ReindexFunctionItem
-    {
-        public string Description { get; set; }
-        public string Id { get; set; }
-        public bool Value { get; set; }
-        public string Type { get; set; }
-        [JsonIgnore]
-        public Action Callback { get; set; }
-        public DateTime LastRun { get; set; }
-        public int Duration { get; set; }
-        public string Origin { get; set; }
-        public string Result { get; set; }
-        public bool Selectable { get; set; }
-        public List<RdxScriptLog> Details { get; set; }
-    }
-
-
-
     public class DbBackupModel
     {
         [Display(Name = "NOME_DE_UTILIZADOR58858", ResourceType = typeof(Resources.Resources))]

@@ -1,5 +1,5 @@
 ﻿<template>
-	<div v-if="!showErrorDialog">
+	<div v-if="!(showDefaultDialog && isErrorDialog)">
 		<q-card
 			class="q-card--admin-default"
 			:title="texts.EXIBICAO16445"
@@ -43,7 +43,7 @@
 			class="q-table--borderless">
 
 			<template #actions="props">
-				<div class="data-systems__table--btns">
+				<div class="q-table__actions-btns">
 					<q-button
 						:title="texts.CONFIGURAR09280"
 						bStyle="tertiary"
@@ -55,6 +55,13 @@
 						bStyle="tertiary"
 						@click="duplicateDataSystem(props.row)">
 						<q-icon icon="duplicate" />
+					</q-button>
+					<q-button
+						:title="texts.APAGAR04097"
+						:disabled="props.row.Year === configDefaultDs"
+						bStyle="tertiary"
+						@click="confirmDelete(props.row)">
+						<q-icon icon="bin" />
 					</q-button>
 				</div>
 			</template>
@@ -79,12 +86,13 @@
 	</div>
 
 	<q-dialog 
-		v-model="showErrorDialog"
-		:title="texts.ERRO38355"
-		:text="errorDialogText"
-		:buttons="errorDialogButtons" />
+		v-model="showDefaultDialog"
+		:title="isErrorDialog ? texts.ERRO38355 : ''"
+		:icon="defaultDialogIcon"
+		:text="defaultDialogText"
+		:buttons="defaultDialogButtons" />
 
-	<q-dialog 
+	<q-dialog
 		v-model="showNewSystemDialog"
 		:title="texts.CRIAR_UM_NOVO_SISTEM49777"
 		:buttons="newSystemDialogButtons">
@@ -128,24 +136,40 @@
 		data() {
 			return {
 				/**
+				 * The default data system of the application. Unlike model.DefaultYear, this
+				 * represents what is saved in the configuration file - not the current QSelect value.
+				 */
+				configDefaultDs: '',
+
+				/**
 				 * The data systems (Years) of the application.
 				 */
 				dataSystems: [],
 
 				/**
-				 * True if the error dialog is to be shown, false otherwise.
+				 * True if the default dialog is to be shown, false otherwise.
 				 */
-				showErrorDialog: false,
+				showDefaultDialog: false,
 
 				/**
-				 * Text to be displayed in the error dialog.
+				 * True if the default dialog is an error dialog, false otherwise.
 				 */
-				errorDialogText: '',
+				isErrorDialog: false,
 
 				/**
-				 * Action buttons of the error dialog.
+				 * Text to be displayed in the default dialog.
 				 */
-				errorDialogButtons: [],
+				defaultDialogText: '',
+
+				/**
+				 * Icon to be displayed in the default dialog.
+				 */
+				defaultDialogIcon: {},
+
+				/**
+				 * Action buttons of the default dialog.
+				 */
+				defaultDialogButtons: [],
 
 				/**
 				 * True if the new data system dialog is to be shown, false otherwise.
@@ -333,10 +357,6 @@
 			 * Initializes the tab with the necessary information.
 			 */
 			initDataSystems() {
-				// Retrieve model information
-				this.defaultYear = this.model.DefaultYear
-				this.hideYears = this.model.HideYears
-
 				// Set "new Data System" dialog buttons
 				this.newSystemDialogButtons = [
 					{
@@ -370,12 +390,13 @@
 				QUtils.log('fetchDataSystemsInfo - Request: ', fetchUrl)
 
 				QUtils.FetchData(fetchUrl).done((data) => {
-					if (data.Success)
+					if (data.Success) {
+						// Sets the current default data system value
+						this.configDefaultDs = this.model.DefaultYear
 						this.dataSystems = data.data.dataSystemsInfo
+					}
 					else {
-						// Set error dialog information
-						this.errorDialogText = data.message
-						this.errorDialogButtons = [{
+						const dialogButtons = [{
 							id: 'close-dialog-btn',
 							props: {
 								bStyle: 'primary',
@@ -387,7 +408,8 @@
 								})
 							}
 						}]
-						this.showErrorDialog = true
+
+						this.setDefaultDialog(data.message, dialogButtons, null, true)
 					}
 				})
 			},
@@ -402,8 +424,10 @@
 				QUtils.postData('Config', 'SaveConfigDataSystems', this.model, null, (data) => {
 					QUtils.log("SaveConfigDataSystems - Response", data);
 
-					if (data.Success)
+					if (data.Success) {
+						this.configDefaultDs = this.model.DefaultYear
 						this.$emit('alert-class', { ResultMsg: this.texts.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
+					}
 					else
 						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 				});
@@ -428,7 +452,7 @@
 					QUtils.log("CreateDataSystem - Response", data);
 
 					// Update database years
-					this.$eventHub.emit('app_updateYear')
+					this.updateDataSystemList()
 
 					// Append new year to existent data systems
 					this.dataSystems.push(
@@ -445,6 +469,35 @@
 
 				// Clear information from previously created data system
 				this.clearNewDataSystemInfo()
+			},
+
+			/**
+			 * Deletes an existing data system.
+			 */
+			deleteDataSystem(dataSystem) {
+				var postUrl = QUtils.apiActionURL('Config', 'DeleteDataSystem')
+				QUtils.log("DeleteDataSystem - Request", postUrl)
+
+				QUtils.postData('Config', 'DeleteDataSystem', dataSystem, null, (data) => {
+					QUtils.log("DeleteDataSystem - Response", data);
+
+					if (data.ResultMsg) {
+						this.$emit('alert-class', { ResultMsg: data.ResultMsg, AlertType: 'danger' });
+						return
+					}
+
+					this.dataSystems = this.dataSystems.filter(ds => ds.Year != data.system)
+					let message = this.texts.O_SISTEMA_DE_DADOS_F39849
+
+					// Swap to default data system if needed
+					if (this.currentYear == data.system) {
+						this.$router.replace({ name: 'system_setup', params: { culture: this.currentLang, system: this.model.DefaultYear } })
+						message += ` ${this.texts.O_SISTEMA_DE_DADOS_A48279}` 
+					}
+
+					this.updateDataSystemList()
+					this.setDefaultDialog(message, null, 'check-circle-outline', false)
+				})
 			},
 
 			/**
@@ -467,6 +520,35 @@
 				this.$emit('changeTab', 'tabGroup', 'selectedTab', 'database-tab')
 			},
 
+			updateDataSystemList() {
+				this.$eventHub.emit('app_updateYear')
+			},
+
+			confirmDelete(row) {
+				const message = `${this.texts.TEM_A_CERTEZA_QUE_QU16920} <b>${row.Year}</b>?`
+				const buttons = [
+					{
+						id: 'delete-btn',
+						props: {
+							bStyle: 'danger',
+							label: this.texts.APAGAR04097
+						},
+						icon: { icon: 'bin' },
+						action: () => this.deleteDataSystem(row.Year)
+					},
+					{
+						id: 'cancel-btn',
+						props: {
+							bStyle: 'secondary',
+							label: this.texts.CANCELAR49513
+						},
+						icon: { icon: 'cancel' }
+					},
+				]
+
+				this.setDefaultDialog(message, buttons, 'alert', false)
+			},
+
 			/**
 			 * Shows the dialog to create a new data system.
 			 */
@@ -482,6 +564,38 @@
 				this.newDsSchema = ''
 				this.newDsType = ''
 				this.newDsServer = ''
+			},
+
+			resetDefaultDialogInfo() {
+				this.defaultDialogText = ''
+				this.defaultDialogIcon = {}
+				this.defaultDialogButtons = [
+					{
+						id: 'ok-btn',
+						props: {
+							bStyle: 'primary',
+							label: this.texts.OK15819
+						}
+					}
+				]
+
+				this.isErrorDialog = false
+				this.showDefaultDialog = false
+			},
+
+			setDefaultDialog(message, buttons, icon, isError) {
+				this.resetDefaultDialogInfo()
+
+				this.defaultDialogText = message
+
+				if (buttons)				
+					this.defaultDialogButtons = buttons
+
+				if (icon)
+					this.defaultDialogIcon = { icon: icon }
+
+				this.isErrorDialog = isError
+				this.showDefaultDialog = true
 			}
 		},
 

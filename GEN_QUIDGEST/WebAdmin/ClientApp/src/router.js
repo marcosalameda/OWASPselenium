@@ -67,6 +67,12 @@ export function setupRouter(i18n) {
       props: true
     },
     {
+      path: '/:culture/:system/DbAdmin/LogDetails/:logId?',
+      name: 'log_details',
+      component: () => import(/* webpackChunkName: "log_details" */ './views/Maintenance/LogDetails.vue'),
+      props:  route => ({ logId: Number(route.params.logId) })
+    },
+    {
       path: '/:culture/:system/Users',
       name: 'users',
       component: () => import(/* webpackChunkName: "users" */ './views/Users/Users.vue'),

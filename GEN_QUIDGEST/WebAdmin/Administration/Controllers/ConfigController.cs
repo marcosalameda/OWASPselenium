@@ -411,6 +411,26 @@ namespace Administration.Controllers
         }
 
         [HttpPost]
+        public IActionResult DeleteDataSystem([FromBody] string year)
+        {
+            try
+            {
+                ConfigurationXML conf = configManager.GetExistingConfig();
+                
+                conf.DataSystems = conf.DataSystems.Where(ds => ds.Name != year).ToList();
+                configManager.StoreConfig(conf);
+                Configuration.ReadConfiguration(conf);
+
+                return Json(new { system = year });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return Json(new { ResultMsg = Resources.Resources.NAO_E_POSSIVEL_APAGA39444 });
+            }
+        }
+
+        [HttpPost]
         public IActionResult SaveConfigDataSystems([FromBody] Models.ConfigModel model)
         {
             var conf = configManager.GetExistingConfig();

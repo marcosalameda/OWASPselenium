@@ -177,10 +177,6 @@
 			}
 		},
 
-		created() {
-			this.$eventHub.on('alertClass', this.updateAlert);
-		},
-
 		mounted() {
 			var vm = this;
 			vm.observer = new MutationObserver(mutations => {
@@ -194,18 +190,18 @@
 				}
 			});
 
-			// Asegurarse de que las refs están disponibles después de la renderización
+			// Ensure the refs are available by waiting until after they're rendered
 			vm.$nextTick(() => {
 				Object.keys(vm.$refs).forEach(ref => {
 
 					let element = vm.$refs[ref];
 
-					// Si la ref es un componente Vue, usa su elemento raíz
+					// If the ref is a Vue component, use the root element
 					if (element && element.$el) {
 						element = element.$el;
 					}
 
-					// Comprobar si el elemento es un Nodo DOM
+					// Check if the element is a DOM node
 					if (element && element.nodeType === 1) {
 						vm.observer.observe(element, {
 							attributes: true,
@@ -218,7 +214,6 @@
 		
 		beforeUnmount() {
 			this.observer.disconnect();
-			this.$eventHub.off('alertClass', this.updateAlert);
 		}
 	};
 </script>

@@ -140,84 +140,94 @@
 			</q-card>
 		</row>
 		
-		<q-collapsible
-			:title="Resources.OPCOES_AVANCADAS_DE_63606"
-			class="q-collapsible--admin-default"
-			width="block">
-			<q-card
-				v-if="currentModel.LastLogInfo"
-				class="q-card--admin-default"
-				:title="Resources.LAST_MAINTENANCE_JOB39831"
-				variant="minor"
+		<row>
+			<q-collapsible
+				:title="Resources.OPCOES_AVANCADAS_DE_63606"
+				class="q-collapsible--admin-default"
 				width="block">
-				<div class="database-options__last-rdx">
-					<static-text
-						class="database-data"
-						:model-value="currentModel.LastLogInfo.Success ? Resources.SIM28552 : Resources.NAO06521"
-						:label="Resources.TAREFA_BEM_SUCEDIDA33448"
-						bold-label />
-					<static-text
-						class="database-data"
-						:model-value="`${ currentModel.LastLogInfo.Duration }ms`"
-						:label="Resources.DURATION40426"
-						bold-label />
-					<static-text
-						class="database-data"
-						v-model="currentModel.LastLogInfo.Database"
-						:label="Resources.NOME_DA_BD63025"
-						bold-label />
-					<static-text
-						class="database-data"
-						:model-value="currentModel.LastLogInfo.StartTime"
-						:label="Resources.STARTED_AT44034"
-						bold-label />
-				</div>
-			</q-card>
-			<br />
-			<div class="database-options">
-				<q-checkbox 
-					v-model="currentModel.Zero" 
-					:label="Resources.REINDEXACAO_COMPLETA51519" />
-			</div>
-			<template v-for="group in reindexGroups"
-				:key="group.Id">
+				<q-card
+					v-if="currentModel.LastLogInfo"
+					class="q-card--admin-default"
+					:title="Resources.LAST_MAINTENANCE_JOB39831"
+					variant="minor"
+					width="block">
+					<div class="database-options__last-rdx">
+						<static-text
+							class="database-data"
+							:model-value="currentModel.LastLogInfo.Success ? Resources.SIM28552 : Resources.NAO06521"
+							:label="Resources.TAREFA_BEM_SUCEDIDA33448"
+							bold-label />
+						<static-text
+							class="database-data"
+							:model-value="`${ currentModel.LastLogInfo.Duration }ms`"
+							:label="Resources.DURATION40426"
+							bold-label />
+						<static-text
+							class="database-data"
+							v-model="currentModel.LastLogInfo.DataSystem"
+							:label="Resources.NOME_DO_SISTEMA_DE_D18974"
+							bold-label />
+						<static-text
+							class="database-data"
+							v-model="currentModel.LastLogInfo.Database"
+							:label="Resources.NOME_DA_BD63025"
+							bold-label />
+						<static-text
+							class="database-data"
+							:model-value="currentModel.LastLogInfo.StartTime"
+							:label="Resources.STARTED_AT44034"
+							bold-label />
+					</div>
+				</q-card>
+				<br />
 				<div class="database-options">
-					<q-checkbox
-						v-model="reindexGroupsState[group.Name]"
-						:indeterminate="getGroupFunctions(group).some(func => func.Value)"
-						:label="group.Name"
-						@update:model-value="(newVal) => { groupValueUpdate(group, newVal) }" />
+					<q-checkbox 
+						v-model="currentModel.Zero" 
+						:label="Resources.REINDEXACAO_COMPLETA51519" />
 				</div>
-				<div 
-					style="text-align:left; margin-left: 20px;">
-					<template 
-						v-for="sqlFunc in getGroupFunctions(group)"
-						:key="sqlFunc.Id">
-						<div 
-							v-if="sqlFunc.Selectable"
-							class="database-options">
-							<q-checkbox
-								v-model="sqlFunc.Value"
-								:label="sqlFunc.Description"
-								:id="sqlFunc.Id"
-								@update:model-value="itemValueUpdate(group)" />
-							<q-button
-								v-if="formatDate(sqlFunc.LastRun) != '-'"
-								b-style="tertiary"
-								borderless
-								size="small"
-								:label="Resources._INFO15849"
-								:title="sqlFunc.Result"
-								@click="changeSelectedScript(sqlFunc)">
-								<q-icon
-									:class="sqlFunc.Result.length > 0 ? 'database-options__status-error' : 'database-options__status-success'"
-									:icon="sqlFunc.Result.length > 0 ? 'close' : 'check'" />
-							</q-button>
-						</div>
-					</template>
-				</div>
-			</template>
-		</q-collapsible>
+				<template v-for="group in reindexGroups"
+					:key="group.Id">
+					<div class="database-options">
+						<q-checkbox
+							v-model="reindexGroupsState[group.Name]"
+							:indeterminate="getGroupFunctions(group).some(func => func.Value)"
+							:label="group.Name"
+							@update:model-value="(newVal) => { groupValueUpdate(group, newVal) }" />
+					</div>
+					<div 
+						style="text-align:left; margin-left: 20px;">
+						<template 
+							v-for="sqlFunc in getGroupFunctions(group)"
+							:key="sqlFunc.Id">
+							<div 
+								v-if="sqlFunc.Selectable"
+								class="database-options">
+								<q-checkbox
+									v-model="sqlFunc.Value"
+									:label="sqlFunc.Description"
+									:id="sqlFunc.Id"
+									@update:model-value="itemValueUpdate(group)" />
+								<q-button
+									v-if="formatDate(sqlFunc.LastRun) != '-'"
+									b-style="tertiary"
+									borderless
+									size="small"
+									:label="Resources._INFO15849"
+									:title="sqlFunc.Result"
+									@click="changeSelectedScript(sqlFunc)">
+									<q-icon
+										:class="sqlFunc.Result.length > 0 ? 'database-options__status-error' : 'database-options__status-success'"
+										:icon="sqlFunc.Result.length > 0 ? 'close' : 'check'" />
+								</q-button>
+							</div>
+						</template>
+					</div>
+				</template>
+			</q-collapsible>
+		</row>
+
+		<maintenance-history
+			:load-history="loadHistory" />
 
 		<row>
 			<numeric-input v-model="currentModel.Timeout" :label="'Timeout'" size="small" />
@@ -319,10 +329,14 @@
 	import { reusableMixin } from '@/mixins/mainMixin'
 	import { QUtils } from '@/utils/mainUtils'
 
+	import maintenanceHistory from '@/views/Maintenance/MaintenanceHistory'
+
 	export default {
 		name: 'maintenance_index',
 
 		mixins: [reusableMixin],
+
+		components: { maintenanceHistory },
 
 		data() {
 			// Resources aren't available while the local Vue instance isn't created -> access global instance
@@ -353,6 +367,11 @@
 				 * True if all information that the tab displays is loaded, false otherwise.
 				 */
 				isLoaded: false,
+
+				/**
+				 * Flag that inverts whenever the maintenance history needs to be updated.
+				 */
+				loadHistory: true,
 
 				/**
 				 * The script that is currently selected (information displayed in the script details overlay).
@@ -461,7 +480,7 @@
 				return {
 					row:
 					{
-						'q-table__row-error': (row) => row.VersionDb !== row.VersionApp
+						'q-table__row-error': (row) => row.VersionDb !== row.VersionApp || row.VersionUpgrIndx != this.currentModel.VersionUpgrScripts
 					}
 				}
 			},
@@ -470,7 +489,7 @@
 			* True if there are data systems that need to execute the data maintenance tasks, false otherwise.
 			*/
 			notReindexedDataSystems() {
-				return this.maintenanceModels.some(model => model.VersionDb != model.VersionApp)
+				return this.maintenanceModels.some(model => model.VersionDb != model.VersionApp || model.VersionUpgrIndx != model.VersionUpgrScripts)
 			},
 
 			/**
@@ -526,8 +545,9 @@
 					this.setCurrentModel()
 					this.resetFunctionGroups()
 
-					// After loading server info, set tab as ready
+					// After loading server info, set tab as ready and set maintenance history as outdated
 					this.isLoaded = true
+					this.loadHistory = !this.loadHistory
 				})
 			},
 
@@ -772,6 +792,11 @@
 		watch: {
 			$route() {
 				this.setCurrentModel()
+			},
+
+			showTablePagination(newValue) {
+				this.tableConfig.config.pagination = newValue
+				this.tableConfig.config.pagination_info = newValue
 			}
 		}
 	}

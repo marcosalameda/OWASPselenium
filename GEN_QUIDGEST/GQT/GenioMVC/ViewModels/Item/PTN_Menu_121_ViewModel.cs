@@ -176,12 +176,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
 			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_121_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ITEM.ITEMCOD", new OrderedDictionary());
-			allSortOrders["ITEM.ITEMCOD"].Add("ITEM.ITEMCOD", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "PTN_Menu_121_"));
 
 

@@ -176,12 +176,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgenre.FldCodgenre, CSGenioAgenre.Fl
 			Menu.SetFilters(bool.Parse(requestValues["TBS_Menu_161_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("GENRE.GENDER", new OrderedDictionary());
-			allSortOrders["GENRE.GENDER"].Add("GENRE.GENDER", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "TBS_Menu_161_"));
 
 

@@ -185,12 +185,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
 			Menu.SetFilters(bool.Parse(requestValues["STY_Menu_LEAFLET_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("INSTA.DESIGNAT", new OrderedDictionary());
-			allSortOrders["INSTA.DESIGNAT"].Add("INSTA.DESIGNAT", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "STY_Menu_LEAFLET_"));
 
 

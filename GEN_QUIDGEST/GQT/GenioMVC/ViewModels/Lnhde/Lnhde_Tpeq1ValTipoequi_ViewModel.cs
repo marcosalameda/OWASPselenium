@@ -140,14 +140,6 @@ namespace GenioMVC.ViewModels.Lnhde
 			Menu.SetFilters(bool.Parse(requestValues["Lnhde_Tpeq1ValTipoequi_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("TPEQ1.TPEQUCOD", new OrderedDictionary());
-			allSortOrders["TPEQ1.TPEQUCOD"].Add("TPEQ1.TPEQUCOD", "A");
-			allSortOrders.Add("TPEQ1.TIPOEQUI", new OrderedDictionary());
-			allSortOrders["TPEQ1.TIPOEQUI"].Add("TPEQ1.TIPOEQUI", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Lnhde_Tpeq1ValTipoequi_"));
 
 

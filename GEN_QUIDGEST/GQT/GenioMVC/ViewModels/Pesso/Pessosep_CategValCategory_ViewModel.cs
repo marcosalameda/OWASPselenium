@@ -140,14 +140,6 @@ namespace GenioMVC.ViewModels.Pesso
 			Menu.SetFilters(bool.Parse(requestValues["Pessosep_CategValCategoria_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("CATEG.CATEGORIA", new OrderedDictionary());
-			allSortOrders["CATEG.CATEGORIA"].Add("CATEG.CATEGORIA", "A");
-			allSortOrders.Add("CATEG.ABBREVIATION", new OrderedDictionary());
-			allSortOrders["CATEG.ABBREVIATION"].Add("CATEG.ABBREVIATION", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Pessosep_CategValCategoria_"));
 
 

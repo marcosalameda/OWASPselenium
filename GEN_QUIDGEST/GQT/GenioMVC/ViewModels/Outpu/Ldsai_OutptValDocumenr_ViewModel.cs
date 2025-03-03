@@ -140,12 +140,6 @@ namespace GenioMVC.ViewModels.Outpu
 			Menu.SetFilters(bool.Parse(requestValues["Ldsai_OutptValDocumenr_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("OUTPT.DHDOCUME", new OrderedDictionary());
-			allSortOrders["OUTPT.DHDOCUME"].Add("OUTPT.DHDOCUME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Ldsai_OutptValDocumenr_"));
 
 

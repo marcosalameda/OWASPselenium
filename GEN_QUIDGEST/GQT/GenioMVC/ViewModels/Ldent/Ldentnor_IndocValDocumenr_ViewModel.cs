@@ -140,12 +140,6 @@ namespace GenioMVC.ViewModels.Ldent
 			Menu.SetFilters(bool.Parse(requestValues["Ldentnor_IndocValDocumenr_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("INDOC.DHDOCUME", new OrderedDictionary());
-			allSortOrders["INDOC.DHDOCUME"].Add("INDOC.DHDOCUME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Ldentnor_IndocValDocumenr_"));
 
 

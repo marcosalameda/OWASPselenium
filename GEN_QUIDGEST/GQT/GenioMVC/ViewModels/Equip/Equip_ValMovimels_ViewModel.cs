@@ -142,12 +142,6 @@ namespace GenioMVC.ViewModels.Equip
 			Menu.SetFilters(bool.Parse(requestValues["ValMovimels_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("MOVIM.DHMUDANC", new OrderedDictionary());
-			allSortOrders["MOVIM.DHMUDANC"].Add("MOVIM.DHMUDANC", "D");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValMovimels_"));
 
 

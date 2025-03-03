@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Cattp
 			Menu.SetFilters(bool.Parse(requestValues["Tpcat_SbcatValSubcateg_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("SBCAT.SUBCATEG", new OrderedDictionary());
-			allSortOrders["SBCAT.SUBCATEG"].Add("SBCAT.SUBCATEG", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Tpcat_SbcatValSubcateg_"));
 
 

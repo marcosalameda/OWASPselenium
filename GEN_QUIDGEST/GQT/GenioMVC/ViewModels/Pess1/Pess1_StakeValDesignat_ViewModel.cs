@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Pess1
 			Menu.SetFilters(bool.Parse(requestValues["Pess1_StakeValDesignat_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("STAKE.DESIGNAT", new OrderedDictionary());
-			allSortOrders["STAKE.DESIGNAT"].Add("STAKE.DESIGNAT", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Pess1_StakeValDesignat_"));
 
 

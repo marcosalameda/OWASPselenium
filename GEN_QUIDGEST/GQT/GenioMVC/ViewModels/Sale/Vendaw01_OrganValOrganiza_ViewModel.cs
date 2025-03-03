@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Sale
 			Menu.SetFilters(bool.Parse(requestValues["Vendaw01_OrganValOrganiza_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ORGAN.ORGANIZA", new OrderedDictionary());
-			allSortOrders["ORGAN.ORGANIZA"].Add("ORGAN.ORGANIZA", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Vendaw01_OrganValOrganiza_"));
 
 

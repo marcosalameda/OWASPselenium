@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Cmpki
 			Menu.SetFilters(bool.Parse(requestValues["Cmpki_TpequValTipoequi_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("TPEQU.TIPOEQUI", new OrderedDictionary());
-			allSortOrders["TPEQU.TIPOEQUI"].Add("TPEQU.TIPOEQUI", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Cmpki_TpequValTipoequi_"));
 
 

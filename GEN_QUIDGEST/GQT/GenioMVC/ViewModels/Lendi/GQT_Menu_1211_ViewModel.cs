@@ -188,16 +188,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.Fl
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_1211_tableFilters"] ?? "false"), true);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("LENDI.START", new OrderedDictionary());
-			allSortOrders["LENDI.START"].Add("LENDI.START", "A");
-			allSortOrders.Add("LENDI.WARNDT", new OrderedDictionary());
-			allSortOrders["LENDI.WARNDT"].Add("LENDI.WARNDT", "A");
-			allSortOrders.Add("LENDI.END", new OrderedDictionary());
-			allSortOrders["LENDI.END"].Add("LENDI.END", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_1211_"));
 
 

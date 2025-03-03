@@ -201,22 +201,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_61411_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PESSO.NAME", new OrderedDictionary());
-			allSortOrders["PESSO.NAME"].Add("PESSO.NAME", "A");
-			allSortOrders.Add("PESSO.DTNASCIM", new OrderedDictionary());
-			allSortOrders["PESSO.DTNASCIM"].Add("PESSO.DTNASCIM", "A");
-			allSortOrders.Add("PESSO.TELEPHON", new OrderedDictionary());
-			allSortOrders["PESSO.TELEPHON"].Add("PESSO.TELEPHON", "A");
-			allSortOrders.Add("PESSO.EMAIL", new OrderedDictionary());
-			allSortOrders["PESSO.EMAIL"].Add("PESSO.EMAIL", "A");
-			allSortOrders.Add("PESSO.EMAIL2", new OrderedDictionary());
-			allSortOrders["PESSO.EMAIL2"].Add("PESSO.EMAIL2", "A");
-			allSortOrders.Add("PESSO.DTULTCAT", new OrderedDictionary());
-			allSortOrders["PESSO.DTULTCAT"].Add("PESSO.DTULTCAT", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_61411_"));
 
 

@@ -185,12 +185,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 			Menu.SetFilters(bool.Parse(requestValues["STY_Menu_CARDIMGTHUMB_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("WPESS.NAME", new OrderedDictionary());
-			allSortOrders["WPESS.NAME"].Add("WPESS.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "STY_Menu_CARDIMGTHUMB_"));
 
 

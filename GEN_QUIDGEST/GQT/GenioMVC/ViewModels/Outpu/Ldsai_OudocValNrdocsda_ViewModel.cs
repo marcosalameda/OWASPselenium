@@ -141,12 +141,6 @@ namespace GenioMVC.ViewModels.Outpu
 			Menu.SetFilters(bool.Parse(requestValues["Ldsai_OudocValNrdocsda_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("OUDOC.NRDOCSDA", new OrderedDictionary());
-			allSortOrders["OUDOC.NRDOCSDA"].Add("OUDOC.NRDOCSDA", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Ldsai_OudocValNrdocsda_"));
 
 

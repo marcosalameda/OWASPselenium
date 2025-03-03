@@ -146,12 +146,6 @@ namespace GenioMVC.ViewModels.Ldent
 			Menu.SetFilters(bool.Parse(requestValues["Ldentnor_ItemValItemdes_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());
-			allSortOrders["ITEM.ITEMDES"].Add("ITEM.ITEMDES", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Ldentnor_ItemValItemdes_"));
 
 

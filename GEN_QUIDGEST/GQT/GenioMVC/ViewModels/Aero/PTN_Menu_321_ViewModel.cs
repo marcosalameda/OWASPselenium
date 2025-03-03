@@ -174,12 +174,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAaero.FldCodaero, CSGenioAaero.FldZz
 			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_321_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("AERO.NAME", new OrderedDictionary());
-			allSortOrders["AERO.NAME"].Add("AERO.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "PTN_Menu_321_"));
 
 

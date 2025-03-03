@@ -142,12 +142,6 @@ namespace GenioMVC.ViewModels.Item
 			Menu.SetFilters(bool.Parse(requestValues["ValLsaidas_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("OUTPU.EXITDT", new OrderedDictionary());
-			allSortOrders["OUTPU.EXITDT"].Add("OUTPU.EXITDT", "D");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValLsaidas_"));
 
 

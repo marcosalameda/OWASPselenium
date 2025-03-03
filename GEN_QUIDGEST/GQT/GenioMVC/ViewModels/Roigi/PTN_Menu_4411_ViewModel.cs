@@ -180,12 +180,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAroigi.FldCodroigi, CSGenioAroigi.Fl
 			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_4411_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ROIGI.ORDER", new OrderedDictionary());
-			allSortOrders["ROIGI.ORDER"].Add("ROIGI.ORDER", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "PTN_Menu_4411_"));
 
 

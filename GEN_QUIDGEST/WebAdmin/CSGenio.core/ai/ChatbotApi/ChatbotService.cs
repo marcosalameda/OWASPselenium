@@ -1,3 +1,4 @@
+using CSGenio.core.di;
 using CSGenio.framework;
 using Newtonsoft.Json;
 using System;
@@ -17,6 +18,12 @@ namespace CSGenio.core.ai
         public ChatbotService(HttpClient httpClient)
         {
             _httpClient = httpClient;
+            _chatbotEndpointUrl = Configuration.APIEndpoint?.TrimEnd('/');
+        }
+
+        public ChatbotService()
+        {
+            _httpClient = GenioDI.HttpFactory.CreateClient();
             _chatbotEndpointUrl = Configuration.APIEndpoint?.TrimEnd('/');
         }
 

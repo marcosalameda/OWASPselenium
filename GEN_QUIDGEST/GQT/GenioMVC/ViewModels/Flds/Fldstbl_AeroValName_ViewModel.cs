@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Flds
 			Menu.SetFilters(bool.Parse(requestValues["Fldstbl_AeroValName_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("AERO.NAME", new OrderedDictionary());
-			allSortOrders["AERO.NAME"].Add("AERO.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Fldstbl_AeroValName_"));
 
 

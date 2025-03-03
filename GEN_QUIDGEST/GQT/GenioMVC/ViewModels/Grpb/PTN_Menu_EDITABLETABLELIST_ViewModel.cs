@@ -173,12 +173,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZz
 			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_EDITABLETABLELIST_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("GRPB.NAME", new OrderedDictionary());
-			allSortOrders["GRPB.NAME"].Add("GRPB.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "PTN_Menu_EDITABLETABLELIST_"));
 
 

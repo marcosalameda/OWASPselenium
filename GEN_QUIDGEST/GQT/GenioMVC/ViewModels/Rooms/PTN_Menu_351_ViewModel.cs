@@ -174,12 +174,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioArooms.FldCodrooms, CSGenioArooms.Fl
 			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_351_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ROOMS.ROOMNR", new OrderedDictionary());
-			allSortOrders["ROOMS.ROOMNR"].Add("ROOMS.ROOMNR", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "PTN_Menu_351_"));
 
 

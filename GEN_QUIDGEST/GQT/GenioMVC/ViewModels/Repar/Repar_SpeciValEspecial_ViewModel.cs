@@ -148,12 +148,6 @@ namespace GenioMVC.ViewModels.Repar
 			Menu.SetFilters(bool.Parse(requestValues["Repar_SpeciValEspecial_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("SPECI.ESPECIAL", new OrderedDictionary());
-			allSortOrders["SPECI.ESPECIAL"].Add("SPECI.ESPECIAL", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Repar_SpeciValEspecial_"));
 
 

@@ -145,18 +145,6 @@ namespace GenioMVC.ViewModels.Equip
 			Menu.SetFilters(bool.Parse(requestValues["ValVisequip_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("VISIT.TITLE", new OrderedDictionary());
-			allSortOrders["VISIT.TITLE"].Add("VISIT.TITLE", "A");
-			allSortOrders.Add("VISIT.STARTDT", new OrderedDictionary());
-			allSortOrders["VISIT.STARTDT"].Add("VISIT.STARTDT", "A");
-			allSortOrders.Add("VISIT.DTFIM", new OrderedDictionary());
-			allSortOrders["VISIT.DTFIM"].Add("VISIT.DTFIM", "A");
-			allSortOrders.Add("VISIT.COLOR", new OrderedDictionary());
-			allSortOrders["VISIT.COLOR"].Add("VISIT.COLOR", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValVisequip_"));
 
 

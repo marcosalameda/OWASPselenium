@@ -186,28 +186,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAnotif.FldCodnotif, CSGenioAnotif.Fl
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_81_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("NOTIF.BEGIN", new OrderedDictionary());
-			allSortOrders["NOTIF.BEGIN"].Add("NOTIF.BEGIN", "A");
-			allSortOrders.Add("NOTIF.END", new OrderedDictionary());
-			allSortOrders["NOTIF.END"].Add("NOTIF.END", "A");
-			allSortOrders.Add("NOTIF.EMAIL", new OrderedDictionary());
-			allSortOrders["NOTIF.EMAIL"].Add("NOTIF.EMAIL", "A");
-			allSortOrders.Add("NOTIF.IDNOTIF", new OrderedDictionary());
-			allSortOrders["NOTIF.IDNOTIF"].Add("NOTIF.IDNOTIF", "A");
-			allSortOrders.Add("NOTIF.IDMSG", new OrderedDictionary());
-			allSortOrders["NOTIF.IDMSG"].Add("NOTIF.IDMSG", "A");
-			allSortOrders.Add("NOTIF.MAILERR", new OrderedDictionary());
-			allSortOrders["NOTIF.MAILERR"].Add("NOTIF.MAILERR", "A");
-			allSortOrders.Add("NOTIF.DESIGNAT", new OrderedDictionary());
-			allSortOrders["NOTIF.DESIGNAT"].Add("NOTIF.DESIGNAT", "A");
-			allSortOrders.Add("NOTIF.CREATDAT", new OrderedDictionary());
-			allSortOrders["NOTIF.CREATDAT"].Add("NOTIF.CREATDAT", "A");
-			allSortOrders.Add("NOTIF.CREATOPE", new OrderedDictionary());
-			allSortOrders["NOTIF.CREATOPE"].Add("NOTIF.CREATOPE", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_81_"));
 
 

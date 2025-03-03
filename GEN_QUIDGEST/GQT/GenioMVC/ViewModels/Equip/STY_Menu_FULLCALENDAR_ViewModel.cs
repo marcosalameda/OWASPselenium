@@ -201,12 +201,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 			Menu.SetFilters(bool.Parse(requestValues["STY_Menu_FULLCALENDAR_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
-			allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "STY_Menu_FULLCALENDAR_"));
 
 

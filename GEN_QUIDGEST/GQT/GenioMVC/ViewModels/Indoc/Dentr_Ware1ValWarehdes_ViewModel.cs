@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Indoc
 			Menu.SetFilters(bool.Parse(requestValues["Dentr_Ware1ValWarehdes_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("WARE1.WAREHDES", new OrderedDictionary());
-			allSortOrders["WARE1.WAREHDES"].Add("WARE1.WAREHDES", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Dentr_Ware1ValWarehdes_"));
 
 

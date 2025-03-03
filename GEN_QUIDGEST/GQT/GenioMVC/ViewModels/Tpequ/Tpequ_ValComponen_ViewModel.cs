@@ -144,12 +144,6 @@ namespace GenioMVC.ViewModels.Tpequ
 			Menu.SetFilters(bool.Parse(requestValues["ValComponen_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("CMPKI.ORDER", new OrderedDictionary());
-			allSortOrders["CMPKI.ORDER"].Add("CMPKI.ORDER", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValComponen_"));
 
 

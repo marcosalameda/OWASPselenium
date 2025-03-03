@@ -145,12 +145,6 @@ namespace GenioMVC.ViewModels.Insta
 			Menu.SetFilters(bool.Parse(requestValues["Leaflett_EquipValRegistnr_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
-			allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Leaflett_EquipValRegistnr_"));
 
 

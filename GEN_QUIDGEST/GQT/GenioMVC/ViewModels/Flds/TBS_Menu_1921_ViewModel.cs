@@ -196,12 +196,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
 			Menu.SetFilters(bool.Parse(requestValues["TBS_Menu_1921_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("FLDS.DURATION", new OrderedDictionary());
-			allSortOrders["FLDS.DURATION"].Add("FLDS.DURATION", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "TBS_Menu_1921_"));
 
 

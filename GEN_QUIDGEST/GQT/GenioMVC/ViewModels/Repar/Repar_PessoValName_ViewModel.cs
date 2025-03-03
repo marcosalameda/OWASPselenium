@@ -160,12 +160,6 @@ namespace GenioMVC.ViewModels.Repar
 			Menu.SetFilters(bool.Parse(requestValues["Repar_PessoValName_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PESSO.NAME", new OrderedDictionary());
-			allSortOrders["PESSO.NAME"].Add("PESSO.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Repar_PessoValName_"));
 
 

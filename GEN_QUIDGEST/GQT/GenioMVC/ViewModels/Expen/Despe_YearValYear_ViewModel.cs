@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Expen
 			Menu.SetFilters(bool.Parse(requestValues["Despe_YearValYear_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("YEAR.YEAR", new OrderedDictionary());
-			allSortOrders["YEAR.YEAR"].Add("YEAR.YEAR", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Despe_YearValYear_"));
 
 

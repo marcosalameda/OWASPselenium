@@ -144,12 +144,6 @@ namespace GenioMVC.ViewModels.Wareh
 			Menu.SetFilters(bool.Parse(requestValues["ValArtigos_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ITEM.ITEMDES", new OrderedDictionary());
-			allSortOrders["ITEM.ITEMDES"].Add("ITEM.ITEMDES", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValArtigos_"));
 
 

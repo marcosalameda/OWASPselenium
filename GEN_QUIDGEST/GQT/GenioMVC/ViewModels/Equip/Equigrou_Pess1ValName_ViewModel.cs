@@ -145,10 +145,6 @@ namespace GenioMVC.ViewModels.Equip
 			Menu.SetFilters(bool.Parse(requestValues["Equigrou_Pess1ValName_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Equigrou_Pess1ValName_"));
 
 

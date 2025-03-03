@@ -178,12 +178,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.Fl
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_931_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ANEXD.DTHRANEX", new OrderedDictionary());
-			allSortOrders["ANEXD.DTHRANEX"].Add("ANEXD.DTHRANEX", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_931_"));
 
 

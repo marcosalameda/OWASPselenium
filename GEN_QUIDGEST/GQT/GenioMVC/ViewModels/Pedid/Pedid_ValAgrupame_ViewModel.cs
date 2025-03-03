@@ -140,12 +140,6 @@ namespace GenioMVC.ViewModels.Pedid
 			Menu.SetFilters(bool.Parse(requestValues["ValAgrupame_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("TPEQ1.TIPOEQUI", new OrderedDictionary());
-			allSortOrders["TPEQ1.TIPOEQUI"].Add("TPEQ1.TIPOEQUI", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValAgrupame_"));
 
 

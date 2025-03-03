@@ -144,12 +144,6 @@ namespace GenioMVC.ViewModels.Item
 			Menu.SetFilters(bool.Parse(requestValues["ValContacor_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("CCORR.NORDER", new OrderedDictionary());
-			allSortOrders["CCORR.NORDER"].Add("CCORR.NORDER", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValContacor_"));
 
 

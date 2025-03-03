@@ -146,12 +146,6 @@ namespace GenioMVC.ViewModels.Equip
 			Menu.SetFilters(bool.Parse(requestValues["Groupbx_ItemValItemdes_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ITEM.ITEMCOD", new OrderedDictionary());
-			allSortOrders["ITEM.ITEMCOD"].Add("ITEM.ITEMCOD", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Groupbx_ItemValItemdes_"));
 
 

@@ -149,10 +149,6 @@ namespace GenioMVC.ViewModels.Fami1
 			Menu.SetFilters(bool.Parse(requestValues["ValTiposequ_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValTiposequ_"));
 
 

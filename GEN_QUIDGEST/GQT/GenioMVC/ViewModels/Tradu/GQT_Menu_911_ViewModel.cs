@@ -177,12 +177,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtradu.FldCodtradu, CSGenioAtradu.Fl
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_911_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("TRADU.REFERENC", new OrderedDictionary());
-			allSortOrders["TRADU.REFERENC"].Add("TRADU.REFERENC", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_911_"));
 
 

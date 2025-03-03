@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Pworg
 			Menu.SetFilters(bool.Parse(requestValues["Pworg_PswValNome_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PSW.NOME", new OrderedDictionary());
-			allSortOrders["PSW.NOME"].Add("PSW.NOME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Pworg_PswValNome_"));
 
 

@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Evcat
 			Menu.SetFilters(bool.Parse(requestValues["Evcat_PessoValName_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PESSO.NAME", new OrderedDictionary());
-			allSortOrders["PESSO.NAME"].Add("PESSO.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Evcat_PessoValName_"));
 
 

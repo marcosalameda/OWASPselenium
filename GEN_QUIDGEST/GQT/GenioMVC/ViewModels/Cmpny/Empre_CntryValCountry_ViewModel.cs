@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Cmpny
 			Menu.SetFilters(bool.Parse(requestValues["Empre_CntryValCountry_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("CNTRY.COUNTRY", new OrderedDictionary());
-			allSortOrders["CNTRY.COUNTRY"].Add("CNTRY.COUNTRY", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Empre_CntryValCountry_"));
 
 

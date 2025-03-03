@@ -141,10 +141,6 @@ namespace GenioMVC.ViewModels.Proje
 			Menu.SetFilters(bool.Parse(requestValues["ValDespesas_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValDespesas_"));
 
 

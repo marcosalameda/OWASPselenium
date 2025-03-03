@@ -177,12 +177,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAhpess.FldCodhpess, CSGenioAhpess.Fl
 			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_1421_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("HPESS.NAME", new OrderedDictionary());
-			allSortOrders["HPESS.NAME"].Add("HPESS.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "PTN_Menu_1421_"));
 
 

@@ -173,12 +173,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAproje.FldCodproje, CSGenioAproje.Fl
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_A11_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PROJE.PROJECTO", new OrderedDictionary());
-			allSortOrders["PROJE.PROJECTO"].Add("PROJE.PROJECTO", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_A11_"));
 
 

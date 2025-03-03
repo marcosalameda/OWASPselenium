@@ -185,12 +185,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
 			Menu.SetFilters(bool.Parse(requestValues["STY_Menu_IMGBACKGROUND_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("WPESS.DATE", new OrderedDictionary());
-			allSortOrders["WPESS.DATE"].Add("WPESS.DATE", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "STY_Menu_IMGBACKGROUND_"));
 
 

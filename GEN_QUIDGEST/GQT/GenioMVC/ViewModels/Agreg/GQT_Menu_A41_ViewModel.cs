@@ -174,12 +174,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAagreg.FldCodaggre, CSGenioAagreg.Fl
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_A41_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("AGREG.VALUE", new OrderedDictionary());
-			allSortOrders["AGREG.VALUE"].Add("AGREG.VALUE", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_A41_"));
 
 

@@ -174,10 +174,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApworg.FldCodpworg, CSGenioApworg.Fl
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_541_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_541_"));
 
 

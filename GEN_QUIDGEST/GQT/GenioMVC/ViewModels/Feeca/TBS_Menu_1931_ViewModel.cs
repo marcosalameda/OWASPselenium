@@ -175,12 +175,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAfeeca.FldCodfeeca, CSGenioAfeeca.Fl
 			Menu.SetFilters(bool.Parse(requestValues["TBS_Menu_1931_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("FEECA.FEEDBACK", new OrderedDictionary());
-			allSortOrders["FEECA.FEEDBACK"].Add("FEECA.FEEDBACK", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "TBS_Menu_1931_"));
 
 

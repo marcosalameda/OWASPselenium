@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Wpess
 			Menu.SetFilters(bool.Parse(requestValues["Armapess_WarehValWarehdes_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
-			allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Armapess_WarehValWarehdes_"));
 
 

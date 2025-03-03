@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Roigf
 			Menu.SetFilters(bool.Parse(requestValues["Roigf_Rogl1ValTitle_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ROGL1.TITLE", new OrderedDictionary());
-			allSortOrders["ROGL1.TITLE"].Add("ROGL1.TITLE", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Roigf_Rogl1ValTitle_"));
 
 

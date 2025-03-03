@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Tpequ
 			Menu.SetFilters(bool.Parse(requestValues["Tpequ_FamilValFamily_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("FAMIL.FAMILY", new OrderedDictionary());
-			allSortOrders["FAMIL.FAMILY"].Add("FAMIL.FAMILY", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Tpequ_FamilValFamily_"));
 
 

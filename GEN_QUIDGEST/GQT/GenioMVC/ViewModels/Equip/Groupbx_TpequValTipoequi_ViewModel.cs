@@ -144,12 +144,6 @@ namespace GenioMVC.ViewModels.Equip
 			Menu.SetFilters(bool.Parse(requestValues["Groupbx_TpequValTipoequi_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
-			allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Groupbx_TpequValTipoequi_"));
 
 

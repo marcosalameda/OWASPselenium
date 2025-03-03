@@ -56,14 +56,14 @@
 					QUtils.postData('Dashboard', 'DisableMaintenance', null, null, function (data) {
 						QUtils.log("DisableMaintenance - Response", data);
 						$.each(data.CurentMaintenance, function (propName, value) { vm.CurentMaintenance[propName] = value; });
-						vm.$emit('alertClass', { ResultMsg: vm.Resources.MANUNTENCAO_DESATIVA30520, AlertType: 'success' });
+						vm.$emit('alertClass', { ResultMsg: vm.Resources.MANUTENCAO_DESATIVAD51873, AlertType: 'success' });
 					});
 				}
 				else {
 					QUtils.postData('Dashboard', 'ScheduleMaintenance', { date: vm.scheduleDT }, null, function (data) {
 						QUtils.log("ScheduleMaintenance - Response", data);
 						$.each(data.CurentMaintenance, function (propName, value) { vm.CurentMaintenance[propName] = value; });
-						vm.$emit('alertClass', { ResultMsg: vm.Resources.MANUNENTANCAO_CONFIG28505, AlertType: 'success' });
+						vm.$emit('alertClass', { ResultMsg: vm.Resources.MANUTENCAO_CONFIGURA28227, AlertType: 'success' });
 					});
 				}
 			}

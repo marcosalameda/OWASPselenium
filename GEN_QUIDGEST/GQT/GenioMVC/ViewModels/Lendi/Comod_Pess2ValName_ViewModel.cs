@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Lendi
 			Menu.SetFilters(bool.Parse(requestValues["Comod_Pess2ValName_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PESS2.NAME", new OrderedDictionary());
-			allSortOrders["PESS2.NAME"].Add("PESS2.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Comod_Pess2ValName_"));
 
 

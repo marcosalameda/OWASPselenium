@@ -57,6 +57,7 @@
   <ItemGroup>
     <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.DirectoryServices.Protocols" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0">
       <Private>True</Private>
     </PackageReference>

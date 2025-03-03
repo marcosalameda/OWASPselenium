@@ -145,12 +145,6 @@ namespace GenioMVC.ViewModels.Propr
 			Menu.SetFilters(bool.Parse(requestValues["Propr01_RegioValRegiao_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
-			allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Propr01_RegioValRegiao_"));
 
 

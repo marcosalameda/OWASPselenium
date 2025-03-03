@@ -145,12 +145,6 @@ namespace GenioMVC.ViewModels.Equip
 			Menu.SetFilters(bool.Parse(requestValues["ValReparaco_tableFilters"] ?? "false"), true);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("REPAR.NRREPARA", new OrderedDictionary());
-			allSortOrders["REPAR.NRREPARA"].Add("REPAR.NRREPARA", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValReparaco_"));
 
 

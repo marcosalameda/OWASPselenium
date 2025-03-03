@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Tradu
 			Menu.SetFilters(bool.Parse(requestValues["Tradu_Lang1ValLangua_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("LANG1.LANGUA", new OrderedDictionary());
-			allSortOrders["LANG1.LANGUA"].Add("LANG1.LANGUA", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Tradu_Lang1ValLangua_"));
 
 

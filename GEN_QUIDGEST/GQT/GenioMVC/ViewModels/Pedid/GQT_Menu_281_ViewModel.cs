@@ -175,12 +175,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_281_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PEDID.DTPEDIDO", new OrderedDictionary());
-			allSortOrders["PEDID.DTPEDIDO"].Add("PEDID.DTPEDIDO", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_281_"));
 
 

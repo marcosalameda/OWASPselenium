@@ -139,10 +139,6 @@ namespace GenioMVC.ViewModels.Lnhpd
 			Menu.SetFilters(bool.Parse(requestValues["ValDesconju_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValDesconju_"));
 
 

@@ -140,12 +140,6 @@ namespace GenioMVC.ViewModels.Cntry
 			Menu.SetFilters(bool.Parse(requestValues["ValProprie1_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PROPR.NAME", new OrderedDictionary());
-			allSortOrders["PROPR.NAME"].Add("PROPR.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValProprie1_"));
 
 

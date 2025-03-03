@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Agreg
 			Menu.SetFilters(bool.Parse(requestValues["Agreg_YearValYear_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("YEAR.YEAR", new OrderedDictionary());
-			allSortOrders["YEAR.YEAR"].Add("YEAR.YEAR", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Agreg_YearValYear_"));
 
 

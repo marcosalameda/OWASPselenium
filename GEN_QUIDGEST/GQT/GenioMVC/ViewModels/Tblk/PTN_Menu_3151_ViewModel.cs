@@ -175,12 +175,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtblk.FldCodtblk, CSGenioAtblk.FldZz
 			Menu.SetFilters(bool.Parse(requestValues["PTN_Menu_3151_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("TBLK.NAME", new OrderedDictionary());
-			allSortOrders["TBLK.NAME"].Add("TBLK.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "PTN_Menu_3151_"));
 
 

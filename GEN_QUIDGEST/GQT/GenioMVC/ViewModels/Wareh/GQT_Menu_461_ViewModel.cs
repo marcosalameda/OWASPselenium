@@ -174,14 +174,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_461_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
-			allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
-			allSortOrders.Add("WAREH.WAREHCOD", new OrderedDictionary());
-			allSortOrders["WAREH.WAREHCOD"].Add("WAREH.WAREHCOD", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_461_"));
 
 

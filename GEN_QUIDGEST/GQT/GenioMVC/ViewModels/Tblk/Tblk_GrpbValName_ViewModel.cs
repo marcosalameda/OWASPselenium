@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Tblk
 			Menu.SetFilters(bool.Parse(requestValues["Tblk_GrpbValName_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("GRPB.NAME", new OrderedDictionary());
-			allSortOrders["GRPB.NAME"].Add("GRPB.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Tblk_GrpbValName_"));
 
 

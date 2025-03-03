@@ -151,12 +151,6 @@ namespace GenioMVC.ViewModels.Lendi
 			Menu.SetFilters(bool.Parse(requestValues["Comod_EquipValRegistnr_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("EQUIP.REGISTNR", new OrderedDictionary());
-			allSortOrders["EQUIP.REGISTNR"].Add("EQUIP.REGISTNR", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Comod_EquipValRegistnr_"));
 
 

@@ -140,10 +140,6 @@ namespace GenioMVC.ViewModels.Flds
 			Menu.SetFilters(bool.Parse(requestValues["ValFeeca_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "ValFeeca_"));
 
 

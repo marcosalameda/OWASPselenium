@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Propr
 			Menu.SetFilters(bool.Parse(requestValues["Proprall_TpproValTppropri_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("TPPRO.TPPROPRI", new OrderedDictionary());
-			allSortOrders["TPPRO.TPPROPRI"].Add("TPPRO.TPPROPRI", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Proprall_TpproValTppropri_"));
 
 

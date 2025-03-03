@@ -174,12 +174,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAyear.FldCodyear, CSGenioAyear.FldZz
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_A31_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("YEAR.YEAR", new OrderedDictionary());
-			allSortOrders["YEAR.YEAR"].Add("YEAR.YEAR", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_A31_"));
 
 

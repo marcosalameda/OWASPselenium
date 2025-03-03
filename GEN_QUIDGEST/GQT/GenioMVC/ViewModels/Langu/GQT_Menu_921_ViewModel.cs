@@ -174,12 +174,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlangu.FldCodlang, CSGenioAlangu.Fld
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_921_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("LANGU.LANGUA", new OrderedDictionary());
-			allSortOrders["LANGU.LANGUA"].Add("LANGU.LANGUA", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_921_"));
 
 

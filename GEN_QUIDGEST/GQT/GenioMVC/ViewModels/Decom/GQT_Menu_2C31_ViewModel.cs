@@ -175,12 +175,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_2C31_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("DECOM.DTDECO", new OrderedDictionary());
-			allSortOrders["DECOM.DTDECO"].Add("DECOM.DTDECO", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_2C31_"));
 
 

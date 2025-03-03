@@ -182,14 +182,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_271_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PESSO.NAME", new OrderedDictionary());
-			allSortOrders["PESSO.NAME"].Add("PESSO.NAME", "A");
-			allSortOrders.Add("PESSO.DTULTCAT", new OrderedDictionary());
-			allSortOrders["PESSO.DTULTCAT"].Add("PESSO.DTULTCAT", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_271_"));
 
 

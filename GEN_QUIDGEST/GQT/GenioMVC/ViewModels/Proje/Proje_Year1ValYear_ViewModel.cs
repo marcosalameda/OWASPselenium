@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Proje
 			Menu.SetFilters(bool.Parse(requestValues["Proje_Year1ValYear_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("YEAR1.YEAR", new OrderedDictionary());
-			allSortOrders["YEAR1.YEAR"].Add("YEAR1.YEAR", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Proje_Year1ValYear_"));
 
 

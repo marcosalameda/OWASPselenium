@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Pess1
 			Menu.SetFilters(bool.Parse(requestValues["Pess1_CmpnyValDesignat_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("CMPNY.DESIGNAT", new OrderedDictionary());
-			allSortOrders["CMPNY.DESIGNAT"].Add("CMPNY.DESIGNAT", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Pess1_CmpnyValDesignat_"));
 
 

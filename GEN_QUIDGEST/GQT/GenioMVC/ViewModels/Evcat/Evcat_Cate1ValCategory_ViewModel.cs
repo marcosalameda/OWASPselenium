@@ -140,12 +140,6 @@ namespace GenioMVC.ViewModels.Evcat
 			Menu.SetFilters(bool.Parse(requestValues["Evcat_Cate1ValCategoria_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("CATE1.CATEGORIA", new OrderedDictionary());
-			allSortOrders["CATE1.CATEGORIA"].Add("CATE1.CATEGORIA", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Evcat_Cate1ValCategoria_"));
 
 

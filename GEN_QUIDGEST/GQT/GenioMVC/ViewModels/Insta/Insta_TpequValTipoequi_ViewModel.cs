@@ -141,12 +141,6 @@ namespace GenioMVC.ViewModels.Insta
 			Menu.SetFilters(bool.Parse(requestValues["Insta_TpequValTipoequi_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("TPEQU.TPEQUCOD", new OrderedDictionary());
-			allSortOrders["TPEQU.TPEQUCOD"].Add("TPEQU.TPEQUCOD", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Insta_TpequValTipoequi_"));
 
 

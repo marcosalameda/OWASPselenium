@@ -149,12 +149,6 @@ namespace GenioMVC.ViewModels.Expen
 			Menu.SetFilters(bool.Parse(requestValues["Despe_AgregValValue_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("AGREG.VALUE", new OrderedDictionary());
-			allSortOrders["AGREG.VALUE"].Add("AGREG.VALUE", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Despe_AgregValValue_"));
 
 

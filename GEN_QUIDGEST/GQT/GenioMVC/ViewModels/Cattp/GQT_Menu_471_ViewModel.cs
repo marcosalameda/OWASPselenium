@@ -173,12 +173,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcattp.FldCodtpcat, CSGenioAcattp.Fl
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_471_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("CATTP.TPCATEGO", new OrderedDictionary());
-			allSortOrders["CATTP.TPCATEGO"].Add("CATTP.TPCATEGO", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_471_"));
 
 

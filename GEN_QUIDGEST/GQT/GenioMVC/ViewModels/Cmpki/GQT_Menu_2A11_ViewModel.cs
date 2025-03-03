@@ -181,12 +181,6 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpki.FldCodcmpki, CSGenioAcmpki.Fl
 			Menu.SetFilters(bool.Parse(requestValues["GQT_Menu_2A11_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("CMPKI.ORDER", new OrderedDictionary());
-			allSortOrders["CMPKI.ORDER"].Add("CMPKI.ORDER", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "GQT_Menu_2A11_"));
 
 

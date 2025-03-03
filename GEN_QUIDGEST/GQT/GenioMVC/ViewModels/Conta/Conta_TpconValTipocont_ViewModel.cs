@@ -145,12 +145,6 @@ namespace GenioMVC.ViewModels.Conta
 			Menu.SetFilters(bool.Parse(requestValues["Conta_TpconValTipocont_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("TPCON.TIPOCONT", new OrderedDictionary());
-			allSortOrders["TPCON.TIPOCONT"].Add("TPCON.TIPOCONT", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Conta_TpconValTipocont_"));
 
 

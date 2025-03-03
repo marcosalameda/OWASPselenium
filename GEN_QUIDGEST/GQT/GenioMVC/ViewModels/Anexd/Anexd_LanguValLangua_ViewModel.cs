@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Anexd
 			Menu.SetFilters(bool.Parse(requestValues["Anexd_LanguValLangua_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("LANGU.LANGUA", new OrderedDictionary());
-			allSortOrders["LANGU.LANGUA"].Add("LANGU.LANGUA", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Anexd_LanguValLangua_"));
 
 

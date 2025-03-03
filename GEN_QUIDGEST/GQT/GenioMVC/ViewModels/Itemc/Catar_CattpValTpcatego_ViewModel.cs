@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Itemc
 			Menu.SetFilters(bool.Parse(requestValues["Catar_CattpValTpcatego_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("CATTP.TPCATEGO", new OrderedDictionary());
-			allSortOrders["CATTP.TPCATEGO"].Add("CATTP.TPCATEGO", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Catar_CattpValTpcatego_"));
 
 

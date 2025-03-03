@@ -139,12 +139,6 @@ namespace GenioMVC.ViewModels.Item
 			Menu.SetFilters(bool.Parse(requestValues["Artig_GitemValItemdes_tableFilters"] ?? "false"), false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("GITEM.ITEMDES", new OrderedDictionary());
-			allSortOrders["GITEM.ITEMDES"].Add("GITEM.ITEMDES", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(true), requestValues, "Artig_GitemValItemdes_"));
 
 

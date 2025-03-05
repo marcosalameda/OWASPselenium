@@ -1047,13 +1047,10 @@ namespace GenioMVC.ViewModels
         /// <param name="targetField">The field being subjected to the filter</param>
         /// <param name="history">The history entry to be consulted</param>
         /// <returns>True if the entry was found, false otherwise</returns>
-        public bool AddHistoryLimit(CriteriaSet baseCondition, FieldRef targetField, string history)
+        public void AddHistoryLimit(CriteriaSet baseCondition, FieldRef targetField, string history)
         {
             if(Navigation.CheckKey(history))
-            {
                 baseCondition.Equal(targetField, Navigation.GetValue(history));
-                return true;
-            }
 
             var ephs = UserContext.Current.User.fieldsEph(history);
             if(ephs != null)
@@ -1062,10 +1059,7 @@ namespace GenioMVC.ViewModels
                     baseCondition.In(targetField, ephs);
                 else if (ephs.Length > 0)
                     baseCondition.Equal(targetField, ephs[0]);
-                return true;
             }
-
-            return false;
         }
 
 

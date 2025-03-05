@@ -9,218 +9,216 @@
             </slot>
         </div>
         <div :class="{'card-body':card_mode}">
-          <div class="row" v-if="getTableTitle || showToolsRow">
-            <div class="col" v-if="getTableTitle">
-              <legend class="form-header">
-                {{getTableTitle()}}	
-              </legend>
-            </div>
-            <template v-if="showToolsRow">
-              <!-- global search text starts here -->
-                <search :initPlaceholder="global_search.placeholder"
-                        :initClasses="global_search.classes"
-                        :initVisibility="global_search.visibility"
-                        :initCaseSensitive="global_search.caseSensitive"
-                        :initShowClearButton="global_search.showClearButton"
-                        :initSearchOnPressEnter="global_search.searchOnPressEnter"
-                        :initSearchDebounceRate="global_search.searchDebounceRate"
-                        :initShowRefreshButton="global_search.showRefreshButton"
-                        :initShowResetButton="global_search.showResetButton"
-                        @clearGlobalSearch="clearGlobalSearch"
-                        @updateGlobalSearchHandler="updateGlobalSearchHandler"
-                        @updateGlobalSearch="updateGlobalSearch"
-                        @emitSearch="emitSearch"
-                        @resetQuery="resetQuery">
-                </search>
-              <!-- global search text ends here -->
-              
-              <!-- export to excel button -->
-                <q-button
-                    class="form-group c-table__export-btn"
-                    v-if="enableExport"
-                    b-style="secondary"
-                    :label="exportLabel"
-                    @click="exportExcel">
-                    <q-icon icon="file-export" />
-                </q-button>
-              <!--  export to excel button ends here -->
-
-              <!-- action buttons starts here -->
-              <div>
-                <slot name="vbt-action-buttons">
-                  <div class="btn-group float-right" role="group" aria-label="Basic example">
-                    <button v-for="(action, ac_key, index) in actions"
-                            :key="index" type="button" class="btn"
-                            :class="getActionButtonClass(action)"
-                            @click="emitActionEvent(action)">
-                      <slot :name="action.btn_text_slot_name">
-                        <span v-html="action.btn_text"></span>
-                      </slot>
-                    </button>
-                  </div>
-                </slot>
-              </div>
-              <!-- action buttons button ends here -->
-            </template>
-          </div>
-
-          <div :class='tableWrapperClasses' class="vbt-table-wrapper">
-            <table class="c-table" :class="tableClasses">
-              <thead class="c-table__head">
-                <tr>
-                  <select-all-rows-check-box v-if="checkbox_rows"
-                                             :all-rows-selected="allRowsSelected"
-                                             @update:allRowsSelected="allRowsSelected = $event"
-                                             :current-page-selection-count="currentPageSelectionCount"
-                                             @select-all-row-checkbox="selectAllCheckbox" />
-                  <slot name="columns" :columns="vbt_columns">
-                    <template v-for="(column, cl_key, index) in vbt_columns" :key="index">
-                      <th v-if="canShowColumn(column)" v-on="isSortableColumn(column) ? { click: () => updateSortQuery(column) } : {}" class="vbt-column-header" :class="columnClasses(column)">
-                        <slot :name="'column_' + getCellSlotName(column)" :column="column">
-                          {{getColumnLabel(column)}}
-                        </slot>
-                        <template v-if='isSortableColumn(column)'>
-                          <SortIcon :sort="query.sort" :column="column">
-                            <template #vbt-sort-asc-icon>
-                              <slot name="sort-asc-icon">
-                                &#x1F825;
-                              </slot>
-                            </template>
-                            <template #vbt-sort-desc-icon>
-                              <slot name="sort-desc-icon">
-                                &#x1F827;
-                              </slot>
-                            </template>
-                            <template #vbt-no-sort-icon>
-                              <slot name="no-sort-icon">
-                                &#x1F825;&#x1F827;
-                              </slot>
-                            </template>
-                          </SortIcon>
-                        </template>
-                      </th>
-                    </template>
-                  </slot>
-                </tr>
-              </thead>
-              <tbody class="c-table__body">
-                <!-- filter row starts here -->
-                <tr class="filtersRow" v-if="showFilterRow">
-                  <td v-show="checkbox_rows"></td>
-                  <template v-for="(column, cl_key, index) in vbt_columns" :key="index">
-                    <td v-if="canShowColumn(column)" align="center">
-                      <template v-if="hasFilter(column)">
-                        <Simple v-if="column.filter.type == 'simple'" :column="column" @update-filter="updateFilter" @clear-filter="clearFilter">
-                          <template #vbt-simple-filter-clear-icon>
-                            <slot name="simple-filter-clear-icon">
-                              &#x24E7;
-                            </slot>
-                          </template>
-                        </Simple>
-                        <MultiSelect v-if="column.filter.type == 'select'" :options="column.filter.options" :column="column" @update-multi-select-filter="updateMultiSelectFilter" @clear-filter="clearFilter"></MultiSelect>
-                        <template v-if="column.filter.type == 'custom'">
-                          <slot :name="column.filter.slot_name" :column="column">
-                          </slot>
-                        </template>
-                      </template>
-                    </td>
-                  </template>
-                </tr>
-                <!-- filter row ends here -->
-                <!-- data rows stars here -->
-                <row v-for="(row, index) in vbt_rows" :key="index"
-                     :row="row"
-                     :columns="vbt_columns"
-                     :row-index="index"
-                     :checkbox-rows="checkbox_rows"
-                     :rows-selectable="rows_selectable"
-                     :single-row-selectable="single_row_selectable"
-                     :selected-items="selected_items"
-                     :highlight-row-hover="highlight_row_hover"
-                     :highlight-row-hover-color="rowHighlightColor"
-                     :prop-row-classes="classes.row"
-                     :prop-cell-classes="classes.cell"
-                     :unique-id="uniqueId"
-                     @add-row="handleAddRow"
-                     @remove-row="handleRemoveRow"
-                     @single-row-select="handleSingleRowSelect">
-                  <template v-for="(column) in columns" #[`vbt-${getCellSlotName(column)}`]>
-                    <slot :name="getCellSlotName(column)" :row="row" :column="column" :cell_value="getValueFromRow(row,column.name)">
-                      {{getValueFromRow(row,column.name)}}
-                    </slot>
-                  </template>
-                </row>
-                <!-- empty row starts here -->
-                <tr v-show="vbt_rows == 0">
-                  <td :colspan="headerColSpan">
-                    <slot name="empty-results">
-                      No results found
-                    </slot>
-                  </td>
-                </tr>
-                <!-- empty row ends here -->
-                <!-- data rows ends here -->
-                <!-- Pagination row starts here -->
-                <tr v-if="showPaginationRow" class="footer-pagination-row">
-                  <td :colspan="headerColSpan">
-                    <div class="row vbt-pagination-row no-gutters">
-                      <!-- pagination starts here -->
-                      <div class="col-md-8">
-                        <div v-if="pagination">
-                          <Pagination v-model:page="page" v-model:per_page="per_page" :per_page_options="per_page_options" :total="rowCount" :num_of_visibile_pagination_buttons="num_of_visibile_pagination_buttons">
-                            <template #vbt-paginataion-previous-button>
-                              <slot name="paginataion-previous-button">
-                                &laquo;
-                              </slot>
-                            </template>
-                            <template #vbt-paginataion-next-button>
-                              <slot name="paginataion-next-button">
-                                &raquo;
-                              </slot>
-                            </template>
-                          </Pagination>
-                        </div>
-                      </div>
-                      <!-- pagination ends here -->
-                      <!-- pagination info start here -->
-                      <div class="col-md-4">
-                        <div class="text-right justify-content-center">
-                          <template v-if="pagination_info">
-                            <slot name="pagination-info" :currentPageRowsLength="currentPageRowsLength" :filteredRowsLength="filteredRowsLength" :originalRowsLength="originalRowsLength">
-                                <template v-if="currentPageRowsLength != 0">
-                                    From {{currentPageFirstRow}} to {{currentPageRowsLength}} of {{filteredRowsLength}} entries
-                                </template>
-                              <template v-else>
-                                No results found
-                              </template>
-                              <template>
-                                ({{originalRowsLength}} total records)
-                              </template>
-                            </slot>
-                          </template>
-                          <template v-if="selected_rows_info && pagination_info && isSelectable">
-                            <slot name="pagination-selected-rows-separator">
-                              |
-                            </slot>
-                          </template>
-                          <template v-if="selected_rows_info && isSelectable">
-                            <slot name="selected-rows-info" :selectedItemsCount="selectedItemsCount">
-                              {{selectedItemsCount}} rows selected
-                            </slot>
-                          </template>
-                        </div>
-                      </div>
-                      <!-- pagination info ends here -->
+            <div :class="['row', 'row-title']" v-if="getTableTitle || showToolsRow">
+                <div class="col" v-if="getTableTitle">
+                    <legend class="form-header">
+                        {{getTableTitle()}}	
+                    </legend>
+                </div>
+                <template v-if="showToolsRow">
+                <!-- global search text starts here -->
+                    <search :initPlaceholder="global_search.placeholder"
+                            :initClasses="global_search.classes"
+                            :initVisibility="global_search.visibility"
+                            :initCaseSensitive="global_search.caseSensitive"
+                            :initShowClearButton="global_search.showClearButton"
+                            :initSearchOnPressEnter="global_search.searchOnPressEnter"
+                            :initSearchDebounceRate="global_search.searchDebounceRate"
+                            :initShowRefreshButton="global_search.showRefreshButton"
+                            :initShowResetButton="global_search.showResetButton"
+                            @clearGlobalSearch="clearGlobalSearch"
+                            @updateGlobalSearchHandler="updateGlobalSearchHandler"
+                            @updateGlobalSearch="updateGlobalSearch"
+                            @emitSearch="emitSearch"
+                            @resetQuery="resetQuery">
+                    </search>
+                    <!-- global search text ends here -->
+                    
+                    <!-- export to excel button -->
+                    <div v-if="enableExport" class="export-btn">
+                        <q-button
+                            class="form-group c-table__export-btn"
+                            v-if="enableExport"
+                            b-style="secondary"
+                            :label="exportLabel"
+                            @click="exportExcel">
+                            <q-icon icon="file-export" />
+                        </q-button>
                     </div>
-                  </td>
-                </tr>
+                    <!--  export to excel button ends here -->
+
+                    <!-- action buttons starts here -->
+                    <div v-if="actions">
+                        <slot name="vbt-action-buttons" class="col-md-8">
+                            <div class="btn-group float-right" role="group" aria-label="Basic example">
+                                <button v-for="(action, ac_key, index) in actions"
+                                        :key="index" type="button" class="btn"
+                                        :class="getActionButtonClass(action)"
+                                        @click="emitActionEvent(action)">
+                                <slot :name="action.btn_text_slot_name">
+                                    <span v-html="action.btn_text"></span>
+                                </slot>
+                                </button>
+                            </div>
+                        </slot>
+                    </div>
+                    <!-- action buttons button ends here -->
+                </template>
+            </div>
+
+            <div :class='tableWrapperClasses' class="vbt-table-wrapper">
+                <table class="c-table" :class="tableClasses">
+                    <thead class="c-table__head">
+                        <tr>
+                            <th v-if="checkbox_rows" class="checkbox-column-th"></th>
+                            <slot name="columns" :columns="vbt_columns">
+                                <template v-for="(column, cl_key, index) in vbt_columns" :key="index">
+                                <th v-if="canShowColumn(column)" v-on="isSortableColumn(column) ? { click: () => updateSortQuery(column) } : {}" class="vbt-column-header" :class="columnClasses(column)">
+                                    <slot :name="'column_' + getCellSlotName(column)" :column="column">
+                                        {{getColumnLabel(column)}}
+                                    </slot>
+                                    <template v-if='isSortableColumn(column)'>
+                                        <SortIcon :sort="query.sort" :column="column">
+                                            <template #vbt-sort-asc-icon>
+                                                <slot name="sort-asc-icon">
+                                                    &#x1F825;
+                                                </slot>
+                                            </template>
+                                            <template #vbt-sort-desc-icon>
+                                                <slot name="sort-desc-icon">
+                                                    &#x1F827;
+                                                </slot>
+                                            </template>
+                                            <template #vbt-no-sort-icon>
+                                                <slot name="no-sort-icon">
+                                                    &#x1F825;&#x1F827;
+                                                </slot>
+                                            </template>
+                                        </SortIcon>
+                                    </template>
+                                </th>
+                            </template>
+                        </slot>
+                        </tr>
+                    </thead>
+                    <tbody class="c-table__body">
+                    <!-- filter row starts here -->
+                    <tr class="filtersRow" v-if="showFilterRow">
+                    <td v-show="checkbox_rows"></td>
+                    <template v-for="(column, cl_key, index) in vbt_columns" :key="index">
+                        <td v-if="canShowColumn(column)" align="center">
+                        <template v-if="hasFilter(column)">
+                            <Simple v-if="column.filter.type == 'simple'" :column="column" @update-filter="updateFilter" @clear-filter="clearFilter">
+                            <template #vbt-simple-filter-clear-icon>
+                                <slot name="simple-filter-clear-icon">
+                                &#x24E7;
+                                </slot>
+                            </template>
+                            </Simple>
+                            <MultiSelect v-if="column.filter.type == 'select'" :options="column.filter.options" :column="column" @update-multi-select-filter="updateMultiSelectFilter" @clear-filter="clearFilter"></MultiSelect>
+                            <template v-if="column.filter.type == 'custom'">
+                            <slot :name="column.filter.slot_name" :column="column">
+                            </slot>
+                            </template>
+                        </template>
+                        </td>
+                    </template>
+                    </tr>
+                    <!-- filter row ends here -->
+                    <!-- data rows stars here -->
+                    <row v-for="(row, index) in vbt_rows" :key="index"
+                        :row="row"
+                        :columns="vbt_columns"
+                        :row-index="index"
+                        :checkbox-rows="checkbox_rows"
+                        :rows-selectable="rows_selectable"
+                        :single-row-selectable="single_row_selectable"
+                        :selected-items="selected_items"
+                        :highlight-row-hover="highlight_row_hover"
+                        :highlight-row-hover-color="rowHighlightColor"
+                        :prop-row-classes="classes.row"
+                        :prop-cell-classes="classes.cell"
+                        :unique-id="uniqueId"
+                        @add-row="handleAddRow"
+                        @remove-row="handleRemoveRow"
+                        @single-row-select="handleSingleRowSelect">
+                    <template v-for="(column) in columns" #[`vbt-${getCellSlotName(column)}`]>
+                        <slot :name="getCellSlotName(column)" :row="row" :column="column" :cell_value="getValueFromRow(row,column.name)">
+                        {{getValueFromRow(row,column.name)}}
+                        </slot>
+                    </template>
+                    </row>
+                    <!-- empty row starts here -->
+                    <tr v-show="vbt_rows == 0">
+                    <td :colspan="headerColSpan">
+                        <slot name="empty-results">
+                        No results found
+                        </slot>
+                    </td>
+                    </tr>
+                    <!-- empty row ends here -->
+                    <!-- data rows ends here -->
+                    <!-- Pagination row starts here -->
+                    <tr v-if="showPaginationRow" class="footer-pagination-row">
+                    <td :colspan="headerColSpan">
+                        <div class="row vbt-pagination-row no-gutters">
+                        <!-- pagination starts here -->
+                        <div class="col-md-8">
+                            <div v-if="pagination">
+                            <Pagination v-model:page="page" v-model:per_page="per_page" :per_page_options="per_page_options" :total="rowCount" :num_of_visibile_pagination_buttons="num_of_visibile_pagination_buttons">
+                                <template #vbt-paginataion-previous-button>
+                                <slot name="paginataion-previous-button">
+                                    &laquo;
+                                </slot>
+                                </template>
+                                <template #vbt-paginataion-next-button>
+                                <slot name="paginataion-next-button">
+                                    &raquo;
+                                </slot>
+                                </template>
+                            </Pagination>
+                            </div>
+                        </div>
+                        <!-- pagination ends here -->
+                        <!-- pagination info start here -->
+                        <div class="col-md-4">
+                            <div class="text-right justify-content-center">
+                            <template v-if="pagination_info">
+                                <slot name="pagination-info" :currentPageRowsLength="currentPageRowsLength" :filteredRowsLength="filteredRowsLength" :originalRowsLength="originalRowsLength">
+                                    <template v-if="currentPageRowsLength != 0">
+                                        From {{currentPageFirstRow}} to {{currentPageRowsLength}} of {{filteredRowsLength}} entries
+                                    </template>
+                                <template v-else>
+                                    No results found
+                                </template>
+                                <template>
+                                    ({{originalRowsLength}} total records)
+                                </template>
+                                </slot>
+                            </template>
+                            <template v-if="selected_rows_info && pagination_info && isSelectable">
+                                <slot name="pagination-selected-rows-separator">
+                                |
+                                </slot>
+                            </template>
+                            <template v-if="selected_rows_info && isSelectable">
+                                <slot name="selected-rows-info" :selectedItemsCount="selectedItemsCount">
+                                {{selectedItemsCount}} rows selected
+                                </slot>
+                            </template>
+                            </div>
+                        </div>
+                        <!-- pagination info ends here -->
+                        </div>
+                    </td>
+                    </tr>
                 <!-- Pagination ends starts here -->
-              </tbody>
-              <tfoot class="c-table__footer">
-                <slot name="table-footer"></slot>
-              </tfoot>
-            </table>
-          </div>
+                </tbody>
+                <tfoot class="c-table__footer">
+                    <slot name="table-footer"></slot>
+                </tfoot>
+                </table>
+            </div>
         </div>
         <div class="card-footer" v-if="card_mode">
             <slot name="card-footer">
@@ -306,8 +304,6 @@ clone
 
 import Search from "./Search.vue";
 import Row from "./Row.vue";
-//import CheckBox from "./CheckBox.vue";
-import SelectAllRowsCheckBox from "./SelectAllRowsCheckBox.vue";
 import SortIcon from "./SortIcon.vue";
 import Pagination from "./Pagination.vue";
 import Simple from "./Filters/Simple.vue";
@@ -460,8 +456,6 @@ export default {
     components: {
         Search,
         Row,
-        //CheckBox,
-        SelectAllRowsCheckBox,
         Simple,
         MultiSelect,
         SortIcon,
@@ -664,22 +658,6 @@ export default {
 
             this.$emit('on-select-row', {"selected_items":cloneDeep(this.selected_items) ,"selected_item":row});
 
-            let difference = [];
-
-            if (this.server_mode && !this.hasUniqueId) {
-                difference = differenceWith(this.vbt_rows, this.selected_items, isEqual);
-            } else {
-                difference = differenceBy(this.vbt_rows, this.selected_items, this.uniqueId);
-            }
-
-            if (difference.length == 0) {
-                this.allRowsSelected = true;
-                // this.$eventHub.emit('select-select-all-items-checkbox', "from main");
-            } else {
-                this.allRowsSelected = false;
-                // this.$eventHub.emit('unselect-select-all-items-checkbox', "from main");
-            }
-
             this.lastSelectedItemIndex = payload.rowIndex;
         },
 
@@ -696,8 +674,6 @@ export default {
                 this.removeSelectedItem(row);
             }
             this.$emit('on-unselect-row', {"selected_items":cloneDeep(this.selected_items),"unselected_item":row});
-            // this.$eventHub.emit('unselect-select-all-items-checkbox');
-            this.allRowsSelected = false;
             this.lastSelectedItemIndex = payload.rowIndex;
         },
         addSelectedItem(item) {
@@ -712,38 +688,6 @@ export default {
             if (index == -1) {
                 this.selected_items.push(item);
             }
-        },
-        selectAllItems() {
-
-            let difference = [];
-
-            if (this.server_mode && !this.hasUniqueId) {
-                difference = differenceWith(this.vbt_rows, this.selected_items, isEqual);
-            } else {
-                difference = differenceBy(this.vbt_rows, this.selected_items, this.uniqueId);
-            }
-
-            this.selected_items.push(...difference);
-
-            this.$emit('on-all-select-rows', {"selected_items":cloneDeep(this.selected_items) });
-
-        },
-        unSelectAllItems() {
-
-            let difference = [];
-
-            if (this.server_mode && !this.hasUniqueId) {
-                let result = intersectionWith(this.vbt_rows, this.selected_items, isEqual);
-                difference = differenceWith(this.selected_items, result, isEqual);
-            } else {
-                let result = intersectionBy(this.vbt_rows, this.selected_items, this.uniqueId);
-                difference = differenceBy(this.selected_items, result, this.uniqueId);
-            }
-
-            this.selected_items = difference;
-
-            this.$emit('on-all-unselect-rows', {"selected_items":cloneDeep(this.selected_items)});
-
         },
         removeSelectedItem(item) {
             // TODO try with findbyId function
@@ -996,16 +940,6 @@ export default {
                 this.vbt_rows = this.temp_filtered_results.slice(start, end);
             } else {
                 this.vbt_rows = cloneDeep(this.temp_filtered_results);
-            }
-        },
-
-        selectAllCheckbox() {
-            if (this.allRowsSelected || this.currentPageSelectionCount > 0) {
-                this.unSelectAllItems();
-                this.allRowsSelected = false;
-            } else {
-                this.selectAllItems();
-                this.allRowsSelected = true;
             }
         },
 
@@ -1302,8 +1236,8 @@ export default {
             return classes;
         },
         tableWrapperClasses() {
-          let classes = "";
-          let defaultClasses = this.isResponsive ? "table-responsive" : "";
+            let classes = "";
+            let defaultClasses = this.isResponsive ? "table-responsive" : "";
 
             if (!this.classes.tableWrapper && this.classes.tableWrapper != "") {
                 return defaultClasses;
@@ -1446,37 +1380,6 @@ export default {
             deep: true
         },
 
-        vbt_rows: {
-            handler: function (newVal, oldVal) {
-                // resetting the shift mode
-                this.lastSelectedItemIndex = null;
-
-                if (this.selected_items.length == 0) {
-                    // this.$eventHub.emit('unselect-select-all-items-checkbox');
-                    this.allRowsSelected = false;
-                    return;
-                }
-
-                let difference = [];
-
-                if (this.server_mode && !this.hasUniqueId) {
-                    difference = differenceWith(newVal, this.selected_items, isEqual);
-                } else {
-                    difference = differenceBy(newVal, this.selected_items, this.uniqueId);
-                }
-
-                if (difference.length == 0) {
-                    // this.$eventHub.emit('select-select-all-items-checkbox');
-                    this.allRowsSelected = true;
-                } else {
-                    this.allRowsSelected = false;
-                    // this.$eventHub.emit('unselect-select-all-items-checkbox');
-                }
-
-            },
-            deep: true
-        },
-
         page(newVal, oldVal) {
             if (!this.server_mode) {
                 this.paginateFilter();
@@ -1499,9 +1402,6 @@ export default {
 </script>
 
 <style scoped>
-    .vbt-select-all-checkbox {
-        margin-bottom: 20px;
-    }
 
     .vbt-sort-cursor {
         cursor: pointer;

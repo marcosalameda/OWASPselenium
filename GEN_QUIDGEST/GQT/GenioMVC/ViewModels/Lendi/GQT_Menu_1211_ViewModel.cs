@@ -47,8 +47,7 @@ namespace GenioMVC.ViewModels.Lendi
 				CriteriaSet conditions = CriteriaSet.And();
 				// Limitations
 				// Limit "HM"
-				if (!AddHistoryLimit(conditions, CSGenioAlendi.FldCodpess1, "user"))
-					return null;
+				AddHistoryLimit(conditions, CSGenioAlendi.FldCodpess1, "user");
 
 				return conditions;
 			}

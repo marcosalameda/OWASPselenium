@@ -529,5 +529,90 @@ namespace Administration.Controllers
                 return Json(new { Success = false, Message = ex.Message, recordsTotal = 0 });
             }
         }
+
+        [HttpPost]
+        public IActionResult RemoveUserRole(string cod, string module, string roleId)
+        {
+            CSGenio.persistence.PersistentSupport sp = null; 
+            try
+            {
+                var conf = configManager.GetExistingConfig();
+                var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == CurrentYear);
+
+                if (dataSystem == null)
+                {
+                    return Json(new { Success = false, Message = Resources.Resources.CONFIGURACOES_NAO_EN22975 });
+                }
+
+                sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(dataSystem.Name);
+                var userManagement = new DBUserManagement();
+                sp.openTransaction();
+                var success = userManagement.RemoveUserRole(cod, module, roleId, sp);
+
+                return Json(new { Success = success });
+            }
+            catch (Exception ex)
+            {
+                if (sp != null)
+                {
+                    sp.rollbackTransaction();
+                }
+                return Json(new { Success = false, Message = ex.Message });
+            }
+            finally
+            {
+                if (sp != null)
+                {
+                    sp.closeTransaction();
+                }
+            }
+        }
+
+        [HttpPost]
+        public IActionResult AssignRoleToUsers(string users, string module, string roleId)
+        {
+            if (string.IsNullOrEmpty(users) || string.IsNullOrEmpty(module) || string.IsNullOrEmpty(roleId))
+            {
+                return Json(new { Success = false, Message = "Parámetros inválidos." });
+            }
+
+            CSGenio.persistence.PersistentSupport sp = null;
+
+            try
+            {
+                var conf = configManager.GetExistingConfig();
+                var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == CurrentYear);
+
+                if (dataSystem == null)
+                {
+                    return Json(new { Success = false, Message = "Configurações não encontradas." });
+                }
+
+                sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(dataSystem.Name);
+                sp.openConnection();
+
+                var userList = users.Split(',').ToList();
+                var userManagement = new DBUserManagement();
+
+                foreach (var codpsw in userList)
+                {
+                    userManagement.AssignRoleIfNotExists(sp, codpsw, module, roleId);
+                }
+
+                sp.closeConnection();
+                return Json(new { Success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message });
+            }
+            finally
+            {
+                if (sp != null)
+                {
+                    sp.closeConnection();
+                }
+            }
+        }
     }
 }

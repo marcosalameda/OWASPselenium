@@ -1914,6 +1914,20 @@ legend {
 			color: $success;
 		}
 	}
+
+	&__body-actions:has(.q-btn) {
+		align-self: flex-start;
+	}
+}
+
+.alert-dialog {
+    .q-dialog__body-text {
+        text-align: center;
+    }
+
+	.q-dialog__body-actions {
+		align-self: center;
+	}
 }
 
 // Data systems tab

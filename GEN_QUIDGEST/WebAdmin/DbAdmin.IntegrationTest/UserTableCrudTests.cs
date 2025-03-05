@@ -2,6 +2,8 @@ using CSGenio.business;
 using CSGenio.framework;
 using NUnit.Framework;
 using Quidgest.Persistence.GenericQuery;
+using DbAdmin;
+using CSGenio.persistence;
 
 namespace DbAdmin.IntegrationTest
 {
@@ -34,6 +36,22 @@ namespace DbAdmin.IntegrationTest
             };
 
             userAuthorization.insert(sp);
+        }
+
+        private void AssignMultipleRolesToUser(CSGenioApsw user, string module, List<Role> roles)
+        {
+            foreach (var role in roles)
+            {
+                CSGenioAs_ua userAuthorization = new CSGenioAs_ua(_user)
+                {
+                    ValSistema = "TST",
+                    ValModulo = module,
+                    ValRole = role.Id,
+                    ValCodpsw = user.ValCodpsw
+                };
+
+                userAuthorization.insert(sp);
+            }
         }
 
         [Test]
@@ -120,6 +138,74 @@ namespace DbAdmin.IntegrationTest
                 return 1;
             else
                 return 0;
+        }
+
+        [Test]
+        public void GetUsersWithoutRoleForModule_IsIdempotent()
+        {
+            // Arrange
+            var codpsw = InsertTestUser();
+            CSGenioApsw existingUser = CSGenioApsw.search(sp, codpsw, _user);
+            DBUserManagement dbUserManagement = new DBUserManagement();
+            string module = "TBL";
+            Role role = Role.ADMINISTRATION;
+
+            List<DBUserManagement.UserBasicInfo> usersBefore = dbUserManagement.GetUsersWithoutRoleForModule(module, role.Id, sp);
+            bool userExistsBefore = usersBefore.Exists(u => u.Codpsw == codpsw);
+
+            // Act
+            List<DBUserManagement.UserBasicInfo> usersAfter = dbUserManagement.GetUsersWithoutRoleForModule(module, role.Id, sp);
+            bool userExistsAfter = usersAfter.Exists(u => u.Codpsw == codpsw);
+
+            // Assert
+            Assert.AreEqual(userExistsBefore, userExistsAfter);
+        }
+
+        [Test]
+        public void RemoveUserRole_WhenUserExist_ReturnsTrue()
+        {
+            // Arrange
+            var codpsw = InsertTestUser();
+            CSGenioApsw user = CSGenioApsw.search(sp, codpsw, _user);
+            Role roleToRemove = Role.ADMINISTRATION;
+            Role roleToKeep = Role.ROLE_20;
+            string module = "TBL";
+            AssignMultipleRolesToUser(user, module, new List<Role> { roleToRemove, roleToKeep });
+
+            DBUserManagement dbUserManagement = new DBUserManagement();
+            var rolesBefore = CSGenioAs_ua.searchList(sp, _user,
+                CriteriaSet.And().Equal(CSGenioAs_ua.FldCodpsw, user.ValCodpsw));
+            Assert.AreEqual(2, rolesBefore.Count);
+            Assert.IsTrue(rolesBefore.Any(r => r.ValRole == roleToRemove.Id));
+            Assert.IsTrue(rolesBefore.Any(r => r.ValRole == roleToKeep.Id));
+
+            // Act
+            bool success = dbUserManagement.RemoveUserRole(user.ValCodpsw, module, roleToRemove.Id, sp);
+
+            // Assert
+            Assert.IsTrue(success);
+            var rolesAfter = CSGenioAs_ua.searchList(sp, _user,
+                CriteriaSet.And().Equal(CSGenioAs_ua.FldCodpsw, user.ValCodpsw));
+            // Ensure only the intended role was removed
+            Assert.AreEqual(1, rolesAfter.Count);
+            Assert.IsFalse(rolesAfter.Any(r => r.ValRole == roleToRemove.Id));
+            Assert.IsTrue(rolesAfter.Any(r => r.ValRole == roleToKeep.Id));
+        }
+
+        [Test]
+        public void RemoveUserRole_WhenUserDoesNotExist_ReturnsFalse()
+        {
+            // Arrange
+            DBUserManagement dbUserManagement = new DBUserManagement();
+            string codpsw = Guid.NewGuid().ToString();
+            string module = "TBL";
+            string roleId = Role.ADMINISTRATION.Id;
+
+            // Act
+            bool success = dbUserManagement.RemoveUserRole(codpsw, module, roleId, sp);
+
+            // Assert
+            Assert.IsFalse(success);
         }
     }
 }

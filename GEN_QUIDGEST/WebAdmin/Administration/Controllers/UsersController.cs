@@ -62,6 +62,7 @@ namespace Administration.Controllers
                 {
                     r.Role,
                     r.Module,
+                    r.Description,
                     ModuleName = GetModuleName(r.Module),
                     Designation = Resources.Resources.ResourceManager.GetString(r.Designation)
                 });

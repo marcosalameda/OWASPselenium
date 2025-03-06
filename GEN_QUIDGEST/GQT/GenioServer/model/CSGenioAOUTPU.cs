@@ -192,8 +192,8 @@ namespace CSGenio.business
 			//------------------------------
 			//Actualiza as seguintes somas relacionadas:
 			info.RelatedSumArgs = new List<RelatedSumArgument>();
-			info.RelatedSumArgs.Add( new RelatedSumArgument("outpu", "item", "exits", "exitqnty", '+', true));
 			info.RelatedSumArgs.Add( new RelatedSumArgument("outpu", "item", "existenc", "exitqnty", '-', true));
+			info.RelatedSumArgs.Add( new RelatedSumArgument("outpu", "item", "exits", "exitqnty", '+', true));
 
 
 

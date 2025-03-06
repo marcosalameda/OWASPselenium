@@ -20,14 +20,18 @@ namespace CSGenio.config
             string pathConfig = _basePath;
             pathConfig = Path.Combine(pathConfig, CONFIG_FILE);
 
-#if DEBUG
             if (!File.Exists(pathConfig))
             {
+                //Check env for config path
+                string envPath = Environment.GetEnvironmentVariable("CONFIG_PATH");
+                if (envPath != null)
+                    return Path.Combine(envPath, CONFIG_FILE);
+#if DEBUG
                 string debugPath = GetDebugPath();
                 if (!String.IsNullOrEmpty(debugPath))
                     pathConfig = debugPath;
-            }            
 #endif
+            }            
             return pathConfig;
         }
 

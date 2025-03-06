@@ -54,6 +54,14 @@ namespace DbAdmin.IntegrationTest
             }
         }
 
+        private static Role CreateRole(string title, Role[] subRoles = null)
+        {
+            Role newRole = new Role(RoleType.ROLE, title, subRoles ?? []);
+            Role.ALL_ROLES.Add(title, newRole);
+
+            return newRole;
+        }
+
         [Test]
         public void ReadUser()
         {
@@ -167,8 +175,8 @@ namespace DbAdmin.IntegrationTest
             // Arrange
             var codpsw = InsertTestUser();
             CSGenioApsw user = CSGenioApsw.search(sp, codpsw, _user);
-            Role roleToRemove = Role.ADMINISTRATION;
-            Role roleToKeep = Role.ROLE_20;
+            Role roleToRemove = CreateRole("test1");
+            Role roleToKeep = CreateRole("test2");
             string module = "TBL";
             AssignMultipleRolesToUser(user, module, new List<Role> { roleToRemove, roleToKeep });
 

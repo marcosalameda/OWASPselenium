@@ -3,6 +3,7 @@ using CSGenio.framework;
 using GenioServer.framework;
 using NUnit.Framework;
 using CSGenio.config;
+using System.Reflection.PortableExecutable;
 
 namespace DbAdmin.IntegrationTest
 {
@@ -19,19 +20,28 @@ namespace DbAdmin.IntegrationTest
                 Directory.Delete(workspace, recursive: true);
             }
             Directory.CreateDirectory(workspace);
-        }
 
+
+#if(DEBUG)
+            //This tests don't execute in debug compilation, because this mode fetches the configuration from aditional places and the reliability can't be ensured
+            Assert.Ignore("Skipping test because it's running in Debug mode.");
+#endif
+
+        }
 
         [Test]
         public void CheckIfNotExists()
-        {
+        {        
+            var envVar = Environment.GetEnvironmentVariable("CONFIG_PATH");
+            Assert.IsNull(envVar, $"CONFIG_PATH environment variable is not null: {envVar}");
+
             FileConfigurationManager manager = new FileConfigurationManager("C:\\invalidPath");
 
             bool result = manager.Exists();
 
-            Assert.IsFalse(result);
-
+            Assert.IsFalse(result, $"A file was found in {manager.GetFileLocation()}");
         }
+
 
         [Test]
         public void CreateNewConfigFile()
@@ -83,8 +93,6 @@ namespace DbAdmin.IntegrationTest
             var readConfig = manager.GetExistingConfig();      
             Assert.AreEqual("3", readConfig.ConfigVersion);
         }
-
-
 
 
     }

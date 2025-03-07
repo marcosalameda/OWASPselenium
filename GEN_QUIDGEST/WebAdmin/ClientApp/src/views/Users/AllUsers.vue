@@ -154,7 +154,7 @@
 	export default {
 		name: 'allUsers',
 		mixins: [reusableMixin],
-		emits: ['alertClass'],
+		emits: ['alert-class'],
 		data() {
 			var vm = this;
 			return {
@@ -348,7 +348,7 @@
 						this.getShowDialog();
 					}
 					else {
-						this.$emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 					}
 				});
 			},

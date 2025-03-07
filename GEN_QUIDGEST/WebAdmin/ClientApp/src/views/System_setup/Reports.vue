@@ -78,7 +78,7 @@
 
 		mixins: [reusableMixin],
 
-		emits: ['alertClass'],
+		emits: ['alert-class'],
 
 		methods: {
 			SaveConfigOthers() {
@@ -86,7 +86,7 @@
 				QUtils.log("SaveConfigOthers - Request", QUtils.apiActionURL('Config', 'SaveConfigOthers'));
 				QUtils.postData('Config', 'SaveConfigOthers', vm.model, null, function (data) {
 					QUtils.log("SaveConfigOthers - Response", data);
-						this.$emit('alertClass', {
+						this.$emit('alert-class', {
 						ResultMsg: data.Success ? this.Resources.ALTERACOES_EFETUADAS10166 : data.Message,
 						AlertType: data.Success ? 'success' : 'danger'
 					});

@@ -82,7 +82,7 @@
 							label: vm.$t('MANUTENCAO49776'),
 							disabled: false,
 							isVisible: true,
-							events: { 'alertClass': vm.updateAlert }
+							events: { 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'backup-tab',
@@ -91,7 +91,7 @@
 							label: vm.$t('BACKUP51008'), 
 							disabled: false,
 							isVisible: true,
-							events: { 'alertClass': vm.updateAlert }
+							events: { 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'security-tab',
@@ -100,7 +100,7 @@
 							label: vm.$t('SEGURANCA53664'),
 							disabled: false,
 							isVisible: true,
-							events: { 'alertClass': vm.updateAlert }
+							events: { 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'indexes-tab',
@@ -109,7 +109,7 @@
 							label: vm.$t('INDICES58021'),
 							disabled: false,
 							isVisible: true,
-							events: { 'alertClass': vm.updateAlert }
+							events: { 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'data_quality-tab',
@@ -118,7 +118,7 @@
 							label: vm.$t('QUALIDADE_DE_DADOS10588'),
 							disabled: false,
 							isVisible: true,
-							events: { 'alertClass': vm.updateAlert }
+							events: { 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'change_year-tab',
@@ -127,7 +127,7 @@
 							label: vm.$t('MUDANCA_DE_ANO09709'),
 							disabled: false,
 							isVisible: true,
-							events: { 'alertClass': vm.updateAlert }
+							events: { 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'schedule_maintenance-tab',
@@ -136,7 +136,7 @@
 							label: vm.$t('AGENDAR_MANUTENCAO19112'),
 							disabled: false,
 							isVisible: true,
-							events: { 'alertClass': vm.updateAlert }
+							events: { 'alert-class': vm.updateAlert }
 						}
 					]
 				}

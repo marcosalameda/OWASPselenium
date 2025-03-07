@@ -23,10 +23,10 @@
             :model="model"
 			:Cores="Cores"
 			:SelectLists="SelectLists"
-            @alertClass="forwardAlert" />
+            @alert-class="forwardAlert" />
         <reports
             :model="model"
-            @alertClass="forwardAlert" />
+            @alert-class="forwardAlert" />
 	</div>
 </template>
 
@@ -55,11 +55,11 @@
 
 		mixins: [reusableMixin],
 
-		emits: ['updateModal', 'alertClass'],
+		emits: ['update-model', 'alert-class'],
 
 		methods: {
 			forwardAlert(alertData) {
-				this.$emit('alertClass', alertData);
+				this.$emit('alert-class', alertData);
 			},
 		}
 	};

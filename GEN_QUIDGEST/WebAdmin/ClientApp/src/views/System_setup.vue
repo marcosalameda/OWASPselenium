@@ -89,7 +89,7 @@
 							disabled: false,
 							isVisible: true,
 							props: { model: computed(() => vm.Model) },
-							events: { 'connection-tested': vm.handleConnectionTested, 'updateModal': vm.setModel, 'alertClass': vm.updateAlert }
+							events: { 'connection-tested': vm.handleConnectionTested, 'update-model': vm.setModel, 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'datasystems-tab',
@@ -102,7 +102,7 @@
 								model: computed(() => vm.Model),
 								texts: computed(() => vm.Resources)
 							},
-							events: { 'changeTab': vm.changeTab, 'alertClass': vm.updateAlert }
+							events: { 'changeTab': vm.changeTab, 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'system-tab',
@@ -112,7 +112,7 @@
 							disabled: false,
 							isVisible: true,
 							props: { model: computed(() => vm.Model), Scheduler: computed(() => vm.Model?.Scheduler), TaskList: computed(() => vm.Model?.SelectLists.SchedulerTaskList) },
-							events: { 'updateModal': () => vm.fetchData() || vm.setModel(), 'alertClass': vm.updateAlert }
+							events: { 'update-model': () => vm.fetchData() || vm.setModel(), 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'display-tab',
@@ -122,7 +122,7 @@
 							disabled: false,
 							isVisible: true,
 							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists) },
-							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'externalservices-tab',
@@ -132,7 +132,7 @@
 							disabled: false,
 							isVisible: true,
 							props: { model: computed(() => vm.Model), Cores: computed(() => vm.Cores), SelectLists: computed(() => vm.Model?.SelectLists) },
-							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'integration-tab',
@@ -143,7 +143,7 @@
 							isVisible: true,
 							props: { model: computed(() => vm.Model), Messaging: computed(() => vm.Model?.Messaging),
 								Metadata: computed(() => vm.Model?.MessagingMetadata), reloadMQueues: vm.reloadMQueues },
-							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'extra-tab',
@@ -153,7 +153,7 @@
 							disabled: false,
 							isVisible: true,
 							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists) },
-							events: { 'updateModal': vm.fetchData, 'alertClass': vm.updateAlert }
+							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 					]
 				}

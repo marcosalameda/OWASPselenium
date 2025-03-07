@@ -77,7 +77,7 @@
 
 		mixins: [reusableMixin],
 
-		emits: ['alertClass'],
+		emits: ['alert-class'],
 
 		data() {
 			var vm = this;
@@ -197,7 +197,7 @@
 					vm.showPB = false;
 					vm.Model.BackupItem = null;
 					if (data.ResultMsg) {
-						vm.$emit('alertClass', { ResultMsg: data.ResultMsg, AlertType: data.AlertType || 'info' });
+						vm.$emit('alert-class', { ResultMsg: data.ResultMsg, AlertType: data.AlertType || 'info' });
 					}
 					vm.setTableData();
 				});

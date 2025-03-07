@@ -37,7 +37,7 @@
 
         mixins: [reusableMixin],
 
-		emits: ['alertClass'],
+		emits: ['alert-class'],
 
         props: {
 			model: {
@@ -52,10 +52,10 @@
 				QUtils.postData('Config', 'SaveConfigAudit', vm.model, null, function (data) {
 					QUtils.log("SaveConfigAudit - Response", data);
 					if (data.Success) {
-						vm.$emit('alertClass', { ResultMsg: vm.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
+						vm.$emit('alert-class', { ResultMsg: vm.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
 					}
 					else {
-						vm.$emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+						vm.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 					}
 				});
 			},

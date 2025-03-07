@@ -116,7 +116,7 @@
 
 		mixins: [reusableMixin],
 
-		emits: ['updateModal', 'alertClass'],
+		emits: ['update-model', 'alert-class'],
 
 		props: {
 			model: {
@@ -236,8 +236,8 @@
 					FormMode: this.dialogModeAdvanced,
 				}
 				QUtils.postData('Config', 'SaveMoreProperty', propsValues, { appId: this.$store.state.currentApp }, (data) => {
-					if (data.emptyVal) { this.$emit('alertClass', { ResultMsg: this.Resources.VALUE_CANNOT_BE_EMPT24668, AlertType: 'danger' }); }
-					else if (!data.success) { this.$emit('alertClass', { ResultMsg: this.Resources.THIS_KEY_ALREADY_EXI09944, AlertType: 'danger' }); }
+					if (data.emptyVal) { this.$emit('alert-class', { ResultMsg: this.Resources.VALUE_CANNOT_BE_EMPT24668, AlertType: 'danger' }); }
+					else if (!data.success) { this.$emit('alert-class', { ResultMsg: this.Resources.THIS_KEY_ALREADY_EXI09944, AlertType: 'danger' }); }
 					else {
 						switch (propsValues.FormMode) {
 						case 'new':
@@ -256,7 +256,7 @@
 						case 'delete':
 							if (data.initProp) {
 								eventData.moreProperty = data.moreProperty;
-								this.$emit('alertClass', { ResultMsg: this.Resources.CANNOT_DELETE_THIS_P45050, AlertType: 'danger' });
+								this.$emit('alert-class', { ResultMsg: this.Resources.CANNOT_DELETE_THIS_P45050, AlertType: 'danger' });
 							} else {
 								this.advancedProps = this.advancedProps.filter(prop => prop.Key != this.rowKey);
 							}
@@ -266,7 +266,7 @@
 						}
 						this.clearMorePropertyValues()
 						// Update model data
-						this.$emit('updateModal')
+						this.$emit('update-model')
 					}
 				});
 			},

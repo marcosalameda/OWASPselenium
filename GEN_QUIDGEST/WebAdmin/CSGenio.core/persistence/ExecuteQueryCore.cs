@@ -60,7 +60,7 @@ namespace ExecuteQueryCore
         public string ScriptName { get; set; }
         public string Content { get; set; }
         public string Type { get; set; }
-        public string Version { get; set; }
+        public int Version { get; set; }
         public Action<CancellationToken> Execute { get; set; }
         public string MinDbVersion { get; set; }
         public string MaxDbVersion { get; set; }
@@ -72,7 +72,7 @@ namespace ExecuteQueryCore
     {
         public string Script { get; set; }
         public string Type { get; set; }
-        public string Version { get; set; }
+        public int Version { get; set; }
         public Action<CancellationToken> Execute { get; set; }
         public string MinDbVersion { get; set; }
         public string MaxDbVersion { get; set; }
@@ -827,7 +827,7 @@ namespace ExecuteQueryCore
                                 try
                                 {
                                     string command = scriptBlock;
-                                    if (script.Version != null) command = command.Replace("[W_GnVER]", script.Version);
+                                    if (script.Version != 0) command = command.Replace("[W_GnVER]", script.Version.ToString());
 
                                     if (script.Connection == ConnectionType.Admin && param.AdmConn != null)                                        
                                         ExecuteCommand(param.AdmConn, command, script.Timeout);
@@ -864,7 +864,7 @@ namespace ExecuteQueryCore
                         this.CurrentBlockStr = script.ScriptName;
 
                         blockLog = new RdxScriptLog();
-                        blockLog.ScriptId = (script.Version != null) ? script.Version : rdxNum.ToString();
+                        blockLog.ScriptId = (script.Version != 0) ? script.Version.ToString() : rdxNum.ToString();
                         blockLog.StartTime = DateTime.Now;
 
                         try
@@ -1266,7 +1266,7 @@ namespace ExecuteQueryCore
         public string Type { get; set; }
 
         [XmlAttribute("Version")]
-        public string Version { get; set; }
+        public int Version { get; set; }
 
         [XmlAttribute("MinDbVersion")]
         public string MinDbVersion { get; set; } //Minimum database version

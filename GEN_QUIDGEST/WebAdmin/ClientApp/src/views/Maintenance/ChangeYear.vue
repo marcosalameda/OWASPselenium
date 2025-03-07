@@ -137,9 +137,9 @@
 					$.each(data.Model, function (propName, value) { vm.Model[propName] = value; });
 					vm.Errors = data.Errors;
 					if (vm.Errors.length > 0) {
-						vm.$emit('alertClass', { ResultMsg: vm.Errors, AlertType: data.AlertType || 'danger' });
+						vm.$emit('alert-class', { ResultMsg: vm.Errors, AlertType: data.AlertType || 'danger' });
 					} else {
-						vm.$emit('alertClass', { message: "Year change process completed successfully", AlertType: 'success' });
+						vm.$emit('alert-class', { message: "Year change process completed successfully", AlertType: 'success' });
 					}
 
 					setTimeout(vm.checkProgress, 250);

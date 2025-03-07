@@ -34,8 +34,8 @@
 	</Function>
 	<Function Id="UPGRADECLIENT1" Name="Upgrade Client" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="false">
 	  <Scripts>
- 		<Script Type="SQL" Version="1" MinDbVersion="0" MaxDbVersion="0">UpgradeClient.sql</Script>
-     </Scripts>
+		<Script Type="SQL" Version="1" MinDbVersion="0" MaxDbVersion="0">UpgradeClient.sql</Script>
+  </Scripts>
 	</Function>
 
 
@@ -126,8 +126,8 @@
 	<Function Id="UPGRADECLIENT2" Name="Upgrade Client" Type="SQL" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="false">
 	  <Scripts>
 		<Script Type="SQL" Version="2" MinDbVersion="0" MaxDbVersion="0">UpgradeClient.sql</Script>
-    		<!-- User defined ReIndexItems -->
-     </Scripts>
+		<!-- User defined ReIndexItems -->
+  </Scripts>
 	</Function>
 	
 	<Function Id="UPDATEFORMULAFIELDS" Name="Update FormulaFields" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="true">

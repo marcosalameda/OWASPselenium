@@ -129,7 +129,7 @@
 						disabled: false,
 						isVisible: true,
 						props: { model: computed(() => vm.Model), tNotifsOnBD: computed(() => vm.tNotifsOnBD) },
-						events: { 'updateModal': vm.fetchData }
+						events: { 'update-model': vm.fetchData }
 					},
 					{
 						id: 'msgs-tab',
@@ -139,7 +139,7 @@
 						disabled: false,
 						isVisible: true,
 						props: { model: computed(() => vm.Model), tMessagesConfig: computed(() => vm.tMessagesConfig) },
-						events: { 'updateModal': vm.fetchData }
+						events: { 'update-model': vm.fetchData }
 					}]
 				}
 			};

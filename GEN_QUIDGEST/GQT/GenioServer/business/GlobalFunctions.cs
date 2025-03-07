@@ -2177,7 +2177,7 @@ namespace CSGenio.business
                 if (scripts[i].Script == "UpgradeClient" || scripts[i].Script == "UpgradeClient.sql")
                     //Since the scripts are not sequencially executed, we compare their indexes and not the versions themselfs to know if
                     //they need to be removed or not
-                    if (i < scripts.IndexOf(scripts.Find(ord => ord.Version == upgrindx.ToString())))
+                    if (i < scripts.IndexOf(scripts.Find(ord => ord.Version == upgrindx)))
                     {
                         scripts.RemoveAt(i);
                         continue;
@@ -2185,15 +2185,15 @@ namespace CSGenio.business
 
                 if (scripts[i].Type != null && scripts[i].Type.ToUpper() == "CS")
                 {
-                    if (String.IsNullOrEmpty(scripts[i].Version))
+                    if (scripts[i].Version == 0)
                         scripts[i].Execute = (Action<System.Threading.CancellationToken>)Delegate.CreateDelegate(typeof(Action<System.Threading.CancellationToken>), rdxfunc, rdxfunc.GetType().GetMethod(scripts[i].Script));
                     else
-                        scripts[i].Execute = (Action<System.Threading.CancellationToken>)Delegate.CreateDelegate(typeof(Action<System.Threading.CancellationToken>), rdxfunc, rdxfunc.GetType().GetMethod(scripts[i].Script + scripts[i].Version));
+                        scripts[i].Execute = (Action<System.Threading.CancellationToken>)Delegate.CreateDelegate(typeof(Action<System.Threading.CancellationToken>), rdxfunc, rdxfunc.GetType().GetMethod(scripts[i].Script + scripts[i].Version.ToString()));
                 }
             }
 
             //We remove the last ran index last because if we do it before the others, we wont know what index to compare the records to
-            int idx = scripts.IndexOf(scripts.Find(ord => ord.Version == upgrindx.ToString()));
+            int idx = scripts.IndexOf(scripts.Find(ord => ord.Version == upgrindx && (ord.Script == "UpgradeClient" || ord.Script == "UpgradeClient.sql")));
             if (idx != -1)
                 scripts.RemoveAt(idx);
 

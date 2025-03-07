@@ -240,7 +240,7 @@ export default {
 
 	mixins: [reusableMixin],
 
-	emits: ['updateModal', 'connection-tested'],
+	emits: ['update-model', 'connection-tested'],
 
 	data() {
 		return {
@@ -258,12 +258,12 @@ export default {
 			QUtils.postData('Config', 'SaveConfigDatabase', vm.model, null, function (data) {
 				QUtils.log("SaveConfigDatabase - Response", data);
 				if (data.ResultMsg === vm.Resources.FICHEIRO_DE_CONFIGUR18806 + " " + vm.Resources.SERA_REDIRECIONADO_E06592) {
-					vm.$emit('updateModal', data);
+					vm.$emit('update-model', data);
 					setTimeout(function () {
 						vm.$router.push({ name: 'dashboard', params: { culture: vm.currentLang, system: vm.currentYear } });
 					}, 3000);
 				} else {
-					vm.$emit('updateModal', data);
+					vm.$emit('update-model', data);
 				};
 			});
 		},
@@ -272,7 +272,7 @@ export default {
 			var vm = this;
 			// Verify that essential data is present
 			if (!vm.model.Server || !vm.model.Schema || !vm.model.DbUser || !vm.model.DbPsw) {
-				vm.$emit('alertClass', { ResultMsg: vm.Resources.POR_FAVOR__PREENCHA_05829, AlertType: 'danger' });
+				vm.$emit('alert-class', { ResultMsg: vm.Resources.POR_FAVOR__PREENCHA_05829, AlertType: 'danger' });
 				return;
 			}
 

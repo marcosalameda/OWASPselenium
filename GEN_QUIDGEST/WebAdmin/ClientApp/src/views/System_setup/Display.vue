@@ -92,7 +92,7 @@ export default {
 
 	mixins: [reusableMixin],
 
-	emits: ['updateModal', 'alertClass'],
+	emits: ['update-model', 'alert-class'],
 	
 	data() {
 		var vm = this;
@@ -116,10 +116,10 @@ export default {
 			QUtils.postData('Config', 'SaveConfigOthers', vm.model, null, function (data) {
 				QUtils.log("SaveConfigOthers - Response", data);
 				if (data.Success) {
-					vm.$emit('alertClass', { ResultMsg: vm.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
+					vm.$emit('alert-class', { ResultMsg: vm.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
 				}
 				else {
-					vm.$emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+					vm.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 				}
 			});
 		},

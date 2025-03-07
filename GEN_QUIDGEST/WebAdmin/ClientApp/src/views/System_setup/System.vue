@@ -3,10 +3,10 @@
 		<scheduler
 			:model="model"
 			:TaskList="TaskList"
-			@alertClass="forwardAlert" />
+			@alert-class="forwardAlert" />
 		<audit
 			:model="model"
-			@alertClass="forwardAlert" />
+			@alert-class="forwardAlert" />
 	</div>
 </template>
 
@@ -28,7 +28,7 @@
 
 		mixins: [reusableMixin],
 
-		emits: ['updateModal', 'alertClass'],
+		emits: ['update-model', 'alert-class'],
 
 		props: {
 			model: {
@@ -41,7 +41,7 @@
 
 		methods: {
 			forwardAlert(alertData) {
-				this.$emit('alertClass', alertData);
+				this.$emit('alert-class', alertData);
 			},
 		}
 	}

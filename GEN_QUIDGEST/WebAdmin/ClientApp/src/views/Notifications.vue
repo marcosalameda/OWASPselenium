@@ -7,7 +7,7 @@
 		</div>
     <hr>
       <!-- This used to be a tab an it's now a self contained page-->
-      <notifications_notifs :Notifications="Model.notifications" @updateModal="fetchData"></notifications_notifs>
+      <notifications_notifs :Notifications="Model.notifications" @update-model="fetchData"></notifications_notifs>
   </div>
 </template>
 

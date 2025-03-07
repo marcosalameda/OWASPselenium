@@ -132,7 +132,7 @@
 
 		mixins: [reusableMixin],
 
-		emits: ['alertClass', 'updateModal'],
+		emits: ['alert-class', 'update-model'],
 
 		props: {
 			model: {
@@ -226,12 +226,12 @@
 				QUtils.log("SaveSchedulerConfig - Request", QUtils.apiActionURL('Config', 'SaveSchedulerConfig'));
 				QUtils.postData('Config', 'SaveSchedulerConfig', this.model, null, function (data) {
 					QUtils.log("SaveSchedulerConfig - Response", data);          
-					this.$emit('updateModal', data);
+					this.$emit('update-model', data);
 					if (data.Success) {
-						this.$emit('alertClass', { ResultMsg: this.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
+						this.$emit('alert-class', { ResultMsg: this.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
 						this.statusError = false;
 					} else {
-						this.$emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 					}
 				});
 			},
@@ -266,12 +266,12 @@
 						}
 					}
 					else {
-						this.$emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 					}
 
 					this.clearSchedulerValues()
 					// Update model data
-					this.$emit('updateModal')
+					this.$emit('update-model')
 				});
 			},
 

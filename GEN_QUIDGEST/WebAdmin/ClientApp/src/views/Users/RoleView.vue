@@ -109,7 +109,7 @@
 	export default {
 		name: 'role-view',
 		mixins: [reusableMixin],
-        emits: ['alertClass'],
+        emits: ['alert-class'],
 		mounted() {
             this.$nextTick(async () => {
                 await this.fetchRole();
@@ -243,7 +243,7 @@
                     this.getButtons() 
                     this.showAsignUsers = true;
                 } else {
-                    this.$emit('alertClass', { ResultMsg: this.Resources.ERRO_AO_CARREGAR_UTI62612, AlertType: 'danger' });
+                    this.$emit('alert-class', { ResultMsg: this.Resources.ERRO_AO_CARREGAR_UTI62612, AlertType: 'danger' });
                 }
             });
         },
@@ -284,7 +284,7 @@
         async submit() {
             const selectedUsers = this.$refs.userAsignTable.selected_items;
             if (selectedUsers.length === 0) {
-                $emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+                $emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
             }
             const users = selectedUsers.map((user) => user.Codpsw).join(',');
             const module = this.$route.params.module;
@@ -294,7 +294,7 @@
                     this.fetchRole();
                     this.getShowDialog('add')
                 } else {
-                    $emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+                    $emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
                 }
             });
         },
@@ -308,7 +308,7 @@
                     this.getShowDialog('delete');
                 }
                 else {
-                    this.$emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+                    this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
                 }
             });
         },

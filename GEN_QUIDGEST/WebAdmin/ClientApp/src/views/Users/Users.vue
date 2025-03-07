@@ -68,7 +68,7 @@
 					label: this.$t('UTILIZADORES39761'),
 					disabled: false,
 					isVisible: true,
-					events: { 'alertClass': this.updateAlert }
+					events: { 'alert-class': this.updateAlert }
 				},
 				{
 					id: 'roles-tab',
@@ -77,7 +77,7 @@
 					label: this.$t('ROLES61449'), 
 					disabled: false,
 					isVisible: true,
-					events: { 'alertClass': this.updateAlert }
+					events: { 'alert-class': this.updateAlert }
 				},
 				{
 					id: 'Nroles-tab',
@@ -86,7 +86,7 @@
 					label: this.$t('GESTAO_DE_FUNCOES_DE46211'),
 					disabled: false,
 					isVisible: true,
-					events: { 'alertClass': this.updateAlert }
+					events: { 'alert-class': this.updateAlert }
 				}
 				]
 			}

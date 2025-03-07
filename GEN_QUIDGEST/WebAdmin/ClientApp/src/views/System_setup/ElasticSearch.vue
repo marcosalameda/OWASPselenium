@@ -113,7 +113,7 @@
 
 		mixins: [reusableMixin],
 
-		emits: ['updateModal', 'alertClass'],
+		emits: ['update-model', 'alert-class'],
 
 		data() {
 			return {
@@ -282,7 +282,7 @@
 							break;
 						}
 						// Update model data
-						this.$emit('updateModal')
+						this.$emit('update-model')
 					}
 
 					this.clearCoreValues()

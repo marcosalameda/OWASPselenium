@@ -50,7 +50,7 @@
   export default {
     name: 'notifications_notifs',
     mixins: [reusableMixin],
-    emits: ['updateModal'],
+    emits: ['update-model'],
     props: {
       Notifications: {
         required: true
@@ -110,13 +110,13 @@
       Send: function (row) {
           var vm = this;
           QUtils.postData('Notifications', 'Send', null, { idnotif: row.IDNotif }, function () {
-              vm.$emit('updateModal');
+              vm.$emit('update-model');
           });
       },
       SendAll: function () {
           var vm = this;
           QUtils.postData('Notifications', 'SendAll', null, null, function () {
-              vm.$emit('updateModal');
+              vm.$emit('update-model');
           });
       }
     },

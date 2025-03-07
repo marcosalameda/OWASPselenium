@@ -35,7 +35,7 @@ import paths from './App_configuration/Paths.vue';
 export default {
 	name: 'app_config',
 	mixins: [reusableMixin],
-	emits: ['updateModal', 'updateUsers'],
+	emits: ['update-model', 'update-users'],
 	components: { security, paths },
 	data() {
 		var vm = this;
@@ -56,7 +56,7 @@ export default {
 						disabled: false,
 						isVisible: true,
 						props: { model: computed(() => vm.Model?.Security), SelectLists: computed(() => vm.Model?.SelectLists) },
-						events: { 'updateModal': vm.fetchData, 'updateUsers': vm.updateUsers }
+						events: { 'update-model': vm.fetchData, 'update-users': vm.updateUsers }
 					},
 					{
 						id: 'paths-tab',
@@ -66,7 +66,7 @@ export default {
 						disabled: false,
 						isVisible: true,
 						props: { model: computed(() => vm.Paths) },
-						events: { 'updateModal': vm.setModel }
+						events: { 'update-model': vm.setModel }
 					}
 				]
 			}

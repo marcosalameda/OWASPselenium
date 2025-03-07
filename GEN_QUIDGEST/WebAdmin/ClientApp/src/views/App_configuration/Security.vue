@@ -459,7 +459,7 @@
 	export default {
 		name: 'security',
 		components: { QAlert },
-		emits: ['updateModal', 'alertClass'],
+		emits: ['update-model', 'alert-class'],
 		props: {
 			model: {
 				required: true
@@ -674,10 +674,10 @@
 				QUtils.postData('Config', 'SaveConfigSecurity', this.Security, null, (data) => {
 					QUtils.log("SaveConfigSecurity - Response", data);
 					if (data.Success) {
-						this.$emit('alertClass', { ResultMsg: this.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
+						this.$emit('alert-class', { ResultMsg: this.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
 						this.statusError = false;
 					} else {
-						this.$emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 						this.statusError = true;
 					}
 				});
@@ -1013,7 +1013,7 @@
 						}
 						this.clearIdentityProviderValues()
 						// Update model data
-						this.$emit('updateModal')
+						this.$emit('update-model')
 					}
 				});
 			},
@@ -1092,12 +1092,12 @@
 						}
 					}
 					else {
-						this.$emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 					}
 
 					this.clearUserCfg()
 					// Update model data
-					this.$emit('updateModal')
+					this.$emit('update-model')
 				});
 			},
 			typeMapping(userType) {
@@ -1185,12 +1185,12 @@
 						}
 					}
 					else {
-						this.$emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 						}
 
 					this.clearRoleProvider()
 					// Update model data
-					this.$emit('updateModal')
+					this.$emit('update-model')
 				});
 			},
 			clearRoleProvider() {

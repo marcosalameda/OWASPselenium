@@ -74,7 +74,7 @@
 							disabled: false,
 							isVisible: true,
               props: { model: computed(() => vm.Model), EmailProperties: computed(() => vm.Model?.emailProperties) },
-              events: { 'updateModal': vm.fetchData }
+              events: { 'update-model': vm.fetchData }
 						},
 						{
 							id: 'signatures-tab',
@@ -84,7 +84,7 @@
 							disabled: false,
 							isVisible: true,
               props: { model: computed(() => vm.Model), EmailSignatures: computed(() => vm.Model?.emailSignatures) },
-              events: { 'updateModal': vm.fetchData }
+              events: { 'update-model': vm.fetchData }
 						},
 						{
 							id: 'more-tab',

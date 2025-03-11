@@ -7,10 +7,15 @@
 		<div class="progress-bar__container">
 			<div
 				v-if="withTitle"
-				class="c-modal__header">
+				class="c-modal__header progress-bar__header">
 				<h3 class="c-modal__header-title">
 					{{ text }}
 				</h3>
+				<span 
+					v-if="subtext"
+					class="progress-bar__subtitle">
+					{{ subtext }}
+				</span>
 			</div>
 			<div class="c-modal__body">
 				<div
@@ -52,6 +57,11 @@ export default {
 		},
 
 		text: {
+			type: String,
+			default: ''
+		},
+
+		subtext: {
 			type: String,
 			default: ''
 		},

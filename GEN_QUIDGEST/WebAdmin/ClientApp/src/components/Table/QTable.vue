@@ -26,6 +26,7 @@
                             :initSearchDebounceRate="global_search.searchDebounceRate"
                             :initShowRefreshButton="global_search.showRefreshButton"
                             :initShowResetButton="global_search.showResetButton"
+                            :size="global_search.size"
                             @clearGlobalSearch="clearGlobalSearch"
                             @updateGlobalSearchHandler="updateGlobalSearchHandler"
                             @updateGlobalSearch="updateGlobalSearch"
@@ -131,7 +132,6 @@
                         :columns="vbt_columns"
                         :row-index="index"
                         :checkbox-rows="checkbox_rows"
-                        :rows-selectable="rows_selectable"
                         :single-row-selectable="single_row_selectable"
                         :selected-items="selected_items"
                         :highlight-row-hover="highlight_row_hover"
@@ -281,19 +281,15 @@
 
 import {
 findIndex,
-range,
 filter,
 includes,
 map,
-join,
 has,
 extend,
 isEmpty,
 isEqual,
 debounce,
 cloneDeep,
-differenceWith,
-differenceBy,
 intersectionWith,
 intersectionBy,
 orderBy,
@@ -314,6 +310,7 @@ import MultiSelect from "./Filters/MultiSelect.vue";
 // SOURCE: https://github.com/rubanraj54/vue-bootstrap4-table
 
 import { QUtils } from '@/utils/mainUtils';
+import { isDefined } from '@/utils/common'
 
 export default {
     name: "QTable",
@@ -377,7 +374,6 @@ export default {
             selected_items: [],
             highlight_row_hover: true,
             highlight_row_hover_color: "#d6d6d6",
-            rows_selectable: false,
             single_row_selectable: false,
             allRowsSelected: false,
             multi_column_sort:false,
@@ -386,6 +382,7 @@ export default {
             global_search: {
                 placeholder: "Enter search text",
                 classes: "",
+                size: "xlarge",
                 visibility: true,
                 caseSensitive: false,
                 showRefreshButton: true,
@@ -484,8 +481,6 @@ export default {
 
             this.highlight_row_hover_color =  (has(this.config, 'highlight_row_hover_color')) ? this.config.highlight_row_hover_color : "#d6d6d6";
 
-            this.rows_selectable = (has(this.config, 'rows_selectable')) ? this.config.rows_selectable : false;
-
             this.single_row_selectable = (has(this.config, 'single_row_selectable')) ? this.config.single_row_selectable : false;
 
             this.multi_column_sort = (has(this.config, 'multi_column_sort')) ? (this.config.multi_column_sort) : false;
@@ -506,6 +501,7 @@ export default {
                 this.global_search.searchOnPressEnter = (has(this.config.global_search, 'searchOnPressEnter')) ? this.config.global_search.searchOnPressEnter : true;
                 this.global_search.searchDebounceRate = (has(this.config.global_search, 'searchDebounceRate')) ? this.config.global_search.searchDebounceRate : 60;
                 this.global_search.classes = (has(this.config.global_search, 'classes')) ? this.config.global_search.classes : "";
+                this.global_search.size = (has(this.config.global_search, 'size')) ? this.config.global_search.size : "xlarge";
                 this.global_search.init.value = (has(this.config.global_search, 'init.value')) ? this.config.global_search.init.value: "";
             }
 
@@ -677,27 +673,26 @@ export default {
             this.lastSelectedItemIndex = payload.rowIndex;
         },
         addSelectedItem(item) {
-
             let index = -1;
-            if (this.server_mode && !this.hasUniqueId) {
-                index = findIndex(this.selected_items, (selected_item) => {return isEqual(selected_item, item)});
+            if (!this.hasUniqueId) {
+                index = findIndex(this.selected_items, (selected_item) => { return isEqual(selected_item, item) });
             } else {
-                index = findIndex(this.selected_items, (selected_item) => {return selected_item[this.uniqueId] == item[this.uniqueId]});
+                index = findIndex(this.selected_items, (selected_item) => { return selected_item[this.uniqueId] == item[this.uniqueId] })
             }
 
             if (index == -1) {
-                this.selected_items.push(item);
+                this.selected_items.push(item)
             }
         },
+
         removeSelectedItem(item) {
-            // TODO try with findbyId function
-            this.selected_items.some((selected_item,index) => {
-                if (isEqual(item, selected_item)) {
-                    this.selected_items.splice(index, 1);
-                    return true;
-                }
-            });
+            if (!this.hasUniqueId) {
+				this.selected_items = this.selected_items.filter(selected_item => !isEqual(selected_item, item))
+            } else {
+				this.selected_items = this.selected_items.filter(selected_item => selected_item[this.uniqueId] !== item[this.uniqueId])
+            }
         },
+
         getShiftSelectionRows(rowIndex) {
             let start = 0;
             let end = 0;
@@ -1122,33 +1117,16 @@ export default {
         filteredResultsCount() {
             return this.temp_filtered_results.length;
         },
+
         uniqueId() {
-            let unique_id = "";
-
-            if (!this.hasUniqueId) {
-                unique_id = "vbt_id";
-                return unique_id;
-            }
-            this.vbt_columns.some((column, key) => {
-                if (has(column, 'uniqueId') && column.uniqueId === true) {
-                    unique_id = column.name;
-                    return true;
-                }
-            });
-
-            return unique_id;
+            if (!this.hasUniqueId)
+                return undefined
+            
+            return this.vbt_columns.find(column => column.uniqueId).name
         },
+
         hasUniqueId() {
-            let has_unique_id = false;
-
-            this.vbt_columns.some((column, key) => {
-                if (has(column, 'uniqueId') && column.uniqueId === true) {
-                    has_unique_id = true;
-                    return true;
-                }
-            });
-
-            return has_unique_id;
+            return this.vbt_columns.some(column => column.uniqueId)
         },
 
         // pagination info computed properties - start
@@ -1209,7 +1187,7 @@ export default {
 
         currentPageSelectionCount() {
             let result = [];
-            if (this.server_mode && !this.hasUniqueId) {
+            if (!this.hasUniqueId) {
                 result = intersectionWith(this.vbt_rows, this.selected_items, isEqual);
             } else {
                 result = intersectionBy(this.vbt_rows, this.selected_items, this.uniqueId);
@@ -1247,7 +1225,7 @@ export default {
         },
 
         isSelectable() {
-            return (this.checkbox_rows || this.rows_selectable);
+            return this.checkbox_rows
         },
 
         updateGlobalSearch() {

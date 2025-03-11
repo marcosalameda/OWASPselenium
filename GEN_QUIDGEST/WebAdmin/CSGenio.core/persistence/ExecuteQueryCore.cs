@@ -130,7 +130,8 @@ namespace ExecuteQueryCore
         RUNNING,
         CANCELLED,
         SUCCESS,
-        ERROR
+        ERROR,
+        FINISHED
     }
 
     public class RdxStatus

@@ -484,4 +484,35 @@ namespace Administration.Models
         [Display(Name = "Field")]
         public string Field { get; set; }
     }
+
+    /// <summary>
+    /// Class that contains information about the currently running maintenance job.
+    /// </summary>
+    public class MaintenanceProgress
+    {
+        /// <summary>
+        /// The maintenance progress percentage.
+        /// </summary>
+        public double Count { get; set; } = 0;
+
+        /// <summary>
+        /// In case of error or success, the message to send to the client.
+        /// </summary>
+        public string Message { get; set; } = "";
+
+        /// <summary>
+        /// The script that is currently being executed.
+        /// </summary>
+        public string ActualScript { get; set; } = "";
+
+        /// <summary>
+        /// The data system (DbAdminModel) that is currently running the maintenance job.
+        /// </summary>
+        public string ActualModel { get; set; } = "";
+
+        /// <summary>
+        /// The status of the current maintenance job. Is inferred from the RdxProgressStatus enumeration.
+        /// </summary>
+        public string Status { get; set; } = RdxProgressStatus.NOT_STARTED.ToString();
+    }
 }

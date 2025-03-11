@@ -517,7 +517,7 @@
 				// Change current data system to the one in the clicked row
 				this.$router.replace({ name: 'system_setup', params: { culture: this.currentLang, system: row.Year } })
 
-				this.$emit('changeTab', 'tabGroup', 'selectedTab', 'database-tab')
+				this.$emit('change-tab', 'tabGroup', 'selectedTab', 'database-tab')
 			},
 
 			updateDataSystemList() {

@@ -1839,6 +1839,17 @@ legend {
 		min-width: 30rem;
 	}
 
+	&__header {
+		padding-bottom: 0;
+	}
+
+	&__subtitle {
+		display: flex;
+		align-items: center;
+		color: var(--q-theme-neutral);
+		font-size: $font-size-base;
+	}
+
 	&__footer {
 		display: flex;
 		padding: 0.5rem;
@@ -2087,4 +2098,12 @@ legend {
 // QCheckbox web-admin specific styling
 .q-checkbox {
 	gap: 0.25rem;
+
+	// Variants
+	// table checkboxes
+	&--table:not(.q-checkbox--checked) {
+		.q-checkbox__input {
+			background-color: $white;
+		}
+	}
 }

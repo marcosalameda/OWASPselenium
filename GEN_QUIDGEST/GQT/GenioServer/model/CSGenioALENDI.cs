@@ -253,8 +253,8 @@ namespace CSGenio.business
 			info.Pathways.Add("cate2","pess1");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
-			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
+			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("item","equip");
 			info.Pathways.Add("famil","equip");
 			info.Pathways.Add("gitem","equip");

@@ -112,8 +112,8 @@ namespace CSGenio.business
 			info.Pathways.Add("equip","flds");
 			info.Pathways.Add("decom","flds");
 			info.Pathways.Add("wareh","flds");
-			info.Pathways.Add("tpequ","flds");
 			info.Pathways.Add("room1","flds");
+			info.Pathways.Add("tpequ","flds");
 			info.Pathways.Add("cmpny","flds");
 			info.Pathways.Add("item","flds");
 			info.Pathways.Add("pess1","flds");

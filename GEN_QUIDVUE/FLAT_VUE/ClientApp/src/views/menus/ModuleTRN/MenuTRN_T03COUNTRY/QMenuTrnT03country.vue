@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.COUNTRY64133),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TRN_Menu_T03COUNTRY',
@@ -292,11 +292,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-CTRY'],
+						globalEvents: ['changed-CTRY'],
 						uuid: 'c90616e7-d035-4136-8a85-6c6da44aae88',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

@@ -38,39 +38,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">TYPE OF EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Insta.ValCodtpequ")]
 		public string ValCodtpequ { get { return klass.ValCodtpequ; } set { klass.ValCodtpequ = value; } }
+
 		private Tpequ _tpequ;
 		[DisplayName("Tpequ")]
 		[ShouldSerialize("Tpequ")]
-		public virtual Tpequ Tpequ {
-			get {
-				if (!this.isEmptyModel && (_tpequ == null || (!string.IsNullOrEmpty(ValCodtpequ) && (_tpequ.isEmptyModel || _tpequ.klass.QPrimaryKey != ValCodtpequ))))
+		public virtual Tpequ Tpequ
+		{
+			get
+			{
+				if (!isEmptyModel && (_tpequ == null || (!string.IsNullOrEmpty(ValCodtpequ) && (_tpequ.isEmptyModel || _tpequ.klass.QPrimaryKey != ValCodtpequ))))
 					_tpequ = Models.Tpequ.Find(ValCodtpequ, m_userContext, Identifier, _fieldsToSerialize);
-				if (_tpequ == null)
-					_tpequ = new Models.Tpequ(m_userContext, true, _fieldsToSerialize);
+				_tpequ ??= new Models.Tpequ(m_userContext, true, _fieldsToSerialize);
 				return _tpequ;
 			}
 			set { _tpequ = value; }
 		}
 
-
 		[DisplayName(">EQUIPMENT")]
 		/// <summary>Field : ">EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Insta.ValCodequip")]
 		public string ValCodequip { get { return klass.ValCodequip; } set { klass.ValCodequip = value; } }
+
 		private Equip _equip;
 		[DisplayName("Equip")]
 		[ShouldSerialize("Equip")]
-		public virtual Equip Equip {
-			get {
-				if (!this.isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
+		public virtual Equip Equip
+		{
+			get
+			{
+				if (!isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
 					_equip = Models.Equip.Find(ValCodequip, m_userContext, Identifier, _fieldsToSerialize);
-				if (_equip == null)
-					_equip = new Models.Equip(m_userContext, true, _fieldsToSerialize);
+				_equip ??= new Models.Equip(m_userContext, true, _fieldsToSerialize);
 				return _equip;
 			}
 			set { _equip = value; }
 		}
-
 
 		[DisplayName("Scheduling")]
 		/// <summary>Field : "Scheduling" Tipo: "C" Formula:  ""</summary>
@@ -142,8 +144,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Insta.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Insta(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -162,7 +164,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAinsta csgenioa)
 		{
 			if (csgenioa == null)
@@ -173,13 +174,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "tpequ":
-						if (_tpequ == null)
-							_tpequ = new Tpequ(m_userContext, true, _fieldsToSerialize);
+						_tpequ ??= new Tpequ(m_userContext, true, _fieldsToSerialize);
 						_tpequ.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "equip":
-						if (_equip == null)
-							_equip = new Equip(m_userContext, true, _fieldsToSerialize);
+						_equip ??= new Equip(m_userContext, true, _fieldsToSerialize);
 						_equip.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

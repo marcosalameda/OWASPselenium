@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Prope05_AgentValNameModel : RequestLookupModel
+		{
+			public Prope05_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Prope/Prope05_AgentValName
 		// POST: /Prope/Prope05_AgentValName
 		[ActionName("Prope05_AgentValName")]
-		public ActionResult Prope05_AgentValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Prope05_AgentValName([FromBody] Prope05_AgentValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Prope05_AgentValName_ViewModel model = new Prope05_AgentValName_ViewModel(UserContext.Current);
-			
+
+			Models.Prope parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Prope05_AgentValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Prope05_CityValCityModel : RequestLookupModel
+		{
+			public Prope05_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Prope/Prope05_CityValCity
 		// POST: /Prope/Prope05_CityValCity
 		[ActionName("Prope05_CityValCity")]
-		public ActionResult Prope05_CityValCity([FromBody]RequestLookupModel requestModel)
+		public ActionResult Prope05_CityValCity([FromBody] Prope05_CityValCityModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Prope05_CityValCity_ViewModel model = new Prope05_CityValCity_ViewModel(UserContext.Current);
-			
+
+			Models.Prope parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Prope05_CityValCity_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

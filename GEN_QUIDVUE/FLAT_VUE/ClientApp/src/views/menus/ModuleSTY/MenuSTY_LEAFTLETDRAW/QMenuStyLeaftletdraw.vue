@@ -151,7 +151,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodtpequ',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Equip.ValRegistnr',
@@ -161,7 +161,7 @@
 								dataLength: 6,
 								scrollData: 6,
 								pkColumn: 'ValCodequip',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValDesignat',
@@ -170,7 +170,7 @@
 								label: computed(() => this.Resources.SCHEDULING24801),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 4,
 								name: 'ValDtiniage',
@@ -179,7 +179,7 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 5,
 								name: 'ValDtfimage',
@@ -188,7 +188,7 @@
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValDescript',
@@ -196,7 +196,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 7,
 								name: 'ValAllday',
@@ -204,7 +204,7 @@
 								field: 'ALLDAY',
 								label: computed(() => this.Resources.ALL_DAY18496),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 8,
 								name: 'ValSince',
@@ -213,7 +213,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
 								name: 'ValUntil',
@@ -222,7 +222,7 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
 								name: 'ValHours',
@@ -232,7 +232,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 11,
 								name: 'ValPrecohor',
@@ -242,7 +242,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 12,
 								name: 'ValValue',
@@ -252,7 +252,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 13,
 								name: 'ValCoordgeo',
@@ -263,7 +263,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_LEAFTLETDRAW',
@@ -405,11 +405,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
+						globalEvents: ['changed-INSTA', 'changed-TPEQU', 'changed-EQUIP'],
 						uuid: '5b5648c2-338b-4f0a-8b4e-33bb84218448',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

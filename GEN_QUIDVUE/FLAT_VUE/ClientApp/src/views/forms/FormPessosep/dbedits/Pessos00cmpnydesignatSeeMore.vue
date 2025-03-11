@@ -28,6 +28,7 @@
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 
+	import netAPI from '@/api/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
@@ -122,7 +123,7 @@
 		mounted()
 		{
 			// Listens for changes to the DB and updates the list accordingly.
-			this.$eventHub.onMany(this.listCtrl.changeEvents, this.onTableDBDataChanged)
+			this.$eventHub.onMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
 
 			const modalProps = {
 				id: 'see-more-pessos00cmpnydesignat',
@@ -140,7 +141,7 @@
 		beforeUnmount()
 		{
 			// Removes the listeners.
-			this.$eventHub.offMany(this.listCtrl.changeEvents, this.onTableDBDataChanged)
+			this.$eventHub.offMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
 			this.listCtrl.destroy()
 			this.componentOnLoadProc.destroy()
 
@@ -205,7 +206,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValAcronym',
@@ -214,7 +215,7 @@
 								label: computed(() => this.Resources.ACRONYM00872),
 								dataLength: 15,
 								scrollData: 15,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValNif',
@@ -223,7 +224,7 @@
 								label: computed(() => this.Resources.TAX_IDENTIFICATION51190),
 								dataLength: 15,
 								scrollData: 15,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValTelephon',
@@ -232,7 +233,7 @@
 								label: computed(() => this.Resources.PHONE56703),
 								dataLength: 20,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValEmail',
@@ -241,7 +242,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 6,
 								name: 'ValLogo',
@@ -252,7 +253,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'Pessos00_CmpnyValDesignat',
@@ -294,7 +295,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-CMPNY', 'changed-CNTRY'],
+						globalEvents: ['changed-CMPNY', 'changed-CNTRY'],
 						uuid: 'Pessos00_Pessos00_CmpnyValDesignat',
 						allSelectedRows: 'false',
 						handlers: {

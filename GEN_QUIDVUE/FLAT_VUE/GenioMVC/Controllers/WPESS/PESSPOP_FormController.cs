@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Pesspop_WarehValWarehdesModel : RequestLookupModel
+		{
+			public Pesspop_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Wpess/Pesspop_WarehValWarehdes
 		// POST: /Wpess/Pesspop_WarehValWarehdes
 		[ActionName("Pesspop_WarehValWarehdes")]
-		public ActionResult Pesspop_WarehValWarehdes([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pesspop_WarehValWarehdes([FromBody] Pesspop_WarehValWarehdesModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Pesspop_WarehValWarehdes_ViewModel model = new Pesspop_WarehValWarehdes_ViewModel(UserContext.Current);
-			
+
+			Models.Wpess parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pesspop_WarehValWarehdes_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

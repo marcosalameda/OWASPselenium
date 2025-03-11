@@ -2,9 +2,9 @@
 import cloneDeep from 'lodash-es/cloneDeep'
 import _assignInWith from 'lodash-es/assignInWith'
 import _debounce from 'lodash-es/debounce'
+import _isArray from 'lodash-es/isArray'
 import _isEmpty from 'lodash-es/isEmpty'
 import _isUndefined from 'lodash-es/isUndefined'
-import _isArray from 'lodash-es/isArray'
 import _merge from 'lodash-es/merge'
 import _mergeWith from 'lodash-es/mergeWith'
 
@@ -341,7 +341,7 @@ const customControlMixin = {
 		else
 		{
 			const isMultipleValue = _isArray(image)
-			const base64Img = isMultipleValue ? image.map(img => genericFunctions.imageObjToSrc(img)) : genericFunctions.imageObjToSrc(image)
+			const base64Img = isMultipleValue ? image.map((img) => genericFunctions.imageObjToSrc(img)) : genericFunctions.imageObjToSrc(image)
 			mappedVal.value = base64Img
 
 			// Compute dominant color from preview image only if necessary

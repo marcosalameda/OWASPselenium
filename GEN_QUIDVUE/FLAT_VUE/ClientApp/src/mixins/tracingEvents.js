@@ -1,4 +1,6 @@
-﻿import _filter from 'lodash-es/filter'
+﻿import { shallowReactive, toRaw } from 'vue'
+import { v4 as uuidv4 } from 'uuid'
+import _filter from 'lodash-es/filter'
 import _forEach from 'lodash-es/forEach'
 import _get from 'lodash-es/get'
 import _groupBy from 'lodash-es/groupBy'
@@ -11,10 +13,6 @@ import _toSafeInteger from 'lodash-es/toSafeInteger'
 import _uniq from 'lodash-es/uniq'
 
 import { TelemetryHandler } from './telemetryHandler'
-
-import { shallowReactive, toRaw } from 'vue'
-
-import { v4 as uuidv4 } from 'uuid'
 
 /**
  * Function to retrieve the call stack.
@@ -281,7 +279,7 @@ export class EventTracker
 	addTrace(options)
 	{
 		const event = new TraceEvent(options)
-		
+
 		this.telemetryHandler.registerTrace(event)
 
 		return this.addEvent(event)
@@ -332,7 +330,7 @@ export class EventTracker
 	addRequestTrace(options)
 	{
 		const event = new RequestEvent(options)
-		
+
 		this.telemetryHandler.registerTrace(event)
 
 		return this.addEvent(event)
@@ -373,7 +371,7 @@ export class EventTracker
 
 		if (_isArray(errors))
 		{
-			_forEach(errors, srvError => {
+			_forEach(errors, (srvError) => {
 				if (_isString(srvError))
 				{
 					this.addServerError({
@@ -396,7 +394,7 @@ export class EventTracker
 	getEventsOfType(traceEventType)
 	{
 		if (!_isEmpty(traceEventType))
-			return _filter(this.events, event => event.type === traceEventType)
+			return _filter(this.events, (event) => event.type === traceEventType)
 		return this.events
 	}
 
@@ -408,7 +406,7 @@ export class EventTracker
 	getEventsOfTypes(traceEventTypes)
 	{
 		if (_isArray(traceEventTypes) && traceEventTypes.length > 0)
-			return _filter(this.events, event => traceEventTypes.includes(event.type))
+			return _filter(this.events, (event) => traceEventTypes.includes(event.type))
 		return this.events
 	}
 
@@ -419,8 +417,8 @@ export class EventTracker
 	getEventsByGroup()
 	{
 		const errors = this.getEventsOfTypes([ TraceEventType.ERROR, TraceEventType.SERVER_ERROR ])
-		const traceIds = _uniq(_map(errors, error => error.traceId))
-		const relatedEvents = _filter(this.events, event => traceIds.includes(event.traceId))
+		const traceIds = _uniq(_map(errors, (error) => error.traceId))
+		const relatedEvents = _filter(this.events, (event) => traceIds.includes(event.traceId))
 		const groups = _groupBy(_orderBy(relatedEvents, 'timestamp'), 'traceId')
 		return groups
 	}

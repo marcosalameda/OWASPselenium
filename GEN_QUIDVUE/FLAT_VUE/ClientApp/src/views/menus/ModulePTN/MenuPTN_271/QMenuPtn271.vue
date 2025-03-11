@@ -153,7 +153,7 @@
 								array: qProjArrays.QArrayAcondtst.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayAcondtst.type,
 								arrayDisplayMode: 'D',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValFclient1',
@@ -162,7 +162,7 @@
 								label: computed(() => this.Resources.FIELD_WITH_CLIENT_SI60452),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
 								name: 'ValFserver1',
@@ -171,7 +171,7 @@
 								label: computed(() => this.Resources.FIELD_WITH_SERVER_SI13554),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 4,
 								name: 'ValFclient2',
@@ -179,7 +179,7 @@
 								field: 'FCLIENT2',
 								label: computed(() => this.Resources.FIELD_WITH_CLIENT_SI60452),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
 								name: 'ValFserver2',
@@ -189,7 +189,7 @@
 								scrollData: 8,
 								maxDigits: 5,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 6,
 								name: 'ValFclient3',
@@ -200,7 +200,7 @@
 								scrollData: 30,
 								sortable: false,
 								viewType: qEnums.documentViewTypeMode.preview,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 7,
 								name: 'ValFserver3',
@@ -211,7 +211,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_271',
@@ -353,11 +353,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-EQUIP', 'changed-FLDS', 'changed-AERO'],
+						globalEvents: ['changed-EQUIP', 'changed-FLDS', 'changed-AERO'],
 						uuid: '32a1f511-9029-4390-aa28-2f7ddfc6c2c6',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

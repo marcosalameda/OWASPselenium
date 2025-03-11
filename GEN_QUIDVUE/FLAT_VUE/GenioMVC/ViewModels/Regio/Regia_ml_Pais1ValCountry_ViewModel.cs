@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,51 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Regio
 {
-	public class Regia_ml_Pais1ValCountry_ViewModel : ListViewModel
+	public class Regia_ml_Pais1ValCountry_ViewModel : MenuListViewModel<Models.Pais1>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DB"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Regia_ml_Pais1ValCountry_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "pais1"; }
+		[JsonIgnore]
+		public override string TableAlias => "pais1";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Regia_ml_Pais1ValCountry"; }
+		public override string Uuid => "Regia_ml_Pais1ValCountry";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCodregia { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -52,6 +63,7 @@ namespace GenioMVC.ViewModels.Regio
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -63,6 +75,7 @@ namespace GenioMVC.ViewModels.Regio
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -86,12 +99,28 @@ namespace GenioMVC.ViewModels.Regio
 		}
 
 		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Regia_ml_Pais1ValCountry_ViewModel() : base(null!) { }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Regia_ml_Pais1ValCountry_ViewModel" /> class.
 		/// </summary>
 		/// <param name="userContext">The current user request context</param>
 		public Regia_ml_Pais1ValCountry_ViewModel(UserContext userContext) : base(userContext)
 		{
 			ValCodregia = userContext.CurrentNavigation.CurrentLevel.GetEntry("regio")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Regia_ml_Pais1ValCountry_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Regia_ml_Pais1ValCountry_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -155,12 +184,6 @@ namespace GenioMVC.ViewModels.Regio
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PAIS1.COUNTRY", new OrderedDictionary());
-			allSortOrders["PAIS1.COUNTRY"].Add("PAIS1.COUNTRY", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -175,7 +198,6 @@ namespace GenioMVC.ViewModels.Regio
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -270,22 +292,21 @@ namespace GenioMVC.ViewModels.Regio
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioApais1> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "REGIA_ML")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Regia_ml_Pais1ValCountry_RowViewModel>();
 
 				CriteriaSet regia_mlpais1country_Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("PAIS1.COUNTRY", new OrderedDictionary());
 				allSortOrders["PAIS1.COUNTRY"].Add("PAIS1.COUNTRY", "A");
-
 
 
 
@@ -323,10 +344,9 @@ namespace GenioMVC.ViewModels.Regio
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
 
 				if (conditions == null)
@@ -373,7 +393,6 @@ namespace GenioMVC.ViewModels.Regio
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -393,18 +412,12 @@ namespace GenioMVC.ViewModels.Regio
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -412,7 +425,7 @@ namespace GenioMVC.ViewModels.Regio
 
 		private List<Regia_ml_Pais1ValCountry_RowViewModel> MapRegia_ml_Pais1ValCountry(ListingMVC<CSGenioApais1> Qlisting)
 		{
-			var Elements = new List<Regia_ml_Pais1ValCountry_RowViewModel>();
+			List<Regia_ml_Pais1ValCountry_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -429,7 +442,6 @@ namespace GenioMVC.ViewModels.Regio
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioApais1 row
 		/// to a Regia_ml_Pais1ValCountry_RowViewModel object.
@@ -438,7 +450,9 @@ namespace GenioMVC.ViewModels.Regio
 		private Regia_ml_Pais1ValCountry_RowViewModel MapRegia_ml_Pais1ValCountry(CSGenioApais1 row)
 		{
 			var model = new Regia_ml_Pais1ValCountry_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -450,32 +464,7 @@ namespace GenioMVC.ViewModels.Regio
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Regia_ml_Pais1ValCountry_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -489,36 +478,42 @@ namespace GenioMVC.ViewModels.Regio
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioApais1> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioApais1 row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Pais1 m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Pais1 m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM REGIA_ML_PAIS1VALCOUNTRY]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Pais1", "Pais1.ValCodcntry", "Pais1.ValZzstate", "Pais1.ValCountry", "BtnPermission"
+			"Pais1", "Pais1.ValCodcntry", "Pais1.ValZzstate", "Pais1.ValCountry"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValCountry", CSGenioApais1.FldCountry, typeof(string))
 		];
-
-
-
 	}
 }

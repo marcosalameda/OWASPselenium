@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -243,8 +243,6 @@
 					mode: ''
 				},
 
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
-
 				formButtons: {
 					changeToShow: {
 						id: 'change-to-show-btn',
@@ -433,7 +431,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 2,
 								name: 'ValPhotogra',
@@ -444,7 +442,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
 								name: 'ValGender',
@@ -455,7 +453,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayGenero.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayGenero.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValEmail',
@@ -464,7 +462,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValPeoplels',
@@ -504,7 +502,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1'],
+						globalEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-PAIS1', 'changed-CMPNY'],
 						uuid: 'People_ValPeoplels',
 						allSelectedRows: 'false',
 						controlLimits: [

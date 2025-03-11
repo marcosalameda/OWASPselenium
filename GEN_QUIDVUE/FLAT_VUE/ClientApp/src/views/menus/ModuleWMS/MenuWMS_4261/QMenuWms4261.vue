@@ -151,7 +151,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodlocat',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValGlnext',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.GLN_EXTENSION_COMPON55869),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
 								name: 'ValSpacetyp',
@@ -171,7 +171,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArraySpacetyp.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArraySpacetyp.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValSpaceobs',
@@ -180,7 +180,7 @@
 								label: computed(() => this.Resources.SPACE62433),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_4261',
@@ -322,11 +322,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-LCEXT', 'changed-LOCAT'],
+						globalEvents: ['changed-LCEXT', 'changed-LOCAT'],
 						uuid: 'd72dd71e-f678-4fb0-8bf0-1ee9db354a48',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

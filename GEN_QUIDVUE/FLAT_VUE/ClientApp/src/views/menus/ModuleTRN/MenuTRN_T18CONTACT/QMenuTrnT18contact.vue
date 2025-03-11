@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValEmail',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValTelephon',
@@ -168,7 +168,7 @@
 								label: computed(() => this.Resources.TELEPHONE28697),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValDescript',
@@ -176,7 +176,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 5,
 								name: 'ValDate',
@@ -185,7 +185,7 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'Prope.ValTitle',
@@ -195,7 +195,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodprope',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TRN_Menu_T18CONTACT',
@@ -337,11 +337,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PROCN', 'changed-PROPE'],
+						globalEvents: ['changed-PROCN', 'changed-PROPE'],
 						uuid: '96a6c4cf-408f-4e64-bd93-a0675f994a73',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

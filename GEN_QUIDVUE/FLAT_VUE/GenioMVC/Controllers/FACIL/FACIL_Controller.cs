@@ -43,7 +43,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER FACIL]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -56,13 +55,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Facil row = null;
-
-			if (row == null)
-			{
-				row = new Models.Facil(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("facil");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Facil row = new Models.Facil(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("facil");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +75,7 @@ namespace GenioMVC.Controllers
 				{
 					case "FACIL___ENTITNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Facil_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Facil_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Facil___entitname____(qs);
 							result = model.TableEntitName;
@@ -84,8 +83,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "FACIL___FACTYTYPE____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Facil_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Facil_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Facil___factytype____(qs);
 							result = model.TableFactyType;
@@ -93,8 +91,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "FACILFEXENTITNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Facilfex_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Facilfex_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Facilfexentitname____(qs);
 							result = model.TableEntitName;
@@ -102,8 +99,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "FACILFEXFACTYTYPE____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Facilfex_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Facilfex_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Facilfexfactytype____(qs);
 							result = model.TableFactyType;
@@ -179,6 +175,8 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Facil" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -192,6 +190,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Facil)
 			);
 		}
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Facilfex" form. (++, CT, SR, CL and U1)

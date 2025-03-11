@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,45 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Grpb
 {
-	public class PTN_Menu_3M1_ViewModel : ListViewModel
+	public class PTN_Menu_3M1_ViewModel : MenuListViewModel<Models.Grpb>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<PTN_Menu_3M1_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "grpb"; }
+		[JsonIgnore]
+		public override string TableAlias => "grpb";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "fa354599-4a30-4174-adb2-39d65e17489c"; }
+		public override string Uuid => "fa354599-4a30-4174-adb2-39d65e17489c";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodgrpb { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -52,6 +57,7 @@ namespace GenioMVC.ViewModels.Grpb
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -63,6 +69,7 @@ namespace GenioMVC.ViewModels.Grpb
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -81,7 +88,6 @@ namespace GenioMVC.ViewModels.Grpb
 
 
 
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -97,17 +103,25 @@ namespace GenioMVC.ViewModels.Grpb
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldZzstate, CSGenioAgrpb.FldName };
 
-			ListingMVC<CSGenioAgrpb> listing = new ListingMVC<CSGenioAgrpb>(fields, null, 1, 1, false, user, true, string.Empty, false);
+			ListingMVC<CSGenioAgrpb> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
 			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public PTN_Menu_3M1_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PTN_Menu_3M1_ViewModel" /> class.
@@ -116,6 +130,16 @@ namespace GenioMVC.ViewModels.Grpb
 		public PTN_Menu_3M1_ViewModel(UserContext userContext) : base(userContext)
 		{
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PTN_Menu_3M1_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public PTN_Menu_3M1_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -178,10 +202,6 @@ namespace GenioMVC.ViewModels.Grpb
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -195,7 +215,6 @@ namespace GenioMVC.ViewModels.Grpb
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -292,21 +311,20 @@ namespace GenioMVC.ViewModels.Grpb
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAgrpb> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "3M1"),
 				new("Module", "PTN")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<PTN_Menu_3M1_RowViewModel>();
 
 				CriteriaSet ptn_menu_3m1Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
 
 
 
@@ -338,20 +356,19 @@ namespace GenioMVC.ViewModels.Grpb
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAgrpb model_limit_area = new CSGenioAgrpb(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML3M1");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAgrpb model_limit_area = new CSGenioAgrpb(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML3M1");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -399,7 +416,6 @@ namespace GenioMVC.ViewModels.Grpb
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -422,18 +438,12 @@ namespace GenioMVC.ViewModels.Grpb
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -441,7 +451,7 @@ namespace GenioMVC.ViewModels.Grpb
 
 		private List<PTN_Menu_3M1_RowViewModel> MapPTN_Menu_3M1(ListingMVC<CSGenioAgrpb> Qlisting, System.Collections.Hashtable tableBelowRows = null)
 		{
-			var Elements = new List<PTN_Menu_3M1_RowViewModel>();
+			List<PTN_Menu_3M1_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -458,7 +468,6 @@ namespace GenioMVC.ViewModels.Grpb
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAgrpb row
 		/// to a PTN_Menu_3M1_RowViewModel object.
@@ -467,7 +476,9 @@ namespace GenioMVC.ViewModels.Grpb
 		private PTN_Menu_3M1_RowViewModel MapPTN_Menu_3M1(CSGenioAgrpb row, System.Collections.Hashtable tableBelowRows = null)
 		{
 			var model = new PTN_Menu_3M1_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -479,13 +490,11 @@ namespace GenioMVC.ViewModels.Grpb
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
 			// TBLB columns
-			if((bool)tableBelowRows?.ContainsKey("tblb"))
+			if ((bool)tableBelowRows?.ContainsKey("tblb"))
 			{
 				var rowsByKey = tableBelowRows["tblb"] as Dictionary<string, List<CSGenioAtblb>>;
-				if(rowsByKey?.TryGetValue(row.QPrimaryKey, out List<CSGenioAtblb> rows) == true)
+				if (rowsByKey?.TryGetValue(row.QPrimaryKey, out List<CSGenioAtblb> rows) == true)
 				{
 					model.TblbValBool = [.. rows.Where(r => !Field.isEmptyValue(r.ValBool, FieldType.LOGICO.Formatting)).Select(r => ViewModelConversion.ToLogic(r.ValBool))];
 					model.TblbValCurdec = [.. rows.Where(r => !Field.isEmptyValue(r.ValCurdec, FieldType.VALOR.Formatting)).Select(r => ViewModelConversion.ToNumeric(r.ValCurdec))];
@@ -507,28 +516,6 @@ namespace GenioMVC.ViewModels.Grpb
 		}
 
 		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(PTN_Menu_3M1_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
-		}
-
-		/// <summary>
 		/// Checks the loaded model for pending rows (zzsttate not 0).
 		/// </summary>
 		public bool CheckForZzstate()
@@ -539,40 +526,48 @@ namespace GenioMVC.ViewModels.Grpb
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAgrpb> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAgrpb row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Grpb m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Grpb m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM PTN_MENU_3M1]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Grpb", "Grpb.ValCodgrpb", "Grpb.ValZzstate", "Grpb.ValName", "Tblb.ValBool", "Tblb.ValCurdec", "Tblb.ValCurint", "Tblb.ValDate", "Tblb.ValDatetm", "Tblb.ValDatets", "Tblb.ValEnumn", "Tblb.ValEnumt", "Tblb.ValNumdec", "Tblb.ValNumint", "Tblb.ValText", "Tblb.ValTextml", "Tblb.ValTimehm", "BtnPermission"
+			"Grpb", "Grpb.ValCodgrpb", "Grpb.ValZzstate", "Grpb.ValName", "Tblb.ValBool", "Tblb.ValCurdec", "Tblb.ValCurint", "Tblb.ValDate", "Tblb.ValDatetm", "Tblb.ValDatets", "Tblb.ValEnumn", "Tblb.ValEnumt", "Tblb.ValNumdec", "Tblb.ValNumint", "Tblb.ValText", "Tblb.ValTextml", "Tblb.ValTimehm"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValName", CSGenioAgrpb.FldName, typeof(string), defaultSearch : true)
 		];
-
-        /// <summary>
-        /// Retrieves values from the database for the related tables. Each table fetches all necessary fields required for visualization in the table
-        /// </summary>
-        /// <param name="keys">Current row keys</param>
-        /// <returns></returns>
+		/// <summary>
+		/// Retrieves values from the database for the related tables. Each table fetches all necessary fields required for visualization in the table
+		/// </summary>
+		/// <param name="keys">Current row keys</param>
+		/// <returns></returns>
 		private System.Collections.Hashtable GetRecordsFromTablesBelow(IEnumerable<string> keys)
 		{
 			System.Collections.Hashtable result = [];
@@ -588,7 +583,5 @@ namespace GenioMVC.ViewModels.Grpb
 			}
 			return result;
 		}
-
-
 	}
 }

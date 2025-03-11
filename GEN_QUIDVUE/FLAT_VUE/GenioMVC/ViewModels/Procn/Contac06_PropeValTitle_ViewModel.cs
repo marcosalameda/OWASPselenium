@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,51 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Procn
 {
-	public class Contac06_PropeValTitle_ViewModel : ListViewModel
+	public class Contac06_PropeValTitle_ViewModel : MenuListViewModel<Models.Prope>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DB"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Contac06_PropeValTitle_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "prope"; }
+		[JsonIgnore]
+		public override string TableAlias => "prope";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Contac06_PropeValTitle"; }
+		public override string Uuid => "Contac06_PropeValTitle";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCodprocn { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -52,6 +63,7 @@ namespace GenioMVC.ViewModels.Procn
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -63,6 +75,7 @@ namespace GenioMVC.ViewModels.Procn
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -86,12 +99,28 @@ namespace GenioMVC.ViewModels.Procn
 		}
 
 		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Contac06_PropeValTitle_ViewModel() : base(null!) { }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Contac06_PropeValTitle_ViewModel" /> class.
 		/// </summary>
 		/// <param name="userContext">The current user request context</param>
 		public Contac06_PropeValTitle_ViewModel(UserContext userContext) : base(userContext)
 		{
 			ValCodprocn = userContext.CurrentNavigation.CurrentLevel.GetEntry("procn")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Contac06_PropeValTitle_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Contac06_PropeValTitle_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -155,12 +184,6 @@ namespace GenioMVC.ViewModels.Procn
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PROPE.TITLE", new OrderedDictionary());
-			allSortOrders["PROPE.TITLE"].Add("PROPE.TITLE", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -175,7 +198,6 @@ namespace GenioMVC.ViewModels.Procn
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -270,22 +292,21 @@ namespace GenioMVC.ViewModels.Procn
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAprope> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "CONTAC06")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Contac06_PropeValTitle_RowViewModel>();
 
 				CriteriaSet contac06propetitle___Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("PROPE.TITLE", new OrderedDictionary());
 				allSortOrders["PROPE.TITLE"].Add("PROPE.TITLE", "A");
-
 
 
 
@@ -323,10 +344,9 @@ namespace GenioMVC.ViewModels.Procn
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
 
 				if (conditions == null)
@@ -373,7 +393,6 @@ namespace GenioMVC.ViewModels.Procn
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -393,18 +412,12 @@ namespace GenioMVC.ViewModels.Procn
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -412,7 +425,7 @@ namespace GenioMVC.ViewModels.Procn
 
 		private List<Contac06_PropeValTitle_RowViewModel> MapContac06_PropeValTitle(ListingMVC<CSGenioAprope> Qlisting)
 		{
-			var Elements = new List<Contac06_PropeValTitle_RowViewModel>();
+			List<Contac06_PropeValTitle_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -429,7 +442,6 @@ namespace GenioMVC.ViewModels.Procn
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAprope row
 		/// to a Contac06_PropeValTitle_RowViewModel object.
@@ -438,7 +450,9 @@ namespace GenioMVC.ViewModels.Procn
 		private Contac06_PropeValTitle_RowViewModel MapContac06_PropeValTitle(CSGenioAprope row)
 		{
 			var model = new Contac06_PropeValTitle_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -450,32 +464,7 @@ namespace GenioMVC.ViewModels.Procn
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Contac06_PropeValTitle_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -489,36 +478,42 @@ namespace GenioMVC.ViewModels.Procn
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAprope> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAprope row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Prope m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Prope m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM CONTAC06_PROPEVALTITLE]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Prope", "Prope.ValCodprope", "Prope.ValZzstate", "Prope.ValTitle", "Prope.ValCodagent", "Prope.ValCodcity", "BtnPermission"
+			"Prope", "Prope.ValCodprope", "Prope.ValZzstate", "Prope.ValTitle", "Prope.ValCodagent", "Prope.ValCodcity"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValTitle", CSGenioAprope.FldTitle, typeof(string))
 		];
-
-
-
 	}
 }

@@ -151,7 +151,7 @@
 								dataLength: 85,
 								scrollData: 85,
 								pkColumn: 'ValCodgitem',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Wareh.ValWarehdes',
@@ -161,7 +161,7 @@
 								dataLength: 85,
 								scrollData: 85,
 								pkColumn: 'ValCodwareh',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
 								name: 'ValItemtype',
@@ -172,7 +172,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayTipoarti.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayTipoarti.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValItemdes',
@@ -181,7 +181,7 @@
 								label: computed(() => this.Resources.ITEM40802),
 								dataLength: 85,
 								scrollData: 85,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
 								name: 'ValEntries',
@@ -191,7 +191,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
 								name: 'ValExits',
@@ -201,7 +201,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
 								name: 'ValExistenc',
@@ -211,7 +211,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 8,
 								name: 'ValImage',
@@ -222,7 +222,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
 								name: 'ValCategory',
@@ -230,7 +230,7 @@
 								field: 'CATEGORY',
 								label: computed(() => this.Resources.CATEGORY18978),
 								scrollData: 85,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_441',
@@ -372,11 +372,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-WAREH', 'changed-GITEM', 'changed-ITEM'],
+						globalEvents: ['changed-GITEM', 'changed-WAREH', 'changed-ITEM'],
 						uuid: '1a23820b-f641-4064-b042-83810cb95223',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

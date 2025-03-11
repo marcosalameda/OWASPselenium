@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -412,8 +412,6 @@
 					mode: ''
 				},
 
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
-
 				formButtons: {
 					changeToShow: {
 						id: 'change-to-show-btn',
@@ -802,7 +800,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValUntil',
@@ -811,7 +809,7 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValHours',
@@ -821,7 +819,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 4,
 								name: 'ValPrecohor',
@@ -831,7 +829,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 5,
 								name: 'ValValue',
@@ -841,7 +839,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValInstalag',
@@ -982,7 +980,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
+						globalEvents: ['changed-INSTA', 'changed-TPEQU', 'changed-EQUIP'],
 						uuid: 'Accordi_ValInstalag',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1030,7 +1028,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValUntil',
@@ -1039,7 +1037,7 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValHours',
@@ -1049,7 +1047,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 4,
 								name: 'ValPrecohor',
@@ -1059,7 +1057,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 5,
 								name: 'ValValue',
@@ -1069,7 +1067,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 6,
 								name: 'ValCoordgeo',
@@ -1080,7 +1078,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValInstalac',
@@ -1120,7 +1118,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
+						globalEvents: ['changed-INSTA', 'changed-TPEQU', 'changed-EQUIP'],
 						uuid: 'Accordi_ValInstalac',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1169,7 +1167,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDtrepara',
@@ -1178,7 +1176,7 @@
 								label: computed(() => this.Resources.FIXED_IN00179),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Cate1.ValCategoria',
@@ -1188,7 +1186,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodcateg',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'Pesso.ValName',
@@ -1198,7 +1196,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodpesso',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValDescript',
@@ -1206,7 +1204,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION_OF_THE_R26085),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
 								name: 'ValHours',
@@ -1216,7 +1214,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValReparaco',
@@ -1357,7 +1355,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-EQUIP', 'changed-PESSO', 'changed-REPAR', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
+						globalEvents: ['changed-EQUIP', 'changed-REPAR', 'changed-PESSO', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
 						uuid: 'Accordi_ValReparaco',
 						allSelectedRows: 'false',
 						controlLimits: [

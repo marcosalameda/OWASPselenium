@@ -151,7 +151,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDhdocume',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Ware1.ValWarehdes',
@@ -170,7 +170,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodwareh',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_411',
@@ -312,11 +312,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-OUTPT', 'changed-WARE1'],
+						globalEvents: ['changed-OUTPT', 'changed-WARE1'],
 						uuid: '40d782e2-021c-459e-ae69-1e1ff69a0c72',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

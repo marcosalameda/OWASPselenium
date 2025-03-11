@@ -151,7 +151,7 @@
 								dataLength: 90,
 								scrollData: 30,
 								pkColumn: 'ValCodcntry',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValRegiao',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.REGION12723),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'IMO_Menu_121',
@@ -222,11 +222,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-REGIO', 'changed-CNTRY', 'changed-PAIS1'],
+						globalEvents: ['changed-REGIO', 'changed-CNTRY', 'changed-PAIS1'],
 						uuid: '42ada8ca-26a1-42c6-aec0-c4df9252a718',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

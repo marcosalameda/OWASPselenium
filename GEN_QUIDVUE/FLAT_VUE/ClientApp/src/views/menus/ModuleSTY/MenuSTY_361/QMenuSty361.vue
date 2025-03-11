@@ -151,7 +151,7 @@
 								scrollData: 9,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValTextgro',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.TEXT_FIELD41810),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValButtngro',
@@ -168,7 +168,7 @@
 								field: 'BUTTNGRO',
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValSpangro',
@@ -177,7 +177,7 @@
 								label: computed(() => this.Resources.PROFILE65433),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValName',
@@ -186,7 +186,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValLastname',
@@ -195,7 +195,7 @@
 								label: computed(() => this.Resources.LAST_NAME63426),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 7,
 								name: 'ValAdress',
@@ -207,7 +207,7 @@
 								array: qProjArrays.QArrayAddresst.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayAddresst.type,
 								arrayDisplayMode: 'D',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 8,
 								name: 'ValPrefix',
@@ -219,7 +219,7 @@
 								array: qProjArrays.QArrayPhonepre.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayPhonepre.type,
 								arrayDisplayMode: 'D',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
 								name: 'ValPhone',
@@ -229,7 +229,7 @@
 								scrollData: 15,
 								maxDigits: 15,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 10,
 								name: 'ValEmail',
@@ -238,7 +238,7 @@
 								label: computed(() => this.Resources.E_MAIL42251),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 11,
 								name: 'ValWeb',
@@ -247,7 +247,7 @@
 								label: computed(() => this.Resources.WEB09813),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 12,
 								name: 'ValIban',
@@ -256,7 +256,7 @@
 								label: computed(() => this.Resources.IBAN28506),
 								dataLength: 34,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 13,
 								name: 'ValBankacco',
@@ -265,7 +265,7 @@
 								label: computed(() => this.Resources.BANKING_ACCOUNT_NUMB62548),
 								dataLength: 24,
 								scrollData: 24,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 14,
 								name: 'ValTextspan',
@@ -274,7 +274,7 @@
 								label: computed(() => this.Resources.TEXT04938),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 15,
 								name: 'ValDirectio',
@@ -283,7 +283,7 @@
 								label: computed(() => this.Resources.ADRESS39816),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 16,
 								name: 'ValBankcomp',
@@ -295,7 +295,7 @@
 								array: qProjArrays.QArrayBankcomp.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayBankcomp.type,
 								arrayDisplayMode: 'D',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_361',
@@ -437,11 +437,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-INPGR'],
+						globalEvents: ['changed-INPGR'],
 						uuid: 'bbdc57e0-4d64-4aa6-8f57-c642f9358f3a',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

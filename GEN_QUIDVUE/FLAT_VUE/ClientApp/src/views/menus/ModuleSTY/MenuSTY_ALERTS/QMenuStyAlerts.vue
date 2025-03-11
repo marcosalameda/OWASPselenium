@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.WAREHOUSE51864),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_ALERTS',
@@ -212,11 +212,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-WAREH'],
+						globalEvents: ['changed-WAREH'],
 						uuid: '859c224b-b5e6-4d51-a8c8-5b6d5be2e655',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

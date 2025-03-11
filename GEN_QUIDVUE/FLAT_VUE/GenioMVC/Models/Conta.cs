@@ -38,58 +38,61 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Conta.ValCodpesso")]
 		public string ValCodpesso { get { return klass.ValCodpesso; } set { klass.ValCodpesso = value; } }
+
 		private Pesso _pesso;
 		[DisplayName("Pesso")]
 		[ShouldSerialize("Pesso")]
-		public virtual Pesso Pesso {
-			get {
-				if (!this.isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
+		public virtual Pesso Pesso
+		{
+			get
+			{
+				if (!isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
 					_pesso = Models.Pesso.Find(ValCodpesso, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pesso == null)
-					_pesso = new Models.Pesso(m_userContext, true, _fieldsToSerialize);
+				_pesso ??= new Models.Pesso(m_userContext, true, _fieldsToSerialize);
 				return _pesso;
 			}
 			set { _pesso = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Conta.ValCodgenre")]
 		public string ValCodgenre { get { return klass.ValCodgenre; } set { klass.ValCodgenre = value; } }
+
 		private Genre _genre;
 		[DisplayName("Genre")]
 		[ShouldSerialize("Genre")]
-		public virtual Genre Genre {
-			get {
-				if (!this.isEmptyModel && (_genre == null || (!string.IsNullOrEmpty(ValCodgenre) && (_genre.isEmptyModel || _genre.klass.QPrimaryKey != ValCodgenre))))
+		public virtual Genre Genre
+		{
+			get
+			{
+				if (!isEmptyModel && (_genre == null || (!string.IsNullOrEmpty(ValCodgenre) && (_genre.isEmptyModel || _genre.klass.QPrimaryKey != ValCodgenre))))
 					_genre = Models.Genre.Find(ValCodgenre, m_userContext, Identifier, _fieldsToSerialize);
-				if (_genre == null)
-					_genre = new Models.Genre(m_userContext, true, _fieldsToSerialize);
+				_genre ??= new Models.Genre(m_userContext, true, _fieldsToSerialize);
 				return _genre;
 			}
 			set { _genre = value; }
 		}
 
-
 		[DisplayName("Contact type")]
 		/// <summary>Field : "Contact type" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Conta.ValCodtpcon")]
 		public string ValCodtpcon { get { return klass.ValCodtpcon; } set { klass.ValCodtpcon = value; } }
+
 		private Tpcon _tpcon;
 		[DisplayName("Tpcon")]
 		[ShouldSerialize("Tpcon")]
-		public virtual Tpcon Tpcon {
-			get {
-				if (!this.isEmptyModel && (_tpcon == null || (!string.IsNullOrEmpty(ValCodtpcon) && (_tpcon.isEmptyModel || _tpcon.klass.QPrimaryKey != ValCodtpcon))))
+		public virtual Tpcon Tpcon
+		{
+			get
+			{
+				if (!isEmptyModel && (_tpcon == null || (!string.IsNullOrEmpty(ValCodtpcon) && (_tpcon.isEmptyModel || _tpcon.klass.QPrimaryKey != ValCodtpcon))))
 					_tpcon = Models.Tpcon.Find(ValCodtpcon, m_userContext, Identifier, _fieldsToSerialize);
-				if (_tpcon == null)
-					_tpcon = new Models.Tpcon(m_userContext, true, _fieldsToSerialize);
+				_tpcon ??= new Models.Tpcon(m_userContext, true, _fieldsToSerialize);
 				return _tpcon;
 			}
 			set { _tpcon = value; }
 		}
-
 
 		[DisplayName("Contact")]
 		/// <summary>Field : "Contact" Tipo: "C" Formula:  ""</summary>
@@ -98,8 +101,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Conta.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Conta(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -118,7 +121,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAconta csgenioa)
 		{
 			if (csgenioa == null)
@@ -129,18 +131,15 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "pesso":
-						if (_pesso == null)
-							_pesso = new Pesso(m_userContext, true, _fieldsToSerialize);
+						_pesso ??= new Pesso(m_userContext, true, _fieldsToSerialize);
 						_pesso.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "genre":
-						if (_genre == null)
-							_genre = new Genre(m_userContext, true, _fieldsToSerialize);
+						_genre ??= new Genre(m_userContext, true, _fieldsToSerialize);
 						_genre.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "tpcon":
-						if (_tpcon == null)
-							_tpcon = new Tpcon(m_userContext, true, _fieldsToSerialize);
+						_tpcon ??= new Tpcon(m_userContext, true, _fieldsToSerialize);
 						_tpcon.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

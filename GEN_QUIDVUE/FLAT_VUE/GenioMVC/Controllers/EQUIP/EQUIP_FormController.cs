@@ -395,11 +395,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Equip_CmpnyValDesignatModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equip_CmpnyValDesignat
 		// POST: /Equip/Equip_CmpnyValDesignat
 		[ActionName("Equip_CmpnyValDesignat")]
-		public ActionResult Equip_CmpnyValDesignat([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_CmpnyValDesignat([FromBody] Equip_CmpnyValDesignatModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -424,16 +429,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Equip_CmpnyValDesignat_ViewModel model = new Equip_CmpnyValDesignat_ViewModel(UserContext.Current);
-			
+
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_CmpnyValDesignat_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -458,11 +466,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip_Pess1ValNameModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equip_Pess1ValName
 		// POST: /Equip/Equip_Pess1ValName
 		[ActionName("Equip_Pess1ValName")]
-		public ActionResult Equip_Pess1ValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_Pess1ValName([FromBody] Equip_Pess1ValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -487,23 +500,26 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Equip_Pess1ValName_ViewModel model = new Equip_Pess1ValName_ViewModel(UserContext.Current);
-			
+
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_Pess1ValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
+
 			// Static filter "order" fields that have changed
 			tableConfigOptions.StaticFiltersKeyShiftValues = new Dictionary<string, int>
 			{
-				{ "filter_Pess1ValName_FILTER1", 0 }
-,
+				{ "filter_Pess1ValName_FILTER1", 0 },
 				{ "filter_Pess1ValName_FILTER2", -1 }
- 			};
- 
+			};
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -528,11 +544,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip_TpequValTipoequiModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equip_TpequValTipoequi
 		// POST: /Equip/Equip_TpequValTipoequi
 		[ActionName("Equip_TpequValTipoequi")]
-		public ActionResult Equip_TpequValTipoequi([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_TpequValTipoequi([FromBody] Equip_TpequValTipoequiModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -557,16 +578,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Equip_TpequValTipoequi_ViewModel model = new Equip_TpequValTipoequi_ViewModel(UserContext.Current);
-			
+
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_TpequValTipoequi_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -591,11 +615,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip_WarehValWarehdesModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equip_WarehValWarehdes
 		// POST: /Equip/Equip_WarehValWarehdes
 		[ActionName("Equip_WarehValWarehdes")]
-		public ActionResult Equip_WarehValWarehdes([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_WarehValWarehdes([FromBody] Equip_WarehValWarehdesModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -620,16 +649,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Equip_WarehValWarehdes_ViewModel model = new Equip_WarehValWarehdes_ViewModel(UserContext.Current);
-			
+
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_WarehValWarehdes_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -654,11 +686,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip_ItemValItemdesModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equip_ItemValItemdes
 		// POST: /Equip/Equip_ItemValItemdes
 		[ActionName("Equip_ItemValItemdes")]
-		public ActionResult Equip_ItemValItemdes([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_ItemValItemdes([FromBody] Equip_ItemValItemdesModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -683,16 +720,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Equip_ItemValItemdes_ViewModel model = new Equip_ItemValItemdes_ViewModel(UserContext.Current);
-			
+
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_ItemValItemdes_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -763,11 +803,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip_ValMovimelsModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equip_ValMovimels
 		// POST: /Equip/Equip_ValMovimels
 		[ActionName("Equip_ValMovimels")]
-		public ActionResult Equip_ValMovimels([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_ValMovimels([FromBody] Equip_ValMovimelsModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -791,16 +836,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equip_ValMovimels_ViewModel model = new Equip_ValMovimels_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_ValMovimels_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -823,13 +870,18 @@ namespace GenioMVC.Controllers
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
+		}
+
+		public class Equip_ValInstalagModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
 		}
 
 		//
 		// GET: /Equip/Equip_ValInstalag
 		// POST: /Equip/Equip_ValInstalag
 		[ActionName("Equip_ValInstalag")]
-		public ActionResult Equip_ValInstalag([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_ValInstalag([FromBody] Equip_ValInstalagModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -853,16 +905,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equip_ValInstalag_ViewModel model = new Equip_ValInstalag_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_ValInstalag_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -885,13 +939,18 @@ namespace GenioMVC.Controllers
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
+		}
+
+		public class Equip_ValInstalacModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
 		}
 
 		//
 		// GET: /Equip/Equip_ValInstalac
 		// POST: /Equip/Equip_ValInstalac
 		[ActionName("Equip_ValInstalac")]
-		public ActionResult Equip_ValInstalac([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_ValInstalac([FromBody] Equip_ValInstalacModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -915,16 +974,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equip_ValInstalac_ViewModel model = new Equip_ValInstalac_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_ValInstalac_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -949,11 +1010,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip_ValReparacoModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equip_ValReparaco
 		// POST: /Equip/Equip_ValReparaco
 		[ActionName("Equip_ValReparaco")]
-		public ActionResult Equip_ValReparaco([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_ValReparaco([FromBody] Equip_ValReparacoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -977,21 +1043,24 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equip_ValReparaco_ViewModel model = new Equip_ValReparaco_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_ValReparaco_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
+
 			// Static filter "order" fields that have changed
 			tableConfigOptions.StaticFiltersKeyShiftValues = new Dictionary<string, int>
 			{
 				{ "filter_ValReparaco_STARTED", 0 }
- 			};
- 
+			};
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -1016,11 +1085,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip_DecomValDecomnrModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equip_DecomValDecomnr
 		// POST: /Equip/Equip_DecomValDecomnr
 		[ActionName("Equip_DecomValDecomnr")]
-		public ActionResult Equip_DecomValDecomnr([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_DecomValDecomnr([FromBody] Equip_DecomValDecomnrModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -1045,16 +1119,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Equip_DecomValDecomnr_ViewModel model = new Equip_DecomValDecomnr_ViewModel(UserContext.Current);
-			
+
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_DecomValDecomnr_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -1079,11 +1156,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip_ValFotoequiModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equip_ValFotoequi
 		// POST: /Equip/Equip_ValFotoequi
 		[ActionName("Equip_ValFotoequi")]
-		public ActionResult Equip_ValFotoequi([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_ValFotoequi([FromBody] Equip_ValFotoequiModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -1107,16 +1189,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equip_ValFotoequi_ViewModel model = new Equip_ValFotoequi_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_ValFotoequi_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -1141,11 +1225,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip_ValVisequipModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equip_ValVisequip
 		// POST: /Equip/Equip_ValVisequip
 		[ActionName("Equip_ValVisequip")]
-		public ActionResult Equip_ValVisequip([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_ValVisequip([FromBody] Equip_ValVisequipModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -1169,16 +1258,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equip_ValVisequip_ViewModel model = new Equip_ValVisequip_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_ValVisequip_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -1203,11 +1294,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip_ValAnexosModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equip_ValAnexos
 		// POST: /Equip/Equip_ValAnexos
 		[ActionName("Equip_ValAnexos")]
-		public ActionResult Equip_ValAnexos([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_ValAnexos([FromBody] Equip_ValAnexosModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -1231,16 +1327,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equip_ValAnexos_ViewModel model = new Equip_ValAnexos_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_ValAnexos_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -1265,11 +1363,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip_ValTlequipaModel : RequestLookupModel
+		{
+			public Equip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equip_ValTlequipa
 		// POST: /Equip/Equip_ValTlequipa
 		[ActionName("Equip_ValTlequipa")]
-		public ActionResult Equip_ValTlequipa([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip_ValTlequipa([FromBody] Equip_ValTlequipaModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -1293,16 +1396,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equip_ValTlequipa_ViewModel model = new Equip_ValTlequipa_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip_ValTlequipa_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

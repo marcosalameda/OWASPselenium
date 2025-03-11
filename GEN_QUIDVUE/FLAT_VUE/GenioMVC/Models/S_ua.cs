@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("S_ua.ValCodpsw")]
 		public string ValCodpsw { get { return klass.ValCodpsw; } set { klass.ValCodpsw = value; } }
+
 		private Psw _psw;
 		[DisplayName("Psw")]
 		[ShouldSerialize("Psw")]
-		public virtual Psw Psw {
-			get {
-				if (!this.isEmptyModel && (_psw == null || (!string.IsNullOrEmpty(ValCodpsw) && (_psw.isEmptyModel || _psw.klass.QPrimaryKey != ValCodpsw))))
+		public virtual Psw Psw
+		{
+			get
+			{
+				if (!isEmptyModel && (_psw == null || (!string.IsNullOrEmpty(ValCodpsw) && (_psw.isEmptyModel || _psw.klass.QPrimaryKey != ValCodpsw))))
 					_psw = Models.Psw.Find(ValCodpsw, m_userContext, Identifier, _fieldsToSerialize);
-				if (_psw == null)
-					_psw = new Models.Psw(m_userContext, true, _fieldsToSerialize);
+				_psw ??= new Models.Psw(m_userContext, true, _fieldsToSerialize);
 				return _psw;
 			}
 			set { _psw = value; }
 		}
-
 
 		[DisplayName("System")]
 		/// <summary>Field : "System" Tipo: "C" Formula:  ""</summary>
@@ -111,8 +112,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("S_ua.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public S_ua(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -131,7 +132,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAs_ua csgenioa)
 		{
 			if (csgenioa == null)
@@ -142,8 +142,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "psw":
-						if (_psw == null)
-							_psw = new Psw(m_userContext, true, _fieldsToSerialize);
+						_psw ??= new Psw(m_userContext, true, _fieldsToSerialize);
 						_psw.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

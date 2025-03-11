@@ -31,6 +31,26 @@ export default class ViewModel extends ViewModelBase
 		super(vueContext, options)
 		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
+
+		this.ValCorletra = reactive(new modelFieldType.String({
+			id: 'ValCorletra',
+			originId: 'ValCorletra',
+			area: 'TPEQU',
+			field: 'CORLETRA',
+			maxLength: 50,
+			description: computed(() => this.Resources.LETTER_COLOR15736),
+		}).cloneFrom(values?.ValCorletra))
+		watch(() => this.ValCorletra.value, (newValue, oldValue) => this.onUpdate('tpequ.corletra', this.ValCorletra, newValue, oldValue))
+
+		this.ValBackcolo = reactive(new modelFieldType.String({
+			id: 'ValBackcolo',
+			originId: 'ValBackcolo',
+			area: 'TPEQU',
+			field: 'BACKCOLO',
+			maxLength: 50,
+			description: computed(() => this.Resources.BACKGROUND_COLOR47883),
+		}).cloneFrom(values?.ValBackcolo))
+		watch(() => this.ValBackcolo.value, (newValue, oldValue) => this.onUpdate('tpequ.backcolo', this.ValBackcolo, newValue, oldValue))
 	}
 
 	/**

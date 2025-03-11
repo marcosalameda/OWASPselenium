@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -583,8 +583,6 @@
 					mode: ''
 				},
 
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
-
 				formButtons: {
 					changeToShow: {
 						id: 'change-to-show-btn',
@@ -1065,7 +1063,7 @@
 								label: computed(() => this.Resources.ATTACHED26247),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValNote',
@@ -1073,7 +1071,7 @@
 								field: 'NOTE',
 								label: computed(() => this.Resources.NOTE54557),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 3,
 								name: 'ValDocument',
@@ -1084,7 +1082,7 @@
 								scrollData: 30,
 								sortable: false,
 								viewType: qEnums.documentViewTypeMode.print,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValAttachme',
@@ -1225,7 +1223,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ASSET', 'changed-ATTAC'],
+						globalEvents: ['changed-ASSET', 'changed-ATTAC'],
 						uuid: 'Equip02_ValAttachme',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1273,7 +1271,7 @@
 								label: computed(() => this.Resources.MANUAL_NAME60077),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 2,
 								name: 'ValDigdocum',
@@ -1284,7 +1282,7 @@
 								scrollData: 30,
 								sortable: false,
 								viewType: qEnums.documentViewTypeMode.print,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValNotes',
@@ -1292,7 +1290,7 @@
 								field: 'NOTES',
 								label: computed(() => this.Resources.NOTES05274),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValDocument',
@@ -1433,7 +1431,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ASSMA', 'changed-ASSET'],
+						globalEvents: ['changed-ASSMA', 'changed-ASSET'],
 						uuid: 'Equip03_ValDocument',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1564,7 +1562,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodparam',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
 								name: 'ValDatatype',
@@ -1573,10 +1571,10 @@
 								label: computed(() => this.Resources.DATA_TYPE47159),
 								dataLength: 1,
 								scrollData: 1,
-								visibility: false,
+								isVisible: false,
 								array: qProjArrays.QArrayDatatype.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayDatatype.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValDecimalplaces',
@@ -1586,8 +1584,8 @@
 								scrollData: 1,
 								maxDigits: 1,
 								decimalPlaces: 0,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValText',
@@ -1596,8 +1594,8 @@
 								label: computed(() => this.Resources.TEXT04938),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
 								name: 'ValQuantity',
@@ -1607,8 +1605,8 @@
 								scrollData: 12,
 								maxDigits: 7,
 								decimalPlaces: 4,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 6,
 								name: 'ValDate',
@@ -1617,8 +1615,8 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
 								dateTimeType: 'date',
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'ValToshow',
@@ -1627,7 +1625,7 @@
 								label: computed(() => this.Resources.VALUE10285),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValParamete',
@@ -1768,7 +1766,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ASSET', 'changed-PARAM', 'changed-ASSPA'],
+						globalEvents: ['changed-ASSET', 'changed-PARAM', 'changed-ASSPA'],
 						uuid: 'Equip04_ValParamete',
 						allSelectedRows: 'false',
 						controlLimits: [

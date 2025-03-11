@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Item" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Itemp.ValCoditem")]
 		public string ValCoditem { get { return klass.ValCoditem; } set { klass.ValCoditem = value; } }
+
 		private Item _item;
 		[DisplayName("Item")]
 		[ShouldSerialize("Item")]
-		public virtual Item Item {
-			get {
-				if (!this.isEmptyModel && (_item == null || (!string.IsNullOrEmpty(ValCoditem) && (_item.isEmptyModel || _item.klass.QPrimaryKey != ValCoditem))))
+		public virtual Item Item
+		{
+			get
+			{
+				if (!isEmptyModel && (_item == null || (!string.IsNullOrEmpty(ValCoditem) && (_item.isEmptyModel || _item.klass.QPrimaryKey != ValCoditem))))
 					_item = Models.Item.Find(ValCoditem, m_userContext, Identifier, _fieldsToSerialize);
-				if (_item == null)
-					_item = new Models.Item(m_userContext, true, _fieldsToSerialize);
+				_item ??= new Models.Item(m_userContext, true, _fieldsToSerialize);
 				return _item;
 			}
 			set { _item = value; }
 		}
-
 
 		[DisplayName("Property Name")]
 		/// <summary>Field : "Property Name" Tipo: "C" Formula:  ""</summary>
@@ -70,8 +71,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Itemp.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Itemp(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -90,7 +91,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAitemp csgenioa)
 		{
 			if (csgenioa == null)
@@ -101,8 +101,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "item":
-						if (_item == null)
-							_item = new Item(m_userContext, true, _fieldsToSerialize);
+						_item ??= new Item(m_userContext, true, _fieldsToSerialize);
 						_item.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

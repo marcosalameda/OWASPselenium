@@ -1,17 +1,20 @@
-﻿import { computed } from 'vue'
+﻿import { nextTick, unref, watch, computed } from 'vue'
 import _assignIn from 'lodash-es/assignIn'
 import _get from 'lodash-es/get'
 import _keyBy from 'lodash-es/keyBy'
 import _toString from 'lodash-es/toString'
+import cloneDeep from 'lodash-es/cloneDeep'
 
+import { QEventEmitter } from '@/api/global/eventBus.js'
 import { useSystemDataStore } from '@/stores/systemData.js'
+import { validateFormula } from  '@/utils/formula.js'
 import listFunctions from '@/mixins/listFunctions.js'
 
 export class BaseColumn
 {
-	#visibility = true
+	#fnVisibility
 
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init = true)
 	{
 		this.order = 0
 		this.dataType = 'None'
@@ -32,8 +35,6 @@ export class BaseColumn
 		this.export = true
 		this.array = null
 		this.useDistinctValues = false
-		this.textColor = null
-		this.bgColor = null
 		this.isOrderingColumn = false
 		this.initialSort = false
 		this.initialSortOrder = ''
@@ -41,41 +42,143 @@ export class BaseColumn
 		this.pkColumn = null
 		this.isHtmlField = false
 		this.multipleValues = false
+		this.isSerialized = false
+		this.showWhen = null
+		this.visibilityListeners = []
 
-		this.fnVisibility = () => true
-		this.visibility = computed({
-			get: () => this.#visibility && this.fnVisibility(),
-			set: (val) => this.#visibility = val
+		Object.defineProperties(this, {
+			visible: {
+				value: true,
+				configurable: true,
+				writable: true,
+				enumerable: false
+			},
+			visibilityEval: {
+				value: false,
+				configurable: true,
+				writable: true,
+				enumerable: false
+			},
+			modelCtx: {
+				value: null,
+				configurable: true,
+				writable: true,
+				enumerable: false
+			},
+			eventEmitter: {
+				value: null,
+				configurable: true,
+				writable: true,
+				enumerable: false
+			}
 		})
+
+		this.#fnVisibility = async () => {
+			const isVisible = this.isVisible
+			this.visibilityEval = await validateFormula(this.showWhen, this.modelCtx)
+
+			// If the visibility changes, triggers the listeners.
+			if (isVisible !== this.isVisible)
+				for (let listener of this.visibilityListeners)
+					listener(this.isVisible)
+		}
+
+		/**
+		 * Whether the column is currently visible.
+		 */
+		this.isVisible = computed(
+			{
+				get()
+				{
+					return this.visible && this.visibilityEval
+				},
+				
+				set(newValue)
+				{
+					this.visible = newValue
+				}
+			}
+		)
 
 		// Add all properties to itself
 		_assignIn(this, options)
+
+		if (init)
+			this.init(modelCtx, eventEmitter)
+	}
+
+	/**
+	 * Asynchronously initializes the necessary properties and listeners in the column.
+	 * @param {ViewModel} modelCtx The model context
+	 * @param {QEventEmitter} eventEmitter The event emitter instance
+	 */
+	async init(modelCtx, eventEmitter)
+	{
+		// Needs to wait so that the "modelCtx" and "eventEmitter" are already set.
+		await nextTick()
+
+		this.eventEmitter = unref(eventEmitter)
+
+		if (this.showWhen && this.eventEmitter instanceof QEventEmitter)
+		{
+			this.modelCtx = unref(modelCtx)
+			watch(() => modelCtx, (value) => this.modelCtx = unref(value), { deep: true })
+
+			this.eventEmitter.offMany(this.showWhen.dependencyEvents, this.#fnVisibility)
+			this.eventEmitter.onMany(this.showWhen.dependencyEvents, this.#fnVisibility)
+			await this.#fnVisibility()
+		}
+		else
+			this.visibilityEval = true
+	}
+
+	/**
+	 * Adds the specified listener to be executed when the column's visibility changes.
+	 * @param {function} listener The listener function to add
+	 */
+	addVisibilityListener(listener)
+	{
+		if (typeof listener !== 'function')
+			throw new Error('The "listener" argument should be a function.')
+		this.visibilityListeners.push(listener)
+	}
+
+	/**
+	 * Creates a clone of this column.
+	 * @returns The column clone.
+	 */
+	clone()
+	{
+		const clonedCol = new this.constructor(cloneDeep(this), this.modelCtx, this.eventEmitter, false)
+
+		// This is needed since non-enumerable properties won't be set, as "cloneDeep" will ignore them.
+		clonedCol.visible = this.visible
+		clonedCol.visibilityEval = this.visibilityEval
+
+		return clonedCol
 	}
 }
 
 export class TextColumn extends BaseColumn
 {
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init)
 	{
-		super({
+		super(_assignIn({
 			dataType: 'Text',
 			searchFieldType: 'text',
 			dataDisplay: listFunctions.textDisplayCell,
 			dataDisplayText: listFunctions.textDisplayCell
-		})
-
-		// Add all properties to itself
-		_assignIn(this, options)
+		}, options), modelCtx, eventEmitter, init)
 	}
 }
 
 export class NumericColumn extends BaseColumn
 {
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init)
 	{
 		const systemDataStore = useSystemDataStore()
 
-		super({
+		super(_assignIn({
 			dataType: 'Numeric',
 			searchFieldType: 'num',
 			dataDisplay: listFunctions.numericDisplayCell,
@@ -89,10 +192,7 @@ export class NumericColumn extends BaseColumn
 			showTotal: true,
 			columnClasses: 'c-table__cell-numeric row-numeric',
 			columnHeaderClasses: 'c-table__head-numeric'
-		})
-
-		// Add all properties to itself
-		_assignIn(this, options)
+		}, options), modelCtx, eventEmitter, init)
 
 		if (this.isOrderingColumn)
 			this.columnHeaderClasses += ' thead-order'
@@ -101,21 +201,18 @@ export class NumericColumn extends BaseColumn
 
 export class CurrencyColumn extends NumericColumn
 {
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init)
 	{
 		const systemDataStore = useSystemDataStore()
 
-		super({
+		super(_assignIn({
 			dataType: 'Currency',
 			searchFieldType: 'num',
 			dataDisplay: listFunctions.currencyDisplayCell,
 			dataDisplayText: listFunctions.currencyDisplayCell,
 			currency: systemDataStore.system.baseCurrency.code,
 			currencySymbol: systemDataStore.system.baseCurrency.symbol
-		})
-
-		// Add all properties to itself
-		_assignIn(this, options)
+		}, options), modelCtx, eventEmitter, init)
 
 		// Currency fields get 2 more decimal places than what is defined
 		this.decimalPlaces += 2
@@ -124,94 +221,79 @@ export class CurrencyColumn extends NumericColumn
 
 export class DateColumn extends BaseColumn
 {
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init)
 	{
 		const systemDataStore = useSystemDataStore()
-		
-		super({
+
+		super(_assignIn({
 			dataType: 'Date',
 			searchFieldType: 'date',
 			dateTimeType: 'dateTime',
 			dateFormats: systemDataStore.system.dateFormat,
 			dataDisplay: listFunctions.dateDisplayCell,
 			dataDisplayText: listFunctions.dateDisplayCell
-		})
-
-		// Add all properties to itself
-		_assignIn(this, options)
+		}, options), modelCtx, eventEmitter, init)
 	}
 }
 
 export class BooleanColumn extends BaseColumn
 {
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init)
 	{
-		super({
+		super(_assignIn({
 			dataType: 'Boolean',
 			searchFieldType: 'bool',
 			component: 'q-render-boolean',
 			dataDisplay: listFunctions.booleanDisplayCell,
 			dataDisplayText: listFunctions.booleanDisplayCell
-		})
-
-		// Add all properties to itself
-		_assignIn(this, options)
+		}, options), modelCtx, eventEmitter, init)
 	}
 }
 
 export class ImageColumn extends BaseColumn
 {
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init)
 	{
-		super({
+		super(_assignIn({
 			dataType: 'Image',
 			component: 'q-render-image',
 			cellAction: true,
 			dataDisplay: listFunctions.imageDisplayCell,
 			dataDisplayText: listFunctions.imageDisplayCell
-		})
-
-		// Add all properties to itself
-		_assignIn(this, options)
+		}, options), modelCtx, eventEmitter, init)
 	}
 }
 
 export class DocumentColumn extends BaseColumn
 {
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init)
 	{
-		super({
+		super(_assignIn({
 			dataType: 'Document',
 			component: 'q-render-document',
 			dataDisplay: listFunctions.documentDisplayCell,
 			dataDisplayText: listFunctions.documentDisplayCell,
 			isSerialized: true
-		})
-
-		// Add all properties to itself
-		_assignIn(this, options)
+		}, options), modelCtx, eventEmitter, init)
 	}
 }
 
 export class ArrayColumn extends BaseColumn
 {
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init)
 	{
-		super({
+		super(_assignIn({
 			dataType: 'Array',
 			component: 'q-render-array',
 			searchFieldType: 'enum',
 			dataDisplay: listFunctions.enumerationDisplayCell,
 			dataDisplayText: listFunctions.enumerationDisplayCell
-		})
-
-		// Add all properties to itself
-		_assignIn(this, options)
+		}, options), modelCtx, eventEmitter, init)
 	}
 
 	get arrayAsObj()
 	{
-		return new Proxy(_keyBy(this.array, aElem => _toString(aElem.key)), {
+		return new Proxy(_keyBy(this.array, (aElem) => _toString(aElem.key)), {
 			get(target, name)
 			{
 				return _get({
@@ -228,11 +310,11 @@ export class ArrayColumn extends BaseColumn
 
 export class GeographicColumn extends BaseColumn
 {
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init)
 	{
 		const systemDataStore = useSystemDataStore()
 
-		super({
+		super(_assignIn({
 			dataType: 'Geographic',
 			dataDisplay: listFunctions.geographicDisplayCell,
 			dataDisplayText: listFunctions.geographicDisplayCell,
@@ -240,69 +322,65 @@ export class GeographicColumn extends BaseColumn
 				decimalSeparator: systemDataStore.system.numberFormat.decimalSeparator,
 				groupSeparator: systemDataStore.system.numberFormat.thousandsSeparator,
 			}
-		})
-
-		// Add all properties to itself
-		_assignIn(this, options)
+		}, options), modelCtx, eventEmitter, init)
 	}
 }
 
 export class GeographicShapeColumn extends BaseColumn
 {
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init)
 	{
-		super({
+		super(_assignIn({
 			dataType: 'GeographicShape',
 			dataDisplay: listFunctions.geographicShapeDisplayCell,
 			dataDisplayText: listFunctions.geographicShapeDisplayCell
-		})
-
-		// Add all properties to itself
-		_assignIn(this, options)
+		}, options), modelCtx, eventEmitter, init)
 	}
 }
 
 export class GeometricShapeColumn extends GeographicShapeColumn
 {
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init)
 	{
-		super({
+		super(_assignIn({
 			dataType: 'GeometricShape'
-		})
-
-		// Add all properties to itself
-		_assignIn(this, options)
+		}, options), modelCtx, eventEmitter, init)
 	}
 }
 
 export class HyperLinkColumn extends BaseColumn
 {
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init)
 	{
-		super({
+		super(_assignIn({
 			dataType: 'Text',
 			searchFieldType: 'text',
 			dataDisplay: listFunctions.hyperLinkDisplayCell,
 			dataDisplayText: listFunctions.hyperLinkDisplayCell,
 			component: 'q-render-hyperlink'
-		})
-
-		// Add all properties to itself
-		_assignIn(this, options)
+		}, options), modelCtx, eventEmitter, init)
 	}
 }
 
 export class HtmlColumn extends TextColumn
 {
-	constructor(options)
+	constructor(options, modelCtx, eventEmitter, init)
 	{
-		super({
+		super(_assignIn({
 			component: 'q-render-html',
 			isHtmlField: true
-		})
+		}, options), modelCtx, eventEmitter, init)
+	}
+}
 
-		// Add all properties to itself
-		_assignIn(this, options)
+export class MarkdownColumn extends TextColumn
+{
+	constructor(options, modelCtx, eventEmitter, init)
+	{
+		super(_assignIn({
+			component: 'q-render-markdown',
+			isHtmlField: true
+		}, options), modelCtx, eventEmitter, init)
 	}
 }
 
@@ -320,5 +398,6 @@ export default {
 	GeographicShapeColumn,
 	GeometricShapeColumn,
 	HyperLinkColumn,
-	HtmlColumn
+	HtmlColumn,
+	MarkdownColumn
 }

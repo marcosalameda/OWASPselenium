@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -264,7 +264,7 @@
 											<q-checkbox-input
 												v-if="controls.ENTIX___ENTITCARRIER_.isVisible"
 												v-bind="controls.ENTIX___ENTITCARRIER_.props"
-												@update:model-value="model.ValCarrier.fnUpdateValue" />
+												v-on="controls.ENTIX___ENTITCARRIER_.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -282,7 +282,7 @@
 											<q-checkbox-input
 												v-if="controls.ENTIX___ENTITSUPPLIER.isVisible"
 												v-bind="controls.ENTIX___ENTITSUPPLIER.props"
-												@update:model-value="model.ValSupplier.fnUpdateValue" />
+												v-on="controls.ENTIX___ENTITSUPPLIER.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -300,7 +300,7 @@
 											<q-checkbox-input
 												v-if="controls.ENTIX___ENTITMANUFACT.isVisible"
 												v-bind="controls.ENTIX___ENTITMANUFACT.props"
-												@update:model-value="model.ValManufact.fnUpdateValue" />
+												v-on="controls.ENTIX___ENTITMANUFACT.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -820,8 +820,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -1586,7 +1584,7 @@
 								label: computed(() => this.Resources.INCORPORATION10135),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValName',
@@ -1595,7 +1593,7 @@
 								label: computed(() => this.Resources.FACILITY_NAME19514),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Facty.ValType',
@@ -1605,7 +1603,7 @@
 								dataLength: 25,
 								scrollData: 25,
 								pkColumn: 'ValCodfacty',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValLatitude',
@@ -1615,7 +1613,7 @@
 								scrollData: 10,
 								maxDigits: 3,
 								decimalPlaces: 6,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
 								name: 'ValLongitud',
@@ -1625,7 +1623,7 @@
 								scrollData: 10,
 								maxDigits: 3,
 								decimalPlaces: 6,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 6,
 								name: 'ValGeocoord',
@@ -1636,7 +1634,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 7,
 								name: 'ValImage',
@@ -1647,7 +1645,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValFacilite',
@@ -1788,7 +1786,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FACTY', 'changed-CNTRY', 'changed-FACIL', 'changed-ENTIT'],
+						globalEvents: ['changed-FACTY', 'changed-FACIL', 'changed-CNTRY', 'changed-ENTIT'],
 						uuid: 'Entix_ValFacilite',
 						allSelectedRows: 'false',
 						controlLimits: [

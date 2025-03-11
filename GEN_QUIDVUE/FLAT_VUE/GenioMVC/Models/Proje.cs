@@ -43,20 +43,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">REFERENCE YEAR" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Proje.ValCodyear")]
 		public string ValCodyear { get { return klass.ValCodyear; } set { klass.ValCodyear = value; } }
+
 		private Year1 _year1;
 		[DisplayName("Year1")]
 		[ShouldSerialize("Year1")]
-		public virtual Year1 Year1 {
-			get {
-				if (!this.isEmptyModel && (_year1 == null || (!string.IsNullOrEmpty(ValCodyear) && (_year1.isEmptyModel || _year1.klass.QPrimaryKey != ValCodyear))))
+		public virtual Year1 Year1
+		{
+			get
+			{
+				if (!isEmptyModel && (_year1 == null || (!string.IsNullOrEmpty(ValCodyear) && (_year1.isEmptyModel || _year1.klass.QPrimaryKey != ValCodyear))))
 					_year1 = Models.Year1.Find(ValCodyear, m_userContext, Identifier, _fieldsToSerialize);
-				if (_year1 == null)
-					_year1 = new Models.Year1(m_userContext, true, _fieldsToSerialize);
+				_year1 ??= new Models.Year1(m_userContext, true, _fieldsToSerialize);
 				return _year1;
 			}
 			set { _year1 = value; }
 		}
-
 
 		[DisplayName("Year")]
 		/// <summary>Field : "Year" Tipo: "C" Formula: ++ "[YEAR1->YEAR]"</summary>
@@ -64,25 +65,25 @@ namespace GenioMVC.Models
 		public string ValYear { get { return klass.ValYear; } set { klass.ValYear = value; } }
 
 		[DisplayName("First")]
-		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
+		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		[ShouldSerialize("Proje.ValPrimeiro")]
 		[CurrencyAttribute("EUR", 2)]
 		public decimal? ValPrimeiro { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrimeiro, 2)); } set { klass.ValPrimeiro = Convert.ToDecimal(value); } }
 
 		[DisplayName("Before")]
-		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
+		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		[ShouldSerialize("Proje.ValBefore")]
 		[CurrencyAttribute("EUR", 2)]
 		public decimal? ValBefore { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBefore, 2)); } set { klass.ValBefore = Convert.ToDecimal(value); } }
 
 		[DisplayName("Following")]
-		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
+		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		[ShouldSerialize("Proje.ValFollowin")]
 		[CurrencyAttribute("EUR", 2)]
 		public decimal? ValFollowin { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValFollowin, 2)); } set { klass.ValFollowin = Convert.ToDecimal(value); } }
 
 		[DisplayName("Last")]
-		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
+		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		[ShouldSerialize("Proje.ValUltimo")]
 		[CurrencyAttribute("EUR", 2)]
 		public decimal? ValUltimo { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValUltimo, 2)); } set { klass.ValUltimo = Convert.ToDecimal(value); } }
@@ -101,8 +102,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Proje.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Proje(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -121,7 +122,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAproje csgenioa)
 		{
 			if (csgenioa == null)
@@ -132,8 +132,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "year1":
-						if (_year1 == null)
-							_year1 = new Year1(m_userContext, true, _fieldsToSerialize);
+						_year1 ??= new Year1(m_userContext, true, _fieldsToSerialize);
 						_year1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

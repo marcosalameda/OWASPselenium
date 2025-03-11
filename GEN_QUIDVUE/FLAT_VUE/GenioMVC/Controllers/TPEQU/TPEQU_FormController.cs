@@ -408,11 +408,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Tpequ_FamilValFamilyModel : RequestLookupModel
+		{
+			public Tpequ_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Tpequ/Tpequ_FamilValFamily
 		// POST: /Tpequ/Tpequ_FamilValFamily
 		[ActionName("Tpequ_FamilValFamily")]
-		public ActionResult Tpequ_FamilValFamily([FromBody]RequestLookupModel requestModel)
+		public ActionResult Tpequ_FamilValFamily([FromBody] Tpequ_FamilValFamilyModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -437,16 +442,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Tpequ_FamilValFamily_ViewModel model = new Tpequ_FamilValFamily_ViewModel(UserContext.Current);
-			
+
+			Models.Tpequ parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Tpequ_FamilValFamily_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -471,11 +479,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Tpequ_ValComponenModel : RequestLookupModel
+		{
+			public Tpequ_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Tpequ/Tpequ_ValComponen
 		// POST: /Tpequ/Tpequ_ValComponen
 		[ActionName("Tpequ_ValComponen")]
-		public ActionResult Tpequ_ValComponen([FromBody]RequestLookupModel requestModel)
+		public ActionResult Tpequ_ValComponen([FromBody] Tpequ_ValComponenModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -499,16 +512,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Tpequ_ValComponen_ViewModel model = new Tpequ_ValComponen_ViewModel(UserContext.Current);
-			
+			Models.Tpequ parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Tpequ_ValComponen_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -533,11 +548,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Tpequ_ValEvolucaoModel : RequestLookupModel
+		{
+			public Tpequ_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Tpequ/Tpequ_ValEvolucao
 		// POST: /Tpequ/Tpequ_ValEvolucao
 		[ActionName("Tpequ_ValEvolucao")]
-		public ActionResult Tpequ_ValEvolucao([FromBody]RequestLookupModel requestModel)
+		public ActionResult Tpequ_ValEvolucao([FromBody] Tpequ_ValEvolucaoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -561,16 +581,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Tpequ_ValEvolucao_ViewModel model = new Tpequ_ValEvolucao_ViewModel(UserContext.Current);
-			
+			Models.Tpequ parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Tpequ_ValEvolucao_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -625,11 +647,16 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
+		public class Tpequ_ValUnicoModel : RequestLookupModel
+		{
+			public Tpequ_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Tpequ/Tpequ_ValUnico
 		// POST: /Tpequ/Tpequ_ValUnico
 		[ActionName("Tpequ_ValUnico")]
-		public ActionResult Tpequ_ValUnico([FromBody]RequestLookupModel requestModel)
+		public ActionResult Tpequ_ValUnico([FromBody] Tpequ_ValUnicoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -653,16 +680,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Tpequ_ValUnico_ViewModel model = new Tpequ_ValUnico_ViewModel(UserContext.Current);
-			
+			Models.Tpequ parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Tpequ_ValUnico_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -685,13 +714,18 @@ namespace GenioMVC.Controllers
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
+		}
+
+		public class Tpequ_ValInstalacModel : RequestLookupModel
+		{
+			public Tpequ_ViewModel Model { get; set; }
 		}
 
 		//
 		// GET: /Tpequ/Tpequ_ValInstalac
 		// POST: /Tpequ/Tpequ_ValInstalac
 		[ActionName("Tpequ_ValInstalac")]
-		public ActionResult Tpequ_ValInstalac([FromBody]RequestLookupModel requestModel)
+		public ActionResult Tpequ_ValInstalac([FromBody] Tpequ_ValInstalacModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -715,16 +749,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Tpequ_ValInstalac_ViewModel model = new Tpequ_ValInstalac_ViewModel(UserContext.Current);
-			
+			Models.Tpequ parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Tpequ_ValInstalac_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -749,11 +785,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Tpequ_ValInstala1Model : RequestLookupModel
+		{
+			public Tpequ_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Tpequ/Tpequ_ValInstala1
 		// POST: /Tpequ/Tpequ_ValInstala1
 		[ActionName("Tpequ_ValInstala1")]
-		public ActionResult Tpequ_ValInstala1([FromBody]RequestLookupModel requestModel)
+		public ActionResult Tpequ_ValInstala1([FromBody] Tpequ_ValInstala1Model requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -777,16 +818,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Tpequ_ValInstala1_ViewModel model = new Tpequ_ValInstala1_ViewModel(UserContext.Current);
-			
+			Models.Tpequ parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Tpequ_ValInstala1_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

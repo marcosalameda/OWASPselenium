@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 50,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValNif',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.NIF55908),
 								dataLength: 20,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValEmail1',
@@ -168,7 +168,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValEmail2',
@@ -177,7 +177,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValTelephon',
@@ -186,7 +186,7 @@
 								label: computed(() => this.Resources.PHONE56703),
 								dataLength: 15,
 								scrollData: 15,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'REG_Menu_111',
@@ -328,11 +328,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-REGIS'],
+						globalEvents: ['changed-REGIS'],
 						uuid: '9cd10358-e74c-413f-9913-baa3ad3afa58',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

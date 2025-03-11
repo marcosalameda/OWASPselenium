@@ -3,8 +3,8 @@
 		data-testid="checkbox-container"
 		:class="['i-checkbox__container', { 'disabled': disabled || readonly }]">
 		<input
-			v-bind="$attrs"
 			:id="controlId"
+			v-bind="$attrs"
 			v-model="curValue"
 			type="checkbox"
 			:data-testid="dataTestid"
@@ -12,7 +12,7 @@
 			:disabled="disabled || readonly"
 			@click="inputClicked">
 
-		<span class="i-checkbox__field"></span>
+		<span class="i-checkbox__field" />
 	</label>
 </template>
 

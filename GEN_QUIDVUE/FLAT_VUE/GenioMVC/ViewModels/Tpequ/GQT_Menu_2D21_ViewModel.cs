@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,43 +7,47 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Tpequ
 {
-	public class GQT_Menu_2D21_ViewModel : ListViewModel
+	public class GQT_Menu_2D21_ViewModel : MenuListViewModel<Models.Tpequ>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<GQT_Menu_2D21_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "tpequ"; }
+		[JsonIgnore]
+		public override string TableAlias => "tpequ";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "17bc4906-db78-4a9c-845c-30c7e64fb3d6"; }
+		public override string Uuid => "17bc4906-db78-4a9c-845c-30c7e64fb3d6";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodtpequ { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -54,6 +59,7 @@ namespace GenioMVC.ViewModels.Tpequ
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -65,6 +71,7 @@ namespace GenioMVC.ViewModels.Tpequ
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -83,7 +90,6 @@ namespace GenioMVC.ViewModels.Tpequ
 
 
 
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -99,17 +105,26 @@ namespace GenioMVC.ViewModels.Tpequ
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.FldZzstate, CSGenioAtpequ.FldCodfamil, CSGenioAfamil.FldCodfamil, CSGenioAfamil.FldFamily, CSGenioAtpequ.FldTipoequi, CSGenioAtpequ.FldTpequcod, CSGenioAtpequ.FldTpequpai, CSGenioAtpequ.FldNivel, CSGenioAtpequ.FldBackcolo, CSGenioAtpequ.FldCorletra, CSGenioAtpequ.FldPrecomax, CSGenioAtpequ.FldPrecoult, CSGenioAtpequ.FldSince, CSGenioAtpequ.FldQtdequip, CSGenioAtpequ.FldKit };
 
-			ListingMVC<CSGenioAtpequ> listing = new ListingMVC<CSGenioAtpequ>(fields, null, 1, 1, false, user, true, string.Empty, false);
+			ListingMVC<CSGenioAtpequ> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
 			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public GQT_Menu_2D21_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GQT_Menu_2D21_ViewModel" /> class.
@@ -118,6 +133,16 @@ namespace GenioMVC.ViewModels.Tpequ
 		public GQT_Menu_2D21_ViewModel(UserContext userContext) : base(userContext)
 		{
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GQT_Menu_2D21_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public GQT_Menu_2D21_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -191,12 +216,6 @@ namespace GenioMVC.ViewModels.Tpequ
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("TPEQU.TIPOEQUI", new OrderedDictionary());
-			allSortOrders["TPEQU.TIPOEQUI"].Add("TPEQU.TIPOEQUI", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -210,7 +229,6 @@ namespace GenioMVC.ViewModels.Tpequ
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -307,23 +325,22 @@ namespace GenioMVC.ViewModels.Tpequ
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAtpequ> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "2D21"),
 				new("Module", "GQT")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<GQT_Menu_2D21_RowViewModel>();
 
 				CriteriaSet gqt_menu_2d21Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("TPEQU.TIPOEQUI", new OrderedDictionary());
 				allSortOrders["TPEQU.TIPOEQUI"].Add("TPEQU.TIPOEQUI", "A");
-
 
 
 
@@ -361,20 +378,19 @@ namespace GenioMVC.ViewModels.Tpequ
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAtpequ model_limit_area = new CSGenioAtpequ(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML2D21");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAtpequ model_limit_area = new CSGenioAtpequ(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML2D21");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -422,7 +438,6 @@ namespace GenioMVC.ViewModels.Tpequ
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -443,18 +458,12 @@ namespace GenioMVC.ViewModels.Tpequ
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -462,7 +471,7 @@ namespace GenioMVC.ViewModels.Tpequ
 
 		private List<GQT_Menu_2D21_RowViewModel> MapGQT_Menu_2D21(ListingMVC<CSGenioAtpequ> Qlisting)
 		{
-			var Elements = new List<GQT_Menu_2D21_RowViewModel>();
+			List<GQT_Menu_2D21_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -479,7 +488,6 @@ namespace GenioMVC.ViewModels.Tpequ
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAtpequ row
 		/// to a GQT_Menu_2D21_RowViewModel object.
@@ -488,7 +496,9 @@ namespace GenioMVC.ViewModels.Tpequ
 		private GQT_Menu_2D21_RowViewModel MapGQT_Menu_2D21(CSGenioAtpequ row)
 		{
 			var model = new GQT_Menu_2D21_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -502,32 +512,7 @@ namespace GenioMVC.ViewModels.Tpequ
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(GQT_Menu_2D21_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -541,31 +526,40 @@ namespace GenioMVC.ViewModels.Tpequ
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAtpequ> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAtpequ row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Tpequ m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Tpequ m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM GQT_MENU_2D21]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Tpequ", "Tpequ.ValCodtpequ", "Tpequ.ValZzstate", "Famil", "Famil.ValFamily", "Tpequ.ValTipoequi", "Tpequ.ValTpequcod", "Tpequ.ValTpequpai", "Tpequ.ValNivel", "Tpequ.ValBackcolo", "Tpequ.ValCorletra", "Tpequ.ValPrecomax", "Tpequ.ValPrecoult", "Tpequ.ValSince", "Tpequ.ValQtdequip", "Tpequ.ValKit", "Tpequ.ValCodfamil", "BtnPermission"
+			"Tpequ", "Tpequ.ValCodtpequ", "Tpequ.ValZzstate", "Famil", "Famil.ValFamily", "Tpequ.ValTipoequi", "Tpequ.ValTpequcod", "Tpequ.ValTpequpai", "Tpequ.ValNivel", "Tpequ.ValBackcolo", "Tpequ.ValCorletra", "Tpequ.ValPrecomax", "Tpequ.ValPrecoult", "Tpequ.ValSince", "Tpequ.ValQtdequip", "Tpequ.ValKit", "Tpequ.ValCodfamil"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("Famil_ValFamily", CSGenioAfamil.FldFamily, typeof(string)),
 			new TableSearchColumn("ValTipoequi", CSGenioAtpequ.FldTipoequi, typeof(string), defaultSearch : true),
@@ -580,8 +574,5 @@ namespace GenioMVC.ViewModels.Tpequ
 			new TableSearchColumn("ValQtdequip", CSGenioAtpequ.FldQtdequip, typeof(decimal?)),
 			new TableSearchColumn("ValKit", CSGenioAtpequ.FldKit, typeof(bool))
 		];
-
-
-
 	}
 }

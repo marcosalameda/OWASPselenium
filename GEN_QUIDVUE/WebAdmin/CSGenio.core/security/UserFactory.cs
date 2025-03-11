@@ -213,7 +213,7 @@ namespace GenioServer.security
                 if (error != "")
                     throw new InvalidPasswordException(error, "UserRegistration.CreateNewUser", error);
 
-                FillPassword(userPsw, password.New);
+                FillPassword(userPsw, password.New, status);
             }
         }
 
@@ -237,14 +237,14 @@ namespace GenioServer.security
             }
         }
 
-        private static void FillPassword(CSGenioApsw userPsw, string newPass)
+        private static void FillPassword(CSGenioApsw userPsw, string newPass, int status = 0)
         {
             string pswEnc = PasswordFactory.Encrypt(newPass);
             userPsw.ValPassword = pswEnc; //Neste momento é gravado com o salt to facilitar na transição
             userPsw.ValSalt = "";
             userPsw.ValPswtype = Configuration.Security.PasswordAlgorithms.ToString();
             userPsw.ValDatexp = CalculateExpirationDate();
-            userPsw.ValStatus = 0;
+            userPsw.ValStatus = status;
         }
 
         private string CheckChangePassword(CSGenioApsw userPsw, string oldPass, string newPass, string confirmPass)

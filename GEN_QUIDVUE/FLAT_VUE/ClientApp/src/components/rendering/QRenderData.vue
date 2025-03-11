@@ -30,7 +30,7 @@
 			--
 		</div>
 		<template v-else>
-			<template 
+			<template
 				v-for="(item, index) in valuesToDisplay"
 				:key="index">
 				<!-- If tooltip is required -->
@@ -51,7 +51,7 @@
 								:data-field-value="true">
 								--
 							</div>
-							<span 
+							<span
 								v-else
 								:data-field-value="true">
 								{{ getCellValue(item) }}
@@ -73,7 +73,7 @@
 						:data-field-value="true">
 						--
 					</div>
-					<span 
+					<span
 						v-else
 						:data-field-value="true">
 						{{ item }}
@@ -123,7 +123,8 @@
 
 		expose: [],
 
-		data() {
+		data()
+		{
 			return {
 				/**
 				 * References to elements in multiple values scenario.
@@ -136,14 +137,16 @@
 			/**
 			 * Indicates whether multiple values should be displayed, rather than a single value.
 			 */
-			multipleValues() {
+			multipleValues()
+			{
 				return this.$attrs.options?.multipleValues ?? false
 			},
 
 			/**
 			 * Ensures that the displayed values are always in an array form when multipleValues is true.
 			 */
-			valuesToDisplay() {
+			valuesToDisplay()
+			{
 				return _isArray(this.value) ? this.value : [this.value]
 			},
 
@@ -211,7 +214,8 @@
 			 * @param {any} item The cell value. In the case of multiple text value, it will have an object with properties { value, originalValue }
 			 * @returns {any} The displayable value.
 			 */
-			getCellValue(item) {
+			getCellValue(item)
+			{
 				return this.isFormatedValue(item) ? item.value : item
 			},
 
@@ -220,7 +224,8 @@
 			 * @param {any} value The cell value. In the case of multiple text value, it will have an object with properties { value, originalValue }
 			 * @returns {string|null} The original value or null if not present.
 			 */
-			getCellTitle(value) {
+			getCellTitle(value)
+			{
 				return value?.originalValue ?? null
 			},
 
@@ -240,7 +245,7 @@
 					...this.$attrs,
 					... {
 						/**
-						 * For cases where the specific data type component has its own application in the background, 
+						 * For cases where the specific data type component has its own application in the background,
 						 * in multi-value the badge is the one that will have a color instead of the rendering value component.
 						 */
 						backgroundColor: this.multipleValues ? null : this.backgroundColor

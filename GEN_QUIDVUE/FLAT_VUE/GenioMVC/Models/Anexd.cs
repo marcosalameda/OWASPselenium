@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Anexd.ValCodequip")]
 		public string ValCodequip { get { return klass.ValCodequip; } set { klass.ValCodequip = value; } }
+
 		private Equip _equip;
 		[DisplayName("Equip")]
 		[ShouldSerialize("Equip")]
-		public virtual Equip Equip {
-			get {
-				if (!this.isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
+		public virtual Equip Equip
+		{
+			get
+			{
+				if (!isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
 					_equip = Models.Equip.Find(ValCodequip, m_userContext, Identifier, _fieldsToSerialize);
-				if (_equip == null)
-					_equip = new Models.Equip(m_userContext, true, _fieldsToSerialize);
+				_equip ??= new Models.Equip(m_userContext, true, _fieldsToSerialize);
 				return _equip;
 			}
 			set { _equip = value; }
 		}
-
 
 		[DisplayName("Attached")]
 		/// <summary>Field : "Attached" Tipo: "DT" Formula:  ""</summary>
@@ -76,20 +77,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">LANGUAGE" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Anexd.ValCodlang")]
 		public string ValCodlang { get { return klass.ValCodlang; } set { klass.ValCodlang = value; } }
+
 		private Langu _langu;
 		[DisplayName("Langu")]
 		[ShouldSerialize("Langu")]
-		public virtual Langu Langu {
-			get {
-				if (!this.isEmptyModel && (_langu == null || (!string.IsNullOrEmpty(ValCodlang) && (_langu.isEmptyModel || _langu.klass.QPrimaryKey != ValCodlang))))
+		public virtual Langu Langu
+		{
+			get
+			{
+				if (!isEmptyModel && (_langu == null || (!string.IsNullOrEmpty(ValCodlang) && (_langu.isEmptyModel || _langu.klass.QPrimaryKey != ValCodlang))))
 					_langu = Models.Langu.Find(ValCodlang, m_userContext, Identifier, _fieldsToSerialize);
-				if (_langu == null)
-					_langu = new Models.Langu(m_userContext, true, _fieldsToSerialize);
+				_langu ??= new Models.Langu(m_userContext, true, _fieldsToSerialize);
 				return _langu;
 			}
 			set { _langu = value; }
 		}
-
 
 		[DisplayName("Translated title")]
 		/// <summary>Field : "Translated title" Tipo: "C" Formula: CT "TRADU[ANEXD->TITLE][TRADU->ATRADUZI][TRADU->TRADUZID][ANEXD->CODLANG][TRADU->CODIDIO2](DESC)"</summary>
@@ -103,8 +105,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Anexd.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Anexd(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -123,7 +125,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAanexd csgenioa)
 		{
 			if (csgenioa == null)
@@ -134,13 +135,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "equip":
-						if (_equip == null)
-							_equip = new Equip(m_userContext, true, _fieldsToSerialize);
+						_equip ??= new Equip(m_userContext, true, _fieldsToSerialize);
 						_equip.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "langu":
-						if (_langu == null)
-							_langu = new Langu(m_userContext, true, _fieldsToSerialize);
+						_langu ??= new Langu(m_userContext, true, _fieldsToSerialize);
 						_langu.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

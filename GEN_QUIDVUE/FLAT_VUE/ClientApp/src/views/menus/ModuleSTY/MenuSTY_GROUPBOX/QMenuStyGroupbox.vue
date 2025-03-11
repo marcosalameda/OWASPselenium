@@ -151,7 +151,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodempre',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Pess1.ValName',
@@ -161,7 +161,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodpesso',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValSequennr',
@@ -171,7 +171,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValRegistnr',
@@ -180,7 +180,7 @@
 								label: computed(() => this.Resources.NO__REGISTER04207),
 								dataLength: 6,
 								scrollData: 6,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'Tpequ.ValTipoequi',
@@ -190,7 +190,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodtpequ',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'Wareh.ValWarehdes',
@@ -200,7 +200,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodwareh',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'Item.ValItemdes',
@@ -210,7 +210,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCoditem',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
 								name: 'ValDesignat',
@@ -219,7 +219,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
 								name: 'ValDtaquisi',
@@ -228,7 +228,7 @@
 								label: computed(() => this.Resources.ACQUISITION44180),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
 								name: 'Decom.ValDecomnr',
@@ -239,7 +239,7 @@
 								maxDigits: 10,
 								decimalPlaces: 0,
 								pkColumn: 'ValCoddeco',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 11,
 								name: 'ValDtdeco',
@@ -247,8 +247,8 @@
 								field: 'DTDECO',
 								label: computed(() => this.Resources.DECOMISSION14486),
 								scrollData: 8,
-								dateTimeType: 'date',
-							}),
+								dateTimeType: 'dateTime',
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 12,
 								name: 'ValIfabatif',
@@ -256,7 +256,7 @@
 								field: 'IFABATIF',
 								label: computed(() => this.Resources.DOWNED_EQUIPMENT43331),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 13,
 								name: 'ValPhotogra',
@@ -267,7 +267,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 14,
 								name: 'ValValortot',
@@ -277,7 +277,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 15,
 								name: 'ValFrequenc',
@@ -289,7 +289,7 @@
 								decimalPlaces: 0,
 								array: qProjArrays.QArrayFreqempr.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayFreqempr.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 16,
 								name: 'ValBought',
@@ -297,7 +297,7 @@
 								field: 'BOUGHT',
 								label: computed(() => this.Resources.BOUGHT32044),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 17,
 								name: 'Room1.ValRoomnr',
@@ -307,7 +307,7 @@
 								dataLength: 10,
 								scrollData: 10,
 								pkColumn: 'ValCodrooms',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 18,
 								name: 'ValDtrefere',
@@ -316,7 +316,7 @@
 								label: computed(() => this.Resources.REFERENCE28402),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 19,
 								name: 'ValFirst',
@@ -325,7 +325,7 @@
 								label: computed(() => this.Resources.FIRST42972),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 20,
 								name: 'ValBefore',
@@ -334,7 +334,7 @@
 								label: computed(() => this.Resources.BEFORE60156),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 21,
 								name: 'ValFollowin',
@@ -343,7 +343,7 @@
 								label: computed(() => this.Resources.FOLLOWING22170),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 22,
 								name: 'ValLast',
@@ -352,7 +352,7 @@
 								label: computed(() => this.Resources.LAST49207),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.HyperLinkColumn({
 								order: 23,
 								name: 'ValSitefabr',
@@ -361,7 +361,7 @@
 								label: computed(() => this.Resources.MANUFACTURER_S_WEBSI11084),
 								dataLength: 256,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 24,
 								name: 'ValLastpho',
@@ -372,7 +372,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 25,
 								name: 'ValMoviment',
@@ -380,7 +380,7 @@
 								field: 'MOVIMENT',
 								label: computed(() => this.Resources.DRIVES34119),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 26,
 								name: 'ValQtdmovim',
@@ -390,7 +390,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 27,
 								name: 'ValShowrc',
@@ -398,7 +398,7 @@
 								field: 'SHOWRC',
 								label: computed(() => this.Resources.SHOW_RECORD53851),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_GROUPBOX',
@@ -540,7 +540,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
+						globalEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY'],
 						uuid: '4e9ccb50-3e83-46f4-b9ec-5040fa799e8f',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -548,7 +548,7 @@
 						controlLimits: [
 							/** SC */
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

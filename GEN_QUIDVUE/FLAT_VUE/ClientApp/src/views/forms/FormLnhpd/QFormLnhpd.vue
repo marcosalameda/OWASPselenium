@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -355,8 +355,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -736,7 +734,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Tpeq1.ValTipoequi',
@@ -746,7 +744,7 @@
 								dataLength: 50,
 								scrollData: 50,
 								pkColumn: 'ValCodtpequ',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValQuantida',
@@ -756,7 +754,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValDescript',
@@ -764,7 +762,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValCode',
@@ -773,7 +771,7 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.HyperLinkColumn({
 								order: 6,
 								name: 'ValUrl',
@@ -782,7 +780,7 @@
 								label: computed(() => this.Resources.SITE06486),
 								dataLength: 250,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValDesagreg',
@@ -923,7 +921,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-LNHDE', 'changed-TPEQ1', 'changed-LNHPD', 'changed-PEDID', 'changed-LNHAG'],
+						globalEvents: ['changed-LNHDE', 'changed-TPEQ1', 'changed-LNHPD', 'changed-PEDID', 'changed-LNHAG'],
 						uuid: 'Lnhpd_ValDesagreg',
 						allSelectedRows: 'false',
 						controlLimits: [

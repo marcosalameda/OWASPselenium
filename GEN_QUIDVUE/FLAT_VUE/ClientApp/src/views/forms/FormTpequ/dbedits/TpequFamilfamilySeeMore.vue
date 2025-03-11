@@ -28,6 +28,7 @@
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 
+	import netAPI from '@/api/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
@@ -122,7 +123,7 @@
 		mounted()
 		{
 			// Listens for changes to the DB and updates the list accordingly.
-			this.$eventHub.onMany(this.listCtrl.changeEvents, this.onTableDBDataChanged)
+			this.$eventHub.onMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
 
 			const modalProps = {
 				id: 'see-more-tpequ-familfamily',
@@ -140,7 +141,7 @@
 		beforeUnmount()
 		{
 			// Removes the listeners.
-			this.$eventHub.offMany(this.listCtrl.changeEvents, this.onTableDBDataChanged)
+			this.$eventHub.offMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
 			this.listCtrl.destroy()
 			this.componentOnLoadProc.destroy()
 
@@ -205,7 +206,7 @@
 								label: computed(() => this.Resources.FAMILIA_DE_EQUIPAMEN12158),
 								dataLength: 50,
 								scrollData: 50,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'Tpequ_FamilValFamily',
@@ -247,7 +248,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FAMIL'],
+						globalEvents: ['changed-FAMIL'],
 						uuid: 'Tpequ_Tpequ_FamilValFamily',
 						allSelectedRows: 'false',
 						handlers: {

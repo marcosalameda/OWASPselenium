@@ -117,8 +117,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Faci2.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Faci2(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -136,7 +136,6 @@ namespace GenioMVC.Models
 				SetFieldsToSerialize(fieldsToSerialize);
 			FillRelatedAreas(val);
 		}
-
 
 		public void FillRelatedAreas(CSGenioAfaci2 csgenioa)
 		{

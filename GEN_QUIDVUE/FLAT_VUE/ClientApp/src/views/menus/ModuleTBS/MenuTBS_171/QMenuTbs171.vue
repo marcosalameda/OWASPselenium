@@ -149,7 +149,7 @@
 								field: 'HOME',
 								label: computed(() => this.Resources.HOME_TEXT11153),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TBS_Menu_171',
@@ -291,11 +291,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FACTY', 'changed-GLOB'],
+						globalEvents: ['changed-FACTY', 'changed-GLOB'],
 						uuid: '3037c567-98d1-42b3-bd1a-909bfe515217',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -197,7 +197,7 @@
 								<q-checkbox-input
 									v-if="controls.RECEI___RECEITOCHECK_.isVisible"
 									v-bind="controls.RECEI___RECEITOCHECK_.props"
-									@update:model-value="model.ValTocheck.fnUpdateValue" />
+									v-on="controls.RECEI___RECEITOCHECK_.handlers" />
 							</template>
 						</base-input-structure>
 					</q-control-wrapper>
@@ -217,7 +217,7 @@
 								<q-checkbox-input
 									v-if="controls.RECEI___RECEICHECKED_.isVisible"
 									v-bind="controls.RECEI___RECEICHECKED_.props"
-									@update:model-value="model.ValChecked.fnUpdateValue" />
+									v-on="controls.RECEI___RECEICHECKED_.handlers" />
 							</template>
 						</base-input-structure>
 					</q-control-wrapper>
@@ -237,7 +237,7 @@
 								<q-checkbox-input
 									v-if="controls.RECEI___RECEISTORED__.isVisible"
 									v-bind="controls.RECEI___RECEISTORED__.props"
-									@update:model-value="model.ValStored.fnUpdateValue" />
+									v-on="controls.RECEI___RECEISTORED__.handlers" />
 							</template>
 						</base-input-structure>
 					</q-control-wrapper>
@@ -394,8 +394,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -688,7 +686,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Produ.ValSku',
@@ -698,7 +696,7 @@
 								dataLength: 20,
 								scrollData: 20,
 								pkColumn: 'ValCodprodu',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Produ.ValGtin',
@@ -707,9 +705,9 @@
 								label: computed(() => this.Resources.GTIN45487),
 								dataLength: 14,
 								scrollData: 14,
-								visibility: false,
+								isVisible: false,
 								pkColumn: 'ValCodprodu',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'Produ.ValProduct',
@@ -719,7 +717,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodprodu',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
 								name: 'ValOrdered',
@@ -729,7 +727,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
 								name: 'ValReceived',
@@ -739,7 +737,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
 								name: 'ValOutstand',
@@ -749,7 +747,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValReceiptl',
@@ -890,7 +888,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PRODU', 'changed-RELIN', 'changed-ENTIT', 'changed-RECEI'],
+						globalEvents: ['changed-PRODU', 'changed-RELIN', 'changed-ENTIT', 'changed-RECEI'],
 						uuid: 'Recei_ValReceiptl',
 						allSelectedRows: 'false',
 						controlLimits: [

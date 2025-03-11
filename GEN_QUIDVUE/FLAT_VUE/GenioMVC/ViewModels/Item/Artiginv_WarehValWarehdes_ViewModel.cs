@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,51 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Item
 {
-	public class Artiginv_WarehValWarehdes_ViewModel : ListViewModel
+	public class Artiginv_WarehValWarehdes_ViewModel : MenuListViewModel<Models.Wareh>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DB"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Artiginv_WarehValWarehdes_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "wareh"; }
+		[JsonIgnore]
+		public override string TableAlias => "wareh";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Artiginv_WarehValWarehdes"; }
+		public override string Uuid => "Artiginv_WarehValWarehdes";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCoditem { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -52,6 +63,7 @@ namespace GenioMVC.ViewModels.Item
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -63,6 +75,7 @@ namespace GenioMVC.ViewModels.Item
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -86,12 +99,28 @@ namespace GenioMVC.ViewModels.Item
 		}
 
 		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Artiginv_WarehValWarehdes_ViewModel() : base(null!) { }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Artiginv_WarehValWarehdes_ViewModel" /> class.
 		/// </summary>
 		/// <param name="userContext">The current user request context</param>
 		public Artiginv_WarehValWarehdes_ViewModel(UserContext userContext) : base(userContext)
 		{
 			ValCoditem = userContext.CurrentNavigation.CurrentLevel.GetEntry("item")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Artiginv_WarehValWarehdes_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Artiginv_WarehValWarehdes_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -155,12 +184,6 @@ namespace GenioMVC.ViewModels.Item
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
-			allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -175,7 +198,6 @@ namespace GenioMVC.ViewModels.Item
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -270,22 +292,21 @@ namespace GenioMVC.ViewModels.Item
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAwareh> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "ARTIGINV")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Artiginv_WarehValWarehdes_RowViewModel>();
 
 				CriteriaSet artiginvwarehwarehdesConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("WAREH.WAREHDES", new OrderedDictionary());
 				allSortOrders["WAREH.WAREHDES"].Add("WAREH.WAREHDES", "A");
-
 
 
 
@@ -323,10 +344,9 @@ namespace GenioMVC.ViewModels.Item
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
 
 				if (conditions == null)
@@ -373,7 +393,6 @@ namespace GenioMVC.ViewModels.Item
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -393,18 +412,12 @@ namespace GenioMVC.ViewModels.Item
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -412,7 +425,7 @@ namespace GenioMVC.ViewModels.Item
 
 		private List<Artiginv_WarehValWarehdes_RowViewModel> MapArtiginv_WarehValWarehdes(ListingMVC<CSGenioAwareh> Qlisting)
 		{
-			var Elements = new List<Artiginv_WarehValWarehdes_RowViewModel>();
+			List<Artiginv_WarehValWarehdes_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -429,7 +442,6 @@ namespace GenioMVC.ViewModels.Item
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAwareh row
 		/// to a Artiginv_WarehValWarehdes_RowViewModel object.
@@ -438,7 +450,9 @@ namespace GenioMVC.ViewModels.Item
 		private Artiginv_WarehValWarehdes_RowViewModel MapArtiginv_WarehValWarehdes(CSGenioAwareh row)
 		{
 			var model = new Artiginv_WarehValWarehdes_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -450,32 +464,7 @@ namespace GenioMVC.ViewModels.Item
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Artiginv_WarehValWarehdes_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -489,36 +478,42 @@ namespace GenioMVC.ViewModels.Item
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAwareh> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAwareh row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Wareh m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Wareh m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM ARTIGINV_WAREHVALWAREHDES]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Wareh", "Wareh.ValCodwareh", "Wareh.ValZzstate", "Wareh.ValWarehdes", "BtnPermission"
+			"Wareh", "Wareh.ValCodwareh", "Wareh.ValZzstate", "Wareh.ValWarehdes"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string))
 		];
-
-
-
 	}
 }

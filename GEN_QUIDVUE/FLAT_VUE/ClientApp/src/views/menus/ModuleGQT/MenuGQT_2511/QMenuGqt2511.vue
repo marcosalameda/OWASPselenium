@@ -41,7 +41,7 @@
 						<q-row-container is-large>
 							<q-control-wrapper class="row-line-group">
 								<q-button
-									b-style="secondary"									
+									b-style="secondary"
 									:label="Resources.APLICAR33981"
 									:title="Resources.APLICAR33981"
 									@click="applyChanges">
@@ -126,8 +126,6 @@
 			return {
 				componentOnLoadProc: asyncProcM.getProcListMonitor('GQT_Menu_2511', false),
 
-				internalEvents: new QEventEmitter(),
-
 				interfaceMetadata: {
 					id: 'QMenuGQT_2511', // Used for resources
 					requiredTextResources
@@ -152,7 +150,6 @@
 							icon: 'remove-circle'
 						}
 					}, this),
-
 					secondTab: new controlClass.BaseControl({
 						id: 'secondTab',
 						name: 'secondTabForm',
@@ -162,12 +159,10 @@
 							icon: 'list'
 						}
 					}, this),
-
 					tabGroup: new controlClass.TabsControl({
 						tabControlsIds: ['firstTab', 'secondTab'],
 						selectedTab: 'firstTab'
 					}, this),
-
 					firstTable: new controlClass.TableListControl({
 						id: 'GQT_Menu_2511',
 						controller: 'ROOMS',
@@ -183,7 +178,7 @@
 								label: computed(() => this.Resources.N_R__ROOM43805),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValDesignat',
@@ -192,7 +187,7 @@
 								label: computed(() => this.Resources.ROOM_DESIGNATION37895),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_2511',
@@ -321,7 +316,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ROOMS'],
+						globalEvents: ['changed-ROOMS'],
 						uuid: 'a8ab9db2-018e-4292-9747-eb8c7b11458e',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -339,7 +334,6 @@
 							}
 						}
 					}, this),
-
 					secondTable: new controlClass.TableListControl({
 						id: 'GQT_Menu_2511',
 						controller: 'ROOMS',
@@ -355,7 +349,7 @@
 								label: computed(() => this.Resources.N_R__ROOM43805),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValDesignat',
@@ -364,7 +358,7 @@
 								label: computed(() => this.Resources.ROOM_DESIGNATION37895),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_2511',
@@ -493,7 +487,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ROOMS'],
+						globalEvents: ['changed-ROOMS'],
 						uuid: 'a8ab9db2-018e-4292-9747-eb8c7b11458e',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -515,7 +509,6 @@
 							}
 						}
 					}, this),
-
 					thirdTable: new controlClass.TableListControl({
 						controller: '',
 						action: '',
@@ -550,7 +543,6 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: [],
 						uuid: '',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -564,7 +556,7 @@
 								this.unselectAllRowsData()
 							}
 						}
-					}, this)
+					}, this),
 				}
 			}
 		},

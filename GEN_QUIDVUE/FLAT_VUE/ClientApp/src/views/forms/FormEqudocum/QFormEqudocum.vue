@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -280,8 +280,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -595,7 +593,7 @@
 								label: computed(() => this.Resources.ATTACHED26247),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValTitle',
@@ -604,7 +602,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 3,
 								name: 'ValDocument',
@@ -615,7 +613,7 @@
 								scrollData: 30,
 								sortable: false,
 								viewType: qEnums.documentViewTypeMode.print,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValTittradu',
@@ -624,7 +622,7 @@
 								label: computed(() => this.Resources.TRANSLATED_TITLE58577),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValReferenc',
@@ -633,7 +631,7 @@
 								label: computed(() => this.Resources.REFERENCE28402),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValLisanex',
@@ -774,7 +772,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-EQUIP', 'changed-ANEXD', 'changed-LANGU'],
+						globalEvents: ['changed-EQUIP', 'changed-ANEXD', 'changed-LANGU'],
 						uuid: 'Equdocum_ValLisanex',
 						allSelectedRows: 'false',
 						controlLimits: [

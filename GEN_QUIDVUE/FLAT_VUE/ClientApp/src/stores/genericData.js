@@ -6,9 +6,9 @@
  *****************************************************************/
 
 import { defineStore } from 'pinia'
-import { focusElement } from '@/mixins/genericFunctions.js'
-
 import _remove from 'lodash-es/remove'
+
+import { focusElement } from '@/mixins/genericFunctions.js'
 
 //----------------------------------------------------------------
 // State variables
@@ -270,8 +270,8 @@ const actions = {
 
 			let removedModalArr = this.modals.splice(i, 1)
 
-			//Focus on the element that opened the popup, if it still exists
-			let returnElement = removedModalArr[0]?.returnElement;
+			// Focus on the element that opened the popup, if it still exists.
+			const returnElement = removedModalArr[0]?.returnElement
 			if (returnElement !== undefined && returnElement !== null)
 				focusElement(returnElement)
 

@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Tpeq1.ValCodfamil")]
 		public string ValCodfamil { get { return klass.ValCodfamil; } set { klass.ValCodfamil = value; } }
+
 		private Fami1 _fami1;
 		[DisplayName("Fami1")]
 		[ShouldSerialize("Fami1")]
-		public virtual Fami1 Fami1 {
-			get {
-				if (!this.isEmptyModel && (_fami1 == null || (!string.IsNullOrEmpty(ValCodfamil) && (_fami1.isEmptyModel || _fami1.klass.QPrimaryKey != ValCodfamil))))
+		public virtual Fami1 Fami1
+		{
+			get
+			{
+				if (!isEmptyModel && (_fami1 == null || (!string.IsNullOrEmpty(ValCodfamil) && (_fami1.isEmptyModel || _fami1.klass.QPrimaryKey != ValCodfamil))))
 					_fami1 = Models.Fami1.Find(ValCodfamil, m_userContext, Identifier, _fieldsToSerialize);
-				if (_fami1 == null)
-					_fami1 = new Models.Fami1(m_userContext, true, _fieldsToSerialize);
+				_fami1 ??= new Models.Fami1(m_userContext, true, _fieldsToSerialize);
 				return _fami1;
 			}
 			set { _fami1 = value; }
 		}
-
 
 		[DisplayName("TYPE OF EQUIPMENT")]
 		/// <summary>Field : "TYPE OF EQUIPMENT" Tipo: "C" Formula:  ""</summary>
@@ -115,8 +116,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Tpeq1.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Tpeq1(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -135,7 +136,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAtpeq1 csgenioa)
 		{
 			if (csgenioa == null)
@@ -146,8 +146,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "fami1":
-						if (_fami1 == null)
-							_fami1 = new Fami1(m_userContext, true, _fieldsToSerialize);
+						_fami1 ??= new Fami1(m_userContext, true, _fieldsToSerialize);
 						_fami1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

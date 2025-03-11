@@ -95,6 +95,7 @@
 			'set-advanced-filter-state',
 			'remove-advanced-filter',
 			'save-view',
+			'rename-view',
 			'copy-view',
 			'select-view',
 			'view-action'
@@ -188,6 +189,7 @@
 					},
 					setProperty: (...args) => this.emitEventArgs('set-property', ...args),
 					saveView: (eventData) => this.emitSaveViewEvent('save-view', eventData),
+					renameView: (eventData) => this.$emit('rename-view', eventData),
 					copyView: (eventData) => this.emitSaveViewEvent('copy-view', eventData)
 				},
 
@@ -272,11 +274,20 @@
 						else
 							this.$emit(eventName, eventData)
 						break
+					case 'RENAME':
+						this.$emit(
+							'signal-component',
+							'viewSave',
+							{ mode: eventData?.name, renameFromName: eventData.rowValue },
+							true
+						)
+						this.$emit('signal-component', 'config', { selectedTab: 'view-save' }, false)
+						break
 					case 'DUPLICATE':
 						this.$emit(
 							'signal-component',
 							'viewSave',
-							{ copyFromName: eventData.rowValue },
+							{ mode: eventData?.name, copyFromName: eventData.rowValue },
 							true
 						)
 						this.$emit('signal-component', 'config', { selectedTab: 'view-save' }, false)

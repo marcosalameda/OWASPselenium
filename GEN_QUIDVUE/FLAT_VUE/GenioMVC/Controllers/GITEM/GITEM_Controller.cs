@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER GITEM]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Artgl" form. (++, CT, SR, CL and U1)
 		/// </summary>

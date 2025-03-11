@@ -2,9 +2,13 @@
 using CSGenio.core.scheduler;
 using CSGenio.persistence;
 using CSGenio.core.di;
+using CSGenio.core.ai;
 using GenioServer.security;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
+
 
 namespace CSGenio
 {
@@ -25,6 +29,8 @@ namespace CSGenio
             UseEph();
             UseElasticSearch();
             UseQueries();
+            UseHttpFactory();
+            UseAiAgent();
         }
 
         public static void UseDatabase()
@@ -64,6 +70,23 @@ namespace CSGenio
         public static void UseElasticSearch()
         {
             //TODO: CSGenio.business.ElasticsearchQueriesExtra.Use();
+        }
+
+        /// <summary>
+        /// Registers the default AI agent. Must be used after the HttpFactory
+        /// </summary>
+        public static void UseAiAgent()
+        {
+            GenioDI.RegisterService<IChatbotService>(new ChatbotService());
+        }
+
+
+        public static void UseHttpFactory()
+        {
+            GenioDI.HttpFactory = new ServiceCollection()
+                .AddHttpClient()
+                .BuildServiceProvider()
+                .GetRequiredService<IHttpClientFactory>();
         }
 
     }

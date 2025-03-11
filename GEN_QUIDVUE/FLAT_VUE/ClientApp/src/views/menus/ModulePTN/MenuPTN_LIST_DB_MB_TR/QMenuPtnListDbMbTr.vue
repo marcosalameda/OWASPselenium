@@ -151,7 +151,7 @@
 								dataLength: 4,
 								scrollData: 4,
 								pkColumn: 'ValCodyear',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'ValYearnumb',
@@ -161,7 +161,7 @@
 								scrollData: 4,
 								maxDigits: 4,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 3,
 								name: 'Agreg.ValValue',
@@ -172,7 +172,7 @@
 								maxDigits: 7,
 								decimalPlaces: 0,
 								pkColumn: 'ValCodaggre',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValDescript',
@@ -181,7 +181,7 @@
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 5,
 								name: 'ValValue',
@@ -191,7 +191,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 6,
 								name: 'ValPrevval',
@@ -201,7 +201,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'Proje.ValProjecto',
@@ -211,7 +211,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodproje',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_LIST_DB_MB_TR',
@@ -325,6 +325,7 @@
 								{
 									id: 'MB_BUTTONTRIGGERTEST1',
 									name: 'PTN_MenuR_TRIGGER_MENU1',
+									isVisible: true,
 									title: computed(() => this.Resources.BUTTON_TO_TRIGGER30903),
 									params: {
 										limits: [
@@ -365,11 +366,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-YEAR', 'changed-PROJE', 'changed-AGREG', 'changed-EXPEN'],
+						globalEvents: ['changed-YEAR', 'changed-PROJE', 'changed-AGREG', 'changed-EXPEN'],
 						uuid: '4d59767d-72c2-4fc8-afe5-1220c23dfd7b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

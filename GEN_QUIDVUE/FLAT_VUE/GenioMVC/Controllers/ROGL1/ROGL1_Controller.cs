@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER ROGL1]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Rogl1" form. (++, CT, SR, CL and U1)
 		/// </summary>

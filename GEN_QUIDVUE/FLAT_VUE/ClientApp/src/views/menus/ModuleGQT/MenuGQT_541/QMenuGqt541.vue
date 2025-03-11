@@ -151,7 +151,7 @@
 								dataLength: 100,
 								scrollData: 20,
 								pkColumn: 'ValCodpsw',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Organ.ValOrganiza',
@@ -161,7 +161,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodorgan',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_541',
@@ -303,11 +303,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ORGAN', 'changed-PWORG', 'changed-PSW'],
+						globalEvents: ['changed-ORGAN', 'changed-PWORG', 'changed-PSW'],
 						uuid: '69c157b5-3838-464d-9a91-ee1545f411b3',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

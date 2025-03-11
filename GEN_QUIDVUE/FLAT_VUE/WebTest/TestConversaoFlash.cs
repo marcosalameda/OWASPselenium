@@ -1,10 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.ComponentModel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 
 using CSGenio.business;
 using CSGenio.persistence;
@@ -12,18 +6,16 @@ using CSGenio.framework;
 
 namespace WebTest
 {
-
     /// <summary>
     ///This is a test class for Test and is intended
     ///to contain all Test Unit Tests
     ///</summary>
-    [TestClass()]
     public class TestConversaoFlash
     {
         /// <summary>
         /// Teste à função ToString
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToString()
         {
             string res = null;
@@ -132,7 +124,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromString
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromString()
         {
             string res = null;
@@ -163,10 +155,10 @@ namespace WebTest
         /// <summary>
         /// Teste às funções FromNumeric e ToNumeric.
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromNumericAndToNumeric()
         {
-            double res = 0.0;
+            decimal res = 0.0m;
 
             // TODO: actualmente tudo o que envolve digits decimais está a falhar
             // Há que ver até que ponto faz sentido o auxFromNumericAndBack,
@@ -225,17 +217,17 @@ namespace WebTest
             //catch { }
         }
 
-        private void auxFromNumericAndBack(double original)
+        private void auxFromNumericAndBack(decimal original)
         {
             string dbVal = FlashConversion.FromNumeric(original);
-            double result = FlashConversion.ToNumeric(dbVal);
+            decimal result = FlashConversion.ToNumeric(dbVal);
             Assert.AreEqual(original, result, String.Format("Expected {0} but got {1}. Database value was {2}", original, result, dbVal));
         }
 
         /// <summary>
         /// Teste à função ToInteger
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToInteger()
         {
             int res;
@@ -356,7 +348,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromInteger
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromInteger()
         {
             // Como FlashConversion.FromInteger é essencialmente um Convert.ToString(int),
@@ -377,7 +369,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função ToDateTime
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToDateTime()
         {
             DateTime res;
@@ -421,13 +413,13 @@ namespace WebTest
             Assert.AreEqual(DateTime.MaxValue, res);
 
             // a string --> exception
-            Test.AssertThrows<Exception>(() =>
+            Assert.Throws<FormatException>(() =>
             {
                 res = FlashConversion.ToDateTime("blablabla");
             });
 
             // an integer --> exception
-            Test.AssertThrows<Exception>(() =>
+            Assert.Throws<InvalidCastException>(() =>
             {
                 res = FlashConversion.ToDateTime(20110411);
             });
@@ -436,7 +428,7 @@ namespace WebTest
         /// <summary>
         ///Teste à função FromDateTime
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromDateTime()
         {
             string res = null;
@@ -451,7 +443,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função ToLogic
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToLogic()
         {
             int res = -1;
@@ -480,7 +472,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromLogic
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromLogic()
         {
             string res = null;
@@ -504,7 +496,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função ToKey
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToKey()
         {
             string res = null;
@@ -538,7 +530,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromKey
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromKey()
         {
             string res = null;
@@ -567,7 +559,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função ToBinary
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToBinary()
         {
         }
@@ -575,7 +567,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromBinary
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromBinary()
         {
         }
@@ -583,7 +575,7 @@ namespace WebTest
         /// <summary>
         /// Teste às funções ToInternal e FromInternal
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestToInterno()
         {
             // var value in System.Enum.GetValues(typeof(FieldFormatting)) ){}
@@ -615,12 +607,12 @@ namespace WebTest
 
             // null --> zero-length byte array
             res = FlashConversion.ToInternal(null, FieldFormatting.BINARIO);
-            Assert.IsInstanceOfType(res, typeof(byte[]));
+            Assert.IsInstanceOf(typeof(byte[]), res);
             Assert.IsTrue((res as byte[]).Length == 0);
 
             // DBNull --> zero-length byte array
             res = FlashConversion.ToInternal(DBNull.Value, FieldFormatting.BINARIO);
-            Assert.IsInstanceOfType(res, typeof(byte[]));
+            Assert.IsInstanceOf(typeof(byte[]), res);
             Assert.IsTrue((res as byte[]).Length == 0);
 
             //
@@ -629,7 +621,7 @@ namespace WebTest
 
             // null --> empty string
             res = FlashConversion.ToInternal(null, FieldFormatting.CARACTERES);
-            Assert.IsInstanceOfType(res, typeof(string));
+            Assert.IsInstanceOf(typeof(string), res);
             Assert.AreEqual("", res);
 
             //
@@ -638,12 +630,12 @@ namespace WebTest
 
             // null --> DateTime.MinValue
             res = FlashConversion.ToInternal(null, FieldFormatting.DATA);
-            Assert.IsInstanceOfType(res, typeof(DateTime));
+            Assert.IsInstanceOf(typeof(DateTime), res);
             Assert.AreEqual(DateTime.MinValue, res);
 
             // DateTime.MinValue --> DateTime.MinValue
             res = FlashConversion.ToInternal(DateTime.MinValue, FieldFormatting.DATA);
-            Assert.IsInstanceOfType(res, typeof(DateTime));
+            Assert.IsInstanceOf(typeof(DateTime), res);
             Assert.AreEqual(DateTime.MinValue, res);
 
             //
@@ -667,7 +659,7 @@ namespace WebTest
             Assert.AreEqual(0.0, res);
 
             // "0,9464572" --> 0.9464572
-            res = FlashConversion.ToInternal("0,9464572", FieldFormatting.FLOAT);
+            res = FlashConversion.ToInternal("0.9464572", FieldFormatting.FLOAT);
             Assert.AreEqual(0.9464572, res);
 
             //os numericos não são válidos por isso a conversão de flash devolve zero
@@ -694,7 +686,7 @@ namespace WebTest
         /// <summary>
         /// Teste à função FromInternal
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void TestFromInterno()
         {
             string res = null;
@@ -773,18 +765,14 @@ namespace WebTest
             //
 
             // null --> exception
-            Test.AssertThrows<Exception>(() =>
-                FlashConversion.FromInternal(null, FieldFormatting.DATA)
-            );
+            Assert.Throws<FrameworkException>(() => FlashConversion.FromInternal(null, FieldFormatting.DATA));
 
             // DateTime.MinValue --> NULL
             res = FlashConversion.FromInternal(DateTime.MinValue, FieldFormatting.DATA);
             Assert.AreEqual("", res);
 
             // empty string --> NULL should throw exception
-            Test.AssertThrows<FrameworkException>(() =>
-                FlashConversion.FromInternal("", FieldFormatting.DATA)
-            );
+            Assert.Throws<FrameworkException>(() => FlashConversion.FromInternal("", FieldFormatting.DATA));
 
             //
             // FieldFormatting.DATAHORA

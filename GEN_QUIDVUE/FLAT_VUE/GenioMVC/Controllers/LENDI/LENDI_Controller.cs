@@ -239,7 +239,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER LENDI]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -252,13 +251,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Lendi row = null;
-
-			if (row == null)
-			{
-				row = new Models.Lendi(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("lendi");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Lendi row = new Models.Lendi(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("lendi");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -271,8 +271,7 @@ namespace GenioMVC.Controllers
 				{
 					case "COMOD___PESS1NAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Comod_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Comod_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Comod___pess1name____(qs);
 							result = model.TablePess1Name;
@@ -280,8 +279,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "COMOD___PESS2NAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Comod_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Comod_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Comod___pess2name____(qs);
 							result = model.TablePess2Name;
@@ -289,8 +287,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "COMOD___EQUIPREGISTNR":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Comod_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Comod_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Comod___equipregistnr(qs);
 							result = model.TableEquipRegistnr;
@@ -361,6 +358,8 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
 
 
 		/// <summary>

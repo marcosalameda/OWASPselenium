@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -136,7 +136,7 @@
 											<q-checkbox-input
 												v-if="controls.PAIS____CNTRYACTIVE__.isVisible"
 												v-bind="controls.PAIS____CNTRYACTIVE__.props"
-												@update:model-value="model.ValActive.fnUpdateValue" />
+												v-on="controls.PAIS____CNTRYACTIVE__.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -426,8 +426,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -825,7 +823,7 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
 								name: 'ValPrecoest',
@@ -835,7 +833,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValProprie1',
@@ -977,7 +975,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
+						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
 						uuid: 'Pais_ValProprie1',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1009,7 +1007,7 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
 								name: 'ValPrecoest',
@@ -1019,7 +1017,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValEndereco',
@@ -1027,7 +1025,7 @@
 								field: 'ENDERECO',
 								label: computed(() => this.Resources.ADDRESS04342),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValLocalida',
@@ -1036,7 +1034,7 @@
 								label: computed(() => this.Resources.LOCALE34521),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValPostalco',
@@ -1045,7 +1043,7 @@
 								label: computed(() => this.Resources.ZIP_CODE56964),
 								dataLength: 20,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValPostallo',
@@ -1054,7 +1052,7 @@
 								label: computed(() => this.Resources.POSTAL_LOCATION08708),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 7,
 								name: 'ValMobilada',
@@ -1062,7 +1060,7 @@
 								field: 'MOBILADA',
 								label: computed(() => this.Resources.FURNISHED37431),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
 								name: 'ValQtd_wc',
@@ -1072,7 +1070,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
 								name: 'ValQtdquart',
@@ -1082,7 +1080,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
 								name: 'ValM2',
@@ -1092,7 +1090,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 11,
 								name: 'ValDtdispon',
@@ -1101,7 +1099,7 @@
 								label: computed(() => this.Resources.AVAILABLE_FROM53703),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 12,
 								name: 'ValPhotogra',
@@ -1112,7 +1110,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 13,
 								name: 'ValDescript',
@@ -1120,7 +1118,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 14,
 								name: 'ValCoordgeo',
@@ -1131,7 +1129,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValPropried',
@@ -1272,7 +1270,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
+						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
 						uuid: 'Pais_ValPropried',
 						allSelectedRows: 'false',
 						controlLimits: [

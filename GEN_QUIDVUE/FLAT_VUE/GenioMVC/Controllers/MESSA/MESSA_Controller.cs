@@ -43,7 +43,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER MESSA]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -56,13 +55,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Messa row = null;
-
-			if (row == null)
-			{
-				row = new Models.Messa(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("messa");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Messa row = new Models.Messa(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("messa");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +75,7 @@ namespace GenioMVC.Controllers
 				{
 					case "MESSA___ENTITNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Messa_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Messa_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Messa___entitname____(qs);
 							result = model.TableEntitName;
@@ -84,8 +83,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "MESSA___PERSONAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Messa_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Messa_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Messa___personame____(qs);
 							result = model.TablePersoName;
@@ -153,6 +151,8 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
 
 
 		/// <summary>

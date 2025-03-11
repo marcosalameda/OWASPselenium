@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,43 +7,53 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Cntry
 {
-	public class Pais_ValProprie1_ViewModel : ListViewModel
+	public class Pais_ValProprie1_ViewModel : MenuListViewModel<Models.Propr>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Pais_ValProprie1_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "propr"; }
+		[JsonIgnore]
+		public override string TableAlias => "propr";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Pais_ValProprie1"; }
+		public override string Uuid => "Pais_ValProprie1";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCodcntry { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -54,6 +65,7 @@ namespace GenioMVC.ViewModels.Cntry
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -65,6 +77,7 @@ namespace GenioMVC.ViewModels.Cntry
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -88,12 +101,28 @@ namespace GenioMVC.ViewModels.Cntry
 		}
 
 		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Pais_ValProprie1_ViewModel() : base(null!) { }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Pais_ValProprie1_ViewModel" /> class.
 		/// </summary>
 		/// <param name="userContext">The current user request context</param>
 		public Pais_ValProprie1_ViewModel(UserContext userContext) : base(userContext)
 		{
 			ValCodcntry = userContext.CurrentNavigation.CurrentLevel.GetEntry("cntry")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Pais_ValProprie1_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Pais_ValProprie1_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -158,12 +187,6 @@ namespace GenioMVC.ViewModels.Cntry
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PROPR.NAME", new OrderedDictionary());
-			allSortOrders["PROPR.NAME"].Add("PROPR.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -180,7 +203,6 @@ namespace GenioMVC.ViewModels.Cntry
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -277,22 +299,21 @@ namespace GenioMVC.ViewModels.Cntry
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioApropr> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "PAIS")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Pais_ValProprie1_RowViewModel>();
 
 				CriteriaSet pais____pseudproprie1Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("PROPR.NAME", new OrderedDictionary());
 				allSortOrders["PROPR.NAME"].Add("PROPR.NAME", "A");
-
 
 
 
@@ -330,20 +351,19 @@ namespace GenioMVC.ViewModels.Cntry
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioApropr model_limit_area = new CSGenioApropr(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_PAIS____PSEUDPROPRIE1");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioApropr model_limit_area = new CSGenioApropr(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_PAIS____PSEUDPROPRIE1");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -391,7 +411,6 @@ namespace GenioMVC.ViewModels.Cntry
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -411,18 +430,12 @@ namespace GenioMVC.ViewModels.Cntry
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -430,7 +443,7 @@ namespace GenioMVC.ViewModels.Cntry
 
 		private List<Pais_ValProprie1_RowViewModel> MapPais_ValProprie1(ListingMVC<CSGenioApropr> Qlisting)
 		{
-			var Elements = new List<Pais_ValProprie1_RowViewModel>();
+			List<Pais_ValProprie1_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -447,7 +460,6 @@ namespace GenioMVC.ViewModels.Cntry
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioApropr row
 		/// to a Pais_ValProprie1_RowViewModel object.
@@ -456,7 +468,9 @@ namespace GenioMVC.ViewModels.Cntry
 		private Pais_ValProprie1_RowViewModel MapPais_ValProprie1(CSGenioApropr row)
 		{
 			var model = new Pais_ValProprie1_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -468,32 +482,7 @@ namespace GenioMVC.ViewModels.Cntry
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Pais_ValProprie1_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -507,37 +496,43 @@ namespace GenioMVC.ViewModels.Cntry
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioApropr> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioApropr row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Propr m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Propr m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM PAIS_VALPROPRIE1]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Propr", "Propr.ValCodpropr", "Propr.ValZzstate", "Propr.ValName", "Propr.ValPrecoest", "Propr.ValCodcntry", "Propr.ValCodpais1", "Propr.ValCodpesso", "Propr.ValCodregia", "Propr.ValCodtppro", "BtnPermission"
+			"Propr", "Propr.ValCodpropr", "Propr.ValZzstate", "Propr.ValName", "Propr.ValPrecoest", "Propr.ValCodcntry", "Propr.ValCodpais1", "Propr.ValCodpesso", "Propr.ValCodregia", "Propr.ValCodtppro"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValName", CSGenioApropr.FldName, typeof(string)),
 			new TableSearchColumn("ValPrecoest", CSGenioApropr.FldPrecoest, typeof(decimal?))
 		];
-
-
-
 	}
 }

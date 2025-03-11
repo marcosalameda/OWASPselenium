@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Recei_EntitValNameModel : RequestLookupModel
+		{
+			public Recei_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Recei/Recei_EntitValName
 		// POST: /Recei/Recei_EntitValName
 		[ActionName("Recei_EntitValName")]
-		public ActionResult Recei_EntitValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Recei_EntitValName([FromBody] Recei_EntitValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Recei_EntitValName_ViewModel model = new Recei_EntitValName_ViewModel(UserContext.Current);
-			
+
+			Models.Recei parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Recei_EntitValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Recei_ValReceiptlModel : RequestLookupModel
+		{
+			public Recei_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Recei/Recei_ValReceiptl
 		// POST: /Recei/Recei_ValReceiptl
 		[ActionName("Recei_ValReceiptl")]
-		public ActionResult Recei_ValReceiptl([FromBody]RequestLookupModel requestModel)
+		public ActionResult Recei_ValReceiptl([FromBody] Recei_ValReceiptlModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -483,16 +496,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Recei_ValReceiptl_ViewModel model = new Recei_ValReceiptl_ViewModel(UserContext.Current);
-			
+			Models.Recei parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Recei_ValReceiptl_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

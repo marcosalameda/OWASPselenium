@@ -151,7 +151,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodpesso',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Equip.ValRegistnr',
@@ -161,7 +161,7 @@
 								dataLength: 6,
 								scrollData: 6,
 								pkColumn: 'ValCodequip',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Pess2.ValName',
@@ -171,7 +171,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodpesso',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValLendinnr',
@@ -181,7 +181,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 5,
 								name: 'ValStart',
@@ -190,7 +190,7 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 6,
 								name: 'Equip.ValFrequenc',
@@ -203,7 +203,7 @@
 								array: qProjArrays.QArrayFreqempr.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayFreqempr.type,
 								pkColumn: 'ValCodequip',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
 								name: 'ValWarndt',
@@ -212,7 +212,7 @@
 								label: computed(() => this.Resources.WARNING52043),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 8,
 								name: 'ValEnd',
@@ -221,7 +221,7 @@
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
 								name: 'ValObservat',
@@ -229,7 +229,7 @@
 								field: 'OBSERVAT',
 								label: computed(() => this.Resources.OBSERVATIONS03729),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_1411',
@@ -371,7 +371,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-LENDI', 'changed-EQUIP', 'changed-PESS2', 'changed-PESS1'],
+						globalEvents: ['changed-LENDI', 'changed-EQUIP', 'changed-PESS2', 'changed-PESS1'],
 						uuid: '918a2ea7-9eb6-4228-98f9-4bb4c1bc9bca',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -391,7 +391,7 @@
 								fnValueSelector: () => vm.$route.params['maxLendiValStart'],
 							},
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

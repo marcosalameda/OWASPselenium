@@ -1,7 +1,11 @@
 ﻿<template>
     <div class="dropdown i-select select-simple" :class="{ 'dropleft': side == 'left' }">
         <div class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" :id="'dropdown_' + id" ref="toggle">
-            <i :class="style_class" v-if="!isEmptyObject(icon)" style="margin-right:0.25rem; margin-right:0.25rem;"></i>
+            <q-icon
+                v-if="!isEmptyObject(icon)"
+                :class="style_class"
+                :icon="icon"
+                style="margin-right:0.25rem; margin-right:0.25rem;" />
             <span v-if="showValue">{{ curValue.Text }}</span>
             <span v-else-if="!isEmptyObject(staticText)">{{ staticText }}</span>
         </div>
@@ -54,9 +58,6 @@
                     return { Value: vm.modelValue, Text };
                 },
                 set: function (newValue) { this.$emit('update:modelValue', $.isEmptyObject(newValue) ? newValue : newValue.Value); }
-            },
-            style_class: function () {
-                return 'glyphicons glyphicons-' + (this.icon || 'option-horizontal') + ' e-icon';
             }
         },
         methods: {

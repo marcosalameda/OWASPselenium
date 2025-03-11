@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Specialized;
+using System.Text;
+using System.Text.Unicode;
 
 using CSGenio.business;
 using CSGenio.framework;
@@ -12,8 +14,6 @@ using GenioMVC.Models.Navigation;
 using GenioMVC.ViewModels;
 using GenioServer.security;
 using Quidgest.Persistence.GenericQuery;
-using System.Text.Unicode;
-using System.Text;
 
 namespace GenioMVC.Controllers
 {
@@ -279,15 +279,15 @@ namespace GenioMVC.Controllers
 				requestValues.Add(kv.Key, kv.Value);
 
 			People_ValPeoplels_ViewModel model = new(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -401,15 +401,15 @@ namespace GenioMVC.Controllers
 				requestValues.Add(kv.Key, kv.Value);
 
 			Wid_equi_ValWidequi_ViewModel model = new(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -523,15 +523,15 @@ namespace GenioMVC.Controllers
 				requestValues.Add(kv.Key, kv.Value);
 
 			Wid_grap_ValField001_ViewModel model = new(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -645,15 +645,15 @@ namespace GenioMVC.Controllers
 				requestValues.Add(kv.Key, kv.Value);
 
 			Wid_pess_ValPesslist_ViewModel model = new(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -741,21 +741,21 @@ namespace GenioMVC.Controllers
 			if (status == 1)
 				ModelState.AddModelError(Resources.Resources.PALAVRA_CHAVE_EXPIRA05120, Resources.Resources.PALAVRA_CHAVE_EXPIRA05120);
 
-            // Check if configuracoes.xml have External Auth Providers configured
-            foreach (var ip in SecurityFactory.IdentityProviderList)
-            {
-                if (ip.HasRedirectLogin())
-                    profile.AuthRedirectMethods.Add(new()
-                    {
-                        Id = ip.Id,
-                        Description = ip.Description,
-                        Redirect = ip.GetRedirectLoginUrl(
-                            AuthRedirectMethodModel.MapRedirectEndpoint(ip, Url, Request, "Register")
+			// Check if configuracoes.xml have External Auth Providers configured
+			foreach (var ip in SecurityFactory.IdentityProviderList)
+			{
+				if (ip.HasRedirectLogin())
+					profile.AuthRedirectMethods.Add(new()
+					{
+						Id = ip.Id,
+						Description = ip.Description,
+						Redirect = ip.GetRedirectLoginUrl(
+							AuthRedirectMethodModel.MapRedirectEndpoint(ip, Url, Request, "Register")
 							)
-                    });
-            }
+					});
+			}
 
-            return JsonOK(profile);
+			return JsonOK(profile);
 		}
 
 		//
@@ -984,14 +984,14 @@ namespace GenioMVC.Controllers
 		}
 
 		/*
-			 NOTE: This code not yet used for client-side debugging.
+		// NOTE: This code not yet used for client-side debugging.
 		[AllowAnonymous]
 		public ActionResult QDebug()
 		{
 			// We only allow code debugging when event tracing is active.
-			if(!Configuration.EventTracking)
+			if (!Configuration.EventTracking)
 				return RedirectToVueRoute("main");
-			QDebug_ViewModel model = new QDebug_ViewModel(UserContext.Current);
+			QDebug_ViewModel model = new(UserContext.Current);
 			return JsonOK(model);
 		}
 		*/
@@ -1264,7 +1264,7 @@ namespace GenioMVC.Controllers
 				if (rec is null || string.IsNullOrEmpty(rec?.Name))
 					// Invalid user or null record
 					return PermissionError(Resources.Resources.O_REGISTO_PEDIDO_NAO63869);
-				
+
 				PersistentSupport sp = PersistentSupport.getPersistentSupport(UserContext.Current.User.Year);
 
 				byte[] content = rec.GetContent(sp);
@@ -1299,31 +1299,6 @@ namespace GenioMVC.Controllers
 			}
 
 			return JsonERROR();
-		}
-
-		/// <summary>
-		/// Created by [SF] at [2022.08.04]
-		/// Remove files creates in method PrepareFileLink
-		/// </summary>
-		/// <returns></returns>
-		public ActionResult RemoveFileTemp()
-		{
-			var ticket = Navigation.GetStrValue("filename");
-			if (!string.IsNullOrEmpty(ticket))
-			{
-				var resource = GetResourceFileFromTicket(ticket);
-				Navigation.ClearValue("filename");
-
-				if (string.IsNullOrEmpty(resource?.Name))
-					// Invalid user or ticket
-					return JsonOK(new { success = false });
-
-				string tempFolder = FilePathUtils.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp");
-				if(!FilePathUtils.DeleteFileIfExists(tempFolder, resource.Name))
-                    return JsonOK(new { success = false });
-			}
-
-			return JsonOK(new { success = true, loading = true });
 		}
 
 		/// <summary>
@@ -1439,26 +1414,46 @@ namespace GenioMVC.Controllers
 
 			if (user.EphTofill != null)
 			{
-				// Get the action for the form id
-				string id = user.EphTofill.GetForm(InitialEphModule.EphModule);
+				var allowedActions = Helpers.Menus.Menus.GetAllowedRoutes(m_userContext.User, false);
 
-				Helpers.Menus.MenuEntry menu;
-
-				// Search all branches possible to navigate
-				while (!string.IsNullOrEmpty(id))
+				if (allowedActions.Count > 0)
 				{
-					menu = Helpers.Menus.Menus.FindMenu(InitialEphModule.EphModule, id);
+					routeName = allowedActions.LastOrDefault().action;
 
-					if (string.IsNullOrEmpty(menu.Controller))
-						break;
-
-					routeName = menu.Route_VUE;
-					id = menu.ParentId;
-					allowedRoutes.Add(routeName);
+					foreach (var action in allowedActions)
+						allowedRoutes.Add(action.action);
 				}
 			}
 
 			return JsonOK(new { routeName, allowedRoutes });
+		}
+
+		/// <summary>
+		/// Redirects to the Permanent History Entry (PHE) when don't pass in action filter.
+		/// Create by FFS (2025.01.03)
+		/// </summary>
+		/// <returns></returns>
+		public ActionResult GetEphFormActionByModule(string EphModule)
+		{
+			User user = UserContext.Current.User;
+			string routeName = string.Empty;
+			bool initialPHEEmpty = false;
+			// List of routes that are allowed as 'child' menus
+			var allowedRoutes = new HashSet<string>();
+
+			if (user.EphTofill != null)
+			{
+				var allowedActions = Helpers.Menus.Menus.GetAllowedRoutes(m_userContext.User, false);
+				routeName = allowedActions.LastOrDefault().action;
+
+				foreach (var action in allowedActions)
+				{
+					allowedRoutes.Add(action.action);
+					initialPHEEmpty = true;
+				}
+			}
+
+			return JsonOK(new { routeName = routeName, allowedRoutes = allowedRoutes, InitialPHEEmpty = initialPHEEmpty, Module = EphModule });
 		}
 
 		#region Programmers area...

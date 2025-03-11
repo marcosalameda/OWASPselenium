@@ -1,12 +1,12 @@
-<template>
+﻿<template>
 	<div
 		class="q-image-preview__modal-main-container">
 		<div class="q-image-preview__modal-container">
 			<img
-				:src="imageURL"
 				class="q-image-preview__modal-image"
+				:src="imageURL"
 				:alt="dataTitle" />
-	
+
 			<div class="q-image-preview__modal-buttons">
 				<q-button
 					id="downloadPreviewBtn"
@@ -17,7 +17,7 @@
 					@click="download">
 					<q-icon icon="download" />
 				</q-button>
-	
+
 				<q-button
 					id="closePreviewBtn"
 					b-style="plain"
@@ -31,7 +31,7 @@
 		</div>
 	</div>
 </template>
-	
+
 <script>
 	import { getImageURL, downloadImage } from '@/utils/image.js'
 	import { validateImageFormat, validateTexts } from '@/mixins/genericFunctions.js'
@@ -43,14 +43,18 @@
 
 	export default {
 		name: 'QImagePreview',
-	
+
 		emits: {
-			'close-image-preview': () => true,
+			'close-image-preview': () => true
 		},
 
 		inheritAttrs: false,
 
 		props: {
+			/**
+			 * Image title used for the alt attribute.
+			 */
+			dataTitle: String,
 
 			/**
 			 * The image to be displayed
@@ -68,19 +72,11 @@
 				type: Object,
 				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
 				default: () => DEFAULT_TEXTS
-			},
-
-			/**
-			 * Image title used for the alt attribute.
-			 */
-			dataTitle: {
-				type: String,
-				default: null
 			}
 		},
 
 		expose: [],
-	
+
 		mounted()
 		{
 			document.addEventListener('keydown', this.onKeyPress)
@@ -95,13 +91,13 @@
 			/**
 			 * The base64 representation of the image to be displayed.
 			 */
-			imageURL() {
+			imageURL()
+			{
 				return getImageURL(this.image)
 			}
 		},
 
 		methods: {
-
 			/**
 			 * Closes the image preview.
 			 */
@@ -113,10 +109,11 @@
 			/**
 			 * Handles the downloading of the image.
 			 */
-			download() {
+			download()
+			{
 				downloadImage(this.fullSizeImage)
 			},
-			
+
 			/**
 			 * Handles key press events.
 			 * @param {Object} event - The key press event.

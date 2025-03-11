@@ -5,6 +5,11 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>annotations</Nullable>
+
+    <!-- When publishing the solution for Linux there are a couple of files that are duplicated for some reason
+    This option seems to be the only way to avoid those errors, and they can safly be ignored since the
+    duplicated files don't cause significant issues. -->
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
 
   <ItemGroup>

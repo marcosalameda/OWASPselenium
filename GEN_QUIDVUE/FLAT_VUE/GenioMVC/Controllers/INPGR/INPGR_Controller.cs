@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER INPGR]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Ingroups" form. (++, CT, SR, CL and U1)
 		/// </summary>

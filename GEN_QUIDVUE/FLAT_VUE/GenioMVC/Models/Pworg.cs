@@ -38,44 +38,46 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Pworg.ValCodpsw")]
 		public string ValCodpsw { get { return klass.ValCodpsw; } set { klass.ValCodpsw = value; } }
+
 		private Psw _psw;
 		[DisplayName("Psw")]
 		[ShouldSerialize("Psw")]
-		public virtual Psw Psw {
-			get {
-				if (!this.isEmptyModel && (_psw == null || (!string.IsNullOrEmpty(ValCodpsw) && (_psw.isEmptyModel || _psw.klass.QPrimaryKey != ValCodpsw))))
+		public virtual Psw Psw
+		{
+			get
+			{
+				if (!isEmptyModel && (_psw == null || (!string.IsNullOrEmpty(ValCodpsw) && (_psw.isEmptyModel || _psw.klass.QPrimaryKey != ValCodpsw))))
 					_psw = Models.Psw.Find(ValCodpsw, m_userContext, Identifier, _fieldsToSerialize);
-				if (_psw == null)
-					_psw = new Models.Psw(m_userContext, true, _fieldsToSerialize);
+				_psw ??= new Models.Psw(m_userContext, true, _fieldsToSerialize);
 				return _psw;
 			}
 			set { _psw = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Pworg.ValCodorgan")]
 		public string ValCodorgan { get { return klass.ValCodorgan; } set { klass.ValCodorgan = value; } }
+
 		private Organ _organ;
 		[DisplayName("Organ")]
 		[ShouldSerialize("Organ")]
-		public virtual Organ Organ {
-			get {
-				if (!this.isEmptyModel && (_organ == null || (!string.IsNullOrEmpty(ValCodorgan) && (_organ.isEmptyModel || _organ.klass.QPrimaryKey != ValCodorgan))))
+		public virtual Organ Organ
+		{
+			get
+			{
+				if (!isEmptyModel && (_organ == null || (!string.IsNullOrEmpty(ValCodorgan) && (_organ.isEmptyModel || _organ.klass.QPrimaryKey != ValCodorgan))))
 					_organ = Models.Organ.Find(ValCodorgan, m_userContext, Identifier, _fieldsToSerialize);
-				if (_organ == null)
-					_organ = new Models.Organ(m_userContext, true, _fieldsToSerialize);
+				_organ ??= new Models.Organ(m_userContext, true, _fieldsToSerialize);
 				return _organ;
 			}
 			set { _organ = value; }
 		}
 
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Pworg.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Pworg(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -94,7 +96,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioApworg csgenioa)
 		{
 			if (csgenioa == null)
@@ -105,13 +106,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "psw":
-						if (_psw == null)
-							_psw = new Psw(m_userContext, true, _fieldsToSerialize);
+						_psw ??= new Psw(m_userContext, true, _fieldsToSerialize);
 						_psw.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "organ":
-						if (_organ == null)
-							_organ = new Organ(m_userContext, true, _fieldsToSerialize);
+						_organ ??= new Organ(m_userContext, true, _fieldsToSerialize);
 						_organ.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

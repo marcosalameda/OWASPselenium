@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.ARTICLE60065),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValItemcod',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 15,
 								scrollData: 15,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValEntries',
@@ -169,7 +169,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValExits',
@@ -179,7 +179,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
 								name: 'ValExistenc',
@@ -189,7 +189,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'Wareh.ValWarehdes',
@@ -198,9 +198,9 @@
 								label: computed(() => this.Resources.WAREHOUSE51864),
 								dataLength: 85,
 								scrollData: 30,
-								visibility: false,
+								isVisible: false,
 								pkColumn: 'ValCodwareh',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'Gitem.ValItemdes',
@@ -209,9 +209,9 @@
 								label: computed(() => this.Resources.GLOBAL_ARTICLE63861),
 								dataLength: 85,
 								scrollData: 30,
-								visibility: false,
+								isVisible: false,
 								pkColumn: 'ValCodgitem',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_4611',
@@ -354,7 +354,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-WAREH', 'changed-GITEM', 'changed-ITEM'],
+						globalEvents: ['changed-GITEM', 'changed-WAREH', 'changed-ITEM'],
 						uuid: 'a95f0654-5e3a-4d36-b46f-5a17074e5019',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -368,7 +368,7 @@
 								fnValueSelector: () => vm.$route.params['wareh'],
 							},
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Ldent_IndocValDocumenrModel : RequestLookupModel
+		{
+			public Ldent_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Ldent/Ldent_IndocValDocumenr
 		// POST: /Ldent/Ldent_IndocValDocumenr
 		[ActionName("Ldent_IndocValDocumenr")]
-		public ActionResult Ldent_IndocValDocumenr([FromBody]RequestLookupModel requestModel)
+		public ActionResult Ldent_IndocValDocumenr([FromBody] Ldent_IndocValDocumenrModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Ldent_IndocValDocumenr_ViewModel model = new Ldent_IndocValDocumenr_ViewModel(UserContext.Current);
-			
+
+			Models.Ldent parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Ldent_IndocValDocumenr_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Ldent_WarehValWarehdesModel : RequestLookupModel
+		{
+			public Ldent_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Ldent/Ldent_WarehValWarehdes
 		// POST: /Ldent/Ldent_WarehValWarehdes
 		[ActionName("Ldent_WarehValWarehdes")]
-		public ActionResult Ldent_WarehValWarehdes([FromBody]RequestLookupModel requestModel)
+		public ActionResult Ldent_WarehValWarehdes([FromBody] Ldent_WarehValWarehdesModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Ldent_WarehValWarehdes_ViewModel model = new Ldent_WarehValWarehdes_ViewModel(UserContext.Current);
-			
+
+			Models.Ldent parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Ldent_WarehValWarehdes_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -518,11 +534,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Ldent_ItemValItemdesModel : RequestLookupModel
+		{
+			public Ldent_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Ldent/Ldent_ItemValItemdes
 		// POST: /Ldent/Ldent_ItemValItemdes
 		[ActionName("Ldent_ItemValItemdes")]
-		public ActionResult Ldent_ItemValItemdes([FromBody]RequestLookupModel requestModel)
+		public ActionResult Ldent_ItemValItemdes([FromBody] Ldent_ItemValItemdesModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -547,16 +568,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Ldent_ItemValItemdes_ViewModel model = new Ldent_ItemValItemdes_ViewModel(UserContext.Current);
-			
+
+			Models.Ldent parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Ldent_ItemValItemdes_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

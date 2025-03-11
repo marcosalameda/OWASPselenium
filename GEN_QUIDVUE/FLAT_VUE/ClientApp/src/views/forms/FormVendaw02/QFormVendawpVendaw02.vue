@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -131,7 +131,7 @@
 														<q-checkbox-input
 															v-if="controls.VENDAW02SALE_INTERESS.isVisible"
 															v-bind="controls.VENDAW02SALE_INTERESS.props"
-															@update:model-value="model.ValInteress.fnUpdateValue" />
+															v-on="controls.VENDAW02SALE_INTERESS.handlers" />
 													</template>
 												</base-input-structure>
 											</q-control-wrapper>
@@ -149,7 +149,7 @@
 														<q-checkbox-input
 															v-if="controls.VENDAW02SALE_SEMRFINA.isVisible"
 															v-bind="controls.VENDAW02SALE_SEMRFINA.props"
-															@update:model-value="model.ValSemrfina.fnUpdateValue" />
+															v-on="controls.VENDAW02SALE_SEMRFINA.handlers" />
 													</template>
 												</base-input-structure>
 											</q-control-wrapper>
@@ -167,7 +167,7 @@
 														<q-checkbox-input
 															v-if="controls.VENDAW02SALE_SEMCAPAC.isVisible"
 															v-bind="controls.VENDAW02SALE_SEMCAPAC.props"
-															@update:model-value="model.ValSemcapac.fnUpdateValue" />
+															v-on="controls.VENDAW02SALE_SEMCAPAC.handlers" />
 													</template>
 												</base-input-structure>
 											</q-control-wrapper>
@@ -207,7 +207,7 @@
 														<q-checkbox-input
 															v-if="controls.VENDAW02SALE_QUALIFIC.isVisible"
 															v-bind="controls.VENDAW02SALE_QUALIFIC.props"
-															@update:model-value="model.ValQualific.fnUpdateValue" />
+															v-on="controls.VENDAW02SALE_QUALIFIC.handlers" />
 													</template>
 												</base-input-structure>
 											</q-control-wrapper>
@@ -357,8 +357,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				wizardData: readonly({
 					type: qEnums.wizardTypes.progress,

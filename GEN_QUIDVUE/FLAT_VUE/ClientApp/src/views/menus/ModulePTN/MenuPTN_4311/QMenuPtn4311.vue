@@ -152,7 +152,7 @@
 								maxDigits: 8,
 								decimalPlaces: 1,
 								isOrderingColumn: true,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValTitle',
@@ -161,7 +161,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Rogl1.ValTitle',
@@ -171,7 +171,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodrogl1',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_4311',
@@ -315,7 +315,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ROIGF', 'changed-ROGL1'],
+						globalEvents: ['changed-ROIGF', 'changed-ROGL1'],
 						uuid: '89d29d5f-c51e-40ab-9b60-aef9f71c56ab',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -329,7 +329,7 @@
 								fnValueSelector: () => vm.$route.params['rogl1'],
 							},
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

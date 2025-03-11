@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.WAREHOUSE51864),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValWarehcod',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.ACRONYM00872),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_461',
@@ -300,11 +300,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-WAREH'],
+						globalEvents: ['changed-WAREH'],
 						uuid: 'c57ebd33-a9eb-45a9-83fa-a0ebd4db3a84',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

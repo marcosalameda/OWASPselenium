@@ -152,7 +152,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValTitle',
@@ -161,7 +161,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Prope.ValTitle',
@@ -171,7 +171,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodprope',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TRN_Menu_T03PHOTOS',
@@ -313,11 +313,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PROPE', 'changed-PROPH'],
+						globalEvents: ['changed-PROPE', 'changed-PROPH'],
 						uuid: '1b922be3-3c02-481c-9ecb-b4436e31b7df',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

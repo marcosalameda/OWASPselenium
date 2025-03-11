@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.DISPATCH_DATE54413),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'ValDispanr',
@@ -160,7 +160,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Entit.ValName',
@@ -170,7 +170,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodentit',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_241',
@@ -312,11 +312,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-DISPA', 'changed-PERSO', 'changed-ENTIT', 'changed-DISST'],
+						globalEvents: ['changed-DISPA', 'changed-PERSO', 'changed-ENTIT', 'changed-DISST'],
 						uuid: '9a0b0214-06bf-4759-baaf-3939c00d8f73',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

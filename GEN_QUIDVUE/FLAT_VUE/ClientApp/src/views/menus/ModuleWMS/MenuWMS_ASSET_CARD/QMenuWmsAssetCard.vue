@@ -151,7 +151,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValName',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.IDENTIFICATION_NAME16317),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Kinde.ValDesignat',
@@ -169,9 +169,9 @@
 								label: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
 								dataLength: 85,
 								scrollData: 30,
-								visibility: false,
+								isVisible: false,
 								pkColumn: 'ValCodkinde',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 4,
 								name: 'ValIdenttyp',
@@ -182,7 +182,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayIdenttyp.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayIdenttyp.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValGrai',
@@ -191,7 +191,7 @@
 								label: computed(() => this.Resources.GRAI10374),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValGiai',
@@ -200,7 +200,7 @@
 								label: computed(() => this.Resources.GIAI50592),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 7,
 								name: 'ValPhoto',
@@ -211,7 +211,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
 								name: 'Manuf.ValName',
@@ -221,7 +221,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodentit',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.HyperLinkColumn({
 								order: 9,
 								name: 'Manuf.ValWebsite',
@@ -231,7 +231,7 @@
 								dataLength: 254,
 								scrollData: 30,
 								pkColumn: 'ValCodentit',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_ASSET_CARD',
@@ -373,7 +373,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-KINDE', 'changed-MANUF', 'changed-ASSET'],
+						globalEvents: ['changed-KINDE', 'changed-MANUF', 'changed-ASSET'],
 						uuid: 'cbba1257-006c-407c-bff6-cb87a80d6f4e',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -412,8 +412,8 @@
 									text: {
 										allowsMultiple: true,
 										sources: [
-											'ASSET.GIAI',
 											'ASSET.GRAI',
+											'ASSET.GIAI',
 										]
 									},
 									image: {
@@ -555,7 +555,7 @@
 						controlLimits: [
 							/** SC */
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

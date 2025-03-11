@@ -86,39 +86,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : "'Entity'" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Messa.ValCodentit")]
 		public string ValCodentit { get { return klass.ValCodentit; } set { klass.ValCodentit = value; } }
+
 		private Entit _entit;
 		[DisplayName("Entit")]
 		[ShouldSerialize("Entit")]
-		public virtual Entit Entit {
-			get {
-				if (!this.isEmptyModel && (_entit == null || (!string.IsNullOrEmpty(ValCodentit) && (_entit.isEmptyModel || _entit.klass.QPrimaryKey != ValCodentit))))
+		public virtual Entit Entit
+		{
+			get
+			{
+				if (!isEmptyModel && (_entit == null || (!string.IsNullOrEmpty(ValCodentit) && (_entit.isEmptyModel || _entit.klass.QPrimaryKey != ValCodentit))))
 					_entit = Models.Entit.Find(ValCodentit, m_userContext, Identifier, _fieldsToSerialize);
-				if (_entit == null)
-					_entit = new Models.Entit(m_userContext, true, _fieldsToSerialize);
+				_entit ??= new Models.Entit(m_userContext, true, _fieldsToSerialize);
 				return _entit;
 			}
 			set { _entit = value; }
 		}
 
-
 		[DisplayName("'Person'")]
 		/// <summary>Field : "'Person'" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Messa.ValCodperso")]
 		public string ValCodperso { get { return klass.ValCodperso; } set { klass.ValCodperso = value; } }
+
 		private Perso _perso;
 		[DisplayName("Perso")]
 		[ShouldSerialize("Perso")]
-		public virtual Perso Perso {
-			get {
-				if (!this.isEmptyModel && (_perso == null || (!string.IsNullOrEmpty(ValCodperso) && (_perso.isEmptyModel || _perso.klass.QPrimaryKey != ValCodperso))))
+		public virtual Perso Perso
+		{
+			get
+			{
+				if (!isEmptyModel && (_perso == null || (!string.IsNullOrEmpty(ValCodperso) && (_perso.isEmptyModel || _perso.klass.QPrimaryKey != ValCodperso))))
 					_perso = Models.Perso.Find(ValCodperso, m_userContext, Identifier, _fieldsToSerialize);
-				if (_perso == null)
-					_perso = new Models.Perso(m_userContext, true, _fieldsToSerialize);
+				_perso ??= new Models.Perso(m_userContext, true, _fieldsToSerialize);
 				return _perso;
 			}
 			set { _perso = value; }
 		}
-
 
 		[DisplayName("Document number")]
 		/// <summary>Field : "Document number" Tipo: "N" Formula:  ""</summary>
@@ -128,8 +130,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Messa.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Messa(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -148,7 +150,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAmessa csgenioa)
 		{
 			if (csgenioa == null)
@@ -159,13 +160,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "entit":
-						if (_entit == null)
-							_entit = new Entit(m_userContext, true, _fieldsToSerialize);
+						_entit ??= new Entit(m_userContext, true, _fieldsToSerialize);
 						_entit.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "perso":
-						if (_perso == null)
-							_perso = new Perso(m_userContext, true, _fieldsToSerialize);
+						_perso ??= new Perso(m_userContext, true, _fieldsToSerialize);
 						_perso.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

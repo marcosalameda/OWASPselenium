@@ -1,9 +1,5 @@
 ﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 
 using CSGenio.business;
 using CSGenio.framework;
@@ -43,6 +39,7 @@ namespace GenioMVC.ViewModels
 		/// <summary>
 		/// Gets the alias of the table.
 		/// </summary>
+		[JsonIgnore]
 		public abstract string TableAlias { get; }
 
 		/// <summary>
@@ -54,7 +51,7 @@ namespace GenioMVC.ViewModels
 		/// Gets the searchable columns.
 		/// </summary>
 		protected abstract List<TableSearchColumn> SearchableColumns { get; }
-		
+
 		/// <summary>
 		/// Gets the tables limits that are always applied.
 		/// </summary>
@@ -64,22 +61,21 @@ namespace GenioMVC.ViewModels
 		/// Gets the list base conditions.
 		/// For row reordering.
 		/// </summary>
+		[JsonIgnore]
 		public abstract CriteriaSet baseConditions { get; }
 
 		/// <summary>
 		/// Gets the list of relations.
 		/// For row reordering.
 		/// </summary>
+		[JsonIgnore]
 		public abstract List<Relation> relations { get; }
 
 		/// <summary>
 		/// Gets the user column configuration.
 		/// </summary>
 		[JsonIgnore]
-		public List<CSGenioAlstcol> UserColumns
-		{
-			get => userColumns;
-		}
+		public List<CSGenioAlstcol> UserColumns => userColumns;
 
 		/// <summary>
 		/// Gets or sets the table limits.
@@ -95,10 +91,7 @@ namespace GenioMVC.ViewModels
 		/// <summary>
 		/// Gets the table views management mode.
 		/// </summary>
-		virtual protected TableViewsManagementMode ViewsManagementMode
-		{
-			get => TableViewsManagementMode.None;
-		}
+		virtual protected TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.None;
 
 		/// <summary>
 		/// Gets the names of the user table configurations.
@@ -120,7 +113,7 @@ namespace GenioMVC.ViewModels
 		/// </summary>
 		/// <param name="userContext">The current user request context</param>
 		public ListViewModel(UserContext userContext) : base(userContext) {}
-		
+
 		/// <summary>
 		/// Applies manual code to change the static limits property
 		/// </summary>
@@ -128,7 +121,7 @@ namespace GenioMVC.ViewModels
 		{
 			return crs;
 		}
-		
+
 		/// <summary>
 		/// Gets the user table configuration names from the loaded data and sets the corresponding properties.
 		/// </summary>
@@ -534,9 +527,9 @@ namespace GenioMVC.ViewModels
 		/// <returns>The instantiated ListViewModel</returns>
 		public static ListViewModel CreateListViewModel(UserContext userContext, string controller, string action)
 		{
-			string viewmodelStr = string.Format("GenioMVC.ViewModels.{0}.{1}_ViewModel", controller, action);
-			var viewmodelType = Type.GetType(viewmodelStr, false, true) ?? throw new InvalidOperationException($"Could not instantiate a ListViewModel for {controller}/{action}");
-			var newViewmodel = Activator.CreateInstance(viewmodelType, userContext);
+			string viewmodelStr = $"GenioMVC.ViewModels.{controller}.{action}_ViewModel";
+			Type viewmodelType = Type.GetType(viewmodelStr, false, true) ?? throw new InvalidOperationException($"Could not instantiate a ListViewModel for {controller}/{action}");
+			object newViewmodel = Activator.CreateInstance(viewmodelType, userContext);
 			return newViewmodel as ListViewModel ?? throw new InvalidOperationException($"Could not instantiate a ListViewModel for {controller}/{action}");
 		}
 	}

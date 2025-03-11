@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Globfact_FactyValTypeModel : RequestLookupModel
+		{
+			public Globfact_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Glob/Globfact_FactyValType
 		// POST: /Glob/Globfact_FactyValType
 		[ActionName("Globfact_FactyValType")]
-		public ActionResult Globfact_FactyValType([FromBody]RequestLookupModel requestModel)
+		public ActionResult Globfact_FactyValType([FromBody] Globfact_FactyValTypeModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Globfact_FactyValType_ViewModel model = new Globfact_FactyValType_ViewModel(UserContext.Current);
-			
+
+			Models.Glob parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Globfact_FactyValType_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

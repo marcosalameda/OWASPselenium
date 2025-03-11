@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Pworg_PswValNomeModel : RequestLookupModel
+		{
+			public Pworg_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Pworg/Pworg_PswValNome
 		// POST: /Pworg/Pworg_PswValNome
 		[ActionName("Pworg_PswValNome")]
-		public ActionResult Pworg_PswValNome([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pworg_PswValNome([FromBody] Pworg_PswValNomeModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Pworg_PswValNome_ViewModel model = new Pworg_PswValNome_ViewModel(UserContext.Current);
-			
+
+			Models.Pworg parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pworg_PswValNome_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Pworg_OrganValOrganizaModel : RequestLookupModel
+		{
+			public Pworg_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Pworg/Pworg_OrganValOrganiza
 		// POST: /Pworg/Pworg_OrganValOrganiza
 		[ActionName("Pworg_OrganValOrganiza")]
-		public ActionResult Pworg_OrganValOrganiza([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pworg_OrganValOrganiza([FromBody] Pworg_OrganValOrganizaModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Pworg_OrganValOrganiza_ViewModel model = new Pworg_OrganValOrganiza_ViewModel(UserContext.Current);
-			
+
+			Models.Pworg parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pworg_OrganValOrganiza_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

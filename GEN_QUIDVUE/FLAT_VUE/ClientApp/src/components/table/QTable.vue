@@ -399,8 +399,6 @@
 									:show-row-action-text="showRowActionText"
 									:show-general-action-text="showGeneralActionText"
 									:readonly="tableIsReadonly"
-									:text-color="rowTextColor"
-									:bg-color="rowBgColor"
 									:bg-color-selected="rowBgColorSelected"
 									:row-selected-for-group="isRowSelected(row)"
 									:cell-titles="getRowCellDataTitles(row, vbtColumns)"
@@ -459,8 +457,6 @@
 								:columns="vbtColumns"
 								row-index="new"
 								unique-id="new_row"
-								:text-color="rowTextColor"
-								:bg-color="rowBgColor"
 								:bg-color-selected="rowBgColorSelected"
 								:cell-titles="getRowCellDataTitles(newRow, vbtColumns)"
 								@update="(...args) => setCellValue(...args)">
@@ -622,7 +618,7 @@
 </template>
 
 <script>
-	import { markRaw, defineAsyncComponent } from 'vue'
+	import { defineAsyncComponent, markRaw } from 'vue'
 	import cloneDeep from 'lodash-es/cloneDeep'
 	import filter from 'lodash-es/filter'
 	import find from 'lodash-es/find'
@@ -715,6 +711,7 @@
 		noLabel: 'No',
 		activeText: 'Active',
 		inactiveText: 'Inactive',
+		inactiveFilterText: 'Inactive filter',
 		showRecordsWhereText: 'Show records when',
 		visibleColumnsText: 'Visible columns',
 		invisibleColumnsHelpText: 'Invisible columns are not searchable.',
@@ -747,7 +744,8 @@
 		rowExpand: 'Expand row',
 		rowCollapse: 'Collapse row',
 		close: 'Close',
-		download: 'Download'
+		download: 'Download',
+		placeholder: "Choose..."
 	}
 
 	export default {
@@ -1267,8 +1265,6 @@
 					hours: 'HH:mm',
 					use12Hour: false
 				},
-				rowTextColor: '',
-				rowBgColor: '',
 				rowBgColorSelected: '#E0E0E0',
 				filtersVisible: false,
 				staticFiltersVisible: true,
@@ -1449,8 +1445,6 @@
 			}
 
 			this.initRowsDragAndDrop()
-
-
 		},
 
 		updated()
@@ -1461,11 +1455,11 @@
 			this.tableContainerElem = Array.isArray(this.$refs.tableContainerElem) ? this.$refs.tableContainerElem[0] : this.$refs.tableContainerElem
 
 			// Update table navigation properties
-			if(this.setNavOnUpdate)
+			if (this.setNavOnUpdate)
 			{
 				this.$emit('set-property', ['config', 'setNavOnUpdate'], false)
 
-				this.$nextTick().then(()=> {
+				this.$nextTick().then(() => {
 					this.navigateToTableRowAction('first')
 				})
 			}
@@ -1551,8 +1545,8 @@
 			 */
 			topLevelColumns()
 			{
-				if (!Array.isArray(this.columnHierarchy)) return this.vbtColumns
-				return this.columnHierarchy[0] ? this.columnHierarchy[0] : this.vbtColumns
+				const columns = this.columnHierarchy[0] ?? this.vbtColumns
+				return columns.filter((c) => this.canShowColumn(c))
 			},
 
 			/**
@@ -1674,7 +1668,7 @@
 			 */
 			headerColSpan()
 			{
-				return this.vbtColumns.filter((column) => this.canShowColumn(column)).length
+				return this.topLevelColumns.length
 			},
 
 			/**
@@ -2417,12 +2411,12 @@
 						// If the focused element is a sub-element of the table
 						tableContainerElem?.focus()
 						event.preventDefault()
-						break;
+						break
 					case "ArrowUp":
 						// Navigate to the previous row
 						this.navigateToRow(this.navRowIndex - 1)
 						event.preventDefault()
-						break;
+						break
 					case "ArrowDown":
 						// Navigate to the first row if not navigated to any row, other wise navigate to the next row
 						if(this.navRowIndex === undefined || this.navRowIndex === null || isNaN(this.navRowIndex))
@@ -2430,44 +2424,44 @@
 						else
 							this.navigateToRow(this.navRowIndex + 1)
 						event.preventDefault()
-						break;
+						break
 					case "ArrowLeft":
 						// Navigate to the previous action element
 						this.navigateToTableRowAction('previous')
 						event.preventDefault()
-						break;
+						break
 					case "ArrowRight":
 						// Navigate to the next action element
 						this.navigateToTableRowAction('next')
 						event.preventDefault()
-						break;
+						break
 					case "Home":
 						// Navigate to first data row
 						this.navigateToRow(this.firstDataRowIndex)
 						event.preventDefault()
-						break;
+						break
 					case "End":
 						// Navigate to last data row
 						this.navigateToRow(this.navRowElems?.length - 1)
 						event.preventDefault()
-						break;
+						break
 					case "Insert":
 						// Insert new record
 						this.$emit('row-action', { id: 'insert' })
 						event.preventDefault()
-						break;
+						break
 					case "PageUp":
 						// Go to previous page
 						if(this.page > 1)
 							this.goToPage(this.page - 1)
 						event.preventDefault()
-						break;
+						break
 					case "PageDown":
 						// Go to previous page
 						if(this.hasMore)
 							this.goToPage(this.page + 1)
 						event.preventDefault()
-						break;
+						break
 				}
 			},
 
@@ -2688,7 +2682,8 @@
 				//Put references to columns in vbtColumns
 				this.vbtColumns.splice(0)
 
-				for (let idx in this.columns) this.vbtColumns[idx] = cloneDeep(this.columns[idx])
+				for (let column of this.columns)
+					this.vbtColumns.push(column.clone?.() ?? cloneDeep(column))
 
 				//FOR: TABLE LIST ROW ACTIONS
 				//BEGIN: Add row actions column
@@ -2706,8 +2701,10 @@
 						columnTextAlignment: 'text-center'
 					}
 
-					if (this.actionsPlacement === 'right') this.vbtColumns.push(actionsColumn)
-					else if (this.actionsPlacement === 'left') this.vbtColumns.unshift(actionsColumn)
+					if (this.actionsPlacement === 'right')
+						this.vbtColumns.push(actionsColumn)
+					else if (this.actionsPlacement === 'left')
+						this.vbtColumns.unshift(actionsColumn)
 				}
 				//END: Add row actions column
 
@@ -2723,7 +2720,8 @@
 					checkListTitle: 'CheckList Title'
 				}
 
-				if (this.rowsSelectableMultiple !== false) this.vbtColumns.unshift(checklistColumn)
+				if (this.rowsSelectableMultiple !== false)
+					this.vbtColumns.unshift(checklistColumn)
 				//END: Add checklist column
 
 				//FOR: EXTENDED ROW ACTIONS
@@ -2753,7 +2751,8 @@
 					columnTextAlignment: 'text-center'
 				}
 
-				if (this.showRowDragAndDropOption || this.hasRowDragAndDrop) this.vbtColumns.unshift(dragColumn)
+				if (this.showRowDragAndDropOption || this.hasRowDragAndDrop)
+					this.vbtColumns.unshift(dragColumn)
 				//END: Add drag and drop column
 
 				//BEGIN: Add totalizer title column (only if all columns in the table are data columns)
@@ -2781,7 +2780,8 @@
 				//END: Add totalizer column
 
 				// If tree table, create column hierarchy
-				if (this.type === 'TreeList') this.columnHierarchy = listFunctions.getColumnHierarchy(this.vbtColumns)
+				if (this.type === 'TreeList')
+					this.columnHierarchy = listFunctions.getColumnHierarchy(this.vbtColumns)
 
 				this.$nextTick().then(() => {
 					if (this.$refs.tableElem && this.$refs.tableContainerElem)
@@ -3723,11 +3723,9 @@
 			{
 				//FOR: DRAG AND DROP COLUMNS
 				if ((this.isDragAndDropColumn(column) && !this.hasRowDragAndDrop) || (this.isActionsColumn(column) && this.hasRowDragAndDrop))
-				{
 					return false
-				}
 				//For all columns
-				return column.visibility === undefined || column.visibility
+				return listFunctions.isVisibleColumn(column)
 			},
 
 			/**
@@ -4343,11 +4341,24 @@
 				{
 					if (eObj.elementId === 'advanced-filters') this.showAdvancedFilters()
 					else
+					{
+						// For saving a new configuration, the mode must be specified 
+						// since multiple actions used the same interface that will be opened
+						if (eObj.id === 'viewSave')
+						{
+							this.$emit(
+								'signal-component',
+								'viewSave',
+								{ mode: 'SAVE' },
+								true
+							)
+						}
 						this.$emit('signal-component', 'config', {
 							show: true,
 							selectedTab: eObj.elementId,
 							returnElement: this.configMenuId
 						})
+					}
 				}
 			},
 

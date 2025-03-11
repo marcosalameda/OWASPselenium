@@ -10,7 +10,7 @@
 							grouping-field="type"
 							value-column-name="Val"
 							primary-key-column-name="PrimaryKey"
-							format="DateTimeSeconds"
+							format="dateTimeSeconds"
 							:rows="rows"
 							:type-select-options="typeSelectOptions"
 							:max-characters="15"
@@ -33,7 +33,7 @@
 							grouping-field="type"
 							primary-key-column-name="PrimaryKey"
 							value-column-name="Val"
-							format="DateTimeSeconds"
+							format="dateTimeSeconds"
 							value-edit-mode
 							:rows="rows"
 							:type-select-options="typeSelectOptions"
@@ -57,7 +57,7 @@
 							grouping-field="type"
 							primary-key-column-name="PrimaryKey"
 							value-column-name="Val"
-							format="DateTimeSeconds"
+							format="dateTimeSeconds"
 							readonly
 							:rows="rows"
 							:type-select-options="typeSelectOptions"
@@ -81,7 +81,11 @@
 	import mockData from './PropertyList.mock'
 
 	export default {
+		name: 'QPropertyListContainer',
+
 		docsfile: './docs/property-list/QPropertyList.md',
+
+		expose: [],
 
 		data()
 		{

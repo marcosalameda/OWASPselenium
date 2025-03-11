@@ -1,4 +1,4 @@
-﻿import { markRaw, readonly } from 'vue'
+﻿import { markRaw } from 'vue'
 import _forEach from 'lodash-es/forEach'
 import _isEmpty from 'lodash-es/isEmpty'
 import _isEqual from 'lodash-es/isEqual'
@@ -7,7 +7,7 @@ import _set from 'lodash-es/set'
 
 import { useTracingDataStore } from '@/stores/tracingData.js'
 
-import { postData } from '@/api/network'
+import { postData, uploadFile } from '@/api/network'
 import modelFieldType from '@/mixins/formModelFieldTypes.js'
 import ViewModelBase from '@/mixins/viewModelBase.js'
 
@@ -80,29 +80,6 @@ export default class FormViewModelBase extends ViewModelBase
 	get isDirty()
 	{
 		return _some(this, (modelField) => modelField instanceof modelFieldType.Base && modelField.isDirty)
-	}
-
-	/**
-	 * The values of the vue model in the format expected by the view model of the server.
-	 */
-	get serverObjModel()
-	{
-		const viewModel = {}
-
-		for (let modelField in this)
-		{
-			const fieldObj = this[modelField]
-
-			if (fieldObj instanceof modelFieldType.Base &&
-				fieldObj.type !== 'Lookup' &&
-				fieldObj.ignoreFldSubmit !== true)
-			{
-				const value = fieldObj.serverValue
-				viewModel[modelField] = value
-			}
-		}
-
-		return readonly(viewModel)
 	}
 
 	/**
@@ -325,12 +302,14 @@ export default class FormViewModelBase extends ViewModelBase
 
 			// Submit a different request for each file.
 			const promise = new Promise((resolve) => {
-				postData(
+				uploadFile(
 					field.area,
 					'SetFile',
+					currentDocument.value.fileData,
 					currentDocument.dataToSubmit,
-					(data, request) => {
-						if (request.data?.Success)
+					(data) => {
+						// As long as there is no "success": true/false, it is just a progress response.
+						if (data?.success === true)
 						{
 							field.properties.updateValue(data.properties)
 							field.documentFK.updateValue(data.properties.documentId)
@@ -341,21 +320,33 @@ export default class FormViewModelBase extends ViewModelBase
 
 							resolve(true)
 						}
-						else
+						else if (data?.success === false)
 						{
 							const tracingDataStore = useTracingDataStore()
 							tracingDataStore.addError({
 								origin: 'saveDocuments',
 								message: `Error found while trying to save document "${field.id}".`,
-								contextData: field
+								contextData: {
+									field,
+									data
+								}
 							})
-
 							resolve(false)
 						}
 					},
-					undefined,
-					{ contentType: 'application/octet-stream' },
-					this.navigationId)
+					(error) => {
+						const tracingDataStore = useTracingDataStore()
+						tracingDataStore.addError({
+							origin: 'saveDocuments',
+							message: `Error found while trying to save document "${field.id}".`,
+							contextData: {
+								field,
+								error
+							}
+						})
+
+						resolve(false)
+					})
 			})
 
 			promises.push(promise)

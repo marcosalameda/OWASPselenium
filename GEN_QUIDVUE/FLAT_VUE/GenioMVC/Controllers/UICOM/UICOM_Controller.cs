@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER UICOM]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Uicom" form. (++, CT, SR, CL and U1)
 		/// </summary>

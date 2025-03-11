@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.ANO33022),
 								dataLength: 4,
 								scrollData: 4,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
 								name: 'ValValue',
@@ -160,7 +160,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_A31',
@@ -302,11 +302,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-YEAR'],
+						globalEvents: ['changed-YEAR'],
 						uuid: '5b426f5b-f8d9-49b9-9172-1fc20cc05aa6',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

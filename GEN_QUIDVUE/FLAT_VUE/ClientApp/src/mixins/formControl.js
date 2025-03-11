@@ -48,21 +48,25 @@ export class FormControl
 			headerButtons: true,
 			footer: true
 		}
+		this.triggerIntervalIds = []
 		this.initialized = false
 	}
 
-	async init(initTabs, isEditable)
+	async init(initTabs, isEditable, initControls = true)
 	{
 		if (typeof initTabs !== 'boolean')
 			initTabs = true
 
 		this.isEditable = typeof isEditable === 'boolean' ? isEditable : true
-
 		this.initModel()
-		await this.initControls(initTabs)
-		this.initBtns()
-		this.initTriggers()
 
+		if (initControls)
+		{
+			await this.initControls(initTabs)
+			this.initBtns()
+		}
+
+		this.initTriggers()
 		this.initialized = true
 
 		if (this.vueContext.isNested && this.vueContext.formInfo.mode === 'NEW')
@@ -174,7 +178,8 @@ export class FormControl
 		// Get all the periodic triggers.
 		const triggers = this.vueContext.getTriggers(triggerEvents.periodic)
 
-		this.triggerIntervalIds = []
+		// Ensure there are no leftover triggers.
+		this.destroyTriggers()
 
 		// Schedule execution of periodic events.
 		_forEach(triggers, (t) => {
@@ -232,15 +237,16 @@ export class FormControl
 	 */
 	initListOnDBChangeEvent()
 	{
-		for (let tableName of this.vueContext.tableFields || [])
+		for (let tableName of this.vueContext.tableFields ?? [])
 		{
-			let table = this.vueContext.controls[tableName]
+			const table = this.vueContext.controls[tableName]
 			if (_isEmpty(table))
 				continue
 
 			// We give an id to the list reload method, so the listener can be correctly removed later.
 			table.reloadList = (dirtyFields) => this.vueContext.reloadList(tableName, dirtyFields)
-			eventBus.onMany(table.changeEvents, table.reloadList)
+			this.vueContext.internalEvents.onMany(table.internalEvents, table.reloadList)
+			eventBus.onMany(table.globalEvents, table.reloadList)
 		}
 	}
 
@@ -249,11 +255,14 @@ export class FormControl
 	 */
 	removeListOnDBChangeEvent()
 	{
-		for (let tableName of this.vueContext.tableFields || [])
+		for (let tableName of this.vueContext.tableFields ?? [])
 		{
-			let table = this.vueContext.controls[tableName]
+			const table = this.vueContext.controls[tableName]
 			if (!_isEmpty(table))
-				eventBus.offMany(table.changeEvents, table.reloadList)
+			{
+				this.vueContext.internalEvents.offMany(table.internalEvents, table.reloadList)
+				eventBus.offMany(table.globalEvents, table.reloadList)
+			}
 		}
 	}
 

@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValAcronym',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.ACRONYM00872),
 								dataLength: 15,
 								scrollData: 15,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValNif',
@@ -168,7 +168,7 @@
 								label: computed(() => this.Resources.TAX_IDENTIFICATION51190),
 								dataLength: 15,
 								scrollData: 15,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValTelephon',
@@ -177,7 +177,7 @@
 								label: computed(() => this.Resources.PHONE56703),
 								dataLength: 20,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValEmail',
@@ -186,7 +186,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 6,
 								name: 'ValLogo',
@@ -197,7 +197,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'Cntry.ValCountry',
@@ -207,7 +207,7 @@
 								dataLength: 90,
 								scrollData: 30,
 								pkColumn: 'ValCodcntry',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
 								name: 'ValQtdpesso',
@@ -217,7 +217,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_6111',
@@ -331,6 +331,7 @@
 								{
 									id: 'MB_61111',
 									name: 'menu-GQT_611111',
+									isVisible: true,
 									title: computed(() => this.Resources.ALL38603),
 									params: {
 										limits: [
@@ -345,6 +346,7 @@
 								{
 									id: 'MB_61112',
 									name: 'menu-GQT_6111211',
+									isVisible: true,
 									title: computed(() => this.Resources.MEN30137),
 									params: {
 										limits: [
@@ -359,6 +361,7 @@
 								{
 									id: 'MB_61113',
 									name: 'menu-GQT_6111311',
+									isVisible: true,
 									title: computed(() => this.Resources.WOMEN02655),
 									params: {
 										limits: [
@@ -401,11 +404,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-CMPNY', 'changed-CNTRY'],
+						globalEvents: ['changed-CMPNY', 'changed-CNTRY'],
 						uuid: 'a276a8c7-3344-4461-b524-47a2f8c9ef0a',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

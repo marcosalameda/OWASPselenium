@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.SPECIALTY09304),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
 								name: 'ValAreatecn',
@@ -161,7 +161,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayAreatecn.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_331',
@@ -303,11 +303,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-SPECI'],
+						globalEvents: ['changed-SPECI'],
 						uuid: 'f2a0a22f-307b-414e-8cee-055825cf55e7',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

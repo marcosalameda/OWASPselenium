@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -391,8 +391,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -802,7 +800,7 @@
 								maxDigits: 3,
 								decimalPlaces: 1,
 								isOrderingColumn: true,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Wareh.ValWarehdes',
@@ -812,7 +810,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodwareh',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Item.ValItemdes',
@@ -822,7 +820,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCoditem',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValQtdentra',
@@ -832,7 +830,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 5,
 								name: 'ValDhentra',
@@ -841,7 +839,7 @@
 								label: computed(() => this.Resources.INSTANT_ENTRANCE27379),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValEntradas',
@@ -967,7 +965,7 @@
 									isVisible: computed(() => vm.controls.DENTR___PSEUDNORMAL__.isVisible),
 									disabled: computed(() => vm.controls.DENTR___PSEUDNORMAL__.isBlocked),
 									params: {
-										action: (c, o, d) => vm.controls.DENTR___PSEUDNORMAL__.action(d || c),
+										action: (c, _, d) => vm.controls.DENTR___PSEUDNORMAL__.action(d || c),
 										isControlled: true,
 										isRoute: true
 									}
@@ -1007,7 +1005,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-WAREH', 'changed-LDENT', 'changed-ITEM', 'changed-INDOC'],
+						globalEvents: ['changed-WAREH', 'changed-LDENT', 'changed-ITEM', 'changed-INDOC'],
 						uuid: 'Dentr_ValEntradas',
 						allSelectedRows: 'false',
 						controlLimits: [

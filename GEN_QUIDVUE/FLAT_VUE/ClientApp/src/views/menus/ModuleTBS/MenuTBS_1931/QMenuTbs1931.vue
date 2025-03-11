@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.DESCRICAO51618),
 								scrollData: 30,
 								pkColumn: 'ValCodflds',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValFeedback',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.FEEDBACK52855),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 3,
 								name: 'Flds.ValAttach',
@@ -171,7 +171,7 @@
 								sortable: false,
 								pkColumn: 'ValCodflds',
 								viewType: qEnums.documentViewTypeMode.print,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TBS_Menu_1931',
@@ -313,11 +313,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FLDS', 'changed-FEECA'],
+						globalEvents: ['changed-FLDS', 'changed-FEECA'],
 						uuid: 'bcd28de4-9e50-4d1a-92e0-3c661c0ab999',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

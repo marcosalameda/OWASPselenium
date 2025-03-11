@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.GLOBAL_ARTICLE63861),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValItemgcod',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 15,
 								scrollData: 15,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_441',
@@ -301,11 +301,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-GITEM'],
+						globalEvents: ['changed-GITEM'],
 						uuid: 'efd9c3fa-f83f-48c0-aa4a-815a9bfbfaf2',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

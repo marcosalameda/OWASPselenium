@@ -1,11 +1,64 @@
 services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      MSSQL_SA_PASSWORD: "QuidSpark!"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    ports:
+      - "2433:1433"
+  
+  db-init:
+    build: ../WebAdmin
+    container_name: db-init
+    environment:
+      CONFIG_PATH: /app/config
+    volumes:
+      - ../config:/app/config
+    depends_on:
+      - sqlserver
+    entrypoint: >
+      bash -c "
+      echo 'Waiting for SQL Server to be ready...';
+      sleep 5;
+      echo 'Running database configuration...';
+      ./AdminCLI dbconfig-write -u sa -p QuidSpark! --server sqlserver --schema GQT0 --type SQLSERVER;
+      echo 'Reindexing database...';
+      ./AdminCLI reindex -u sa -p QuidSpark!;
+      echo 'Creating QUIDGEST default user...';
+      ./AdminCLI reindex -u sa -p QuidSpark! --single-script CREATEDEFAULTUSER;
+      echo 'Database initialization complete!';
+      exit 0;"
+      
+  webadmin:
+    build: ../WebAdmin
+    container_name: webadmin
+    ports:
+      - "3031:8080"
+    environment:
+      CONFIG_PATH: /app/config
+    volumes:
+      - ../config:/app/config
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    dns: # Add Quidgest DNS resolution
+      - "172.16.0.28"
+      - "1.1.1.1"
+      
   genioapp:
     build: .
     container_name: genioapp
     ports:
       - "3030:8080"
+    environment:
+      CONFIG_PATH: /app/config
     volumes:
-      - ../WebAdmin/Administration/Configuracoes.xml:/app/Configuracoes.xml
+      - ../config:/app/config
+    depends_on:
+      - webadmin
     dns: # Add Quidgest DNS resolution
       - "172.16.0.28"
       - "1.1.1.1"
+      

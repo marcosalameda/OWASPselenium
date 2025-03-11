@@ -43,7 +43,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER TABPR]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -56,13 +55,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Tabpr row = null;
-
-			if (row == null)
-			{
-				row = new Models.Tabpr(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("tabpr");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Tabpr row = new Models.Tabpr(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("tabpr");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +75,7 @@ namespace GenioMVC.Controllers
 				{
 					case "TABPR___TPEQUTIPOEQUI":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Tabpr_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Tabpr_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Tabpr___tpequtipoequi(qs);
 							result = model.TableTpequTipoequi;
@@ -141,6 +140,8 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
 
 
 		/// <summary>

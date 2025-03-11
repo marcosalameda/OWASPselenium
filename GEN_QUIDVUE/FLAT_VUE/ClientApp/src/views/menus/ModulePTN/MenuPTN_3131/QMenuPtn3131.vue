@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.TEXT04938),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValTextml',
@@ -158,7 +158,7 @@
 								field: 'TEXTML',
 								label: computed(() => this.Resources.MULTILINE_TEXT38013),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValNumint',
@@ -168,7 +168,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValNumdec',
@@ -178,7 +178,7 @@
 								scrollData: 10,
 								maxDigits: 6,
 								decimalPlaces: 3,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 5,
 								name: 'ValCurint',
@@ -188,7 +188,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 6,
 								name: 'ValCurdec',
@@ -198,7 +198,7 @@
 								scrollData: 10,
 								maxDigits: 5,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 7,
 								name: 'ValBool',
@@ -206,7 +206,7 @@
 								field: 'BOOL',
 								label: computed(() => this.Resources.BOOLEAN45002),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 8,
 								name: 'ValDate',
@@ -215,7 +215,7 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
 								name: 'ValDatetm',
@@ -224,7 +224,7 @@
 								label: computed(() => this.Resources.DATETIME__MINUTES_59352),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 10,
 								name: 'ValDatets',
@@ -233,7 +233,7 @@
 								label: computed(() => this.Resources.DATETIME__SECONDS_49861),
 								scrollData: 19,
 								dateTimeType: 'dateTimeSeconds',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 11,
 								name: 'ValTimehm',
@@ -243,7 +243,7 @@
 								dataLength: 5,
 								scrollData: 5,
 								dateTimeType: 'time',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 12,
 								name: 'ValEnumt',
@@ -254,7 +254,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayTypet.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayTypet.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 13,
 								name: 'ValEnumn',
@@ -266,7 +266,7 @@
 								decimalPlaces: 0,
 								array: qProjArrays.QArrayTypen.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayTypen.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_3131',
@@ -410,11 +410,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-TBLB', 'changed-GRPB'],
+						globalEvents: ['changed-TBLB', 'changed-GRPB'],
 						uuid: '3fd77cd2-766d-43a4-b089-f0a2b4bfc9d9',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

@@ -60,7 +60,7 @@ namespace ExecuteQueryCore
         public string ScriptName { get; set; }
         public string Content { get; set; }
         public string Type { get; set; }
-        public string Version { get; set; }
+        public int Version { get; set; }
         public Action<CancellationToken> Execute { get; set; }
         public string MinDbVersion { get; set; }
         public string MaxDbVersion { get; set; }
@@ -72,7 +72,7 @@ namespace ExecuteQueryCore
     {
         public string Script { get; set; }
         public string Type { get; set; }
-        public string Version { get; set; }
+        public int Version { get; set; }
         public Action<CancellationToken> Execute { get; set; }
         public string MinDbVersion { get; set; }
         public string MaxDbVersion { get; set; }
@@ -168,6 +168,8 @@ namespace ExecuteQueryCore
         }
 
         public double Percentage() {
+            if(TotalScriptNum == 0) return 0;
+            
             return ActualScriptNum * 100 / (double)TotalScriptNum;
         }
 
@@ -196,6 +198,7 @@ namespace ExecuteQueryCore
         public IDbConnection DefConn { get; set; }
         public bool ContinueAfterError { get; set; }
         public string Origin { get; set; }
+        public string DataSystem { get; set; }
     }
 
     /**
@@ -203,8 +206,10 @@ namespace ExecuteQueryCore
      */
     public class RdxOperationInfo
     {
+        public int Id { get; set; }
         public string StartTime { get; set; }
         public int Duration { get; set; }
+        public string DataSystem { get; set; }
         public string Database { get; set; }
         public string Origin { get; set; }
         public bool Success { get; set; }
@@ -215,6 +220,7 @@ namespace ExecuteQueryCore
         public DateTime StartTime { get; set; }
         public int Duration { get; set; }
         public string Database { get; set; }
+        public string DataSystem { get; set; }
         public string Origin { get; set; }
         public List<RdxScriptLog> ScriptDetails { get; set; }
 
@@ -241,6 +247,16 @@ namespace ExecuteQueryCore
                 //We just ignore any error here and just return whatever we were able to read
             }
             return res;
+        }
+
+        public static RdxOperationLog FindXML(int logIndex, string filename)
+        {
+            if (logIndex < 0)
+                return null;
+
+            List<RdxOperationLog> logs = readAggregateXML(filename);
+
+            return logIndex >= logs.Count ? null : logs[logIndex];
         }
 
         public void appendXML(string filename)
@@ -736,7 +752,7 @@ namespace ExecuteQueryCore
         /// <summary>
         /// Executa scripts sobre uma base de dados, aplicando as substituições do dicionário
         /// </summary>
-        public void ExecuteServer(RdxParamExecuteServer param, CancellationToken cToken)
+        public void ExecuteServer(RdxParamExecuteServer param, CancellationToken cToken, bool dbExists = true)
         {
             bool execError = false;
             RdxOperationLog log = new RdxOperationLog();
@@ -744,6 +760,7 @@ namespace ExecuteQueryCore
             log.Database = param.Conn.Database;
             log.ScriptDetails = new List<RdxScriptLog>();
             log.Origin = param.Origin;
+            log.DataSystem = param.DataSystem;
 
             RdxScriptLog scriptLog;
             RdxScriptLog blockLog;
@@ -762,11 +779,6 @@ namespace ExecuteQueryCore
                 // obtém a lista de scripts já com as substituições efectuadas
                 scripts = ReadScriptsWithReplaces();
 
-                // cria um comando para executar as queries
-                IDbCommand cmd = null;
-                IDbCommand AdmCmd = null;
-                IDbCommand logCmd = null;
-
                 TotalScripts = scripts.Count;
                 CurrentScriptNumber = 0;
                 List<int> incrementScripts = new List<int>();
@@ -779,6 +791,11 @@ namespace ExecuteQueryCore
 
                     //If the cancelation token is activated, then end the reindexation
                     cToken.ThrowIfCancellationRequested();
+
+                    // Don't run update client scripts if the database doesn't exist
+                    // There is no data to migrate and BeforeSchema routines would fail to run obviously
+                    if ((script.ScriptName == "UpgradeClient.sql" || script.ScriptName == "UpgradeClient") && !dbExists)
+                        continue;
 
                     scriptLog = new RdxScriptLog(script.ScriptName, DateTime.Now, 0, "");
 
@@ -798,9 +815,6 @@ namespace ExecuteQueryCore
                         int currentLine = 1;
                         foreach (string scriptBlock in scriptSplited)
                         {
-                            //DELETE
-                            //System.Threading.Thread.Sleep(500);
-
                             this.CurrentBlockScript++;
                             this.CurrentBlockStr = scriptBlock;
                             if (hasContent(scriptBlock))
@@ -812,55 +826,14 @@ namespace ExecuteQueryCore
 
                                 try
                                 {
-                                    if (script.Connection == ConnectionType.Admin && param.AdmConn != null)
-                                    {
-                                        if (param.AdmConn.State != ConnectionState.Open)
-                                            param.AdmConn.Open();
+                                    string command = scriptBlock;
+                                    if (script.Version != 0) command = command.Replace("[W_GnVER]", script.Version.ToString());
 
-                                        using (AdmCmd = param.AdmConn.CreateCommand())
-                                        {
-                                            if(script.Version != null)
-                                                AdmCmd.CommandText = scriptBlock.Replace("[W_GnVER]", script.Version);
-                                            else
-                                                AdmCmd.CommandText = scriptBlock;
-
-                                            AdmCmd.CommandTimeout = script.Timeout;
-                                            AdmCmd.ExecuteNonQuery();
-                                        }
-                                    }
+                                    if (script.Connection == ConnectionType.Admin && param.AdmConn != null)                                        
+                                        ExecuteCommand(param.AdmConn, command, script.Timeout);
                                     else if (script.Connection == ConnectionType.Log && param.LogConn != null)
-                                    {
-                                        if (param.LogConn.State != ConnectionState.Open)
-                                            param.LogConn.Open();
-
-                                        using (logCmd = param.LogConn.CreateCommand())
-                                        {
-                                            if (script.Version != null)
-                                                logCmd.CommandText = scriptBlock.Replace("[W_GnVER]", script.Version);
-                                            else
-                                                logCmd.CommandText = scriptBlock;
-
-                                            logCmd.CommandTimeout = script.Timeout;
-                                            logCmd.ExecuteNonQuery();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (param.Conn.State != ConnectionState.Open)
-                                            param.Conn.Open();
-                                        // se o bloco tem conteúdo, actualiza a variável global com o código do script e executa-o
-                                        using (cmd = param.Conn.CreateCommand())
-                                        {
-                                            if (script.Version != null)
-                                                cmd.CommandText = scriptBlock.Replace("[W_GnVER]", script.Version);
-                                            else
-                                                cmd.CommandText = scriptBlock;
-
-                                            cmd.CommandTimeout = script.Timeout;
-                                            cmd.ExecuteNonQuery();
-                                        }
-                                    }
-
+                                        ExecuteCommand(param.LogConn, command, script.Timeout);
+                                    else ExecuteCommand(param.Conn, command, script.Timeout);
                                 }
                                 catch (Exception e)
                                 {
@@ -891,7 +864,7 @@ namespace ExecuteQueryCore
                         this.CurrentBlockStr = script.ScriptName;
 
                         blockLog = new RdxScriptLog();
-                        blockLog.ScriptId = (script.Version != null) ? script.Version : rdxNum.ToString();
+                        blockLog.ScriptId = (script.Version != 0) ? script.Version.ToString() : rdxNum.ToString();
                         blockLog.StartTime = DateTime.Now;
 
                         try
@@ -918,25 +891,47 @@ namespace ExecuteQueryCore
                         }
                     }
 
-                    //If this is the upgrade client routine we need to update the ipgrindx
+                    //If this is the upgrade client routine we need to update the upgrindx
                     //With the script version that we just ran
                     if((script.ScriptName == "UpgradeClient.sql" || script.ScriptName == "UpgradeClient") && !execError)
                     {
-                        if (param.Conn.State != ConnectionState.Open)
-                            param.Conn.Open();
-
-                        using (cmd = param.Conn.CreateCommand())
-                        {
-                            cmd.CommandText = @"UPDATE " + CSGenio.framework.Configuration.Program + "cfg SET upgrindx = " + script.Version.ToString();                        
-                            cmd.ExecuteNonQuery();
-                        }                     
+                        ExecuteCommand(param.Conn,
+                            @"UPDATE " + CSGenio.framework.Configuration.Program + "cfg SET upgrindx = " + script.Version.ToString());              
                     }
 
                     scriptLog.Duration = (int)(DateTime.Now - scriptLog.StartTime).TotalMilliseconds;
-                    log.ScriptDetails.Add(scriptLog);
+                    log.ScriptDetails.Add(scriptLog);  
+                }
 
-                    if (cmd != null) cmd.Dispose();
-                    if (AdmCmd != null) AdmCmd.Dispose();            
+                /*
+                 If the databaes doesn't exist at the start of the reindexation, we won't run the version migration
+                 scripts but we still want to update the version to the last so that they don't run unnecessarly in 
+                 the future.
+                 */
+                if(!dbExists)
+                {
+                    string tableName = CSGenio.framework.Configuration.Program + "cfg";
+                    // Check if the CFG table exists first since there is a chance that may not be the case
+                    IDataReader reader = ExecuteCommand(param.Conn, 
+                        @"SELECT COUNT(*) 
+                        FROM INFORMATION_SCHEMA.TABLES
+                        WHERE TABLE_NAME = '" + tableName + "' "/* +
+                        "AND TABLE_CATALOG = '" + param.Conn.Database + "'"*/, null, true);
+
+                    if(reader.Read())
+                    {
+                        bool tableExists = reader.GetInt32(0) > 0;
+
+                        // We need to get rid of these before doing new query
+                        reader.Close();
+                        reader.Dispose();
+
+                        if (tableExists)
+                        {
+                            ExecuteCommand(param.Conn,
+                                @"UPDATE " + tableName + " SET upgrindx = " + CSGenio.framework.Configuration.VersionUpgrIndxGen);
+                        }
+                    }
                 }
 
                 //Send finished status
@@ -968,6 +963,23 @@ namespace ExecuteQueryCore
                                                                        this.TotalScriptBlock,
                                                                        this.CurrentBlockScript));
             }
+        }
+
+        private IDataReader ExecuteCommand(IDbConnection conn, string command, int? timeout = null, bool isSelectQuery = false)
+        {
+            if (conn.State != ConnectionState.Open)
+                conn.Open();
+
+            using (IDbCommand cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = command;
+                if(timeout != null) cmd.CommandTimeout = (int)timeout;
+
+                if(!isSelectQuery) cmd.ExecuteNonQuery();
+                else return cmd.ExecuteReader();
+            }
+
+            return null;
         }
 
         private int CountLines(string str)
@@ -1197,6 +1209,54 @@ namespace ExecuteQueryCore
         public List<ReIndexFile> Scripts { get; set; }
     }
 
+    /**
+     * Class that structures information of a ReindexFunction that was run during maintenance (based on its RdxOperationLog).
+     */
+    public class ReindexFunctionItem
+    {
+        public string Description { get; set; }
+        public string Id { get; set; }
+        public bool Value { get; set; }
+        public string Type { get; set; }
+        [JsonIgnore]
+        public Action Callback { get; set; }
+        public DateTime LastRun { get; set; }
+        public int Duration { get; set; }
+        public string Origin { get; set; }
+        public string Result { get; set; }
+        public bool Selectable { get; set; }
+        public List<RdxScriptLog> Details { get; set; }
+
+        public void Load(ReIndexFunction function, RdxOperationLog log = null)
+        {
+            Description = function.Name;
+            Id = function.Id;
+            Value = function.Selected;
+            Duration = 0;
+            Result = "";
+            LastRun = DateTime.MinValue;
+            Origin = log != null ? log.Origin : "";
+            Details = new List<RdxScriptLog>();
+            Selectable = function.Selectable;
+
+            if (log != null)
+            {
+                foreach (var script in function.Scripts)
+                {
+                    var l = log.ScriptDetails.Find(x => x.ScriptId == script.Name);
+                    if (l != null)
+                    {
+                        if (LastRun == DateTime.MinValue)
+                            LastRun = l.StartTime;
+                        Duration += l.Duration;
+                        Result += l.Result ?? "";
+                        Details.Add(l);
+                    }
+                }
+            }
+        }
+    }
+
     public class ReIndexFile
     {
         [XmlText]
@@ -1206,7 +1266,7 @@ namespace ExecuteQueryCore
         public string Type { get; set; }
 
         [XmlAttribute("Version")]
-        public string Version { get; set; }
+        public int Version { get; set; }
 
         [XmlAttribute("MinDbVersion")]
         public string MinDbVersion { get; set; } //Minimum database version

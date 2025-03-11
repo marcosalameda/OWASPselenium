@@ -181,8 +181,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Dttyp.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Dttyp(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -200,7 +200,6 @@ namespace GenioMVC.Models
 				SetFieldsToSerialize(fieldsToSerialize);
 			FillRelatedAreas(val);
 		}
-
 
 		public void FillRelatedAreas(CSGenioAdttyp csgenioa)
 		{

@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">TYPE OF EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Tabpr.ValCodtpeq1")]
 		public string ValCodtpeq1 { get { return klass.ValCodtpeq1; } set { klass.ValCodtpeq1 = value; } }
+
 		private Tpequ _tpequ;
 		[DisplayName("Tpequ")]
 		[ShouldSerialize("Tpequ")]
-		public virtual Tpequ Tpequ {
-			get {
-				if (!this.isEmptyModel && (_tpequ == null || (!string.IsNullOrEmpty(ValCodtpeq1) && (_tpequ.isEmptyModel || _tpequ.klass.QPrimaryKey != ValCodtpeq1))))
+		public virtual Tpequ Tpequ
+		{
+			get
+			{
+				if (!isEmptyModel && (_tpequ == null || (!string.IsNullOrEmpty(ValCodtpeq1) && (_tpequ.isEmptyModel || _tpequ.klass.QPrimaryKey != ValCodtpeq1))))
 					_tpequ = Models.Tpequ.Find(ValCodtpeq1, m_userContext, Identifier, _fieldsToSerialize);
-				if (_tpequ == null)
-					_tpequ = new Models.Tpequ(m_userContext, true, _fieldsToSerialize);
+				_tpequ ??= new Models.Tpequ(m_userContext, true, _fieldsToSerialize);
 				return _tpequ;
 			}
 			set { _tpequ = value; }
 		}
-
 
 		[DisplayName("Since")]
 		/// <summary>Field : "Since" Tipo: "DT" Formula:  ""</summary>
@@ -68,8 +69,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Tabpr.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Tabpr(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -88,7 +89,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAtabpr csgenioa)
 		{
 			if (csgenioa == null)
@@ -99,8 +99,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "tpequ":
-						if (_tpequ == null)
-							_tpequ = new Tpequ(m_userContext, true, _fieldsToSerialize);
+						_tpequ ??= new Tpequ(m_userContext, true, _fieldsToSerialize);
 						_tpequ.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

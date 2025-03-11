@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Venda_OrganValOrganizaModel : RequestLookupModel
+		{
+			public Venda_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Sale/Venda_OrganValOrganiza
 		// POST: /Sale/Venda_OrganValOrganiza
 		[ActionName("Venda_OrganValOrganiza")]
-		public ActionResult Venda_OrganValOrganiza([FromBody]RequestLookupModel requestModel)
+		public ActionResult Venda_OrganValOrganiza([FromBody] Venda_OrganValOrganizaModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Venda_OrganValOrganiza_ViewModel model = new Venda_OrganValOrganiza_ViewModel(UserContext.Current);
-			
+
+			Models.Sale parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Venda_OrganValOrganiza_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

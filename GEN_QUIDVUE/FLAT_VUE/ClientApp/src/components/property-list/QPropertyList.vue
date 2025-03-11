@@ -191,7 +191,7 @@
 															: getCellValue(row, 'type') === 'Number'
 																? 'QNumericInput'
 																: getCellValue(row, 'type') === 'Date'
-																	? 'QDateTimeInput'
+																	? 'QDateTimePicker'
 																	: getCellValue(row, 'type') === 'Enumeration'
 																		? 'QSelect'
 																		: ''
@@ -252,7 +252,7 @@
 													: getCellValue(row, 'type') === 'Number'
 														? 'QNumericInput'
 														: getCellValue(row, 'type') === 'Date'
-															? 'QDateTimeInput'
+															? 'QDateTimePicker'
 															: getCellValue(row, 'type') === 'Enumeration'
 																? 'QSelect'
 																: ''
@@ -575,9 +575,9 @@
 			 */
 			format: {
 				type: String,
-				default: 'DateTime',
+				default: 'dateTime',
 				validator: (propValue) => {
-					return ['Date', 'DateTime', 'DateTimeSeconds', 'Time'].includes(propValue)
+					return ['date', 'dateTime', 'dateTimeSeconds', 'time'].includes(propValue)
 				}
 			},
 
@@ -588,10 +588,10 @@
 				type: Object,
 				default: () => {
 					return {
-						Date: 'dd/MM/yyyy',
-						DateTime: 'dd/MM/yyyy HH:mm',
-						DateTimeSeconds: 'dd/MM/yyyy HH:mm:ss',
-						Time: 'HH:mm'
+						date: 'dd/MM/yyyy',
+						dateTime: 'dd/MM/yyyy HH:mm',
+						dateTimeSeconds: 'dd/MM/yyyy HH:mm:ss',
+						time: 'HH:mm'
 					}
 				}
 			},
@@ -818,7 +818,7 @@
 									? 'Text'
 									: this.selectedDropdownOption.value === 'QNumericInput'
 										? 'Number'
-										: this.selectedDropdownOption.value === 'QDateTimeInput'
+										: this.selectedDropdownOption.value === 'QDateTimePicker'
 											? 'Date'
 											: this.selectedDropdownOption.value === 'CheckBoxInput'
 												? 'Boolean'
@@ -849,7 +849,7 @@
 							? 'Text'
 							: this.selectedDropdownOption.value === 'QNumericInput'
 								? 'Number'
-								: this.selectedDropdownOption.value === 'QDateTimeInput'
+								: this.selectedDropdownOption.value === 'QDateTimePicker'
 									? 'Date'
 									: this.selectedDropdownOption.value === 'CheckBoxInput'
 										? 'Boolean'

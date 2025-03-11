@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,43 +7,47 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Rules
 {
-	public class PTN_Menu_131_ViewModel : ListViewModel
+	public class PTN_Menu_131_ViewModel : MenuListViewModel<Models.Rules>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<PTN_Menu_131_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "rules"; }
+		[JsonIgnore]
+		public override string TableAlias => "rules";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "9b87f9f8-b7d7-4ffb-8bd2-a17a81c9ef71"; }
+		public override string Uuid => "9b87f9f8-b7d7-4ffb-8bd2-a17a81c9ef71";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodregra { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -54,6 +59,7 @@ namespace GenioMVC.ViewModels.Rules
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -65,6 +71,7 @@ namespace GenioMVC.ViewModels.Rules
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -82,6 +89,30 @@ namespace GenioMVC.ViewModels.Rules
 		}
 
 
+		public string ValTipocond { get; set; }
+
+		public string ValLocal { get; set; }
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param
+		private void SetViewModelValue(string fullFieldName, object value)
+		{
+			if (string.IsNullOrEmpty(fullFieldName))
+				return;
+
+			switch (fullFieldName)
+			{
+				case "rules.tipocond":
+					ValTipocond = ViewModelConversion.ToString(value);
+					break;
+				case "rules.local":
+					ValLocal = ViewModelConversion.ToString(value);
+					break;
+			}
+		}
 
 
 		public override int GetCount(User user)
@@ -99,17 +130,25 @@ namespace GenioMVC.ViewModels.Rules
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioArules.FldCodregra, CSGenioArules.FldZzstate, CSGenioArules.FldTipocond, CSGenioArules.FldDescript, CSGenioArules.FldLocal };
 
-			ListingMVC<CSGenioArules> listing = new ListingMVC<CSGenioArules>(fields, null, 1, 1, false, user, true, string.Empty, false);
+			ListingMVC<CSGenioArules> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
 			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public PTN_Menu_131_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PTN_Menu_131_ViewModel" /> class.
@@ -118,6 +157,16 @@ namespace GenioMVC.ViewModels.Rules
 		public PTN_Menu_131_ViewModel(UserContext userContext) : base(userContext)
 		{
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PTN_Menu_131_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public PTN_Menu_131_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -182,10 +231,6 @@ namespace GenioMVC.ViewModels.Rules
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -199,7 +244,6 @@ namespace GenioMVC.ViewModels.Rules
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -296,21 +340,20 @@ namespace GenioMVC.ViewModels.Rules
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioArules> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "131"),
 				new("Module", "PTN")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<PTN_Menu_131_RowViewModel>();
 
 				CriteriaSet ptn_menu_131Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
 
 
 
@@ -342,20 +385,19 @@ namespace GenioMVC.ViewModels.Rules
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioArules model_limit_area = new CSGenioArules(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML131");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioArules model_limit_area = new CSGenioArules(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML131");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -403,7 +445,6 @@ namespace GenioMVC.ViewModels.Rules
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -424,18 +465,12 @@ namespace GenioMVC.ViewModels.Rules
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -443,7 +478,7 @@ namespace GenioMVC.ViewModels.Rules
 
 		private List<PTN_Menu_131_RowViewModel> MapPTN_Menu_131(ListingMVC<CSGenioArules> Qlisting)
 		{
-			var Elements = new List<PTN_Menu_131_RowViewModel>();
+			List<PTN_Menu_131_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -460,7 +495,6 @@ namespace GenioMVC.ViewModels.Rules
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioArules row
 		/// to a PTN_Menu_131_RowViewModel object.
@@ -469,7 +503,9 @@ namespace GenioMVC.ViewModels.Rules
 		private PTN_Menu_131_RowViewModel MapPTN_Menu_131(CSGenioArules row)
 		{
 			var model = new PTN_Menu_131_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -481,65 +517,7 @@ namespace GenioMVC.ViewModels.Rules
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(PTN_Menu_131_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-
-				// Support Form REGRA CRUD conditions
-				// [RULES->TIPOCOND]!="V" || [RULES->LOCAL]!="F"
-				{
-					var formulaResult = (Logical)(((string)model.ValTipocond)!="V"||((string)model.ValLocal)!="F");
-					canView &= formulaResult;
-					// If View is blocked by CRUD condition, Duplicate should also be blocked.
-					canDuplicate &= formulaResult;
-				}
-				// [RULES->TIPOCOND]!="U" || [RULES->LOCAL]!="F"
-				canEdit &= (Logical)(((string)model.ValTipocond)!="U"||((string)model.ValLocal)!="F");
-				// [RULES->TIPOCOND]!="D" || [RULES->LOCAL]!="F"
-				canDelete &= (Logical)(((string)model.ValTipocond)!="D"||((string)model.ValLocal)!="F");
-
-				// Table CRUD conditions
-				// [RULES->TIPOCOND]!="V"  || [RULES->LOCAL]!="T"
-				{
-					var formulaResult = (Logical)(((string)model.ValTipocond)!="V"||((string)model.ValLocal)!="T");
-					canView &= formulaResult;
-					// If View is blocked by CRUD condition, Duplicate should also be blocked.
-					canDuplicate &= formulaResult;
-				}
-				// [RULES->TIPOCOND]!="I"  || [RULES->LOCAL]!="T"
-				{
-					var formulaResult = (Logical)(((string)model.ValTipocond)!="I"||((string)model.ValLocal)!="T");
-					canInsert &= formulaResult;
-					// If Insert is blocked by CRUD condition, Duplicate should also be blocked.
-					canDuplicate &= formulaResult;
-				}
-				// [RULES->TIPOCOND]!="U"  || [RULES->LOCAL]!="T"
-				canEdit &= (Logical)(((string)model.ValTipocond)!="U"||((string)model.ValLocal)!="T");
-				// [RULES->TIPOCOND]!="D" || [RULES->LOCAL]!="T"
-				canDelete &= (Logical)(((string)model.ValTipocond)!="D"||((string)model.ValLocal)!="T");
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -553,38 +531,76 @@ namespace GenioMVC.ViewModels.Rules
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioArules> listing)
 		{
-			if (listing.Rows == null)
-				return;
+		}
 
-			foreach (CSGenioArules row in listing.Rows)
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Rules m)
+		{
+			if (m == null)
 			{
+				CSGenio.framework.Log.Error("Map Model (Rules) to ViewModel (PTN_Menu_131) - Model is a null reference.");
+				throw new ModelNotFoundException("Model not found");
+			}
+
+			try
+			{
+				ValTipocond = ViewModelConversion.ToString(m.ValTipocond);
+				ValLocal = ViewModelConversion.ToString(m.ValLocal);
+			}
+			catch
+			{
+				CSGenio.framework.Log.Error("Map Model (Rules) to ViewModel (PTN_Menu_131) - Error during mapping.");
+				throw;
 			}
 		}
 
+		/// <inheritdoc />
+		public override void MapToModel(Models.Rules m)
+		{
+			if (m == null)
+			{
+				CSGenio.framework.Log.Error("Map ViewModel (PTN_Menu_131) to Model (Rules) - Model is a null reference.");
+				throw new ModelNotFoundException("Model not found");
+			}
+
+			try
+			{
+				m.ValTipocond = ViewModelConversion.ToString(ValTipocond);
+				m.ValLocal = ViewModelConversion.ToString(ValLocal);
+			}
+			catch
+			{
+				CSGenio.framework.Log.Error("Map ViewModel (PTN_Menu_131) to Model (Rules) - Error during mapping.");
+				throw;
+			}
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM PTN_MENU_131]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Rules", "Rules.ValCodregra", "Rules.ValZzstate", "Rules.ValTipocond", "Rules.ValDescript", "Rules.ValLocal", "BtnPermission"
+			"Rules", "Rules.ValCodregra", "Rules.ValZzstate", "Rules.ValTipocond", "Rules.ValDescript", "Rules.ValLocal"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValTipocond", CSGenioArules.FldTipocond, typeof(string), array : "tipoCond"),
 			new TableSearchColumn("ValDescript", CSGenioArules.FldDescript, typeof(string)),
 			new TableSearchColumn("ValLocal", CSGenioArules.FldLocal, typeof(string), array : "aLocRegr")
 		];
-
-
-
 	}
 }

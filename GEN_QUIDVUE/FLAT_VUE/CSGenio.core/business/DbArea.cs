@@ -637,6 +637,12 @@ namespace CSGenio.business
                         insertNameValueField(Alias + "." + Qfield.Name, value);
                     }
                 }
+				//Data trim, remove time values
+				else if(Qfield.FieldType.Equals(FieldType.DATA))
+                {
+                    DateTime value = (DateTime)returnValueField(Alias + "." + Qfield.Name);
+                    insertNameValueField(Alias + "." + Qfield.Name, value.Date);                    
+                }
             }
         }
 

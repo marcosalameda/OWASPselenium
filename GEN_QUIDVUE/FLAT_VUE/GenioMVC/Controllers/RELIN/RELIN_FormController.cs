@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Relin_ReceiValNumberModel : RequestLookupModel
+		{
+			public Relin_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Relin/Relin_ReceiValNumber
 		// POST: /Relin/Relin_ReceiValNumber
 		[ActionName("Relin_ReceiValNumber")]
-		public ActionResult Relin_ReceiValNumber([FromBody]RequestLookupModel requestModel)
+		public ActionResult Relin_ReceiValNumber([FromBody] Relin_ReceiValNumberModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Relin_ReceiValNumber_ViewModel model = new Relin_ReceiValNumber_ViewModel(UserContext.Current);
-			
+
+			Models.Relin parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Relin_ReceiValNumber_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Relin_ProduValProductModel : RequestLookupModel
+		{
+			public Relin_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Relin/Relin_ProduValProduct
 		// POST: /Relin/Relin_ProduValProduct
 		[ActionName("Relin_ProduValProduct")]
-		public ActionResult Relin_ProduValProduct([FromBody]RequestLookupModel requestModel)
+		public ActionResult Relin_ProduValProduct([FromBody] Relin_ProduValProductModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Relin_ProduValProduct_ViewModel model = new Relin_ProduValProduct_ViewModel(UserContext.Current);
-			
+
+			Models.Relin parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Relin_ProduValProduct_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

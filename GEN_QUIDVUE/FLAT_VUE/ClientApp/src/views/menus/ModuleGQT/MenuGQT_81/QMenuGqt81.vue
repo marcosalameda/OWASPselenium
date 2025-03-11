@@ -151,7 +151,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValBegin',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
 								name: 'ValEnd',
@@ -169,7 +169,7 @@
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValEmail',
@@ -178,7 +178,7 @@
 								label: computed(() => this.Resources.RECIPIENT_S_EMAIL43894),
 								dataLength: 100,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValIdnotif',
@@ -187,7 +187,7 @@
 								label: computed(() => this.Resources.NOTIFICATION_ID_THAT61751),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValIdmsg',
@@ -196,7 +196,7 @@
 								label: computed(() => this.Resources.MESSAGE_ID37133),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'ValMessage',
@@ -204,7 +204,7 @@
 								field: 'MESSAGE',
 								label: computed(() => this.Resources.TEXT_OF_THE_SENT_MES52307),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
 								name: 'ValMailerr',
@@ -213,7 +213,7 @@
 								label: computed(() => this.Resources.ERROR_SENDING_EMAIL53846),
 								dataLength: 300,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
 								name: 'ValDesignat',
@@ -222,7 +222,7 @@
 								label: computed(() => this.Resources.RECIPIENT65165),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 10,
 								name: 'ValCreatdat',
@@ -231,7 +231,7 @@
 								label: computed(() => this.Resources.CREATION__DATE13180),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 11,
 								name: 'ValCreatope',
@@ -240,7 +240,7 @@
 								label: computed(() => this.Resources.CREATION__OPERATOR50535),
 								dataLength: 20,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 12,
 								name: 'ValReturned',
@@ -248,7 +248,7 @@
 								field: 'RETURNED',
 								label: computed(() => this.Resources.RETURNED01606),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 13,
 								name: 'ValDtdevolu',
@@ -257,7 +257,7 @@
 								label: computed(() => this.Resources.RETURN32222),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 14,
 								name: 'Pess2.ValName',
@@ -267,7 +267,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodpesso',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_81',
@@ -409,11 +409,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PESS2', 'changed-NOTIF'],
+						globalEvents: ['changed-PESS2', 'changed-NOTIF'],
 						uuid: '8a24817a-f3db-4158-821e-86bf9df25ea0',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

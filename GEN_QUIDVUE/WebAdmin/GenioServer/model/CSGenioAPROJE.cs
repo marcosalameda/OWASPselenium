@@ -100,7 +100,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "FIRST42972";
 
 			Qfield.Dupmsg = "";
-			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "yearnumb", "value", SortOrder.Ascending, LookupFormulaType.Previous, "codproje", "codproje");
+			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "year", "value", SortOrder.Ascending, LookupFormulaType.Previous, "codproje", "codproje");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -114,7 +114,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "BEFORE60156";
 
 			Qfield.Dupmsg = "";
-			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "yearnumb", "value", SortOrder.Descending, LookupFormulaType.Previous, "codproje", "codproje");
+			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "year", "value", SortOrder.Descending, LookupFormulaType.Previous, "codproje", "codproje");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -128,7 +128,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "FOLLOWING22170";
 
 			Qfield.Dupmsg = "";
-			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "yearnumb", "value", SortOrder.Ascending, LookupFormulaType.Next, "codproje", "codproje");
+			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "year", "value", SortOrder.Ascending, LookupFormulaType.Next, "codproje", "codproje");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -142,7 +142,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "LAST49207";
 
 			Qfield.Dupmsg = "";
-			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "yearnumb", "value", SortOrder.Descending, LookupFormulaType.Next, "codproje", "codproje");
+			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "year", "value", SortOrder.Descending, LookupFormulaType.Next, "codproje", "codproje");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -393,44 +393,44 @@ namespace CSGenio.business
 			set { insertNameValueField(FldYear, value); }
 		}
 
-		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
+		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		public static FieldRef FldPrimeiro { get { return m_fldPrimeiro; } }
 		private static FieldRef m_fldPrimeiro = new FieldRef("proje", "primeiro");
 
-		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
+		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		public decimal ValPrimeiro
 		{
 			get { return (decimal)returnValueField(FldPrimeiro); }
 			set { insertNameValueField(FldPrimeiro, value); }
 		}
 
-		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
+		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		public static FieldRef FldBefore { get { return m_fldBefore; } }
 		private static FieldRef m_fldBefore = new FieldRef("proje", "before");
 
-		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
+		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		public decimal ValBefore
 		{
 			get { return (decimal)returnValueField(FldBefore); }
 			set { insertNameValueField(FldBefore, value); }
 		}
 
-		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
+		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		public static FieldRef FldFollowin { get { return m_fldFollowin; } }
 		private static FieldRef m_fldFollowin = new FieldRef("proje", "followin");
 
-		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
+		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		public decimal ValFollowin
 		{
 			get { return (decimal)returnValueField(FldFollowin); }
 			set { insertNameValueField(FldFollowin, value); }
 		}
 
-		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
+		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		public static FieldRef FldUltimo { get { return m_fldUltimo; } }
 		private static FieldRef m_fldUltimo = new FieldRef("proje", "ultimo");
 
-		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
+		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		public decimal ValUltimo
 		{
 			get { return (decimal)returnValueField(FldUltimo); }

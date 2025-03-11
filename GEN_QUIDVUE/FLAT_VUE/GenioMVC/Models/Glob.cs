@@ -501,20 +501,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Glob.ValCodfacty")]
 		public string ValCodfacty { get { return klass.ValCodfacty; } set { klass.ValCodfacty = value; } }
+
 		private Facty _facty;
 		[DisplayName("Facty")]
 		[ShouldSerialize("Facty")]
-		public virtual Facty Facty {
-			get {
-				if (!this.isEmptyModel && (_facty == null || (!string.IsNullOrEmpty(ValCodfacty) && (_facty.isEmptyModel || _facty.klass.QPrimaryKey != ValCodfacty))))
+		public virtual Facty Facty
+		{
+			get
+			{
+				if (!isEmptyModel && (_facty == null || (!string.IsNullOrEmpty(ValCodfacty) && (_facty.isEmptyModel || _facty.klass.QPrimaryKey != ValCodfacty))))
 					_facty = Models.Facty.Find(ValCodfacty, m_userContext, Identifier, _fieldsToSerialize);
-				if (_facty == null)
-					_facty = new Models.Facty(m_userContext, true, _fieldsToSerialize);
+				_facty ??= new Models.Facty(m_userContext, true, _fieldsToSerialize);
 				return _facty;
 			}
 			set { _facty = value; }
 		}
-
 
 		[DisplayName("Legend")]
 		/// <summary>Field : "Legend" Tipo: "IJ" Formula:  ""</summary>
@@ -531,8 +532,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Glob.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Glob(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -551,7 +552,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAglob csgenioa)
 		{
 			if (csgenioa == null)
@@ -562,8 +562,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "facty":
-						if (_facty == null)
-							_facty = new Facty(m_userContext, true, _fieldsToSerialize);
+						_facty ??= new Facty(m_userContext, true, _fieldsToSerialize);
 						_facty.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

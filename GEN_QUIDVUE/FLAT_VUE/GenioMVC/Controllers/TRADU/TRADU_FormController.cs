@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Tradu_Lang1ValLanguaModel : RequestLookupModel
+		{
+			public Tradu_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Tradu/Tradu_Lang1ValLangua
 		// POST: /Tradu/Tradu_Lang1ValLangua
 		[ActionName("Tradu_Lang1ValLangua")]
-		public ActionResult Tradu_Lang1ValLangua([FromBody]RequestLookupModel requestModel)
+		public ActionResult Tradu_Lang1ValLangua([FromBody] Tradu_Lang1ValLanguaModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Tradu_Lang1ValLangua_ViewModel model = new Tradu_Lang1ValLangua_ViewModel(UserContext.Current);
-			
+
+			Models.Tradu parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Tradu_Lang1ValLangua_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Tradu_Lang2ValLanguaModel : RequestLookupModel
+		{
+			public Tradu_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Tradu/Tradu_Lang2ValLangua
 		// POST: /Tradu/Tradu_Lang2ValLangua
 		[ActionName("Tradu_Lang2ValLangua")]
-		public ActionResult Tradu_Lang2ValLangua([FromBody]RequestLookupModel requestModel)
+		public ActionResult Tradu_Lang2ValLangua([FromBody] Tradu_Lang2ValLanguaModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Tradu_Lang2ValLangua_ViewModel model = new Tradu_Lang2ValLangua_ViewModel(UserContext.Current);
-			
+
+			Models.Tradu parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Tradu_Lang2ValLangua_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -322,8 +322,6 @@
 					mode: ''
 				},
 
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
-
 				formButtons: {
 					changeToShow: {
 						id: 'change-to-show-btn',
@@ -599,7 +597,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'ValQuantida',
@@ -609,7 +607,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValLinhas',
@@ -750,7 +748,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-LNHPD', 'changed-PEDID', 'changed-TPEQU'],
+						globalEvents: ['changed-LNHPD', 'changed-PEDID', 'changed-TPEQU'],
 						uuid: 'Pedid_ValLinhas',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -793,7 +791,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Tpeq1.ValTipoequi',
@@ -803,7 +801,7 @@
 								dataLength: 50,
 								scrollData: 50,
 								pkColumn: 'ValCodtpequ',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValQuantida',
@@ -813,7 +811,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValDesagreg',
@@ -954,7 +952,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-LNHDE', 'changed-TPEQ1', 'changed-LNHPD', 'changed-PEDID', 'changed-LNHAG'],
+						globalEvents: ['changed-LNHDE', 'changed-TPEQ1', 'changed-LNHPD', 'changed-PEDID', 'changed-LNHAG'],
 						uuid: 'Pedid_ValDesagreg',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -987,7 +985,7 @@
 								dataLength: 50,
 								scrollData: 50,
 								pkColumn: 'ValCodtpequ',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'ValQtdtpequ',
@@ -997,7 +995,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValAgrupame',
@@ -1138,7 +1136,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PEDID', 'changed-TPEQ1', 'changed-LNHAG'],
+						globalEvents: ['changed-PEDID', 'changed-TPEQ1', 'changed-LNHAG'],
 						uuid: 'Pedid_ValAgrupame',
 						allSelectedRows: 'false',
 						controlLimits: [

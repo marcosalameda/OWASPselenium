@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Regi1.ValCodcntry")]
 		public string ValCodcntry { get { return klass.ValCodcntry; } set { klass.ValCodcntry = value; } }
+
 		private Pais1 _pais1;
 		[DisplayName("Pais1")]
 		[ShouldSerialize("Pais1")]
-		public virtual Pais1 Pais1 {
-			get {
-				if (!this.isEmptyModel && (_pais1 == null || (!string.IsNullOrEmpty(ValCodcntry) && (_pais1.isEmptyModel || _pais1.klass.QPrimaryKey != ValCodcntry))))
+		public virtual Pais1 Pais1
+		{
+			get
+			{
+				if (!isEmptyModel && (_pais1 == null || (!string.IsNullOrEmpty(ValCodcntry) && (_pais1.isEmptyModel || _pais1.klass.QPrimaryKey != ValCodcntry))))
 					_pais1 = Models.Pais1.Find(ValCodcntry, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pais1 == null)
-					_pais1 = new Models.Pais1(m_userContext, true, _fieldsToSerialize);
+				_pais1 ??= new Models.Pais1(m_userContext, true, _fieldsToSerialize);
 				return _pais1;
 			}
 			set { _pais1 = value; }
 		}
-
 
 		[DisplayName("Region")]
 		/// <summary>Field : "Region" Tipo: "C" Formula:  ""</summary>
@@ -65,8 +66,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Regi1.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Regi1(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -85,7 +86,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAregi1 csgenioa)
 		{
 			if (csgenioa == null)
@@ -96,8 +96,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "pais1":
-						if (_pais1 == null)
-							_pais1 = new Pais1(m_userContext, true, _fieldsToSerialize);
+						_pais1 ??= new Pais1(m_userContext, true, _fieldsToSerialize);
 						_pais1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

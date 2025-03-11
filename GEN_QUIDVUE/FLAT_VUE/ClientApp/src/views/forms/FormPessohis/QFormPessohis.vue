@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -298,8 +298,6 @@
 					mode: ''
 				},
 
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
-
 				formButtons: {
 					changeToShow: {
 						id: 'change-to-show-btn',
@@ -575,7 +573,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDate',
@@ -584,7 +582,7 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValAuthor',
@@ -593,7 +591,7 @@
 								label: computed(() => this.Resources.AUTHOR21241),
 								dataLength: 100,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValField001',
@@ -633,7 +631,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PESSO', 'changed-HPESS', 'changed-CMPNY'],
+						globalEvents: ['changed-PESSO', 'changed-HPESS', 'changed-CMPNY'],
 						uuid: 'Pessohis_ValField001',
 						allSelectedRows: 'false',
 						controlLimits: [

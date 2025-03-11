@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
 								name: 'ValPrice',
@@ -160,7 +160,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
 								name: 'ValPhoto',
@@ -171,7 +171,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'Agent.ValName',
@@ -181,7 +181,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodagent',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TRN_Menu_T02PROPERTY',
@@ -323,11 +323,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PROPE', 'changed-CITY', 'changed-AGENT'],
+						globalEvents: ['changed-PROPE', 'changed-CITY', 'changed-AGENT'],
 						uuid: '755a71ec-5c0f-4abb-870b-abff608a8d4f',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

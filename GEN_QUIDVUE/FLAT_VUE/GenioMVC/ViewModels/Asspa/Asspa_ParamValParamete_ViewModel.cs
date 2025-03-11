@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,51 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Asspa
 {
-	public class Asspa_ParamValParameter_ViewModel : ListViewModel
+	public class Asspa_ParamValParameter_ViewModel : MenuListViewModel<Models.Param>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DB"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Asspa_ParamValParameter_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "param"; }
+		[JsonIgnore]
+		public override string TableAlias => "param";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Asspa_ParamValParameter"; }
+		public override string Uuid => "Asspa_ParamValParameter";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCodasspa { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -52,6 +63,7 @@ namespace GenioMVC.ViewModels.Asspa
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -63,6 +75,7 @@ namespace GenioMVC.ViewModels.Asspa
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -86,12 +99,28 @@ namespace GenioMVC.ViewModels.Asspa
 		}
 
 		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Asspa_ParamValParameter_ViewModel() : base(null!) { }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Asspa_ParamValParameter_ViewModel" /> class.
 		/// </summary>
 		/// <param name="userContext">The current user request context</param>
 		public Asspa_ParamValParameter_ViewModel(UserContext userContext) : base(userContext)
 		{
 			ValCodasspa = userContext.CurrentNavigation.CurrentLevel.GetEntry("asspa")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Asspa_ParamValParameter_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Asspa_ParamValParameter_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -155,12 +184,6 @@ namespace GenioMVC.ViewModels.Asspa
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PARAM.PARAMETER", new OrderedDictionary());
-			allSortOrders["PARAM.PARAMETER"].Add("PARAM.PARAMETER", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -175,7 +198,6 @@ namespace GenioMVC.ViewModels.Asspa
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -270,22 +292,21 @@ namespace GenioMVC.ViewModels.Asspa
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAparam> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "ASSPA")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Asspa_ParamValParameter_RowViewModel>();
 
 				CriteriaSet asspa___paramparameteConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("PARAM.PARAMETER", new OrderedDictionary());
 				allSortOrders["PARAM.PARAMETER"].Add("PARAM.PARAMETER", "A");
-
 
 
 
@@ -323,10 +344,9 @@ namespace GenioMVC.ViewModels.Asspa
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
 
 				if (conditions == null)
@@ -373,7 +393,6 @@ namespace GenioMVC.ViewModels.Asspa
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -393,18 +412,12 @@ namespace GenioMVC.ViewModels.Asspa
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -412,7 +425,7 @@ namespace GenioMVC.ViewModels.Asspa
 
 		private List<Asspa_ParamValParameter_RowViewModel> MapAsspa_ParamValParameter(ListingMVC<CSGenioAparam> Qlisting)
 		{
-			var Elements = new List<Asspa_ParamValParameter_RowViewModel>();
+			List<Asspa_ParamValParameter_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -429,7 +442,6 @@ namespace GenioMVC.ViewModels.Asspa
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAparam row
 		/// to a Asspa_ParamValParameter_RowViewModel object.
@@ -438,7 +450,9 @@ namespace GenioMVC.ViewModels.Asspa
 		private Asspa_ParamValParameter_RowViewModel MapAsspa_ParamValParameter(CSGenioAparam row)
 		{
 			var model = new Asspa_ParamValParameter_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -450,32 +464,7 @@ namespace GenioMVC.ViewModels.Asspa
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Asspa_ParamValParameter_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -489,36 +478,42 @@ namespace GenioMVC.ViewModels.Asspa
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAparam> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAparam row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Param m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Param m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM ASSPA_PARAMVALPARAMETER]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Param", "Param.ValCodparam", "Param.ValZzstate", "Param.ValParameter", "Param.ValCodkinde", "BtnPermission"
+			"Param", "Param.ValCodparam", "Param.ValZzstate", "Param.ValParameter", "Param.ValCodkinde"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValParameter", CSGenioAparam.FldParameter, typeof(string))
 		];
-
-
-
 	}
 }

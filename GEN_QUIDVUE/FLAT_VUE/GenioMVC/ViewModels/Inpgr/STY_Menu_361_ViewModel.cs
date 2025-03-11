@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,45 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Inpgr
 {
-	public class STY_Menu_361_ViewModel : ListViewModel
+	public class STY_Menu_361_ViewModel : MenuListViewModel<Models.Inpgr>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<STY_Menu_361_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "inpgr"; }
+		[JsonIgnore]
+		public override string TableAlias => "inpgr";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "bbdc57e0-4d64-4aa6-8f57-c642f9358f3a"; }
+		public override string Uuid => "bbdc57e0-4d64-4aa6-8f57-c642f9358f3a";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodinpgr { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -52,6 +57,7 @@ namespace GenioMVC.ViewModels.Inpgr
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -63,6 +69,7 @@ namespace GenioMVC.ViewModels.Inpgr
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -81,7 +88,6 @@ namespace GenioMVC.ViewModels.Inpgr
 
 
 
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -97,17 +103,25 @@ namespace GenioMVC.ViewModels.Inpgr
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAinpgr.FldCodinpgr, CSGenioAinpgr.FldZzstate, CSGenioAinpgr.FldNumbgro, CSGenioAinpgr.FldTextgro, CSGenioAinpgr.FldButtngro, CSGenioAinpgr.FldSpangro, CSGenioAinpgr.FldName, CSGenioAinpgr.FldLastname, CSGenioAinpgr.FldAdress, CSGenioAinpgr.FldPrefix, CSGenioAinpgr.FldPhone, CSGenioAinpgr.FldEmail, CSGenioAinpgr.FldWeb, CSGenioAinpgr.FldIban, CSGenioAinpgr.FldBankacco, CSGenioAinpgr.FldTextspan, CSGenioAinpgr.FldDirectio, CSGenioAinpgr.FldBankcomp };
 
-			ListingMVC<CSGenioAinpgr> listing = new ListingMVC<CSGenioAinpgr>(fields, null, 1, 1, false, user, true, string.Empty, false);
+			ListingMVC<CSGenioAinpgr> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
 			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public STY_Menu_361_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="STY_Menu_361_ViewModel" /> class.
@@ -116,6 +130,16 @@ namespace GenioMVC.ViewModels.Inpgr
 		public STY_Menu_361_ViewModel(UserContext userContext) : base(userContext)
 		{
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="STY_Menu_361_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public STY_Menu_361_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -193,12 +217,6 @@ namespace GenioMVC.ViewModels.Inpgr
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("INPGR.TEXTGRO", new OrderedDictionary());
-			allSortOrders["INPGR.TEXTGRO"].Add("INPGR.TEXTGRO", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -212,7 +230,6 @@ namespace GenioMVC.ViewModels.Inpgr
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -309,23 +326,22 @@ namespace GenioMVC.ViewModels.Inpgr
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAinpgr> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "361"),
 				new("Module", "STY")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<STY_Menu_361_RowViewModel>();
 
 				CriteriaSet sty_menu_361Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("INPGR.TEXTGRO", new OrderedDictionary());
 				allSortOrders["INPGR.TEXTGRO"].Add("INPGR.TEXTGRO", "A");
-
 
 
 
@@ -363,20 +379,19 @@ namespace GenioMVC.ViewModels.Inpgr
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAinpgr model_limit_area = new CSGenioAinpgr(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML361");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAinpgr model_limit_area = new CSGenioAinpgr(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML361");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -424,7 +439,6 @@ namespace GenioMVC.ViewModels.Inpgr
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -445,18 +459,12 @@ namespace GenioMVC.ViewModels.Inpgr
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -464,7 +472,7 @@ namespace GenioMVC.ViewModels.Inpgr
 
 		private List<STY_Menu_361_RowViewModel> MapSTY_Menu_361(ListingMVC<CSGenioAinpgr> Qlisting)
 		{
-			var Elements = new List<STY_Menu_361_RowViewModel>();
+			List<STY_Menu_361_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -481,7 +489,6 @@ namespace GenioMVC.ViewModels.Inpgr
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAinpgr row
 		/// to a STY_Menu_361_RowViewModel object.
@@ -490,7 +497,9 @@ namespace GenioMVC.ViewModels.Inpgr
 		private STY_Menu_361_RowViewModel MapSTY_Menu_361(CSGenioAinpgr row)
 		{
 			var model = new STY_Menu_361_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -502,32 +511,7 @@ namespace GenioMVC.ViewModels.Inpgr
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(STY_Menu_361_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -541,31 +525,40 @@ namespace GenioMVC.ViewModels.Inpgr
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAinpgr> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAinpgr row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Inpgr m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Inpgr m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM STY_MENU_361]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Inpgr", "Inpgr.ValCodinpgr", "Inpgr.ValZzstate", "Inpgr.ValNumbgro", "Inpgr.ValTextgro", "Inpgr.ValButtngro", "Inpgr.ValSpangro", "Inpgr.ValName", "Inpgr.ValLastname", "Inpgr.ValAdress", "Inpgr.ValPrefix", "Inpgr.ValPhone", "Inpgr.ValEmail", "Inpgr.ValWeb", "Inpgr.ValIban", "Inpgr.ValBankacco", "Inpgr.ValTextspan", "Inpgr.ValDirectio", "Inpgr.ValBankcomp", "BtnPermission"
+			"Inpgr", "Inpgr.ValCodinpgr", "Inpgr.ValZzstate", "Inpgr.ValNumbgro", "Inpgr.ValTextgro", "Inpgr.ValButtngro", "Inpgr.ValSpangro", "Inpgr.ValName", "Inpgr.ValLastname", "Inpgr.ValAdress", "Inpgr.ValPrefix", "Inpgr.ValPhone", "Inpgr.ValEmail", "Inpgr.ValWeb", "Inpgr.ValIban", "Inpgr.ValBankacco", "Inpgr.ValTextspan", "Inpgr.ValDirectio", "Inpgr.ValBankcomp"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValNumbgro", CSGenioAinpgr.FldNumbgro, typeof(decimal?)),
 			new TableSearchColumn("ValTextgro", CSGenioAinpgr.FldTextgro, typeof(string)),
@@ -584,8 +577,5 @@ namespace GenioMVC.ViewModels.Inpgr
 			new TableSearchColumn("ValDirectio", CSGenioAinpgr.FldDirectio, typeof(string)),
 			new TableSearchColumn("ValBankcomp", CSGenioAinpgr.FldBankcomp, typeof(string), array : "bankComp")
 		];
-
-
-
 	}
 }

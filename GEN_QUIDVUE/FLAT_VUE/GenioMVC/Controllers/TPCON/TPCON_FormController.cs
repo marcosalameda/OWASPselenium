@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Tpcon_GenreValGenderModel : RequestLookupModel
+		{
+			public Tpcon_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Tpcon/Tpcon_GenreValGender
 		// POST: /Tpcon/Tpcon_GenreValGender
 		[ActionName("Tpcon_GenreValGender")]
-		public ActionResult Tpcon_GenreValGender([FromBody]RequestLookupModel requestModel)
+		public ActionResult Tpcon_GenreValGender([FromBody] Tpcon_GenreValGenderModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Tpcon_GenreValGender_ViewModel model = new Tpcon_GenreValGender_ViewModel(UserContext.Current);
-			
+
+			Models.Tpcon parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Tpcon_GenreValGender_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

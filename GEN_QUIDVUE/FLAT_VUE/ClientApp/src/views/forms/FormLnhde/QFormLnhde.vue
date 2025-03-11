@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -398,8 +398,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -814,7 +812,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValLnprops',
@@ -955,7 +953,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-LNHDE', 'changed-LNHDF'],
+						globalEvents: ['changed-LNHDE', 'changed-LNHDF'],
 						uuid: 'Lnhde_ValLnprops',
 						allSelectedRows: 'false',
 						controlLimits: [

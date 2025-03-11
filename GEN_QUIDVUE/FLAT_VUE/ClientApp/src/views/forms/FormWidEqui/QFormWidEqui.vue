@@ -10,8 +10,8 @@
 			class="c-action-bar">
 			<h1
 				v-if="formControl.uiComponents.header && formInfo.designation"
-				class="form-header"
-				:id="formTitleId">
+				:id="formTitleId"
+				class="form-header">
 				{{ formInfo.designation }}
 			</h1>
 
@@ -168,8 +168,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -359,7 +357,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'ValSequennr',
@@ -369,7 +367,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValRegistnr',
@@ -378,7 +376,7 @@
 								label: computed(() => this.Resources.NO__REGISTER04207),
 								dataLength: 6,
 								scrollData: 6,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'Tpequ.ValTipoequi',
@@ -388,7 +386,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodtpequ',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 5,
 								name: 'ValBought',
@@ -396,7 +394,7 @@
 								field: 'BOUGHT',
 								label: computed(() => this.Resources.BOUGHT32044),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValWidequi',
@@ -436,7 +434,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
+						globalEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY'],
 						uuid: 'Wid_equi_ValWidequi',
 						allSelectedRows: 'false',
 						controlLimits: [

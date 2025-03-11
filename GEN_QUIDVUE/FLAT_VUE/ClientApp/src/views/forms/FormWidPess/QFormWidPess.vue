@@ -10,8 +10,8 @@
 			class="c-action-bar">
 			<h1
 				v-if="formControl.uiComponents.header && formInfo.designation"
-				class="form-header"
-				:id="formTitleId">
+				:id="formTitleId"
+				class="form-header">
 				{{ formInfo.designation }}
 			</h1>
 
@@ -170,8 +170,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -361,7 +359,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 2,
 								name: 'ValPhotogra',
@@ -372,7 +370,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValEmail',
@@ -381,7 +379,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'Categ.ValCategoria',
@@ -391,7 +389,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodcateg',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'Cmpny.ValDesignat',
@@ -401,7 +399,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodempre',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValPesslist',
@@ -441,7 +439,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1'],
+						globalEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-PAIS1', 'changed-CMPNY'],
 						uuid: 'Wid_pess_ValPesslist',
 						allSelectedRows: 'false',
 						viewModes: [

@@ -28,6 +28,7 @@
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 
+	import netAPI from '@/api/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
@@ -122,7 +123,7 @@
 		mounted()
 		{
 			// Listens for changes to the DB and updates the list accordingly.
-			this.$eventHub.onMany(this.listCtrl.changeEvents, this.onTableDBDataChanged)
+			this.$eventHub.onMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
 
 			const modalProps = {
 				id: 'see-more-globfactfactytype',
@@ -140,7 +141,7 @@
 		beforeUnmount()
 		{
 			// Removes the listeners.
-			this.$eventHub.offMany(this.listCtrl.changeEvents, this.onTableDBDataChanged)
+			this.$eventHub.offMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
 			this.listCtrl.destroy()
 			this.componentOnLoadProc.destroy()
 
@@ -205,7 +206,7 @@
 								label: computed(() => this.Resources.FACILITY_TYPE44577),
 								dataLength: 25,
 								scrollData: 25,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'Globfact_FactyValType',
@@ -247,7 +248,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FACTY'],
+						globalEvents: ['changed-FACTY'],
 						uuid: 'Globfact_Globfact_FactyValType',
 						allSelectedRows: 'false',
 						handlers: {

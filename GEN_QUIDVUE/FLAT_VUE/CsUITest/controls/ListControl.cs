@@ -259,11 +259,11 @@ public class ListControl : ControlObject
             var cell = row.FindElement(By.CssSelector("td.row-actions"));
 
             //if it's a dropdown menu, click the button to open the dropdown. If the dropdown doesn't exist, the buttons are inlined.
-            var dropdownButton = cell.FindElements(By.CssSelector("[data-testid=options-btn]"));
+            var dropdownButton = cell.FindElements(By.CssSelector("[data-type=options-button]"));
             if(dropdownButton.Count() > 0)
                 dropdownButton[0].Click();
 
-            var actionButton = cell.FindElement(By.CssSelector("[data-testid=table-action][data-action-key='" + action + "']"));
+            var actionButton = driver.FindElement(By.CssSelector("[role=listbox] [role=option][data-key='" + action + "']"));
 
             actionButton.Click();
         }

@@ -22,7 +22,7 @@
 
     export default {
 		name: "notifsDB",
-		emits: ['updateModal'],
+		emits: ['update-model'],
 		mixins: [reusableMixin],
 		props: {
 			model: {

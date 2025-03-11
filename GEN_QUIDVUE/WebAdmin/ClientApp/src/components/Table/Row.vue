@@ -1,10 +1,10 @@
 ﻿<template>
     <tr :data-id="rowId" ref="vbt_row" :class='rowClasses' v-on="rowsSelectable || singleRowSelectable ? { click: ($event) => handleRowSelect($event) } : {}">
-        <CheckBox v-if="checkboxRows"
-                  :rowsSelectable="rowsSelectable"
-                  :row-selected="rowSelected"
-                  @add-row="addRow"
-                  @remove-row="removeRow"/>
+        <td v-if="checkboxRows" class="checkbox-column">
+            <q-checkbox
+                v-model="rowSelected"
+                @update:model-value="emitSelectValue" />
+        </td>
         <template v-for="(column, key, hindex) in columns">
             <td v-if="canShowColumn(column)" :key="hindex" :class="cellClasses(column)">
                 <slot :name="'vbt-'+getCellSlotName(column)">
@@ -14,18 +14,14 @@
     </tr>
 </template>
 
-<script>
-  //v-bind:style='{"background": (rowHiglighted) ? highlightRowHoverColor : ""}'
-	
-import {
-has,
-get,
-differenceWith,
-isEqual,
-includes,
-} from "lodash-es";
-
-    import CheckBox from "./CheckBox.vue";
+<script>	
+    import {
+        has,
+        get,
+        differenceWith,
+        isEqual,
+        includes,
+    } from "lodash-es";
 
     export default {
         name: 'Row',
@@ -84,7 +80,7 @@ includes,
                 default: false
             }
         },
-        data: function() {
+        data() {
             return {
                 rowSelected: false,
                 rowHiglighted:false,
@@ -98,7 +94,12 @@ includes,
             this.checkInSelecteditems(this.selectedItems,this.row);
         },
         methods: {
-
+            emitSelectValue(newVal) {
+                if (newVal)
+                    this.addRow(false)
+                else
+                    this.removeRow(false)
+            },
             addRow(shiftKey) {
                 this.$emit('add-row', {'shiftKey':shiftKey,"rowIndex":this.rowIndex});
             },
@@ -240,9 +241,6 @@ includes,
                 },
                 deep: true
             }
-        },
-        components: {
-            CheckBox
         }
     }
 </script>

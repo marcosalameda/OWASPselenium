@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.PROPERTY43977),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
 								name: 'ValPrecoest',
@@ -160,7 +160,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Tppro.ValTppropri',
@@ -170,7 +170,7 @@
 								dataLength: 20,
 								scrollData: 20,
 								pkColumn: 'ValCodtppro',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValEndereco',
@@ -178,8 +178,8 @@
 								field: 'ENDERECO',
 								label: computed(() => this.Resources.ADDRESS04342),
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValLocalida',
@@ -188,7 +188,7 @@
 								label: computed(() => this.Resources.LOCALE34521),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'Regio.ValRegiao',
@@ -198,7 +198,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodregia',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'ValPostalco',
@@ -207,8 +207,8 @@
 								label: computed(() => this.Resources.ZIP_CODE56964),
 								dataLength: 20,
 								scrollData: 20,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
 								name: 'ValPostallo',
@@ -217,8 +217,8 @@
 								label: computed(() => this.Resources.POSTAL_LOCATION08708),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
 								name: 'Cntry.ValCountry',
@@ -227,9 +227,9 @@
 								label: computed(() => this.Resources.COUNTRY64133),
 								dataLength: 90,
 								scrollData: 30,
-								visibility: false,
+								isVisible: false,
 								pkColumn: 'ValCodcntry',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 10,
 								name: 'ValMobilada',
@@ -237,7 +237,7 @@
 								field: 'MOBILADA',
 								label: computed(() => this.Resources.FURNISHED37431),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 11,
 								name: 'ValQtd_wc',
@@ -247,7 +247,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 12,
 								name: 'ValQtdquart',
@@ -257,7 +257,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 13,
 								name: 'ValM2',
@@ -267,7 +267,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 14,
 								name: 'ValDtdispon',
@@ -276,7 +276,7 @@
 								label: computed(() => this.Resources.AVAILABILITY56489),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 15,
 								name: 'ValPhotogra',
@@ -287,7 +287,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 16,
 								name: 'ValDescript',
@@ -295,8 +295,8 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'IMO_Menu_111',
@@ -438,11 +438,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
+						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
 						uuid: '5d7b8c5d-ac05-4bf4-b866-40e2585c681e',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

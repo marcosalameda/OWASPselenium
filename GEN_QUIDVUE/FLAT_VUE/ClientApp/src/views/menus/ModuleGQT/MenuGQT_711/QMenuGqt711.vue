@@ -151,7 +151,7 @@
 								dataLength: 100,
 								scrollData: 20,
 								pkColumn: 'ValCodpsw',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Pess1.ValName',
@@ -161,7 +161,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodpesso',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
 								name: 'ValFoto',
@@ -172,7 +172,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValNridenti',
@@ -182,7 +182,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_711',
@@ -324,11 +324,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PWCOM', 'changed-PESS1', 'changed-PSW'],
+						globalEvents: ['changed-PWCOM', 'changed-PESS1', 'changed-PSW'],
 						uuid: 'b84668d1-565f-459d-a7c5-24dcba182b3d',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

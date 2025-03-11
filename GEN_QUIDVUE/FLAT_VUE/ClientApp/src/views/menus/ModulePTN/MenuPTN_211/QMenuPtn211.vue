@@ -151,7 +151,7 @@
 								dataLength: 90,
 								scrollData: 30,
 								pkColumn: 'ValCodcntry',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValRegiao',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.REGION12723),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Pais1.ValCountry',
@@ -170,7 +170,7 @@
 								dataLength: 90,
 								scrollData: 30,
 								pkColumn: 'ValCodcntry',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_211',
@@ -312,11 +312,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-REGIO', 'changed-CNTRY', 'changed-PAIS1'],
+						globalEvents: ['changed-REGIO', 'changed-CNTRY', 'changed-PAIS1'],
 						uuid: '3ff5c84d-e77b-442c-b81e-603fe2ba55be',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

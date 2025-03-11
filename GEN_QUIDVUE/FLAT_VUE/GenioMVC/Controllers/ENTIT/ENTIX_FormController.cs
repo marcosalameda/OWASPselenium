@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Entix_ValFaciliteModel : RequestLookupModel
+		{
+			public Entix_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Entit/Entix_ValFacilite
 		// POST: /Entit/Entix_ValFacilite
 		[ActionName("Entix_ValFacilite")]
-		public ActionResult Entix_ValFacilite([FromBody]RequestLookupModel requestModel)
+		public ActionResult Entix_ValFacilite([FromBody] Entix_ValFaciliteModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -420,16 +425,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Entix_ValFacilite_ViewModel model = new Entix_ValFacilite_ViewModel(UserContext.Current);
-			
+			Models.Entit parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Entix_ValFacilite_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

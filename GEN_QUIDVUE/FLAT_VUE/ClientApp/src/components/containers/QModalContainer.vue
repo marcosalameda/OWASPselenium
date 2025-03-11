@@ -214,15 +214,13 @@
 			{
 				return `c-modal--${this.modalWidth}`
 			},
-			
+
 			/**
-			 * A unique id for the popup title
+			 * A unique id for the popup title.
 			 */
-			popupTitleId() {
-				if(this.formIdentifier)
-					return this.formIdentifier + "_title";
-				else
-					return this.id + "_title";
+			popupTitleId()
+			{
+				return this.formIdentifier ? `${this.formIdentifier}_title` : `${this.id}_title`
 			}
 		},
 

@@ -505,6 +505,14 @@ export default {
 		},
 
 		/**
+		 * The identifier of the form's title element.
+		 */
+		formTitleId()
+		{
+			return `${this.formInfo.identifier}_title`
+		},
+
+		/**
 		 * The human key of the current record.
 		 */
 		humanKey()
@@ -2069,15 +2077,17 @@ export default {
 
 		/**
 		 * Inits the form and all it's controls.
+		 * @param {boolean} isFirstLoad Indicates whether it's the first load of the form
 		 */
-		async initFormControls()
+		async initFormControls(isFirstLoad)
 		{
-			await this.formControl.init(false, this.isEditable)
+			await this.formControl.init(false, this.isEditable, isFirstLoad)
 
 			// In some cases, this operation won't work as expected unless we force a DOM update before calling it.
 			this.setContainersStateFromStore()
 			// Tabs need to be initialized only after setting the selected tab.
-			this.formControl.initTabs()
+			if (isFirstLoad)
+				this.formControl.initTabs()
 		},
 
 		/**
@@ -2165,7 +2175,7 @@ export default {
 
 		/**
 		 * Loads form data and initializes form controls.
-		 * @param {boolean} isFirstLoad - Indicates whether it is the first load
+		 * @param {boolean} isFirstLoad Indicates whether it's the first load of the form
 		 * @returns {Promise<string>} A promise that resolves with a success message or rejects with an error message.
 		 */
 		async loadFormData(isFirstLoad)
@@ -2198,11 +2208,7 @@ export default {
 
 			this.formHeader = this.$refs.formHeader
 
-			// Destroy any running periodic events.
-			if (!isFirstLoad)
-				this.formControl.destroyTriggers()
-
-			await this.initFormControls()
+			await this.initFormControls(isFirstLoad)
 			await this.refreshAllListsData(isFirstLoad)
 
 			if (!this.isNested)
@@ -2210,12 +2216,12 @@ export default {
 				this.internalEvents.emit('form-buttons-change', this.formButtons)
 				this.setBreadcrumbProperties()
 
-				this.$nextTick().then(() => {
-					// If the user is navigating from a record below, scrolls the page to the respective table.
-					const anchor = this.$route.params.anchor
-					if (!_isEmpty(anchor))
-						this.focusControl(anchor)
-				})
+				await this.$nextTick()
+
+				// If the user is navigating from a record below, scrolls the page to the respective table.
+				const anchor = this.$route.params.anchor
+				if (!_isEmpty(anchor))
+					this.focusControl(anchor)
 			}
 
 			return 'Form data loaded successfully.'

@@ -149,14 +149,14 @@
 								field: 'COUNTRY',
 								dataLength: 90,
 								scrollData: 90,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 2,
 								name: 'ValActive',
 								area: 'CNTRY',
 								field: 'ACTIVE',
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValCodigonr',
@@ -164,7 +164,7 @@
 								field: 'CODIGONR',
 								dataLength: 3,
 								scrollData: 3,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValAlfa2',
@@ -172,7 +172,7 @@
 								field: 'ALFA2',
 								dataLength: 2,
 								scrollData: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValAlfa3',
@@ -180,7 +180,7 @@
 								field: 'ALFA3',
 								dataLength: 3,
 								scrollData: 3,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 6,
 								name: 'ValFlag',
@@ -189,7 +189,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_4271',
@@ -335,11 +335,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-CNTRY'],
+						globalEvents: ['changed-CNTRY'],
 						uuid: 'abc39823-4a57-4dbd-881d-4e22e7b0b3d8',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

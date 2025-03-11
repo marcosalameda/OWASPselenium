@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_4121',
@@ -292,11 +292,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-KINDE'],
+						globalEvents: ['changed-KINDE'],
 						uuid: '587f2aab-f2be-4298-842b-00848515cc6a',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

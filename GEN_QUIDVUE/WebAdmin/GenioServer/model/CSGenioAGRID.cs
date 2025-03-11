@@ -112,8 +112,8 @@ namespace CSGenio.business
 			info.Pathways.Add("pesso","pesso");
 			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("cntry","pesso");
-			info.Pathways.Add("cmpny","pesso");
 			info.Pathways.Add("pais1","pesso");
+			info.Pathways.Add("cmpny","pesso");
 			info.Pathways.Add("regi1","pesso");
 		}
 

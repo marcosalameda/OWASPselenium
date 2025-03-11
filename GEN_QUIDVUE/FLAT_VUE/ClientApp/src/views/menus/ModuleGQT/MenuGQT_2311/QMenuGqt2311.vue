@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.N_R__ROOM43805),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValDesignat',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.ROOM_DESIGNATION37895),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_2311',
@@ -288,7 +288,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ROOMS'],
+						globalEvents: ['changed-ROOMS'],
 						uuid: '7d91f319-b775-4c60-a166-3454014b284c',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -296,7 +296,7 @@
 						controlLimits: [
 							/** DE */
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

@@ -218,8 +218,7 @@ export default {
 		/**
 		 * Edit advanced filter
 		 * @param {object} listConf The list configuration
-		 * @param filter {Object}
-		 * @param index {number}
+		 * @param filters {Object}
 		 */
 		editAdvancedFilters(listConf, filters)
 		{
@@ -500,7 +499,52 @@ export default {
 		},
 
 		/**
-		 * Open a table view (user table configuration)
+		 * Rename a table view (user table configuration)
+		 * @param {object} listConf The list configuration
+		 * @param {object} eObj
+		 */
+		onTableListRenameView(listConf, eObj)
+		{
+			const params = {
+				uuid: listConf.uuid,
+				configName: eObj.name,
+				isSelected: eObj.isSelected,
+				renameFromName: eObj.renameFromName
+			}
+
+			// Send request to save configuration
+			return new Promise((resolve) => {
+				netAPI.postData(
+					'Tblcfg',
+					'RenameConfig',
+					params,
+					async (data) => {
+						if(data.Success)
+						{
+							// Set table configuration to use when reloading
+							const userTableConfigName = listConf.config.userTableConfigName === eObj.renameFromName ? eObj.name : listConf.config.userTableConfigName
+							
+							// Set whether to load the default view
+							const LoadDefaultView = data.LoadDefaultView
+							
+							// Reload table
+							await this.fetchListData(listConf, { userTableConfigName, LoadDefaultView })
+							resolve(true)
+						}
+						else
+						{
+							genericFunctions.displayMessage(data.ErrorMsg, 'error')
+							resolve(false)
+						}
+					},
+					undefined,
+					undefined,
+					this.navigationId)
+			})
+		},
+
+		/**
+		 * Copy a table view (user table configuration)
 		 * @param {object} listConf The list configuration
 		 * @param {object} eObj
 		 */
@@ -1526,7 +1570,8 @@ export default {
 			let formModes = ''
 			if (actionCfg.params.restrictedModes) // Until access modes change from DBs to each Form
 				formModes = genericFunctions.getDefaultFormModesForMode(actionCfg.params.mode)
-			else {
+			else
+			{
 				if (listConf.config.permissions.canView && genericFunctions.btnHasPermission(row?.btnPermission, qEnums.formModes.show))
 					formModes += 'v'
 				if (!isForm || this.isEditable)

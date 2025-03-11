@@ -43,7 +43,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER LCEXT]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -56,13 +55,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Lcext row = null;
-
-			if (row == null)
-			{
-				row = new Models.Lcext(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("lcext");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Lcext row = new Models.Lcext(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("lcext");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +75,7 @@ namespace GenioMVC.Controllers
 				{
 					case "LCEXT___LOCATGLN_____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Lcext_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Lcext_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Lcext___locatgln_____(qs);
 							result = model.TableLocatGln;
@@ -141,6 +140,8 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
 
 
 		/// <summary>

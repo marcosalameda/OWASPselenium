@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.TEXT_FIELD41810),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_TABS',
@@ -292,7 +292,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-EQUIP', 'changed-FLDS', 'changed-AERO'],
+						globalEvents: ['changed-EQUIP', 'changed-FLDS', 'changed-AERO'],
 						uuid: '5fdc29f1-c37a-422d-a13c-97b03a5593b6',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -300,7 +300,7 @@
 						controlLimits: [
 							/** SC */
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

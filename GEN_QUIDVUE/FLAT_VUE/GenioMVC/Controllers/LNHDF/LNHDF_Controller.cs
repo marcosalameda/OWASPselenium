@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER LNHDF]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Lnhdf" form. (++, CT, SR, CL and U1)
 		/// </summary>

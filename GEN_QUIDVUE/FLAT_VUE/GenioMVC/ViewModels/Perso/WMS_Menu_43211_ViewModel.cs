@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,43 +7,47 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Perso
 {
-	public class WMS_Menu_43211_ViewModel : ListViewModel
+	public class WMS_Menu_43211_ViewModel : MenuListViewModel<Models.Perso>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<WMS_Menu_43211_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "perso"; }
+		[JsonIgnore]
+		public override string TableAlias => "perso";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "1a20e7a0-41b2-445a-9698-02f8863e65d2"; }
+		public override string Uuid => "1a20e7a0-41b2-445a-9698-02f8863e65d2";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodperso { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -55,6 +60,7 @@ namespace GenioMVC.ViewModels.Perso
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -68,6 +74,7 @@ namespace GenioMVC.ViewModels.Perso
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -86,7 +93,6 @@ namespace GenioMVC.ViewModels.Perso
 
 
 
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -102,17 +108,27 @@ namespace GenioMVC.ViewModels.Perso
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAperso.FldCodperso, CSGenioAperso.FldZzstate, CSGenioAperso.FldName, CSGenioAperso.FldGender, CSGenioAperso.FldIdentifi, CSGenioAperso.FldPhoto, CSGenioAperso.FldDob, CSGenioAperso.FldEmail, CSGenioAperso.FldYear, CSGenioAperso.FldMonth, CSGenioAperso.FldTob };
 
-			ListingMVC<CSGenioAperso> listing = new ListingMVC<CSGenioAperso>(fields, null, 1, 1, false, user, true, string.Empty, false);
+			ListingMVC<CSGenioAperso> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
 			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public WMS_Menu_43211_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WMS_Menu_43211_ViewModel" /> class.
@@ -121,6 +137,16 @@ namespace GenioMVC.ViewModels.Perso
 		public WMS_Menu_43211_ViewModel(UserContext userContext) : base(userContext)
 		{
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WMS_Menu_43211_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public WMS_Menu_43211_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -191,12 +217,6 @@ namespace GenioMVC.ViewModels.Perso
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PERSO.NAME", new OrderedDictionary());
-			allSortOrders["PERSO.NAME"].Add("PERSO.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -213,10 +233,8 @@ namespace GenioMVC.ViewModels.Perso
 
 			// Limitations
 			// Limit "AC"
-			if (!Navigation.CheckKey("perso.gender"))
-				return null;
-			crs.Equal(CSGenioAperso.FldGender, Navigation.GetValue("perso.gender"));
-
+			if (Navigation.CheckKey("perso.gender"))
+				crs.Equal(CSGenioAperso.FldGender, Navigation.GetValue("perso.gender"));
 			if (isToExport)
 			{
 				// EPH
@@ -312,23 +330,22 @@ namespace GenioMVC.ViewModels.Perso
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAperso> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "43211"),
 				new("Module", "WMS")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<WMS_Menu_43211_RowViewModel>();
 
 				CriteriaSet wms_menu_43211Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("PERSO.NAME", new OrderedDictionary());
 				allSortOrders["PERSO.NAME"].Add("PERSO.NAME", "A");
-
 
 
 
@@ -366,40 +383,39 @@ namespace GenioMVC.ViewModels.Perso
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAperso model_limit_area = new CSGenioAperso(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML43211");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAperso model_limit_area = new CSGenioAperso(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML43211");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
-			// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
-			// Limit origin: menu 
+				// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
+				// Limit origin: menu 
 
-			//Limit type: "AC"
-			//Current Area = "PERSO"
-			//1st Area Limit: "PERSO"
-			//1st Area Field: "GENDER"
-			//1st Area Value: ""
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.AC;
-				limit.NaoAplicaSeNulo = false;
-				CSGenioAperso model_limit_area = new CSGenioAperso(m_userContext.User);
-				string limit_field = "gender", limit_field_value = "";
-				object this_limit_field = Navigation.GetStrValue(limit_field_value);
-				Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
-				if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
-					this.tableLimits.Add(limit);
-			}
+				//Limit type: "AC"
+				//Current Area = "PERSO"
+				//1st Area Limit: "PERSO"
+				//1st Area Field: "GENDER"
+				//1st Area Value: ""
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.AC;
+					limit.NaoAplicaSeNulo = false;
+					CSGenioAperso model_limit_area = new CSGenioAperso(m_userContext.User);
+					string limit_field = "gender", limit_field_value = "";
+					object this_limit_field = Navigation.GetStrValue(limit_field_value);
+					Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
+					if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
+						this.tableLimits.Add(limit);
+				}
 
 				if (conditions == null)
 					conditions = CriteriaSet.And();
@@ -446,7 +462,6 @@ namespace GenioMVC.ViewModels.Perso
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -467,18 +482,12 @@ namespace GenioMVC.ViewModels.Perso
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -486,7 +495,7 @@ namespace GenioMVC.ViewModels.Perso
 
 		private List<WMS_Menu_43211_RowViewModel> MapWMS_Menu_43211(ListingMVC<CSGenioAperso> Qlisting)
 		{
-			var Elements = new List<WMS_Menu_43211_RowViewModel>();
+			List<WMS_Menu_43211_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -503,7 +512,6 @@ namespace GenioMVC.ViewModels.Perso
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAperso row
 		/// to a WMS_Menu_43211_RowViewModel object.
@@ -512,7 +520,9 @@ namespace GenioMVC.ViewModels.Perso
 		private WMS_Menu_43211_RowViewModel MapWMS_Menu_43211(CSGenioAperso row)
 		{
 			var model = new WMS_Menu_43211_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -524,33 +534,8 @@ namespace GenioMVC.ViewModels.Perso
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			SetTicketToImageFields(model);
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(WMS_Menu_43211_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -564,31 +549,40 @@ namespace GenioMVC.ViewModels.Perso
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAperso> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAperso row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Perso m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Perso m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM WMS_MENU_43211]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Perso", "Perso.ValCodperso", "Perso.ValZzstate", "Perso.ValName", "Perso.ValGender", "Perso.ValIdentifi", "Perso.ValPhoto", "Perso.ValDob", "Perso.ValEmail", "Perso.ValYear", "Perso.ValMonth", "Perso.ValTob", "BtnPermission"
+			"Perso", "Perso.ValCodperso", "Perso.ValZzstate", "Perso.ValName", "Perso.ValGender", "Perso.ValIdentifi", "Perso.ValPhoto", "Perso.ValDob", "Perso.ValEmail", "Perso.ValYear", "Perso.ValMonth", "Perso.ValTob"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValName", CSGenioAperso.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValGender", CSGenioAperso.FldGender, typeof(string), array : "Gender"),
@@ -599,12 +593,9 @@ namespace GenioMVC.ViewModels.Perso
 			new TableSearchColumn("ValMonth", CSGenioAperso.FldMonth, typeof(decimal), visible : false, array : "Months"),
 			new TableSearchColumn("ValTob", CSGenioAperso.FldTob, typeof(string), visible : false)
 		];
-
-
-
 		protected void SetTicketToImageFields(Models.Perso row)
 		{
-			if(row == null)
+			if (row == null)
 				return;
 
 			row.ValPhotoQTicket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaPERSO, CSGenioAperso.FldPhoto.Field, null, row.ValCodperso);

@@ -206,6 +206,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Tpeq1 m)
 		{
 			if (m == null)
@@ -237,20 +238,13 @@ namespace GenioMVC.ViewModels.Tpeq1
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Tpeq1 m)
 		{
 			if (m == null)
@@ -704,8 +698,6 @@ namespace GenioMVC.ViewModels.Tpeq1
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

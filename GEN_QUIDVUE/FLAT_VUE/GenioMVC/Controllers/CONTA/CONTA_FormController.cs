@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Conta_PessoValNameModel : RequestLookupModel
+		{
+			public Conta_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Conta/Conta_PessoValName
 		// POST: /Conta/Conta_PessoValName
 		[ActionName("Conta_PessoValName")]
-		public ActionResult Conta_PessoValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Conta_PessoValName([FromBody] Conta_PessoValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Conta_PessoValName_ViewModel model = new Conta_PessoValName_ViewModel(UserContext.Current);
-			
+
+			Models.Conta parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Conta_PessoValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Conta_GenreValGenderModel : RequestLookupModel
+		{
+			public Conta_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Conta/Conta_GenreValGender
 		// POST: /Conta/Conta_GenreValGender
 		[ActionName("Conta_GenreValGender")]
-		public ActionResult Conta_GenreValGender([FromBody]RequestLookupModel requestModel)
+		public ActionResult Conta_GenreValGender([FromBody] Conta_GenreValGenderModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Conta_GenreValGender_ViewModel model = new Conta_GenreValGender_ViewModel(UserContext.Current);
-			
+
+			Models.Conta parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Conta_GenreValGender_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -518,11 +534,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Conta_TpconValTipocontModel : RequestLookupModel
+		{
+			public Conta_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Conta/Conta_TpconValTipocont
 		// POST: /Conta/Conta_TpconValTipocont
 		[ActionName("Conta_TpconValTipocont")]
-		public ActionResult Conta_TpconValTipocont([FromBody]RequestLookupModel requestModel)
+		public ActionResult Conta_TpconValTipocont([FromBody] Conta_TpconValTipocontModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -547,16 +568,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Conta_TpconValTipocont_ViewModel model = new Conta_TpconValTipocont_ViewModel(UserContext.Current);
-			
+
+			Models.Conta parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Conta_TpconValTipocont_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

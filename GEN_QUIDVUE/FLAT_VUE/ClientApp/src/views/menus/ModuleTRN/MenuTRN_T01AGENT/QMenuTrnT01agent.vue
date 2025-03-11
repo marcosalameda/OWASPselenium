@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.BIRTHDATE22743),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValName',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
 								name: 'ValPhoto',
@@ -170,7 +170,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValEmail',
@@ -179,7 +179,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TRN_Menu_T01AGENT',
@@ -321,11 +321,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-AGENT'],
+						globalEvents: ['changed-AGENT'],
 						uuid: '8eff371d-1d96-4236-9a5f-99682561ce0b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

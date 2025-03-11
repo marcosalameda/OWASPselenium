@@ -21,13 +21,30 @@ namespace GenioMVC.Controllers.Tblcfg
 		{
             public string Uuid { get; set; }
             public string ConfigName { get; set; }
-            public bool IsSelected { get; set; }
-            public string? Data { get; set; }
-			public string? CopyFromName { get; set; }
         }
 
-		[HttpPost]
-		public ActionResult SaveConfig([FromBody]RequestConfigModel requestModel)
+        public class RequestConfigSelectedModel : RequestConfigModel
+        {
+            public bool IsSelected { get; set; }
+        }
+
+        public class RequestConfigSaveModel : RequestConfigSelectedModel
+        {
+            public string? Data { get; set; }
+        }
+
+        public class RequestConfigRenameModel : RequestConfigSelectedModel
+        {
+            public string? RenameFromName { get; set; }
+        }
+
+        public class RequestConfigCopyModel : RequestConfigSelectedModel
+        {
+            public string? CopyFromName { get; set; }
+        }
+
+        [HttpPost]
+		public ActionResult SaveConfig([FromBody] RequestConfigSaveModel requestModel)
 		{
 			// Don't allow changes in maintenance mode
 			if(Maintenance.Current.IsActive)
@@ -97,6 +114,8 @@ namespace GenioMVC.Controllers.Tblcfg
 					userTableConfigSelectedInfo.change(sp, (CriteriaSet)null);
 					sp.closeTransaction();
 				}
+				// If this record is set as the default record
+				// add the corresponding record that specifies the default
 				else if (isSelected)
 				{
 					userTableConfigSelectedInfo.ValCodtblcfg = userTableConfig.ValCodtblcfg;
@@ -316,8 +335,127 @@ namespace GenioMVC.Controllers.Tblcfg
 			}
 		}
 
-		[HttpPost]
-		public ActionResult CopyConfig([FromBody] RequestConfigModel requestModel)
+        [HttpPost]
+        public ActionResult RenameConfig([FromBody] RequestConfigRenameModel requestModel)
+        {
+            User user = UserContext.Current.User;
+
+            // Don't allow changes in maintenance mode
+            if (Maintenance.Current.IsActive)
+                return JsonERROR(Translations.Get("The system is under maintenance! We apologize for the inconvenience.", user.Language));
+
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
+
+            var uuid = requestModel.Uuid;
+            var configName = requestModel.ConfigName;
+            var isSelected = requestModel.IsSelected;
+            var renameFromName = requestModel.RenameFromName;
+
+            //Get saved configuration
+            List<CSGenioAtblcfg> userTableConfigs = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
+                .Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
+                .Equal(CSGenioAtblcfg.FldUuid, uuid)
+				.SubSet(
+                    CriteriaSet.Or()
+						.Equal(CSGenioAtblcfg.FldName, renameFromName)
+                        .Equal(CSGenioAtblcfg.FldName, configName)
+                )
+            );
+
+			//Get saved configuration
+			CSGenioAtblcfg userTableConfigToRename = userTableConfigs.Where(config => config.ValName.Equals(renameFromName)).ToList().FirstOrDefault();
+
+            //If record to rename doesn't exist
+            if (userTableConfigToRename == null)
+            {
+                return Json(new
+                {
+                    Success = false,
+                    ErrorNo = 1,
+                    ErrorMsg = Translations.Get("Erro ao guardar o registo.", user.Language)
+                });
+            }
+
+            //Check if saved configuration with new name already exists
+            CSGenioAtblcfg userTableConfigWithNewName = userTableConfigs.Where(config => config.ValName.Equals(configName)).ToList().FirstOrDefault();
+
+            //If record already exists
+            if (userTableConfigWithNewName != null)
+            {
+                return Json(new
+                {
+                    Success = false,
+                    ErrorNo = 2,
+                    ErrorMsg = Translations.Get("Essa vista já existe.", user.Language)
+                });
+            }
+
+            //Update record
+            userTableConfigToRename.ValName = configName;
+
+            try
+            {
+                //Save record
+                sp.openTransaction();
+                userTableConfigToRename.change(sp, (CriteriaSet)null);
+                sp.closeTransaction();
+
+				CSGenioAtblcfgsel userTableConfigSelectedInfo = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
+					.Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
+					.Equal(CSGenioAtblcfgsel.FldUuid, uuid))
+					.FirstOrDefault();
+
+				// If this record is set as the default record
+				// add / update the corresponding record that specifies the default
+				if (isSelected)
+				{
+					sp.openTransaction();
+
+					//If record doesn't exist, create it
+					if (userTableConfigSelectedInfo == null)
+					{
+						userTableConfigSelectedInfo = new CSGenioAtblcfgsel(user);
+
+						userTableConfigSelectedInfo.ValCodpsw = user.Codpsw;
+						userTableConfigSelectedInfo.ValUuid = uuid;
+						userTableConfigSelectedInfo.ValCodtblcfg = userTableConfigToRename.ValCodtblcfg;
+
+						userTableConfigSelectedInfo.insert(sp);
+					}
+
+					// Update and save
+					userTableConfigSelectedInfo.ValCodtblcfg = userTableConfigToRename.ValCodtblcfg;
+					userTableConfigSelectedInfo.change(sp, (CriteriaSet)null);
+					sp.closeTransaction();
+				}
+				// If this configuration is the default and is being set as not being the default
+				else if (userTableConfigSelectedInfo.ValCodtblcfg.Equals(userTableConfigToRename.ValCodtblcfg))
+				{
+                    sp.openTransaction();
+                    userTableConfigSelectedInfo.delete(sp);
+                    sp.closeTransaction();
+                }
+
+                //Clear cache
+                TableUiSettings.Invalidate(uuid, user);
+
+                return Json(new
+                {
+                    Success = true,
+                    LoadDefaultView = isSelected
+                });
+            }
+            catch
+            {
+                sp.rollbackTransaction();
+                sp.closeConnection();
+
+                return Json(new { Success = false, Message = Translations.Get("Erro ao guardar o registo.", user.Language) });
+            }
+        }
+
+        [HttpPost]
+		public ActionResult CopyConfig([FromBody] RequestConfigCopyModel requestModel)
 		{
             // Don't allow changes in maintenance mode
             if (Maintenance.Current.IsActive)
@@ -390,6 +528,8 @@ namespace GenioMVC.Controllers.Tblcfg
 					.Equal(CSGenioAtblcfgsel.FldUuid, uuid))
 					.FirstOrDefault();
 
+				// If this record is set as the default record
+				// add / update the corresponding record that specifies the default
 				if (isSelected)
 				{
 					//If record doesn't exist, create it

@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_3F211',
@@ -195,7 +195,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1'],
+						globalEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-PAIS1', 'changed-CMPNY'],
 						uuid: '6fb9ec4c-b225-4a65-8a7e-fff5c440214b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -203,7 +203,7 @@
 						controlLimits: [
 							/** SC */
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

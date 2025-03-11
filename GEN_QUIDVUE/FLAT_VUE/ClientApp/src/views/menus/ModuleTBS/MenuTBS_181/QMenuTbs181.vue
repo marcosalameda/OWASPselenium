@@ -151,7 +151,7 @@
 								dataLength: 100,
 								scrollData: 20,
 								pkColumn: 'ValCodpsw',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Regio.ValRegiao',
@@ -161,7 +161,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodregia',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TBS_Menu_181',
@@ -303,11 +303,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-REGIO', 'changed-PSW', 'changed-PWREG'],
+						globalEvents: ['changed-REGIO', 'changed-PSW', 'changed-PWREG'],
 						uuid: 'd00b4f2a-57b6-4d04-a521-47133a9dcfee',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

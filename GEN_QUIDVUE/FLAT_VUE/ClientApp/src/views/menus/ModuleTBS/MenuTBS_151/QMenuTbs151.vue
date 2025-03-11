@@ -152,7 +152,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayGenconta.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayGenconta.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValTipocont',
@@ -161,7 +161,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TBS_Menu_151',
@@ -303,11 +303,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-TPCON', 'changed-GENRE'],
+						globalEvents: ['changed-TPCON', 'changed-GENRE'],
 						uuid: 'e32f8ddf-048b-48dc-b978-3a536ed248ad',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

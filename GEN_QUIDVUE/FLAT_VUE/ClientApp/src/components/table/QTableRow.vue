@@ -22,7 +22,7 @@
 				:class="cellClasses(column)"
 				:style="getCellStyles(column)"
 				:title="getCellTitle(column)">
-				<slot :name="'vbt-' + getCellSlotName(column)"> </slot>
+				<slot :name="'vbt-' + getCellSlotName(column)" />
 				<!-- BEGIN: Row drag and drop column -->
 				<template v-if="isDragAndDropColumn(column)">
 					<slot
@@ -84,26 +84,15 @@
 						:name="getCellSlotName(column)"
 						:row-key="row.rowKey"
 						:column="column">
-						<q-table-record-actions-menu
-							:btn-permission="row.btnPermission"
-							:action-visibility="row.actionVisibility"
-							:crud-actions="crudActions"
-							:custom-actions="customActions"
-							:general-actions="generalActionsPlacement === 'left' || generalActionsPlacement === 'right' ? generalActions : null"
-							:general-custom-actions="
-								generalActionsPlacement === 'left' || generalActionsPlacement === 'right' ? generalCustomActions : null
-							"
-							:actions-placement="actionsPlacement"
+						<q-action-list
+							:actions="rowActions"
+							:action-groups="rowActionGroups"
 							:readonly="readonly"
-							:display="rowActionDisplay"
-							:show-row-action-icon="showRowActionIcon"
-							:show-general-action-icon="showGeneralActionIcon"
-							:show-row-action-text="showRowActionText"
-							:show-general-action-text="showGeneralActionText"
 							:texts="texts"
 							data-table-action-selected="false"
 							tabindex="-1"
-							@row-action="(emitAction) => emitRowAction(emitAction)" />
+							@click:action="(emitAction) => emitRowAction(emitAction)"
+						/>
 					</slot>
 				</template>
 				<!-- END: Row action column -->
@@ -200,7 +189,7 @@
 										outputObject: true
 									})
 								"
-								:background-color="getBackgroundColor(row, column)"
+								:background-color="getBackgroundColor(column)"
 								:raw-value="getValueFromRow(row, column)"
 								:table-name="tableName"
 								:row-index="rowIndex"
@@ -237,6 +226,7 @@
 	import QRenderImage from '@/components/rendering/QRenderImage.vue'
 
 	import listFunctions from '@/mixins/listFunctions.js'
+	import genericFunctions from '@/mixins/genericFunctions.js'
 
 	export default {
 		name: 'QTableRow',
@@ -333,22 +323,6 @@
 			 * A dynamic title for the row or a static string; used for tooltips or accessibility.
 			 */
 			rowTitle: {
-				type: [Function, String],
-				default: ''
-			},
-
-			/**
-			 * A dynamic text color for the row or a static string; can be used to style rows conditionally.
-			 */
-			textColor: {
-				type: [Function, String],
-				default: ''
-			},
-
-			/**
-			 * A dynamic background color for the row or a static string; used for conditional styling.
-			 */
-			bgColor: {
 				type: [Function, String],
 				default: ''
 			},
@@ -626,12 +600,12 @@
 
 			//FOR: select row on return
 			this.expandFromRowKeyPath(this.rowKeyToScroll)
-			if(this.isLastInRowKeyPath(this.rowKeyToScroll))
+			if (this.isLastInRowKeyPath(this.rowKeyToScroll))
 				this.$emit('go-to-row', this.rowKeyToScroll, this.rowId)
 
 			//FOR: navigate to row on return
 			this.expandFromRowKeyPath(this.navigatedRowKeyPath)
-			if(this.isLastInRowKeyPath(this.navigatedRowKeyPath))
+			if (this.isLastInRowKeyPath(this.navigatedRowKeyPath))
 				this.$emit('navigate-row', this.rowIndex)
 		},
 
@@ -683,7 +657,7 @@
 			 * @returns String
 			 */
 			rowStyles() {
-				var rowStyles = {}
+				const rowStyles = {}
 
 				//Don't apply styles for rows with invalid state
 				if (this.isValid === false) {
@@ -691,22 +665,11 @@
 				}
 
 				//Row text color
-				if (this.textColor) {
-					if (typeof this.textColor === 'string' && this.textColor !== '') {
-						rowStyles['color'] = this.textColor
-					} else if (typeof this.textColor === 'function') {
-						rowStyles['color'] = this.textColor(this.row)
-					}
-				}
-
+				if (this.row.Fields?.foregroundColor?.length > 0)
+					rowStyles['color'] = this.row.Fields.foregroundColor
 				//Row background color
-				if (this.bgColor) {
-					if (typeof this.bgColor === 'string' && this.bgColor !== '') {
-						rowStyles['background-color'] = this.bgColor
-					} else if (typeof this.bgColor === 'function') {
-						rowStyles['background-color'] = this.bgColor(this.row)
-					}
-				}
+				if (this.row.Fields?.backgroundColor?.length > 0)
+					rowStyles['background-color'] = this.row.Fields.backgroundColor
 
 				//Row selected background color
 				if (this.rowSelectedForGroup !== false) {
@@ -734,13 +697,47 @@
 				// For rows without sub rows (normal tables)
 				if (!this.isRowHasChild)
 					return null
-				
+
 				// For rows with sub rows
 				return this.showChildren
 			},
 
 			addAction() {
 				return _find(this.generalActions, (act) => act.id === 'insert')
+			},
+
+			/**
+			 * Computes the list of actions and extra properties to use in the row actions
+			 */
+			rowActions(){
+				return [
+					...this.customActions.map(act => ({
+						...act,
+						isVisible: this.row.actionVisibility?.[act.id] ?? act.isVisible
+					})),
+					...this.crudActions.map(act => ({
+						...act,
+						disabled: !genericFunctions.btnHasPermission(this.row.btnPermission, act.id)
+					}))
+				];
+			},
+			
+			/**
+			 * Computes the groups of actions to use in the row actions
+			 */
+			rowActionGroups() {
+				const commonSettings = {
+					display: this.rowActionDisplay,
+					disabled: false,
+					bStyle: 'secondary',
+					borderless: true,
+					separator: false,
+					customClass: undefined
+				}
+				return [
+					{ id: 'custom', ...commonSettings },
+					{ id: 'crud', ...commonSettings },
+				]
 			}
 		},
 
@@ -807,20 +804,21 @@
 			 * @returns String
 			 */
 			getCellStyles(column) {
-				var cellStyles = {}
+				const cellStyles = {}
 
 				//Don't apply styles for rows with invalid state
 				if (this.isValid === false) {
 					return cellStyles
 				}
 
-				//Cell text color
-				if (column.textColor) {
-					if (typeof column.textColor === 'string' && column.textColor !== '') {
-						cellStyles['color'] = column.textColor
-					} else if (typeof column.textColor === 'function') {
-						cellStyles['color'] = column.textColor(this.row, column)
-					}
+				// The buttons and checkboxes columns won't have an order.
+				if (typeof column.order === 'number')
+				{
+					const rowColumn = this.row.Fields?.columns?.[column.order - 1]
+
+					// Cell text color
+					if (rowColumn?.foregroundColor?.length > 0)
+						cellStyles['color'] = rowColumn.foregroundColor
 				}
 
 				return cellStyles
@@ -850,7 +848,7 @@
 						break
 					case "Delete":
 						// Prevent if not focused on the row element
-						if(event.target.tagName !== 'TR')
+						if (event.target.tagName !== 'TR')
 							break
 						// Delete record
 						this.$emit('row-action', { id: 'delete', rowKeyPath: this.rowKeyPath ?? [this.rowKey] })
@@ -870,7 +868,7 @@
 				{
 					case 'Enter':
 						// Trigger only from the row and cell elements.
-						if(event?.target.tagName === 'TR' || event?.target.tagName === 'TD')
+						if (event?.target.tagName === 'TR' || event?.target.tagName === 'TD')
 							this.$emit('row-click', this.row)
 						break
 				}
@@ -894,7 +892,7 @@
 			 * @returns String
 			 */
 			setSubRowsVisibility(visibility) {
-				if(typeof visibility !== 'boolean')
+				if (typeof visibility !== 'boolean')
 					return
 
 				this.showChildren = visibility
@@ -944,18 +942,22 @@
 
 			/**
 			 * Cell background color
-			 * @param row {Object}
 			 * @param column {Object}
 			 * @returns String
 			 */
-			getBackgroundColor(row, column) {
-				if (column.bgColor) {
-					if (typeof column.bgColor === 'string' && column.bgColor !== '') {
-						return column.bgColor
-					} else if (typeof column.bgColor === 'function') {
-						return column.bgColor(row, column)
-					}
+			getBackgroundColor(column)
+			{
+				// The buttons and checkboxes columns won't have an order.
+				if (typeof column.order === 'number')
+				{
+					const rowColumn = this.row.Fields?.columns?.[column.order - 1]
+
+					// Cell background color
+					if (rowColumn?.backgroundColor?.length > 0)
+						return rowColumn.backgroundColor
 				}
+
+				return ''
 			},
 
 			/**

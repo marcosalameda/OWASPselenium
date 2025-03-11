@@ -151,7 +151,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodempre',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValName',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
 								name: 'ValGender',
@@ -171,7 +171,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayGenero.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayGenero.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 4,
 								name: 'ValDtnascim',
@@ -180,7 +180,7 @@
 								label: computed(() => this.Resources.BIRTH21799),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
 								name: 'ValIdade',
@@ -190,7 +190,7 @@
 								scrollData: 5,
 								maxDigits: 5,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
 								name: 'ValIdfuncio',
@@ -200,7 +200,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'ValTelephon',
@@ -209,7 +209,7 @@
 								label: computed(() => this.Resources.PHONE56703),
 								dataLength: 20,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
 								name: 'ValEmail',
@@ -218,7 +218,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
 								name: 'ValEmail2',
@@ -227,7 +227,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 10,
 								name: 'ValPhotogra',
@@ -238,7 +238,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 11,
 								name: 'ValDtultcat',
@@ -247,7 +247,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 12,
 								name: 'Categ.ValCategoria',
@@ -257,7 +257,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodcateg',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 13,
 								name: 'ValExterna',
@@ -265,7 +265,7 @@
 								field: 'EXTERNA',
 								label: computed(() => this.Resources.EXTERNAL13375),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 14,
 								name: 'ValInterna',
@@ -273,7 +273,7 @@
 								field: 'INTERNA',
 								label: computed(() => this.Resources.INTERNAL04894),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 15,
 								name: 'Cntry.ValCountry',
@@ -283,7 +283,7 @@
 								dataLength: 90,
 								scrollData: 30,
 								pkColumn: 'ValCodcntry',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 16,
 								name: 'Pais1.ValCountry',
@@ -293,7 +293,7 @@
 								dataLength: 90,
 								scrollData: 30,
 								pkColumn: 'ValCodcntry',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 17,
 								name: 'Regi1.ValRegiao',
@@ -303,7 +303,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodregia',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_1411',
@@ -432,11 +432,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1'],
+						globalEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-PAIS1', 'changed-CMPNY'],
 						uuid: '70d754f6-18c4-4fa0-9c99-0e776084a3e4',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

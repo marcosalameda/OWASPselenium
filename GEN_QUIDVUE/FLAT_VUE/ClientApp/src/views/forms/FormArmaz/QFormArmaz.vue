@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -166,7 +166,7 @@
 								<q-checkbox-input
 									v-if="controls.ARMAZ___WAREHSHOWRECO.isVisible"
 									v-bind="controls.ARMAZ___WAREHSHOWRECO.props"
-									@update:model-value="model.ValShowreco.fnUpdateValue" />
+									v-on="controls.ARMAZ___WAREHSHOWRECO.handlers" />
 							</template>
 						</base-input-structure>
 					</q-control-wrapper>
@@ -317,8 +317,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -610,7 +608,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
 								name: 'ValSex',
@@ -621,7 +619,7 @@
 								scrollData: 9,
 								array: qProjArrays.QArraySexo.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArraySexo.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValNfunc',
@@ -631,7 +629,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValPessarma',
@@ -754,7 +752,7 @@
 									isVisible: computed(() => vm.controls.ARMAZ___PSEUDEXPOSETB.isVisible),
 									disabled: computed(() => vm.controls.ARMAZ___PSEUDEXPOSETB.isBlocked),
 									params: {
-										action: (c, o, d) => vm.controls.ARMAZ___PSEUDEXPOSETB.action(d || c),
+										action: (c, _, d) => vm.controls.ARMAZ___PSEUDEXPOSETB.action(d || c),
 										isControlled: true,
 										isRoute: true
 									}
@@ -789,7 +787,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-WAREH', 'changed-WPESS'],
+						globalEvents: ['changed-WAREH', 'changed-WPESS'],
 						uuid: 'Armaz_ValPessarma',
 						allSelectedRows: 'false',
 						controlLimits: [

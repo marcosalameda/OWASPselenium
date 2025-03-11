@@ -151,7 +151,7 @@
 								dataLength: 6,
 								scrollData: 6,
 								pkColumn: 'ValCodequip',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDthranex',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.ATTACHED26247),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValTitle',
@@ -169,7 +169,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 4,
 								name: 'ValDocument',
@@ -180,7 +180,7 @@
 								scrollData: 30,
 								sortable: false,
 								viewType: qEnums.documentViewTypeMode.preview,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'Langu.ValLangua',
@@ -190,7 +190,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodlang',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValTittradu',
@@ -199,7 +199,7 @@
 								label: computed(() => this.Resources.TITULO_TRADUZIDO52244),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_931',
@@ -341,11 +341,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-EQUIP', 'changed-ANEXD', 'changed-LANGU'],
+						globalEvents: ['changed-EQUIP', 'changed-ANEXD', 'changed-LANGU'],
 						uuid: 'd0edbebe-a828-4bc2-8c79-fd97739f9c49',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

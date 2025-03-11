@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -242,7 +242,7 @@
 											<q-checkbox-input
 												v-if="controls.ARTIG___ITEM_VALID___.isVisible"
 												v-bind="controls.ARTIG___ITEM_VALID___.props"
-												@update:model-value="model.ValValid.fnUpdateValue" />
+												v-on="controls.ARTIG___ITEM_VALID___.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -674,8 +674,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -1169,7 +1167,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDate',
@@ -1178,7 +1176,7 @@
 								label: computed(() => this.Resources.INSTANT35907),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValType',
@@ -1187,7 +1185,7 @@
 								label: computed(() => this.Resources.TYPE00312),
 								dataLength: 8,
 								scrollData: 8,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValReferenc',
@@ -1196,7 +1194,7 @@
 								label: computed(() => this.Resources.REF_A30225),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
 								name: 'ValQnty',
@@ -1206,7 +1204,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
 								name: 'ValBalance',
@@ -1216,7 +1214,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValContacor',
@@ -1237,8 +1235,6 @@
 							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
-							// eslint-disable-next-line no-unused-vars
-							rowBgColor: (row) => qApi.iif(row.Fields.ValType==="Entrada",qApi.RGB(207,255,158),qApi.iif(row.Fields.ValType==="Saída",qApi.RGB(255,190,158),qApi.RGB(255,255,255))),
 							generalCustomActions: [
 							],
 							groupActions: [
@@ -1258,7 +1254,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-CCORR', 'changed-INDOC', 'changed-ITEM'],
+						globalEvents: ['changed-CCORR', 'changed-INDOC', 'changed-ITEM'],
 						uuid: 'Artig_ValContacor',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1306,7 +1302,7 @@
 								label: computed(() => this.Resources.INSTANT_ENTRANCE27379),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'Indoc.ValDocumenr',
@@ -1326,7 +1322,7 @@
 								maxDigits: 10,
 								decimalPlaces: 0,
 								pkColumn: 'ValCoddentr',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValLine',
@@ -1336,7 +1332,7 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValQtdentra',
@@ -1346,7 +1342,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValLentrada',
@@ -1367,8 +1363,6 @@
 							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
-							// eslint-disable-next-line no-unused-vars
-							rowTextColor: (row) => qApi.RGB(207,255,158),
 							crudActions: [
 								{
 									id: 'show',
@@ -1493,7 +1487,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						changeEvents: ['changed-WAREH', 'changed-LDENT', 'changed-ITEM', 'changed-INDOC', 'changed-WARE1', 'changed-PESSO', 'changed-CMPNY', 'changed-CNTRY'],
+						globalEvents: ['changed-WAREH', 'changed-LDENT', 'changed-ITEM', 'changed-INDOC', 'changed-WARE1', 'changed-PESSO', 'changed-CMPNY', 'changed-CNTRY'],
 						uuid: 'Artig_ValLentrada',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1526,7 +1520,7 @@
 								label: computed(() => this.Resources.EXIT_INSTANT27038),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'Outpt.ValDocumenr',
@@ -1546,7 +1540,7 @@
 								maxDigits: 10,
 								decimalPlaces: 0,
 								pkColumn: 'ValCodoutpt',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValLine',
@@ -1556,7 +1550,7 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValExitqnty',
@@ -1566,7 +1560,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValLsaidas',
@@ -1587,8 +1581,6 @@
 							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
-							// eslint-disable-next-line no-unused-vars
-							rowTextColor: (row) => qApi.RGB(255,190,158),
 							crudActions: [
 								{
 									id: 'show',
@@ -1713,7 +1705,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						changeEvents: ['changed-ITEM', 'changed-OUTPU', 'changed-OUTPT', 'changed-OUDOC', 'changed-WAREH', 'changed-WARE1'],
+						globalEvents: ['changed-ITEM', 'changed-OUTPU', 'changed-OUTPT', 'changed-OUDOC', 'changed-WAREH', 'changed-WARE1'],
 						uuid: 'Artig_ValLsaidas',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1759,7 +1751,7 @@
 								label: computed(() => this.Resources.CATEGORY_TYPE23058),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Sbcat.ValSubcateg',
@@ -1769,7 +1761,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodsbcat',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValCategori',
@@ -1817,7 +1809,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-CATTP', 'changed-SBCAT', 'changed-ITEMC', 'changed-ITEM'],
+						globalEvents: ['changed-CATTP', 'changed-SBCAT', 'changed-ITEMC', 'changed-ITEM'],
 						uuid: 'Artig_ValCategori',
 						allSelectedRows: 'false',
 						modelField: 'List_Categori_SelectedIds',
@@ -1858,7 +1850,7 @@
 								label: computed(() => this.Resources.CATEGORY_TYPE23058),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Sbcat.ValSubcateg',
@@ -1868,7 +1860,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodsbcat',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValCategor',
@@ -1916,7 +1908,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-CATTP', 'changed-SBCAT', 'changed-ITEMC', 'changed-ITEM'],
+						globalEvents: ['changed-CATTP', 'changed-SBCAT', 'changed-ITEMC', 'changed-ITEM'],
 						uuid: 'Artig_ValCategor',
 						allSelectedRows: 'false',
 						modelField: 'List_Categor_SelectedIds',

@@ -16,16 +16,16 @@ const state = () => {
 		applicationName: 'Vertical layout - Vue',
 
 		genio: {
-			buildVersion: 2902,
-			dbIdxVersion: 1606,
-			dbVersion: '3938',
-			genioVersion: '362,25',
+			buildVersion: 2907,
+			dbIdxVersion: 1658,
+			dbVersion: '3989',
+			genioVersion: '362,39',
 			trackChangesVersion: '0',
-			assemblyVersion: '362,25.3938.0.2902',
+			assemblyVersion: '362,39.3989.0.2907',
 			generationDate: {
 				year: 2025,
-				month: 2,
-				day: 20
+				month: 3,
+				day: 11
 			}
 		},
 

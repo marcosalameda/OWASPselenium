@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Produsim_LocatValGlnModel : RequestLookupModel
+		{
+			public Produsim_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Produ/Produsim_LocatValGln
 		// POST: /Produ/Produsim_LocatValGln
 		[ActionName("Produsim_LocatValGln")]
-		public ActionResult Produsim_LocatValGln([FromBody]RequestLookupModel requestModel)
+		public ActionResult Produsim_LocatValGln([FromBody] Produsim_LocatValGlnModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Produsim_LocatValGln_ViewModel model = new Produsim_LocatValGln_ViewModel(UserContext.Current);
-			
+
+			Models.Produ parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Produsim_LocatValGln_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Produsim_LcextValGlnextModel : RequestLookupModel
+		{
+			public Produsim_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Produ/Produsim_LcextValGlnext
 		// POST: /Produ/Produsim_LcextValGlnext
 		[ActionName("Produsim_LcextValGlnext")]
-		public ActionResult Produsim_LcextValGlnext([FromBody]RequestLookupModel requestModel)
+		public ActionResult Produsim_LcextValGlnext([FromBody] Produsim_LcextValGlnextModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Produsim_LcextValGlnext_ViewModel model = new Produsim_LcextValGlnext_ViewModel(UserContext.Current);
-			
+
+			Models.Produ parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Produsim_LcextValGlnext_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

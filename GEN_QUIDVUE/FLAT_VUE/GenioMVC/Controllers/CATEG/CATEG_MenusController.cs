@@ -43,11 +43,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			TBS_Menu_131_ViewModel model = new TBS_Menu_131_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,

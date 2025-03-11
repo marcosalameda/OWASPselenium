@@ -152,7 +152,7 @@
 								scrollData: 7,
 								array: qProjArrays.QArrayAddressu.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayAddressu.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
 								name: 'ValAddresstype',
@@ -163,7 +163,7 @@
 								scrollData: 8,
 								array: qProjArrays.QArrayAddresst.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayAddresst.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValAddresstext',
@@ -171,7 +171,7 @@
 								field: 'ADDRESSTEXT',
 								label: computed(() => this.Resources.ENTIRE_ADDRESS64248),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValAddresscity',
@@ -180,7 +180,7 @@
 								label: computed(() => this.Resources.ADDRESS_CITY41109),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValAddressdistrict',
@@ -189,7 +189,7 @@
 								label: computed(() => this.Resources.ADDRESS_DISTRICT48524),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValAddressstate',
@@ -198,7 +198,7 @@
 								label: computed(() => this.Resources.ADDRESS_STATE16863),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'ValAddresspostalcode',
@@ -207,7 +207,7 @@
 								label: computed(() => this.Resources.ADDRESS_POSTAL_CODE41631),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
 								name: 'ValAddresscountry',
@@ -216,7 +216,7 @@
 								label: computed(() => this.Resources.ADDRESS_COUNTRY56159),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
 								name: 'ValPeriodstart',
@@ -225,7 +225,7 @@
 								label: computed(() => this.Resources.PERIOD_START07901),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 10,
 								name: 'ValPeriodend',
@@ -234,7 +234,7 @@
 								label: computed(() => this.Resources.PERIOD_END31576),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_721',
@@ -376,11 +376,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ADDRE'],
+						globalEvents: ['changed-ADDRE'],
 						uuid: 'effd297d-4589-4a9c-b1c1-d836902892b1',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

@@ -38,39 +38,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Pwcom.ValCodpsw")]
 		public string ValCodpsw { get { return klass.ValCodpsw; } set { klass.ValCodpsw = value; } }
+
 		private Psw _psw;
 		[DisplayName("Psw")]
 		[ShouldSerialize("Psw")]
-		public virtual Psw Psw {
-			get {
-				if (!this.isEmptyModel && (_psw == null || (!string.IsNullOrEmpty(ValCodpsw) && (_psw.isEmptyModel || _psw.klass.QPrimaryKey != ValCodpsw))))
+		public virtual Psw Psw
+		{
+			get
+			{
+				if (!isEmptyModel && (_psw == null || (!string.IsNullOrEmpty(ValCodpsw) && (_psw.isEmptyModel || _psw.klass.QPrimaryKey != ValCodpsw))))
 					_psw = Models.Psw.Find(ValCodpsw, m_userContext, Identifier, _fieldsToSerialize);
-				if (_psw == null)
-					_psw = new Models.Psw(m_userContext, true, _fieldsToSerialize);
+				_psw ??= new Models.Psw(m_userContext, true, _fieldsToSerialize);
 				return _psw;
 			}
 			set { _psw = value; }
 		}
 
-
 		[DisplayName(">COMOMODOR")]
 		/// <summary>Field : ">COMOMODOR" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Pwcom.ValCodpess1")]
 		public string ValCodpess1 { get { return klass.ValCodpess1; } set { klass.ValCodpess1 = value; } }
+
 		private Pess1 _pess1;
 		[DisplayName("Pess1")]
 		[ShouldSerialize("Pess1")]
-		public virtual Pess1 Pess1 {
-			get {
-				if (!this.isEmptyModel && (_pess1 == null || (!string.IsNullOrEmpty(ValCodpess1) && (_pess1.isEmptyModel || _pess1.klass.QPrimaryKey != ValCodpess1))))
+		public virtual Pess1 Pess1
+		{
+			get
+			{
+				if (!isEmptyModel && (_pess1 == null || (!string.IsNullOrEmpty(ValCodpess1) && (_pess1.isEmptyModel || _pess1.klass.QPrimaryKey != ValCodpess1))))
 					_pess1 = Models.Pess1.Find(ValCodpess1, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pess1 == null)
-					_pess1 = new Models.Pess1(m_userContext, true, _fieldsToSerialize);
+				_pess1 ??= new Models.Pess1(m_userContext, true, _fieldsToSerialize);
 				return _pess1;
 			}
 			set { _pess1 = value; }
 		}
-
 
 		[DisplayName("Name")]
 		/// <summary>Field : "Name" Tipo: "C" Formula: ++ "[PSW->NOME]"</summary>
@@ -93,8 +95,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Pwcom.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Pwcom(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -113,7 +115,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioApwcom csgenioa)
 		{
 			if (csgenioa == null)
@@ -124,13 +125,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "psw":
-						if (_psw == null)
-							_psw = new Psw(m_userContext, true, _fieldsToSerialize);
+						_psw ??= new Psw(m_userContext, true, _fieldsToSerialize);
 						_psw.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "pess1":
-						if (_pess1 == null)
-							_pess1 = new Pess1(m_userContext, true, _fieldsToSerialize);
+						_pess1 ??= new Pess1(m_userContext, true, _fieldsToSerialize);
 						_pess1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

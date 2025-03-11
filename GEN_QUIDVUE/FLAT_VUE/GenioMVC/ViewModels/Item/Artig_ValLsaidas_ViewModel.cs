@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,51 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Item
 {
-	public class Artig_ValLsaidas_ViewModel : ListViewModel
+	public class Artig_ValLsaidas_ViewModel : MenuListViewModel<Models.Outpu>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Artig_ValLsaidas_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "outpu"; }
+		[JsonIgnore]
+		public override string TableAlias => "outpu";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Artig_ValLsaidas"; }
+		public override string Uuid => "Artig_ValLsaidas";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCoditem { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -52,6 +63,7 @@ namespace GenioMVC.ViewModels.Item
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -64,6 +76,7 @@ namespace GenioMVC.ViewModels.Item
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -91,12 +104,28 @@ namespace GenioMVC.ViewModels.Item
 		}
 
 		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Artig_ValLsaidas_ViewModel() : base(null!) { }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Artig_ValLsaidas_ViewModel" /> class.
 		/// </summary>
 		/// <param name="userContext">The current user request context</param>
 		public Artig_ValLsaidas_ViewModel(UserContext userContext) : base(userContext)
 		{
 			ValCoditem = userContext.CurrentNavigation.CurrentLevel.GetEntry("item")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Artig_ValLsaidas_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Artig_ValLsaidas_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -163,12 +192,6 @@ namespace GenioMVC.ViewModels.Item
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("OUTPU.EXITDT", new OrderedDictionary());
-			allSortOrders["OUTPU.EXITDT"].Add("OUTPU.EXITDT", "D");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -185,7 +208,6 @@ namespace GenioMVC.ViewModels.Item
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -282,22 +304,21 @@ namespace GenioMVC.ViewModels.Item
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAoutpu> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "ARTIG")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Artig_ValLsaidas_RowViewModel>();
 
 				CriteriaSet artig___pseudlsaidas_Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("OUTPU.EXITDT", new OrderedDictionary());
 				allSortOrders["OUTPU.EXITDT"].Add("OUTPU.EXITDT", "D");
-
 
 
 
@@ -335,20 +356,19 @@ namespace GenioMVC.ViewModels.Item
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAoutpu model_limit_area = new CSGenioAoutpu(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_ARTIG___PSEUDLSAIDAS_");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAoutpu model_limit_area = new CSGenioAoutpu(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_ARTIG___PSEUDLSAIDAS_");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -396,7 +416,6 @@ namespace GenioMVC.ViewModels.Item
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -416,18 +435,12 @@ namespace GenioMVC.ViewModels.Item
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -435,7 +448,7 @@ namespace GenioMVC.ViewModels.Item
 
 		private List<Artig_ValLsaidas_RowViewModel> MapArtig_ValLsaidas(ListingMVC<CSGenioAoutpu> Qlisting)
 		{
-			var Elements = new List<Artig_ValLsaidas_RowViewModel>();
+			List<Artig_ValLsaidas_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -452,7 +465,6 @@ namespace GenioMVC.ViewModels.Item
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAoutpu row
 		/// to a Artig_ValLsaidas_RowViewModel object.
@@ -461,7 +473,9 @@ namespace GenioMVC.ViewModels.Item
 		private Artig_ValLsaidas_RowViewModel MapArtig_ValLsaidas(CSGenioAoutpu row)
 		{
 			var model = new Artig_ValLsaidas_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -475,32 +489,7 @@ namespace GenioMVC.ViewModels.Item
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Artig_ValLsaidas_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -514,39 +503,45 @@ namespace GenioMVC.ViewModels.Item
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAoutpu> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAoutpu row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Outpu m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Outpu m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM ARTIG_VALLSAIDAS]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Outpu", "Outpu.ValCodoutpu", "Outpu.ValZzstate", "Outpu.ValExitdt", "Outpt", "Outpt.ValDocumenr", "Outpu.ValLine", "Outpu.ValExitqnty", "Outpu.ValCodoutpt", "Outpt.ValCodoutpt", "Outpu.ValCoditem", "Outpu.ValCoddocsd", "Outpu.ValCodwareh", "BtnPermission"
+			"Outpu", "Outpu.ValCodoutpu", "Outpu.ValZzstate", "Outpu.ValExitdt", "Outpt", "Outpt.ValDocumenr", "Outpu.ValLine", "Outpu.ValExitqnty", "Outpu.ValCodoutpt", "Outpt.ValCodoutpt", "Outpu.ValCoditem", "Outpu.ValCoddocsd", "Outpu.ValCodwareh"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValExitdt", CSGenioAoutpu.FldExitdt, typeof(DateTime?)),
 			new TableSearchColumn("Outpt_ValDocumenr", CSGenioAoutpt.FldDocumenr, typeof(decimal?)),
 			new TableSearchColumn("ValLine", CSGenioAoutpu.FldLine, typeof(decimal?)),
 			new TableSearchColumn("ValExitqnty", CSGenioAoutpu.FldExitqnty, typeof(decimal?))
 		];
-
-
-
 	}
 }

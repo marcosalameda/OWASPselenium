@@ -115,10 +115,10 @@
 
 				<!-- BEGIN: General custom action links -->
 				<q-table-actions
-					v-if="numArrayVisibleActions(visibleGeneralCustomActions, readonly) >= 1 && display === 'dropdown'"
+					v-if="numArrayVisibleActions(generalCustomActions, readonly) >= 1 && display === 'dropdown'"
 					borderless
 					show-action-text
-					:actions="visibleGeneralCustomActions"
+					:actions="generalCustomActions"
 					:enable-actions="enableGeneralActions"
 					:readonly="readonly"
 					:separator-class="separatorClass"
@@ -343,42 +343,27 @@
 			 * The allowed CRUD actions on the row
 			 */
 			allowedCrudActions() {
-				return _map(this.crudActions, (action) => {
-					return {
-						...action,
-						disabled: !this.hasPermission(action.id)
-					}
-				})
+				return _map(this.crudActions, (action) => ({
+					...action,
+					disabled: !this.hasPermission(action.id)
+				}))
 			},
 
 			/**
 			 * The allowed General actions on the table
 			 */
 			allowedGeneralActions() {
-				return _map(this.generalActions, (action) => {
-					return {
-						...action,
-						disabled: !this.hasPermission(action.id)
-					}
-				})
+				return _map(this.generalActions, (action) => ({
+					...action,
+					disabled: !this.hasPermission(action.id)
+				}))
 			},
 
 			visibleCustomActions() {
-				return _map(this.customActions, (action) => {
-					return {
-						...action,
-						isVisible: this.actionVisibility ? this.actionVisibility[action.id] : action.isVisible
-					}
-				})
-			},
-
-			visibleGeneralCustomActions() {
-				return _map(this.generalCustomActions, (action) => {
-					return {
-						...action,
-						isVisible: action.visibleCondition ? action.visibleCondition() : action.isVisible
-					}
-				})
+				return _map(this.customActions, (action) => ({
+					...action,
+					isVisible: this.actionVisibility?.[action.id] ?? action.isVisible
+				}))
 			},
 
 			/**
@@ -391,7 +376,7 @@
 					this.numArrayVisibleActions(this.allowedCrudActions, this.readonly) +
 					this.numArrayVisibleActions(this.visibleCustomActions, this.readonly) +
 					this.numArrayVisibleActions(this.allowedGeneralActions, this.readonly) +
-					this.numArrayVisibleActions(this.visibleGeneralCustomActions, this.readonly)
+					this.numArrayVisibleActions(this.generalCustomActions, this.readonly)
 				)
 			},
 
@@ -413,7 +398,7 @@
 					if (this.numArrayVisibleActions(this.allowedCrudActions, this.readonly) === 1) return this.allowedCrudActions
 					if (this.numArrayVisibleActions(this.visibleCustomActions, this.readonly) === 1) return this.visibleCustomActions
 					if (this.numArrayVisibleActions(this.allowedGeneralActions, this.readonly) === 1) return this.allowedGeneralActions
-					if (this.numArrayVisibleActions(this.visibleGeneralCustomActions, this.readonly) === 1) return this.generalCustomActions
+					if (this.numArrayVisibleActions(this.generalCustomActions, this.readonly) === 1) return this.generalCustomActions
 				}
 				return null
 			},

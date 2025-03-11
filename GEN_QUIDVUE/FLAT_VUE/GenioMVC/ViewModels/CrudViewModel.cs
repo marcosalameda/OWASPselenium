@@ -180,7 +180,6 @@ namespace GenioMVC.ViewModels
 		void PopulateViewModel(Dictionary<string, object> values);
 	}
 
-
 	public abstract class CrudViewModel<T> : ViewModelBase, ICrudViewModel where T : Models.ModelBase
 	{
 		/// <summary>
@@ -333,14 +332,17 @@ namespace GenioMVC.ViewModels
 
 		public abstract void NewLoad();
 
-		// Mapping must be implemented by the subclass
+		/// <summary>
+		/// Performs the mapping of field values from the Model to the ViewModel.
+		/// </summary>
+		/// <param name="model">The Model to be filled.</param>
 		public abstract void MapFromModel(T model);
 
 		/// <summary>
 		/// Performs the mapping of field values from the ViewModel to the Model.
 		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <param name="model">The Model to be filled.</param>
+		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="model"/> is null.</exception>
 		public abstract void MapToModel(T model);
 
 		/// <summary>

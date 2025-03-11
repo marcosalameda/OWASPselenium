@@ -130,7 +130,7 @@
 					<q-checkbox-input
 						v-if="controls.GRPB____PSEUDTBLB____TBLB_BOOL____.isVisible"
 						v-bind="controls.GRPB____PSEUDTBLB____TBLB_BOOL____.props"
-						@update:model-value="model.ValBool.fnUpdateValue" />
+						v-on="controls.GRPB____PSEUDTBLB____TBLB_BOOL____.handlers" />
 				</template>
 			</grid-base-input-structure>
 		</td>

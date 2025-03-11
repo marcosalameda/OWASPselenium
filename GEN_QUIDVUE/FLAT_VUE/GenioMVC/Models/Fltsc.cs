@@ -44,25 +44,26 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Fltsc.ValCodfligh")]
 		public string ValCodfligh { get { return klass.ValCodfligh; } set { klass.ValCodfligh = value; } }
+
 		private Fligh _fligh;
 		[DisplayName("Fligh")]
 		[ShouldSerialize("Fligh")]
-		public virtual Fligh Fligh {
-			get {
-				if (!this.isEmptyModel && (_fligh == null || (!string.IsNullOrEmpty(ValCodfligh) && (_fligh.isEmptyModel || _fligh.klass.QPrimaryKey != ValCodfligh))))
+		public virtual Fligh Fligh
+		{
+			get
+			{
+				if (!isEmptyModel && (_fligh == null || (!string.IsNullOrEmpty(ValCodfligh) && (_fligh.isEmptyModel || _fligh.klass.QPrimaryKey != ValCodfligh))))
 					_fligh = Models.Fligh.Find(ValCodfligh, m_userContext, Identifier, _fieldsToSerialize);
-				if (_fligh == null)
-					_fligh = new Models.Fligh(m_userContext, true, _fieldsToSerialize);
+				_fligh ??= new Models.Fligh(m_userContext, true, _fieldsToSerialize);
 				return _fligh;
 			}
 			set { _fligh = value; }
 		}
 
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Fltsc.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Fltsc(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -81,7 +82,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAfltsc csgenioa)
 		{
 			if (csgenioa == null)
@@ -92,8 +92,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "fligh":
-						if (_fligh == null)
-							_fligh = new Fligh(m_userContext, true, _fieldsToSerialize);
+						_fligh ??= new Fligh(m_userContext, true, _fieldsToSerialize);
 						_fligh.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

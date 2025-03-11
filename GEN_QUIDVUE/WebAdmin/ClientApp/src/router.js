@@ -67,16 +67,28 @@ export function setupRouter(i18n) {
       props: true
     },
     {
+      path: '/:culture/:system/DbAdmin/LogDetails/:logId?',
+      name: 'log_details',
+      component: () => import(/* webpackChunkName: "log_details" */ './views/Maintenance/LogDetails.vue'),
+      props:  route => ({ logId: Number(route.params.logId) })
+    },
+    {
       path: '/:culture/:system/Users',
       name: 'users',
       component: () => import(/* webpackChunkName: "users" */ './views/Users/Users.vue'),
       props: true
     },
-        {
-        path: '/:culture/:system/Users/RoleView/:module/:role',
-        name: 'view_role',
-        component: () => import(/* webpackChunkName: "viewrole" */ './views/Users/RoleView.vue'),
-        props: true
+    {
+      path: '/:culture/:system/Users/Roles',
+      name: 'roles',
+      component: () => import(/* webpackChunkName: "roles" */ './views/Users/RoleList.vue'),
+      props: true
+    },
+    {
+      path: '/:culture/:system/Users/RoleView/:module/:role',
+      name: 'view_role',
+      component: () => import(/* webpackChunkName: "viewrole" */ './views/Users/RoleView.vue'),
+      props: true
     },
     {
       path: '/:culture/:system/ManageUsers/:mod/:cod?',

@@ -151,7 +151,7 @@
 								dataLength: 25,
 								scrollData: 25,
 								pkColumn: 'ValCodfacty',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_4241',
@@ -293,11 +293,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FACTY', 'changed-GLOB'],
+						globalEvents: ['changed-FACTY', 'changed-GLOB'],
 						uuid: '0666b85e-6c85-44dd-a3e5-555d90e861d9',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

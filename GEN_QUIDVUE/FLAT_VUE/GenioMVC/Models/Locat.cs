@@ -38,39 +38,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Locat.ValCodentit")]
 		public string ValCodentit { get { return klass.ValCodentit; } set { klass.ValCodentit = value; } }
+
 		private Entit _entit;
 		[DisplayName("Entit")]
 		[ShouldSerialize("Entit")]
-		public virtual Entit Entit {
-			get {
-				if (!this.isEmptyModel && (_entit == null || (!string.IsNullOrEmpty(ValCodentit) && (_entit.isEmptyModel || _entit.klass.QPrimaryKey != ValCodentit))))
+		public virtual Entit Entit
+		{
+			get
+			{
+				if (!isEmptyModel && (_entit == null || (!string.IsNullOrEmpty(ValCodentit) && (_entit.isEmptyModel || _entit.klass.QPrimaryKey != ValCodentit))))
 					_entit = Models.Entit.Find(ValCodentit, m_userContext, Identifier, _fieldsToSerialize);
-				if (_entit == null)
-					_entit = new Models.Entit(m_userContext, true, _fieldsToSerialize);
+				_entit ??= new Models.Entit(m_userContext, true, _fieldsToSerialize);
 				return _entit;
 			}
 			set { _entit = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Locat.ValCodfacil")]
 		public string ValCodfacil { get { return klass.ValCodfacil; } set { klass.ValCodfacil = value; } }
+
 		private Facil _facil;
 		[DisplayName("Facil")]
 		[ShouldSerialize("Facil")]
-		public virtual Facil Facil {
-			get {
-				if (!this.isEmptyModel && (_facil == null || (!string.IsNullOrEmpty(ValCodfacil) && (_facil.isEmptyModel || _facil.klass.QPrimaryKey != ValCodfacil))))
+		public virtual Facil Facil
+		{
+			get
+			{
+				if (!isEmptyModel && (_facil == null || (!string.IsNullOrEmpty(ValCodfacil) && (_facil.isEmptyModel || _facil.klass.QPrimaryKey != ValCodfacil))))
 					_facil = Models.Facil.Find(ValCodfacil, m_userContext, Identifier, _fieldsToSerialize);
-				if (_facil == null)
-					_facil = new Models.Facil(m_userContext, true, _fieldsToSerialize);
+				_facil ??= new Models.Facil(m_userContext, true, _fieldsToSerialize);
 				return _facil;
 			}
 			set { _facil = value; }
 		}
-
 
 		[DisplayName("Global Location Number")]
 		/// <summary>Field : "Global Location Number" Tipo: "C" Formula:  ""</summary>
@@ -79,8 +81,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Locat.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Locat(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -99,7 +101,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAlocat csgenioa)
 		{
 			if (csgenioa == null)
@@ -110,13 +111,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "entit":
-						if (_entit == null)
-							_entit = new Entit(m_userContext, true, _fieldsToSerialize);
+						_entit ??= new Entit(m_userContext, true, _fieldsToSerialize);
 						_entit.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "facil":
-						if (_facil == null)
-							_facil = new Facil(m_userContext, true, _fieldsToSerialize);
+						_facil ??= new Facil(m_userContext, true, _fieldsToSerialize);
 						_facil.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

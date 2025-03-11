@@ -191,6 +191,19 @@
 							}
 						},
 						{
+							id: 'RENAME',
+							name: 'RENAME',
+							title: this.texts.renameText,
+							icon: {
+								icon: 'pencil'
+							},
+							params: {
+								type: 'form',
+								formName: 'VIEW',
+								mode: 'RENAME'
+							}
+						},
+						{
 							id: 'DUPLICATE',
 							name: 'DUPLICATE',
 							title: this.texts.duplicateText,

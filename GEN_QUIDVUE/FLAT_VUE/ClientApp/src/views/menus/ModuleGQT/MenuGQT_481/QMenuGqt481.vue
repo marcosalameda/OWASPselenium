@@ -151,7 +151,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCoditem',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Cattp.ValTpcatego',
@@ -161,7 +161,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodtpcat',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_481',
@@ -303,11 +303,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ITEMC', 'changed-ITEM', 'changed-CATTP'],
+						globalEvents: ['changed-ITEMC', 'changed-ITEM', 'changed-CATTP'],
 						uuid: '4097bafd-ae59-4acb-af77-b863f0cf03b9',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

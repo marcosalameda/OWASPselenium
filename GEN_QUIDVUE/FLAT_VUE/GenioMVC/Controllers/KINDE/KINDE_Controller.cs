@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER KINDE]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Kinde" form. (++, CT, SR, CL and U1)
 		/// </summary>

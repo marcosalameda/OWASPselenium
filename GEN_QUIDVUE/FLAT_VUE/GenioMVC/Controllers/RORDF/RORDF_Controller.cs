@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER RORDF]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Rordf" form. (++, CT, SR, CL and U1)
 		/// </summary>

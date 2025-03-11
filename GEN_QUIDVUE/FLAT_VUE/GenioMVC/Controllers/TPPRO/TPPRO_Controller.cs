@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER TPPRO]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Tppro" form. (++, CT, SR, CL and U1)
 		/// </summary>

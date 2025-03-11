@@ -110,7 +110,7 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValName',
 			area: 'PWCOM',
 			field: 'NAME',
-			maxLength: 20,
+			maxLength: 100,
 			description: computed(() => this.Resources.NAME31974),
 			isFixed: true,
 			valueFormula: {

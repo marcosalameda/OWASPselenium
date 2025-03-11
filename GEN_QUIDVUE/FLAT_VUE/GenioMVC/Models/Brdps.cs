@@ -51,77 +51,81 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Brdps.ValCodfligh")]
 		public string ValCodfligh { get { return klass.ValCodfligh; } set { klass.ValCodfligh = value; } }
+
 		private Fligh _fligh;
 		[DisplayName("Fligh")]
 		[ShouldSerialize("Fligh")]
-		public virtual Fligh Fligh {
-			get {
-				if (!this.isEmptyModel && (_fligh == null || (!string.IsNullOrEmpty(ValCodfligh) && (_fligh.isEmptyModel || _fligh.klass.QPrimaryKey != ValCodfligh))))
+		public virtual Fligh Fligh
+		{
+			get
+			{
+				if (!isEmptyModel && (_fligh == null || (!string.IsNullOrEmpty(ValCodfligh) && (_fligh.isEmptyModel || _fligh.klass.QPrimaryKey != ValCodfligh))))
 					_fligh = Models.Fligh.Find(ValCodfligh, m_userContext, Identifier, _fieldsToSerialize);
-				if (_fligh == null)
-					_fligh = new Models.Fligh(m_userContext, true, _fieldsToSerialize);
+				_fligh ??= new Models.Fligh(m_userContext, true, _fieldsToSerialize);
 				return _fligh;
 			}
 			set { _fligh = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Brdps.ValCodpsngr")]
 		public string ValCodpsngr { get { return klass.ValCodpsngr; } set { klass.ValCodpsngr = value; } }
+
 		private Psngr _psngr;
 		[DisplayName("Psngr")]
 		[ShouldSerialize("Psngr")]
-		public virtual Psngr Psngr {
-			get {
-				if (!this.isEmptyModel && (_psngr == null || (!string.IsNullOrEmpty(ValCodpsngr) && (_psngr.isEmptyModel || _psngr.klass.QPrimaryKey != ValCodpsngr))))
+		public virtual Psngr Psngr
+		{
+			get
+			{
+				if (!isEmptyModel && (_psngr == null || (!string.IsNullOrEmpty(ValCodpsngr) && (_psngr.isEmptyModel || _psngr.klass.QPrimaryKey != ValCodpsngr))))
 					_psngr = Models.Psngr.Find(ValCodpsngr, m_userContext, Identifier, _fieldsToSerialize);
-				if (_psngr == null)
-					_psngr = new Models.Psngr(m_userContext, true, _fieldsToSerialize);
+				_psngr ??= new Models.Psngr(m_userContext, true, _fieldsToSerialize);
 				return _psngr;
 			}
 			set { _psngr = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Brdps.ValCodtickt")]
 		public string ValCodtickt { get { return klass.ValCodtickt; } set { klass.ValCodtickt = value; } }
+
 		private Tickt _tickt;
 		[DisplayName("Tickt")]
 		[ShouldSerialize("Tickt")]
-		public virtual Tickt Tickt {
-			get {
-				if (!this.isEmptyModel && (_tickt == null || (!string.IsNullOrEmpty(ValCodtickt) && (_tickt.isEmptyModel || _tickt.klass.QPrimaryKey != ValCodtickt))))
+		public virtual Tickt Tickt
+		{
+			get
+			{
+				if (!isEmptyModel && (_tickt == null || (!string.IsNullOrEmpty(ValCodtickt) && (_tickt.isEmptyModel || _tickt.klass.QPrimaryKey != ValCodtickt))))
 					_tickt = Models.Tickt.Find(ValCodtickt, m_userContext, Identifier, _fieldsToSerialize);
-				if (_tickt == null)
-					_tickt = new Models.Tickt(m_userContext, true, _fieldsToSerialize);
+				_tickt ??= new Models.Tickt(m_userContext, true, _fieldsToSerialize);
 				return _tickt;
 			}
 			set { _tickt = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Brdps.ValCodfltsc")]
 		public string ValCodfltsc { get { return klass.ValCodfltsc; } set { klass.ValCodfltsc = value; } }
+
 		private Fltsc _fltsc;
 		[DisplayName("Fltsc")]
 		[ShouldSerialize("Fltsc")]
-		public virtual Fltsc Fltsc {
-			get {
-				if (!this.isEmptyModel && (_fltsc == null || (!string.IsNullOrEmpty(ValCodfltsc) && (_fltsc.isEmptyModel || _fltsc.klass.QPrimaryKey != ValCodfltsc))))
+		public virtual Fltsc Fltsc
+		{
+			get
+			{
+				if (!isEmptyModel && (_fltsc == null || (!string.IsNullOrEmpty(ValCodfltsc) && (_fltsc.isEmptyModel || _fltsc.klass.QPrimaryKey != ValCodfltsc))))
 					_fltsc = Models.Fltsc.Find(ValCodfltsc, m_userContext, Identifier, _fieldsToSerialize);
-				if (_fltsc == null)
-					_fltsc = new Models.Fltsc(m_userContext, true, _fieldsToSerialize);
+				_fltsc ??= new Models.Fltsc(m_userContext, true, _fieldsToSerialize);
 				return _fltsc;
 			}
 			set { _fltsc = value; }
 		}
-
 
 		[DisplayName("Boarding Gate")]
 		/// <summary>Field : "Boarding Gate" Tipo: "C" Formula:  ""</summary>
@@ -147,8 +151,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Brdps.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Brdps(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -167,7 +171,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAbrdps csgenioa)
 		{
 			if (csgenioa == null)
@@ -178,23 +181,19 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "fligh":
-						if (_fligh == null)
-							_fligh = new Fligh(m_userContext, true, _fieldsToSerialize);
+						_fligh ??= new Fligh(m_userContext, true, _fieldsToSerialize);
 						_fligh.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "psngr":
-						if (_psngr == null)
-							_psngr = new Psngr(m_userContext, true, _fieldsToSerialize);
+						_psngr ??= new Psngr(m_userContext, true, _fieldsToSerialize);
 						_psngr.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "tickt":
-						if (_tickt == null)
-							_tickt = new Tickt(m_userContext, true, _fieldsToSerialize);
+						_tickt ??= new Tickt(m_userContext, true, _fieldsToSerialize);
 						_tickt.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "fltsc":
-						if (_fltsc == null)
-							_fltsc = new Fltsc(m_userContext, true, _fieldsToSerialize);
+						_fltsc ??= new Fltsc(m_userContext, true, _fieldsToSerialize);
 						_fltsc.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

@@ -21,7 +21,7 @@
 		<hr />
 
 		<row>
-			<qtable :rows="tQueues.rows"
+			<qtable :rows="queuesProps"
 					:columns="tQueues.columns"
 					:config="tQueues.config"
 					:totalRows="tQueues.total_rows"
@@ -30,7 +30,7 @@
 					<q-button-group borderless>
 					<q-button
 						:title="Resources.EDITAR11616"
-						@click="editQueue(props.row)">
+						@click="changeQueue(props.row)">
 						<q-icon icon="pencil" />
 					</q-button>
 					<q-button
@@ -55,7 +55,7 @@
 		</row>
 
 		<row>
-			<qtable :rows="tAcks.rows"
+			<qtable :rows="acksProps"
 					:columns="tAcks.columns"
 					:config="tAcks.config"
 					:totalRows="tAcks.total_rows"
@@ -64,7 +64,7 @@
 					<q-button-group borderless>
 					<q-button
 						:title="Resources.EDITAR11616"
-						@click="editAck(props.row)">
+						@click="changeAck(props.row)">
 						<q-icon icon="pencil" />
 					</q-button>
 					<q-button
@@ -88,8 +88,99 @@
 			</qtable>
 		</row>
 
-		<queue_modal :show="queueModal.show" :Model="queueModal.data" @close="reloadMQueues"></queue_modal>
-		<ack_modal :show="ackModal.show" :Model="ackModal.data" @close="reloadMQueues"></ack_modal>
+		<q-dialog
+			v-model="showDialog"
+			:title="Resources.QUEUE45251"
+			:buttons="buttons">
+			<template #body.content>
+				<div class="q-dialog-container">
+					<div>
+						<q-text-field
+							v-model="queueData.queue"
+							:label="Resources.NOME_DA_QUEUE56594"
+							:readonly="blockFormQueue"
+							size="large" />
+					</div>
+					<div>
+						<q-text-field
+							v-model="queueData.queueChannel"
+							:label="Resources.CANAL_DA_QUEUE34934"
+							:readonly="blockFormQueue"
+							size="large" />
+					</div>
+					<div>
+						<q-text-field
+							v-model="queueData.path"
+							:label="Resources.TRAJETO_DA_QUEUE07185"
+							:readonly="blockFormQueue"
+							size="large" />
+					</div>
+					<div>
+						<q-text-field
+							v-model="queueData.Qyear"
+							:label="Resources.ANO33022"
+							:readonly="blockFormQueue"
+							size="large" />
+					</div>
+					<div>
+						<numeric-input
+							v-model="queueData.Blocksize"
+							:label="Resources.TAMANHO_DO_BLOCO42316"
+							:isReadOnly="blockFormQueue"
+							size="large" />
+					</div>
+					<div>
+                        <q-checkbox
+                            v-model="queueData.Unicode"
+                            :label="Resources.UNICODE63246"
+                            :readonly="blockFormQueue" />
+                    </div>
+                    <div>
+                        <q-checkbox
+                            v-model="queueData.UsesMsmq"
+                            :label="Resources.USA_MSMQ18528"
+                            :readonly="blockFormQueue" />
+                    </div>
+                    <div>
+                        <q-checkbox
+                            v-model="queueData.Journal"
+                            :label="Resources.JOURNAL20931"
+                            :readonly="blockFormQueue" />
+                    </div>
+				</div>
+			</template>
+		</q-dialog>
+
+		<q-dialog
+			v-model="showConfigDialog"
+			title="Ack"
+			:buttons="buttonsConfig">
+			<template #body.content>
+				<div class="q-dialog-container">
+					<div>
+						<q-text-field
+							v-model="ackData.source"
+							:label="Resources.QUEUE_ORIGEM31278"
+							:readonly="blockFormQueueACK"
+							size="large" />
+					</div>
+					<div>
+                        <q-text-field
+							v-model="ackData.ackQueue"
+							:label="Resources.QUEUE_ACK30680"
+							:readonly="blockFormQueueACK"
+							size="large" />
+                    </div>
+                    <div>
+                        <numeric-input
+							v-model="ackData.Blocksize"
+							:label="Resources.TAMANHO_DO_BLOCO42316"
+							:isReadOnly="blockFormQueueACK"
+							size="large" />
+                    </div>
+				</div>
+			</template>
+		</q-dialog>
 	</row>
 </template>
 
@@ -97,20 +188,13 @@
 	// @ is an alias to /src
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
-	import bootbox from 'bootbox';
-	import queue_modal from './Queue_modal';
-	import ack_modal from './Ack_modal';
 
 	export default {
 		name: 'integration',
 
-		components: {
-			queue_modal, ack_modal
-		},
-
 		mixins: [reusableMixin],
 
-		emits: ['alertClass', 'reloadMQueues'],
+		emits: ['alert-class', 'update-model'],
 
 		props: {
 			model: {
@@ -120,13 +204,35 @@
 
 		data() {
 			return {
-				queueModal: {
-					show: false,
-					data: { }
+				showDialog: false,
+				showConfigDialog: false,
+				buttons: [],
+				buttonsConfig: [],
+				queuesProps: [],
+				acksProps: [],
+				dialogModeQueue: '',
+				dialogModeConfig: '',
+				queueData: {
+					queue: '',
+					queueChannel: '',
+					path: '',
+					Qyear: '',
+					Blocksize: '',
+					Unicode: false,
+					UsesMsmq: false,
+					Journal: false,
+					Rownum: 0
 				},
-				ackModal: {
-					show: false,
-					data: { }
+				ackData: {
+					source: '',
+					ackQueue: '',
+					Blocksize: '',
+					Rownum: 0
+				},
+				alert: {
+					isVisible: false,
+					alertType: 'info',
+					message: ''
 				},
 				tQueues: {
 					rows: [],
@@ -263,67 +369,213 @@
 				},
 			};
 		},
-		
+		computed: {
+            blockFormQueue() {
+                return this.dialogModeQueue === 'delete';
+            },
+			blockFormQueueACK() {
+                return this.dialogModeConfig === 'delete';
+            }
+        },
 		methods: {
 			SaveConfigMessageQueue() {
-				QUtils.postData('Config', 'SaveConfigMessageQueue', this.model, null, function (data) {
-					bootbox.alert(data.Message);
+				QUtils.postData('Config', 'SaveConfigMessageQueue', this.model, null, (data) => {
+					if (data.Status == 'OK') {
+						this.$emit('update-model');
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'success' });
+					}
+					else {
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
+					}
 				});
 			},
-			initTables() {
-				var vm = this;
-				vm.tQueues.rows = vm.model.MQueues.Queues || [];
-				vm.tQueues.total_rows = vm.tQueues.rows.length;
-
-				vm.tAcks.rows = vm.model.MQueues.Acks || [];
-				vm.tAcks.total_rows = vm.tAcks.rows.length;
+			clearQueueValues(){
+				this.queueData = {
+					queue: '',
+					queueChannel: '',
+					path: '',
+					Qyear: '',
+					Blocksize: '',
+					Unicode: false,
+					UsesMsmq: false,
+					Journal: false,
+					Rownum: 0
+				};
+				this.dialogModeQueue = ''
+				this.buttons = []
+			},
+			showQueueModal(mode) {
+				this.dialogModeQueue = mode;
+				this.getQueueButtons();
+				this.showDialog = true;
+			},
+			changeQueue(queue) {
+				this.queueData = { ...queue };
+				this.showQueueModal('edit');
+			},
+			deleteQueue(queue) {
+				this.queueData = { ...queue };
+				this.showQueueModal('delete');
 			},
 			createQueue() {
-				var vm = this;
-				QUtils.FetchData(QUtils.apiActionURL('Config', 'GetNewQueue')).done(function (data) {
-					vm.queueModal.data = data;
-					vm.queueModal.data.FormMode = 'new';
-					vm.queueModal.show = true;
+				var url = QUtils.apiActionURL('Config', 'GetNewQueue');
+				QUtils.FetchData(url).done((data) => {
+					this.queueData = data
+					this.showQueueModal('new');
 				});
 			},
-			editQueue(row) {
-				this.queueModal.data = $.extend({}, row);
-				this.queueModal.data.FormMode = 'edit';
-				this.queueModal.show = true;
+			getQueueButtons() {	
+				switch(this.dialogModeQueue) {
+					case 'delete':
+						this.buttons.push({
+							id: 'delete-btn',
+							props: {
+								label: this.Resources.APAGAR04097,
+								bStyle: "danger"
+							},
+							action: () => {
+								this.SaveQueue()
+							}
+						});
+						break;
+					case 'edit':
+					case 'new':
+						this.buttons.push({
+							id: 'save-btn',
+							props: {
+								label: this.Resources.GRAVAR45301,
+								bStyle: "primary"
+							},
+							action: () => {
+								this.SaveQueue()
+							}
+						});
+						break;
+					default:
+						break;
+				}
+
+				this.buttons.push({
+					id: 'cancel-btn',
+					props: {
+						label: this.Resources.CANCELAR49513
+					},
+					action: () => this.clearQueueValues()
+				})
 			},
-			deleteQueue(row) {
-				this.queueModal.data = $.extend({}, row);
-				this.queueModal.data.FormMode = 'delete';
-				this.queueModal.show = true;
+			SaveQueue() {
+				const propsQueueValues = {
+					...this.queueData,
+					FormMode: this.dialogModeQueue
+				}
+				QUtils.postData('Config', 'SaveQueue', propsQueueValues, null, (data) => {
+					if (data.Success) {
+						// Update model data
+						this.$emit('update-model')
+					}
+
+					this.clearQueueValues()
+				});
+			},
+			clearAckValues(){
+				this.ackData = {
+					source: '',
+					ackQueue: '',
+					Blocksize: '',
+					Rownum: 0
+				};
+				this.dialogModeConfig = ''
+				this.buttonsConfig = []
+			},
+			showAckModal(mode) {
+				this.dialogModeConfig = mode;
+				this.getAckButtons();
+				this.showConfigDialog = true;
+			},
+			changeAck(ack) {
+				this.ackData = { ...ack };
+				this.showAckModal('edit');
+			},
+			deleteAck(ack) {
+				this.ackData = { ...ack };
+				this.showAckModal('delete');
 			},
 			createAck() {
-				var vm = this;
-				QUtils.FetchData(QUtils.apiActionURL('Config', 'GetNewAck')).done(function (data) {
-					vm.ackModal.data = data;
-					vm.ackModal.data.FormMode = 'new';
-					vm.ackModal.show = true;
+				var url = QUtils.apiActionURL('Config', 'GetNewAck');
+				QUtils.FetchData(url).done((data) => {
+					this.ackData = data;
+					this.showAckModal('new');
 				});
 			},
-			editAck(row) {
-				this.ackModal.data = $.extend({}, row);
-				this.ackModal.data.FormMode = 'edit';
-				this.ackModal.show = true;
-			},
-			deleteAck(row) {
-				this.ackModal.data = $.extend({}, row);
-				this.ackModal.data.FormMode = 'delete';
-				this.ackModal.show = true;
-			},
-			reloadMQueues: function (reload) {
-				this.queueModal.show = this.ackModal.show = false;
-				this.queueModal.data = this.ackModal.data = {};
-				if (reload) {
-					this.$emit('reloadMQueues');
+			getAckButtons() {	
+				switch(this.dialogModeConfig) {
+					case 'delete':
+						this.buttonsConfig.push({
+							id: 'delete-btn',
+							props: {
+								label: this.Resources.APAGAR04097,
+								bStyle: "danger"
+							},
+							action: () => {
+								this.SaveQueueACK()
+							}
+						});
+						break;
+					case 'edit':
+					case 'new':
+						this.buttonsConfig.push({
+							id: 'save-btn',
+							props: {
+								label: this.Resources.GRAVAR45301,
+								bStyle: "primary"
+							},
+							action: () => {
+								this.SaveQueueACK()
+							}
+						});
+						break;
+					default:
+						break;
 				}
+
+				this.buttonsConfig.push({
+					id: 'cancel-btn',
+					props: {
+						label: this.Resources.CANCELAR49513
+					},
+					action: () => this.clearAckValues()
+				})
 			},
+			SaveQueueACK() {
+				const propsQueueACKValues = {
+					...this.ackData,
+					FormMode: this.dialogModeConfig
+				}
+				QUtils.postData('Config', 'SaveQueueACK', propsQueueACKValues, null, (data) => {
+					if (data.Success) {
+						// Update model data
+						this.$emit('update-model')
+					}
+
+					this.clearAckValues()
+				});
+			},
+			initQueues(newModel) {
+				this.queuesProps = newModel.MQueues.Queues || [];
+				this.acksProps = newModel.MQueues.Acks || [];
+			}
 		},
-		updated(){
-			this.initTables();
+		mounted() {
+			this.initQueues(this.model)
 		},
+
+		watch: {
+			model: {
+				handler(newModel) {
+					this.initQueues(newModel)
+				},
+				deep: true
+			}
+		}
 	};
 </script>

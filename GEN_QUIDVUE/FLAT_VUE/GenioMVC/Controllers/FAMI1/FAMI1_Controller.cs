@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER FAMI1]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Fami1" form. (++, CT, SR, CL and U1)
 		/// </summary>

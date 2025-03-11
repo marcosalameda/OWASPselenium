@@ -395,11 +395,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Pesso_CategValCategoriaModel : RequestLookupModel
+		{
+			public Pesso_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Pesso/Pesso_CategValCategoria
 		// POST: /Pesso/Pesso_CategValCategoria
 		[ActionName("Pesso_CategValCategoria")]
-		public ActionResult Pesso_CategValCategoria([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pesso_CategValCategoria([FromBody] Pesso_CategValCategoriaModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -424,16 +429,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Pesso_CategValCategoria_ViewModel model = new Pesso_CategValCategoria_ViewModel(UserContext.Current);
-			
+
+			Models.Pesso parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pesso_CategValCategoria_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -458,11 +466,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Pesso_Pais1ValCountryModel : RequestLookupModel
+		{
+			public Pesso_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Pesso/Pesso_Pais1ValCountry
 		// POST: /Pesso/Pesso_Pais1ValCountry
 		[ActionName("Pesso_Pais1ValCountry")]
-		public ActionResult Pesso_Pais1ValCountry([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pesso_Pais1ValCountry([FromBody] Pesso_Pais1ValCountryModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -487,16 +500,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Pesso_Pais1ValCountry_ViewModel model = new Pesso_Pais1ValCountry_ViewModel(UserContext.Current);
-			
+
+			Models.Pesso parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pesso_Pais1ValCountry_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -567,11 +583,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Pesso_ValEspecitlModel : RequestLookupModel
+		{
+			public Pesso_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Pesso/Pesso_ValEspecitl
 		// POST: /Pesso/Pesso_ValEspecitl
 		[ActionName("Pesso_ValEspecitl")]
-		public ActionResult Pesso_ValEspecitl([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pesso_ValEspecitl([FromBody] Pesso_ValEspecitlModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -595,16 +616,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Pesso_ValEspecitl_ViewModel model = new Pesso_ValEspecitl_ViewModel(UserContext.Current);
-			
+			Models.Pesso parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pesso_ValEspecitl_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -629,11 +652,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Pesso_ValContactoModel : RequestLookupModel
+		{
+			public Pesso_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Pesso/Pesso_ValContacto
 		// POST: /Pesso/Pesso_ValContacto
 		[ActionName("Pesso_ValContacto")]
-		public ActionResult Pesso_ValContacto([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pesso_ValContacto([FromBody] Pesso_ValContactoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -657,16 +685,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Pesso_ValContacto_ViewModel model = new Pesso_ValContacto_ViewModel(UserContext.Current);
-			
+			Models.Pesso parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pesso_ValContacto_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -691,11 +721,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Pesso_CmpnyValDesignatModel : RequestLookupModel
+		{
+			public Pesso_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Pesso/Pesso_CmpnyValDesignat
 		// POST: /Pesso/Pesso_CmpnyValDesignat
 		[ActionName("Pesso_CmpnyValDesignat")]
-		public ActionResult Pesso_CmpnyValDesignat([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pesso_CmpnyValDesignat([FromBody] Pesso_CmpnyValDesignatModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -720,16 +755,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Pesso_CmpnyValDesignat_ViewModel model = new Pesso_CmpnyValDesignat_ViewModel(UserContext.Current);
-			
+
+			Models.Pesso parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pesso_CmpnyValDesignat_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -754,11 +792,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Pesso_Regi1ValRegiaoModel : RequestLookupModel
+		{
+			public Pesso_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Pesso/Pesso_Regi1ValRegiao
 		// POST: /Pesso/Pesso_Regi1ValRegiao
 		[ActionName("Pesso_Regi1ValRegiao")]
-		public ActionResult Pesso_Regi1ValRegiao([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pesso_Regi1ValRegiao([FromBody] Pesso_Regi1ValRegiaoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -783,16 +826,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Pesso_Regi1ValRegiao_ViewModel model = new Pesso_Regi1ValRegiao_ViewModel(UserContext.Current);
-			
+
+			Models.Pesso parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pesso_Regi1ValRegiao_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -817,11 +863,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Pesso_ValEvolucaoModel : RequestLookupModel
+		{
+			public Pesso_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Pesso/Pesso_ValEvolucao
 		// POST: /Pesso/Pesso_ValEvolucao
 		[ActionName("Pesso_ValEvolucao")]
-		public ActionResult Pesso_ValEvolucao([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pesso_ValEvolucao([FromBody] Pesso_ValEvolucaoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -845,16 +896,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Pesso_ValEvolucao_ViewModel model = new Pesso_ValEvolucao_ViewModel(UserContext.Current);
-			
+			Models.Pesso parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pesso_ValEvolucao_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.WAREHOUSE51864),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValWarehcod',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.ACRONYM00872),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
 								name: 'ValActivity',
@@ -169,7 +169,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayActivida.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayActivida.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_EXPOSETABLE',
@@ -315,7 +315,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-WAREH', 'changed-WPESS'],
+						globalEvents: ['changed-WAREH', 'changed-WPESS'],
 						uuid: '5a78032b-d6ee-4835-a462-b5172b68f789',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -323,7 +323,7 @@
 						controlLimits: [
 							/** SC */
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

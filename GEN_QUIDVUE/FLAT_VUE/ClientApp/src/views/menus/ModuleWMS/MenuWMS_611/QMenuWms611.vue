@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.NOTIFICATION_ID25507),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValIdmsg',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.MESSAGE_ID37133),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValDesignat',
@@ -168,7 +168,7 @@
 								label: computed(() => this.Resources.TO_WHOM_THE_MESSAGE_02337),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValEmail',
@@ -177,7 +177,7 @@
 								label: computed(() => this.Resources.E_MAIL_TO_WHOM_THE_M37668),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValMessage',
@@ -185,7 +185,7 @@
 								field: 'MESSAGE',
 								label: computed(() => this.Resources.MESSAGE30602),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 6,
 								name: 'ValMailsent',
@@ -193,7 +193,7 @@
 								field: 'MAILSENT',
 								label: computed(() => this.Resources.E_MAIL_SENT_60490),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'ValMailerr',
@@ -202,7 +202,7 @@
 								label: computed(() => this.Resources.ERROR_SENDING_MAIL44674),
 								dataLength: 300,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
 								name: 'ValCreatope',
@@ -211,7 +211,7 @@
 								label: computed(() => this.Resources.CREATED_BY12292),
 								dataLength: 128,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
 								name: 'ValCreatdat',
@@ -220,7 +220,7 @@
 								label: computed(() => this.Resources.CREATED_ON00051),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 10,
 								name: 'Entit.ValName',
@@ -230,7 +230,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodentit',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 11,
 								name: 'Perso.ValName',
@@ -240,7 +240,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodperso',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 12,
 								name: 'ValDocum_nr',
@@ -250,7 +250,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_611',
@@ -392,11 +392,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ENTIT', 'changed-MESSA', 'changed-PERSO'],
+						globalEvents: ['changed-ENTIT', 'changed-MESSA', 'changed-PERSO'],
 						uuid: 'c907abb5-c7f3-4623-8cf5-4701f233e6cb',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

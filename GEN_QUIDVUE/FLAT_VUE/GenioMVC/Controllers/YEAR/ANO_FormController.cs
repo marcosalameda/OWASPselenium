@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Ano_ValTodasdesModel : RequestLookupModel
+		{
+			public Ano_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Year/Ano_ValTodasdes
 		// POST: /Year/Ano_ValTodasdes
 		[ActionName("Ano_ValTodasdes")]
-		public ActionResult Ano_ValTodasdes([FromBody]RequestLookupModel requestModel)
+		public ActionResult Ano_ValTodasdes([FromBody] Ano_ValTodasdesModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -420,16 +425,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Ano_ValTodasdes_ViewModel model = new Ano_ValTodasdes_ViewModel(UserContext.Current);
-			
+			Models.Year parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Ano_ValTodasdes_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -454,11 +461,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Ano_ValAgregadoModel : RequestLookupModel
+		{
+			public Ano_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Year/Ano_ValAgregado
 		// POST: /Year/Ano_ValAgregado
 		[ActionName("Ano_ValAgregado")]
-		public ActionResult Ano_ValAgregado([FromBody]RequestLookupModel requestModel)
+		public ActionResult Ano_ValAgregado([FromBody] Ano_ValAgregadoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -482,16 +494,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Ano_ValAgregado_ViewModel model = new Ano_ValAgregado_ViewModel(UserContext.Current);
-			
+			Models.Year parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Ano_ValAgregado_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

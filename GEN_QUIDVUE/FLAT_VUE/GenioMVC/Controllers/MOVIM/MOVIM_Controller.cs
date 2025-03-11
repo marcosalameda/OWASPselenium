@@ -43,7 +43,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER MOVIM]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -56,13 +55,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Movim row = null;
-
-			if (row == null)
-			{
-				row = new Models.Movim(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("movim");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Movim row = new Models.Movim(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("movim");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +75,7 @@ namespace GenioMVC.Controllers
 				{
 					case "MOVIM___EQUIPREGISTNR":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Movim_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Movim_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Movim___equipregistnr(qs);
 							result = model.TableEquipRegistnr;
@@ -84,8 +83,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "MOVIM___ROOMSROOMNR__":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Movim_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Movim_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Movim___roomsroomnr__(qs);
 							result = model.TableRoomsRoomnr;
@@ -153,6 +151,8 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
 
 
 		/// <summary>

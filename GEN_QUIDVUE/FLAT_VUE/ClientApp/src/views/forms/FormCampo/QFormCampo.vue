@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -318,7 +318,7 @@
 								<q-checkbox-input
 									v-if="controls.CAMPO___FLDS_PRIMVIAG.isVisible"
 									v-bind="controls.CAMPO___FLDS_PRIMVIAG.props"
-									@update:model-value="model.ValPrimviag.fnUpdateValue" />
+									v-on="controls.CAMPO___FLDS_PRIMVIAG.handlers" />
 							</template>
 						</base-input-structure>
 					</q-control-wrapper>
@@ -336,7 +336,7 @@
 								<q-checkbox-input
 									v-if="controls.CAMPO___FLDS_CONDITIO.isVisible"
 									v-bind="controls.CAMPO___FLDS_CONDITIO.props"
-									@update:model-value="model.ValConditio.fnUpdateValue" />
+									v-on="controls.CAMPO___FLDS_CONDITIO.handlers" />
 							</template>
 						</base-input-structure>
 					</q-control-wrapper>
@@ -644,8 +644,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {

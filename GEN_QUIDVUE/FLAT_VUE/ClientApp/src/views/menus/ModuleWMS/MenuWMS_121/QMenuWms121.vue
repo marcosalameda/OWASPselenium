@@ -151,7 +151,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDtreceip',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.RECEIPT_DATE00996),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Entit.ValName',
@@ -170,7 +170,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodentit',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 4,
 								name: 'ValDtcheck',
@@ -179,7 +179,7 @@
 								label: computed(() => this.Resources.RECEIPT_VERIFICATION62328),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 5,
 								name: 'ValChecked',
@@ -187,7 +187,7 @@
 								field: 'CHECKED',
 								label: computed(() => this.Resources.CHECKED31708),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 6,
 								name: 'ValTocheck',
@@ -195,7 +195,7 @@
 								field: 'TOCHECK',
 								label: computed(() => this.Resources.TO_CHECK57511),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
 								name: 'ValDtstorag',
@@ -204,7 +204,7 @@
 								label: computed(() => this.Resources.STORAGE_DATE59954),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_121',
@@ -368,11 +368,11 @@
 								defaultValue: '1'
 							},
 						],
-						changeEvents: ['changed-ENTIT', 'changed-RECEI'],
+						globalEvents: ['changed-ENTIT', 'changed-RECEI'],
 						uuid: 'd5a95839-cfc6-40f7-89d3-b36149d26ab4',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

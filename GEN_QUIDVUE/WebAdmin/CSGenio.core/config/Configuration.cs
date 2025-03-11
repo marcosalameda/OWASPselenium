@@ -55,7 +55,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static int Version { get; } = 3938;
+        public static int Version { get; } = 3989;
 
         /// <summary>
         /// System id
@@ -85,12 +85,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const int VersionDbGen = 3938;
+        public const int VersionDbGen = 3989;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1606;
+        public const int VersionIdxDbGen = 1658;
 
         /// <summary>
         /// Version of the latest upgrade index version
@@ -105,12 +105,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "362.25";
+        public const string GenioVersion = "362.39";
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2902;
+        public const int BuildVersionGen = 2907;
         /// <summary>
         /// Solution release version
         /// </summary>
@@ -354,6 +354,14 @@ namespace CSGenio.framework
                 path = redirect.GetFullPath(Environment.CurrentDirectory);
                 if (File.Exists(Path.Combine(path, "Configuracoes.xml")))
                     return path;
+            }
+
+            // Check for a custom path defined in env variable
+            string envPath = Environment.GetEnvironmentVariable("CONFIG_PATH");
+            if(envPath != null)
+            {
+                envPath = Path.Combine(envPath, "Configuracoes.xml");
+                if (File.Exists(envPath)) return envPath;
             }
 
             return defaultPath;

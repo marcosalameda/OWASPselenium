@@ -42,7 +42,7 @@ public class Wid_iequForm : Form
 	/// <summary>
 	/// Decomission
 	/// </summary>
-	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#WID_IEQUEQUIPDTDECO__");
+	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#WID_IEQUEQUIPDTDECO__", "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// Bought

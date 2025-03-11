@@ -216,6 +216,7 @@ namespace GenioMVC.ViewModels.Wpess
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Wpess m)
 		{
 			if (m == null)
@@ -248,20 +249,13 @@ namespace GenioMVC.ViewModels.Wpess
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Wpess m)
 		{
 			if (m == null)
@@ -721,7 +715,6 @@ namespace GenioMVC.ViewModels.Wpess
 				_ => modelValue
 			};
 		}
-
 
 		/// <inheritdoc/>
 		protected override void SetTicketToImageFields()

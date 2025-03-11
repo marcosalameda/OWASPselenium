@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Users_PswValNomeModel : RequestLookupModel
+		{
+			public Users_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Users/Users_PswValNome
 		// POST: /Users/Users_PswValNome
 		[ActionName("Users_PswValNome")]
-		public ActionResult Users_PswValNome([FromBody]RequestLookupModel requestModel)
+		public ActionResult Users_PswValNome([FromBody] Users_PswValNomeModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Users_PswValNome_ViewModel model = new Users_PswValNome_ViewModel(UserContext.Current);
-			
+
+			Models.Users parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Users_PswValNome_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Users_PersoValNameModel : RequestLookupModel
+		{
+			public Users_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Users/Users_PersoValName
 		// POST: /Users/Users_PersoValName
 		[ActionName("Users_PersoValName")]
-		public ActionResult Users_PersoValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Users_PersoValName([FromBody] Users_PersoValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Users_PersoValName_ViewModel model = new Users_PersoValName_ViewModel(UserContext.Current);
-			
+
+			Models.Users parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Users_PersoValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

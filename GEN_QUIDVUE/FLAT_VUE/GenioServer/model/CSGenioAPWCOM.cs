@@ -78,7 +78,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field("name", FieldType.TEXTO);
 			Qfield.FieldDescription = "Name";
-			Qfield.FieldSize =  20;
+			Qfield.FieldSize =  100;
 			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;

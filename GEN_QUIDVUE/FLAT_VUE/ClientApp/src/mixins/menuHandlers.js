@@ -16,11 +16,16 @@ export default {
 	created()
 	{
 		this.componentOnLoadProc.addBusy(loadResources(this, this.interfaceMetadata.requiredTextResources), this.Resources[hardcodedTexts.genericLoad], 300)
-		this.controls.menu.init()
+
 		this.componentOnLoadProc.addWL(this.loadList())
-		this.componentOnLoadProc.once(() => {
+		this.componentOnLoadProc.once(async () => {
 			this.setMenuNavProperties()
-			this.controls.menu.initData()
+
+			for (let i in this.controls)
+			{
+				await this.controls[i].init()
+				this.controls[i].initData?.()
+			}
 		}, this)
 	},
 
@@ -29,14 +34,16 @@ export default {
 		this.$eventTracker.addTrace({ origin: 'mounted (menuHandler)', message: 'Menu is mounted', contextData: { menuInfo: this.menuInfo } })
 
 		// Listens for changes to the DB and updates the list accordingly.
-		this.$eventHub.onMany(this.controls.menu.changeEvents, this.loadList)
+		this.internalEvents.onMany(this.controls.menu.internalEvents, this.loadList)
+		this.$eventHub.onMany(this.controls.menu.globalEvents, this.loadList)
 	},
 
 	beforeUnmount()
 	{
 		this.$eventTracker.addTrace({ origin: 'beforeUnmount (menuHandler)', message: 'Menu will be unmounted', contextData: { menuInfo: this.menuInfo } })
 		// Removes the listeners.
-		this.$eventHub.offMany(this.controls.menu.changeEvents, this.loadList)
+		this.internalEvents.offMany(this.controls.menu.internalEvents, this.loadList)
+		this.$eventHub.offMany(this.controls.menu.globalEvents, this.loadList)
 	},
 
 	computed: {

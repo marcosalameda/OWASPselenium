@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
 								name: 'ValPrice',
@@ -160,7 +160,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
 								name: 'ValPhoto',
@@ -171,7 +171,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'Agent.ValName',
@@ -181,7 +181,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodagent',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
 								name: 'ValSize',
@@ -191,7 +191,7 @@
 								scrollData: 15,
 								maxDigits: 15,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
 								name: 'ValBathrms',
@@ -201,7 +201,7 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'ValYear',
@@ -210,7 +210,7 @@
 								label: computed(() => this.Resources.YEAR_BUILT55277),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
 								name: 'ValDescript',
@@ -218,7 +218,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
 								name: 'City.ValCity',
@@ -228,7 +228,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodcity',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 10,
 								name: 'ValBuildtyp',
@@ -240,7 +240,7 @@
 								array: qProjArrays.QArrayBuildtyp.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayBuildtyp.type,
 								arrayDisplayMode: 'D',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 11,
 								name: 'ValTypology',
@@ -253,7 +253,7 @@
 								array: qProjArrays.QArrayAparttyp.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayAparttyp.type,
 								arrayDisplayMode: 'D',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TRN_Menu_T14PROPERTY',
@@ -395,7 +395,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PROPE', 'changed-CITY', 'changed-AGENT'],
+						globalEvents: ['changed-PROPE', 'changed-CITY', 'changed-AGENT'],
 						uuid: '0637b9a3-1863-4478-8b1c-cc516b9ac249',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -409,7 +409,7 @@
 								fnValueSelector: () => vm.$route.params['agent'],
 							},
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

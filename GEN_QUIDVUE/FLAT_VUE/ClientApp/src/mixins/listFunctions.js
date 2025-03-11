@@ -1,5 +1,4 @@
-﻿import { isRef, markRaw, reactive, ref, shallowReactive, toValue } from 'vue'
-import cloneDeep from 'lodash-es/cloneDeep'
+﻿import cloneDeep from 'lodash-es/cloneDeep'
 import _find from 'lodash-es/find'
 import _findIndex from 'lodash-es/findIndex'
 import _forEach from 'lodash-es/forEach'
@@ -10,12 +9,12 @@ import _map from 'lodash-es/map'
 import _set from 'lodash-es/set'
 import _toLower from 'lodash-es/toLower'
 import _unionWith from 'lodash-es/unionWith'
+import { isRef, markRaw, reactive, ref, shallowReactive, toValue, unref } from 'vue'
 
-import { geographicDisplay, geographicShapeDisplay } from '@/utils/geography.js'
-import { tableViewManagementModes, documentViewTypeMode } from '@/mixins/quidgest.mainEnums.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
 import searchFilterData from '@/api/genio/searchFilterData.js'
-import { formModes } from '@/mixins/quidgest.mainEnums.js'
+import genericFunctions from '@/mixins/genericFunctions.js'
+import { documentViewTypeMode, formModes, tableViewManagementModes } from '@/mixins/quidgest.mainEnums.js'
+import { geographicDisplay, geographicShapeDisplay } from '@/utils/geography.js'
 
 import { useGlobalTablesDataStore } from '@/stores/globalTablesData.js'
 import { useSystemDataStore } from '@/stores/systemData.js'
@@ -185,7 +184,7 @@ export function getTableConfiguration(listConf)
 			columnOrder.push({
 				name: column.name,
 				order: column.order,
-				visibility: column.visibility ? 1 : 0,
+				visibility: column.isVisible ? 1 : 0,
 				exportability: column.export ? 1 : 0
 			})
 		}
@@ -528,10 +527,10 @@ export function hydrateTableRow(listControl, rowData, rowIndex)
 	// Deserialize serialized fields
 	for (let idx in listControl.columns)
 	{
-		let column = listControl.columns[idx]
+		const column = listControl.columns[idx]
 		if (column.isSerialized)
 		{
-			let columnData = _get(rowData, column.name, null)
+			const columnData = _get(rowData, column.name, null)
 			if (_isEmpty(columnData))
 				rowData[column.name] = undefined
 			else
@@ -539,22 +538,27 @@ export function hydrateTableRow(listControl, rowData, rowIndex)
 		}
 	}
 
+	const btnPermission = {
+		...listControl.config.permissions,
+		// CRUD conditions (disable buttons when the conditions are false)
+		...rowData?.btnPermission
+	}
+
+	// Delete this property, so it won't be duplicated in every row.
+	delete rowData?.btnPermission
+
 	const row = reactive({
 		Rownum: rowIndex,
-		Fields: rowData, // TODO: Change to use the list of used fields. GetCamposForListing / GetRequestedFieldsForDBedit
+		Fields: rowData,
 		pkField: listControl.config.pkColumn,
 		actionVisibility: {},
 		get rowKey() { return !_isEmpty(listControl.config.pkColumn) ? this.Fields[this.pkField] : this.Rownum },
-		btnPermission: {
-			...listControl.config.permissions,
-			// CRUD conditions (disable buttons when the conditions are false)
-			...rowData?.btnPermission
-		}
+		btnPermission
 	})
 
 	// Custom actions visibility
 	_forEach(listControl.config.customActions, (action) => {
-		row.actionVisibility[action.id] = typeof action.visibleCondition === 'function' ? action.visibleCondition(row) : action.isVisible
+		row.actionVisibility[action.id] = action.checkIsVisible?.(row) ?? action.isVisible
 	})
 
 	// The fields of the other tables have a different field identifier. TODO: Use the _get on the Table component
@@ -634,9 +638,8 @@ export function getColumnHierarchy(columns)
 		for (let key in columnGroup)
 		{
 			let column = columnGroup[key]
-			let columnIsVivible = column.visibility === undefined || column.visibility
 
-			if (columnIsVivible && !_isEmpty(column.name) && !_isEmpty(column.area) && !_isEmpty(column.field))
+			if (isVisibleColumn(column) && !_isEmpty(column.name) && !_isEmpty(column.area) && !_isEmpty(column.field))
 			{
 				column.hasTreeShowHide = true
 				break
@@ -728,7 +731,7 @@ class TreeRow
 
 		this._fields = row.Fields
 		this.Fields = markRaw(typeof this._fnRowModel === 'function' ? this._fnRowModel(row.Fields) : row.Fields)
-		this.Fields.ValZzstate = 0
+		this.Fields.isValid = true
 
 		this.alreadyLoaded = !_isEmpty(row.Children)
 
@@ -877,7 +880,7 @@ export function hydrateFullCalendarData(listControl, viewModel)
 		event.id = !_isEmpty(listControl.config.pkColumn) ? _get(row, listControl.config.pkColumn) : null
 
 		_forEach(listControl.columns, (column) => {
-			if (column.visibility)
+			if (isVisibleColumn(column))
 			{
 				let columnValue = _get(row, column.name)
 				switch (column.dataType)
@@ -1416,9 +1419,7 @@ export function cellOnChange(table, row, column, options)
 export function textDisplayCell(row, column, options)
 {
 	const value = getCellValue(row, column)
-	const fnGetDisplayValue = (val) => {
-		return genericFunctions.textDisplay(val, options)
-	}
+	const fnGetDisplayValue = (val) => genericFunctions.textDisplay(val, options)
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
 }
 
@@ -1495,9 +1496,7 @@ export function dateDisplayCell(row, column, options)
 export function booleanDisplayCell(row, column, options)
 {
 	const value = getCellValue(row, column)
-	const fnGetDisplayValue = (val) => {
-		return genericFunctions.booleanDisplay(val, options)
-	}
+	const fnGetDisplayValue = (val) => genericFunctions.booleanDisplay(val, options)
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
 }
 
@@ -1511,9 +1510,7 @@ export function booleanDisplayCell(row, column, options)
 export function hyperLinkDisplayCell(row, column)
 {
 	const value = getCellValue(row, column)
-	const fnGetDisplayValue = (val) => {
-		return val
-	}
+	const fnGetDisplayValue = (val) => val
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
 }
 
@@ -1527,9 +1524,7 @@ export function hyperLinkDisplayCell(row, column)
 export function imageDisplayCell(row, column, options)
 {
 	const value = getCellValue(row, column)
-	const fnGetDisplayValue = (val) => {
-		return genericFunctions.imageDisplay(val, options)
-	}
+	const fnGetDisplayValue = (val) => genericFunctions.imageDisplay(val, options)
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
 }
 
@@ -1582,9 +1577,7 @@ export function geographicDisplayCell(row, column)
 export function geographicShapeDisplayCell(row, column)
 {
 	const value = getCellValue(row, column)
-	const fnGetDisplayValue = (val) => {
-		return geographicShapeDisplay(val)
-	}
+	const fnGetDisplayValue = (val) => geographicShapeDisplay(val)
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
 }
 
@@ -1602,10 +1595,7 @@ export function enumerationDisplayCell(row, column, options)
 	if (column.array === undefined)
 		return value
 
-	const fnGetDisplayValue = (val) => {
-		return genericFunctions.enumerationDisplay(column.arrayAsObj, val, options)
-	}
-
+	const fnGetDisplayValue = (val) => genericFunctions.enumerationDisplay(column.arrayAsObj, val, options)
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
 }
 
@@ -1619,9 +1609,7 @@ export function enumerationDisplayCell(row, column, options)
 export function radioDisplayCell(row, column, options)
 {
 	const value = getCellValue(row, column)
-	const fnGetDisplayValue = (val) => {
-		return genericFunctions.radioDisplay(val, options)
-	}
+	const fnGetDisplayValue = (val) => genericFunctions.radioDisplay(val, options)
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
 }
 
@@ -1869,9 +1857,14 @@ export function isSearchableColumn(column)
 	return column.searchable && !_isEmpty(column.searchFieldType) && isVisibleColumn(column)
 }
 
+/**
+ * Checks if the specified column is visible
+ * @param {object} column The column
+ * @returns True if it's a visible column, false otherwise
+ */
 export function isVisibleColumn(column)
 {
-	return column.visibility === undefined || column.visibility
+	return column.isVisible === undefined || unref(column.isVisible)
 }
 
 /**
@@ -2000,7 +1993,7 @@ export function getFilterName(filterOperators, filter, searchableColumns, orText
 		return filter.name
 
 	// Filter name not defined
-	var conditionNames = [],
+	let conditionNames = [],
 		condition = {},
 		column = {},
 		operator = {}
@@ -2011,7 +2004,7 @@ export function getFilterName(filterOperators, filter, searchableColumns, orText
 		column = getFilterColumnFromName(filter, conditionIdx, searchableColumns)
 
 		// Skip invalid conditions
-		if(column === undefined || column === null)
+		if (column === undefined || column === null)
 			continue
 
 		operator = _get(filterOperators, `${column.searchFieldType}.${condition.operator}`, { Title: 'Unknown', ValueCount: 0 })
@@ -2146,7 +2139,7 @@ export function isValidFilterCondition(filter, conditionIdx, searchableColumns)
 	let condition = filter.conditions[conditionIdx]
 
 	// Check if the field used in the column is searchable / visible
-	return searchableColumns.some(col => col.area.toUpperCase() + '.' + col.field.toUpperCase() === condition.field.toUpperCase())
+	return searchableColumns.some((col) => col.area.toUpperCase() + '.' + col.field.toUpperCase() === condition.field.toUpperCase())
 }
 
 /**
@@ -2160,7 +2153,7 @@ export function isValidFilter(filter, searchableColumns)
 	// Check if any of the conditions are valid
 	for (let idx = 0; idx < filter?.conditions?.length; idx++)
 	{
-		if(isValidFilterCondition(filter, idx, searchableColumns))
+		if (isValidFilterCondition(filter, idx, searchableColumns))
 			return true
 	}
 
@@ -2183,11 +2176,11 @@ export function getValidFilterConditionRelativeIndex(filter, conditionIdx, searc
 	for (let idx = 0; idx <= conditionIdx; idx++)
 	{
 		currentConditionIsValid = isValidFilterCondition(filter, idx, searchableColumns)
-		if(currentConditionIsValid)
+		if (currentConditionIsValid)
 			validConditionIndex++
 	}
 
-	if(!currentConditionIsValid)
+	if (!currentConditionIsValid)
 		return -1
 
 	return validConditionIndex
@@ -2201,7 +2194,7 @@ export function getValidFilterConditionRelativeIndex(filter, conditionIdx, searc
  */
 export function getValidFilterConditionCount(filter, searchableColumns)
 {
-	if(isNaN(filter?.conditions?.length))
+	if (isNaN(filter?.conditions?.length))
 		return 0
 
 	let validConditionCount = 0
@@ -2209,7 +2202,7 @@ export function getValidFilterConditionCount(filter, searchableColumns)
 	// Check the conditions up to this index
 	for (let idx = 0; idx < filter.conditions.length; idx++)
 	{
-		if(isValidFilterCondition(filter, idx, searchableColumns))
+		if (isValidFilterCondition(filter, idx, searchableColumns))
 			validConditionCount++
 	}
 

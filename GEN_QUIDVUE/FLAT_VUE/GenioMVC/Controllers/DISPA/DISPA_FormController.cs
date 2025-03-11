@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Dispa_DisstValStatusModel : RequestLookupModel
+		{
+			public Dispa_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Dispa/Dispa_DisstValStatus
 		// POST: /Dispa/Dispa_DisstValStatus
 		[ActionName("Dispa_DisstValStatus")]
-		public ActionResult Dispa_DisstValStatus([FromBody]RequestLookupModel requestModel)
+		public ActionResult Dispa_DisstValStatus([FromBody] Dispa_DisstValStatusModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Dispa_DisstValStatus_ViewModel model = new Dispa_DisstValStatus_ViewModel(UserContext.Current);
-			
+
+			Models.Dispa parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Dispa_DisstValStatus_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Dispa_EntitValNameModel : RequestLookupModel
+		{
+			public Dispa_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Dispa/Dispa_EntitValName
 		// POST: /Dispa/Dispa_EntitValName
 		[ActionName("Dispa_EntitValName")]
-		public ActionResult Dispa_EntitValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Dispa_EntitValName([FromBody] Dispa_EntitValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Dispa_EntitValName_ViewModel model = new Dispa_EntitValName_ViewModel(UserContext.Current);
-			
+
+			Models.Dispa parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Dispa_EntitValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -518,11 +534,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Dispa_PersoValNameModel : RequestLookupModel
+		{
+			public Dispa_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Dispa/Dispa_PersoValName
 		// POST: /Dispa/Dispa_PersoValName
 		[ActionName("Dispa_PersoValName")]
-		public ActionResult Dispa_PersoValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Dispa_PersoValName([FromBody] Dispa_PersoValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -547,16 +568,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Dispa_PersoValName_ViewModel model = new Dispa_PersoValName_ViewModel(UserContext.Current);
-			
+
+			Models.Dispa parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Dispa_PersoValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -581,11 +605,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Dispa_ValDispatchModel : RequestLookupModel
+		{
+			public Dispa_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Dispa/Dispa_ValDispatch
 		// POST: /Dispa/Dispa_ValDispatch
 		[ActionName("Dispa_ValDispatch")]
-		public ActionResult Dispa_ValDispatch([FromBody]RequestLookupModel requestModel)
+		public ActionResult Dispa_ValDispatch([FromBody] Dispa_ValDispatchModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -609,16 +638,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Dispa_ValDispatch_ViewModel model = new Dispa_ValDispatch_ViewModel(UserContext.Current);
-			
+			Models.Dispa parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Dispa_ValDispatch_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

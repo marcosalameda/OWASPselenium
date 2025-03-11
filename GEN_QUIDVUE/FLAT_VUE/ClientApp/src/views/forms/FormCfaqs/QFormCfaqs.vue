@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -304,8 +304,6 @@
 					mode: ''
 				},
 
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
-
 				formButtons: {
 					changeToShow: {
 						id: 'change-to-show-btn',
@@ -577,7 +575,7 @@
 								field: 'QUESTION',
 								label: computed(() => this.Resources.QUESTION00194),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValAnswer',
@@ -585,7 +583,7 @@
 								field: 'ANSWER',
 								label: computed(() => this.Resources.ANSWER22961),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValExpfaqs',
@@ -726,7 +724,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FAQS', 'changed-CFAQS'],
+						globalEvents: ['changed-FAQS', 'changed-CFAQS'],
 						uuid: 'Cfaqs_ValExpfaqs',
 						allSelectedRows: 'false',
 						controlLimits: [

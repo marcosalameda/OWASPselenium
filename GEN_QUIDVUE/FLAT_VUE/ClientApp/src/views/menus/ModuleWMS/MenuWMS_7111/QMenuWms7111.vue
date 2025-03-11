@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.STRING29433),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValUppercas',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.UPPER_CASE31324),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValQrcode',
@@ -168,7 +168,7 @@
 								label: computed(() => this.Resources.QR_CODE12259),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValMultilin',
@@ -176,7 +176,7 @@
 								field: 'MULTILIN',
 								label: computed(() => this.Resources.SIMPLE_MULTILINE_TEX04460),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValMultili3',
@@ -184,7 +184,7 @@
 								field: 'MULTILI3',
 								label: computed(() => this.Resources.EDITOR_MULTILINE_TEX05556),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 6,
 								name: 'ValBoolean',
@@ -192,7 +192,7 @@
 								field: 'BOOLEAN',
 								label: computed(() => this.Resources.BOOLEAN__TINYINT___S57956),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 7,
 								name: 'ValBoolean2',
@@ -202,7 +202,7 @@
 								scrollData: 1,
 								maxDigits: 1,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
 								name: 'ValSmallint',
@@ -212,7 +212,7 @@
 								scrollData: 4,
 								maxDigits: 4,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
 								name: 'ValInteger',
@@ -222,7 +222,7 @@
 								scrollData: 9,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
 								name: 'ValBigint',
@@ -232,7 +232,7 @@
 								scrollData: 15,
 								maxDigits: 15,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 11,
 								name: 'ValReal',
@@ -242,7 +242,7 @@
 								scrollData: 8,
 								maxDigits: 5,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 12,
 								name: 'ValFloat',
@@ -252,7 +252,7 @@
 								scrollData: 15,
 								maxDigits: 12,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 13,
 								name: 'ValDecimal',
@@ -262,7 +262,7 @@
 								scrollData: 10,
 								maxDigits: 5,
 								decimalPlaces: 4,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 14,
 								name: 'ValDecimal9',
@@ -272,7 +272,7 @@
 								scrollData: 15,
 								maxDigits: 10,
 								decimalPlaces: 4,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 15,
 								name: 'ValMoney',
@@ -282,7 +282,7 @@
 								scrollData: 10,
 								maxDigits: 5,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 16,
 								name: 'ValMoney9',
@@ -292,7 +292,7 @@
 								scrollData: 15,
 								maxDigits: 10,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 17,
 								name: 'ValDate',
@@ -301,7 +301,7 @@
 								label: computed(() => this.Resources.DATE02091),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 18,
 								name: 'ValDatetime',
@@ -310,7 +310,7 @@
 								label: computed(() => this.Resources.DATETIME62630),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 19,
 								name: 'ValDtsesond',
@@ -319,7 +319,7 @@
 								label: computed(() => this.Resources.DATE_TIME_SECOND__IN55990),
 								scrollData: 19,
 								dateTimeType: 'dateTimeSeconds',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 20,
 								name: 'ValTime',
@@ -329,7 +329,7 @@
 								dataLength: 5,
 								scrollData: 5,
 								dateTimeType: 'time',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 21,
 								name: 'ValUuid',
@@ -338,7 +338,7 @@
 								label: computed(() => this.Resources.UUID__AKA_GUID_13998),
 								dataLength: 36,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 22,
 								name: 'ValImage',
@@ -349,7 +349,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 23,
 								name: 'ValStart',
@@ -358,7 +358,7 @@
 								label: computed(() => this.Resources.STARTING_TIME_WITH_I44217),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 24,
 								name: 'ValEnd',
@@ -367,7 +367,7 @@
 								label: computed(() => this.Resources.END_TIME_WITH_INCLUS19241),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_7111',
@@ -509,11 +509,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-DTTYP'],
+						globalEvents: ['changed-DTTYP'],
 						uuid: 'c2b15f2a-27e8-459e-91be-79fcbdf502e1',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

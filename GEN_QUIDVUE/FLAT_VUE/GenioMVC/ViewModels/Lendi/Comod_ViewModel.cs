@@ -250,6 +250,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Lendi m)
 		{
 			if (m == null)
@@ -281,20 +282,13 @@ namespace GenioMVC.ViewModels.Lendi
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Lendi m)
 		{
 			if (m == null)
@@ -1141,8 +1135,6 @@ namespace GenioMVC.ViewModels.Lendi
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">COMPANY" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Pesso.ValCodempre")]
 		public string ValCodempre { get { return klass.ValCodempre; } set { klass.ValCodempre = value; } }
+
 		private Cmpny _cmpny;
 		[DisplayName("Cmpny")]
 		[ShouldSerialize("Cmpny")]
-		public virtual Cmpny Cmpny {
-			get {
-				if (!this.isEmptyModel && (_cmpny == null || (!string.IsNullOrEmpty(ValCodempre) && (_cmpny.isEmptyModel || _cmpny.klass.QPrimaryKey != ValCodempre))))
+		public virtual Cmpny Cmpny
+		{
+			get
+			{
+				if (!isEmptyModel && (_cmpny == null || (!string.IsNullOrEmpty(ValCodempre) && (_cmpny.isEmptyModel || _cmpny.klass.QPrimaryKey != ValCodempre))))
 					_cmpny = Models.Cmpny.Find(ValCodempre, m_userContext, Identifier, _fieldsToSerialize);
-				if (_cmpny == null)
-					_cmpny = new Models.Cmpny(m_userContext, true, _fieldsToSerialize);
+				_cmpny ??= new Models.Cmpny(m_userContext, true, _fieldsToSerialize);
 				return _cmpny;
 			}
 			set { _cmpny = value; }
 		}
-
 
 		[DisplayName("Interested party")]
 		/// <summary>Field : "Interested party" Tipo: "CF" Formula:  ""</summary>
@@ -124,20 +125,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">LAST CATEGORY" Tipo: "CE" Formula: U1 "EVCAT[EVCAT->SINCE][EVCAT->CODCATEG][Today]"</summary>
 		[ShouldSerialize("Pesso.ValCodcateg")]
 		public string ValCodcateg { get { return klass.ValCodcateg; } set { klass.ValCodcateg = value; } }
+
 		private Categ _categ;
 		[DisplayName("Categ")]
 		[ShouldSerialize("Categ")]
-		public virtual Categ Categ {
-			get {
-				if (!this.isEmptyModel && (_categ == null || (!string.IsNullOrEmpty(ValCodcateg) && (_categ.isEmptyModel || _categ.klass.QPrimaryKey != ValCodcateg))))
+		public virtual Categ Categ
+		{
+			get
+			{
+				if (!isEmptyModel && (_categ == null || (!string.IsNullOrEmpty(ValCodcateg) && (_categ.isEmptyModel || _categ.klass.QPrimaryKey != ValCodcateg))))
 					_categ = Models.Categ.Find(ValCodcateg, m_userContext, Identifier, _fieldsToSerialize);
-				if (_categ == null)
-					_categ = new Models.Categ(m_userContext, true, _fieldsToSerialize);
+				_categ ??= new Models.Categ(m_userContext, true, _fieldsToSerialize);
 				return _categ;
 			}
 			set { _categ = value; }
 		}
-
 
 		[DisplayName("External")]
 		/// <summary>Field : "External" Tipo: "L" Formula:  ""</summary>
@@ -153,58 +155,61 @@ namespace GenioMVC.Models
 		/// <summary>Field : "COMPANY PARENTS" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Pesso.ValCodpaise")]
 		public string ValCodpaise { get { return klass.ValCodpaise; } set { klass.ValCodpaise = value; } }
+
 		private Cntry _cntry;
 		[DisplayName("Cntry")]
 		[ShouldSerialize("Cntry")]
-		public virtual Cntry Cntry {
-			get {
-				if (!this.isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodpaise) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodpaise))))
+		public virtual Cntry Cntry
+		{
+			get
+			{
+				if (!isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodpaise) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodpaise))))
 					_cntry = Models.Cntry.Find(ValCodpaise, m_userContext, Identifier, _fieldsToSerialize);
-				if (_cntry == null)
-					_cntry = new Models.Cntry(m_userContext, true, _fieldsToSerialize);
+				_cntry ??= new Models.Cntry(m_userContext, true, _fieldsToSerialize);
 				return _cntry;
 			}
 			set { _cntry = value; }
 		}
 
-
 		[DisplayName("PERSON'S PARENTS")]
 		/// <summary>Field : "PERSON'S PARENTS" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Pesso.ValCodcntry")]
 		public string ValCodcntry { get { return klass.ValCodcntry; } set { klass.ValCodcntry = value; } }
+
 		private Pais1 _pais1;
 		[DisplayName("Pais1")]
 		[ShouldSerialize("Pais1")]
-		public virtual Pais1 Pais1 {
-			get {
-				if (!this.isEmptyModel && (_pais1 == null || (!string.IsNullOrEmpty(ValCodcntry) && (_pais1.isEmptyModel || _pais1.klass.QPrimaryKey != ValCodcntry))))
+		public virtual Pais1 Pais1
+		{
+			get
+			{
+				if (!isEmptyModel && (_pais1 == null || (!string.IsNullOrEmpty(ValCodcntry) && (_pais1.isEmptyModel || _pais1.klass.QPrimaryKey != ValCodcntry))))
 					_pais1 = Models.Pais1.Find(ValCodcntry, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pais1 == null)
-					_pais1 = new Models.Pais1(m_userContext, true, _fieldsToSerialize);
+				_pais1 ??= new Models.Pais1(m_userContext, true, _fieldsToSerialize);
 				return _pais1;
 			}
 			set { _pais1 = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Pesso.ValCodregia")]
 		public string ValCodregia { get { return klass.ValCodregia; } set { klass.ValCodregia = value; } }
+
 		private Regi1 _regi1;
 		[DisplayName("Regi1")]
 		[ShouldSerialize("Regi1")]
-		public virtual Regi1 Regi1 {
-			get {
-				if (!this.isEmptyModel && (_regi1 == null || (!string.IsNullOrEmpty(ValCodregia) && (_regi1.isEmptyModel || _regi1.klass.QPrimaryKey != ValCodregia))))
+		public virtual Regi1 Regi1
+		{
+			get
+			{
+				if (!isEmptyModel && (_regi1 == null || (!string.IsNullOrEmpty(ValCodregia) && (_regi1.isEmptyModel || _regi1.klass.QPrimaryKey != ValCodregia))))
 					_regi1 = Models.Regi1.Find(ValCodregia, m_userContext, Identifier, _fieldsToSerialize);
-				if (_regi1 == null)
-					_regi1 = new Models.Regi1(m_userContext, true, _fieldsToSerialize);
+				_regi1 ??= new Models.Regi1(m_userContext, true, _fieldsToSerialize);
 				return _regi1;
 			}
 			set { _regi1 = value; }
 		}
-
 
 		[DisplayName("Indiviudal notifications")]
 		/// <summary>Field : "Indiviudal notifications" Tipo: "L" Formula:  ""</summary>
@@ -307,8 +312,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Pesso.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Pesso(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -327,7 +332,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioApesso csgenioa)
 		{
 			if (csgenioa == null)
@@ -338,28 +342,23 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "cmpny":
-						if (_cmpny == null)
-							_cmpny = new Cmpny(m_userContext, true, _fieldsToSerialize);
+						_cmpny ??= new Cmpny(m_userContext, true, _fieldsToSerialize);
 						_cmpny.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "categ":
-						if (_categ == null)
-							_categ = new Categ(m_userContext, true, _fieldsToSerialize);
+						_categ ??= new Categ(m_userContext, true, _fieldsToSerialize);
 						_categ.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "cntry":
-						if (_cntry == null)
-							_cntry = new Cntry(m_userContext, true, _fieldsToSerialize);
+						_cntry ??= new Cntry(m_userContext, true, _fieldsToSerialize);
 						_cntry.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "pais1":
-						if (_pais1 == null)
-							_pais1 = new Pais1(m_userContext, true, _fieldsToSerialize);
+						_pais1 ??= new Pais1(m_userContext, true, _fieldsToSerialize);
 						_pais1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "regi1":
-						if (_regi1 == null)
-							_regi1 = new Regi1(m_userContext, true, _fieldsToSerialize);
+						_regi1 ??= new Regi1(m_userContext, true, _fieldsToSerialize);
 						_regi1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.PROJECTO50142),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_A11',
@@ -292,11 +292,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-YEAR1', 'changed-PROJE'],
+						globalEvents: ['changed-YEAR1', 'changed-PROJE'],
 						uuid: 'e17cfb89-1af6-4cca-b3bc-dfdf07cac6d8',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

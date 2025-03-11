@@ -62,6 +62,7 @@ namespace Administration.Controllers
                 {
                     r.Role,
                     r.Module,
+                    r.Description,
                     ModuleName = GetModuleName(r.Module),
                     Designation = Resources.Resources.ResourceManager.GetString(r.Designation)
                 });
@@ -126,30 +127,32 @@ namespace Administration.Controllers
                 int total = DBConversion.ToInteger(sp.ExecuteScalar(QueryUtils.buildQueryCount(selQuery)));
                 sp.closeConnection();
 
-                List<string> userList = new List<string>();
-                for(int i =0; i < dataSet.NumRows; i++)
+                if (dataSet.NumRows > 0)
                 {
-                    userList.Add(dataSet.GetKey(i, 0));
+                    List<string> userList = new List<string>();
+                    for (int i = 0; i < dataSet.NumRows; i++)
+                    {
+                        userList.Add(dataSet.GetKey(i, 0));
+                    }
+
+                    //get the module and the level from the database to display in the users table
+                    var userAuthorization = CSGenioAuserauthorization.searchList(sp, SysConfiguration.CreateWebAdminUser(), CriteriaSet.And()
+                        .In(CSGenioAuserauthorization.FldCodpsw, userList)
+                        .Equal(CSGenioAuserauthorization.FldSistema, "GQT")
+                        .Equal(CSGenioAuserauthorization.FldZzstate, 0));
+
+                    for (int i = 0; i < dataSet.NumRows; i++)
+                    {
+                        string codpsw = dataSet.GetKey(i, 0);
+                        string userName = dataSet.GetKey(i, 1);
+                        var userRoles = userAuthorization
+                            .Where(x => x.ValCodpsw == codpsw)
+                            .Select(x => ModuleRoleModel.GetRole(x.ValModulo, x.ValRole,(int) x.ValNivel))
+                            .Where(x => x != null) //GetRole might return null
+                            .ToList();
+                        dataResult.Add(new { Codpsw = codpsw, Nome = userName, privileges = userRoles });
+                    }
                 }
-
-                //get the module and the level from the database to display in the users table
-                var userAuthorization = CSGenioAuserauthorization.searchList(sp, SysConfiguration.CreateWebAdminUser(), CriteriaSet.And()
-                    .In(CSGenioAuserauthorization.FldCodpsw, userList)
-                    .Equal(CSGenioAuserauthorization.FldSistema, "GQT")
-                    .Equal(CSGenioAuserauthorization.FldZzstate, 0));
-
-                for (int i = 0; i < dataSet.NumRows; i++)
-                {
-                    string codpsw = dataSet.GetKey(i, 0);
-                    string userName = dataSet.GetKey(i, 1);
-                    var userRoles = userAuthorization
-                        .Where(x => x.ValCodpsw == codpsw)
-                        .Select(x => ModuleRoleModel.GetRole(x.ValModulo, x.ValRole,(int) x.ValNivel))
-                        .Where(x => x != null) //GetRole might return null
-                        .ToList();
-                    dataResult.Add(new { Codpsw = codpsw, Nome = userName, privileges = userRoles });
-                }
-
 
                 return Json(new { recordsTotal = total, data = dataResult, modules = model.Modules });
             }

@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Armaz02_ValArtigosModel : RequestLookupModel
+		{
+			public Armazpop_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Wareh/Armaz02_ValArtigos
 		// POST: /Wareh/Armaz02_ValArtigos
 		[ActionName("Armaz02_ValArtigos")]
-		public ActionResult Armaz02_ValArtigos([FromBody]RequestLookupModel requestModel)
+		public ActionResult Armaz02_ValArtigos([FromBody] Armaz02_ValArtigosModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -420,16 +425,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Armaz02_ValArtigos_ViewModel model = new Armaz02_ValArtigos_ViewModel(UserContext.Current);
-			
+			Models.Wareh parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Armaz02_ValArtigos_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

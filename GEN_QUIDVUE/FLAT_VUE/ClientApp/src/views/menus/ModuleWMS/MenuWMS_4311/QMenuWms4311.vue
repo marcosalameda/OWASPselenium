@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.PERSON_NAME40980),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
 								name: 'ValGender',
@@ -161,7 +161,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayGender.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayGender.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValIdentifi',
@@ -170,7 +170,7 @@
 								label: computed(() => this.Resources.IDENTIFICATION_NUMBE11999),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 4,
 								name: 'ValPhoto',
@@ -181,7 +181,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 5,
 								name: 'ValDob',
@@ -190,7 +190,7 @@
 								label: computed(() => this.Resources.DATE_OF_BIRTH63058),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValEmail',
@@ -199,7 +199,7 @@
 								label: computed(() => this.Resources.E_MAIL42251),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
 								name: 'ValYear',
@@ -209,8 +209,8 @@
 								scrollData: 4,
 								maxDigits: 4,
 								decimalPlaces: 0,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 8,
 								name: 'ValMonth',
@@ -220,10 +220,10 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
-								visibility: false,
+								isVisible: false,
 								array: qProjArrays.QArrayMonths.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayMonths.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
 								name: 'ValTob',
@@ -233,8 +233,8 @@
 								dataLength: 5,
 								scrollData: 5,
 								dateTimeType: 'time',
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_4311',
@@ -376,11 +376,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PERSO'],
+						globalEvents: ['changed-PERSO'],
 						uuid: '41620bc2-3820-44b2-9922-4b85648ff0b5',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

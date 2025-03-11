@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Repar_EquipValRegistnrModel : RequestLookupModel
+		{
+			public Repar_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Repar/Repar_EquipValRegistnr
 		// POST: /Repar/Repar_EquipValRegistnr
 		[ActionName("Repar_EquipValRegistnr")]
-		public ActionResult Repar_EquipValRegistnr([FromBody]RequestLookupModel requestModel)
+		public ActionResult Repar_EquipValRegistnr([FromBody] Repar_EquipValRegistnrModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Repar_EquipValRegistnr_ViewModel model = new Repar_EquipValRegistnr_ViewModel(UserContext.Current);
-			
+
+			Models.Repar parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Repar_EquipValRegistnr_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Repar_SpeciValEspecialModel : RequestLookupModel
+		{
+			public Repar_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Repar/Repar_SpeciValEspecial
 		// POST: /Repar/Repar_SpeciValEspecial
 		[ActionName("Repar_SpeciValEspecial")]
-		public ActionResult Repar_SpeciValEspecial([FromBody]RequestLookupModel requestModel)
+		public ActionResult Repar_SpeciValEspecial([FromBody] Repar_SpeciValEspecialModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Repar_SpeciValEspecial_ViewModel model = new Repar_SpeciValEspecial_ViewModel(UserContext.Current);
-			
+
+			Models.Repar parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Repar_SpeciValEspecial_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -520,11 +536,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Repar_PessoValNameModel : RequestLookupModel
+		{
+			public Repar_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Repar/Repar_PessoValName
 		// POST: /Repar/Repar_PessoValName
 		[ActionName("Repar_PessoValName")]
-		public ActionResult Repar_PessoValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Repar_PessoValName([FromBody] Repar_PessoValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -549,16 +570,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Repar_PessoValName_ViewModel model = new Repar_PessoValName_ViewModel(UserContext.Current);
-			
+
+			Models.Repar parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Repar_PessoValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

@@ -39,7 +39,7 @@ export default {
 	}
 }
 
-export function navigateToRouteName(vueInstance, routeName, options, query, prefillValues)
+export function navigateToRouteName(vueInstance, routeName, options, query, prefillValues = {})
 {
 	const systemDataStore = useSystemDataStore()
 	const culture = systemDataStore.system.currentLang

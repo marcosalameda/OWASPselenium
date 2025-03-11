@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Pedid_ValLinhasModel : RequestLookupModel
+		{
+			public Pedid_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Pedid/Pedid_ValLinhas
 		// POST: /Pedid/Pedid_ValLinhas
 		[ActionName("Pedid_ValLinhas")]
-		public ActionResult Pedid_ValLinhas([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pedid_ValLinhas([FromBody] Pedid_ValLinhasModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -420,16 +425,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Pedid_ValLinhas_ViewModel model = new Pedid_ValLinhas_ViewModel(UserContext.Current);
-			
+			Models.Pedid parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pedid_ValLinhas_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -454,11 +461,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Pedid_ValDesagregModel : RequestLookupModel
+		{
+			public Pedid_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Pedid/Pedid_ValDesagreg
 		// POST: /Pedid/Pedid_ValDesagreg
 		[ActionName("Pedid_ValDesagreg")]
-		public ActionResult Pedid_ValDesagreg([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pedid_ValDesagreg([FromBody] Pedid_ValDesagregModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -482,16 +494,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Pedid_ValDesagreg_ViewModel model = new Pedid_ValDesagreg_ViewModel(UserContext.Current);
-			
+			Models.Pedid parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pedid_ValDesagreg_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -516,11 +530,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Pedid_ValAgrupameModel : RequestLookupModel
+		{
+			public Pedid_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Pedid/Pedid_ValAgrupame
 		// POST: /Pedid/Pedid_ValAgrupame
 		[ActionName("Pedid_ValAgrupame")]
-		public ActionResult Pedid_ValAgrupame([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pedid_ValAgrupame([FromBody] Pedid_ValAgrupameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -544,16 +563,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Pedid_ValAgrupame_ViewModel model = new Pedid_ValAgrupame_ViewModel(UserContext.Current);
-			
+			Models.Pedid parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pedid_ValAgrupame_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

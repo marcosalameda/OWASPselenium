@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Tpcat_SbcatValSubcategModel : RequestLookupModel
+		{
+			public Tpcat_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Cattp/Tpcat_SbcatValSubcateg
 		// POST: /Cattp/Tpcat_SbcatValSubcateg
 		[ActionName("Tpcat_SbcatValSubcateg")]
-		public ActionResult Tpcat_SbcatValSubcateg([FromBody]RequestLookupModel requestModel)
+		public ActionResult Tpcat_SbcatValSubcateg([FromBody] Tpcat_SbcatValSubcategModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Tpcat_SbcatValSubcateg_ViewModel model = new Tpcat_SbcatValSubcateg_ViewModel(UserContext.Current);
-			
+
+			Models.Cattp parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Tpcat_SbcatValSubcateg_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -253,7 +253,7 @@
 														<q-checkbox-input
 															v-if="controls.PESSO___PESSOINTERNA_.isVisible"
 															v-bind="controls.PESSO___PESSOINTERNA_.props"
-															@update:model-value="model.ValInterna.fnUpdateValue" />
+															v-on="controls.PESSO___PESSOINTERNA_.handlers" />
 													</template>
 												</base-input-structure>
 											</q-control-wrapper>
@@ -271,7 +271,7 @@
 														<q-checkbox-input
 															v-if="controls.PESSO___PESSOEXTERNA_.isVisible"
 															v-bind="controls.PESSO___PESSOEXTERNA_.props"
-															@update:model-value="model.ValExterna.fnUpdateValue" />
+															v-on="controls.PESSO___PESSOEXTERNA_.handlers" />
 													</template>
 												</base-input-structure>
 											</q-control-wrapper>
@@ -791,7 +791,7 @@
 											<q-checkbox-input
 												v-if="controls.PESSO___PESSODRAWMRK_.isVisible"
 												v-bind="controls.PESSO___PESSODRAWMRK_.props"
-												@update:model-value="model.ValDrawmrk.fnUpdateValue" />
+												v-on="controls.PESSO___PESSODRAWMRK_.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
@@ -805,7 +805,7 @@
 											<q-checkbox-input
 												v-if="controls.PESSO___PESSOALLOWLIN.isVisible"
 												v-bind="controls.PESSO___PESSOALLOWLIN.props"
-												@update:model-value="model.ValAllowlin.fnUpdateValue" />
+												v-on="controls.PESSO___PESSOALLOWLIN.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
@@ -819,7 +819,7 @@
 											<q-checkbox-input
 												v-if="controls.PESSO___PESSOALLOWPOL.isVisible"
 												v-bind="controls.PESSO___PESSOALLOWPOL.props"
-												@update:model-value="model.ValAllowpol.fnUpdateValue" />
+												v-on="controls.PESSO___PESSOALLOWPOL.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -839,7 +839,7 @@
 											<q-checkbox-input
 												v-if="controls.PESSO___PESSOCANEXPOR.isVisible"
 												v-bind="controls.PESSO___PESSOCANEXPOR.props"
-												@update:model-value="model.ValCanexpor.fnUpdateValue" />
+												v-on="controls.PESSO___PESSOCANEXPOR.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
@@ -853,7 +853,7 @@
 											<q-checkbox-input
 												v-if="controls.PESSO___PESSOGROUPMRK.isVisible"
 												v-bind="controls.PESSO___PESSOGROUPMRK.props"
-												@update:model-value="model.ValGroupmrk.fnUpdateValue" />
+												v-on="controls.PESSO___PESSOGROUPMRK.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -873,7 +873,7 @@
 											<q-checkbox-input
 												v-if="controls.PESSO___PESSOCANEDIT_.isVisible"
 												v-bind="controls.PESSO___PESSOCANEDIT_.props"
-												@update:model-value="model.ValCanedit.fnUpdateValue" />
+												v-on="controls.PESSO___PESSOCANEDIT_.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
@@ -887,7 +887,7 @@
 											<q-checkbox-input
 												v-if="controls.PESSO___PESSOCANCUT__.isVisible"
 												v-bind="controls.PESSO___PESSOCANCUT__.props"
-												@update:model-value="model.ValCancut.fnUpdateValue" />
+												v-on="controls.PESSO___PESSOCANCUT__.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
@@ -901,7 +901,7 @@
 											<q-checkbox-input
 												v-if="controls.PESSO___PESSOCANDRAG_.isVisible"
 												v-bind="controls.PESSO___PESSOCANDRAG_.props"
-												@update:model-value="model.ValCandrag.fnUpdateValue" />
+												v-on="controls.PESSO___PESSOCANDRAG_.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
@@ -915,7 +915,7 @@
 											<q-checkbox-input
 												v-if="controls.PESSO___PESSOCANROT__.isVisible"
 												v-bind="controls.PESSO___PESSOCANROT__.props"
-												@update:model-value="model.ValCanrot.fnUpdateValue" />
+												v-on="controls.PESSO___PESSOCANROT__.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
@@ -929,7 +929,7 @@
 											<q-checkbox-input
 												v-if="controls.PESSO___PESSOCANREMOV.isVisible"
 												v-bind="controls.PESSO___PESSOCANREMOV.props"
-												@update:model-value="model.ValCanremov.fnUpdateValue" />
+												v-on="controls.PESSO___PESSOCANREMOV.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -1091,8 +1091,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -1619,7 +1617,7 @@
 								label: computed(() => this.Resources.SPECIALTY09304),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
 								name: 'ValAreatecn',
@@ -1630,7 +1628,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayAreatecn.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValEspecial',
@@ -1678,7 +1676,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-SPECI', 'changed-PESSO', 'changed-ESPPE'],
+						globalEvents: ['changed-SPECI', 'changed-PESSO', 'changed-ESPPE'],
 						uuid: 'Pesso_ValEspecial',
 						allSelectedRows: 'false',
 						modelField: 'List_Especial_SelectedIds',
@@ -1709,7 +1707,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodespec',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
 								name: 'Speci.ValAreatecn',
@@ -1721,7 +1719,7 @@
 								array: qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayAreatecn.type,
 								pkColumn: 'ValCodespec',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValEspecitl',
@@ -1868,7 +1866,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-SPECI', 'changed-PESSO', 'changed-ESPPE'],
+						globalEvents: ['changed-SPECI', 'changed-PESSO', 'changed-ESPPE'],
 						uuid: 'Pesso_ValEspecitl',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1975,7 +1973,7 @@
 								dataLength: 50,
 								scrollData: 20,
 								pkColumn: 'ValCodtpcon',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValContacto',
@@ -1984,7 +1982,7 @@
 								label: computed(() => this.Resources.CONTACT59247),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValContacto',
@@ -2130,7 +2128,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-GENRE', 'changed-TPCON', 'changed-CONTA', 'changed-PESSO'],
+						globalEvents: ['changed-GENRE', 'changed-TPCON', 'changed-CONTA', 'changed-PESSO'],
 						uuid: 'Pesso_ValContacto',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -2307,7 +2305,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Cate1.ValCategoria',
@@ -2317,7 +2315,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodcateg',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
 								name: 'ValFimperio',
@@ -2326,7 +2324,7 @@
 								label: computed(() => this.Resources.END_OF_PERIOD44616),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValObservat',
@@ -2334,7 +2332,7 @@
 								field: 'OBSERVAT',
 								label: computed(() => this.Resources.OBSERVATION37880),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValEvolucao',
@@ -2480,7 +2478,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						changeEvents: ['changed-PESSO', 'changed-EVCAT', 'changed-CATE1'],
+						globalEvents: ['changed-PESSO', 'changed-EVCAT', 'changed-CATE1'],
 						uuid: 'Pesso_ValEvolucao',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -2805,8 +2803,8 @@
 									markerDescription: {
 										allowsMultiple: true,
 										sources: [
-											'PESSO.NAME',
 											'PESSO.TELEPHON',
+											'PESSO.NAME',
 										]
 									},
 								}),

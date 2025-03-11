@@ -135,13 +135,7 @@ export function ReadProviderConfig(type, config, ProviderTypeList) {
     if (!provider)
         return tempConfig;
 
-    let c = {};
-    if (type === 'GenioServer.security.LdapQueryIdentityProvider' ||
-        type === 'GenioServer.security.LdapIdentityProvider') {
-        c = ParseQueryString(config);
-    } else {
-        c = config ? ParseQueryString(config) : {};
-    }
+    let c = ParseQueryString(config);
 
     //expand json string objects if they belong the the parent of an option
     for (const o of provider.Options) {

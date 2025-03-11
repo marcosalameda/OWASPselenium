@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Fieldhlp_AeroValNameModel : RequestLookupModel
+		{
+			public Fieldhlp_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Flds/Fieldhlp_AeroValName
 		// POST: /Flds/Fieldhlp_AeroValName
 		[ActionName("Fieldhlp_AeroValName")]
-		public ActionResult Fieldhlp_AeroValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Fieldhlp_AeroValName([FromBody] Fieldhlp_AeroValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Fieldhlp_AeroValName_ViewModel model = new Fieldhlp_AeroValName_ViewModel(UserContext.Current);
-			
+
+			Models.Flds parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Fieldhlp_AeroValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

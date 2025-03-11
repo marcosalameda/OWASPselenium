@@ -110,6 +110,7 @@
 							:raw-value="editFilter.conditions[conditionIdx].values[valueIdx]"
 							:placeholder="getFilterPlaceholder(conditionIdx)"
 							:error-messages="getValueErrorMessages(valueIdx)"
+							:texts="texts"
 							:locale="locale"
 							@update="setFilterConditionValue(conditionIdx, valueIdx, $event)"
 							@loaded="getFilterValueCount(conditionIdx)" />

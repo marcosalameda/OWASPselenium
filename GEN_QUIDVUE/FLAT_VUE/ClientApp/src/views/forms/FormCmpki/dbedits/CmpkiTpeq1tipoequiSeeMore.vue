@@ -28,6 +28,7 @@
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 
+	import netAPI from '@/api/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
@@ -122,7 +123,7 @@
 		mounted()
 		{
 			// Listens for changes to the DB and updates the list accordingly.
-			this.$eventHub.onMany(this.listCtrl.changeEvents, this.onTableDBDataChanged)
+			this.$eventHub.onMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
 
 			const modalProps = {
 				id: 'see-more-cmpki-tpeq1tipoequi',
@@ -140,7 +141,7 @@
 		beforeUnmount()
 		{
 			// Removes the listeners.
-			this.$eventHub.offMany(this.listCtrl.changeEvents, this.onTableDBDataChanged)
+			this.$eventHub.offMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
 			this.listCtrl.destroy()
 			this.componentOnLoadProc.destroy()
 
@@ -205,7 +206,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 50,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'Cmpki_Tpeq1ValTipoequi',
@@ -247,7 +248,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-TPEQ1', 'changed-FAMI1'],
+						globalEvents: ['changed-TPEQ1', 'changed-FAMI1'],
 						uuid: 'Cmpki_Cmpki_Tpeq1ValTipoequi',
 						allSelectedRows: 'false',
 						handlers: {

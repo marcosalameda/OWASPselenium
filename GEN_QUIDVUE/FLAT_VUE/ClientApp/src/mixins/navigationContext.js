@@ -55,6 +55,20 @@ export class HistoryLevel
 	}
 
 	/**
+	 * Checks if the level is still valid.
+	 * Returns true if:
+	 * - The level is active.
+	 * - The level is inactive but has an expiration time and the time has not passed yet.
+	 * Returns false if:
+	 * - The level is inactive without an expiration time.
+	 * - The level is inactive and the expiration time has passed.
+	 */
+	get isValid()
+	{
+		return this.isActive || (this.expiresAt && Date.now() <= this.expiresAt)
+	}
+
+	/**
 	 * Marks the level as inactive and sets a time-to-live for expiration.
 	 * @param {Number} ttl Default Time-to-Live (TTL) in milliseconds (default: 1 minute)
 	 */
@@ -72,20 +86,6 @@ export class HistoryLevel
 		this.isActive = true
 		// Clear the expiration time when activated
 		this.expiresAt = null
-	}
-
-	/**
-	 * Checks if the level is still valid.
-	 * Returns true if:
-	 * - The level is active.
-	 * - The level is inactive but has an expiration time and the time has not passed yet.
-	 * Returns false if:
-	 * - The level is inactive without an expiration time.
-	 * - The level is inactive and the expiration time has passed.
-	 */
-	get isValid()
-	{
-		return this.isActive || (this.expiresAt && Date.now() <= this.expiresAt)
 	}
 
 	/**
@@ -604,18 +604,17 @@ export class NavigationContext
 			this.updateHistoryLevelData(options)
 		else
 		{
-			/*
-				When navigating to the previous level, if the form contained Nested Forms and we are opening it, 
-				we will attempt to recover it from upperLevels.
-			*/
-			let nestedLevelRestore = null;
-			if (previousLevel?.upperLevels) {
-				for (const [key, upperLevel] of previousLevel.upperLevels.entries()) {
-					/*
-						Clean up deactivated nested levels, as they were not used to recover the history level. 
-						If we navigate to the next normal level and the deactivated level was not recovered, it means it is no longer needed.
-					*/
-					if (!upperLevel.isValid) {
+			// When navigating to the previous level, if the form contained Nested Forms and we are opening it,
+			// we will attempt to recover it from upperLevels.
+			let nestedLevelRestore = null
+			if (previousLevel?.upperLevels)
+			{
+				for (const [key, upperLevel] of previousLevel.upperLevels.entries())
+				{
+					// Clean up deactivated nested levels, as they were not used to recover the history level.
+					// If we navigate to the next normal level and the deactivated level was not recovered, it means it is no longer needed.
+					if (!upperLevel.isValid)
+					{
 						// Destroy the level
 						upperLevel.destroy()
 						// Remove it from the Map
@@ -626,14 +625,15 @@ export class NavigationContext
 						upperLevel.checkLocation(options) &&
 						upperLevel.params?.id === options?.params?.id &&
 						upperLevel.previousLevel === previousLevel
-					) {
-						// Assign the nested level to restore if it matches the conditions
+					)
+					{
+						// Assign the nested level to restore if it matches the conditions.
 						nestedLevelRestore = upperLevel
 					}
 				}
 			}
 
-			if(nestedLevelRestore instanceof HistoryLevel)
+			if (nestedLevelRestore instanceof HistoryLevel)
 			{
 				nestedLevelRestore.activate()
 				this.currentLevel = nestedLevelRestore
@@ -644,7 +644,7 @@ export class NavigationContext
 				const historyLevel = new HistoryLevel(previousLevel || this.currentLevel, options)
 				if (!_isEmpty(historyLevel.previousLevel))
 					historyLevel.previousLevel.upperLevels.set(historyLevel.uniqueIdentifier, historyLevel)
-	
+
 				this.currentLevel = historyLevel
 			}
 		}
@@ -755,11 +755,11 @@ export class NavigationContext
 			*/
 			if (this.currentLevel?.isNested)
 			{
-				this.currentLevel.deactivate();
+				this.currentLevel.deactivate()
 				this.currentLevel = this.currentLevel.previousLevel
-			} 
+			}
 			else
-				this.removeNavigationLevel();
+				this.removeNavigationLevel()
 		}
 	}
 

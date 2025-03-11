@@ -52,11 +52,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			STY_Menu_MODAL_ViewModel model = new STY_Menu_MODAL_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -136,11 +136,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			STY_Menu_ALERTS_ViewModel model = new STY_Menu_ALERTS_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -219,11 +219,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			STY_Menu_AUTH_ViewModel model = new STY_Menu_AUTH_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -332,11 +332,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			STY_Menu_BTNFORM_ViewModel model = new STY_Menu_BTNFORM_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -445,11 +445,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			STY_Menu_MULTIFORM_ViewModel model = new STY_Menu_MULTIFORM_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -558,11 +558,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			STY_Menu_EXTENDFORM_ViewModel model = new STY_Menu_EXTENDFORM_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -671,11 +671,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			STY_Menu_EXPOSETABLE_ViewModel model = new STY_Menu_EXPOSETABLE_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -784,11 +784,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			STY_Menu_TIMELIN_ViewModel model = new STY_Menu_TIMELIN_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -897,11 +897,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			GQT_Menu_461_ViewModel model = new GQT_Menu_461_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -980,11 +980,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			GQT_Menu_491_ViewModel model = new GQT_Menu_491_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,

@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 2,
 								multipleValues: true,
@@ -162,7 +162,7 @@
 								sortable: false,
 								searchable: false,
 								pkColumn: 'ValCodtblb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 3,
 								multipleValues: true,
@@ -176,7 +176,7 @@
 								sortable: false,
 								searchable: false,
 								pkColumn: 'ValCodtblb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 4,
 								multipleValues: true,
@@ -190,7 +190,7 @@
 								sortable: false,
 								searchable: false,
 								pkColumn: 'ValCodtblb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 5,
 								multipleValues: true,
@@ -203,7 +203,7 @@
 								sortable: false,
 								searchable: false,
 								pkColumn: 'ValCodtblb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 6,
 								multipleValues: true,
@@ -216,7 +216,7 @@
 								sortable: false,
 								searchable: false,
 								pkColumn: 'ValCodtblb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
 								multipleValues: true,
@@ -229,7 +229,7 @@
 								sortable: false,
 								searchable: false,
 								pkColumn: 'ValCodtblb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 8,
 								multipleValues: true,
@@ -245,7 +245,7 @@
 								array: qProjArrays.QArrayTypen.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayTypen.type,
 								pkColumn: 'ValCodtblb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 9,
 								multipleValues: true,
@@ -260,7 +260,7 @@
 								array: qProjArrays.QArrayTypet.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayTypet.type,
 								pkColumn: 'ValCodtblb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
 								multipleValues: true,
@@ -274,7 +274,7 @@
 								sortable: false,
 								searchable: false,
 								pkColumn: 'ValCodtblb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 11,
 								multipleValues: true,
@@ -288,7 +288,7 @@
 								sortable: false,
 								searchable: false,
 								pkColumn: 'ValCodtblb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 12,
 								multipleValues: true,
@@ -301,7 +301,7 @@
 								sortable: false,
 								searchable: false,
 								pkColumn: 'ValCodtblb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 13,
 								multipleValues: true,
@@ -313,7 +313,7 @@
 								sortable: false,
 								searchable: false,
 								pkColumn: 'ValCodtblb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 14,
 								multipleValues: true,
@@ -327,7 +327,7 @@
 								sortable: false,
 								searchable: false,
 								pkColumn: 'ValCodtblb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_3M1',
@@ -457,11 +457,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-GRPB'],
+						globalEvents: ['changed-GRPB'],
 						uuid: 'fa354599-4a30-4174-adb2-39d65e17489c',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

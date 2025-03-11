@@ -28,6 +28,7 @@
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 
+	import netAPI from '@/api/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
@@ -122,7 +123,7 @@
 		mounted()
 		{
 			// Listens for changes to the DB and updates the list accordingly.
-			this.$eventHub.onMany(this.listCtrl.changeEvents, this.onTableDBDataChanged)
+			this.$eventHub.onMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
 
 			const modalProps = {
 				id: 'see-more-plist-warehwarehdes',
@@ -140,7 +141,7 @@
 		beforeUnmount()
 		{
 			// Removes the listeners.
-			this.$eventHub.offMany(this.listCtrl.changeEvents, this.onTableDBDataChanged)
+			this.$eventHub.offMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
 			this.listCtrl.destroy()
 			this.componentOnLoadProc.destroy()
 
@@ -205,7 +206,7 @@
 								label: computed(() => this.Resources.WAREHOUSE51864),
 								dataLength: 85,
 								scrollData: 85,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'Plist_WarehValWarehdes',
@@ -226,6 +227,96 @@
 							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
+							crudActions: [
+								{
+									id: 'show',
+									name: 'show',
+									title: computed(() => this.Resources.CONSULTAR57388),
+									icon: {
+										icon: 'view'
+									},
+									isInReadOnly: true,
+									params: {
+										canExecuteAction: vm.applyChanges,
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'WARE_WS',
+										mode: 'SHOW',
+										isControlled: true
+									}
+								},
+								{
+									id: 'edit',
+									name: 'edit',
+									title: computed(() => this.Resources.EDITAR11616),
+									icon: {
+										icon: 'pencil'
+									},
+									isInReadOnly: false,
+									params: {
+										canExecuteAction: vm.applyChanges,
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'WARE_WS',
+										mode: 'EDIT',
+										isControlled: true
+									}
+								},
+								{
+									id: 'duplicate',
+									name: 'duplicate',
+									title: computed(() => this.Resources.DUPLICAR09748),
+									icon: {
+										icon: 'duplicate'
+									},
+									isInReadOnly: false,
+									params: {
+										canExecuteAction: vm.applyChanges,
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'WARE_WS',
+										mode: 'DUPLICATE',
+										isControlled: true
+									}
+								},
+								{
+									id: 'delete',
+									name: 'delete',
+									title: computed(() => this.Resources.ELIMINAR21155),
+									icon: {
+										icon: 'delete'
+									},
+									isInReadOnly: false,
+									params: {
+										canExecuteAction: vm.applyChanges,
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'WARE_WS',
+										mode: 'DELETE',
+										isControlled: true
+									}
+								}
+							],
+							generalActions: [
+								{
+									id: 'insert',
+									name: 'insert',
+									title: computed(() => this.Resources.INSERIR43365),
+									icon: {
+										icon: 'add'
+									},
+									isInReadOnly: false,
+									params: {
+										canExecuteAction: vm.applyChanges,
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'WARE_WS',
+										mode: 'NEW',
+										repeatInsertion: false,
+										isControlled: true
+									}
+								},
+							],
 							generalCustomActions: [
 							],
 							groupActions: [
@@ -239,6 +330,10 @@
 								name: 'see-more-choice',
 							},
 							formsDefinition: {
+								'WARE_WS': {
+									fnKeySelector: (row) => row.Fields.ValCodwareh,
+									isPopup: false
+								},
 							},
 							defaultSearchColumnName: 'ValWarehdes',
 							defaultSearchColumnNameOriginal: 'ValWarehdes',
@@ -247,7 +342,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-WAREH'],
+						globalEvents: ['changed-WAREH'],
 						uuid: 'Plist_Plist_WarehValWarehdes',
 						allSelectedRows: 'false',
 						handlers: {

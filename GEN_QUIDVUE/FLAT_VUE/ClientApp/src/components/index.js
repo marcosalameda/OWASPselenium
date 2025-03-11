@@ -61,6 +61,7 @@ export const components = {
 	QStaticText: defineAsyncComponent(() => import('./QStaticText.vue')),
 	QPageBusyState: defineAsyncComponent(() => import('./QPageBusyState.vue')),
 	QInfoMessage: defineAsyncComponent(() => import('./QInfoMessage.vue')),
+	QMarkdownViewer: defineAsyncComponent(() => import('./QMarkdownViewer.vue')),
 
 	// Input controls
 	BaseInputStructure: defineAsyncComponent(() => import('./inputs/BaseInputStructure.vue')),
@@ -103,11 +104,13 @@ export const components = {
 	// Render components are used by tables to display fields.
 	// Edit components are used by advanced filters, column filters and editable fields in normal tables
 	// (different than the ones in the editable table lists).
+	QActionList: defineAsyncComponent(() => import('./rendering/QActionList.vue')),
 	QRenderArray: defineAsyncComponent(() => import('./rendering/QRenderArray.vue')),
 	QRenderBoolean: defineAsyncComponent(() => import('./rendering/QRenderBoolean.vue')),
 	QRenderData: defineAsyncComponent(() => import('./rendering/QRenderData.vue')),
 	QRenderHyperlink: defineAsyncComponent(() => import('./rendering/QRenderHyperlink.vue')),
 	QRenderHtml: defineAsyncComponent(() => import('./rendering/QRenderHtml.vue')),
+	QRenderMarkdown: defineAsyncComponent(() => import('./rendering/QRenderMarkdown.vue')),
 	QRenderImage: defineAsyncComponent(() => import('./rendering/QRenderImage.vue')),
 	QRenderDocument: defineAsyncComponent(() => import('./rendering/QRenderDocument.vue')),
 	QEditText: defineAsyncComponent(() => import('./rendering/QEditText.vue')),
@@ -144,7 +147,6 @@ export const components = {
 	QTablePaginationAlt: defineAsyncComponent(() => import('./table/QTablePaginationAlt.vue')),
 	QTableLimitInfo: defineAsyncComponent(() => import('./table/QTableLimitInfo.vue')),
 	QTableChecklistCheckbox: defineAsyncComponent(() => import('./table/QTableChecklistCheckbox.vue')),
-	QTableSelector: defineAsyncComponent(() => import('./table/QTableSelector.vue')),
 	QTableColumnFilters: defineAsyncComponent(() => import('./table/QTableColumnFilters.vue')),
 	QTableColumnTotalizers: defineAsyncComponent(() => import('./table/QTableColumnTotalizers.vue')),
 	QTableCurrentFilters: defineAsyncComponent(() => import('./table/QTableCurrentFilters.vue')),

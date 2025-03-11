@@ -58,7 +58,7 @@
 	export default {
 		name: 'messagesConfig',
 		mixins: [reusableMixin],
-		emits: ['updateModal'],
+		emits: ['update-model'],
 		props: {
 			model: {
 				required: true

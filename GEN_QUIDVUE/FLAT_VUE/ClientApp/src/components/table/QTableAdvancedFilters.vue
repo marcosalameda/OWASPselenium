@@ -96,6 +96,7 @@
 										:raw-value="editFilter.conditions[conditionIdx].values[valueIdx]"
 										:placeholder="getFilterPlaceholder(editFilter, conditionIdx, searchableColumns)"
 										:error-messages="getFilterValueErrorMessages(filterIdx, conditionIdx, valueIdx)"
+										:texts="texts"
 										:locale="locale"
 										@update="setFilterConditionValue(editFilter, conditionIdx, valueIdx, $event)">
 									</component>

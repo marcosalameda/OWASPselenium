@@ -122,7 +122,6 @@ export default ({ mode }) => {
 							'src/components/table/QTablePaginationAlt.vue',
 							'src/components/table/QTableLimitInfo.vue',
 							'src/components/table/QTableChecklistCheckbox.vue',
-							'src/components/table/QTableSelector.vue',
 							'src/components/table/QTableColumnFilters.vue',
 							'src/components/table/QTableCurrentFilters.vue',
 							'src/components/table/QTableActions.vue',
@@ -173,7 +172,8 @@ export default ({ mode }) => {
 							'src/components/rendering/QEditDatetime.vue',
 							'src/components/rendering/QEditEnumeration.vue',
 							'src/components/rendering/QEditCheckList.vue',
-							'src/components/rendering/QEditRadio.vue'
+							'src/components/rendering/QEditRadio.vue',
+							'src/components/rendering/QActionList.vue'
 						]
 					}
 				}

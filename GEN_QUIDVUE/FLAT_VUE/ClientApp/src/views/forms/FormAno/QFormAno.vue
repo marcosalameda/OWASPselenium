@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -306,8 +306,6 @@
 					mode: ''
 				},
 
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
-
 				formButtons: {
 					changeToShow: {
 						id: 'change-to-show-btn',
@@ -569,7 +567,7 @@
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 19,
 								name: 'ValValue',
@@ -579,7 +577,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValTodasdes',
@@ -720,7 +718,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-YEAR', 'changed-PROJE', 'changed-AGREG', 'changed-EXPEN'],
+						globalEvents: ['changed-YEAR', 'changed-PROJE', 'changed-AGREG', 'changed-EXPEN'],
 						uuid: 'Ano_ValTodasdes',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -753,7 +751,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValAgregado',
@@ -894,7 +892,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PROJE', 'changed-YEAR', 'changed-AGREG'],
+						globalEvents: ['changed-PROJE', 'changed-YEAR', 'changed-AGREG'],
 						uuid: 'Ano_ValAgregado',
 						allSelectedRows: 'false',
 						controlLimits: [

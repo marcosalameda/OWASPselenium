@@ -77,7 +77,7 @@
 	export default {
 		name: 'message',
 
-		emits: ['alertClass', 'updateModal'],
+		emits: ['alert-class', 'update-model'],
 
 		mixins: [reusableMixin],
 
@@ -141,8 +141,8 @@
 				QUtils.log("SaveConfigMessaging - Request", QUtils.apiActionURL('Config', 'SaveConfigMessaging'));
 				QUtils.postData('Config', 'SaveConfigMessaging', vm.model, null, function (data) {
 					QUtils.log("SaveConfigMessaging - Response", data);          
-					vm.$emit('updateModal', data);
-					vm.$emit('alertClass', { 
+					vm.$emit('update-model');
+					vm.$emit('alert-class', { 
 						ResultMsg: data.Success ? vm.Resources.ALTERACOES_EFETUADAS10166 : data.Message, 
 						AlertType: data.Success ? 'success' : 'danger' 
 					});

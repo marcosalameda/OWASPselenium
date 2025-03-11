@@ -38,39 +38,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">COMPANY" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Pess2.ValCodempre")]
 		public string ValCodempre { get { return klass.ValCodempre; } set { klass.ValCodempre = value; } }
+
 		private Cmpny _cmpny;
 		[DisplayName("Cmpny")]
 		[ShouldSerialize("Cmpny")]
-		public virtual Cmpny Cmpny {
-			get {
-				if (!this.isEmptyModel && (_cmpny == null || (!string.IsNullOrEmpty(ValCodempre) && (_cmpny.isEmptyModel || _cmpny.klass.QPrimaryKey != ValCodempre))))
+		public virtual Cmpny Cmpny
+		{
+			get
+			{
+				if (!isEmptyModel && (_cmpny == null || (!string.IsNullOrEmpty(ValCodempre) && (_cmpny.isEmptyModel || _cmpny.klass.QPrimaryKey != ValCodempre))))
 					_cmpny = Models.Cmpny.Find(ValCodempre, m_userContext, Identifier, _fieldsToSerialize);
-				if (_cmpny == null)
-					_cmpny = new Models.Cmpny(m_userContext, true, _fieldsToSerialize);
+				_cmpny ??= new Models.Cmpny(m_userContext, true, _fieldsToSerialize);
 				return _cmpny;
 			}
 			set { _cmpny = value; }
 		}
 
-
 		[DisplayName(">INTERESTED PARTY")]
 		/// <summary>Field : ">INTERESTED PARTY" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Pess2.ValCodparte")]
 		public string ValCodparte { get { return klass.ValCodparte; } set { klass.ValCodparte = value; } }
+
 		private Stake _stake;
 		[DisplayName("Stake")]
 		[ShouldSerialize("Stake")]
-		public virtual Stake Stake {
-			get {
-				if (!this.isEmptyModel && (_stake == null || (!string.IsNullOrEmpty(ValCodparte) && (_stake.isEmptyModel || _stake.klass.QPrimaryKey != ValCodparte))))
+		public virtual Stake Stake
+		{
+			get
+			{
+				if (!isEmptyModel && (_stake == null || (!string.IsNullOrEmpty(ValCodparte) && (_stake.isEmptyModel || _stake.klass.QPrimaryKey != ValCodparte))))
 					_stake = Models.Stake.Find(ValCodparte, m_userContext, Identifier, _fieldsToSerialize);
-				if (_stake == null)
-					_stake = new Models.Stake(m_userContext, true, _fieldsToSerialize);
+				_stake ??= new Models.Stake(m_userContext, true, _fieldsToSerialize);
 				return _stake;
 			}
 			set { _stake = value; }
 		}
-
 
 		[DisplayName("Name")]
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
@@ -265,8 +267,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Pess2.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Pess2(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -285,7 +287,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioApess2 csgenioa)
 		{
 			if (csgenioa == null)
@@ -296,13 +297,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "cmpny":
-						if (_cmpny == null)
-							_cmpny = new Cmpny(m_userContext, true, _fieldsToSerialize);
+						_cmpny ??= new Cmpny(m_userContext, true, _fieldsToSerialize);
 						_cmpny.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "stake":
-						if (_stake == null)
-							_stake = new Stake(m_userContext, true, _fieldsToSerialize);
+						_stake ??= new Stake(m_userContext, true, _fieldsToSerialize);
 						_stake.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

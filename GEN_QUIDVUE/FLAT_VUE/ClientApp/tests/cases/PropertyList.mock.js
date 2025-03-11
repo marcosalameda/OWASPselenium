@@ -2,7 +2,7 @@
 	typeSelectOptions: [
 		{ key: 'Text', value: 'QTextInput' },
 		{ key: 'Numeric', value: 'QNumericInput' },
-		{ key: 'Calendar', value: 'QDateTimeInput' },
+		{ key: 'Calendar', value: 'QDateTimePicker' },
 		{ key: 'Boolean', value: 'CheckBoxInput' },
 		{ key: 'Enumeration', value: 'QTextInput' },
 	],

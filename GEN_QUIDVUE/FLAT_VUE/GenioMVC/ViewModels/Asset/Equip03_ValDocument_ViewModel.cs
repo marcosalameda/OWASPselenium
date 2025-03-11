@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,51 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Asset
 {
-	public class Equip03_ValDocument_ViewModel : ListViewModel
+	public class Equip03_ValDocument_ViewModel : MenuListViewModel<Models.Assma>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Equip03_ValDocument_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "assma"; }
+		[JsonIgnore]
+		public override string TableAlias => "assma";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Equip03_ValDocument"; }
+		public override string Uuid => "Equip03_ValDocument";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCodasset { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -52,6 +63,7 @@ namespace GenioMVC.ViewModels.Asset
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -63,6 +75,7 @@ namespace GenioMVC.ViewModels.Asset
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -86,12 +99,28 @@ namespace GenioMVC.ViewModels.Asset
 		}
 
 		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Equip03_ValDocument_ViewModel() : base(null!) { }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Equip03_ValDocument_ViewModel" /> class.
 		/// </summary>
 		/// <param name="userContext">The current user request context</param>
 		public Equip03_ValDocument_ViewModel(UserContext userContext) : base(userContext)
 		{
 			ValCodasset = userContext.CurrentNavigation.CurrentLevel.GetEntry("asset")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Equip03_ValDocument_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Equip03_ValDocument_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -157,10 +186,6 @@ namespace GenioMVC.ViewModels.Asset
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -177,7 +202,6 @@ namespace GenioMVC.ViewModels.Asset
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -274,20 +298,19 @@ namespace GenioMVC.ViewModels.Asset
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAassma> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "EQUIP03")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Equip03_ValDocument_RowViewModel>();
 
 				CriteriaSet equip03_pseuddocumentConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
 
 
 
@@ -319,20 +342,19 @@ namespace GenioMVC.ViewModels.Asset
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAassma model_limit_area = new CSGenioAassma(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_EQUIP03_PSEUDDOCUMENT");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAassma model_limit_area = new CSGenioAassma(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_EQUIP03_PSEUDDOCUMENT");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -380,7 +402,6 @@ namespace GenioMVC.ViewModels.Asset
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -400,18 +421,12 @@ namespace GenioMVC.ViewModels.Asset
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -419,7 +434,7 @@ namespace GenioMVC.ViewModels.Asset
 
 		private List<Equip03_ValDocument_RowViewModel> MapEquip03_ValDocument(ListingMVC<CSGenioAassma> Qlisting)
 		{
-			var Elements = new List<Equip03_ValDocument_RowViewModel>();
+			List<Equip03_ValDocument_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -436,7 +451,6 @@ namespace GenioMVC.ViewModels.Asset
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAassma row
 		/// to a Equip03_ValDocument_RowViewModel object.
@@ -445,7 +459,9 @@ namespace GenioMVC.ViewModels.Asset
 		private Equip03_ValDocument_RowViewModel MapEquip03_ValDocument(CSGenioAassma row)
 		{
 			var model = new Equip03_ValDocument_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -457,32 +473,7 @@ namespace GenioMVC.ViewModels.Asset
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Equip03_ValDocument_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -496,11 +487,10 @@ namespace GenioMVC.ViewModels.Asset
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAassma> listing)
 		{
 			if (listing.Rows == null)
@@ -509,8 +499,9 @@ namespace GenioMVC.ViewModels.Asset
 			foreach (CSGenioAassma row in listing.Rows)
 			{
 				{
-					if (!string.IsNullOrEmpty((string)row.returnValueField("assma.digdocumfk"))){
-						ResourceQuery resource = new ResourceQuery("Assma", "ValDigdocum", "ValDigdocumfk", row.ValCodassma);
+					if (!string.IsNullOrEmpty((string)row.returnValueField("assma.digdocumfk")))
+					{
+						ResourceQuery resource = new("Assma", "ValDigdocum", "ValDigdocumfk", row.ValCodassma);
 						string ticket = QResources.CreateTicketEncryptedBase64(m_userContext.User.Name, m_userContext.User.Location, resource);
 
 						row.insertNameValueField("assma.digdocum", Newtonsoft.Json.JsonConvert.SerializeObject(new
@@ -525,23 +516,36 @@ namespace GenioMVC.ViewModels.Asset
 			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Assma m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Assma m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM EQUIP03_VALDOCUMENT]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Assma", "Assma.ValCodassma", "Assma.ValZzstate", "Assma.ValName", "Assma.ValDigdocum", "Assma.ValNotes", "Assma.ValCodasset", "BtnPermission"
+			"Assma", "Assma.ValCodassma", "Assma.ValZzstate", "Assma.ValName", "Assma.ValDigdocum", "Assma.ValNotes", "Assma.ValCodasset"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValName", CSGenioAassma.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValDigdocum", CSGenioAassma.FldDigdocum, typeof(string)),
 			new TableSearchColumn("ValNotes", CSGenioAassma.FldNotes, typeof(string))
 		];
-
-
-
 	}
 }

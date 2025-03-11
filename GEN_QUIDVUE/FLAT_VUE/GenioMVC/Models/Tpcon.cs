@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Tpcon.ValCodgenre")]
 		public string ValCodgenre { get { return klass.ValCodgenre; } set { klass.ValCodgenre = value; } }
+
 		private Genre _genre;
 		[DisplayName("Genre")]
 		[ShouldSerialize("Genre")]
-		public virtual Genre Genre {
-			get {
-				if (!this.isEmptyModel && (_genre == null || (!string.IsNullOrEmpty(ValCodgenre) && (_genre.isEmptyModel || _genre.klass.QPrimaryKey != ValCodgenre))))
+		public virtual Genre Genre
+		{
+			get
+			{
+				if (!isEmptyModel && (_genre == null || (!string.IsNullOrEmpty(ValCodgenre) && (_genre.isEmptyModel || _genre.klass.QPrimaryKey != ValCodgenre))))
 					_genre = Models.Genre.Find(ValCodgenre, m_userContext, Identifier, _fieldsToSerialize);
-				if (_genre == null)
-					_genre = new Models.Genre(m_userContext, true, _fieldsToSerialize);
+				_genre ??= new Models.Genre(m_userContext, true, _fieldsToSerialize);
 				return _genre;
 			}
 			set { _genre = value; }
 		}
-
 
 		[DisplayName("Genre")]
 		/// <summary>Field : "Genre" Tipo: "AC" Formula:  ""</summary>
@@ -68,8 +69,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Tpcon.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Tpcon(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -88,7 +89,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAtpcon csgenioa)
 		{
 			if (csgenioa == null)
@@ -99,8 +99,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "genre":
-						if (_genre == null)
-							_genre = new Genre(m_userContext, true, _fieldsToSerialize);
+						_genre ??= new Genre(m_userContext, true, _fieldsToSerialize);
 						_genre.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

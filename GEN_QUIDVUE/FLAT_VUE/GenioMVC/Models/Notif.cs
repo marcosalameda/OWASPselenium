@@ -113,25 +113,26 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Recipient key 'Comodatário'" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Notif.ValCodpesso")]
 		public string ValCodpesso { get { return klass.ValCodpesso; } set { klass.ValCodpesso = value; } }
+
 		private Pess2 _pess2;
 		[DisplayName("Pess2")]
 		[ShouldSerialize("Pess2")]
-		public virtual Pess2 Pess2 {
-			get {
-				if (!this.isEmptyModel && (_pess2 == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pess2.isEmptyModel || _pess2.klass.QPrimaryKey != ValCodpesso))))
+		public virtual Pess2 Pess2
+		{
+			get
+			{
+				if (!isEmptyModel && (_pess2 == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pess2.isEmptyModel || _pess2.klass.QPrimaryKey != ValCodpesso))))
 					_pess2 = Models.Pess2.Find(ValCodpesso, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pess2 == null)
-					_pess2 = new Models.Pess2(m_userContext, true, _fieldsToSerialize);
+				_pess2 ??= new Models.Pess2(m_userContext, true, _fieldsToSerialize);
 				return _pess2;
 			}
 			set { _pess2 = value; }
 		}
 
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Notif.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Notif(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -150,7 +151,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAnotif csgenioa)
 		{
 			if (csgenioa == null)
@@ -161,8 +161,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "pess2":
-						if (_pess2 == null)
-							_pess2 = new Pess2(m_userContext, true, _fieldsToSerialize);
+						_pess2 ??= new Pess2(m_userContext, true, _fieldsToSerialize);
 						_pess2.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

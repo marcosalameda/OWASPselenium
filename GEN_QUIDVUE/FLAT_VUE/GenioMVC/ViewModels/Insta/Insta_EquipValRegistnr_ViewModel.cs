@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,51 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Insta
 {
-	public class Insta_EquipValRegistnr_ViewModel : ListViewModel
+	public class Insta_EquipValRegistnr_ViewModel : MenuListViewModel<Models.Equip>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DB"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Insta_EquipValRegistnr_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "equip"; }
+		[JsonIgnore]
+		public override string TableAlias => "equip";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Insta_EquipValRegistnr"; }
+		public override string Uuid => "Insta_EquipValRegistnr";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCodinsta { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -52,6 +63,7 @@ namespace GenioMVC.ViewModels.Insta
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -63,6 +75,7 @@ namespace GenioMVC.ViewModels.Insta
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -80,12 +93,38 @@ namespace GenioMVC.ViewModels.Insta
 		}
 
 
+		public DateTime? ValDtdeco { get; set; }
+
 		public string ValCodtpequ { get; set; }
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param
+		private void SetViewModelValue(string fullFieldName, object value)
+		{
+			if (string.IsNullOrEmpty(fullFieldName))
+				return;
+
+			switch (fullFieldName)
+			{
+				case "equip.dtdeco":
+					ValDtdeco = ViewModelConversion.ToDateTime(value);
+					break;
+			}
+		}
 
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Insta_EquipValRegistnr_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Insta_EquipValRegistnr_ViewModel" /> class.
@@ -94,6 +133,16 @@ namespace GenioMVC.ViewModels.Insta
 		public Insta_EquipValRegistnr_ViewModel(UserContext userContext) : base(userContext)
 		{
 			ValCodinsta = userContext.CurrentNavigation.CurrentLevel.GetEntry("insta")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Insta_EquipValRegistnr_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Insta_EquipValRegistnr_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -105,7 +154,7 @@ namespace GenioMVC.ViewModels.Insta
 				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXTO, Resources.Resources.NO__REGISTER04207, 6, 0, true),
 				new Exports.QColumn(CSGenioAequip.FldSequennr, FieldType.NUMERO, Resources.Resources.SEQUENTIAL_NO_38590, 6, 0, false),
 				new Exports.QColumn(CSGenioAequip.FldDtaquisi, FieldType.DATA, Resources.Resources.ACQUISITION44180, 8, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldDtdeco, FieldType.DATA, Resources.Resources.DECOMISSION14486, 8, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldDtdeco, FieldType.DATAHORA, Resources.Resources.DECOMISSION14486, 8, 0, true),
 				!ajaxRequest ? new Exports.QColumn(CSGenioAequip.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
 				new Exports.QColumn(CSGenioAequip.FldValortot, FieldType.VALOR, Resources.Resources.TOTAL_VALUE30570, 12, 0, true),
 			};
@@ -167,12 +216,6 @@ namespace GenioMVC.ViewModels.Insta
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("EQUIP.DESIGNAT", new OrderedDictionary());
-			allSortOrders["EQUIP.DESIGNAT"].Add("EQUIP.DESIGNAT", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -187,7 +230,6 @@ namespace GenioMVC.ViewModels.Insta
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -282,22 +324,21 @@ namespace GenioMVC.ViewModels.Insta
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAequip> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "INSTA")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Insta_EquipValRegistnr_RowViewModel>();
 
 				CriteriaSet insta___equipregistnrConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("EQUIP.DESIGNAT", new OrderedDictionary());
 				allSortOrders["EQUIP.DESIGNAT"].Add("EQUIP.DESIGNAT", "A");
-
 
 
 
@@ -335,39 +376,38 @@ namespace GenioMVC.ViewModels.Insta
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAequip model_limit_area = new CSGenioAequip(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_INSTA___EQUIPREGISTNR");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAequip model_limit_area = new CSGenioAequip(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_INSTA___EQUIPREGISTNR");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
-			// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
-			// Limit origin: form 
-			//Limit type: "A"
-			//Current Area = "EQUIP"
-			//1st Area Limit: "TPEQU"
-			//1st Area Field: "CODTPEQU"
-			//1st Area Value: ""
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.A;
-				limit.NaoAplicaSeNulo = false;
-				CSGenioAtpequ model_limit_area = new CSGenioAtpequ(m_userContext.User);
-				string limit_field = "codtpequ", limit_field_value = "";
-				object this_limit_field = Navigation.GetValue("tpequ") == null ? this.ValCodtpequ : Navigation.GetValue("tpequ");
-				Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
-				if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
-					this.tableLimits.Add(limit);
-			}
+				// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
+				// Limit origin: form 
+				//Limit type: "A"
+				//Current Area = "EQUIP"
+				//1st Area Limit: "TPEQU"
+				//1st Area Field: "CODTPEQU"
+				//1st Area Value: ""
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.A;
+					limit.NaoAplicaSeNulo = false;
+					CSGenioAtpequ model_limit_area = new CSGenioAtpequ(m_userContext.User);
+					string limit_field = "codtpequ", limit_field_value = "";
+					object this_limit_field = Navigation.GetValue("tpequ") == null ? this.ValCodtpequ : Navigation.GetValue("tpequ");
+					Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
+					if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
+						this.tableLimits.Add(limit);
+				}
 
 				if (conditions == null)
 					conditions = CriteriaSet.And();
@@ -413,7 +453,6 @@ namespace GenioMVC.ViewModels.Insta
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -433,18 +472,12 @@ namespace GenioMVC.ViewModels.Insta
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -452,7 +485,7 @@ namespace GenioMVC.ViewModels.Insta
 
 		private List<Insta_EquipValRegistnr_RowViewModel> MapInsta_EquipValRegistnr(ListingMVC<CSGenioAequip> Qlisting)
 		{
-			var Elements = new List<Insta_EquipValRegistnr_RowViewModel>();
+			List<Insta_EquipValRegistnr_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -469,7 +502,6 @@ namespace GenioMVC.ViewModels.Insta
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAequip row
 		/// to a Insta_EquipValRegistnr_RowViewModel object.
@@ -478,7 +510,9 @@ namespace GenioMVC.ViewModels.Insta
 		private Insta_EquipValRegistnr_RowViewModel MapInsta_EquipValRegistnr(CSGenioAequip row)
 		{
 			var model = new Insta_EquipValRegistnr_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -490,33 +524,8 @@ namespace GenioMVC.ViewModels.Insta
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			SetTicketToImageFields(model);
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Insta_EquipValRegistnr_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -530,31 +539,70 @@ namespace GenioMVC.ViewModels.Insta
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAequip> listing)
 		{
-			if (listing.Rows == null)
-				return;
+		}
 
-			foreach (CSGenioAequip row in listing.Rows)
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Equip m)
+		{
+			if (m == null)
 			{
+				CSGenio.framework.Log.Error("Map Model (Equip) to ViewModel (Insta_EquipValRegistnr) - Model is a null reference.");
+				throw new ModelNotFoundException("Model not found");
+			}
+
+			try
+			{
+				ValDtdeco = ViewModelConversion.ToDateTime(m.ValDtdeco);
+			}
+			catch
+			{
+				CSGenio.framework.Log.Error("Map Model (Equip) to ViewModel (Insta_EquipValRegistnr) - Error during mapping.");
+				throw;
 			}
 		}
 
+		/// <inheritdoc />
+		public override void MapToModel(Models.Equip m)
+		{
+			if (m == null)
+			{
+				CSGenio.framework.Log.Error("Map ViewModel (Insta_EquipValRegistnr) to Model (Equip) - Model is a null reference.");
+				throw new ModelNotFoundException("Model not found");
+			}
+
+			try
+			{
+				m.ValDtdeco = ViewModelConversion.ToDateTime(ValDtdeco);
+			}
+			catch
+			{
+				CSGenio.framework.Log.Error("Map ViewModel (Insta_EquipValRegistnr) to Model (Equip) - Error during mapping.");
+				throw;
+			}
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM INSTA_EQUIPVALREGISTNR]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Equip.ValDesignat", "Equip.ValRegistnr", "Equip.ValSequennr", "Equip.ValDtaquisi", "Equip.ValDtdeco", "Equip.ValPhotogra", "Equip.ValValortot", "Equip.ValCodempre", "Equip.ValCoddeco", "Equip.ValCoditem", "Equip.ValCodpess1", "Equip.ValCodrooms", "Equip.ValCodtpequ", "Equip.ValCodwareh", "BtnPermission"
+			"Equip", "Equip.ValCodequip", "Equip.ValZzstate", "Equip.ValDesignat", "Equip.ValRegistnr", "Equip.ValSequennr", "Equip.ValDtaquisi", "Equip.ValDtdeco", "Equip.ValPhotogra", "Equip.ValValortot", "Equip.ValCodempre", "Equip.ValCoddeco", "Equip.ValCoditem", "Equip.ValCodpess1", "Equip.ValCodrooms", "Equip.ValCodtpequ", "Equip.ValCodwareh"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValDesignat", CSGenioAequip.FldDesignat, typeof(string)),
 			new TableSearchColumn("ValRegistnr", CSGenioAequip.FldRegistnr, typeof(string)),
@@ -563,12 +611,9 @@ namespace GenioMVC.ViewModels.Insta
 			new TableSearchColumn("ValDtdeco", CSGenioAequip.FldDtdeco, typeof(DateTime?)),
 			new TableSearchColumn("ValValortot", CSGenioAequip.FldValortot, typeof(decimal?))
 		];
-
-
-
 		protected void SetTicketToImageFields(Models.Equip row)
 		{
-			if(row == null)
+			if (row == null)
 				return;
 
 			row.ValPhotograQTicket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaEQUIP, CSGenioAequip.FldPhotogra.Field, null, row.ValCodequip);

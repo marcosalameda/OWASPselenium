@@ -29,7 +29,7 @@
 			role="menu">
 			<!-- BEGIN: CRUD action links -->
 			<q-table-actions
-				:actions="visibleGroupActions"
+				:actions="groupActions"
 				@action-click="groupAction" />
 			<!-- END: CRUD action links -->
 		</div>
@@ -51,10 +51,8 @@
 </template>
 
 <script>
-	import _map from 'lodash-es/map'
-
-	import QToggleDropdown from '@/components/QToggleDropdown.vue'
 	import { numArrayVisibleActions } from '@/mixins/listFunctions.js'
+	import QToggleDropdown from '@/components/QToggleDropdown.vue'
 
 	export default {
 		name: 'QTableGroupActionsMenu',
@@ -103,23 +101,11 @@
 
 		computed: {
 			/**
-			 * The array of group actions that are visible.
-			 */
-			visibleGroupActions() {
-				return _map(this.groupActions, (action) => {
-					return {
-						...action,
-						isVisible: action.visibleCondition ? action.visibleCondition() : action.isVisible
-					}
-				})
-			},
-
-			/**
 			 * Determine total number of actions that are visible
 			 */
 			numVisibleActions()
 			{
-				return numArrayVisibleActions(this.visibleGroupActions, false)
+				return numArrayVisibleActions(this.groupActions, false)
 			},
 
 			/**
@@ -127,7 +113,7 @@
 			 */
 			followUpAction()
 			{
-				return this.numVisibleActions === 1 ? this.visibleGroupActions[0] : null
+				return this.numVisibleActions === 1 ? this.groupActions[0] : null
 			},
 
 			//BEGIN: Props for styles

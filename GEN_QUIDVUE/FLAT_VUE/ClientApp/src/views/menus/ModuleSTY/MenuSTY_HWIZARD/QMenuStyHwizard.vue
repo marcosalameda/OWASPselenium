@@ -151,7 +151,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValStartdt',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValIdentifi',
@@ -169,7 +169,7 @@
 								label: computed(() => this.Resources.IDENTIFICACAO_DA_OPO05341),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValPotcompr',
@@ -178,7 +178,7 @@
 								label: computed(() => this.Resources.POTENCIAIS_COMPRADOR25099),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 5,
 								name: 'ValProspecc',
@@ -186,7 +186,7 @@
 								field: 'PROSPECC',
 								label: computed(() => this.Resources.PROSPECCAO_EFECTUADA42558),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 6,
 								name: 'ValInteress',
@@ -194,7 +194,7 @@
 								field: 'INTERESS',
 								label: computed(() => this.Resources.INTERESSADO26080),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 7,
 								name: 'ValSemrfina',
@@ -202,7 +202,7 @@
 								field: 'SEMRFINA',
 								label: computed(() => this.Resources.SEM_RECURSOS_FINANCE28439),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 8,
 								name: 'ValSemcapac',
@@ -210,7 +210,7 @@
 								field: 'SEMCAPAC',
 								label: computed(() => this.Resources.SEM_CAPACIDADE_DE_DE07701),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
 								name: 'ValDtqualif',
@@ -219,7 +219,7 @@
 								label: computed(() => this.Resources.QUALIFICACAO07026),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 10,
 								name: 'ValQualific',
@@ -227,7 +227,7 @@
 								field: 'QUALIFIC',
 								label: computed(() => this.Resources.QUALIFICACAO_EFECTUA30983),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 11,
 								name: 'ValPreabord',
@@ -236,7 +236,7 @@
 								label: computed(() => this.Resources.PRE_ABORDAGEM30870),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 12,
 								name: 'ValHomework',
@@ -244,7 +244,7 @@
 								field: 'HOMEWORK',
 								label: computed(() => this.Resources.TRABALHO_DE_CASA_EFE54337),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 13,
 								name: 'ValDtaborda',
@@ -253,7 +253,7 @@
 								label: computed(() => this.Resources.ABORDAGEM05839),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 14,
 								name: 'ValApproach',
@@ -261,7 +261,7 @@
 								field: 'APPROACH',
 								label: computed(() => this.Resources.ABORDAGEM_EFECTUADA60152),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 15,
 								name: 'ValApresent',
@@ -269,7 +269,7 @@
 								field: 'APRESENT',
 								label: computed(() => this.Resources.APRESENTACAO15975),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 16,
 								name: 'ValDtaprese',
@@ -278,7 +278,7 @@
 								label: computed(() => this.Resources.APRESENTACAO_EFECTUA37455),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 17,
 								name: 'ValDtsupera',
@@ -287,7 +287,7 @@
 								label: computed(() => this.Resources.SUPERAR_OBJECOES02243),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 18,
 								name: 'ValTentfech',
@@ -296,7 +296,7 @@
 								label: computed(() => this.Resources.TENTATIVAS_DE_FECHO20342),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 19,
 								name: 'ValDtvenda',
@@ -305,7 +305,7 @@
 								label: computed(() => this.Resources.FECHO_DA_VENDA48081),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 20,
 								name: 'ValDtacompa',
@@ -314,7 +314,7 @@
 								label: computed(() => this.Resources.ACOMPANHAMENTO53507),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_HWIZARD',
@@ -456,7 +456,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ORGAN', 'changed-SALE'],
+						globalEvents: ['changed-ORGAN', 'changed-SALE'],
 						uuid: 'a370304d-2d03-4a9e-8e32-41d68cf57714',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -464,7 +464,7 @@
 						controlLimits: [
 							/** SC */
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

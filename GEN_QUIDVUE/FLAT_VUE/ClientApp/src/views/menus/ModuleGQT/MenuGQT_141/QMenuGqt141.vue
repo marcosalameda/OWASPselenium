@@ -115,8 +115,6 @@
 			return {
 				componentOnLoadProc: asyncProcM.getProcListMonitor('QMenuGQT_141', false),
 
-				internalEvents: new QEventEmitter(),
-
 				formControl: new formControlClass.FormControl(this),
 
 				interfaceMetadata: {

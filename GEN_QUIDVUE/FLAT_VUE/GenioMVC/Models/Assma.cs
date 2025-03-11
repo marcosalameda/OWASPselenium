@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">>Asset" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Assma.ValCodasset")]
 		public string ValCodasset { get { return klass.ValCodasset; } set { klass.ValCodasset = value; } }
+
 		private Asset _asset;
 		[DisplayName("Asset")]
 		[ShouldSerialize("Asset")]
-		public virtual Asset Asset {
-			get {
-				if (!this.isEmptyModel && (_asset == null || (!string.IsNullOrEmpty(ValCodasset) && (_asset.isEmptyModel || _asset.klass.QPrimaryKey != ValCodasset))))
+		public virtual Asset Asset
+		{
+			get
+			{
+				if (!isEmptyModel && (_asset == null || (!string.IsNullOrEmpty(ValCodasset) && (_asset.isEmptyModel || _asset.klass.QPrimaryKey != ValCodasset))))
 					_asset = Models.Asset.Find(ValCodasset, m_userContext, Identifier, _fieldsToSerialize);
-				if (_asset == null)
-					_asset = new Models.Asset(m_userContext, true, _fieldsToSerialize);
+				_asset ??= new Models.Asset(m_userContext, true, _fieldsToSerialize);
 				return _asset;
 			}
 			set { _asset = value; }
 		}
-
 
 		[DisplayName("Manual name")]
 		/// <summary>Field : "Manual name" Tipo: "C" Formula:  ""</summary>
@@ -73,8 +74,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Assma.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Assma(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -93,7 +94,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAassma csgenioa)
 		{
 			if (csgenioa == null)
@@ -104,8 +104,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "asset":
-						if (_asset == null)
-							_asset = new Asset(m_userContext, true, _fieldsToSerialize);
+						_asset ??= new Asset(m_userContext, true, _fieldsToSerialize);
 						_asset.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

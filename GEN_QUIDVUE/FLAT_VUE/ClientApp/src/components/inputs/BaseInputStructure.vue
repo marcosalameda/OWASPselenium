@@ -57,12 +57,18 @@
 			</a>
 		</div>
 
+		<!-- If showAlternativeView is true, render the alternative view slot -->
+		<slot
+			v-if="showAlternativeView"
+			name="alternative-view" />
+		<!-- Special rendering for component -->
 		<component
-			v-if="viewMode?.props"
+			v-else-if="viewMode?.props"
 			:is="`q-${viewMode.type}`"
 			:texts="texts"
 			v-bind="viewMode.props"
 			v-on="viewMode.handlers" />
+		<!-- Otherwise, render the default slot -->
 		<slot v-else />
 
 		<q-subtext-help
@@ -231,6 +237,14 @@
 			viewModes: {
 				type: Array,
 				default: () => []
+			},
+
+			/**
+			 * If true, the "alternative-view" slot is rendered
+			 */
+			showAlternativeView: {
+				type: Boolean,
+				default: false
 			},
 
 			/**

@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Fullcale_ValFullcaleModel : RequestLookupModel
+		{
+			public Fullcale_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Fullcale_ValFullcale
 		// POST: /Equip/Fullcale_ValFullcale
 		[ActionName("Fullcale_ValFullcale")]
-		public ActionResult Fullcale_ValFullcale([FromBody]RequestLookupModel requestModel)
+		public ActionResult Fullcale_ValFullcale([FromBody] Fullcale_ValFullcaleModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -420,16 +425,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Fullcale_ValFullcale_ViewModel model = new Fullcale_ValFullcale_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Fullcale_ValFullcale_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

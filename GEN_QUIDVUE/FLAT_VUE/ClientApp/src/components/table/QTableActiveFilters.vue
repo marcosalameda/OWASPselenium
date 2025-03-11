@@ -1,16 +1,15 @@
 ﻿<template>
 	<!-- BEGIN: Active Filters -->
 	<div
-		class="c-table__active-filters d-flex"
-		style="align-items: center; flex-wrap: wrap">
+		class="c-table__active-filters">
 		<q-button
 			v-for="(advancedFilter, advancedFilterIdx) in advancedFilters"
 			:key="advancedFilterIdx"
-			:style="{ 'background-color': advancedFilter.Active ? null : 'white' }"
+			:style="{ 'background-color': advancedFilter.active ? null : 'white' }"
 			:class="['e-badge', 'e-badge--filter', 'mb-1', 'advanced']"
 			:title="getFilterName(advancedFilter, searchableColumns, texts.orText)"
 			@click="editAdvancedFilters(advancedFilterIdx)">
-			<span :style="{ opacity: advancedFilter.Active ? '1' : '0.4' }">
+			<span :style="{ opacity: advancedFilter.active ? '1' : '0.4' }">
 				<q-icon
 					icon="advanced-filters"
 					class="search-filters-icon" />
@@ -61,7 +60,6 @@
 		name: 'QTableActiveFilters',
 
 		emits: [
-			'set-property',
 			'signal-component',
 			'show-advanced-filters',
 			'remove-column-filter',

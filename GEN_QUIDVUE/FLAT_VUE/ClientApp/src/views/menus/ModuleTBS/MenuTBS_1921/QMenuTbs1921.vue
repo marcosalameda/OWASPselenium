@@ -151,7 +151,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodaero',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValDescrip',
@@ -159,7 +159,7 @@
 								field: 'DESCRIP',
 								label: computed(() => this.Resources.DESCRICAO51618),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValNpassage',
@@ -169,7 +169,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValDuration',
@@ -179,7 +179,7 @@
 								scrollData: 5,
 								maxDigits: 2,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 5,
 								name: 'ValPrice',
@@ -189,7 +189,7 @@
 								scrollData: 6,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 6,
 								name: 'ValPrecobil',
@@ -199,7 +199,7 @@
 								scrollData: 6,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
 								name: 'ValDate',
@@ -208,7 +208,7 @@
 								label: computed(() => this.Resources.DATA_DE_PARTIDA__DD_26044),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 8,
 								name: 'ValDatetime',
@@ -217,7 +217,7 @@
 								label: computed(() => this.Resources.DATA_DE_PARTIDA__HOR47484),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
 								name: 'ValDateseco',
@@ -226,7 +226,7 @@
 								label: computed(() => this.Resources.DATA_DE_PARTIDA__SEG38575),
 								scrollData: 19,
 								dateTimeType: 'dateTimeSeconds',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 10,
 								name: 'ValTime',
@@ -236,7 +236,7 @@
 								dataLength: 5,
 								scrollData: 5,
 								dateTimeType: 'time',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 11,
 								name: 'ValYear',
@@ -246,7 +246,7 @@
 								scrollData: 4,
 								maxDigits: 4,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 12,
 								name: 'ValPrimviag',
@@ -254,7 +254,7 @@
 								field: 'PRIMVIAG',
 								label: computed(() => this.Resources._1AVIAGEM10982),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 13,
 								name: 'ValConditio',
@@ -264,7 +264,7 @@
 								scrollData: 1,
 								maxDigits: 1,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 14,
 								name: 'ValClass',
@@ -275,7 +275,7 @@
 								scrollData: 2,
 								array: qProjArrays.QArrayClass.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayClass.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 15,
 								name: 'ValClassnum',
@@ -287,7 +287,7 @@
 								decimalPlaces: 0,
 								array: qProjArrays.QArrayClassnum.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayClassnum.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 16,
 								name: 'ValLogicenu',
@@ -297,7 +297,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayPrimviag.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayPrimviag.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 17,
 								name: 'ValLogo',
@@ -308,7 +308,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 18,
 								name: 'ValAttach',
@@ -319,7 +319,7 @@
 								scrollData: 30,
 								sortable: false,
 								viewType: qEnums.documentViewTypeMode.print,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 19,
 								name: 'ValLogoexte',
@@ -331,7 +331,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 20,
 								name: 'ValCreatuse',
@@ -340,7 +340,7 @@
 								label: computed(() => this.Resources.CRIADO_POR17895),
 								dataLength: 20,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 21,
 								name: 'ValCreatdat',
@@ -349,7 +349,7 @@
 								label: computed(() => this.Resources.DATA_DE_CRIACAO__DD_33541),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 22,
 								name: 'ValCreathou',
@@ -359,7 +359,7 @@
 								dataLength: 5,
 								scrollData: 5,
 								dateTimeType: 'time',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 23,
 								name: 'ValCreatins',
@@ -368,7 +368,7 @@
 								label: computed(() => this.Resources.DATA_DE_CRIACAO_COMP31582),
 								scrollData: 15,
 								dateTimeType: 'dateTimeSeconds',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 24,
 								name: 'Equip.ValRegistnr',
@@ -378,7 +378,7 @@
 								dataLength: 6,
 								scrollData: 6,
 								pkColumn: 'ValCodequip',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TBS_Menu_1921',
@@ -520,11 +520,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-EQUIP', 'changed-FLDS', 'changed-AERO'],
+						globalEvents: ['changed-EQUIP', 'changed-FLDS', 'changed-AERO'],
 						uuid: 'ece7a4a3-4c81-42b8-99a3-ee5e82c2cf5b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

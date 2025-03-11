@@ -37,9 +37,7 @@ export function getReadableTextColor(backgroundColor)
 	const luminance = color.getLuminance()
 	// If the luminance is greater than 0.5, the background color is light, so use black as the text color
 	// If the luminance is less than or equal to 0.5, the background color is dark, so use white as the text color
-	const textColor = luminance > 0.5 ? 'black' : 'white'
-
-	return textColor
+	return luminance > 0.5 ? 'black' : 'white'
 }
 
 /**
@@ -491,12 +489,11 @@ export function focusElement(element)
 	if (typeof element === 'string' && element !== '')
 		element = document.getElementById(element)
 
-	if (element === undefined || element === null)
+	if (!element)
 		return
 
 	// If the element can be focused, focus on it
-	if (typeof element?.focus === 'function')
-		element.focus()
+	element.focus?.()
 }
 
 /**
@@ -907,12 +904,11 @@ export class FormattedValueToDisplay
  */
 export function formatValueToDisplay(value, fnFormat)
 {
-	if(typeof fnFormat === 'function')
+	if (typeof fnFormat === 'function')
 	{
-		if(Array.isArray(value))
-			return value.map(item => fnFormat(item))
-		else
-			return fnFormat(value)
+		if (Array.isArray(value))
+			return value.map((item) => fnFormat(item))
+		return fnFormat(value)
 	}
 
 	return value
@@ -999,11 +995,11 @@ export function currencyDisplay(value, decimalSep, groupSep, decimalPlaces, curr
  */
 export function dateDisplay(dateTime, dateTimeFormat)
 {
-	var date
+	let date
 
-	if(_isDate(dateTime))
+	if (_isDate(dateTime))
 		date = dateTime
-	else if(typeof dateTime === 'string' || dateTime instanceof String)
+	else if (typeof dateTime === 'string' || dateTime instanceof String)
 	{
 		// NULL dates
 		if (isEmpty(dateTime))
@@ -1322,11 +1318,13 @@ export function btnHasPermission(permissions, actionType)
 /**
  * Retrieves the modes parameter for a given mode.
  * This is meant to be used as a default when no other modes are defined.
- * @param {object} mode The mode the form will be open with
- * @returns 
+ * @param {object} mode The mode the form will be opened with
+ * @returns The mode to open the form.
  */
-export function getDefaultFormModesForMode(mode) {
-	switch (mode) {
+export function getDefaultFormModesForMode(mode)
+{
+	switch (mode)
+	{
 		case formModes.show:
 			return 'v'
 		case formModes.edit:

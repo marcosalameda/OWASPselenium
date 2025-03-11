@@ -67,6 +67,7 @@
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 
+	import netAPI from '@/api/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
@@ -181,8 +182,8 @@
 		mounted()
 		{
 			// Listens for changes to the DB and updates the list accordingly.
-			this.$eventHub.onMany(this.listCtrl.changeEvents, this.onTableDBDataChanged)
-			this.$eventHub.onMany(this.treeListCtrl.changeEvents, this.onTableDBDataChanged)
+			this.$eventHub.onMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
+			this.$eventHub.onMany(this.treeListCtrl.globalEvents, this.onTableDBDataChanged)
 
 			const modalProps = {
 				id: 'see-more-equip-tpequtipoequi',
@@ -200,8 +201,8 @@
 		beforeUnmount()
 		{
 			// Removes the listeners.
-			this.$eventHub.offMany(this.listCtrl.changeEvents, this.onTableDBDataChanged)
-			this.$eventHub.offMany(this.treeListCtrl.changeEvents, this.onTableDBDataChanged)
+			this.$eventHub.offMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
+			this.$eventHub.offMany(this.treeListCtrl.globalEvents, this.onTableDBDataChanged)
 			this.treeListCtrl.destroy()
 			this.listCtrl.destroy()
 			this.componentOnLoadProc.destroy()
@@ -304,7 +305,7 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 20,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValTipoequi',
@@ -313,7 +314,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 50,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValTpequpai',
@@ -322,8 +323,8 @@
 								label: computed(() => this.Resources.DEPENDENT_ON28321),
 								dataLength: 20,
 								scrollData: 20,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValNivel',
@@ -333,8 +334,8 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValBackcolo',
@@ -343,8 +344,8 @@
 								label: computed(() => this.Resources.BACKGROUND_COLOR47883),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValCorletra',
@@ -353,8 +354,8 @@
 								label: computed(() => this.Resources.LETTER_COLOR15736),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'Equip_TpequValTipoequi',
@@ -375,10 +376,6 @@
 							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
-							// eslint-disable-next-line no-unused-vars
-							rowTextColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValCorletra)===1,qApi.RGB(0,0,0),row.Fields.ValCorletra),
-							// eslint-disable-next-line no-unused-vars
-							rowBgColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValBackcolo)===1,qApi.RGB(255,255,255),row.Fields.ValBackcolo),
 							crudActions: [
 								{
 									id: 'show',
@@ -507,7 +504,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FAMIL', 'changed-TPEQU'],
+						globalEvents: ['changed-TPEQU', 'changed-FAMIL'],
 						uuid: 'Equip_Equip_TpequValTipoequi',
 						allSelectedRows: 'false',
 						handlers: {

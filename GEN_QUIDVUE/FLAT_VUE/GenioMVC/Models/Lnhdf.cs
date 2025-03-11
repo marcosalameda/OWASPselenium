@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Lnhdf.ValCodlnhde")]
 		public string ValCodlnhde { get { return klass.ValCodlnhde; } set { klass.ValCodlnhde = value; } }
+
 		private Lnhde _lnhde;
 		[DisplayName("Lnhde")]
 		[ShouldSerialize("Lnhde")]
-		public virtual Lnhde Lnhde {
-			get {
-				if (!this.isEmptyModel && (_lnhde == null || (!string.IsNullOrEmpty(ValCodlnhde) && (_lnhde.isEmptyModel || _lnhde.klass.QPrimaryKey != ValCodlnhde))))
+		public virtual Lnhde Lnhde
+		{
+			get
+			{
+				if (!isEmptyModel && (_lnhde == null || (!string.IsNullOrEmpty(ValCodlnhde) && (_lnhde.isEmptyModel || _lnhde.klass.QPrimaryKey != ValCodlnhde))))
 					_lnhde = Models.Lnhde.Find(ValCodlnhde, m_userContext, Identifier, _fieldsToSerialize);
-				if (_lnhde == null)
-					_lnhde = new Models.Lnhde(m_userContext, true, _fieldsToSerialize);
+				_lnhde ??= new Models.Lnhde(m_userContext, true, _fieldsToSerialize);
 				return _lnhde;
 			}
 			set { _lnhde = value; }
 		}
-
 
 		[DisplayName("Name")]
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
@@ -60,8 +61,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Lnhdf.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Lnhdf(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -80,7 +81,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAlnhdf csgenioa)
 		{
 			if (csgenioa == null)
@@ -91,8 +91,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "lnhde":
-						if (_lnhde == null)
-							_lnhde = new Lnhde(m_userContext, true, _fieldsToSerialize);
+						_lnhde ??= new Lnhde(m_userContext, true, _fieldsToSerialize);
 						_lnhde.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

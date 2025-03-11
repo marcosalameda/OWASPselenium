@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -146,7 +146,7 @@
 								<q-checkbox-input
 									v-if="controls.LDENT___LDENTEMUSO___.isVisible"
 									v-bind="controls.LDENT___LDENTEMUSO___.props"
-									@update:model-value="model.ValEmuso.fnUpdateValue" />
+									v-on="controls.LDENT___LDENTEMUSO___.handlers" />
 							</template>
 						</base-input-structure>
 					</q-control-wrapper>
@@ -324,8 +324,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {

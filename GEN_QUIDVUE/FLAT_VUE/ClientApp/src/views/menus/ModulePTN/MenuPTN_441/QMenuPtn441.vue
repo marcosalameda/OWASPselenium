@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_441',
@@ -291,11 +291,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ROGL1'],
+						globalEvents: ['changed-ROGL1'],
 						uuid: '1f8b660d-6e9a-4576-8a19-9a716cd16c53',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

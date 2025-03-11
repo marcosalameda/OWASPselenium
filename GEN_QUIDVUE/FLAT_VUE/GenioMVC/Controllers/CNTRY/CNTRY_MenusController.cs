@@ -46,11 +46,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			WMS_Menu_4271_ViewModel model = new WMS_Menu_4271_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -129,11 +129,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			IMO_Menu_131_ViewModel model = new IMO_Menu_131_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -328,16 +328,16 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			IMO_Menu_211_ViewModel model = new IMO_Menu_211_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
+
 			// Static filter "order" fields that have changed
 			tableConfigOptions.StaticFiltersKeyShiftValues = new Dictionary<string, int>
 			{
 				{ "filter_IMO_Menu_211_ACTIVO", 0 }
- 			};
- 
+			};
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -510,11 +510,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			IMO_Menu_231_ViewModel model = new IMO_Menu_231_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,

@@ -43,25 +43,26 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Country" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("City.ValCodctry")]
 		public string ValCodctry { get { return klass.ValCodctry; } set { klass.ValCodctry = value; } }
+
 		private Ctry _ctry;
 		[DisplayName("Ctry")]
 		[ShouldSerialize("Ctry")]
-		public virtual Ctry Ctry {
-			get {
-				if (!this.isEmptyModel && (_ctry == null || (!string.IsNullOrEmpty(ValCodctry) && (_ctry.isEmptyModel || _ctry.klass.QPrimaryKey != ValCodctry))))
+		public virtual Ctry Ctry
+		{
+			get
+			{
+				if (!isEmptyModel && (_ctry == null || (!string.IsNullOrEmpty(ValCodctry) && (_ctry.isEmptyModel || _ctry.klass.QPrimaryKey != ValCodctry))))
 					_ctry = Models.Ctry.Find(ValCodctry, m_userContext, Identifier, _fieldsToSerialize);
-				if (_ctry == null)
-					_ctry = new Models.Ctry(m_userContext, true, _fieldsToSerialize);
+				_ctry ??= new Models.Ctry(m_userContext, true, _fieldsToSerialize);
 				return _ctry;
 			}
 			set { _ctry = value; }
 		}
 
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("City.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public City(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -80,7 +81,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAcity csgenioa)
 		{
 			if (csgenioa == null)
@@ -91,8 +91,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "ctry":
-						if (_ctry == null)
-							_ctry = new Ctry(m_userContext, true, _fieldsToSerialize);
+						_ctry ??= new Ctry(m_userContext, true, _fieldsToSerialize);
 						_ctry.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

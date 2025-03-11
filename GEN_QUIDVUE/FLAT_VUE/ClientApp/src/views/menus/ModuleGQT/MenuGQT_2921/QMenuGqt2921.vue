@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.FAMILIA_DE_EQUIPAMEN12158),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_2921',
@@ -292,11 +292,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FAMI1'],
+						globalEvents: ['changed-FAMI1'],
 						uuid: '7d41ceb4-cb60-497f-b5c3-07676a99758b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

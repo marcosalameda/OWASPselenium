@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Company Name" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Flds.ValCodaero")]
 		public string ValCodaero { get { return klass.ValCodaero; } set { klass.ValCodaero = value; } }
+
 		private Aero _aero;
 		[DisplayName("Aero")]
 		[ShouldSerialize("Aero")]
-		public virtual Aero Aero {
-			get {
-				if (!this.isEmptyModel && (_aero == null || (!string.IsNullOrEmpty(ValCodaero) && (_aero.isEmptyModel || _aero.klass.QPrimaryKey != ValCodaero))))
+		public virtual Aero Aero
+		{
+			get
+			{
+				if (!isEmptyModel && (_aero == null || (!string.IsNullOrEmpty(ValCodaero) && (_aero.isEmptyModel || _aero.klass.QPrimaryKey != ValCodaero))))
 					_aero = Models.Aero.Find(ValCodaero, m_userContext, Identifier, _fieldsToSerialize);
-				if (_aero == null)
-					_aero = new Models.Aero(m_userContext, true, _fieldsToSerialize);
+				_aero ??= new Models.Aero(m_userContext, true, _fieldsToSerialize);
 				return _aero;
 			}
 			set { _aero = value; }
 		}
-
 
 		[DisplayName("Description")]
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
@@ -199,20 +200,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Flds.ValCodequip")]
 		public string ValCodequip { get { return klass.ValCodequip; } set { klass.ValCodequip = value; } }
+
 		private Equip _equip;
 		[DisplayName("Equip")]
 		[ShouldSerialize("Equip")]
-		public virtual Equip Equip {
-			get {
-				if (!this.isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
+		public virtual Equip Equip
+		{
+			get
+			{
+				if (!isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
 					_equip = Models.Equip.Find(ValCodequip, m_userContext, Identifier, _fieldsToSerialize);
-				if (_equip == null)
-					_equip = new Models.Equip(m_userContext, true, _fieldsToSerialize);
+				_equip ??= new Models.Equip(m_userContext, true, _fieldsToSerialize);
 				return _equip;
 			}
 			set { _equip = value; }
 		}
-
 
 		[DisplayName("Text Field")]
 		/// <summary>Field : "Text Field" Tipo: "C" Formula:  ""</summary>
@@ -351,8 +353,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Flds.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Flds(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -371,7 +373,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAflds csgenioa)
 		{
 			if (csgenioa == null)
@@ -382,13 +383,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "aero":
-						if (_aero == null)
-							_aero = new Aero(m_userContext, true, _fieldsToSerialize);
+						_aero ??= new Aero(m_userContext, true, _fieldsToSerialize);
 						_aero.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "equip":
-						if (_equip == null)
-							_equip = new Equip(m_userContext, true, _fieldsToSerialize);
+						_equip ??= new Equip(m_userContext, true, _fieldsToSerialize);
 						_equip.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

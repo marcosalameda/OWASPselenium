@@ -38,44 +38,46 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Esppe.ValCodpesso")]
 		public string ValCodpesso { get { return klass.ValCodpesso; } set { klass.ValCodpesso = value; } }
+
 		private Pesso _pesso;
 		[DisplayName("Pesso")]
 		[ShouldSerialize("Pesso")]
-		public virtual Pesso Pesso {
-			get {
-				if (!this.isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
+		public virtual Pesso Pesso
+		{
+			get
+			{
+				if (!isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
 					_pesso = Models.Pesso.Find(ValCodpesso, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pesso == null)
-					_pesso = new Models.Pesso(m_userContext, true, _fieldsToSerialize);
+				_pesso ??= new Models.Pesso(m_userContext, true, _fieldsToSerialize);
 				return _pesso;
 			}
 			set { _pesso = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Esppe.ValCodespec")]
 		public string ValCodespec { get { return klass.ValCodespec; } set { klass.ValCodespec = value; } }
+
 		private Speci _speci;
 		[DisplayName("Speci")]
 		[ShouldSerialize("Speci")]
-		public virtual Speci Speci {
-			get {
-				if (!this.isEmptyModel && (_speci == null || (!string.IsNullOrEmpty(ValCodespec) && (_speci.isEmptyModel || _speci.klass.QPrimaryKey != ValCodespec))))
+		public virtual Speci Speci
+		{
+			get
+			{
+				if (!isEmptyModel && (_speci == null || (!string.IsNullOrEmpty(ValCodespec) && (_speci.isEmptyModel || _speci.klass.QPrimaryKey != ValCodespec))))
 					_speci = Models.Speci.Find(ValCodespec, m_userContext, Identifier, _fieldsToSerialize);
-				if (_speci == null)
-					_speci = new Models.Speci(m_userContext, true, _fieldsToSerialize);
+				_speci ??= new Models.Speci(m_userContext, true, _fieldsToSerialize);
 				return _speci;
 			}
 			set { _speci = value; }
 		}
 
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Esppe.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Esppe(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -94,7 +96,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAesppe csgenioa)
 		{
 			if (csgenioa == null)
@@ -105,13 +106,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "pesso":
-						if (_pesso == null)
-							_pesso = new Pesso(m_userContext, true, _fieldsToSerialize);
+						_pesso ??= new Pesso(m_userContext, true, _fieldsToSerialize);
 						_pesso.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "speci":
-						if (_speci == null)
-							_speci = new Speci(m_userContext, true, _fieldsToSerialize);
+						_speci ??= new Speci(m_userContext, true, _fieldsToSerialize);
 						_speci.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

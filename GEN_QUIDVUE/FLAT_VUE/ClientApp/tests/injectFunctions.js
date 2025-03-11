@@ -1,6 +1,7 @@
-﻿import listFunctions from '@/mixins/listFunctions'
-import has from 'lodash-es/has'
+﻿import has from 'lodash-es/has'
 import get from 'lodash-es/get'
+
+import listFunctions from '@/mixins/listFunctions'
 
 /**
  * Gets the file name without path and extension.
@@ -58,7 +59,7 @@ export function canShowColumn(column, hasRowDragAndDrop)
 	if (column.isDragAndDrop && !hasRowDragAndDrop)
 		return false
 	//For all columns
-	return column.visibility === undefined || column.visibility
+	return listFunctions.isVisibleColumn(column)
 }
 
 /**

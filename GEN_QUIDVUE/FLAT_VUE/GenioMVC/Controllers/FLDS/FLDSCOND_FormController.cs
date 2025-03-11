@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Fldscond_ValGridtblModel : RequestLookupModel
+		{
+			public Fldscond_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Flds/Fldscond_ValGridtbl
 		// POST: /Flds/Fldscond_ValGridtbl
 		[ActionName("Fldscond_ValGridtbl")]
-		public ActionResult Fldscond_ValGridtbl([FromBody]RequestLookupModel requestModel)
+		public ActionResult Fldscond_ValGridtbl([FromBody] Fldscond_ValGridtblModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -420,16 +425,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Fldscond_ValGridtbl_ViewModel model = new Fldscond_ValGridtbl_ViewModel(UserContext.Current);
-			
+			Models.Flds parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Fldscond_ValGridtbl_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -454,11 +461,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model.Menu);
 		}
 
+		public class Fldscond_ValListtblModel : RequestLookupModel
+		{
+			public Fldscond_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Flds/Fldscond_ValListtbl
 		// POST: /Flds/Fldscond_ValListtbl
 		[ActionName("Fldscond_ValListtbl")]
-		public ActionResult Fldscond_ValListtbl([FromBody]RequestLookupModel requestModel)
+		public ActionResult Fldscond_ValListtbl([FromBody] Fldscond_ValListtblModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -482,16 +494,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Fldscond_ValListtbl_ViewModel model = new Fldscond_ValListtbl_ViewModel(UserContext.Current);
-			
+			Models.Flds parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Fldscond_ValListtbl_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

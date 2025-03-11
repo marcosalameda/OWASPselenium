@@ -499,7 +499,7 @@ namespace CSGenio.framework.TableConfiguration
                 // with each value changed by the value in keyShiftValues that corresponds to this filter group.
 				// This is the difference between the old starting value for the filter "order" field and the new one.
                 foreach (char filterKey in entry.Value)
-					if (int.TryParse(filterKey.ToString(), out parsedValue))
+					if (int.TryParse(filterKey.ToString(), out parsedValue) && keyShiftValues.ContainsKey(entry.Key))
                         valueArr.Add(parsedValue + keyShiftValues[entry.Key]);
 
                 // Convert the new value of which filters are selected back to a string and add to result

@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Leaflett_EquipValRegistnrModel : RequestLookupModel
+		{
+			public Leaflett_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Insta/Leaflett_EquipValRegistnr
 		// POST: /Insta/Leaflett_EquipValRegistnr
 		[ActionName("Leaflett_EquipValRegistnr")]
-		public ActionResult Leaflett_EquipValRegistnr([FromBody]RequestLookupModel requestModel)
+		public ActionResult Leaflett_EquipValRegistnr([FromBody] Leaflett_EquipValRegistnrModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Leaflett_EquipValRegistnr_ViewModel model = new Leaflett_EquipValRegistnr_ViewModel(UserContext.Current);
-			
+
+			Models.Insta parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Leaflett_EquipValRegistnr_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

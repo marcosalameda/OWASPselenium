@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,51 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Recei
 {
-	public class Recei_ValReceiptl_ViewModel : ListViewModel
+	public class Recei_ValReceiptl_ViewModel : MenuListViewModel<Models.Relin>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Recei_ValReceiptl_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "relin"; }
+		[JsonIgnore]
+		public override string TableAlias => "relin";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Recei_ValReceiptl"; }
+		public override string Uuid => "Recei_ValReceiptl";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCodrecei { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -52,6 +63,7 @@ namespace GenioMVC.ViewModels.Recei
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -63,6 +75,7 @@ namespace GenioMVC.ViewModels.Recei
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -86,12 +99,28 @@ namespace GenioMVC.ViewModels.Recei
 		}
 
 		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Recei_ValReceiptl_ViewModel() : base(null!) { }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Recei_ValReceiptl_ViewModel" /> class.
 		/// </summary>
 		/// <param name="userContext">The current user request context</param>
 		public Recei_ValReceiptl_ViewModel(UserContext userContext) : base(userContext)
 		{
 			ValCodrecei = userContext.CurrentNavigation.CurrentLevel.GetEntry("recei")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Recei_ValReceiptl_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Recei_ValReceiptl_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -161,12 +190,6 @@ namespace GenioMVC.ViewModels.Recei
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("RELIN.LINENUMB", new OrderedDictionary());
-			allSortOrders["RELIN.LINENUMB"].Add("RELIN.LINENUMB", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -183,7 +206,6 @@ namespace GenioMVC.ViewModels.Recei
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -280,22 +302,21 @@ namespace GenioMVC.ViewModels.Recei
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioArelin> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "RECEI")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Recei_ValReceiptl_RowViewModel>();
 
 				CriteriaSet recei___pseudreceiptlConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("RELIN.LINENUMB", new OrderedDictionary());
 				allSortOrders["RELIN.LINENUMB"].Add("RELIN.LINENUMB", "A");
-
 
 
 
@@ -333,20 +354,19 @@ namespace GenioMVC.ViewModels.Recei
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioArelin model_limit_area = new CSGenioArelin(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_RECEI___PSEUDRECEIPTL");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioArelin model_limit_area = new CSGenioArelin(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_RECEI___PSEUDRECEIPTL");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -394,7 +414,6 @@ namespace GenioMVC.ViewModels.Recei
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -414,18 +433,12 @@ namespace GenioMVC.ViewModels.Recei
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -433,7 +446,7 @@ namespace GenioMVC.ViewModels.Recei
 
 		private List<Recei_ValReceiptl_RowViewModel> MapRecei_ValReceiptl(ListingMVC<CSGenioArelin> Qlisting)
 		{
-			var Elements = new List<Recei_ValReceiptl_RowViewModel>();
+			List<Recei_ValReceiptl_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -450,7 +463,6 @@ namespace GenioMVC.ViewModels.Recei
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioArelin row
 		/// to a Recei_ValReceiptl_RowViewModel object.
@@ -459,7 +471,9 @@ namespace GenioMVC.ViewModels.Recei
 		private Recei_ValReceiptl_RowViewModel MapRecei_ValReceiptl(CSGenioArelin row)
 		{
 			var model = new Recei_ValReceiptl_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -473,32 +487,7 @@ namespace GenioMVC.ViewModels.Recei
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Recei_ValReceiptl_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -512,31 +501,40 @@ namespace GenioMVC.ViewModels.Recei
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioArelin> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioArelin row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Relin m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Relin m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM RECEI_VALRECEIPTL]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Relin", "Relin.ValCoddilin", "Relin.ValZzstate", "Relin.ValLinenumb", "Produ", "Produ.ValSku", "Produ.ValGtin", "Produ.ValProduct", "Relin.ValOrdered", "Relin.ValReceived", "Relin.ValOutstand", "Relin.ValCodentit", "Relin.ValCodprodu", "Relin.ValCodrecei", "BtnPermission"
+			"Relin", "Relin.ValCoddilin", "Relin.ValZzstate", "Relin.ValLinenumb", "Produ", "Produ.ValSku", "Produ.ValGtin", "Produ.ValProduct", "Relin.ValOrdered", "Relin.ValReceived", "Relin.ValOutstand", "Relin.ValCodentit", "Relin.ValCodprodu", "Relin.ValCodrecei"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValLinenumb", CSGenioArelin.FldLinenumb, typeof(decimal?), defaultSearch : true),
 			new TableSearchColumn("Produ_ValSku", CSGenioAprodu.FldSku, typeof(string)),
@@ -546,8 +544,5 @@ namespace GenioMVC.ViewModels.Recei
 			new TableSearchColumn("ValReceived", CSGenioArelin.FldReceived, typeof(decimal?)),
 			new TableSearchColumn("ValOutstand", CSGenioArelin.FldOutstand, typeof(decimal?))
 		];
-
-
-
 	}
 }

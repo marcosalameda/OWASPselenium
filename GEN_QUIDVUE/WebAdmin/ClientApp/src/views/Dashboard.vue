@@ -65,7 +65,7 @@
 					</dl>
 					<dl class="row">
 						<dt>{{ Resources.VERSAO_DE_SISTEMA07287 }}</dt>
-						<dd>2902</dd>
+						<dd>2907</dd>
 						<dt>{{ Resources.VERSAO_DE_BASE_DE_DA46937 }}</dt>
 						<dd>{{ Model.VersionDbGen }}</dd>
 						<dt>{{ Resources.APP_MIGRATION_VERSIO41495 }}</dt>
@@ -73,9 +73,9 @@
 						<dt>{{ Resources.VERSAO_DOS_INDICES49454 }}</dt>
 						<dd>{{ Model.VersionIdxDbGen }}</dd>
 						<dt>{{ Resources.VERSAO_DE_GENIO44840 }}</dt>
-						<dd>362.25</dd>
+						<dd>362.39</dd>
 						<dt>{{ Resources.GERADO_EM27272 }}</dt>
-						<dd>02/20/2025</dd>
+						<dd>02/26/2025</dd>
 					</dl>
 					<dl class="row">
 						<span class="app-brand">
@@ -137,24 +137,17 @@
 // @ is an alias to /src
 import { reusableMixin } from '@/mixins/mainMixin';
 import { QUtils } from '@/utils/mainUtils';
-import bootbox from 'bootbox';
-import moment from 'moment';
 
 export default {
 	name: 'dashboard',
 	mixins: [reusableMixin],
 
 	data() {
-		var vm = this;
 		return {
 			loaded: false,
 			Model: {},
 			modules: [],
 			CurentMaintenance: {},
-			style: {
-				dtClass: 'col-sm-2 textRight',
-				ddClass: 'col-sm-10'
-			},
 			UsersCount: 0,
 			queryParams: {
 				sort: [],
@@ -169,29 +162,29 @@ export default {
 				total_rows: 0,
 				columns: [
 				{
-					label: () => vm.$t('SIGLA14738'),
+					label: () => this.$t('SIGLA14738'),
 					name: "Codiprog",
 					sort: true,
 					initial_sort: true,
 					initial_sort_order: "asc"
 				},
 				{
-					label: () => vm.$t('NOME47814'),
+					label: () => this.$t('NOME47814'),
 					name: "Prog",
 					sort: true
 				},
 				{
-					label: () => vm.$t('PLATAFORMA28085'),
+					label: () => this.$t('PLATAFORMA28085'),
 					name: "Platafor",
 					sort: true
 				},
 				{
-					label: () => vm.$t('VALIDADE07300'),
+					label: () => this.$t('VALIDADE07300'),
 					name: "Vate",
 					sort: true
 				}],
 				config: {
-					table_title: () => vm.$t('MODULOS17298'),
+					table_title: () => this.$t('MODULOS17298'),
 					pagination: false,
 					pagination_info: false,
 					global_search: {
@@ -204,35 +197,29 @@ export default {
 
 	computed: {
 		maintenanceBtnText() {
-			var vm = this;
-			return vm.CurentMaintenance.IsActive 
-				? vm.Resources.DESACTIVAR_MANUTENCA45568 
-				: vm.Resources.MUDAR_AGENDAMENTO_DE08195;
+			return this.CurentMaintenance.IsActive 
+				? this.Resources.DESACTIVAR_MANUTENCA45568 
+				: this.Resources.MUDAR_AGENDAMENTO_DE08195;
 		},
 
 		maintenanceText() {
-			var vm = this;
-			return vm.CurentMaintenance.IsActive 
-				? vm.Resources.O_SISTEMA_ENCONTRA_S37912 
-				: vm.Resources.O_SISTEMA_IRA_ENTRAR46754.replace('{0}', vm.formatDate(vm.CurentMaintenance.Schedule));
+			return this.CurentMaintenance.IsActive 
+				? this.Resources.O_SISTEMA_ENCONTRA_S37912 
+				: this.Resources.O_SISTEMA_IRA_ENTRAR46754.replace('{0}', this.formatDate(this.CurentMaintenance.Schedule));
 		},
 	},
 
 	methods: {
 		fetchData() {
-			var vm = this;
 			QUtils.log("Fetch data - Dashboard");
-			QUtils.FetchData(QUtils.apiActionURL('Dashboard', 'Index')).done(function (data) {
-				QUtils.log("Fetch data - OK (Dashboard)", data);
-				$.each(data.model, function (propName, value) { vm.Model[propName] = value; });
-				if (!vm.Model.HasConfig) {
-					vm.navigateTo(event, 'no_configuration', vm.hasSubmenu);
+			QUtils.FetchData(QUtils.apiActionURL('Dashboard', 'Index')).done((data) => {
+				QUtils.log("Fetch data - OK (Dashboard)", data)
+				Object.entries(data.model).forEach(([propName, value]) => { this.Model[propName] = value; })
+				if (!this.Model.HasConfig) {
+					this.navigateTo(null, 'no_configuration', this.hasSubmenu);
 				}
-				$.each(data.CurentMaintenance, function (propName, value) { vm.CurentMaintenance[propName] = value; });
-				QUtils.FetchData(QUtils.apiActionURL('Users', 'GetUserList', vm.queryParams)).done(function (data) {
-					vm.UsersCount = data.recordsTotal;
-					vm.loaded = true;
-				});
+				Object.entries(data.CurentMaintenance).forEach(([propName, value]) => {  this.CurentMaintenance[propName] = value; })
+				this.loaded = true;
 			});
 		},
 		showDBButton() {

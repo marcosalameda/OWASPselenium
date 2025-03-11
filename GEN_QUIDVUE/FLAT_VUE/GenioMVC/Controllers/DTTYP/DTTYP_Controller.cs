@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER DTTYP]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Dttyp" form. (++, CT, SR, CL and U1)
 		/// </summary>

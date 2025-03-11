@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,51 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Lnhag
 {
-	public class Lnhag_Tpeq1ValTipoequi_ViewModel : ListViewModel
+	public class Lnhag_Tpeq1ValTipoequi_ViewModel : MenuListViewModel<Models.Tpeq1>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DB"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Lnhag_Tpeq1ValTipoequi_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "tpeq1"; }
+		[JsonIgnore]
+		public override string TableAlias => "tpeq1";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Lnhag_Tpeq1ValTipoequi"; }
+		public override string Uuid => "Lnhag_Tpeq1ValTipoequi";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCodlnhag { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -52,6 +63,7 @@ namespace GenioMVC.ViewModels.Lnhag
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -63,6 +75,7 @@ namespace GenioMVC.ViewModels.Lnhag
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -86,12 +99,28 @@ namespace GenioMVC.ViewModels.Lnhag
 		}
 
 		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Lnhag_Tpeq1ValTipoequi_ViewModel() : base(null!) { }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Lnhag_Tpeq1ValTipoequi_ViewModel" /> class.
 		/// </summary>
 		/// <param name="userContext">The current user request context</param>
 		public Lnhag_Tpeq1ValTipoequi_ViewModel(UserContext userContext) : base(userContext)
 		{
 			ValCodlnhag = userContext.CurrentNavigation.CurrentLevel.GetEntry("lnhag")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Lnhag_Tpeq1ValTipoequi_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Lnhag_Tpeq1ValTipoequi_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -155,12 +184,6 @@ namespace GenioMVC.ViewModels.Lnhag
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("TPEQ1.TIPOEQUI", new OrderedDictionary());
-			allSortOrders["TPEQ1.TIPOEQUI"].Add("TPEQ1.TIPOEQUI", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -175,7 +198,6 @@ namespace GenioMVC.ViewModels.Lnhag
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -270,22 +292,21 @@ namespace GenioMVC.ViewModels.Lnhag
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAtpeq1> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "LNHAG")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Lnhag_Tpeq1ValTipoequi_RowViewModel>();
 
 				CriteriaSet lnhag___tpeq1tipoequiConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("TPEQ1.TIPOEQUI", new OrderedDictionary());
 				allSortOrders["TPEQ1.TIPOEQUI"].Add("TPEQ1.TIPOEQUI", "A");
-
 
 
 
@@ -323,20 +344,19 @@ namespace GenioMVC.ViewModels.Lnhag
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAtpeq1 model_limit_area = new CSGenioAtpeq1(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_LNHAG___TPEQ1TIPOEQUI");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAtpeq1 model_limit_area = new CSGenioAtpeq1(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_LNHAG___TPEQ1TIPOEQUI");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -383,7 +403,6 @@ namespace GenioMVC.ViewModels.Lnhag
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -403,18 +422,12 @@ namespace GenioMVC.ViewModels.Lnhag
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -422,7 +435,7 @@ namespace GenioMVC.ViewModels.Lnhag
 
 		private List<Lnhag_Tpeq1ValTipoequi_RowViewModel> MapLnhag_Tpeq1ValTipoequi(ListingMVC<CSGenioAtpeq1> Qlisting)
 		{
-			var Elements = new List<Lnhag_Tpeq1ValTipoequi_RowViewModel>();
+			List<Lnhag_Tpeq1ValTipoequi_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -439,7 +452,6 @@ namespace GenioMVC.ViewModels.Lnhag
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAtpeq1 row
 		/// to a Lnhag_Tpeq1ValTipoequi_RowViewModel object.
@@ -448,7 +460,9 @@ namespace GenioMVC.ViewModels.Lnhag
 		private Lnhag_Tpeq1ValTipoequi_RowViewModel MapLnhag_Tpeq1ValTipoequi(CSGenioAtpeq1 row)
 		{
 			var model = new Lnhag_Tpeq1ValTipoequi_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -460,32 +474,7 @@ namespace GenioMVC.ViewModels.Lnhag
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Lnhag_Tpeq1ValTipoequi_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -499,36 +488,42 @@ namespace GenioMVC.ViewModels.Lnhag
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAtpeq1> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAtpeq1 row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Tpeq1 m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Tpeq1 m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM LNHAG_TPEQ1VALTIPOEQUI]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Tpeq1", "Tpeq1.ValCodtpequ", "Tpeq1.ValZzstate", "Tpeq1.ValTipoequi", "Tpeq1.ValCodfamil", "BtnPermission"
+			"Tpeq1", "Tpeq1.ValCodtpequ", "Tpeq1.ValZzstate", "Tpeq1.ValTipoequi", "Tpeq1.ValCodfamil"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValTipoequi", CSGenioAtpeq1.FldTipoequi, typeof(string))
 		];
-
-
-
 	}
 }

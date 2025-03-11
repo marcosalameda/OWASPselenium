@@ -91,7 +91,7 @@ export function makeFieldVisible(controls, fieldId, skipValidation)
 
 	const field = controls[fieldId]
 
-	if (field.type === 'Group' && field.isCollapsible)
+	if (field.type === 'Group')
 		field.setState(true)
 	else if (field.type === 'Tab')
 		controls.formTabs.selectTab(fieldId)

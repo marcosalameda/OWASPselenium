@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Ldent.ValCoddentr")]
 		public string ValCoddentr { get { return klass.ValCoddentr; } set { klass.ValCoddentr = value; } }
+
 		private Indoc _indoc;
 		[DisplayName("Indoc")]
 		[ShouldSerialize("Indoc")]
-		public virtual Indoc Indoc {
-			get {
-				if (!this.isEmptyModel && (_indoc == null || (!string.IsNullOrEmpty(ValCoddentr) && (_indoc.isEmptyModel || _indoc.klass.QPrimaryKey != ValCoddentr))))
+		public virtual Indoc Indoc
+		{
+			get
+			{
+				if (!isEmptyModel && (_indoc == null || (!string.IsNullOrEmpty(ValCoddentr) && (_indoc.isEmptyModel || _indoc.klass.QPrimaryKey != ValCoddentr))))
 					_indoc = Models.Indoc.Find(ValCoddentr, m_userContext, Identifier, _fieldsToSerialize);
-				if (_indoc == null)
-					_indoc = new Models.Indoc(m_userContext, true, _fieldsToSerialize);
+				_indoc ??= new Models.Indoc(m_userContext, true, _fieldsToSerialize);
 				return _indoc;
 			}
 			set { _indoc = value; }
 		}
-
 
 		[DisplayName("Line")]
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
@@ -63,39 +64,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">ARMAZEM" Tipo: "CE" Formula: DF "[INDOC->CODWAREH]"</summary>
 		[ShouldSerialize("Ldent.ValCodwareh")]
 		public string ValCodwareh { get { return klass.ValCodwareh; } set { klass.ValCodwareh = value; } }
+
 		private Wareh _wareh;
 		[DisplayName("Wareh")]
 		[ShouldSerialize("Wareh")]
-		public virtual Wareh Wareh {
-			get {
-				if (!this.isEmptyModel && (_wareh == null || (!string.IsNullOrEmpty(ValCodwareh) && (_wareh.isEmptyModel || _wareh.klass.QPrimaryKey != ValCodwareh))))
+		public virtual Wareh Wareh
+		{
+			get
+			{
+				if (!isEmptyModel && (_wareh == null || (!string.IsNullOrEmpty(ValCodwareh) && (_wareh.isEmptyModel || _wareh.klass.QPrimaryKey != ValCodwareh))))
 					_wareh = Models.Wareh.Find(ValCodwareh, m_userContext, Identifier, _fieldsToSerialize);
-				if (_wareh == null)
-					_wareh = new Models.Wareh(m_userContext, true, _fieldsToSerialize);
+				_wareh ??= new Models.Wareh(m_userContext, true, _fieldsToSerialize);
 				return _wareh;
 			}
 			set { _wareh = value; }
 		}
 
-
 		[DisplayName(">ARTICLE")]
 		/// <summary>Field : ">ARTICLE" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Ldent.ValCoditem")]
 		public string ValCoditem { get { return klass.ValCoditem; } set { klass.ValCoditem = value; } }
+
 		private Item _item;
 		[DisplayName("Item")]
 		[ShouldSerialize("Item")]
-		public virtual Item Item {
-			get {
-				if (!this.isEmptyModel && (_item == null || (!string.IsNullOrEmpty(ValCoditem) && (_item.isEmptyModel || _item.klass.QPrimaryKey != ValCoditem))))
+		public virtual Item Item
+		{
+			get
+			{
+				if (!isEmptyModel && (_item == null || (!string.IsNullOrEmpty(ValCoditem) && (_item.isEmptyModel || _item.klass.QPrimaryKey != ValCoditem))))
 					_item = Models.Item.Find(ValCoditem, m_userContext, Identifier, _fieldsToSerialize);
-				if (_item == null)
-					_item = new Models.Item(m_userContext, true, _fieldsToSerialize);
+				_item ??= new Models.Item(m_userContext, true, _fieldsToSerialize);
 				return _item;
 			}
 			set { _item = value; }
 		}
-
 
 		[DisplayName("Qtd entry")]
 		/// <summary>Field : "Qtd entry" Tipo: "N" Formula:  ""</summary>
@@ -117,8 +120,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Ldent.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Ldent(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -137,7 +140,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAldent csgenioa)
 		{
 			if (csgenioa == null)
@@ -148,18 +150,15 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "indoc":
-						if (_indoc == null)
-							_indoc = new Indoc(m_userContext, true, _fieldsToSerialize);
+						_indoc ??= new Indoc(m_userContext, true, _fieldsToSerialize);
 						_indoc.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "wareh":
-						if (_wareh == null)
-							_wareh = new Wareh(m_userContext, true, _fieldsToSerialize);
+						_wareh ??= new Wareh(m_userContext, true, _fieldsToSerialize);
 						_wareh.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "item":
-						if (_item == null)
-							_item = new Item(m_userContext, true, _fieldsToSerialize);
+						_item ??= new Item(m_userContext, true, _fieldsToSerialize);
 						_item.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

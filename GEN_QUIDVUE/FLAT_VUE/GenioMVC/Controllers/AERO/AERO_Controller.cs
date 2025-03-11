@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER AERO]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Aero" form. (++, CT, SR, CL and U1)
 		/// </summary>

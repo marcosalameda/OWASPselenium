@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER DECOM]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Abate" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -57,6 +59,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Decom)
 			);
 		}
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Abatereq" form. (++, CT, SR, CL and U1)

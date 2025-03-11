@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.FACILITY_TYPE44577),
 								dataLength: 25,
 								scrollData: 25,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValLayrname',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.LAYER_NAME49545),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValIconurl',
@@ -168,7 +168,7 @@
 								label: computed(() => this.Resources.ICON_URL07016),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValShadowur',
@@ -177,7 +177,7 @@
 								label: computed(() => this.Resources.SHADOW_URL57805),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
 								name: 'ValIconancx',
@@ -187,7 +187,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
 								name: 'ValIconancy',
@@ -197,7 +197,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
 								name: 'ValIconheig',
@@ -207,7 +207,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
 								name: 'ValIconwid',
@@ -217,7 +217,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
 								name: 'ValPopupanx',
@@ -227,7 +227,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
 								name: 'ValPopupany',
@@ -237,7 +237,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 11,
 								name: 'ValShadowax',
@@ -247,7 +247,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 12,
 								name: 'ValShadoway',
@@ -257,7 +257,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 13,
 								name: 'ValShadowhe',
@@ -267,7 +267,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 14,
 								name: 'ValShadowwi',
@@ -277,7 +277,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_4231',
@@ -419,11 +419,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FACTY'],
+						globalEvents: ['changed-FACTY'],
 						uuid: '7e4470ed-09c8-442d-91d2-b76a9ecd0d88',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

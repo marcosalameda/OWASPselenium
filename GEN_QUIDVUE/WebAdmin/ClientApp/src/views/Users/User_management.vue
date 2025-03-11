@@ -117,11 +117,11 @@
 		</div>
 
 		<q-dialog
+			class="alert-dialog"
 			v-model="dialog.visible"
 			:text="dialog.text"
 			:icon="dialog.icon"
-			:buttons="dialog.buttons"
-			class="alert-dialog">
+			:buttons="dialog.buttons">
 		</q-dialog>
 	</div>
 </template>

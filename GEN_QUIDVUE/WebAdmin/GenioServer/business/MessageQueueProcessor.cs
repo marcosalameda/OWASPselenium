@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 using System.Globalization;
 using CSGenio.business;
 using Quidgest.Persistence.GenericQuery;
+using System.Linq;
 
 namespace GenioServer.business
 {

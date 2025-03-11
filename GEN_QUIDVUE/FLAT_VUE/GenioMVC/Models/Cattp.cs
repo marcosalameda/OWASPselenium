@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Cattp.ValCodsbcat")]
 		public string ValCodsbcat { get { return klass.ValCodsbcat; } set { klass.ValCodsbcat = value; } }
+
 		private Sbcat _sbcat;
 		[DisplayName("Sbcat")]
 		[ShouldSerialize("Sbcat")]
-		public virtual Sbcat Sbcat {
-			get {
-				if (!this.isEmptyModel && (_sbcat == null || (!string.IsNullOrEmpty(ValCodsbcat) && (_sbcat.isEmptyModel || _sbcat.klass.QPrimaryKey != ValCodsbcat))))
+		public virtual Sbcat Sbcat
+		{
+			get
+			{
+				if (!isEmptyModel && (_sbcat == null || (!string.IsNullOrEmpty(ValCodsbcat) && (_sbcat.isEmptyModel || _sbcat.klass.QPrimaryKey != ValCodsbcat))))
 					_sbcat = Models.Sbcat.Find(ValCodsbcat, m_userContext, Identifier, _fieldsToSerialize);
-				if (_sbcat == null)
-					_sbcat = new Models.Sbcat(m_userContext, true, _fieldsToSerialize);
+				_sbcat ??= new Models.Sbcat(m_userContext, true, _fieldsToSerialize);
 				return _sbcat;
 			}
 			set { _sbcat = value; }
 		}
-
 
 		[DisplayName("Category type")]
 		/// <summary>Field : "Category type" Tipo: "C" Formula:  ""</summary>
@@ -60,8 +61,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Cattp.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Cattp(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -80,7 +81,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAcattp csgenioa)
 		{
 			if (csgenioa == null)
@@ -91,8 +91,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "sbcat":
-						if (_sbcat == null)
-							_sbcat = new Sbcat(m_userContext, true, _fieldsToSerialize);
+						_sbcat ??= new Sbcat(m_userContext, true, _fieldsToSerialize);
 						_sbcat.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

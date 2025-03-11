@@ -53,7 +53,7 @@
 			backgroundColor: {
 				type: String,
 				default: ''
-			},
+			}
 		},
 
 		expose: [],

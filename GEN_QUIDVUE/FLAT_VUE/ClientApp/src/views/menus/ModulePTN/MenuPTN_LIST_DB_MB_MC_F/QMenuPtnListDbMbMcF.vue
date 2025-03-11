@@ -152,7 +152,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDate',
@@ -161,7 +161,7 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
 								name: 'ValDisponib',
@@ -172,7 +172,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayDsiponib.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayDsiponib.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 4,
 								name: 'ValValid',
@@ -180,7 +180,7 @@
 								field: 'VALID',
 								label: computed(() => this.Resources.IN_USE42606),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_LIST_DB_MB_MC_F',
@@ -214,6 +214,7 @@
 								{
 									id: 'MB_3811',
 									name: 'PTN_MenuMC_3811',
+									isVisible: true,
 									title: computed(() => this.Resources.EDITAR11616),
 									params: {
 										limits: [
@@ -288,11 +289,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-WAREH', 'changed-GITEM', 'changed-ITEM'],
+						globalEvents: ['changed-GITEM', 'changed-WAREH', 'changed-ITEM'],
 						uuid: 'eb2c0e6f-2e0c-46f4-b7e3-9e1ea73e4037',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},
@@ -335,10 +336,17 @@
 			 */
 			PTN_MenuMC_3811(params)
 			{
-				return netAPI.postData(this.controls.menu.controller, 'PTN_MenuMC_3811', params, (data) => {
-					if (data.actionName)
-						this.tableListMCAction(this.controls.menu, data.actionName, data.id)
-				}, undefined, undefined, this.navigationId)
+				return netAPI.postData(
+					this.controls.menu.controller,
+					'PTN_MenuMC_3811',
+					params,
+					(data) => {
+						if (data.actionName)
+							this.tableListMCAction(this.controls.menu, data.actionName, data.id)
+					},
+					undefined,
+					undefined,
+					this.navigationId)
 			},
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PTN_LIST_DB_MB_MC_F]/

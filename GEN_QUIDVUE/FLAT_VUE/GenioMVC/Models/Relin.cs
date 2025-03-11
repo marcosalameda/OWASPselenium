@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">>RECEIPT" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Relin.ValCodrecei")]
 		public string ValCodrecei { get { return klass.ValCodrecei; } set { klass.ValCodrecei = value; } }
+
 		private Recei _recei;
 		[DisplayName("Recei")]
 		[ShouldSerialize("Recei")]
-		public virtual Recei Recei {
-			get {
-				if (!this.isEmptyModel && (_recei == null || (!string.IsNullOrEmpty(ValCodrecei) && (_recei.isEmptyModel || _recei.klass.QPrimaryKey != ValCodrecei))))
+		public virtual Recei Recei
+		{
+			get
+			{
+				if (!isEmptyModel && (_recei == null || (!string.IsNullOrEmpty(ValCodrecei) && (_recei.isEmptyModel || _recei.klass.QPrimaryKey != ValCodrecei))))
 					_recei = Models.Recei.Find(ValCodrecei, m_userContext, Identifier, _fieldsToSerialize);
-				if (_recei == null)
-					_recei = new Models.Recei(m_userContext, true, _fieldsToSerialize);
+				_recei ??= new Models.Recei(m_userContext, true, _fieldsToSerialize);
 				return _recei;
 			}
 			set { _recei = value; }
 		}
-
 
 		[DisplayName("Line")]
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
@@ -63,20 +64,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">>PRODUCT" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Relin.ValCodprodu")]
 		public string ValCodprodu { get { return klass.ValCodprodu; } set { klass.ValCodprodu = value; } }
+
 		private Produ _produ;
 		[DisplayName("Produ")]
 		[ShouldSerialize("Produ")]
-		public virtual Produ Produ {
-			get {
-				if (!this.isEmptyModel && (_produ == null || (!string.IsNullOrEmpty(ValCodprodu) && (_produ.isEmptyModel || _produ.klass.QPrimaryKey != ValCodprodu))))
+		public virtual Produ Produ
+		{
+			get
+			{
+				if (!isEmptyModel && (_produ == null || (!string.IsNullOrEmpty(ValCodprodu) && (_produ.isEmptyModel || _produ.klass.QPrimaryKey != ValCodprodu))))
 					_produ = Models.Produ.Find(ValCodprodu, m_userContext, Identifier, _fieldsToSerialize);
-				if (_produ == null)
-					_produ = new Models.Produ(m_userContext, true, _fieldsToSerialize);
+				_produ ??= new Models.Produ(m_userContext, true, _fieldsToSerialize);
 				return _produ;
 			}
 			set { _produ = value; }
 		}
-
 
 		[DisplayName("Ordered")]
 		/// <summary>Field : "Ordered" Tipo: "N" Formula:  ""</summary>
@@ -100,20 +102,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">>SUPPLIER" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Relin.ValCodentit")]
 		public string ValCodentit { get { return klass.ValCodentit; } set { klass.ValCodentit = value; } }
+
 		private Entit _entit;
 		[DisplayName("Entit")]
 		[ShouldSerialize("Entit")]
-		public virtual Entit Entit {
-			get {
-				if (!this.isEmptyModel && (_entit == null || (!string.IsNullOrEmpty(ValCodentit) && (_entit.isEmptyModel || _entit.klass.QPrimaryKey != ValCodentit))))
+		public virtual Entit Entit
+		{
+			get
+			{
+				if (!isEmptyModel && (_entit == null || (!string.IsNullOrEmpty(ValCodentit) && (_entit.isEmptyModel || _entit.klass.QPrimaryKey != ValCodentit))))
 					_entit = Models.Entit.Find(ValCodentit, m_userContext, Identifier, _fieldsToSerialize);
-				if (_entit == null)
-					_entit = new Models.Entit(m_userContext, true, _fieldsToSerialize);
+				_entit ??= new Models.Entit(m_userContext, true, _fieldsToSerialize);
 				return _entit;
 			}
 			set { _entit = value; }
 		}
-
 
 		[DisplayName("Instant")]
 		/// <summary>Field : "Instant" Tipo: "DT" Formula: ++ "[RECEI->DTRECEIP]"</summary>
@@ -124,8 +127,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Relin.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Relin(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -144,7 +147,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioArelin csgenioa)
 		{
 			if (csgenioa == null)
@@ -155,18 +157,15 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "recei":
-						if (_recei == null)
-							_recei = new Recei(m_userContext, true, _fieldsToSerialize);
+						_recei ??= new Recei(m_userContext, true, _fieldsToSerialize);
 						_recei.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "produ":
-						if (_produ == null)
-							_produ = new Produ(m_userContext, true, _fieldsToSerialize);
+						_produ ??= new Produ(m_userContext, true, _fieldsToSerialize);
 						_produ.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "entit":
-						if (_entit == null)
-							_entit = new Entit(m_userContext, true, _fieldsToSerialize);
+						_entit ??= new Entit(m_userContext, true, _fieldsToSerialize);
 						_entit.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

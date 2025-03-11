@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Dentr_CntryValCountryModel : RequestLookupModel
+		{
+			public Dentr_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Indoc/Dentr_CntryValCountry
 		// POST: /Indoc/Dentr_CntryValCountry
 		[ActionName("Dentr_CntryValCountry")]
-		public ActionResult Dentr_CntryValCountry([FromBody]RequestLookupModel requestModel)
+		public ActionResult Dentr_CntryValCountry([FromBody] Dentr_CntryValCountryModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Dentr_CntryValCountry_ViewModel model = new Dentr_CntryValCountry_ViewModel(UserContext.Current);
-			
+
+			Models.Indoc parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Dentr_CntryValCountry_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Dentr_CmpnyValDesignatModel : RequestLookupModel
+		{
+			public Dentr_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Indoc/Dentr_CmpnyValDesignat
 		// POST: /Indoc/Dentr_CmpnyValDesignat
 		[ActionName("Dentr_CmpnyValDesignat")]
-		public ActionResult Dentr_CmpnyValDesignat([FromBody]RequestLookupModel requestModel)
+		public ActionResult Dentr_CmpnyValDesignat([FromBody] Dentr_CmpnyValDesignatModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Dentr_CmpnyValDesignat_ViewModel model = new Dentr_CmpnyValDesignat_ViewModel(UserContext.Current);
-			
+
+			Models.Indoc parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Dentr_CmpnyValDesignat_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -518,11 +534,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Dentr_PessoValNameModel : RequestLookupModel
+		{
+			public Dentr_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Indoc/Dentr_PessoValName
 		// POST: /Indoc/Dentr_PessoValName
 		[ActionName("Dentr_PessoValName")]
-		public ActionResult Dentr_PessoValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Dentr_PessoValName([FromBody] Dentr_PessoValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -547,16 +568,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Dentr_PessoValName_ViewModel model = new Dentr_PessoValName_ViewModel(UserContext.Current);
-			
+
+			Models.Indoc parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Dentr_PessoValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -581,11 +605,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Dentr_Ware1ValWarehdesModel : RequestLookupModel
+		{
+			public Dentr_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Indoc/Dentr_Ware1ValWarehdes
 		// POST: /Indoc/Dentr_Ware1ValWarehdes
 		[ActionName("Dentr_Ware1ValWarehdes")]
-		public ActionResult Dentr_Ware1ValWarehdes([FromBody]RequestLookupModel requestModel)
+		public ActionResult Dentr_Ware1ValWarehdes([FromBody] Dentr_Ware1ValWarehdesModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -610,16 +639,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Dentr_Ware1ValWarehdes_ViewModel model = new Dentr_Ware1ValWarehdes_ViewModel(UserContext.Current);
-			
+
+			Models.Indoc parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Dentr_Ware1ValWarehdes_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -644,11 +676,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Dentr_ValEntradasModel : RequestLookupModel
+		{
+			public Dentr_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Indoc/Dentr_ValEntradas
 		// POST: /Indoc/Dentr_ValEntradas
 		[ActionName("Dentr_ValEntradas")]
-		public ActionResult Dentr_ValEntradas([FromBody]RequestLookupModel requestModel)
+		public ActionResult Dentr_ValEntradas([FromBody] Dentr_ValEntradasModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -672,16 +709,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Dentr_ValEntradas_ViewModel model = new Dentr_ValEntradas_ViewModel(UserContext.Current);
-			
+			Models.Indoc parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Dentr_ValEntradas_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

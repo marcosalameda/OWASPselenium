@@ -21,18 +21,18 @@ export default {
 
 		this.setSelectedTab()
 
-		for (let i in this.controls)
-			this.controls[i].init()
-
 		// We need to wait for data from fetchListData for both firstTable and secondTable
 		// before running init on controls. This is because certain operations like
 		// crudConditions evaluation might depend on the data fetched from these calls.
 		Promise.all([
 			this.fetchListData(this.controls.firstTable, {}),
 			this.fetchListData(this.controls.secondTable, {})
-		]).then(() => {
-			this.controls.firstTable.initData()
-			this.controls.secondTable.initData()
+		]).then(async () => {
+			for (let i in this.controls)
+			{
+				await this.controls[i].init()
+				this.controls[i].initData?.()
+			}
 		})
 
 		this.mainTable.config.showRowsSelectedCount = true

@@ -305,7 +305,8 @@
 					column = this.columns[idx]
 
 					// If the column show-when condition is not verified, the column shouldn't be visible to the user
-					if (!column.fnVisibility()) continue
+					if (!listFunctions.isVisibleColumn(column))
+						continue
 					
 					let columnCfg = {
 						Rownum: 0,
@@ -328,7 +329,7 @@
 					}
 
 					//Column visibility
-					columnCfg.Fields.visibility = column.visibility === undefined || column.visibility ? 1 : 0
+					columnCfg.Fields.visibility = 1
 
 					//Other fields not displayed
 					columnCfg.Fields.primaryKey = column.primaryKey

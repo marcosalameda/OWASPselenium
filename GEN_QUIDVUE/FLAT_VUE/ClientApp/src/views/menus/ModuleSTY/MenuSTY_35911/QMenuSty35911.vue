@@ -149,7 +149,7 @@
 								field: 'QUESTION',
 								label: computed(() => this.Resources.QUESTION00194),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValAnswer',
@@ -157,7 +157,7 @@
 								field: 'ANSWER',
 								label: computed(() => this.Resources.ANSWER22961),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_35911',
@@ -202,7 +202,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FAQS', 'changed-CFAQS'],
+						globalEvents: ['changed-FAQS', 'changed-CFAQS'],
 						uuid: '2d789e4b-4145-4b00-8473-3b6215ee3fab',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -251,7 +251,7 @@
 								fnValueSelector: () => vm.$route.params['cfaqs'],
 							},
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

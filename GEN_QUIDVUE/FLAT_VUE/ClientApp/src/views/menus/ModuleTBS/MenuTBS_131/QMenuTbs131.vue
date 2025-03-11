@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.CATEGORY18978),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValAbbreviation',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.ABBREVIATION31267),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TBS_Menu_131',
@@ -301,11 +301,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-CATEG'],
+						globalEvents: ['changed-CATEG'],
 						uuid: '0871948f-4b43-478c-a5e4-7887be983613',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

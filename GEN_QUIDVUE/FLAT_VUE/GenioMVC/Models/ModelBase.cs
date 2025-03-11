@@ -76,7 +76,8 @@ namespace GenioMVC.Models
 		virtual public void New(string identifier = null, PersistentSupport persistentSupport = null)
 		{
 			var u = m_userContext.User;
-			var sp = (persistentSupport == null? m_userContext.PersistentSupport: persistentSupport);
+			var sp = persistentSupport ?? m_userContext.PersistentSupport;
+
 			try
 			{
 				this.baseklass.fillEPH(u, sp, identifier);
@@ -685,7 +686,7 @@ namespace GenioMVC.Models
 
 			if (!distinct)
 			{
-				//< Make sure at least one of the fields or combination of fields is unique
+				// Make sure at least one of the fields or combination of fields is unique
 				bool hasUniqueField = false;
 				AreaInfo areaInfo = CSGenio.business.Area.GetInfoArea<A>();
 
@@ -733,7 +734,6 @@ namespace GenioMVC.Models
 					ColumnSort pkColumnSort = new(new ColumnReference(areaInfo.Alias, areaInfo.PrimaryKeyName), SortOrder.Ascending);
 					sorts.Add(pkColumnSort);
 				}
-				//> Make sure at least one of the fields or combination of fields is unique
 			}
 
 			ListingMVC<A> listing = new(fields, sorts, offset, numRegs, distinct, u, noLock, identifier, getTotal, selectrow, pagingPosEPHs, fieldsWithTotalizer, selectedRecords);

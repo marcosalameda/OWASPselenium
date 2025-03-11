@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Feeca.ValCodflds")]
 		public string ValCodflds { get { return klass.ValCodflds; } set { klass.ValCodflds = value; } }
+
 		private Flds _flds;
 		[DisplayName("Flds")]
 		[ShouldSerialize("Flds")]
-		public virtual Flds Flds {
-			get {
-				if (!this.isEmptyModel && (_flds == null || (!string.IsNullOrEmpty(ValCodflds) && (_flds.isEmptyModel || _flds.klass.QPrimaryKey != ValCodflds))))
+		public virtual Flds Flds
+		{
+			get
+			{
+				if (!isEmptyModel && (_flds == null || (!string.IsNullOrEmpty(ValCodflds) && (_flds.isEmptyModel || _flds.klass.QPrimaryKey != ValCodflds))))
 					_flds = Models.Flds.Find(ValCodflds, m_userContext, Identifier, _fieldsToSerialize);
-				if (_flds == null)
-					_flds = new Models.Flds(m_userContext, true, _fieldsToSerialize);
+				_flds ??= new Models.Flds(m_userContext, true, _fieldsToSerialize);
 				return _flds;
 			}
 			set { _flds = value; }
 		}
-
 
 		[DisplayName("Feedback")]
 		/// <summary>Field : "Feedback" Tipo: "C" Formula:  ""</summary>
@@ -60,8 +61,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Feeca.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Feeca(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -80,7 +81,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAfeeca csgenioa)
 		{
 			if (csgenioa == null)
@@ -91,8 +91,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "flds":
-						if (_flds == null)
-							_flds = new Flds(m_userContext, true, _fieldsToSerialize);
+						_flds ??= new Flds(m_userContext, true, _fieldsToSerialize);
 						_flds.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

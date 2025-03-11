@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -377,7 +377,7 @@
 											<q-checkbox-input
 												v-if="controls.EQUIP___EQUIPBOUGHT__.isVisible"
 												v-bind="controls.EQUIP___EQUIPBOUGHT__.props"
-												@update:model-value="model.ValBought.fnUpdateValue" />
+												v-on="controls.EQUIP___EQUIPBOUGHT__.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -768,7 +768,7 @@
 												<q-checkbox-input
 													v-if="controls.EQUIP___EQUIPIFABATIF.isVisible"
 													v-bind="controls.EQUIP___EQUIPIFABATIF.props"
-													@update:model-value="model.ValIfabatif.fnUpdateValue" />
+													v-on="controls.EQUIP___EQUIPIFABATIF.handlers" />
 											</template>
 										</base-input-structure>
 									</q-control-wrapper>
@@ -1006,8 +1006,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -1544,7 +1542,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
 						isFormulaBlocked: true,
-						format: 'date',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1778,7 +1776,7 @@
 								label: computed(() => this.Resources.N_R__ROOM43805),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValDesignat',
@@ -1787,7 +1785,7 @@
 								label: computed(() => this.Resources.ROOM_DESIGNATION37895),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValMovimevv',
@@ -1818,7 +1816,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ROOMS'],
+						globalEvents: ['changed-ROOMS'],
 						uuid: 'Equip_ValMovimevv',
 						allSelectedRows: 'false',
 						modelField: 'List_Movimevv_SelectedIds',
@@ -1865,7 +1863,7 @@
 								label: computed(() => this.Resources.CHANGE36355),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Rooms.ValRoomnr',
@@ -1875,7 +1873,7 @@
 								dataLength: 10,
 								scrollData: 10,
 								pkColumn: 'ValCodrooms',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Rooms.ValDesignat',
@@ -1885,7 +1883,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodrooms',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValObservat',
@@ -1893,7 +1891,7 @@
 								field: 'OBSERVAT',
 								label: computed(() => this.Resources.OBSERVATION37880),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValMovimels',
@@ -2034,7 +2032,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						changeEvents: ['changed-EQUIP', 'changed-MOVIM', 'changed-ROOMS'],
+						globalEvents: ['changed-EQUIP', 'changed-MOVIM', 'changed-ROOMS'],
 						uuid: 'Equip_ValMovimels',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -2141,7 +2139,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValUntil',
@@ -2150,7 +2148,7 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValHours',
@@ -2160,7 +2158,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 4,
 								name: 'ValPrecohor',
@@ -2170,7 +2168,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 5,
 								name: 'ValValue',
@@ -2180,7 +2178,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValInstalag',
@@ -2321,7 +2319,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
+						globalEvents: ['changed-INSTA', 'changed-TPEQU', 'changed-EQUIP'],
 						uuid: 'Equip_ValInstalag',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -2369,7 +2367,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValUntil',
@@ -2378,7 +2376,7 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValHours',
@@ -2388,7 +2386,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 4,
 								name: 'ValPrecohor',
@@ -2398,7 +2396,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 5,
 								name: 'ValValue',
@@ -2408,7 +2406,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 6,
 								name: 'ValCoordgeo',
@@ -2419,7 +2417,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValInstalac',
@@ -2459,7 +2457,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
+						globalEvents: ['changed-INSTA', 'changed-TPEQU', 'changed-EQUIP'],
 						uuid: 'Equip_ValInstalac',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -2668,7 +2666,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDtrepara',
@@ -2677,7 +2675,7 @@
 								label: computed(() => this.Resources.FIXED_IN00179),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Cate1.ValCategoria',
@@ -2687,7 +2685,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodcateg',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'Pesso.ValName',
@@ -2697,7 +2695,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodpesso',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValDescript',
@@ -2705,7 +2703,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION_OF_THE_R26085),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
 								name: 'ValHours',
@@ -2715,7 +2713,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 7,
 								name: 'ValTipoarea',
@@ -2727,7 +2725,7 @@
 								array: qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayAreatecn.type,
 								arrayDisplayMode: 'D',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValReparaco',
@@ -2896,7 +2894,7 @@
 								defaultValue: ''
 							},
 						],
-						changeEvents: ['changed-EQUIP', 'changed-PESSO', 'changed-REPAR', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
+						globalEvents: ['changed-EQUIP', 'changed-REPAR', 'changed-PESSO', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
 						uuid: 'Equip_ValReparaco',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -2987,7 +2985,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 2,
 								name: 'ValPhotogra',
@@ -2998,7 +2996,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValFotoequi',
@@ -3139,7 +3137,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-EQUIP', 'changed-PHOTO'],
+						globalEvents: ['changed-EQUIP', 'changed-PHOTO'],
 						uuid: 'Equip_ValFotoequi',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -3185,7 +3183,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValStartdt',
@@ -3194,7 +3192,7 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
 								name: 'ValDtfim',
@@ -3203,7 +3201,7 @@
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValDescript',
@@ -3211,7 +3209,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 5,
 								name: 'ValTodoodia',
@@ -3219,7 +3217,7 @@
 								field: 'TODOODIA',
 								label: computed(() => this.Resources.DAY27593),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValColor',
@@ -3228,7 +3226,7 @@
 								label: computed(() => this.Resources.COLOR55628),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 7,
 								name: 'ValBack',
@@ -3236,7 +3234,7 @@
 								field: 'BACK',
 								label: computed(() => this.Resources.BACKGROUND45121),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValVisequip',
@@ -3377,7 +3375,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-VISIT', 'changed-EQUIP'],
+						globalEvents: ['changed-VISIT', 'changed-EQUIP'],
 						uuid: 'Equip_ValVisequip',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -3622,7 +3620,7 @@
 								label: computed(() => this.Resources.ATTACHED26247),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValTitle',
@@ -3631,7 +3629,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 3,
 								name: 'ValDocument',
@@ -3642,7 +3640,7 @@
 								scrollData: 30,
 								sortable: false,
 								viewType: qEnums.documentViewTypeMode.print,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValAnexos',
@@ -3783,7 +3781,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-EQUIP', 'changed-ANEXD', 'changed-LANGU'],
+						globalEvents: ['changed-EQUIP', 'changed-ANEXD', 'changed-LANGU'],
 						uuid: 'Equip_ValAnexos',
 						allSelectedRows: 'false',
 						controlLimits: [

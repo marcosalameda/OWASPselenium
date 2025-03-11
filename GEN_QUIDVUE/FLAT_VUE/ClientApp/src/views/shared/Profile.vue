@@ -109,6 +109,7 @@
 								b-style="primary"
 								:label="texts.changePassword"
 								:title="texts.changePassword"
+								:disabled="maintenance.isActive"
 								@click="changePassword">
 								<q-icon icon="reset-password" />
 							</q-button>
@@ -213,6 +214,7 @@
 						class="fit-content"
 						:label="texts.setup2fa"
 						:title="texts.setup2fa"
+						:disabled="maintenance.isActive"
 						@click="change2FA">
 						<q-icon icon="arrow-right" />
 					</q-button>
@@ -432,7 +434,8 @@
 		computed: {
 			...mapState(useSystemDataStore, [
 				'applicationName',
-				'authConfig'
+				'authConfig',
+				'maintenance'
 			]),
 
 			...mapState(useAuthDataStore, [

@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER TBLB]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Tblb" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -57,6 +59,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Tblb)
 			);
 		}
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Grpb____pseudtblb____" form. (++, CT, SR, CL and U1)

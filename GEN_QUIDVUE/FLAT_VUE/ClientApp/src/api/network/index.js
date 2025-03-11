@@ -8,22 +8,12 @@ import { useSystemDataStore } from '@/stores/systemData.js'
 import { useTracingDataStore } from '@/stores/tracingData.js'
 import { displayMessage } from '@/mixins/genericFunctions.js'
 import { documentViewTypeMode } from '@/mixins/quidgest.mainEnums.js'
+import { useUserDataStore } from '@/stores/userData.js'
 import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 import eventBus from '@/api/global/eventBus.js'
 import axios from './axiosInstance'
 
 const MAIN_HISTORY_BRANCH_ID = 'main'
-
-/**
- *
- * @param {function} fnResolve The «promise resolve» function that will be resolved just after completely executed request
- * @param {any} value The value to emit in the resolve
- */
-function resolvePromise(fnResolve, value)
-{
-	if (fnResolve)
-		fnResolve(value)
-}
 
 /**
  * Returns a History structure in the format expected by the server
@@ -40,9 +30,9 @@ function getHistoryToSend(navigationId, currentArea = '')
 }
 
 /**
- *
+ * Handles an error in the request.
  * @param {AxiosResponse} response Axios response object (data, status, statusText, headers, config, request?)
- * @param {Function} fnResolve The «promise resolve» function that will be resolved just after completely executed request
+ * @param {Function} fnResolve The «promise resolve» function that will be resolved just after completely executing the request
  * @param {Callback} _fnCallback The request callback to be executed to process the data received from the server
  * @param {Error} error The request error object
  */
@@ -50,9 +40,9 @@ async function handleNonOkResponse(response, fnResolve, _fnCallback, error)
 {
 	if (response)
 	{
-		let responseData = (response.data || {}),
-			data = responseData.Data || null,
-			statusCode = responseData.statusCode || response.status,
+		let responseData = response.data ?? {},
+			data = responseData.Data ?? null,
+			statusCode = responseData.statusCode ?? response.status,
 			srvEventTracking = responseData.eTracker
 
 		// Tracing event
@@ -81,10 +71,8 @@ async function handleNonOkResponse(response, fnResolve, _fnCallback, error)
 			})
 		}
 
-		/**
-		 * Skip if only one, in addition to redirecting to the next one, may still need to load the list data.
-		 * This is necessary in case when the next hop is a form in PopUp or is a manual routine that doesn't leave the page.
-		 */
+		// Skip if only one, in addition to redirecting to the next one, may still need to load the list data.
+		// This is necessary in case when the next hop is a form in PopUp or is a manual routine that doesn't leave the page.
 		if (typeof _fnCallback === 'function' && data)
 			await _fnCallback(data, response)
 
@@ -112,7 +100,8 @@ async function handleNonOkResponse(response, fnResolve, _fnCallback, error)
 					}
 				})
 		}
-		resolvePromise(fnResolve, data)
+
+		fnResolve?.(data)
 	}
 	else
 	{
@@ -126,16 +115,16 @@ async function handleNonOkResponse(response, fnResolve, _fnCallback, error)
 			}
 		})
 
-		resolvePromise(fnResolve, null)
+		fnResolve?.(null)
 	}
 
-	// Temporary workaround just to avoid infinite recalling "GetIfUserLogged" when itself fails
+	// FIXME: Temporary workaround just to avoid infinitely calling "GetIfUserLogged" when itself fails.
 	if (!response?.config.url.includes('GetIfUserLogged'))
 		eventBus.emit('check-user-is-logged-in')
 }
 
 /**
- * Processing the Axios response
+ * Processing the Axios response.
  * @param {AxiosResponse} response Axios response object (data, status, statusText, headers, config, request?)
  * @param {Callback} _fnCallback The request callback to be executed to process the data received from the server
  * @param {Function} fnResolve The «promise resolve» function that will be resolved just after completely executed request
@@ -144,15 +133,24 @@ async function handleNonOkResponse(response, fnResolve, _fnCallback, error)
 async function processRequest(response, _fnCallback, fnResolve, skipTracing)
 {
 	const tracing = useTracingDataStore()
+	const userDataStore = useUserDataStore()
 
 	if (response)
 	{
+		// If the initial PHE is empty but the key is still persistent, clean it and redirect to home page.
+		if (response.data?.Data?.InitialPHEEmpty === true && typeof userDataStore.valuesOfPHEs[response.data.Data.Module] === 'object')
+		{
+			userDataStore.valuesOfPHEs[response.data.Data.Module] = undefined
+			eventBus.emit('response-redirect-to', { type: 'route', routeName: `home-${response.data.Data.Module}`, routeValues: {} })
+		}
+
 		// Tracing event
 		let traceId = response.config.meta?.traceId
 
 		// The skip tracing is used here so the action that sends the
 		// telemetry doesn't call itself over and over again infinitely
 		if (!skipTracing)
+		{
 			traceId = tracing.addResponseTrace({
 				traceId,
 				origin: 'processRequest',
@@ -164,19 +162,20 @@ async function processRequest(response, _fnCallback, fnResolve, skipTracing)
 				responseData: response.data,
 				meta: response.config.meta
 			})
+		}
 
 		if (response.status === 200)
 		{
 			const navDataStore = useNavDataStore()
 			const systemDataStore = useSystemDataStore()
 
-			let responseData = (response.data || {}),
-				data = responseData.Data || null,
-				statusCode = responseData.statusCode || 200,
-				srvHistory = responseData.NavigationData || {},
-				maintenance = responseData.Maintenance || {},
+			let responseData = response.data ?? {},
+				data = responseData.Data ?? null,
+				statusCode = responseData.statusCode ?? 200,
+				srvHistory = responseData.NavigationData ?? {},
+				maintenance = responseData.Maintenance ?? {},
 				navigationId = srvHistory.navigationId,
-				history = srvHistory.historyDiff || null,
+				history = srvHistory.historyDiff ?? null,
 				srvEventTracking = responseData.eTracker
 
 			// Server errors
@@ -202,10 +201,10 @@ async function processRequest(response, _fnCallback, fnResolve, skipTracing)
 			else if (_fnCallback)
 			{
 				Promise.resolve(_fnCallback(data, response))
-					.then(() => resolvePromise(fnResolve, data), () => resolvePromise(fnResolve, data))
+					.then(() => fnResolve?.(data), () => fnResolve?.(data))
 			}
 			else
-				resolvePromise(fnResolve, data)
+				fnResolve?.(data)
 		}
 	}
 	else
@@ -220,8 +219,8 @@ async function processRequest(response, _fnCallback, fnResolve, skipTracing)
 
 /**
  * Generate the relative URL for a Web API action
- * @param {*} controller The controller name
- * @param {*} action The action name
+ * @param {string} controller The controller name
+ * @param {string} action The action name
  * @returns Relative URL for a Web API action
  */
 export function apiActionURL(controller, action)
@@ -280,10 +279,8 @@ export function fetchData(controller, action, params, _fnCallback, _fnErrorCallb
 		return
 	}
 
-	/*
-	The "Promise" that is returned will only be executed after the callback of the processing of data received from the server has been completely executed.
-	The processing of AxiosResponte will be done centrally and the callback (which comes from the interface) will only have to worry about the processing of the received data.
-	*/
+	// The "Promise" that is returned will only be executed after the callback of the processing of data received from the server has been completely executed.
+	// The processing of AxiosResponte will be done centrally and the callback (which comes from the interface) will only have to worry about the processing of the received data.
 	let url = apiActionURL(controller, action),
 		tokenElements = document.getElementsByName('__RequestVerificationToken'),
 		antiForgeryToken = tokenElements.length > 0 ? tokenElements[0].value : null,
@@ -302,7 +299,8 @@ export function fetchData(controller, action, params, _fnCallback, _fnErrorCallb
 	_merge(axiosOptions, options, { params: { ...params, nav: navigationId } })
 
 	// Tracing event
-	if(!options?.skipTracing) {
+	if (!options?.skipTracing)
+	{
 		const tracing = useTracingDataStore()
 		tracing.addRequestTrace({
 			origin: 'fetchData',
@@ -353,10 +351,8 @@ export function postData(controller, action, data, _fnCallback, _fnErrorCallback
 		return
 	}
 
-	/*
-	The "Promise" that is returned will only be executed after the callback of the processing of data received from the server has been completely executed.
-	The processing of AxiosResponte will be done centrally and the callback (which comes from the interface) will only have to worry about the processing of the received data.
-	*/
+	// The "Promise" that is returned will only be executed after the callback of the processing of data received from the server has been completely executed.
+	// The processing of AxiosResponte will be done centrally and the callback (which comes from the interface) will only have to worry about the processing of the received data.
 	let url = apiActionURL(controller, action),
 		tokenElements = document.getElementsByName('__RequestVerificationToken'),
 		antiForgeryToken = tokenElements.length > 0 ? tokenElements[0].value : null,
@@ -385,7 +381,8 @@ export function postData(controller, action, data, _fnCallback, _fnErrorCallback
 	_merge(axiosOptions, options, { params: { nav: navigationId } })
 
 	// Tracing event
-	if(!options?.skipTracing) {
+	if (!options?.skipTracing)
+	{
 		const tracing = useTracingDataStore()
 		tracing.addRequestTrace({
 			origin: 'postData',
@@ -671,7 +668,220 @@ export function fetchDynamicArray(array, lang, callback)
 }
 
 /**
- * The proxy class for the network API with applying the navigation identifier
+ * Reads a file in chunks asyncronously without loading into memory at once.
+ *
+ * @param {File} file - The file to be split.
+ * @param {number} maxChunkSize - The maximum size of each chunk in bytes.
+ * @returns {AsyncGenerator<{chunk: Blob, start: number, end: number}>} An async generator that yields chunks with their range.
+ */
+async function* splitFile(file, maxChunkSize)
+{
+	if (!(file instanceof File))
+	{
+		const tracing = useTracingDataStore()
+		tracing.addError({
+			origin: 'splitFile',
+			message: 'Provided input is not a valid File object.',
+			contextData: {
+				objectType: typeof file,
+				maxChunkSize
+			}
+		})
+		return
+	}
+
+	let currentPosition = 0
+	while (currentPosition < file.size)
+	{
+		const chunk = file.slice(currentPosition, currentPosition + maxChunkSize)
+		const end = currentPosition + chunk.size - 1 // Use chunk.size for precise end value
+		// Process only the current chunk
+		yield { chunk, start: currentPosition, end }
+		currentPosition += chunk.size
+	}
+}
+
+/**
+ * Uploads a single chunk of a file.
+ * @param {Object} options - Configuration options for the upload.
+ * @param {string} options.url - The upload endpoint.
+ * @param {Blob} options.chunk - The file chunk.
+ * @param {string} options.fileId - The file field identifier.
+ * @param {string} options.fileName - The name of the file.
+ * @param {string} options.ticket - Security ticket for the file upload.
+ * @param {string} options.mode - The mode of the upload.
+ * @param {string} [options.version='1'] - The file version.
+ * @param {number} options.fileSize - The total file size.
+ * @param {number} options.start - The start byte of the chunk.
+ * @param {number} options.end - The end byte of the chunk.
+ * @param {Function} options._fnCallback - Success callback function.
+ * @param {Function} options._fnErrorCallback - Error callback function.
+ * @returns {Promise<void>} A promise that resolves when the upload completes.
+ */
+async function uploadChunk({
+	url,
+	chunk,
+	fileId,
+	fileName,
+	ticket,
+	mode,
+	version = '1',
+	fileSize,
+	start,
+	end,
+	_fnCallback,
+	_fnErrorCallback
+})
+{
+	const formData = new FormData()
+	formData.append(fileId, chunk, fileName)
+	formData.append('ticket', ticket)
+	formData.append('mode', mode)
+	formData.append('version', version)
+
+	const axiosOptions = {
+		withCredentials: true,
+		headers: {
+			'Content-Type': 'multipart/form-data',
+			'Content-Range': `bytes ${start}-${end}/${fileSize}`
+		}
+	}
+
+	return new Promise((fnResolve) => {
+		axios.axiosInstance.post(url, formData, axiosOptions)
+			.then((response) => processRequest(response, _fnCallback, fnResolve))
+			.catch((error) => handleNonOkResponse(error.response, fnResolve, _fnErrorCallback, error))
+	})
+}
+
+/**
+ * Determines the optimal chunk size based on the total file size.
+ * This ensures efficient uploads while balancing memory usage and network performance.
+ *
+ * @param {number} fileSize - The total size of the file in bytes.
+ * @returns {number} The recommended chunk size in bytes.
+ */
+function getOptimalChunkSize(fileSize)
+{
+	if (typeof fileSize !== 'number' || fileSize <= 0)
+		throw new TypeError('Invalid file size. Expected a positive number.')
+
+	// Define 1MB in bytes for better readability
+	const MB = 1024 * 1024
+
+	// Recommended chunk sizes based on file size ranges
+	if (fileSize <= 50 * MB)
+		return 5 * MB // 5MB for files ≤ 50MB
+	else if (fileSize <= 500 * MB)
+		return 10 * MB // 10MB for files ≤ 500MB
+	return 15 * MB // 15MB for files larger than 500MB
+}
+
+/**
+ * Uploads a file in multiple chunks.
+ * @param {string} controller - The API controller handling the upload.
+ * @param {string} action - The API action for the upload.
+ * @param {File} file - The file to be uploaded.
+ * @param {Object} params - Additional parameters for the upload.
+ * @param {string} params.fileId - The file field identifier.
+ * @param {string} params.ticket - Security ticket for the file upload.
+ * @param {string} params.mode - The mode of the upload.
+ * @param {string} params.version - The file version.
+ * @param {Function} _fnCallback - Success callback function.
+ * @param {Function} _fnErrorCallback - Error callback function.
+ * @param {number} [maxChunkSize] - The maximum chunk size.
+ * @returns {Promise<void>} A promise that resolves when all chunks are uploaded.
+ */
+export async function uploadFile(controller, action, file, params, _fnCallback, _fnErrorCallback, maxChunkSize)
+{
+	if (!(file instanceof File))
+		throw new TypeError('Invalid file input. Expected a File object.')
+
+	const url = apiActionURL(controller, action)
+	// Set optimal chunk size if not provided
+	maxChunkSize = maxChunkSize || getOptimalChunkSize(file.size)
+
+	// Tracing event
+	const tracing = useTracingDataStore()
+	tracing.addRequestTrace({
+		origin: 'uploadFile',
+		requestType: 'post',
+		requestUrl: url,
+		requestParams: params,
+		requestData: {
+			sileSize: file?.size,
+			fileName: file?.name,
+		},
+		contextData: {
+			controller,
+			action
+		}
+	})
+
+	for await (const { chunk, start, end } of splitFile(file, maxChunkSize))
+	{
+		try
+		{
+			// Process chunks one at a time
+			const uploadResult = await uploadChunk({
+				url,
+				chunk,
+				...params,
+				fileSize: file.size,
+				fileName: file.name,
+				start,
+				end,
+				_fnCallback,
+				_fnErrorCallback
+			})
+
+			// As long as there is no "success": true/false, it is just a progress response.
+			if (uploadResult?.success === false)
+			{
+				tracing.addTrace({
+					origin: 'uploadFile',
+					message: `Chunk ${start}-${end}/${file.size} uploaded unsuccessfully`,
+					contextData: {
+						params
+					}
+				})
+				// Stop uploading further chunks on server error
+				return
+			}
+
+			tracing.addTrace({
+				origin: 'uploadFile',
+				message: `Chunk ${start}-${end}/${file.size} uploaded successfully`,
+				contextData: {
+					params
+				}
+			})
+		}
+		catch (error)
+		{
+			tracing.addError({
+				origin: 'uploadFile',
+				message: `Error uploading chunk ${start}-${end}/${file.size}`,
+				contextData: {
+					error,
+					params
+				}
+			})
+			return // Stop uploading further chunks on error
+		}
+	}
+
+	tracing.addTrace({
+		origin: 'uploadFile',
+		message: 'All chunks uploaded successfully',
+		contextData: {
+			params
+		}
+	})
+}
+
+/**
+ * The proxy class for the network API with applying the navigation identifier.
  */
 export class NetworkAPI
 {
@@ -683,6 +893,7 @@ export class NetworkAPI
 		this.forceDownload = forceDownload
 		this.retrieveImage = retrieveImage
 		this.fetchDynamicArray = fetchDynamicArray
+		this.uploadFile = uploadFile
 	}
 
 	fetchData(controller, action, params, _fnCallback, _fnErrorCallback, options)
@@ -725,5 +936,6 @@ export default {
 	retrieveImage,
 	getFile,
 	getFileNameFromRequest,
-	fetchDynamicArray
+	fetchDynamicArray,
+	uploadFile
 }

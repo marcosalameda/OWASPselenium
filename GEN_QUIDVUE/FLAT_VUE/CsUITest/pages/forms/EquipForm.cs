@@ -85,7 +85,7 @@ public class EquipForm : Form
 	/// <summary>
 	/// Decomission:
 	/// </summary>
-	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#EQUIP___EQUIPDTDECO__");
+	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#EQUIP___EQUIPDTDECO__", "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// bought

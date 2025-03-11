@@ -56,6 +56,7 @@
 @import "controls/q-info-message.scss";
 @import "controls/q-kanban.scss";
 @import "controls/q-lookup.scss";
+@import "controls/q-markdown-viewer.scss";
 @import "controls/q-modal.scss";
 @import "controls/q-multiform.scss";
 @import "controls/q-numeric-input.scss";
@@ -69,7 +70,6 @@
 @import "controls/q-text.scss";
 @import "controls/q-timeline.scss";
 @import "controls/q-wizard.scss";
-
 
 // TODO: Change to custom controls
 @import "controls/q-pin-input.scss";
@@ -185,18 +185,23 @@ label {
 	}
 }
 
-//Global style for inputs
+// Global style for inputs
 .q-field__control {
 	background-color: $input-bg;
 }
+
 .q-field--readonly > .q-field__control {
 	background-color: $input-bg-readonly;
 }
 
-.i-checkbox__field, .i-textarea__field, .i-radio__field {
+.i-checkbox__field,
+.i-textarea__field,
+.i-radio__field {
 	background-color: $input-bg;
 }
 
-.i-checkbox__field[readonly], .i-textarea__field[readonly], .i-radio__field[readonly] {
+.i-checkbox__field[readonly],
+.i-textarea__field[readonly],
+.i-radio__field[readonly] {
 	background-color: $input-bg-readonly;
 }

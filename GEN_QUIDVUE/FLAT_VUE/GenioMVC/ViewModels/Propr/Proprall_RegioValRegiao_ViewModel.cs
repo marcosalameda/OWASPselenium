@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,51 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Propr
 {
-	public class Proprall_RegioValRegiao_ViewModel : ListViewModel
+	public class Proprall_RegioValRegiao_ViewModel : MenuListViewModel<Models.Regio>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DB"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Proprall_RegioValRegiao_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "regio"; }
+		[JsonIgnore]
+		public override string TableAlias => "regio";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Proprall_RegioValRegiao"; }
+		public override string Uuid => "Proprall_RegioValRegiao";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCodpropr { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -52,6 +63,7 @@ namespace GenioMVC.ViewModels.Propr
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -63,6 +75,7 @@ namespace GenioMVC.ViewModels.Propr
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -88,12 +101,28 @@ namespace GenioMVC.ViewModels.Propr
 		}
 
 		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Proprall_RegioValRegiao_ViewModel() : base(null!) { }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Proprall_RegioValRegiao_ViewModel" /> class.
 		/// </summary>
 		/// <param name="userContext">The current user request context</param>
 		public Proprall_RegioValRegiao_ViewModel(UserContext userContext) : base(userContext)
 		{
 			ValCodpropr = userContext.CurrentNavigation.CurrentLevel.GetEntry("propr")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Proprall_RegioValRegiao_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Proprall_RegioValRegiao_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -161,12 +190,6 @@ namespace GenioMVC.ViewModels.Propr
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
-			allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -181,7 +204,6 @@ namespace GenioMVC.ViewModels.Propr
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -276,22 +298,21 @@ namespace GenioMVC.ViewModels.Propr
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAregio> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "PROPRALL")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Proprall_RegioValRegiao_RowViewModel>();
 
 				CriteriaSet proprallregioregiao__Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("REGIO.REGIAO", new OrderedDictionary());
 				allSortOrders["REGIO.REGIAO"].Add("REGIO.REGIAO", "A");
-
 
 
 
@@ -329,39 +350,38 @@ namespace GenioMVC.ViewModels.Propr
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAregio model_limit_area = new CSGenioAregio(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_PROPRALLREGIOREGIAO__");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAregio model_limit_area = new CSGenioAregio(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_PROPRALLREGIOREGIAO__");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
-			// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
-			// Limit origin: form 
-			//Limit type: "A"
-			//Current Area = "REGIO"
-			//1st Area Limit: "CNTRY"
-			//1st Area Field: "CODCNTRY"
-			//1st Area Value: ""
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.A;
-				limit.NaoAplicaSeNulo = false;
-				CSGenioAcntry model_limit_area = new CSGenioAcntry(m_userContext.User);
-				string limit_field = "codcntry", limit_field_value = "";
-				object this_limit_field = Navigation.GetValue("cntry") == null ? this.ValCodcntry : Navigation.GetValue("cntry");
-				Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
-				if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
-					this.tableLimits.Add(limit);
-			}
+				// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
+				// Limit origin: form 
+				//Limit type: "A"
+				//Current Area = "REGIO"
+				//1st Area Limit: "CNTRY"
+				//1st Area Field: "CODCNTRY"
+				//1st Area Value: ""
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.A;
+					limit.NaoAplicaSeNulo = false;
+					CSGenioAcntry model_limit_area = new CSGenioAcntry(m_userContext.User);
+					string limit_field = "codcntry", limit_field_value = "";
+					object this_limit_field = Navigation.GetValue("cntry") == null ? this.ValCodcntry : Navigation.GetValue("cntry");
+					Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
+					if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
+						this.tableLimits.Add(limit);
+				}
 
 				if (conditions == null)
 					conditions = CriteriaSet.And();
@@ -407,7 +427,6 @@ namespace GenioMVC.ViewModels.Propr
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -427,18 +446,12 @@ namespace GenioMVC.ViewModels.Propr
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -446,7 +459,7 @@ namespace GenioMVC.ViewModels.Propr
 
 		private List<Proprall_RegioValRegiao_RowViewModel> MapProprall_RegioValRegiao(ListingMVC<CSGenioAregio> Qlisting)
 		{
-			var Elements = new List<Proprall_RegioValRegiao_RowViewModel>();
+			List<Proprall_RegioValRegiao_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -463,7 +476,6 @@ namespace GenioMVC.ViewModels.Propr
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAregio row
 		/// to a Proprall_RegioValRegiao_RowViewModel object.
@@ -472,7 +484,9 @@ namespace GenioMVC.ViewModels.Propr
 		private Proprall_RegioValRegiao_RowViewModel MapProprall_RegioValRegiao(CSGenioAregio row)
 		{
 			var model = new Proprall_RegioValRegiao_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -484,32 +498,7 @@ namespace GenioMVC.ViewModels.Propr
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Proprall_RegioValRegiao_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -523,36 +512,42 @@ namespace GenioMVC.ViewModels.Propr
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAregio> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAregio row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Regio m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Regio m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM PROPRALL_REGIOVALREGIAO]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Regio", "Regio.ValCodregia", "Regio.ValZzstate", "Regio.ValRegiao", "Regio.ValCodcntry", "Regio.ValCodpais1", "BtnPermission"
+			"Regio", "Regio.ValCodregia", "Regio.ValZzstate", "Regio.ValRegiao", "Regio.ValCodcntry", "Regio.ValCodpais1"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValRegiao", CSGenioAregio.FldRegiao, typeof(string))
 		];
-
-
-
 	}
 }

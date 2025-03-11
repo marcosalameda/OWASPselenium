@@ -1,4 +1,6 @@
-﻿import { postData, fetchData } from '@/api/network'
+﻿import _isEmpty from 'lodash-es/isEmpty'
+
+import { postData, fetchData } from '@/api/network'
 
 /*****************************************************************
  * This mixin defines methods to be reused by wizard components. *
@@ -88,10 +90,11 @@ export default {
 			if (!this.wizardMode)
 				this.wizardMode = this.navigation.currentLevel.params.mode
 
-			var stepMode = this.wizardMode
-			var currentStepRoute = this.currentStepRoute
-			var recordId = this.navigation.currentLevel.params.id
-			var wizardPathFromParams = this.navigation.currentLevel.params.wizardPath
+			let stepMode = this.wizardMode
+			let currentStepRoute = this.currentStepRoute
+
+			const recordId = this.navigation.currentLevel.params.id
+			const wizardPathFromParams = this.navigation.currentLevel.params.wizardPath
 
 			if (wizardPath && Array.isArray(wizardPath))
 				currentStepRoute = wizardPath[wizardPath.length - 1]
@@ -102,7 +105,7 @@ export default {
 			// The levels of the wizard's phases are siblings and are not hierarchical levels.
 			this.navigation.removeNavigationLevel()
 
-			var params = {
+			const params = {
 				historyBranchId: this.navigation.navigationId,
 				id: recordId,
 				mode: stepMode,
@@ -119,34 +122,36 @@ export default {
 			this.$router.push({ name: stepRoute, params })
 		},
 
-
 		/**
 		 * Handles the click of a step in the wizard.
-		 * @param {string} clickedStep - The route of the step that was clicked.
+		 * @param {string} clickedStep The route of the step that was clicked
 		 */
 		async stepClicked(clickedStep)
-		{	
+		{
 			const handler =  `${this.wizardData.wizardId}_GetPath`
-			const params = {
-				formId: this.primaryKeyValue,
-			}
-			
-			await fetchData(this.formArea, handler, params, (data, request) => {
-				if (!request.data.Success || !Array.isArray(data.Path))
-					return
-	
-				const path = data.Path
-				this.applyChanges(false).then((success) => {
-					if (path.includes(clickedStep) && success)
-					{
-						this.handleStepChange(clickedStep, path)
-					}
-					else {
-						this.$eventTracker.addError({ origin: 'stepClicked (wizardHandlers)', message: `Error while going changing from step "${this.formInfo.name}" in wizard "${this.wizardData.wizardId}".` })
-					}
+			const params = { formId: this.primaryKeyValue }
 
+			await fetchData(
+				this.formArea,
+				handler,
+				params,
+				(data, request) => {
+					if (!request.data.Success || !Array.isArray(data.Path))
+						return
+
+					const path = data.Path
+					this.applyChanges(false).then((success) => {
+						if (path.includes(clickedStep) && success)
+							this.handleStepChange(clickedStep, path)
+						else
+						{
+							this.$eventTracker.addError({
+								origin: 'stepClicked (wizardHandlers)',
+								message: `Error while going changing from step "${this.formInfo.name}" in wizard "${this.wizardData.wizardId}".`
+							})
+						}
+					})
 				})
-			})
 		},
 
 		/**
@@ -156,15 +161,19 @@ export default {
 		clearCurrentStep(callback)
 		{
 			const handler = `${this.wizardData.wizardId}_${this.formInfo.name}_ClearData`
+			const params = { id: this.primaryKeyValue }
 
-			var params = {
-				id: this.primaryKeyValue
-			}
-
-			postData(this.formArea, handler, params, (data) => {
-				if (typeof callback === 'function')
-					callback(data.Success === true)
-			}, undefined, undefined, this.navigationId)
+			postData(
+				this.formArea,
+				handler,
+				params,
+				(data) => {
+					if (typeof callback === 'function')
+						callback(data.Success === true)
+				},
+				undefined,
+				undefined,
+				this.navigationId)
 		},
 
 		/**
@@ -178,9 +187,14 @@ export default {
 			const goBack = (result) => {
 				if (typeof result === 'object' && (result === null || !result.Success) ||
 					typeof result === 'boolean' && !result)
-					this.$eventTracker.addError({ origin: 'goToPreviousStep (wizardHandlers)', message: `Error while going backward from step "${this.formInfo.name}" in wizard "${this.wizardData.wizardId}".` })
+				{
+					this.$eventTracker.addError({
+						origin: 'goToPreviousStep (wizardHandlers)',
+						message: `Error while going backward from step "${this.formInfo.name}" in wizard "${this.wizardData.wizardId}".`
+					})
+				}
 
-				let wizardPath = [...this.wizardPath]
+				const wizardPath = [...this.wizardPath]
 				if (this.isEditable && this.selectedStep.route === this.currentStepRoute)
 					wizardPath.pop()
 
@@ -222,25 +236,39 @@ export default {
 					return
 
 				const handler = `${this.wizardData.wizardId}_NextStep`
-
-				let params = {
+				const params = {
 					formId: this.primaryKeyValue,
 					currentStep: this.wizardData.stepData.id
 				}
 
-				postData(this.formArea, handler, params, (data) => {
-					if (!data || typeof data.Route !== 'string')
-					{
-						this.$eventTracker.addError({ origin: 'goToNextStep (wizardHandlers)', message: `Error while going forward from step "${this.formInfo.name}" in wizard "${this.wizardData.wizardId}".` })
-						return
-					}
+				postData(
+					this.formArea,
+					handler,
+					params,
+					(data, request) => {
+						if (!data || typeof data.Route !== 'string')
+						{
+							this.$eventTracker.addError({
+								origin: 'goToNextStep (wizardHandlers)',
+								message: `Error while going forward from step "${this.formInfo.name}" in wizard "${this.wizardData.wizardId}".`
+							})
 
-					let wizardPath = [...this.wizardPath]
-					if (this.isEditable && this.selectedStep.route === this.currentStepRoute)
-						wizardPath.push(data.Route)
+							this.validationErrors = !_isEmpty(request.data.Message)
+								? this.parseResponseErrors({ ['']: request.data.Message })
+								: {}
 
-					this.handleStepChange(data.Route, wizardPath)
-				}, undefined, undefined, this.navigationId)
+							return
+						}
+
+						let wizardPath = [...this.wizardPath]
+						if (this.isEditable && this.selectedStep.route === this.currentStepRoute)
+							wizardPath.push(data.Route)
+
+						this.handleStepChange(data.Route, wizardPath)
+					},
+					undefined,
+					undefined,
+					this.navigationId)
 			}
 
 			if (this.isEditable)

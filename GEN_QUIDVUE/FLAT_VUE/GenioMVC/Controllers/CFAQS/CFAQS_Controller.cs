@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER CFAQS]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Cfaqs" form. (++, CT, SR, CL and U1)
 		/// </summary>

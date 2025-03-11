@@ -421,7 +421,7 @@ describe('QTableExport.vue', () => {
 		// Click export button
 		await fireEvent.click(button)
 		// Get menu items
-		const menuitems = await wrapper.findAllByRole('menuitem')
+		const menuitems = await wrapper.findAllByRole('option')
 		// Click export menu item and check emit
 		await fireEvent.click(menuitems[idx])
 		expect(wrapper.emitted()).toHaveProperty('export-data')

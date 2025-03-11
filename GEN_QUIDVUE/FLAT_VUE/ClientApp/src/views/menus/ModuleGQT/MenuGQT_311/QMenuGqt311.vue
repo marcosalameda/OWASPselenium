@@ -151,7 +151,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDtrepara',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.FIXED_IN00179),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Equip.ValRegistnr',
@@ -170,7 +170,7 @@
 								dataLength: 6,
 								scrollData: 6,
 								pkColumn: 'ValCodequip',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'Equip.ValDesignat',
@@ -180,7 +180,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodequip',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'Pesso.ValName',
@@ -190,7 +190,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodpesso',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 6,
 								name: 'ValTipoarea',
@@ -201,7 +201,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayAreatecn.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'Speci.ValEspecial',
@@ -211,7 +211,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodespec',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
 								name: 'ValDescript',
@@ -219,7 +219,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION_OF_THE_R26085),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
 								name: 'ValHours',
@@ -229,7 +229,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 10,
 								name: 'Cmpny.ValDesignat',
@@ -238,9 +238,9 @@
 								label: computed(() => this.Resources.COMPANY52963),
 								dataLength: 85,
 								scrollData: 30,
-								visibility: false,
+								isVisible: false,
 								pkColumn: 'ValCodempre',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_311',
@@ -382,11 +382,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-EQUIP', 'changed-PESSO', 'changed-REPAR', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
+						globalEvents: ['changed-EQUIP', 'changed-REPAR', 'changed-PESSO', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
 						uuid: 'eb5c42d7-9401-4743-a232-b08f9c554f17',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

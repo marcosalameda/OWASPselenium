@@ -41,7 +41,7 @@
 						<q-row-container is-large>
 							<q-control-wrapper class="row-line-group">
 								<q-button
-									b-style="secondary"									
+									b-style="secondary"
 									:label="Resources.APLICAR33981"
 									:title="Resources.APLICAR33981"
 									@click="applyChanges">
@@ -126,8 +126,6 @@
 			return {
 				componentOnLoadProc: asyncProcM.getProcListMonitor('PTN_Menu_3511', false),
 
-				internalEvents: new QEventEmitter(),
-
 				interfaceMetadata: {
 					id: 'QMenuPTN_3511', // Used for resources
 					requiredTextResources
@@ -152,7 +150,6 @@
 							icon: 'remove-circle'
 						}
 					}, this),
-
 					secondTab: new controlClass.BaseControl({
 						id: 'secondTab',
 						name: 'secondTabForm',
@@ -162,12 +159,10 @@
 							icon: 'list'
 						}
 					}, this),
-
 					tabGroup: new controlClass.TabsControl({
 						tabControlsIds: ['firstTab', 'secondTab'],
 						selectedTab: 'firstTab'
 					}, this),
-
 					firstTable: new controlClass.TableListControl({
 						id: 'PTN_Menu_3511',
 						controller: 'EQUIP',
@@ -183,7 +178,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_3511',
@@ -228,7 +223,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
+						globalEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY'],
 						uuid: '4a5e2c5a-b9ce-47ad-88fe-7f1fc6e0cd0f',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -246,7 +241,6 @@
 							}
 						}
 					}, this),
-
 					secondTable: new controlClass.TableListControl({
 						id: 'PTN_Menu_3511',
 						controller: 'EQUIP',
@@ -262,7 +256,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_3511',
@@ -307,7 +301,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
+						globalEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY'],
 						uuid: '4a5e2c5a-b9ce-47ad-88fe-7f1fc6e0cd0f',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -329,7 +323,6 @@
 							}
 						}
 					}, this),
-
 					thirdTable: new controlClass.TableListControl({
 						controller: '',
 						action: '',
@@ -364,7 +357,6 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: [],
 						uuid: '',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -378,7 +370,7 @@
 								this.unselectAllRowsData()
 							}
 						}
-					}, this)
+					}, this),
 				}
 			}
 		},

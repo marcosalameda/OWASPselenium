@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.CITY42505),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Ctry.ValCountry',
@@ -160,7 +160,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodctry',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TRN_Menu_T13CITY',
@@ -302,11 +302,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-CTRY', 'changed-CITY'],
+						globalEvents: ['changed-CTRY', 'changed-CITY'],
 						uuid: 'db4f0ce4-600e-4901-8d8f-a2f8141c3e4c',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

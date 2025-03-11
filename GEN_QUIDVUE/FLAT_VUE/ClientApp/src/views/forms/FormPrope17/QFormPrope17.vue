@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -604,8 +604,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -1218,7 +1216,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValTitle',
@@ -1227,7 +1225,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValProphoto',
@@ -1374,7 +1372,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PROPE', 'changed-PROPH'],
+						globalEvents: ['changed-PROPE', 'changed-PROPH'],
 						uuid: 'Prope17_ValProphoto',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1406,7 +1404,7 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValName',
@@ -1415,7 +1413,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValDescript',
@@ -1423,7 +1421,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValPropcont',
@@ -1570,7 +1568,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PROCN', 'changed-PROPE'],
+						globalEvents: ['changed-PROCN', 'changed-PROPE'],
 						uuid: 'Prope17_ValPropcont',
 						allSelectedRows: 'false',
 						controlLimits: [

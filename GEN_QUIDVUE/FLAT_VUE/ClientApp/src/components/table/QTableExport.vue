@@ -1,33 +1,27 @@
 ﻿<template>
-	<q-dropdown-menu
-		id="export-drop"
-		icon="file-export"
-		:texts="dropdownTexts"
-		:options="options"
-		:button-options="dropdownButtonOptions"
-		:button-classes="['dropdown-toggle']"
-		@selected="$emit('export-data', $event)">
-	</q-dropdown-menu>
+	<q-action-list 
+		:actions="exportActions"
+		:action-groups="exportActionGroups"
+		:dropdown-options="dropdownOptions"
+		:texts="texts"
+		@click:action="$emit('export-data', $event.id)"
+	/>
 </template>
 
 <script>
-	import { defineAsyncComponent } from 'vue'
-
 	import { validateTexts } from '@/mixins/genericFunctions.js'
 
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {
-		exportButtonTitle: 'Export'
+		exportButtonTitle: 'Export',
+		actionMenuTitle: 'Actions'
+
 	}
 
 	export default {
 		name: 'QTableExport',
 
 		emits: ['export-data'],
-
-		components: {
-			QDropdownMenu: defineAsyncComponent(() => import('@/components/QDropdownMenu.vue'))
-		},
 
 		props: {
 			/**
@@ -51,17 +45,41 @@
 		expose: [],
 
 		computed: {
-			dropdownTexts()
-			{
-				return { title: this.texts.exportButtonTitle, label: this.texts.exportButtonTitle }
+			/**
+			 * Computes the default options for the dropdown
+			 */
+			dropdownOptions() {
+				return {
+					size: 'normal',
+					label: this.texts.exportButtonTitle,
+					bStyle: 'secondary',
+					icon: 'file-export',
+					borderless: true,
+					placement: 'bottom-start',
+					class: 'q-dropdown-toggle'
+				}
 			},
 
-			dropdownButtonOptions()
-			{
-				return {
-					borderless: true
-				}
-			}
-		}
+			/**
+			 * Computes the options to the dropdown
+			 */
+			exportActions() {
+				return this.options.map(act => { return {
+					id: act.id,
+					title: act.text,
+					group: 'export'
+				} })
+			},
+
+			/**
+			 * Computes the options groups for the dropdown
+			 */
+			exportActionGroups() {
+				return [{
+					id: 'export',
+					display: 'dropdown',
+				}]
+			},
+		},
 	}
 </script>

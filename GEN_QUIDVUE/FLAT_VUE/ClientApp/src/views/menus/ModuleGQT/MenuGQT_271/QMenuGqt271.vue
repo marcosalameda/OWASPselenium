@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 50,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
 								name: 'ValGender',
@@ -161,7 +161,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayGenero.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayGenero.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
 								name: 'ValDtnascim',
@@ -170,7 +170,7 @@
 								label: computed(() => this.Resources.BIRTH21799),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValTelephon',
@@ -179,7 +179,7 @@
 								label: computed(() => this.Resources.PHONE56703),
 								dataLength: 20,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValEmail',
@@ -188,7 +188,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 6,
 								name: 'ValPhotogra',
@@ -199,7 +199,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
 								name: 'ValIdfuncio',
@@ -209,7 +209,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 8,
 								name: 'ValDtultcat',
@@ -218,7 +218,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
 								name: 'Categ.ValCategoria',
@@ -228,7 +228,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodcateg',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 10,
 								name: 'Cmpny.ValDesignat',
@@ -247,7 +247,7 @@
 								},
 								cellAction: true,
 								pkColumn: 'ValCodempre',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_271',
@@ -429,7 +429,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1'],
+						globalEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-PAIS1', 'changed-CMPNY'],
 						uuid: 'e6dc0e9f-d5c7-4b9c-87f7-f7ac16dffec8',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -507,7 +507,7 @@
 							},
 						],
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},
@@ -550,10 +550,17 @@
 			 */
 			GQT_MenuMC_271(params)
 			{
-				return netAPI.postData(this.controls.menu.controller, 'GQT_MenuMC_271', params, (data) => {
-					if (data.actionName)
-						this.tableListMCAction(this.controls.menu, data.actionName, data.id)
-				}, undefined, undefined, this.navigationId)
+				return netAPI.postData(
+					this.controls.menu.controller,
+					'GQT_MenuMC_271',
+					params,
+					(data) => {
+						if (data.actionName)
+							this.tableListMCAction(this.controls.menu, data.actionName, data.id)
+					},
+					undefined,
+					undefined,
+					this.navigationId)
 			},
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS GQT_271]/

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ReindexOrder xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<ReIndexItems>
+    <Function Id="CREATEDB" Name="Create Database" Help="" Connection="Admin" Selected="true" Selectable="true">
+	  <Scripts>
+		<Script>CreateDatabase.sql</Script>
+	  </Scripts>
+	</Function>
     <Function Id="CREATESP" Name="Create Base StoredProcedures" Help="" Connection="Normal" Selected="true" Selectable="true">
 	  <Scripts>
 		<Script>FuncoesAuxCheckTable.sql</Script>
@@ -29,8 +34,8 @@
 	</Function>
 	<Function Id="UPGRADECLIENT1" Name="Upgrade Client" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="false">
 	  <Scripts>
- 		<Script Type="SQL" Version="1" MinDbVersion="0" MaxDbVersion="0">UpgradeClient.sql</Script>
-     </Scripts>
+		<Script Type="SQL" Version="1" MinDbVersion="0" MaxDbVersion="0">UpgradeClient.sql</Script>
+  </Scripts>
 	</Function>
 
     <Function Id="DELETELOGTRIGGERS" Name="Delete Log Triggers" Help="" Connection="Normal" Selected="true" Selectable="true">
@@ -92,6 +97,11 @@
 		<Script>ActStoredProcFIM.sql</Script>
 	  </Scripts>
 	</Function>
+    <Function Id="DELETETMPDB" Name="Delete Temporary Databases" Help="" Connection="Normal" Selected="true" Selectable="true">
+	  <Scripts>
+		<Script>EliminacaoBDTemp.sql</Script>
+	  </Scripts>
+	</Function>
     <Function Id="ADDINDEX" Name="Rebuild Table Indexes" Help="" Connection="Normal" Selected="true" Selectable="true">
 	  <Scripts>
 		<Script>AddIndex.sql</Script>
@@ -122,8 +132,8 @@
 	<Function Id="UPGRADECLIENT2" Name="Upgrade Client" Type="SQL" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="false">
 	  <Scripts>
 		<Script Type="SQL" Version="2" MinDbVersion="0" MaxDbVersion="0">UpgradeClient.sql</Script>
-    		<!-- User defined ReIndexItems -->
-     </Scripts>
+		<!-- User defined ReIndexItems -->
+  </Scripts>
 	</Function>
 	
 	<Function Id="UPDATEFORMULAFIELDS" Name="Update FormulaFields" Help="" Connection="Normal" Selected="true" TimeoutMult="10" Selectable="true">

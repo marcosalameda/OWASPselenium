@@ -1,5 +1,7 @@
-﻿﻿<template>
-	<div><p><b>Dispatches</b></p></div>
+﻿<template>
+	<div>
+		<p><b>Dispatches</b></p>
+	</div>
 
 	<q-kanban
 		:cards="cardsList"
@@ -15,8 +17,8 @@
 			</div>
 		</template>
 		<template #default="{ item }">
-			<q-kanban-card 
-				:card="item" 
+			<q-kanban-card
+				:card="item"
 				:crud-actions="controls.menu.config.crudActions"
 				:row-action-display="controls.menu.config.rowActionDisplay"
 				v-on="controls.menu.handlersCard" />

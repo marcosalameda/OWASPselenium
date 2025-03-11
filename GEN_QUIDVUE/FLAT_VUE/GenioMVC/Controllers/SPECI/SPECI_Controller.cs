@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER SPECI]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Espec" form. (++, CT, SR, CL and U1)
 		/// </summary>

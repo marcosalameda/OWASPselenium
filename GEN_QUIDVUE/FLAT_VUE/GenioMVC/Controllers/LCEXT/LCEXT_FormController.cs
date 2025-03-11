@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Lcext_LocatValGlnModel : RequestLookupModel
+		{
+			public Lcext_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Lcext/Lcext_LocatValGln
 		// POST: /Lcext/Lcext_LocatValGln
 		[ActionName("Lcext_LocatValGln")]
-		public ActionResult Lcext_LocatValGln([FromBody]RequestLookupModel requestModel)
+		public ActionResult Lcext_LocatValGln([FromBody] Lcext_LocatValGlnModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Lcext_LocatValGln_ViewModel model = new Lcext_LocatValGln_ViewModel(UserContext.Current);
-			
+
+			Models.Lcext parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Lcext_LocatValGln_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

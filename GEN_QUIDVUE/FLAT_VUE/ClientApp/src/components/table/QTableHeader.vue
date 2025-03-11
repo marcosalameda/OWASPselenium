@@ -5,108 +5,112 @@
 		<slot
 			name="columns"
 			:columns="columns">
-			<template
-				v-for="(column, key, index) in columns"
-				:key="column.name">
-				<th
-					v-if="canShowColumn(column)"
-					:key="index"
-					:class="columnClasses(column)"
-					:aria-sort="getTableColumnSort(column, columnSorting, true)"
-					:data-column-name="column.name"
-					@mousedown="onColumnMouseDown()"
-					@mousemove="onColumnMouseMove()"
-					@mouseup="onColumnMouseUp()">
-					<!-- BEGIN: TABLE LIST TOTALIZER TITLE COLUMN -->
-					<div
-						v-if="isTotalizerColumn(column)"
-						class="column-header-content">
-						<q-icon icon="sigma" />
-					</div>
-					<!-- BEGIN: FOR: TABLE LIST ROW ACTIONS -->
-					<div
-						v-else-if="isActionsColumn(column) || isDragAndDropColumn(column)"
-						class="column-header-content">
-						<q-icon icon="actions" />
-						<span class="hidden-elem">{{ column.label }}</span>
-					</div>
-					<!-- END: FOR: TABLE LIST ROW ACTIONS -->
-					<!-- BEGIN: Checklist header cell content -->
-					<div
-						v-else-if="isChecklistColumn(column)"
-						class="column-header-content">
+			<th
+				v-for="column in columns"
+				:key="column.name"
+				:class="columnClasses(column)"
+				:aria-sort="getTableColumnSort(column, columnSorting, true)"
+				:data-column-name="column.name"
+				@mousedown="onColumnMouseDown()"
+				@mousemove="onColumnMouseMove()"
+				@mouseup="onColumnMouseUp()">
+				<!-- BEGIN: TABLE LIST TOTALIZER TITLE COLUMN -->
+				<div
+					v-if="isTotalizerColumn(column)"
+					class="column-header-content">
+					<q-icon icon="sigma" />
+				</div>
+				<!-- BEGIN: FOR: TABLE LIST ROW ACTIONS -->
+				<div
+					v-else-if="isActionsColumn(column) || isDragAndDropColumn(column)"
+					class="column-header-content">
+					<q-icon icon="actions" />
+					<span class="hidden-elem">{{ column.label }}</span>
+				</div>
+				<!-- END: FOR: TABLE LIST ROW ACTIONS -->
+				<!-- BEGIN: Checklist header cell content -->
+				<div
+					v-else-if="isChecklistColumn(column)"
+					class="column-header-content">
+					<slot
+						:name="'column_' + getCellSlotName(column)"
+						:column="column">
+						<q-action-list 
+							:disabled="rowCount < 1"
+							:dropdown-options="dropdownOptions"
+							:texts="texts"
+							:actions="checklistActions"
+							data-table-action-selected="false"
+							tabindex="-1"
+							@click:action="checklistAction">
+							<template #customDropdownButton>
+								<q-table-checklist-checkbox
+									:value="false"
+									:table-name="tableName"
+									style="display: flex"
+									readonly />
+							</template>
+						</q-action-list>
+					</slot>
+				</div>
+				<!-- END: Checklist header cell content -->
+				<!-- BEGIN: Extended row action column -->
+				<div
+					v-else-if="isExtendedActionsColumn(column)"
+					class="extended-row-header">
+					<slot
+						:name="getCellSlotName(column)"
+						:column="column">
+						<span
+							v-if="hasExtendedAction('remove-reset')"
+							:key="column.name">
+							<q-button
+								b-style="secondary"
+								:title="texts.resetText"
+								data-table-action-selected="false"
+								tabindex="-1"
+								@click="$emit('unselect-all-rows')">
+								<q-icon icon="reset" />
+							</q-button>
+						</span>
+					</slot>
+				</div>
+				<!-- END: Extended row action column -->
+				<!-- BEGIN: Header cell content -->
+				<div
+					v-else
+					class="column-header-content">
+					<!-- BEGIN: Header cell title -->
+					<div class="column-header-text">
 						<slot
 							:name="'column_' + getCellSlotName(column)"
 							:column="column">
-							<q-table-selector
-								:texts="texts"
-								:readonly="readonly"
-								:disable-selector="rowCount < 1"
-								:table-name="tableName"
-								@check-all-rows="$emit('check-all-rows')"
-								@check-current-page-rows="$emit('check-current-page-rows')"
-								@check-none-rows="$emit('check-none-rows')" />
+							{{ column.label }}
 						</slot>
+						<q-table-column-filters
+							v-if="(allowColumnFilters && isSearchableColumn(column)) || (allowColumnSort && isSortableColumn(column))"
+							:allow-column-filters="allowColumnFilters"
+							:allow-column-sort="allowColumnSort"
+							:allow-advanced-filters="allowAdvancedFilters"
+							:column="column"
+							:disabled="disabled"
+							:filter="filters[columnFullName(column)]"
+							:filter-operators="filterOperators"
+							:searchable-columns="searchableColumns"
+							:sort-direction="getTableColumnSort(column, columnSorting)"
+							:table-name="tableName"
+							:texts="texts"
+							:locale="locale"
+							@update-sort="(...args) => $emit('update-sort', ...args)"
+							@edit-column-filter="(...args) => $emit('edit-column-filter', ...args)"
+							@remove-column-filter="(...args) => $emit('remove-column-filter', ...args)"
+							@add-advanced-filter="(...args) => $emit('add-advanced-filter', ...args)"
+							@show-advanced-filters="(...args) => $emit('show-advanced-filters', ...args)" />
 					</div>
-					<!-- END: Checklist header cell content -->
-					<!-- BEGIN: Extended row action column -->
-					<div
-						v-else-if="isExtendedActionsColumn(column)"
-						class="extended-row-header">
-						<slot
-							:name="getCellSlotName(column)"
-							:column="column">
-							<span
-								v-if="hasExtendedAction('remove-reset')"
-								:key="column.name">
-								<q-button
-									b-style="secondary"
-									:title="texts.resetText"
-									data-table-action-selected="false"
-									tabindex="-1"
-									@click="$emit('unselect-all-rows')">
-									<q-icon icon="reset" />
-								</q-button>
-							</span>
-						</slot>
-					</div>
-					<!-- END: Extended row action column -->
-					<!-- BEGIN: Header cell content -->
-					<div
-						v-else
-						class="column-header-content">
-						<!-- BEGIN: Header cell title -->
-						<div class="column-header-text">
-							<slot
-								:name="'column_' + getCellSlotName(column)"
-								:column="column">
-								{{ column.label }}
-							</slot>
-							<q-table-column-filters
-								v-if="(allowColumnFilters && isSearchableColumn(column)) || (allowColumnSort && isSortableColumn(column))"
-								:allow-column-filters="allowColumnFilters"
-								:allow-column-sort="allowColumnSort"
-								:allow-advanced-filters="allowAdvancedFilters"
-								:column="column"
-								:disabled="disabled"
-								:filter="filters[columnFullName(column)]"
-								:filter-operators="filterOperators"
-								:searchable-columns="searchableColumns"
-								:sort-direction="getTableColumnSort(column, columnSorting)"
-								:table-name="tableName"
-								:texts="texts"
-								:locale="locale"
-								@update-sort="(...args) => $emit('update-sort', ...args)"
-								@edit-column-filter="(...args) => $emit('edit-column-filter', ...args)"
-								@remove-column-filter="(...args) => $emit('remove-column-filter', ...args)"
-								@add-advanced-filter="(...args) => $emit('add-advanced-filter', ...args)"
-								@show-advanced-filters="(...args) => $emit('show-advanced-filters', ...args)" />
-						</div>
-						<!-- END: Header cell title -->
-					</div>
-					<!-- END: Header cell content -->
-				</th>
-			</template>
+					<!-- END: Header cell title -->
+				</div>
+				<!-- END: Header cell content -->
+			</th>
 		</slot>
 	</tr>
 </template>
@@ -116,11 +120,9 @@
 	import includes from 'lodash-es/includes'
 
 	import searchFilterDataModule from '@/api/genio/searchFilterData'
-
 	import listFunctions from '@/mixins/listFunctions.js'
 
 	import QTableColumnFilters from './QTableColumnFilters.vue'
-	import QTableSelector from './QTableSelector.vue'
 
 	export default {
 		name: 'QTableHeader',
@@ -140,7 +142,6 @@
 
 		components: {
 			QTableColumnFilters,
-			QTableSelector
 		},
 
 		inheritAttrs: false,
@@ -217,7 +218,6 @@
 				type: Boolean,
 				default: false
 			},
-
 
 			/**
 			 * An array of columns that can be used for search filtering.
@@ -315,7 +315,6 @@
 
 		inject: [
 			'getCellSlotName',
-			'canShowColumn',
 			'isSortableColumn',
 			'isSearchableColumn',
 			'isActionsColumn',
@@ -326,6 +325,32 @@
 			'hasExtendedAction',
 			'columnFullName'
 		],
+
+		computed: {
+			/**
+			 * Computes the default options for the dropdown
+			 */
+			dropdownOptions() {
+				return {
+					icon: 'unchecked',
+					borderless: true,
+					bStyle: 'tertiary',
+					placement: 'bottom-start',
+					class: 'q-dropdown-toggle'
+				}
+			},
+
+			/**
+			 * Computes the actions/options for the dropdown
+			 */
+			checklistActions() {
+				return [
+					{ id: 'all', title: this.texts.allRecordsText, icon: { icon: 'apply' } },
+					{ id: 'page', title: this.texts.currentPageText, icon: { icon: 'check' } },
+					{ id: 'none', title: this.texts.noneText, icon: { icon: 'remove' } },
+				]
+			},
+		},
 
 		methods: {
 			getTableColumnSort: listFunctions.getTableColumnSort,
@@ -376,6 +401,16 @@
 				}
 				this.mouseDown = false
 				this.mouseMove = false
+			},
+
+			/**
+			 * Executes the action selected in the dropdown
+			 * @param $event the click event from the dropdown
+			 */
+			checklistAction($event) {
+				const emit = $event.id === 'all' ? 'check-all-rows' : 
+					$event.id === 'page' ? 'check-current-page-rows' : 'check-none-rows'
+				this.$emit(emit)	
 			}
 		}
 	}

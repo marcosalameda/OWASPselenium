@@ -43,7 +43,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER TRADU]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -56,13 +55,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Tradu row = null;
-
-			if (row == null)
-			{
-				row = new Models.Tradu(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("tradu");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Tradu row = new Models.Tradu(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("tradu");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +75,7 @@ namespace GenioMVC.Controllers
 				{
 					case "TRADU___LANG1LANGUA__":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Tradu_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Tradu_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Tradu___lang1langua__(qs);
 							result = model.TableLang1Langua;
@@ -84,8 +83,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "TRADU___LANG2LANGUA__":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Tradu_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Tradu_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Tradu___lang2langua__(qs);
 							result = model.TableLang2Langua;
@@ -153,6 +151,8 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
 
 
 		/// <summary>

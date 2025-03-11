@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Artigext_WarehValWarehdesModel : RequestLookupModel
+		{
+			public Artigext_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Item/Artigext_WarehValWarehdes
 		// POST: /Item/Artigext_WarehValWarehdes
 		[ActionName("Artigext_WarehValWarehdes")]
-		public ActionResult Artigext_WarehValWarehdes([FromBody]RequestLookupModel requestModel)
+		public ActionResult Artigext_WarehValWarehdes([FromBody] Artigext_WarehValWarehdesModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Artigext_WarehValWarehdes_ViewModel model = new Artigext_WarehValWarehdes_ViewModel(UserContext.Current);
-			
+
+			Models.Item parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Artigext_WarehValWarehdes_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Artigext_GitemValItemdesModel : RequestLookupModel
+		{
+			public Artigext_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Item/Artigext_GitemValItemdes
 		// POST: /Item/Artigext_GitemValItemdes
 		[ActionName("Artigext_GitemValItemdes")]
-		public ActionResult Artigext_GitemValItemdes([FromBody]RequestLookupModel requestModel)
+		public ActionResult Artigext_GitemValItemdes([FromBody] Artigext_GitemValItemdesModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Artigext_GitemValItemdes_ViewModel model = new Artigext_GitemValItemdes_ViewModel(UserContext.Current);
-			
+
+			Models.Item parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Artigext_GitemValItemdes_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

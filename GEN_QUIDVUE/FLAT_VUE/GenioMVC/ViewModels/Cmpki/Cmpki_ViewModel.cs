@@ -191,6 +191,7 @@ namespace GenioMVC.ViewModels.Cmpki
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Cmpki m)
 		{
 			if (m == null)
@@ -217,20 +218,13 @@ namespace GenioMVC.ViewModels.Cmpki
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Cmpki m)
 		{
 			if (m == null)
@@ -848,8 +842,6 @@ namespace GenioMVC.ViewModels.Cmpki
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

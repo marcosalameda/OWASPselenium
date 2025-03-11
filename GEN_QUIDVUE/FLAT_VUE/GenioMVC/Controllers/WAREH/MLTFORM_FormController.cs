@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Mltform_ValMltform1Model : RequestLookupModel
+		{
+			public Mltform_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Wareh/Mltform_ValMltform1
 		// POST: /Wareh/Mltform_ValMltform1
 		[ActionName("Mltform_ValMltform1")]
-		public ActionResult Mltform_ValMltform1([FromBody]RequestLookupModel requestModel)
+		public ActionResult Mltform_ValMltform1([FromBody] Mltform_ValMltform1Model requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -420,16 +425,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Mltform_ValMltform1_ViewModel model = new Mltform_ValMltform1_ViewModel(UserContext.Current);
-			
+			Models.Wareh parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Mltform_ValMltform1_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

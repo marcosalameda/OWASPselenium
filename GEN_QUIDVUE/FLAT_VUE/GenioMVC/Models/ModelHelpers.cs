@@ -287,7 +287,7 @@ namespace GenioMVC.Models
 		public int? ResponseStatus { get; set; }
 		public dynamic ResponseData { get; set; }
 		public int? Time { get; set; }
-		
+
 		// This parameter is here to be passed to log context
 		// It is a way to destinguish the client side logs from the server side ones
 		public string TelemetrySdk { get; set; } = "ClientSideTelemetry";

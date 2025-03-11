@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.CATEGORY18978),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValAbbreviation',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.ABBREVIATION31267),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_6141',
@@ -300,11 +300,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-CATE1'],
+						globalEvents: ['changed-CATE1'],
 						uuid: '78e89b41-c18a-4d5e-af02-3117ce9c80e0',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

@@ -190,6 +190,7 @@ namespace GenioMVC.ViewModels.Visit
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Visit m)
 		{
 			if (m == null)
@@ -217,20 +218,13 @@ namespace GenioMVC.ViewModels.Visit
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Visit m)
 		{
 			if (m == null)
@@ -661,13 +655,11 @@ namespace GenioMVC.ViewModels.Visit
 			};
 		}
 
-
 		/// <inheritdoc/>
 		protected override void SanitizeHTMLFields()
 		{
 			ValDescript = Helpers.HtmlSanitizerHelper.SanitizeHTML(ValDescript, true);
 		}
-
 
 		#region Charts
 

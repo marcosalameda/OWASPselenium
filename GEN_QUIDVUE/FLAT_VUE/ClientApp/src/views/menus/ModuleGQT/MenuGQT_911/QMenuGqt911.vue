@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.REF_A30225),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Lang1.ValLangua',
@@ -160,7 +160,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodlang',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValAtraduzi',
@@ -169,7 +169,7 @@
 								label: computed(() => this.Resources.A_TRADUZIR48203),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'Lang2.ValLangua',
@@ -179,7 +179,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodlang',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValTraduzid',
@@ -188,7 +188,7 @@
 								label: computed(() => this.Resources.TRADUZIDO46556),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_911',
@@ -330,11 +330,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-TRADU', 'changed-LANG2', 'changed-LANG1'],
+						globalEvents: ['changed-TRADU', 'changed-LANG2', 'changed-LANG1'],
 						uuid: '570a4a5e-67ff-46e4-a6d6-71d4b52998e9',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

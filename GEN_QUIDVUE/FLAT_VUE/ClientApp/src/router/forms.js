@@ -917,6 +917,17 @@ export default function getFormsRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/:module/form/ITEM/:mode/:id?',
+			name: 'form-ITEM',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormItem/QFormItem.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'ITEM',
+				humanKeyFields: ['ValItemdes']
+			}
+		},
+		{
 			path: '/:culture/:system/:module/form/KINDE/:mode/:id?',
 			name: 'form-KINDE',
 			props: route => propsConverter(route),
@@ -2186,6 +2197,17 @@ export default function getFormsRoutes()
 				routeType: 'form',
 				baseArea: 'VISIT',
 				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/WARE_WS/:mode/:id?',
+			name: 'form-WARE_WS',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormWareWs/QFormWareWs.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'WAREH',
+				humanKeyFields: ['ValWarehdes']
 			}
 		},
 		{

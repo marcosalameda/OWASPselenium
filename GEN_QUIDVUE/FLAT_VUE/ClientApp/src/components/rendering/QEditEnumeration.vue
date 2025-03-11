@@ -10,6 +10,7 @@
 			:size="size"
 			:class="classes"
 			:items="items"
+			:texts="texts"
 			clearable
 			item-value="key"
 			item-label="value"
@@ -107,6 +108,14 @@
 			errorMessages: {
 				type: Array,
 				default: () => []
+			},
+
+			/**
+			 * Object containing localized text strings for the component's texts
+			 */
+			texts: {
+				type: Object,
+				required: true
 			}
 		},
 

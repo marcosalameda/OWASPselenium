@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.NOME_DA_COMPANHIA48638),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'ValCodcmaer',
@@ -160,7 +160,7 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TBS_Menu_1911',
@@ -302,11 +302,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-AERO'],
+						globalEvents: ['changed-AERO'],
 						uuid: '63bd7bf2-d3e4-4b13-9f68-862ccec2fe93',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

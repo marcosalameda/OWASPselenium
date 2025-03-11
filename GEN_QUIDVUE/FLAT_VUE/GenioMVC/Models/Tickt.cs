@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Tickt.ValCodpsngr")]
 		public string ValCodpsngr { get { return klass.ValCodpsngr; } set { klass.ValCodpsngr = value; } }
+
 		private Psngr _psngr;
 		[DisplayName("Psngr")]
 		[ShouldSerialize("Psngr")]
-		public virtual Psngr Psngr {
-			get {
-				if (!this.isEmptyModel && (_psngr == null || (!string.IsNullOrEmpty(ValCodpsngr) && (_psngr.isEmptyModel || _psngr.klass.QPrimaryKey != ValCodpsngr))))
+		public virtual Psngr Psngr
+		{
+			get
+			{
+				if (!isEmptyModel && (_psngr == null || (!string.IsNullOrEmpty(ValCodpsngr) && (_psngr.isEmptyModel || _psngr.klass.QPrimaryKey != ValCodpsngr))))
 					_psngr = Models.Psngr.Find(ValCodpsngr, m_userContext, Identifier, _fieldsToSerialize);
-				if (_psngr == null)
-					_psngr = new Models.Psngr(m_userContext, true, _fieldsToSerialize);
+				_psngr ??= new Models.Psngr(m_userContext, true, _fieldsToSerialize);
 				return _psngr;
 			}
 			set { _psngr = value; }
 		}
-
 
 		[DisplayName("Ticket ID")]
 		/// <summary>Field : "Ticket ID" Tipo: "N" Formula:  ""</summary>
@@ -67,8 +68,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Tickt.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Tickt(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -87,7 +88,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAtickt csgenioa)
 		{
 			if (csgenioa == null)
@@ -98,8 +98,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "psngr":
-						if (_psngr == null)
-							_psngr = new Psngr(m_userContext, true, _fieldsToSerialize);
+						_psngr ??= new Psngr(m_userContext, true, _fieldsToSerialize);
 						_psngr.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

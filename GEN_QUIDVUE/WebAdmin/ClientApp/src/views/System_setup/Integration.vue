@@ -10,7 +10,7 @@
 						:Messaging="Messaging"
 						:Metadata="Metadata"
 						:model="model"
-						@alertClass="forwardAlert"
+						@alert-class="forwardAlert"
 					/>
 				</q-row-container>
 			</q-card>
@@ -24,7 +24,8 @@
 				<q-row-container>
 					<queue
 						:model="model"
-						@alertClass="forwardAlert" />
+						@update-model="$emit('update-model')"
+						@alert-class="forwardAlert" />
 				</q-row-container>
 			</q-card>
 		</row>
@@ -49,7 +50,7 @@
 
 		mixins: [reusableMixin],
 
-		emits: ['updateModal', 'alertClass'],
+		emits: ['update-model', 'alert-class'],
 
 		props: {
 			model: {
@@ -77,7 +78,7 @@
 		
 		methods: {
 			forwardAlert(alertData) {
-				this.$emit('alertClass', alertData);
+				this.$emit('alert-class', alertData);
 			}
 		}
 	};

@@ -155,6 +155,11 @@
 			id: String,
 
 			/**
+			 * Title and alt text for the link and image element.
+			 */
+			dataTitle: String,
+
+			/**
 			 * The image to be displayed (can be minimized to improve performance).
 			 */
 			image: {
@@ -250,14 +255,6 @@
 			loading: {
 				type: Boolean,
 				default: false
-			},
-
-			/**
-			 * Title and alt text for the link and image element.
-			 */
-			dataTitle: {
-				type: String,
-				default: null
 			}
 		},
 

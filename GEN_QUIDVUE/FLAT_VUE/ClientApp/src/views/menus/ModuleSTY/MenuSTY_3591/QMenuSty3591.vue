@@ -150,7 +150,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValCategory',
@@ -158,7 +158,7 @@
 								field: 'CATEGORY',
 								label: computed(() => this.Resources.CATEGORY18978),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValDescript',
@@ -166,7 +166,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_3591',
@@ -223,7 +223,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-CFAQS'],
+						globalEvents: ['changed-CFAQS'],
 						uuid: 'c620143f-29ba-4b06-855d-55c48acfe0c6',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -316,7 +316,7 @@
 							},
 						],
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

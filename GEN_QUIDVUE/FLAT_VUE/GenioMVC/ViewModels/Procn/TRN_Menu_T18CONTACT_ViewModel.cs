@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,45 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Procn
 {
-	public class TRN_Menu_T18CONTACT_ViewModel : ListViewModel
+	public class TRN_Menu_T18CONTACT_ViewModel : MenuListViewModel<Models.Procn>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<TRN_Menu_T18CONTACT_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "procn"; }
+		[JsonIgnore]
+		public override string TableAlias => "procn";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "96a6c4cf-408f-4e64-bd93-a0675f994a73"; }
+		public override string Uuid => "96a6c4cf-408f-4e64-bd93-a0675f994a73";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodprocn { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -52,6 +57,7 @@ namespace GenioMVC.ViewModels.Procn
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -63,6 +69,7 @@ namespace GenioMVC.ViewModels.Procn
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -81,7 +88,6 @@ namespace GenioMVC.ViewModels.Procn
 
 
 
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -97,17 +103,26 @@ namespace GenioMVC.ViewModels.Procn
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAprocn.FldCodprocn, CSGenioAprocn.FldZzstate, CSGenioAprocn.FldName, CSGenioAprocn.FldEmail, CSGenioAprocn.FldTelephon, CSGenioAprocn.FldDescript, CSGenioAprocn.FldDate, CSGenioAprocn.FldCodprope, CSGenioAprope.FldCodprope, CSGenioAprope.FldTitle };
 
-			ListingMVC<CSGenioAprocn> listing = new ListingMVC<CSGenioAprocn>(fields, null, 1, 1, false, user, true, string.Empty, false);
+			ListingMVC<CSGenioAprocn> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
 			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public TRN_Menu_T18CONTACT_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TRN_Menu_T18CONTACT_ViewModel" /> class.
@@ -116,6 +131,16 @@ namespace GenioMVC.ViewModels.Procn
 		public TRN_Menu_T18CONTACT_ViewModel(UserContext userContext) : base(userContext)
 		{
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TRN_Menu_T18CONTACT_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public TRN_Menu_T18CONTACT_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -183,12 +208,6 @@ namespace GenioMVC.ViewModels.Procn
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PROCN.NAME", new OrderedDictionary());
-			allSortOrders["PROCN.NAME"].Add("PROCN.NAME", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -202,7 +221,6 @@ namespace GenioMVC.ViewModels.Procn
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
-
 
 			if (isToExport)
 			{
@@ -299,23 +317,22 @@ namespace GenioMVC.ViewModels.Procn
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAprocn> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "T18CONTACT"),
 				new("Module", "TRN")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<TRN_Menu_T18CONTACT_RowViewModel>();
 
 				CriteriaSet trn_menu_t18contactConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("PROCN.NAME", new OrderedDictionary());
 				allSortOrders["PROCN.NAME"].Add("PROCN.NAME", "A");
-
 
 
 
@@ -353,20 +370,19 @@ namespace GenioMVC.ViewModels.Procn
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAprocn model_limit_area = new CSGenioAprocn(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "MLT18CONTACT");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAprocn model_limit_area = new CSGenioAprocn(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "MLT18CONTACT");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -414,7 +430,6 @@ namespace GenioMVC.ViewModels.Procn
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -435,18 +450,12 @@ namespace GenioMVC.ViewModels.Procn
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -454,7 +463,7 @@ namespace GenioMVC.ViewModels.Procn
 
 		private List<TRN_Menu_T18CONTACT_RowViewModel> MapTRN_Menu_T18CONTACT(ListingMVC<CSGenioAprocn> Qlisting)
 		{
-			var Elements = new List<TRN_Menu_T18CONTACT_RowViewModel>();
+			List<TRN_Menu_T18CONTACT_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -471,7 +480,6 @@ namespace GenioMVC.ViewModels.Procn
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAprocn row
 		/// to a TRN_Menu_T18CONTACT_RowViewModel object.
@@ -480,7 +488,9 @@ namespace GenioMVC.ViewModels.Procn
 		private TRN_Menu_T18CONTACT_RowViewModel MapTRN_Menu_T18CONTACT(CSGenioAprocn row)
 		{
 			var model = new TRN_Menu_T18CONTACT_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -494,32 +504,7 @@ namespace GenioMVC.ViewModels.Procn
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(TRN_Menu_T18CONTACT_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -533,31 +518,40 @@ namespace GenioMVC.ViewModels.Procn
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAprocn> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAprocn row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Procn m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Procn m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM TRN_MENU_T18CONTACT]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Procn", "Procn.ValCodprocn", "Procn.ValZzstate", "Procn.ValName", "Procn.ValEmail", "Procn.ValTelephon", "Procn.ValDescript", "Procn.ValDate", "Prope", "Prope.ValTitle", "Procn.ValCodprope", "BtnPermission"
+			"Procn", "Procn.ValCodprocn", "Procn.ValZzstate", "Procn.ValName", "Procn.ValEmail", "Procn.ValTelephon", "Procn.ValDescript", "Procn.ValDate", "Prope", "Prope.ValTitle", "Procn.ValCodprope"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValName", CSGenioAprocn.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValEmail", CSGenioAprocn.FldEmail, typeof(string)),
@@ -566,8 +560,5 @@ namespace GenioMVC.ViewModels.Procn
 			new TableSearchColumn("ValDate", CSGenioAprocn.FldDate, typeof(DateTime?)),
 			new TableSearchColumn("Prope_ValTitle", CSGenioAprope.FldTitle, typeof(string))
 		];
-
-
-
 	}
 }

@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER RULES]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Regra" form. (++, CT, SR, CL and U1)
 		/// </summary>

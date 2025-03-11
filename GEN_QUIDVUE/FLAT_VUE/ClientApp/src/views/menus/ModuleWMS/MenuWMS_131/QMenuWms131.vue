@@ -151,7 +151,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDtreceip',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.RECEIPT_DATE00996),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Entit.ValName',
@@ -170,7 +170,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodentit',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_131',
@@ -312,11 +312,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ENTIT', 'changed-RECEI'],
+						globalEvents: ['changed-ENTIT', 'changed-RECEI'],
 						uuid: 'ac035288-6c74-4087-b1b9-28e5aa6cd29c',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

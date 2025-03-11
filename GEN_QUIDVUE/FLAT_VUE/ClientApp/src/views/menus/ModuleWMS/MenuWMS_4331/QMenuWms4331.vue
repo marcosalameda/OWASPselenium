@@ -151,7 +151,7 @@
 								dataLength: 100,
 								scrollData: 20,
 								pkColumn: 'ValCodpsw',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Perso.ValName',
@@ -161,7 +161,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodperso',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_4331',
@@ -303,11 +303,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PSW', 'changed-PERSO', 'changed-USERS'],
+						globalEvents: ['changed-PSW', 'changed-PERSO', 'changed-USERS'],
 						uuid: 'c5a5ce8c-7964-41c6-b248-bd9d4be5dc71',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

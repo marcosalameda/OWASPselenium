@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDate',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.DATA_DE_NASCIMENTO48110),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
 								name: 'ValSex',
@@ -170,7 +170,7 @@
 								scrollData: 9,
 								array: qProjArrays.QArraySexo.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArraySexo.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValNfunc',
@@ -180,7 +180,7 @@
 								scrollData: 1,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValAdress',
@@ -189,7 +189,7 @@
 								label: computed(() => this.Resources.ADDRESS04342),
 								dataLength: 100,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValZipcode',
@@ -198,7 +198,7 @@
 								label: computed(() => this.Resources.ZIP_CODE56964),
 								dataLength: 8,
 								scrollData: 8,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'ValCountry',
@@ -207,7 +207,7 @@
 								label: computed(() => this.Resources.PAIS04637),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
 								name: 'ValEmail',
@@ -216,7 +216,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 150,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
 								name: 'ValCellphon',
@@ -226,7 +226,7 @@
 								scrollData: 9,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 10,
 								name: 'ValNaturali',
@@ -235,7 +235,7 @@
 								label: computed(() => this.Resources.NATURALNESS33189),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 11,
 								name: 'ValNacional',
@@ -244,7 +244,7 @@
 								label: computed(() => this.Resources.NACIONALIDADE23735),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 12,
 								name: 'Wareh.ValWarehdes',
@@ -254,7 +254,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodwareh',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 13,
 								name: 'ValFtimgtop',
@@ -265,7 +265,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_CARDIMGTOP',
@@ -347,7 +347,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-WAREH', 'changed-WPESS'],
+						globalEvents: ['changed-WAREH', 'changed-WPESS'],
 						uuid: '0e99ffff-7adf-43a1-9968-81840cdfb35c',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -386,9 +386,9 @@
 									text: {
 										allowsMultiple: true,
 										sources: [
-											'WPESS.NACIONAL',
-											'WPESS.NFUNC',
 											'WPESS.EMAIL',
+											'WPESS.NFUNC',
+											'WPESS.NACIONAL',
 										]
 									},
 									image: {
@@ -461,7 +461,7 @@
 							},
 						],
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

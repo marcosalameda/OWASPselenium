@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -250,7 +250,7 @@
 												<q-checkbox-input
 													v-if="controls.TPEQU___TPEQUKIT_____.isVisible"
 													v-bind="controls.TPEQU___TPEQUKIT_____.props"
-													@update:model-value="model.ValKit.fnUpdateValue" />
+													v-on="controls.TPEQU___TPEQUKIT_____.handlers" />
 											</template>
 										</base-input-structure>
 									</q-control-wrapper>
@@ -575,8 +575,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -1052,7 +1050,7 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Tpeq1.ValTipoequi',
@@ -1062,7 +1060,7 @@
 								dataLength: 50,
 								scrollData: 50,
 								pkColumn: 'ValCodtpequ',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
 								name: 'ValQuantida',
@@ -1072,7 +1070,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValDescript',
@@ -1080,7 +1078,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValCode',
@@ -1089,7 +1087,7 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.HyperLinkColumn({
 								order: 6,
 								name: 'ValUrl',
@@ -1098,7 +1096,7 @@
 								label: computed(() => this.Resources.SITE06486),
 								dataLength: 250,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValComponen',
@@ -1245,7 +1243,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-TPEQ1', 'changed-CMPKI', 'changed-TPEQU'],
+						globalEvents: ['changed-TPEQ1', 'changed-CMPKI', 'changed-TPEQU'],
 						uuid: 'Tpequ_ValComponen',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1293,7 +1291,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
 								name: 'ValPrecohor',
@@ -1303,7 +1301,7 @@
 								scrollData: 16,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValEvolucao',
@@ -1450,7 +1448,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-TPEQU', 'changed-TABPR'],
+						globalEvents: ['changed-TPEQU', 'changed-TABPR'],
 						uuid: 'Tpequ_ValEvolucao',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1561,7 +1559,7 @@
 								label: computed(() => this.Resources.SCHEDULING24801),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDtiniage',
@@ -1570,7 +1568,7 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
 								name: 'ValDtfimage',
@@ -1579,7 +1577,7 @@
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValDescript',
@@ -1587,7 +1585,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 5,
 								name: 'ValAllday',
@@ -1595,7 +1593,7 @@
 								field: 'ALLDAY',
 								label: computed(() => this.Resources.ALL_DAY18496),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 6,
 								name: 'ValSince',
@@ -1604,7 +1602,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
 								name: 'ValUntil',
@@ -1613,7 +1611,7 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
 								name: 'ValHours',
@@ -1623,7 +1621,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 9,
 								name: 'ValPrecohor',
@@ -1633,7 +1631,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 10,
 								name: 'ValValue',
@@ -1643,7 +1641,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 11,
 								name: 'ValCoordgeo',
@@ -1654,7 +1652,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValInstalac',
@@ -1801,7 +1799,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
+						globalEvents: ['changed-INSTA', 'changed-TPEQU', 'changed-EQUIP'],
 						uuid: 'Tpequ_ValInstalac',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1834,7 +1832,7 @@
 								label: computed(() => this.Resources.SCHEDULING24801),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDtiniage',
@@ -1843,7 +1841,7 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
 								name: 'ValDtfimage',
@@ -1852,7 +1850,7 @@
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValDescript',
@@ -1860,7 +1858,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 5,
 								name: 'ValAllday',
@@ -1868,7 +1866,7 @@
 								field: 'ALLDAY',
 								label: computed(() => this.Resources.ALL_DAY18496),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 6,
 								name: 'ValSince',
@@ -1877,7 +1875,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
 								name: 'ValUntil',
@@ -1886,7 +1884,7 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
 								name: 'ValHours',
@@ -1896,7 +1894,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 9,
 								name: 'ValPrecohor',
@@ -1906,7 +1904,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 10,
 								name: 'ValValue',
@@ -1916,7 +1914,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 11,
 								name: 'ValCoordgeo',
@@ -1927,7 +1925,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValInstala1',
@@ -1967,7 +1965,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
+						globalEvents: ['changed-INSTA', 'changed-TPEQU', 'changed-EQUIP'],
 						uuid: 'Tpequ_ValInstala1',
 						allSelectedRows: 'false',
 						controlLimits: [

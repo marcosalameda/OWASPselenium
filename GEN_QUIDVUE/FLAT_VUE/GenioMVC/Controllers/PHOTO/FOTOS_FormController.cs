@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Fotos_EquipValRegistnrModel : RequestLookupModel
+		{
+			public Fotos_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Photo/Fotos_EquipValRegistnr
 		// POST: /Photo/Fotos_EquipValRegistnr
 		[ActionName("Fotos_EquipValRegistnr")]
-		public ActionResult Fotos_EquipValRegistnr([FromBody]RequestLookupModel requestModel)
+		public ActionResult Fotos_EquipValRegistnr([FromBody] Fotos_EquipValRegistnrModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Fotos_EquipValRegistnr_ViewModel model = new Fotos_EquipValRegistnr_ViewModel(UserContext.Current);
-			
+
+			Models.Photo parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Fotos_EquipValRegistnr_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

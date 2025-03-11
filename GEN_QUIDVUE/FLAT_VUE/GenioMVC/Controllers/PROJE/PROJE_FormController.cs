@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Proje_Year1ValYearModel : RequestLookupModel
+		{
+			public Proje_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Proje/Proje_Year1ValYear
 		// POST: /Proje/Proje_Year1ValYear
 		[ActionName("Proje_Year1ValYear")]
-		public ActionResult Proje_Year1ValYear([FromBody]RequestLookupModel requestModel)
+		public ActionResult Proje_Year1ValYear([FromBody] Proje_Year1ValYearModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Proje_Year1ValYear_ViewModel model = new Proje_Year1ValYear_ViewModel(UserContext.Current);
-			
+
+			Models.Proje parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Proje_Year1ValYear_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Proje_ValDespesasModel : RequestLookupModel
+		{
+			public Proje_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Proje/Proje_ValDespesas
 		// POST: /Proje/Proje_ValDespesas
 		[ActionName("Proje_ValDespesas")]
-		public ActionResult Proje_ValDespesas([FromBody]RequestLookupModel requestModel)
+		public ActionResult Proje_ValDespesas([FromBody] Proje_ValDespesasModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -483,16 +496,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Proje_ValDespesas_ViewModel model = new Proje_ValDespesas_ViewModel(UserContext.Current);
-			
+			Models.Proje parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Proje_ValDespesas_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -517,11 +532,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Proje_ValAgregadoModel : RequestLookupModel
+		{
+			public Proje_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Proje/Proje_ValAgregado
 		// POST: /Proje/Proje_ValAgregado
 		[ActionName("Proje_ValAgregado")]
-		public ActionResult Proje_ValAgregado([FromBody]RequestLookupModel requestModel)
+		public ActionResult Proje_ValAgregado([FromBody] Proje_ValAgregadoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -545,16 +565,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Proje_ValAgregado_ViewModel model = new Proje_ValAgregado_ViewModel(UserContext.Current);
-			
+			Models.Proje parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Proje_ValAgregado_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

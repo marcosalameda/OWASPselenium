@@ -102,6 +102,11 @@ public class FldscondForm : Form
 	/// </summary>
 	public ButtonControl PseudListbtn => new ButtonControl(driver, ContainerLocator, "#FLDSCONDPSEUDLISTBTN_");
 
+	/// <summary>
+	/// Form
+	/// </summary>
+	public ButtonControl PseudListbtn2 => new ButtonControl(driver, ContainerLocator, "#FLDSCONDPSEUDLISTBTN2");
+
 	public FldscondForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "FLDSCOND", containerLocator: containerLocator) { }
 }

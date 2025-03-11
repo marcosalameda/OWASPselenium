@@ -150,11 +150,7 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 20,
 								scrollData: 20,
-								// eslint-disable-next-line no-unused-vars
-								textColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValCorletra)===1,qApi.RGB(0,0,0),row.Fields.ValCorletra),
-								// eslint-disable-next-line no-unused-vars
-								bgColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValBackcolo)===1,qApi.RGB(255,255,255),row.Fields.ValBackcolo),
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValTipoequi',
@@ -163,7 +159,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValTpequpai',
@@ -172,8 +168,8 @@
 								label: computed(() => this.Resources.DEPENDENT_ON28321),
 								dataLength: 20,
 								scrollData: 20,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValNivel',
@@ -183,8 +179,8 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValBackcolo',
@@ -193,8 +189,8 @@
 								label: computed(() => this.Resources.BACKGROUND_COLOR47883),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValCorletra',
@@ -203,8 +199,8 @@
 								label: computed(() => this.Resources.LETTER_COLOR15736),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 7,
 								name: 'ValPrecomax',
@@ -214,7 +210,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 8,
 								name: 'ValPrecoult',
@@ -224,7 +220,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_2A1',
@@ -365,11 +361,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FAMIL', 'changed-TPEQU'],
+						globalEvents: ['changed-TPEQU', 'changed-FAMIL'],
 						uuid: 'b0d536d8-bb60-4309-a860-eff17d0e5d21',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

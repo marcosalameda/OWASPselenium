@@ -1829,7 +1829,7 @@ namespace GenioMVC.Controllers
 					file = GetFileFromRequest(recq.KeyData + "_file", version);
 
 					if (file == null)
-						return JsonERROR();
+						return JsonOK(new { success = false, message = Resources.Resources.FICHEIRO_VAZIO18253 });
 				}
 				else if (mode != VersionSubmitAction.UnlockFile)
 				{
@@ -1872,6 +1872,7 @@ namespace GenioMVC.Controllers
 					{
 						// Put the partial file into the in-memory cache.
 						QCache.Instance.FileUpload.Put(ticket, parts);
+						// As long as there is no "success": true/false, it is just a progress response.
 						return JsonOK(new { message = "Chunk processed successfully.", startByte, endByte });
 					}
 				}
@@ -1912,15 +1913,15 @@ namespace GenioMVC.Controllers
 				}
 
 				if (!success)
-					return JsonERROR();
+					return JsonOK(new { success = false });
 
 				// Needs to update the properties with the info of the newly saved file.
 				properties = model.GetInfoDoc(recq.KeyData);
-				return JsonOK(new { message = Resources.Resources.ALTERACOES_EFETUADAS10166, properties });
+				return JsonOK(new { success = true, message = Resources.Resources.ALTERACOES_EFETUADAS10166, properties });
 			}
 			catch
 			{
-				return JsonERROR();
+				return JsonOK(new { success = false });
 			}
 		}
 

@@ -1,4 +1,4 @@
-﻿import { markRaw } from 'vue'
+﻿import { markRaw, readonly } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import _forEach from 'lodash-es/forEach'
 import _get from 'lodash-es/get'
@@ -115,6 +115,29 @@ export default class ViewModelBase
 			if (this[modelField].hasServerErrorMessages)
 				return true
 		return false
+	}
+
+	/**
+	 * The values of the vue model in the format expected by the view model of the server.
+	 */
+	get serverObjModel()
+	{
+		const viewModel = {}
+
+		for (let modelField in this)
+		{
+			const fieldObj = this[modelField]
+
+			if (fieldObj instanceof modelFieldType.Base &&
+				fieldObj.type !== 'Lookup' &&
+				fieldObj.ignoreFldSubmit !== true)
+			{
+				const value = fieldObj.serverValue
+				viewModel[modelField] = value
+			}
+		}
+
+		return readonly(viewModel)
 	}
 
 	/**

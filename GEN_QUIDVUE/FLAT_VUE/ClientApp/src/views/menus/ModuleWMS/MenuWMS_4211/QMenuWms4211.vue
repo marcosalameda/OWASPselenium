@@ -151,7 +151,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodentit',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValIncorpor',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.INCORPORATION10135),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValName',
@@ -169,7 +169,7 @@
 								label: computed(() => this.Resources.FACILITY_NAME19514),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 4,
 								name: 'ValFaciltyp',
@@ -178,10 +178,10 @@
 								label: computed(() => this.Resources.FACILITY_TYPE44577),
 								dataLength: 1,
 								scrollData: 1,
-								visibility: false,
+								isVisible: false,
 								array: qProjArrays.QArrayFaciltyp.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayFaciltyp.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'Facty.ValType',
@@ -191,7 +191,7 @@
 								dataLength: 25,
 								scrollData: 25,
 								pkColumn: 'ValCodfacty',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValAddress',
@@ -199,7 +199,7 @@
 								field: 'ADDRESS',
 								label: computed(() => this.Resources.ADDRESS04342),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 7,
 								name: 'ValImage',
@@ -210,7 +210,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 8,
 								name: 'ValGpsinput',
@@ -219,10 +219,10 @@
 								label: computed(() => this.Resources.GPS_INPUT13625),
 								dataLength: 1,
 								scrollData: 1,
-								visibility: false,
+								isVisible: false,
 								array: qProjArrays.QArrayGpsinput.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayGpsinput.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
 								name: 'ValLatitude',
@@ -232,8 +232,8 @@
 								scrollData: 10,
 								maxDigits: 3,
 								decimalPlaces: 6,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
 								name: 'ValLongitud',
@@ -243,8 +243,8 @@
 								scrollData: 10,
 								maxDigits: 3,
 								decimalPlaces: 6,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 11,
 								name: 'ValGeocoori',
@@ -253,10 +253,10 @@
 								label: computed(() => this.Resources.GEOGRAPHICAL_COORDIN45869),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
+								isVisible: false,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 12,
 								name: 'ValGeocoord',
@@ -267,7 +267,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_4211',
@@ -409,11 +409,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FACTY', 'changed-CNTRY', 'changed-FACIL', 'changed-ENTIT'],
+						globalEvents: ['changed-FACTY', 'changed-FACIL', 'changed-CNTRY', 'changed-ENTIT'],
 						uuid: '24c039d6-a804-4041-8cef-ca842275cf78',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

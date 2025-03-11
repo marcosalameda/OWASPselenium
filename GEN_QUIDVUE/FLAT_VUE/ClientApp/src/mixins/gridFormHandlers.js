@@ -1,9 +1,10 @@
-﻿import { computed } from 'vue'
-import _find from 'lodash-es/find'
+﻿import _find from 'lodash-es/find'
+import { computed } from 'vue'
 
 import hardcodedTexts from '@/hardcodedTexts.js'
 import formControlClass from '@/mixins/formControl.js'
 import FormHandlers from '@/mixins/formHandlers.js'
+import { isVisibleColumn } from '@/mixins/listFunctions'
 
 /*****************************************************************
  * This mixin defines methods to be reused by editable table     *
@@ -59,14 +60,14 @@ export default {
 				delete: computed(() => this.Resources[hardcodedTexts.delete]),
 				remove: computed(() => this.Resources[hardcodedTexts.remove]),
 				restore: computed(() => this.Resources[hardcodedTexts.restore]),
-				messages: computed(() => this.Resources[hardcodedTexts.messages]),
+				messages: computed(() => this.Resources[hardcodedTexts.messages])
 			},
 
 			markedForDeletion: false,
 
 			expandIcon: 'expand',
 			expandSVG: 'expand',
-			collapseSVG: 'collapse',
+			collapseSVG: 'collapse'
 		}
 	},
 
@@ -222,7 +223,7 @@ export default {
 		canShowColumn(area, field)
 		{
 			const column = _find(this.columns, { area, field })
-			return column?.visibility ?? false
+			return isVisibleColumn(column)
 		}
 	}
 }

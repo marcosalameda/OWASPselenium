@@ -1,9 +1,10 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+
 using CSGenio.framework;
 using GenioMVC.Models.Navigation;
-using GenioServer.security;
-using System.ComponentModel.DataAnnotations;
 using GenioMVC.ViewModels;
+using GenioServer.security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GenioMVC.Models
@@ -18,7 +19,7 @@ namespace GenioMVC.Models
 		public string UserName { get; set; }
 
 		public string Password { get; set; }
-		
+
 		/// <summary>
 		/// Validates form fields
 		/// </summary>
@@ -45,7 +46,7 @@ namespace GenioMVC.Models
 
 			validator.Required("NewPassword", Resources.Resources.NOVA_PALAVRA_CHAVE09647, NewPassword);
 			validator.Password("ConfirmPassword", NewPassword, ConfirmPassword);
-			
+
 			return validator.GetResult();
 		}
 	}
@@ -69,7 +70,6 @@ namespace GenioMVC.Models
 		public string ValCodpsw { get; set; }
 
 		public string ValNome { get; set; }
-
 
 		public override CrudViewModelValidationResult Validate(UserContext userContext)
 		{
@@ -140,28 +140,23 @@ namespace GenioMVC.Models
 		/// </summary>
 		public string Redirect { get; set; }
 
-		//public string AuthMode {get; set;} [UserPass, Redirect, Certificate]
-
-		//public static string BaseUrl { get; set; } = "";
-
 		public static string MapRedirectEndpoint(IIdentityProvider provider, IUrlHelper url, HttpRequest request, string operation = "Login")
 		{
 			string actionname = "OpenIdConnect";
 			if (provider is CASIdentityProvider)
 				actionname = "CAS";
-            else if (provider is CMDIdentityProvider)
-                actionname = "CMD";
-            else if (provider is OpenIdConnectIdentityProvider)
-                actionname = "OpenIdConnect";
+			else if (provider is CMDIdentityProvider)
+				actionname = "CMD";
+			else if (provider is OpenIdConnectIdentityProvider)
+				actionname = "OpenIdConnect";
 			actionname += operation;
-            //return url.Action(actionname, "Account", new { providerId = provider.Id }, request.Scheme);
 
-            string relative = url.RouteUrl("authRedirectRoute", new { 
-				providerId = provider.Id, 
-				action = actionname 
+			string relative = url.RouteUrl("authRedirectRoute", new {
+				providerId = provider.Id,
+				action = actionname
 			});
 			return AbsoluteUrlUtils.RelativeToAbsolute(request, relative);
-        }
+		}
 	}
 
 	public class LogOnModel : BasicUserModel
@@ -222,12 +217,11 @@ namespace GenioMVC.Models
 		public CrudViewModelValidationResult Validate(UserContext userContext)
 		{
 			CrudViewModelFieldValidator validator = new(userContext.User.Language);
-			
+
 			validator.Required("Email", Resources.Resources.EMAIL25170, Email);
 			validator.Email("Email", Email);
-					
+
 			return validator.GetResult();
 		}
 	}
-
 }

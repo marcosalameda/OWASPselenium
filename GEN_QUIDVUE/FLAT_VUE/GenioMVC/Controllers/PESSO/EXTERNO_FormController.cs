@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Externo_CmpnyValDesignatModel : RequestLookupModel
+		{
+			public Externo_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Pesso/Externo_CmpnyValDesignat
 		// POST: /Pesso/Externo_CmpnyValDesignat
 		[ActionName("Externo_CmpnyValDesignat")]
-		public ActionResult Externo_CmpnyValDesignat([FromBody]RequestLookupModel requestModel)
+		public ActionResult Externo_CmpnyValDesignat([FromBody] Externo_CmpnyValDesignatModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Externo_CmpnyValDesignat_ViewModel model = new Externo_CmpnyValDesignat_ViewModel(UserContext.Current);
-			
+
+			Models.Pesso parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Externo_CmpnyValDesignat_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

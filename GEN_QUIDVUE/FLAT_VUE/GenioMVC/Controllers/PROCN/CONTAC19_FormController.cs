@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Contac19_PropeValTitleModel : RequestLookupModel
+		{
+			public Contac19_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Procn/Contac19_PropeValTitle
 		// POST: /Procn/Contac19_PropeValTitle
 		[ActionName("Contac19_PropeValTitle")]
-		public ActionResult Contac19_PropeValTitle([FromBody]RequestLookupModel requestModel)
+		public ActionResult Contac19_PropeValTitle([FromBody] Contac19_PropeValTitleModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Contac19_PropeValTitle_ViewModel model = new Contac19_PropeValTitle_ViewModel(UserContext.Current);
-			
+
+			Models.Procn parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Contac19_PropeValTitle_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

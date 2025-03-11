@@ -175,9 +175,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dtdeco", FieldType.DATA);
+			Qfield = new Field("dtdeco", FieldType.DATAHORA);
 			Qfield.FieldDescription = "Decomission";
-			Qfield.FieldSize =  8;
+			Qfield.FieldSize =  16;
 			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
@@ -421,12 +421,12 @@ namespace CSGenio.business
 			info.Pathways.Add("wareh","wareh");
 			info.Pathways.Add("tpequ","tpequ");
 			info.Pathways.Add("room1","room1");
-			info.Pathways.Add("cmpny","cmpny");
 			info.Pathways.Add("item","item");
+			info.Pathways.Add("cmpny","cmpny");
 			info.Pathways.Add("pess1","pess1");
 			info.Pathways.Add("famil","tpequ");
-			info.Pathways.Add("cntry","cmpny");
 			info.Pathways.Add("gitem","item");
+			info.Pathways.Add("cntry","cmpny");
 			info.Pathways.Add("stake","pess1");
 			info.Pathways.Add("cate2","pess1");
 		}
@@ -723,11 +723,11 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddeco, value); }
 		}
 
-		/// <summary>Field : "Decomission" Tipo: "D" Formula: ++ "[DECOM->DTDECO]"</summary>
+		/// <summary>Field : "Decomission" Tipo: "DT" Formula: ++ "[DECOM->DTDECO]"</summary>
 		public static FieldRef FldDtdeco { get { return m_fldDtdeco; } }
 		private static FieldRef m_fldDtdeco = new FieldRef("equip", "dtdeco");
 
-		/// <summary>Field : "Decomission" Tipo: "D" Formula: ++ "[DECOM->DTDECO]"</summary>
+		/// <summary>Field : "Decomission" Tipo: "DT" Formula: ++ "[DECOM->DTDECO]"</summary>
 		public DateTime ValDtdeco
 		{
 			get { return (DateTime)returnValueField(FldDtdeco); }

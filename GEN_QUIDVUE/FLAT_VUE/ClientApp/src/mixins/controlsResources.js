@@ -34,6 +34,7 @@ class TableListMainResources extends BaseResources
 		this.viewText = computed(() => this._fnGetResource('CONSULTAR57388'))
 		this.deleteText = computed(() => this._fnGetResource('ELIMINAR21155'))
 		this.duplicateText = computed(() => this._fnGetResource('DUPLICAR09748'))
+		this.renameText = computed(() => this._fnGetResource('MUDAR_O_NOME17369'))
 		this.confirmText = computed(() => this._fnGetResource('CONFIRMAR09808'))
 		this.cancelText = computed(() => this._fnGetResource('CANCELAR49513'))
 		this.discard = computed(() => this._fnGetResource('DESCARTAR04620'))
@@ -100,6 +101,7 @@ class TableListMainResources extends BaseResources
 		this.noLabel = computed(() => this._fnGetResource('NAO06521'))
 		this.activeText = computed(() => this._fnGetResource('ACTIVE03270'))
 		this.inactiveText = computed(() => this._fnGetResource('INACTIVE23138'))
+		this.inactiveFilterText = computed(() => this._fnGetResource('FILTRO_INATIVO54001'))
 		this.showRecordsWhereText = computed(() => this._fnGetResource('MOSTRAR_REGISTOS_QUA55160'))
 		this.visibleColumnsText = computed(() => this._fnGetResource('COLUNAS_VISIVEIS27717'))
 		this.invisibleColumnsHelpText = computed(() => this._fnGetResource('COLUNAS_INVISIVEIS_N46371'))
@@ -142,6 +144,7 @@ class TableListMainResources extends BaseResources
 		this.select = computed(() => this._fnGetResource('SELECIONAR08804'))
 		this.close = computed(() => this._fnGetResource('FECHAR32496'))
 		this.download = computed(() => this._fnGetResource('DESCARREGAR58418'))
+		this.placeholder = computed(() => this._fnGetResource('ESCOLHA___40245'))
 	}
 }
 

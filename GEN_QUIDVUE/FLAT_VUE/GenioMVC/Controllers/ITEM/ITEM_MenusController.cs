@@ -51,11 +51,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			STY_Menu_441_ViewModel model = new STY_Menu_441_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -134,11 +134,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			GQT_Menu_451_ViewModel model = new GQT_Menu_451_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -241,11 +241,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			GQT_Menu_4611_ViewModel model = new GQT_Menu_4611_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -351,11 +351,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			GQT_Menu_4A1_ViewModel model = new GQT_Menu_4A1_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -458,11 +458,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			PTN_Menu_121_ViewModel model = new PTN_Menu_121_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -565,11 +565,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			PTN_Menu_LIST_DB_MC_F_ViewModel model = new PTN_Menu_LIST_DB_MC_F_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -678,11 +678,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			PTN_Menu_LIST_DB_MB_MC_F_ViewModel model = new PTN_Menu_LIST_DB_MB_MC_F_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -791,11 +791,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			PTN_Menu_LIST_DB_MC_R_ViewModel model = new PTN_Menu_LIST_DB_MC_R_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -900,11 +900,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			PTN_Menu_LIST_DB_MB_MC_R_ViewModel model = new PTN_Menu_LIST_DB_MB_MC_R_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,

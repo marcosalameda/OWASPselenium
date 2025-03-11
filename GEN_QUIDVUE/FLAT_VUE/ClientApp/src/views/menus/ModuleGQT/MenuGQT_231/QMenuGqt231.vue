@@ -41,7 +41,7 @@
 						<q-row-container is-large>
 							<q-control-wrapper class="row-line-group">
 								<q-button
-									b-style="secondary"									
+									b-style="secondary"
 									:label="Resources.APLICAR33981"
 									:title="Resources.APLICAR33981"
 									@click="applyChanges">
@@ -126,8 +126,6 @@
 			return {
 				componentOnLoadProc: asyncProcM.getProcListMonitor('GQT_Menu_231', false),
 
-				internalEvents: new QEventEmitter(),
-
 				interfaceMetadata: {
 					id: 'QMenuGQT_231', // Used for resources
 					requiredTextResources
@@ -152,7 +150,6 @@
 							icon: 'list'
 						}
 					}, this),
-
 					secondTab: new controlClass.BaseControl({
 						id: 'secondTab',
 						name: 'secondTabForm',
@@ -162,12 +159,10 @@
 							icon: 'download'
 						}
 					}, this),
-
 					tabGroup: new controlClass.TabsControl({
 						tabControlsIds: ['firstTab', 'secondTab'],
 						selectedTab: 'firstTab'
 					}, this),
-
 					firstTable: new controlClass.TableListControl({
 						id: 'GQT_Menu_231',
 						controller: 'EQUIP',
@@ -183,7 +178,7 @@
 								label: computed(() => this.Resources.NO__REGISTER04207),
 								dataLength: 6,
 								scrollData: 6,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValDesignat',
@@ -192,7 +187,7 @@
 								label: computed(() => this.Resources.EQUIPMENT03632),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
 								name: 'ValPhotogra',
@@ -203,7 +198,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'Room1.ValRoomnr',
@@ -213,7 +208,7 @@
 								dataLength: 10,
 								scrollData: 10,
 								pkColumn: 'ValCodrooms',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'Tpequ.ValTipoequi',
@@ -222,9 +217,9 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
+								isVisible: false,
 								pkColumn: 'ValCodtpequ',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'Wareh.ValWarehdes',
@@ -233,9 +228,9 @@
 								label: computed(() => this.Resources.WAREHOUSE51864),
 								dataLength: 85,
 								scrollData: 30,
-								visibility: false,
+								isVisible: false,
 								pkColumn: 'ValCodwareh',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'Item.ValItemdes',
@@ -244,9 +239,9 @@
 								label: computed(() => this.Resources.ARTICLE60065),
 								dataLength: 85,
 								scrollData: 30,
-								visibility: false,
+								isVisible: false,
 								pkColumn: 'ValCoditem',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_231',
@@ -397,7 +392,7 @@
 								defaultValue: '1'
 							},
 						],
-						changeEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
+						globalEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY'],
 						uuid: '1ef47b5e-55ef-4a74-adc4-a282edf007b4',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -418,7 +413,6 @@
 							}
 						}
 					}, this),
-
 					secondTable: new controlClass.TableListControl({
 						id: 'GQT_Menu_2311',
 						controller: 'ROOMS',
@@ -434,7 +428,7 @@
 								label: computed(() => this.Resources.N_R__ROOM43805),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValDesignat',
@@ -443,7 +437,7 @@
 								label: computed(() => this.Resources.ROOM_DESIGNATION37895),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_2311',
@@ -572,7 +566,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-ROOMS'],
+						globalEvents: ['changed-ROOMS'],
 						uuid: '7d91f319-b775-4c60-a166-3454014b284c',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -588,7 +582,6 @@
 							}
 						}
 					}, this),
-
 					thirdTable: new controlClass.TableListControl({
 						controller: '',
 						action: '',
@@ -623,7 +616,6 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: [],
 						uuid: '',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -637,7 +629,7 @@
 								this.unselectAllRowsData()
 							}
 						}
-					}, this)
+					}, this),
 				}
 			}
 		},

@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -321,8 +321,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -650,7 +648,7 @@
 								label: computed(() => this.Resources.GLN_EXTENSION_COMPON55869),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
 								name: 'ValSpacetyp',
@@ -661,7 +659,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArraySpacetyp.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArraySpacetyp.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValSpaceobs',
@@ -670,7 +668,7 @@
 								label: computed(() => this.Resources.SPACE62433),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValLocalext',
@@ -811,7 +809,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-LCEXT', 'changed-LOCAT'],
+						globalEvents: ['changed-LCEXT', 'changed-LOCAT'],
 						uuid: 'Locat_ValLocalext',
 						allSelectedRows: 'false',
 						controlLimits: [

@@ -204,7 +204,7 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.TableItemItemdes))
 		watch(() => this.TableItemItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.TableItemItemdes, newValue, oldValue))
 
-		this.ValDtdeco = reactive(new modelFieldType.Date({
+		this.ValDtdeco = reactive(new modelFieldType.DateTime({
 			id: 'ValDtdeco',
 			originId: 'ValDtdeco',
 			area: 'EQUIP',

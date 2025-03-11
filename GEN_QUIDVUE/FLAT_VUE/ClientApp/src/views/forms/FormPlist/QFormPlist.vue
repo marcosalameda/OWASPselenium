@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -288,8 +288,6 @@
 					mode: ''
 				},
 
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
-
 				formButtons: {
 					changeToShow: {
 						id: 'change-to-show-btn',
@@ -528,6 +526,8 @@
 							set 'wareh.codwareh'(value) { vm.model.ValCodwareh.updateValue(value) },
 							set 'wareh.warehdes'(value) { vm.model.TableWarehWarehdes.updateValue(value) },
 						}),
+						insertEnabled: true,
+						supportForm: 'WARE_WS',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -570,9 +570,10 @@
 										required: true,
 										modelValue: computed(() => {
 											const property = vm.model?.ValPlist?.value['ValTxtprop']
-											if(!property) return null
+											if (!property)
+												return null
 
-											return vm.model?.ValPlist?.getPropertyParsedValue(property);
+											return vm.model?.ValPlist?.getPropertyParsedValue(property)
 										}),
 										maxLength: 20,
 									}
@@ -588,9 +589,10 @@
 										required: false,
 										modelValue: computed(() => {
 											const property = vm.model?.ValPlist?.value['ValMultprop']
-											if(!property) return null
+											if (!property)
+												return null
 
-											return vm.model?.ValPlist?.getPropertyParsedValue(property);
+											return vm.model?.ValPlist?.getPropertyParsedValue(property)
 										}),
 									}
 								}, this),
@@ -605,9 +607,10 @@
 										required: false,
 										modelValue: computed(() => {
 											const property = vm.model?.ValPlist?.value['ValDateprop']
-											if(!property) return null
+											if (!property)
+												return null
 
-											return vm.model?.ValPlist?.getPropertyParsedValue(property);
+											return vm.model?.ValPlist?.getPropertyParsedValue(property)
 										}),
 									}
 								}, this),
@@ -622,9 +625,10 @@
 										required: false,
 										modelValue: computed(() => {
 											const property = vm.model?.ValPlist?.value['ValBoolprop']
-											if(!property) return null
+											if (!property)
+												return null
 
-											return vm.model?.ValPlist?.getPropertyParsedValue(property);
+											return vm.model?.ValPlist?.getPropertyParsedValue(property)
 										}),
 									}
 								}, this),
@@ -639,9 +643,10 @@
 										required: false,
 										modelValue: computed(() => {
 											const property = vm.model?.ValPlist?.value['ValNumprop']
-											if(!property) return null
+											if (!property)
+												return null
 
-											return vm.model?.ValPlist?.getPropertyParsedValue(property);
+											return vm.model?.ValPlist?.getPropertyParsedValue(property)
 										}),
 									}
 								}, this),
@@ -657,9 +662,10 @@
 										required: false,
 										modelValue: computed(() => {
 											const property = vm.model?.ValPlist?.value['ValEnumprop']
-											if(!property) return null
+											if (!property)
+												return null
 
-											return vm.model?.ValPlist?.getPropertyParsedValue(property);
+											return vm.model?.ValPlist?.getPropertyParsedValue(property)
 										}),
 									}
 								}, this),
@@ -678,10 +684,9 @@
 									title: computed(() => this.Resources.GROUP_307417),
 								},
 							],
-							noSort: true,
-							noSearch: true,
 							noPanel: false,
 							panelPosition: 'bottom',
+							block: false,
 						},
 						arrayName: '',
 						controlLimits: [

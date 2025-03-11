@@ -2,14 +2,38 @@ using Administration.Models;
 using CSGenio.business;
 using CSGenio.framework;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json.Serialization;
 using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
+using DbAdmin;
 
 namespace Administration.Controllers
 {
     public class RoleController : ControllerBase
     {
+        private static readonly DBUserManagement _dbUserManagement = new DBUserManagement();
+
+        [HttpGet]
+        public IActionResult GetUsersForModule(string module, string roleId)
+        {
+            try
+            {
+                string currentYear = GetYearFromRoute();
+                var sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(currentYear);
+                var users = _dbUserManagement.GetUsersWithoutRoleForModule(module, roleId, sp);
+
+                return Ok(new
+                {
+                    Success = true,
+                    UserList = users
+                });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return Json(new { Success = false, Message = ex.Message });
+            }
+        }
+
         [HttpGet]
         public IActionResult GetRole(string module, string roleId)
         {
@@ -35,7 +59,8 @@ namespace Administration.Controllers
                 var roleAboveId = matrixUsersAbove.GetString(i, CSGenioAuserauthorization.FldRole);
                 var level = matrixUsersAbove.GetInteger(i, CSGenioAuserauthorization.FldNivel);
                 var roleAbove = ModuleRoleModel.GetRole(module, roleAboveId, level) ?? new ModuleRoleModel();;
-                userAboveList.Add(new { UserName = name, ChangedDate = date.ToShortDateString(), roleAbove.Designation});
+                var codpsw = matrixUsersAbove.GetString(i, CSGenioAuserauthorization.FldCodpsw);
+                userAboveList.Add(new { UserName = name, ChangedDate = date.ToShortDateString(), roleAbove.Designation,Codpsw = codpsw });
             }
 
             var parentRoles = Role.ALL_ROLES.Values.Where(p => role.HasRole(p) && p != role).Select(r => r.Id);
@@ -108,6 +133,7 @@ namespace Administration.Controllers
                 .Select(CSGenioApsw.FldNome)
                 .Select(CSGenioAuserauthorization.FldDataCria)
                 .Select(CSGenioAuserauthorization.FldRole)
+                .Select(CSGenioAuserauthorization.FldCodpsw)
                 .Select(CSGenioAuserauthorization.FldNivel)
                 .From(Area.AreaUSERAUTHORIZATION)
                     .Join(Area.AreaPSW.Table, Area.AreaPSW.Alias)

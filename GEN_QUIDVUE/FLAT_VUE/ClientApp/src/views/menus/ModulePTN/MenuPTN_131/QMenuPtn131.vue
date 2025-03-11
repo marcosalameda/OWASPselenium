@@ -152,7 +152,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayTipocond.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayTipocond.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValDescript',
@@ -161,7 +161,7 @@
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								dataLength: 100,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
 								name: 'ValLocal',
@@ -172,7 +172,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayAlocregr.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayAlocregr.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_131',
@@ -307,6 +307,18 @@
 									isPopup: false
 								},
 							},
+							insertCondition: {
+								// eslint-disable-next-line no-unused-vars
+								fnFormula(params)
+								{
+									// Formula: [RULES->TIPOCOND]!="I"  || [RULES->LOCAL]!="T"
+									if (!(this.ValTipocond.value!=="I"||this.ValLocal.value!=="T"))
+										return false
+									return true
+								},
+								dependencyEvents: ['fieldChange:rules.tipocond', 'fieldChange:rules.local'],
+								isServerRecalc: false,
+							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
 							defaultColumnSorting: {
@@ -314,11 +326,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-RULES'],
+						globalEvents: ['changed-RULES'],
 						uuid: '9b87f9f8-b7d7-4ffb-8bd2-a17a81c9ef71',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div
 		class="q-code-editor__wrapper"
 		@focusout="updateModelValue">
@@ -6,7 +6,7 @@
 			<q-button
 				v-if="!readonly"
 				class="q-code-editor__diffs-btn"
-				b-style="secondary" 
+				b-style="secondary"
 				:label="texts.showChanges"
 				:disabled="!aceEditorMode"
 				@click="updateShowDiff">
@@ -115,7 +115,8 @@
 			 */
 			rows: {
 				type: Number,
-				default: 15
+				default: 15,
+				validator: (value) => value > 0
 			},
 
 			/**
@@ -125,7 +126,7 @@
 				type: Object,
 				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
 				default: () => DEFAULT_TEXTS
-			},
+			}
 		},
 
 		expose: [],
@@ -177,12 +178,12 @@
 				 */
 				aceEditorDifferHeight: '',
 
-				/** 
+				/**
 				 * True if the differ is currently active, false otherwise
 				 */
 				differActive: false,
 
-				/** 
+				/**
 				 * Shows the changes to the initial value made so far
 				 */
 				showDiff: false,
@@ -348,7 +349,7 @@
 					}
 				)
 				if (this.aceEditorMode === 'javascript') { // Allow JS lines not to have semicolons
-					this.aceEditorSession.$worker.send("changeOptions", [
+					this.aceEditorSession.$worker?.send("changeOptions", [
 						{ asi: true }
 					])
 				}

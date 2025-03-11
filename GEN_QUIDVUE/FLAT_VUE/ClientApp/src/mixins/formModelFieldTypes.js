@@ -780,7 +780,7 @@ export class Number extends Base
 		const value = _toNumber(this.value)
 		if (isNaN(value))
 			return ''
-		return genericFunctions.numericDisplay(value.toFixed(this.decimalDigits), this.decimalSeparator, this.groupSeparator, undefined)
+		return genericFunctions.numericDisplay(value.toFixed(this.decimalDigits), this.decimalSeparator, this.groupSeparator)
 	}
 
 	/**
@@ -923,14 +923,12 @@ export class DocumentData extends Base
 		if (this.value.fileData === null)
 			return null
 
-		const submitData = new FormData()
-
-		submitData.append(`${this.value.documentId}_file`, this.value.fileData)
-		submitData.append('ticket', this.value.ticket)
-		submitData.append('mode', this.value.submitMode)
-		submitData.append('version', this.value.version)
-
-		return submitData
+		return {
+			fileId: `${this.value.documentId}_file`,
+			ticket: this.value.ticket,
+			mode: this.value.submitMode,
+			version: this.value.version
+		}
 	}
 
 	/**
@@ -1650,7 +1648,7 @@ export class PropertyList extends Base
 	 * @override
 	 */
 	isValidType(value)
-	{	
+	{
 		return typeof value === 'object'
 	}
 
@@ -1658,7 +1656,7 @@ export class PropertyList extends Base
 	 * @override
 	 */
 	updateValue(newValue)
-	{	
+	{
 		const clone = _cloneDeep(newValue)
 		return super.updateValue(clone)
 	}
@@ -1705,7 +1703,7 @@ export class PropertyList extends Base
 		if (!properties)
 		{
 			this.originalValue = _cloneDeep(properties)
-			return;
+			return
 		}
 
 		_forEach(properties, (property) => {
@@ -1753,7 +1751,7 @@ export default {
 	Boolean,
 	Number,
 	Image,
-	DocumentData, //FIXME: this should not be exported; Document should suffice
+	DocumentData, // FIXME: this should not be exported, Document should suffice.
 	Document,
 	MultipleValues,
 	GridTableList,

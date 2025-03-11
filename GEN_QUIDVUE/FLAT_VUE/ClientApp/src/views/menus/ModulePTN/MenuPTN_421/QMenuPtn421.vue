@@ -152,7 +152,7 @@
 								maxDigits: 10,
 								decimalPlaces: 0,
 								isOrderingColumn: true,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValTitle',
@@ -161,7 +161,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_421',
@@ -305,11 +305,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-RORDI'],
+						globalEvents: ['changed-RORDI'],
 						uuid: 'af0e17ac-78f6-4be8-a719-3dab8ea29e3b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Accordi_CmpnyValDesignatModel : RequestLookupModel
+		{
+			public Accordi_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Accordi_CmpnyValDesignat
 		// POST: /Equip/Accordi_CmpnyValDesignat
 		[ActionName("Accordi_CmpnyValDesignat")]
-		public ActionResult Accordi_CmpnyValDesignat([FromBody]RequestLookupModel requestModel)
+		public ActionResult Accordi_CmpnyValDesignat([FromBody] Accordi_CmpnyValDesignatModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Accordi_CmpnyValDesignat_ViewModel model = new Accordi_CmpnyValDesignat_ViewModel(UserContext.Current);
-			
+
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Accordi_CmpnyValDesignat_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Accordi_Pess1ValNameModel : RequestLookupModel
+		{
+			public Accordi_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Accordi_Pess1ValName
 		// POST: /Equip/Accordi_Pess1ValName
 		[ActionName("Accordi_Pess1ValName")]
-		public ActionResult Accordi_Pess1ValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Accordi_Pess1ValName([FromBody] Accordi_Pess1ValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,23 +497,26 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Accordi_Pess1ValName_ViewModel model = new Accordi_Pess1ValName_ViewModel(UserContext.Current);
-			
+
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Accordi_Pess1ValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
+
 			// Static filter "order" fields that have changed
 			tableConfigOptions.StaticFiltersKeyShiftValues = new Dictionary<string, int>
 			{
-				{ "filter_Pess1ValName_FILTER1", 0 }
-,
+				{ "filter_Pess1ValName_FILTER1", 0 },
 				{ "filter_Pess1ValName_FILTER2", -1 }
- 			};
- 
+			};
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -523,13 +539,18 @@ namespace GenioMVC.Controllers
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
+		}
+
+		public class Accordi_ValInstalagModel : RequestLookupModel
+		{
+			public Accordi_ViewModel Model { get; set; }
 		}
 
 		//
 		// GET: /Equip/Accordi_ValInstalag
 		// POST: /Equip/Accordi_ValInstalag
 		[ActionName("Accordi_ValInstalag")]
-		public ActionResult Accordi_ValInstalag([FromBody]RequestLookupModel requestModel)
+		public ActionResult Accordi_ValInstalag([FromBody] Accordi_ValInstalagModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -553,16 +574,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Accordi_ValInstalag_ViewModel model = new Accordi_ValInstalag_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Accordi_ValInstalag_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -585,13 +608,18 @@ namespace GenioMVC.Controllers
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
+		}
+
+		public class Accordi_ValInstalacModel : RequestLookupModel
+		{
+			public Accordi_ViewModel Model { get; set; }
 		}
 
 		//
 		// GET: /Equip/Accordi_ValInstalac
 		// POST: /Equip/Accordi_ValInstalac
 		[ActionName("Accordi_ValInstalac")]
-		public ActionResult Accordi_ValInstalac([FromBody]RequestLookupModel requestModel)
+		public ActionResult Accordi_ValInstalac([FromBody] Accordi_ValInstalacModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -615,16 +643,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Accordi_ValInstalac_ViewModel model = new Accordi_ValInstalac_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Accordi_ValInstalac_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -649,11 +679,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Accordi_ValReparacoModel : RequestLookupModel
+		{
+			public Accordi_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Accordi_ValReparaco
 		// POST: /Equip/Accordi_ValReparaco
 		[ActionName("Accordi_ValReparaco")]
-		public ActionResult Accordi_ValReparaco([FromBody]RequestLookupModel requestModel)
+		public ActionResult Accordi_ValReparaco([FromBody] Accordi_ValReparacoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -677,16 +712,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Accordi_ValReparaco_ViewModel model = new Accordi_ValReparaco_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Accordi_ValReparaco_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

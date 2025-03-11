@@ -53,7 +53,7 @@ public class GroupbxForm : Form
 	/// <summary>
 	/// Decomission:
 	/// </summary>
-	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPDTDECO__");
+	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPDTDECO__", "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// Room No.

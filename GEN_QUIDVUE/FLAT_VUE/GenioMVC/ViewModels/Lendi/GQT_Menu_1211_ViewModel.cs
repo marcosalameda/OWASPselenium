@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,43 +7,47 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Lendi
 {
-	public class GQT_Menu_1211_ViewModel : ListViewModel
+	public class GQT_Menu_1211_ViewModel : MenuListViewModel<Models.Lendi>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<GQT_Menu_1211_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "lendi"; }
+		[JsonIgnore]
+		public override string TableAlias => "lendi";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "15439473-a882-4d0e-8b4f-0677625fe691"; }
+		public override string Uuid => "15439473-a882-4d0e-8b4f-0677625fe691";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodlendi { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -50,14 +55,14 @@ namespace GenioMVC.ViewModels.Lendi
 				CriteriaSet conditions = CriteriaSet.And();
 				// Limitations
 				// Limit "HM"
-				if (!AddHistoryLimit(conditions, CSGenioAlendi.FldCodpess1, "user"))
-					return null;
+				AddHistoryLimit(conditions, CSGenioAlendi.FldCodpess1, "user");
 
 				return conditions;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -69,6 +74,7 @@ namespace GenioMVC.ViewModels.Lendi
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -87,7 +93,6 @@ namespace GenioMVC.ViewModels.Lendi
 
 
 
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -103,17 +108,26 @@ namespace GenioMVC.ViewModels.Lendi
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.FldZzstate, CSGenioAlendi.FldCodpess1, CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioAlendi.FldCodequip, CSGenioAequip.FldCodequip, CSGenioAequip.FldRegistnr, CSGenioAlendi.FldCodpess2, CSGenioApess2.FldCodpesso, CSGenioApess2.FldName, CSGenioAlendi.FldLendinnr, CSGenioAlendi.FldStart, CSGenioAequip.FldFrequenc, CSGenioAlendi.FldWarndt, CSGenioAlendi.FldEnd, CSGenioAlendi.FldObservat, CSGenioAlendi.FldReturndt, CSGenioAlendi.FldReturned, CSGenioAlendi.FldDayslimi };
 
-			ListingMVC<CSGenioAlendi> listing = new ListingMVC<CSGenioAlendi>(fields, null, 1, 1, false, user, true, string.Empty, true);
+			ListingMVC<CSGenioAlendi> listing = new(fields, null, 1, 1, false, user, true, string.Empty, true);
 			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public GQT_Menu_1211_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GQT_Menu_1211_ViewModel" /> class.
@@ -122,6 +136,16 @@ namespace GenioMVC.ViewModels.Lendi
 		public GQT_Menu_1211_ViewModel(UserContext userContext) : base(userContext)
 		{
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GQT_Menu_1211_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public GQT_Menu_1211_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -195,16 +219,6 @@ namespace GenioMVC.ViewModels.Lendi
 			Menu.SetFilters(false, true);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("LENDI.START", new OrderedDictionary());
-			allSortOrders["LENDI.START"].Add("LENDI.START", "A");
-			allSortOrders.Add("LENDI.WARNDT", new OrderedDictionary());
-			allSortOrders["LENDI.WARNDT"].Add("LENDI.WARNDT", "A");
-			allSortOrders.Add("LENDI.END", new OrderedDictionary());
-			allSortOrders["LENDI.END"].Add("LENDI.END", "A");
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -255,7 +269,6 @@ namespace GenioMVC.ViewModels.Lendi
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Limitations
-
 			if (isToExport)
 			{
 				// EPH
@@ -351,16 +364,16 @@ namespace GenioMVC.ViewModels.Lendi
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAlendi> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "1211"),
 				new("Module", "GQT")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<GQT_Menu_1211_RowViewModel>();
 
 				CriteriaSet gqt_menu_1211Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
@@ -371,7 +384,6 @@ namespace GenioMVC.ViewModels.Lendi
 				allSortOrders["LENDI.WARNDT"].Add("LENDI.WARNDT", "A");
 				allSortOrders.Add("LENDI.END", new OrderedDictionary());
 				allSortOrders["LENDI.END"].Add("LENDI.END", "A");
-
 
 
 
@@ -411,30 +423,29 @@ namespace GenioMVC.ViewModels.Lendi
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAlendi model_limit_area = new CSGenioAlendi(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML1211");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAlendi model_limit_area = new CSGenioAlendi(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML1211");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
-			// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
-			// Limit origin: menu 
+				// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
+				// Limit origin: menu 
 
 	//Tooltip for limit "HM" to area "PESS1" was ignored (unrelated to this viewmodel).
-			//Limit type: "HM"
-			//Current Area = "LENDI"
-			//1st Area Limit: "PESS1"
-			//1st Area Field: "CODPESSO"
-			//1st Area Value: "user"
+				//Limit type: "HM"
+				//Current Area = "LENDI"
+				//1st Area Limit: "PESS1"
+				//1st Area Field: "CODPESSO"
+				//1st Area Value: "user"
 
 				if (conditions == null)
 					conditions = CriteriaSet.And();
@@ -481,7 +492,6 @@ namespace GenioMVC.ViewModels.Lendi
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -502,18 +512,12 @@ namespace GenioMVC.ViewModels.Lendi
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -521,7 +525,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 		private List<GQT_Menu_1211_RowViewModel> MapGQT_Menu_1211(ListingMVC<CSGenioAlendi> Qlisting)
 		{
-			var Elements = new List<GQT_Menu_1211_RowViewModel>();
+			List<GQT_Menu_1211_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -538,7 +542,6 @@ namespace GenioMVC.ViewModels.Lendi
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAlendi row
 		/// to a GQT_Menu_1211_RowViewModel object.
@@ -547,7 +550,9 @@ namespace GenioMVC.ViewModels.Lendi
 		private GQT_Menu_1211_RowViewModel MapGQT_Menu_1211(CSGenioAlendi row)
 		{
 			var model = new GQT_Menu_1211_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -565,32 +570,7 @@ namespace GenioMVC.ViewModels.Lendi
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(GQT_Menu_1211_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -604,31 +584,40 @@ namespace GenioMVC.ViewModels.Lendi
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAlendi> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAlendi row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Lendi m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Lendi m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM GQT_MENU_1211]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Lendi", "Lendi.ValCodlendi", "Lendi.ValZzstate", "Pess1", "Pess1.ValName", "Equip", "Equip.ValRegistnr", "Pess2", "Pess2.ValName", "Lendi.ValLendinnr", "Lendi.ValStart", "Equip.ValFrequenc", "Lendi.ValWarndt", "Lendi.ValEnd", "Lendi.ValObservat", "Lendi.ValReturndt", "Lendi.ValReturned", "Lendi.ValDayslimi", "Lendi.ValCodequip", "Lendi.ValCodpess1", "Lendi.ValCodpess2", "BtnPermission"
+			"Lendi", "Lendi.ValCodlendi", "Lendi.ValZzstate", "Pess1", "Pess1.ValName", "Equip", "Equip.ValRegistnr", "Pess2", "Pess2.ValName", "Lendi.ValLendinnr", "Lendi.ValStart", "Equip.ValFrequenc", "Lendi.ValWarndt", "Lendi.ValEnd", "Lendi.ValObservat", "Lendi.ValReturndt", "Lendi.ValReturned", "Lendi.ValDayslimi", "Lendi.ValCodequip", "Lendi.ValCodpess1", "Lendi.ValCodpess2"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("Pess1_ValName", CSGenioApess1.FldName, typeof(string)),
 			new TableSearchColumn("Equip_ValRegistnr", CSGenioAequip.FldRegistnr, typeof(string)),
@@ -643,8 +632,5 @@ namespace GenioMVC.ViewModels.Lendi
 			new TableSearchColumn("ValReturned", CSGenioAlendi.FldReturned, typeof(bool), visible : false),
 			new TableSearchColumn("ValDayslimi", CSGenioAlendi.FldDayslimi, typeof(decimal?))
 		];
-
-
-
 	}
 }

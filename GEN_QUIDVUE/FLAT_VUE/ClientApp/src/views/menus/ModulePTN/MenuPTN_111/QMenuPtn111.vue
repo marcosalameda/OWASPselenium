@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.DECOMISSION14486),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'ValDecomnr',
@@ -160,7 +160,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValNote',
@@ -168,7 +168,7 @@
 								field: 'NOTE',
 								label: computed(() => this.Resources.NOTES05274),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 4,
 								name: 'ValCreatdat',
@@ -177,7 +177,7 @@
 								label: computed(() => this.Resources.CRIADO_EM61283),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValCreatope',
@@ -186,7 +186,7 @@
 								label: computed(() => this.Resources.CRIADO_POR17895),
 								dataLength: 20,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 6,
 								name: 'ValChngdate',
@@ -195,7 +195,7 @@
 								label: computed(() => this.Resources.ALTERADO_EM23573),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'ValOperchng',
@@ -204,7 +204,7 @@
 								label: computed(() => this.Resources.ALTERADO_POR39254),
 								dataLength: 20,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_111',
@@ -346,11 +346,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-DECOM'],
+						globalEvents: ['changed-DECOM'],
 						uuid: '08896786-8e39-461e-b166-e259f92211f7',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

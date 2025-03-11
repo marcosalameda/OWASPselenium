@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.PRODUCT12880),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValSku',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.SKU42303),
 								dataLength: 20,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValDescript',
@@ -167,8 +167,8 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValGtin',
@@ -177,8 +177,8 @@
 								label: computed(() => this.Resources.GTIN45487),
 								dataLength: 14,
 								scrollData: 14,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValSize',
@@ -187,8 +187,8 @@
 								label: computed(() => this.Resources.SIZE10299),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
 								name: 'ValWeight',
@@ -198,8 +198,8 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'Locat.ValGln',
@@ -209,7 +209,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodlocat',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
 								name: 'Lcext.ValGlnext',
@@ -219,7 +219,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodlcext',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
 								name: 'ValInputs',
@@ -229,7 +229,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
 								name: 'ValOutputs',
@@ -239,7 +239,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 11,
 								name: 'ValStock',
@@ -249,7 +249,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 12,
 								name: 'ValPrice',
@@ -259,7 +259,7 @@
 								scrollData: 12,
 								maxDigits: 7,
 								decimalPlaces: 2,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 13,
 								name: 'ValIn_use',
@@ -269,7 +269,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayYesno.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayYesno.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 14,
 								name: 'ValImage',
@@ -280,7 +280,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_311',
@@ -423,11 +423,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-LCEXT', 'changed-PRODU', 'changed-LOCAT'],
+						globalEvents: ['changed-LCEXT', 'changed-PRODU', 'changed-LOCAT'],
 						uuid: '92697297-35db-4e66-a7dc-b3b9b29febb5',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

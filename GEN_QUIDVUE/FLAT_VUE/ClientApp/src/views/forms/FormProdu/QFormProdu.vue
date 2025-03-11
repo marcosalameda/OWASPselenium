@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -605,8 +605,6 @@
 					mode: ''
 				},
 
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
-
 				formButtons: {
 					changeToShow: {
 						id: 'change-to-show-btn',
@@ -1161,7 +1159,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDate',
@@ -1170,7 +1168,7 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValType',
@@ -1179,7 +1177,7 @@
 								label: computed(() => this.Resources.TYPE00312),
 								dataLength: 8,
 								scrollData: 8,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValReferenc',
@@ -1188,7 +1186,7 @@
 								label: computed(() => this.Resources.REFERENCE28402),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
 								name: 'ValQuantity',
@@ -1198,7 +1196,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
 								name: 'ValBalance',
@@ -1208,7 +1206,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValStockevo',
@@ -1229,8 +1227,6 @@
 							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
-							// eslint-disable-next-line no-unused-vars
-							rowBgColor: (row) => qApi.iif(row.Fields.ValType==="Input",qApi.RGB(207,255,158),qApi.iif(row.Fields.ValType==="Output",qApi.RGB(255,190,158),qApi.RGB(255,255,255))),
 							generalCustomActions: [
 							],
 							groupActions: [
@@ -1250,7 +1246,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-RECEI', 'changed-STOCK', 'changed-DISPA', 'changed-PRODU'],
+						globalEvents: ['changed-RECEI', 'changed-STOCK', 'changed-DISPA', 'changed-PRODU'],
 						uuid: 'Produ_ValStockevo',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1298,7 +1294,7 @@
 								label: computed(() => this.Resources.INSTANT35907),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'Recei.ValNumber',
@@ -1309,7 +1305,7 @@
 								maxDigits: 10,
 								decimalPlaces: 0,
 								pkColumn: 'ValCodrecei',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Entit.ValName',
@@ -1319,7 +1315,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodentit',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValLinenumb',
@@ -1329,7 +1325,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
 								name: 'ValOrdered',
@@ -1339,7 +1335,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
 								name: 'ValReceived',
@@ -1349,7 +1345,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
 								name: 'ValOutstand',
@@ -1359,7 +1355,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValInputsre',
@@ -1500,7 +1496,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PRODU', 'changed-RELIN', 'changed-ENTIT', 'changed-RECEI'],
+						globalEvents: ['changed-PRODU', 'changed-RELIN', 'changed-ENTIT', 'changed-RECEI'],
 						uuid: 'Produ_ValInputsre',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1533,7 +1529,7 @@
 								label: computed(() => this.Resources.INSTANT35907),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'Dispa.ValDispanr',
@@ -1544,7 +1540,7 @@
 								maxDigits: 10,
 								decimalPlaces: 0,
 								pkColumn: 'ValCoddispa',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Dispa.Entit.ValName',
@@ -1554,7 +1550,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodentit',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValLinenumb',
@@ -1564,7 +1560,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
 								name: 'ValOrdered',
@@ -1574,7 +1570,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
 								name: 'ValDelivere',
@@ -1584,7 +1580,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
 								name: 'ValOutstand',
@@ -1594,7 +1590,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValOutputsd',
@@ -1735,7 +1731,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-DISPA', 'changed-PRODU', 'changed-DILIN'],
+						globalEvents: ['changed-DISPA', 'changed-PRODU', 'changed-DILIN'],
 						uuid: 'Produ_ValOutputsd',
 						allSelectedRows: 'false',
 						controlLimits: [

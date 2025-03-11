@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -190,7 +190,7 @@
 											<q-checkbox-input
 												v-if="controls.PESSOSEPPESSOINTERNA_.isVisible"
 												v-bind="controls.PESSOSEPPESSOINTERNA_.props"
-												@update:model-value="model.ValInterna.fnUpdateValue" />
+												v-on="controls.PESSOSEPPESSOINTERNA_.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
@@ -204,7 +204,7 @@
 											<q-checkbox-input
 												v-if="controls.PESSOSEPPESSOEXTERNA_.isVisible"
 												v-bind="controls.PESSOSEPPESSOEXTERNA_.props"
-												@update:model-value="model.ValExterna.fnUpdateValue" />
+												v-on="controls.PESSOSEPPESSOEXTERNA_.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -597,8 +597,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -1190,7 +1188,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Cate1.ValCategoria',
@@ -1200,7 +1198,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodcateg',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
 								name: 'ValFimperio',
@@ -1209,7 +1207,7 @@
 								label: computed(() => this.Resources.END_OF_PERIOD44616),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValObservat',
@@ -1217,7 +1215,7 @@
 								field: 'OBSERVAT',
 								label: computed(() => this.Resources.OBSERVATION37880),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValEvolucao',
@@ -1359,7 +1357,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						changeEvents: ['changed-PESSO', 'changed-EVCAT', 'changed-CATE1'],
+						globalEvents: ['changed-PESSO', 'changed-EVCAT', 'changed-CATE1'],
 						uuid: 'Pessos01_ValEvolucao',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1431,7 +1429,7 @@
 								dataLength: 50,
 								scrollData: 20,
 								pkColumn: 'ValCodtpcon',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValContacto',
@@ -1440,7 +1438,7 @@
 								label: computed(() => this.Resources.CONTACT59247),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValContacto',
@@ -1554,7 +1552,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-GENRE', 'changed-TPCON', 'changed-CONTA', 'changed-PESSO'],
+						globalEvents: ['changed-GENRE', 'changed-TPCON', 'changed-CONTA', 'changed-PESSO'],
 						uuid: 'Pessos01_ValContacto',
 						allSelectedRows: 'false',
 						controlLimits: [

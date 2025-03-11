@@ -31,6 +31,28 @@ export default class ViewModel extends ViewModelBase
 		super(vueContext, options)
 		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
+
+		this.ValTipocond = reactive(new modelFieldType.String({
+			id: 'ValTipocond',
+			originId: 'ValTipocond',
+			area: 'RULES',
+			field: 'TIPOCOND',
+			arrayOptions: qProjArrays.QArrayTipocond.setResources(vm.$getResource).elements,
+			maxLength: 1,
+			description: computed(() => this.Resources.CONDITION_TYPE57524),
+		}).cloneFrom(values?.ValTipocond))
+		watch(() => this.ValTipocond.value, (newValue, oldValue) => this.onUpdate('rules.tipocond', this.ValTipocond, newValue, oldValue))
+
+		this.ValLocal = reactive(new modelFieldType.String({
+			id: 'ValLocal',
+			originId: 'ValLocal',
+			area: 'RULES',
+			field: 'LOCAL',
+			arrayOptions: qProjArrays.QArrayAlocregr.setResources(vm.$getResource).elements,
+			maxLength: 1,
+			description: computed(() => this.Resources.PLACE_WHERE_YOU_RUN27490),
+		}).cloneFrom(values?.ValLocal))
+		watch(() => this.ValLocal.value, (newValue, oldValue) => this.onUpdate('rules.local', this.ValLocal, newValue, oldValue))
 	}
 
 	/**

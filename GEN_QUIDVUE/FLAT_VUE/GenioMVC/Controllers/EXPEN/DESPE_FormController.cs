@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Despe_ProjeValProjectoModel : RequestLookupModel
+		{
+			public Despe_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Expen/Despe_ProjeValProjecto
 		// POST: /Expen/Despe_ProjeValProjecto
 		[ActionName("Despe_ProjeValProjecto")]
-		public ActionResult Despe_ProjeValProjecto([FromBody]RequestLookupModel requestModel)
+		public ActionResult Despe_ProjeValProjecto([FromBody] Despe_ProjeValProjectoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Despe_ProjeValProjecto_ViewModel model = new Despe_ProjeValProjecto_ViewModel(UserContext.Current);
-			
+
+			Models.Expen parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Despe_ProjeValProjecto_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Despe_YearValYearModel : RequestLookupModel
+		{
+			public Despe_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Expen/Despe_YearValYear
 		// POST: /Expen/Despe_YearValYear
 		[ActionName("Despe_YearValYear")]
-		public ActionResult Despe_YearValYear([FromBody]RequestLookupModel requestModel)
+		public ActionResult Despe_YearValYear([FromBody] Despe_YearValYearModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Despe_YearValYear_ViewModel model = new Despe_YearValYear_ViewModel(UserContext.Current);
-			
+
+			Models.Expen parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Despe_YearValYear_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -518,11 +534,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Despe_AgregValValueModel : RequestLookupModel
+		{
+			public Despe_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Expen/Despe_AgregValValue
 		// POST: /Expen/Despe_AgregValValue
 		[ActionName("Despe_AgregValValue")]
-		public ActionResult Despe_AgregValValue([FromBody]RequestLookupModel requestModel)
+		public ActionResult Despe_AgregValValue([FromBody] Despe_AgregValValueModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -547,16 +568,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Despe_AgregValValue_ViewModel model = new Despe_AgregValValue_ViewModel(UserContext.Current);
-			
+
+			Models.Expen parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Despe_AgregValValue_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

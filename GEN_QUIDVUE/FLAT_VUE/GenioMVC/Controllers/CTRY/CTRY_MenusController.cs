@@ -46,11 +46,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			TRN_Menu_T03COUNTRY_ViewModel model = new TRN_Menu_T03COUNTRY_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -129,11 +129,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			TRN_Menu_T12COUNTRY_ViewModel model = new TRN_Menu_T12COUNTRY_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -212,11 +212,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			TRN_Menu_T13COUNTRY_ViewModel model = new TRN_Menu_T13COUNTRY_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -295,11 +295,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			TRN_Menu_T16COUNTRY_ViewModel model = new TRN_Menu_T16COUNTRY_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,

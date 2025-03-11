@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValCategory',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.CATEGORY18978),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValMenuid',
@@ -168,7 +168,7 @@
 								label: computed(() => this.Resources.FIXED_MENU_NAME38578),
 								dataLength: 30,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 4,
 								name: 'ValThumbnai',
@@ -179,7 +179,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_OVERVIEW',
@@ -247,7 +247,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-UICOM'],
+						globalEvents: ['changed-UICOM'],
 						uuid: '7a94d3ef-80ac-4408-8016-eb66cf9a4ae5',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -334,7 +334,7 @@
 							},
 						],
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

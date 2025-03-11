@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.IDIOMA44057),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValAcron',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.ACRONYM00872),
 								dataLength: 5,
 								scrollData: 5,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_921',
@@ -301,11 +301,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-LANGU'],
+						globalEvents: ['changed-LANGU'],
 						uuid: '8fd173e4-9b55-4d8d-b567-9563206ec9d7',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

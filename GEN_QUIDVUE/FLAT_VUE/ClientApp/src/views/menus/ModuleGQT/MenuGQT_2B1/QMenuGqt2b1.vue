@@ -151,7 +151,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodtpequ',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'ValOrder',
@@ -161,7 +161,7 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Tpeq1.ValTipoequi',
@@ -171,7 +171,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodtpequ',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
 								name: 'ValQuantida',
@@ -181,7 +181,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_2B1',
@@ -323,11 +323,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-TPEQ1', 'changed-CMPKI', 'changed-TPEQU'],
+						globalEvents: ['changed-TPEQ1', 'changed-CMPKI', 'changed-TPEQU'],
 						uuid: '92c5f22f-04ae-44dd-9688-bdfafa2721ba',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

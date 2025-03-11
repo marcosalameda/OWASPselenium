@@ -43,7 +43,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER PROPR]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -56,13 +55,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Propr row = null;
-
-			if (row == null)
-			{
-				row = new Models.Propr(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("propr");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Propr row = new Models.Propr(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("propr");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +75,7 @@ namespace GenioMVC.Controllers
 				{
 					case "PROPR00_TPPROTPPROPRI":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Propr00_tpprotppropri(qs);
 							result = model.TableTpproTppropri;
@@ -84,8 +83,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPR00_PESSONAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Propr00_pessoname____(qs);
 							result = model.TablePessoName;
@@ -93,8 +91,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPR01_CNTRYCOUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Propr01_cntrycountry_(qs);
 							result = model.TableCntryCountry;
@@ -102,8 +99,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPR01_REGIOREGIAO__":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Propr00_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Propr01_regioregiao__(qs);
 							result = model.TableRegioRegiao;
@@ -111,8 +107,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPRALLTPPROTPPROPRI":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Propralltpprotppropri(qs);
 							result = model.TableTpproTppropri;
@@ -120,8 +115,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPRALLCNTRYCOUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Proprallcntrycountry_(qs);
 							result = model.TableCntryCountry;
@@ -129,8 +123,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPRALLREGIOREGIAO__":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Proprallregioregiao__(qs);
 							result = model.TableRegioRegiao;
@@ -138,8 +131,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPRALLPESSONAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Proprall_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Proprallpessoname____(qs);
 							result = model.TablePessoName;
@@ -227,6 +219,8 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Propr00" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -240,6 +234,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Propr)
 			);
 		}
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Proprall" form. (++, CT, SR, CL and U1)

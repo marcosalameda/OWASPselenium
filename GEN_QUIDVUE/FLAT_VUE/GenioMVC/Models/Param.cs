@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Param.ValCodkinde")]
 		public string ValCodkinde { get { return klass.ValCodkinde; } set { klass.ValCodkinde = value; } }
+
 		private Kinde _kinde;
 		[DisplayName("Kinde")]
 		[ShouldSerialize("Kinde")]
-		public virtual Kinde Kinde {
-			get {
-				if (!this.isEmptyModel && (_kinde == null || (!string.IsNullOrEmpty(ValCodkinde) && (_kinde.isEmptyModel || _kinde.klass.QPrimaryKey != ValCodkinde))))
+		public virtual Kinde Kinde
+		{
+			get
+			{
+				if (!isEmptyModel && (_kinde == null || (!string.IsNullOrEmpty(ValCodkinde) && (_kinde.isEmptyModel || _kinde.klass.QPrimaryKey != ValCodkinde))))
 					_kinde = Models.Kinde.Find(ValCodkinde, m_userContext, Identifier, _fieldsToSerialize);
-				if (_kinde == null)
-					_kinde = new Models.Kinde(m_userContext, true, _fieldsToSerialize);
+				_kinde ??= new Models.Kinde(m_userContext, true, _fieldsToSerialize);
 				return _kinde;
 			}
 			set { _kinde = value; }
 		}
-
 
 		[DisplayName("Parameter")]
 		/// <summary>Field : "Parameter" Tipo: "C" Formula:  ""</summary>
@@ -76,8 +77,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Param.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Param(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -96,7 +97,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAparam csgenioa)
 		{
 			if (csgenioa == null)
@@ -107,8 +107,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "kinde":
-						if (_kinde == null)
-							_kinde = new Kinde(m_userContext, true, _fieldsToSerialize);
+						_kinde ??= new Kinde(m_userContext, true, _fieldsToSerialize);
 						_kinde.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

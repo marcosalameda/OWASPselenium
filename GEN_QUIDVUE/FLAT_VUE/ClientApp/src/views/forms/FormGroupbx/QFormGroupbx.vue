@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -427,7 +427,7 @@
 											<q-checkbox-input
 												v-if="controls.GROUPBX_EQUIPBOUGHT__.isVisible"
 												v-bind="controls.GROUPBX_EQUIPBOUGHT__.props"
-												@update:model-value="model.ValBought.fnUpdateValue" />
+												v-on="controls.GROUPBX_EQUIPBOUGHT__.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -572,8 +572,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -967,7 +965,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						format: 'date',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),

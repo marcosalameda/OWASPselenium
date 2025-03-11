@@ -38,39 +38,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Lnhde.ValCodlnhpd")]
 		public string ValCodlnhpd { get { return klass.ValCodlnhpd; } set { klass.ValCodlnhpd = value; } }
+
 		private Lnhpd _lnhpd;
 		[DisplayName("Lnhpd")]
 		[ShouldSerialize("Lnhpd")]
-		public virtual Lnhpd Lnhpd {
-			get {
-				if (!this.isEmptyModel && (_lnhpd == null || (!string.IsNullOrEmpty(ValCodlnhpd) && (_lnhpd.isEmptyModel || _lnhpd.klass.QPrimaryKey != ValCodlnhpd))))
+		public virtual Lnhpd Lnhpd
+		{
+			get
+			{
+				if (!isEmptyModel && (_lnhpd == null || (!string.IsNullOrEmpty(ValCodlnhpd) && (_lnhpd.isEmptyModel || _lnhpd.klass.QPrimaryKey != ValCodlnhpd))))
 					_lnhpd = Models.Lnhpd.Find(ValCodlnhpd, m_userContext, Identifier, _fieldsToSerialize);
-				if (_lnhpd == null)
-					_lnhpd = new Models.Lnhpd(m_userContext, true, _fieldsToSerialize);
+				_lnhpd ??= new Models.Lnhpd(m_userContext, true, _fieldsToSerialize);
 				return _lnhpd;
 			}
 			set { _lnhpd = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula: ++ "[LNHPD->CODPEDID]"</summary>
 		[ShouldSerialize("Lnhde.ValCodpedid")]
 		public string ValCodpedid { get { return klass.ValCodpedid; } set { klass.ValCodpedid = value; } }
+
 		private Pedid _pedid;
 		[DisplayName("Pedid")]
 		[ShouldSerialize("Pedid")]
-		public virtual Pedid Pedid {
-			get {
-				if (!this.isEmptyModel && (_pedid == null || (!string.IsNullOrEmpty(ValCodpedid) && (_pedid.isEmptyModel || _pedid.klass.QPrimaryKey != ValCodpedid))))
+		public virtual Pedid Pedid
+		{
+			get
+			{
+				if (!isEmptyModel && (_pedid == null || (!string.IsNullOrEmpty(ValCodpedid) && (_pedid.isEmptyModel || _pedid.klass.QPrimaryKey != ValCodpedid))))
 					_pedid = Models.Pedid.Find(ValCodpedid, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pedid == null)
-					_pedid = new Models.Pedid(m_userContext, true, _fieldsToSerialize);
+				_pedid ??= new Models.Pedid(m_userContext, true, _fieldsToSerialize);
 				return _pedid;
 			}
 			set { _pedid = value; }
 		}
-
 
 		[DisplayName("Order")]
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
@@ -82,20 +84,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Lnhde.ValCodtpequ")]
 		public string ValCodtpequ { get { return klass.ValCodtpequ; } set { klass.ValCodtpequ = value; } }
+
 		private Tpeq1 _tpeq1;
 		[DisplayName("Tpeq1")]
 		[ShouldSerialize("Tpeq1")]
-		public virtual Tpeq1 Tpeq1 {
-			get {
-				if (!this.isEmptyModel && (_tpeq1 == null || (!string.IsNullOrEmpty(ValCodtpequ) && (_tpeq1.isEmptyModel || _tpeq1.klass.QPrimaryKey != ValCodtpequ))))
+		public virtual Tpeq1 Tpeq1
+		{
+			get
+			{
+				if (!isEmptyModel && (_tpeq1 == null || (!string.IsNullOrEmpty(ValCodtpequ) && (_tpeq1.isEmptyModel || _tpeq1.klass.QPrimaryKey != ValCodtpequ))))
 					_tpeq1 = Models.Tpeq1.Find(ValCodtpequ, m_userContext, Identifier, _fieldsToSerialize);
-				if (_tpeq1 == null)
-					_tpeq1 = new Models.Tpeq1(m_userContext, true, _fieldsToSerialize);
+				_tpeq1 ??= new Models.Tpeq1(m_userContext, true, _fieldsToSerialize);
 				return _tpeq1;
 			}
 			set { _tpeq1 = value; }
 		}
-
 
 		[DisplayName("Amount")]
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
@@ -107,20 +110,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Lnhde.ValCodlnhag")]
 		public string ValCodlnhag { get { return klass.ValCodlnhag; } set { klass.ValCodlnhag = value; } }
+
 		private Lnhag _lnhag;
 		[DisplayName("Lnhag")]
 		[ShouldSerialize("Lnhag")]
-		public virtual Lnhag Lnhag {
-			get {
-				if (!this.isEmptyModel && (_lnhag == null || (!string.IsNullOrEmpty(ValCodlnhag) && (_lnhag.isEmptyModel || _lnhag.klass.QPrimaryKey != ValCodlnhag))))
+		public virtual Lnhag Lnhag
+		{
+			get
+			{
+				if (!isEmptyModel && (_lnhag == null || (!string.IsNullOrEmpty(ValCodlnhag) && (_lnhag.isEmptyModel || _lnhag.klass.QPrimaryKey != ValCodlnhag))))
 					_lnhag = Models.Lnhag.Find(ValCodlnhag, m_userContext, Identifier, _fieldsToSerialize);
-				if (_lnhag == null)
-					_lnhag = new Models.Lnhag(m_userContext, true, _fieldsToSerialize);
+				_lnhag ??= new Models.Lnhag(m_userContext, true, _fieldsToSerialize);
 				return _lnhag;
 			}
 			set { _lnhag = value; }
 		}
-
 
 		[DisplayName("Description")]
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
@@ -147,8 +151,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Lnhde.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Lnhde(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -167,7 +171,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAlnhde csgenioa)
 		{
 			if (csgenioa == null)
@@ -178,23 +181,19 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "lnhpd":
-						if (_lnhpd == null)
-							_lnhpd = new Lnhpd(m_userContext, true, _fieldsToSerialize);
+						_lnhpd ??= new Lnhpd(m_userContext, true, _fieldsToSerialize);
 						_lnhpd.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "pedid":
-						if (_pedid == null)
-							_pedid = new Pedid(m_userContext, true, _fieldsToSerialize);
+						_pedid ??= new Pedid(m_userContext, true, _fieldsToSerialize);
 						_pedid.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "tpeq1":
-						if (_tpeq1 == null)
-							_tpeq1 = new Tpeq1(m_userContext, true, _fieldsToSerialize);
+						_tpeq1 ??= new Tpeq1(m_userContext, true, _fieldsToSerialize);
 						_tpeq1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "lnhag":
-						if (_lnhag == null)
-							_lnhag = new Lnhag(m_userContext, true, _fieldsToSerialize);
+						_lnhag ??= new Lnhag(m_userContext, true, _fieldsToSerialize);
 						_lnhag.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

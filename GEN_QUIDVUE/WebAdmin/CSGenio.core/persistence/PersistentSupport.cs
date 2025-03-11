@@ -676,7 +676,8 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
             try
             {
-                using(IDbConnection conn = getPersistentSupport(dataSystem.Name, param.Username, param.Password).Connection,
+                PersistentSupport sp = getPersistentSupport(dataSystem.Name, param.Username, param.Password);
+                using(IDbConnection conn = sp.Connection,
                     AdmConn = getPersistentSupportMaster(dataSystem.Name, param.Username, param.Password).Connection,
                     LogConn = getPersistentSupportLog(dataSystem.Name, param.Username, param.Password).Connection)
                 {
@@ -686,13 +687,15 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                     paramEx.LogConn = LogConn;
                     paramEx.ContinueAfterError = false;
                     paramEx.Origin = param.Origin;
+                    paramEx.DataSystem = dataSystem.Name;
 
                     paramEx.ChangedExecuteServer += (sender, eventArgs, status) =>
                     {
                         param.OnChangedExecutionScript(EventArgs.Empty, status);
                     };
 
-                    eq.ExecuteServer(paramEx, cToken);
+                    bool dbExists = sp.CheckIfDatabaseExists();
+                    eq.ExecuteServer(paramEx, cToken, dbExists);
 				}
             }
             catch (OperationCanceledException e) { throw e; }

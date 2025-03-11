@@ -43,7 +43,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER FEECA]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -56,13 +55,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Feeca row = null;
-
-			if (row == null)
-			{
-				row = new Models.Feeca(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("feeca");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Feeca row = new Models.Feeca(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("feeca");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +75,7 @@ namespace GenioMVC.Controllers
 				{
 					case "FEECA___FLDS_DESCRIP_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Feeca_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Feeca_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Feeca___flds_descrip_(qs);
 							result = model.TableFldsDescrip;
@@ -143,6 +142,8 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Feeca" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -156,6 +157,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Feeca)
 			);
 		}
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Fldscondpseudgridtbl_" form. (++, CT, SR, CL and U1)

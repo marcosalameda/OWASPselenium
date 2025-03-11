@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -274,8 +274,6 @@
 					mode: ''
 				},
 
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
-
 				formButtons: {
 					changeToShow: {
 						id: 'change-to-show-btn',
@@ -523,7 +521,7 @@
 								label: computed(() => this.Resources.PARAMETER41976),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
 								name: 'ValDatatype',
@@ -534,7 +532,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayDatatype.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayDatatype.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
 								name: 'ValDecimalplaces',
@@ -546,7 +544,7 @@
 								decimalPlaces: 0,
 								array: qProjArrays.QArrayDecplace.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayDecplace.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValParamete',
@@ -687,7 +685,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-KINDE', 'changed-PARAM'],
+						globalEvents: ['changed-KINDE', 'changed-PARAM'],
 						uuid: 'Kinde_ValParamete',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -719,7 +717,7 @@
 								label: computed(() => this.Resources.MANUAL_NAME60077),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 2,
 								name: 'ValDigdocum',
@@ -730,7 +728,7 @@
 								scrollData: 30,
 								sortable: false,
 								viewType: qEnums.documentViewTypeMode.print,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValNotes',
@@ -738,7 +736,7 @@
 								field: 'NOTES',
 								label: computed(() => this.Resources.NOTES05274),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValManuals',
@@ -879,7 +877,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-MANUA', 'changed-KINDE'],
+						globalEvents: ['changed-MANUA', 'changed-KINDE'],
 						uuid: 'Kinde_ValManuals',
 						allSelectedRows: 'false',
 						controlLimits: [

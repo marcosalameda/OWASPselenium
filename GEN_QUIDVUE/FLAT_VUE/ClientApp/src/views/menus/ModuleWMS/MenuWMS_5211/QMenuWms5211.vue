@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.LEGAL_NAME42902),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValInitials',
@@ -159,7 +159,7 @@
 								label: computed(() => this.Resources.COMPANY_INITIALS56204),
 								dataLength: 10,
 								scrollData: 10,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValRegistra',
@@ -168,7 +168,7 @@
 								label: computed(() => this.Resources.LEGAL_REGISTRATION04413),
 								dataLength: 30,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValTaxnumbe',
@@ -177,7 +177,7 @@
 								label: computed(() => this.Resources.VAT_NUMBER24236),
 								dataLength: 30,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'ValEmail',
@@ -186,7 +186,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValPhonenum',
@@ -195,7 +195,7 @@
 								label: computed(() => this.Resources.PHONE_NUMBER20774),
 								dataLength: 20,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
 								name: 'ValIban',
@@ -204,8 +204,8 @@
 								label: computed(() => this.Resources.IBAN__INTERNATIONAL_45066),
 								dataLength: 33,
 								scrollData: 25,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
 								name: 'ValBuilding',
@@ -214,8 +214,8 @@
 								label: computed(() => this.Resources.BUILDING_HOUSE_NUMBE20738),
 								dataLength: 25,
 								scrollData: 10,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
 								name: 'ValStreet',
@@ -224,8 +224,8 @@
 								label: computed(() => this.Resources.STREET44324),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 10,
 								name: 'ValTown',
@@ -234,8 +234,8 @@
 								label: computed(() => this.Resources.TOWN_CITY16259),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 11,
 								name: 'ValCounty',
@@ -244,8 +244,8 @@
 								label: computed(() => this.Resources.COUNTY_PROVINCE34285),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 12,
 								name: 'ValState',
@@ -254,8 +254,8 @@
 								label: computed(() => this.Resources.STATE_PROVINCE28516),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 13,
 								name: 'ValPobox',
@@ -264,8 +264,8 @@
 								label: computed(() => this.Resources.POST_OFFICE_BOX06223),
 								dataLength: 5,
 								scrollData: 5,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 14,
 								name: 'ValPostalco',
@@ -274,8 +274,8 @@
 								label: computed(() => this.Resources.ZIP_POSTAL_CODE55613),
 								dataLength: 10,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 15,
 								name: 'ValTelephon',
@@ -284,8 +284,8 @@
 								label: computed(() => this.Resources.TELEPHONE28697),
 								dataLength: 20,
 								scrollData: 20,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 16,
 								name: 'ValFax',
@@ -294,8 +294,8 @@
 								label: computed(() => this.Resources.FAX08532),
 								dataLength: 20,
 								scrollData: 20,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.HyperLinkColumn({
 								order: 17,
 								name: 'ValWebsite',
@@ -304,8 +304,8 @@
 								label: computed(() => this.Resources.WEB_SITE06263),
 								dataLength: 254,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 18,
 								name: 'ValPerson',
@@ -314,8 +314,8 @@
 								label: computed(() => this.Resources.PERSON_DEPARTMENT_TO28777),
 								dataLength: 85,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 19,
 								name: 'ValContact',
@@ -324,8 +324,8 @@
 								label: computed(() => this.Resources.CONTACT_TELEPHONE_NU12694),
 								dataLength: 30,
 								scrollData: 20,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 20,
 								name: 'ValManufact',
@@ -333,8 +333,8 @@
 								field: 'MANUFACT',
 								label: computed(() => this.Resources.MANUFACTURER50759),
 								scrollData: 1,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 21,
 								name: 'ValFounded',
@@ -343,8 +343,8 @@
 								label: computed(() => this.Resources.FOUNDED_IN54120),
 								scrollData: 8,
 								dateTimeType: 'date',
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 22,
 								name: 'Faci1.ValName',
@@ -353,9 +353,9 @@
 								label: computed(() => this.Resources.FACILITY_NAME19514),
 								dataLength: 85,
 								scrollData: 30,
-								visibility: false,
+								isVisible: false,
 								pkColumn: 'ValCodfacil',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 23,
 								name: 'Faci2.ValName',
@@ -364,9 +364,9 @@
 								label: computed(() => this.Resources.FACILITY_NAME19514),
 								dataLength: 85,
 								scrollData: 30,
-								visibility: false,
+								isVisible: false,
 								pkColumn: 'ValCodfacil',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 24,
 								name: 'ValLanguage',
@@ -375,8 +375,8 @@
 								label: computed(() => this.Resources.LANGUAGE16872),
 								dataLength: 2,
 								scrollData: 2,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 25,
 								name: 'ValCurrency',
@@ -385,8 +385,8 @@
 								label: computed(() => this.Resources.CURRENCY13881),
 								dataLength: 3,
 								scrollData: 3,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 26,
 								name: 'ValOwner',
@@ -395,7 +395,7 @@
 								label: computed(() => this.Resources.OWNER09558),
 								dataLength: 50,
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 27,
 								name: 'ValCarrier',
@@ -403,7 +403,7 @@
 								field: 'CARRIER',
 								label: computed(() => this.Resources.CARRIER64855),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 28,
 								name: 'ValSupplier',
@@ -411,7 +411,7 @@
 								field: 'SUPPLIER',
 								label: computed(() => this.Resources.SUPPLIER17230),
 								scrollData: 1,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_5211',
@@ -553,7 +553,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FACI1', 'changed-ENTIT', 'changed-FACI2'],
+						globalEvents: ['changed-FACI1', 'changed-ENTIT', 'changed-FACI2'],
 						uuid: 'c507fd2e-3399-4cc1-ab05-02fd06f4746a',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -561,7 +561,7 @@
 						controlLimits: [
 							/** SC */
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

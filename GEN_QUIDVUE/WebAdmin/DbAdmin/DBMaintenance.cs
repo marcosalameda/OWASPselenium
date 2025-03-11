@@ -26,6 +26,19 @@ namespace DbAdmin
             _baseDirectory = baseDirectory;
         }
 
+        public class DBMaintenanceException : Exception
+        {
+            public DBMaintenanceException(string message) : base(message) { }
+            public DBMaintenanceException(string message, Exception inner) : base(message, inner) { }
+        }
+
+        public class MaintenanceLogDetails
+        {
+            public RdxOperationInfo Info { get; set; }
+            public List<ReindexFunctionItem> FunctionDetails { get; set; }
+            public List<ReIndexGroup> FunctionGroups { get; set; }
+        }
+
         private void CreateLogFile()
         {
             if(!File.Exists(PersistentSupport.LogReindexPath()))
@@ -35,6 +48,93 @@ namespace DbAdmin
             }
         }
 
+        /// <summary>
+        /// Retrieves information on the latest "numLogs" database maintenance operations, based on the log file.
+        /// </summary>
+        /// <param name="numLogs">The number of logs to retrieve (the last "numLogs" of the LogReindex file). If 0, retrieves all.</param>
+        /// <param name="functions">List of ReindexFunctions that were run during maintenance</param>
+        /// <returns>A list of maintenance information objects (RdxOperationInfo)</returns>
+        public List<RdxOperationInfo> GetMaintenanceLogsInfo(int numLogs)
+        {
+            List<ReIndexFunction> functions = GetReindexScripts().ReIndexItems;
+            var allLogs = RdxOperationLog.readAggregateXML(PersistentSupport.LogReindexPath());
+            if (allLogs.Count == 0)
+                return [];
+
+            var retrievedLogs = (numLogs == 0 ? allLogs : allLogs.TakeLast(numLogs)) // If numLogs == 0, take all logs
+                .Select(log => (index: allLogs.IndexOf(log), log)) // maintain original log index
+                .ToList();
+
+            List<RdxOperationInfo> logsInfo = retrievedLogs
+                .Select(entry => {
+                    var functionDetails = LoadReindexFunctionItems(entry.log, functions);
+                    return CreateOperationInfo(entry.log, entry.index, functionDetails);
+                })
+                .ToList();
+
+            return logsInfo; 
+        }
+
+        /// <summary>
+        /// Retrieves details of a specific maintenance log.
+        /// </summary>
+        /// <param name="logIndex">Index of the log entry</param>
+        /// <param name="functions">List of ReindexFunctions to compare against</param>
+        /// <returns>MaintenanceLogDetails object with log information</returns>
+        public MaintenanceLogDetails GetMaintenanceLogDetails(int logIndex)
+        {
+            ReindexOrder rdxInfo = GetReindexScripts();
+            RdxOperationLog log = RdxOperationLog.FindXML(logIndex, PersistentSupport.LogReindexPath());
+
+            if (log == null)
+                throw new DBMaintenanceException($"Log {logIndex} could not be found.");
+
+            List<ReindexFunctionItem> details = LoadReindexFunctionItems(log, rdxInfo.ReIndexItems);
+
+            return new MaintenanceLogDetails
+            {
+                Info = CreateOperationInfo(log, logIndex, details),
+                FunctionDetails = details,
+                FunctionGroups = rdxInfo.Reindexgroups
+            };
+        }
+
+        /// <summary>
+        /// Gathers the essential information of a maintenance task, based on its logs.
+        /// </summary>
+        /// <param name="log">The <see cref="RdxOperationLog"/> entry containing the logs of a given maintenance task.</param>
+        /// <param name="index">The index of the log entry.</param>
+        /// <param name="items">A list of <see cref="ReindexFunctionItem"/> representing the maintenance functions (with details).</param>
+        /// <returns>An <see cref="RdxOperationInfo"/> object with the maintenance log essential info.</returns>
+        public static RdxOperationInfo CreateOperationInfo(RdxOperationLog log, int index, List<ReindexFunctionItem> items)
+        {
+            return new RdxOperationInfo
+            {
+                Id = index,
+                DataSystem = log.DataSystem,
+                Database = log.Database,
+                Duration = log.Duration,
+                StartTime = log.StartTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture), // Date format that enables ordering records by operation date
+                Origin = log.Origin,
+                Success = items.All(item => item.Result.Length == 0)
+            };
+        }
+
+        /// <summary>
+        /// Loads a list of maintenance function items with details based on a given maintenance log.
+        /// </summary>
+        /// <param name="log">The <see cref="RdxOperationLog"/> entry for which function details are retrieved.</param>
+        /// <param name="functions">A list of <see cref="ReIndexFunction"/> that were executed during maintenance.</param>
+        /// <returns>A list of <see cref="ReindexFunctionItem"/> objects containing details of the reindexing process.</returns>
+        public static List<ReindexFunctionItem> LoadReindexFunctionItems(RdxOperationLog log, List<ReIndexFunction> functions)
+        {
+            return functions.Select(function =>
+            {
+                var item = new ReindexFunctionItem();
+                item.Load(function, log);
+                return item;
+            }).ToList();
+        }
 
         /// <summary>
         /// Start the reindexation process

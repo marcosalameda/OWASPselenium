@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Locat_EntitValNameModel : RequestLookupModel
+		{
+			public Locat_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Locat/Locat_EntitValName
 		// POST: /Locat/Locat_EntitValName
 		[ActionName("Locat_EntitValName")]
-		public ActionResult Locat_EntitValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Locat_EntitValName([FromBody] Locat_EntitValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Locat_EntitValName_ViewModel model = new Locat_EntitValName_ViewModel(UserContext.Current);
-			
+
+			Models.Locat parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Locat_EntitValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Locat_FacilValNameModel : RequestLookupModel
+		{
+			public Locat_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Locat/Locat_FacilValName
 		// POST: /Locat/Locat_FacilValName
 		[ActionName("Locat_FacilValName")]
-		public ActionResult Locat_FacilValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Locat_FacilValName([FromBody] Locat_FacilValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Locat_FacilValName_ViewModel model = new Locat_FacilValName_ViewModel(UserContext.Current);
-			
+
+			Models.Locat parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Locat_FacilValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -518,11 +534,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Locat_ValLocalextModel : RequestLookupModel
+		{
+			public Locat_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Locat/Locat_ValLocalext
 		// POST: /Locat/Locat_ValLocalext
 		[ActionName("Locat_ValLocalext")]
-		public ActionResult Locat_ValLocalext([FromBody]RequestLookupModel requestModel)
+		public ActionResult Locat_ValLocalext([FromBody] Locat_ValLocalextModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -546,16 +567,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Locat_ValLocalext_ViewModel model = new Locat_ValLocalext_ViewModel(UserContext.Current);
-			
+			Models.Locat parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Locat_ValLocalext_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

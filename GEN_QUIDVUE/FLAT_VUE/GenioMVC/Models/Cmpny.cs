@@ -71,20 +71,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Cmpny.ValCodcntry")]
 		public string ValCodcntry { get { return klass.ValCodcntry; } set { klass.ValCodcntry = value; } }
+
 		private Cntry _cntry;
 		[DisplayName("Cntry")]
 		[ShouldSerialize("Cntry")]
-		public virtual Cntry Cntry {
-			get {
-				if (!this.isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodcntry) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodcntry))))
+		public virtual Cntry Cntry
+		{
+			get
+			{
+				if (!isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodcntry) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodcntry))))
 					_cntry = Models.Cntry.Find(ValCodcntry, m_userContext, Identifier, _fieldsToSerialize);
-				if (_cntry == null)
-					_cntry = new Models.Cntry(m_userContext, true, _fieldsToSerialize);
+				_cntry ??= new Models.Cntry(m_userContext, true, _fieldsToSerialize);
 				return _cntry;
 			}
 			set { _cntry = value; }
 		}
-
 
 		[DisplayName("Number of people")]
 		/// <summary>Field : "Number of people" Tipo: "N" Formula: SR "[PESSO->1]"</summary>
@@ -100,8 +101,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Cmpny.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Cmpny(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -120,7 +121,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAcmpny csgenioa)
 		{
 			if (csgenioa == null)
@@ -131,8 +131,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "cntry":
-						if (_cntry == null)
-							_cntry = new Cntry(m_userContext, true, _fieldsToSerialize);
+						_cntry ??= new Cntry(m_userContext, true, _fieldsToSerialize);
 						_cntry.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

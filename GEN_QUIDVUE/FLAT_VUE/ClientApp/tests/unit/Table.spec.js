@@ -164,7 +164,7 @@ describe('QTable.vue', () => {
 		expect(rows[rowNum]).toHaveClass(cssClasses.invalidRow)
 	})
 
-	it('Rows where "Currency" column > 100 have style "color: #00A000"', async () => {
+	it('Rows with color #00A000 and background color #E0E0E0, have those colors in their style', async () => {
 		const wrapper = render(QTable, {
 			global,
 			props: {
@@ -179,46 +179,20 @@ describe('QTable.vue', () => {
 			}
 		})
 
-		await nextTick()
-
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
 		// Get rows
 		const rows = await wrapper.getAllByTestId('table-row')
 
-		expect(rows[4]).toHaveStyle('color: #00A000;')
-		expect(rows[6]).toHaveStyle('color: #00A000;')
-	})
-
-	it('Rows where "Array" column = 5 have style "background-color: #E0E0E0"', async () => {
-		const wrapper = render(QTable, {
-			global,
-			props: {
-				rows: tableTest.rows,
-				columns: tableTest.columns.value,
-				config: tableTest.config,
-				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
-				headerLevel: 1,
-				readonly: tableTest.readonly
-			}
-		})
-
-		await nextTick()
-
-		await flushPromises()
-		await vi.dynamicImportSettled()
-
-		// Get rows
-		const rows = await wrapper.getAllByTestId('table-row')
+		expect(rows[4]).toHaveStyle('color: #00A000')
+		expect(rows[6]).toHaveStyle('color: #00A000')
 
 		expect(rows[3]).toHaveStyle('background-color: #E0E0E0')
 		expect(rows[5]).toHaveStyle('background-color: #E0E0E0')
 	})
 
-	it('Cells where "Val" column length > 3 have style "color: #C08000"', async () => {
+	it('Cells with color #C08000, have that color in their style', async () => {
 		const wrapper = render(QTable, {
 			global,
 			props: {
@@ -233,11 +207,9 @@ describe('QTable.vue', () => {
 			}
 		})
 
-		await nextTick()
-
-		// Get index of column with textColor property
-		const columnIdx = tableTest.columnsOriginal.value.findIndex(obj => obj.textColor !== undefined)
-		var domColumnIdx = columnIdx
+		// Get index of column with foregroundColor property
+		const columnIdx = tableTest.rows[0].Fields.columns.findIndex(col => col.foregroundColor)
+		let domColumnIdx = columnIdx + 1
 		// Account for extra column if table has checklist
 		if (tableTest.config.rowsCheckable !== undefined && tableTest.config.rowsCheckable !== false)
 			domColumnIdx++
@@ -248,19 +220,14 @@ describe('QTable.vue', () => {
 		// Get rows
 		const rows = await wrapper.getAllByTestId('table-row')
 
-		var cells = []
-		cells = await within(rows[0]).queryAllByRole('cell')
-		expect(cells[domColumnIdx + 1]).toHaveStyle('color: #C08000;')
+		let cells = await within(rows[0]).queryAllByRole('cell')
+		expect(cells[domColumnIdx]).toHaveStyle('color: #C08000')
 		cells = await within(rows[1]).queryAllByRole('cell')
-		expect(cells[domColumnIdx + 1]).toHaveStyle('color: #C08000;')
+		expect(cells[domColumnIdx]).toHaveStyle('color: #C08000')
 		cells = await within(rows[2]).queryAllByRole('cell')
-		expect(cells[domColumnIdx + 1]).toHaveStyle('color: #C08000;')
+		expect(cells[domColumnIdx]).toHaveStyle('color: #C08000')
 		cells = await within(rows[3]).queryAllByRole('cell')
-		expect(cells[domColumnIdx + 1]).toHaveStyle('color: #C08000;')
-		cells = await within(rows[4]).queryAllByRole('cell')
-		expect(cells[domColumnIdx + 1]).toHaveStyle('color: #C08000;')
-		cells = await within(rows[5]).queryAllByRole('cell')
-		expect(cells[domColumnIdx + 1]).toHaveStyle('color: #C08000;')
+		expect(cells[domColumnIdx]).toHaveStyle('color: #C08000')
 	})
 
 	it('Cell with column scroll has truncated text followed by (...)', async () => {

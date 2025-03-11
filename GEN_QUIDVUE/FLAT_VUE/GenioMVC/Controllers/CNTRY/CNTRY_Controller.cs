@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER CNTRY]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Pais" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -57,6 +59,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Cntry)
 			);
 		}
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Proppais" form. (++, CT, SR, CL and U1)

@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -169,7 +169,7 @@
 											<q-checkbox-input
 												v-if="controls.FLDSTBL_FLDS_PRIMVIAG.isVisible"
 												v-bind="controls.FLDSTBL_FLDS_PRIMVIAG.props"
-												@update:model-value="model.ValPrimviag.fnUpdateValue" />
+												v-on="controls.FLDSTBL_FLDS_PRIMVIAG.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -953,8 +953,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -2179,7 +2177,7 @@
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
 								pkColumn: 'ValCodflds',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'ValFeedback',
@@ -2188,7 +2186,7 @@
 								label: computed(() => this.Resources.FEEDBACK52855),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValFeeca',
@@ -2329,7 +2327,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FLDS', 'changed-FEECA'],
+						globalEvents: ['changed-FLDS', 'changed-FEECA'],
 						uuid: 'Fldstbl_ValFeeca',
 						allSelectedRows: 'false',
 						controlLimits: [

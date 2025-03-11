@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,41 +7,45 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Faqs
 {
-	public class STY_Menu_35911_ViewModel : ListViewModel
+	public class STY_Menu_35911_ViewModel : MenuListViewModel<Models.Faqs>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<STY_Menu_35911_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "faqs"; }
+		[JsonIgnore]
+		public override string TableAlias => "faqs";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "2d789e4b-4145-4b00-8473-3b6215ee3fab"; }
+		public override string Uuid => "2d789e4b-4145-4b00-8473-3b6215ee3fab";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodfaqs { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet StaticLimits
 		{
 			get
@@ -53,6 +58,7 @@ namespace GenioMVC.ViewModels.Faqs
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -65,6 +71,7 @@ namespace GenioMVC.ViewModels.Faqs
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -83,7 +90,6 @@ namespace GenioMVC.ViewModels.Faqs
 
 
 
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -99,20 +105,29 @@ namespace GenioMVC.ViewModels.Faqs
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAfaqs.FldCodfaqs, CSGenioAfaqs.FldZzstate, CSGenioAfaqs.FldQuestion, CSGenioAfaqs.FldAnswer };
 
-			ListingMVC<CSGenioAfaqs> listing = new ListingMVC<CSGenioAfaqs>(fields, null, 1, 1, false, user, true, string.Empty, false);
+			ListingMVC<CSGenioAfaqs> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
 			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
 
-
-			if (!qs.Joins.Select(x => x.Table).Select(y=>y.TableAlias).Contains(CSGenio.business.Area.AreaCFAQS.Alias))
+			if (!qs.Joins.Select(x => x.Table).Select(y => y.TableAlias).Contains(CSGenio.business.Area.AreaCFAQS.Alias))
 				qs.Join(CSGenio.business.Area.AreaCFAQS, TableJoinType.Inner).On(CriteriaSet.And().Equal(CSGenioAcfaqs.FldCodcfaqs, CSGenioAfaqs.FldCodcfaqs));
+
+
+
+
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public STY_Menu_35911_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="STY_Menu_35911_ViewModel" /> class.
@@ -121,6 +136,16 @@ namespace GenioMVC.ViewModels.Faqs
 		public STY_Menu_35911_ViewModel(UserContext userContext) : base(userContext)
 		{
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="STY_Menu_35911_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public STY_Menu_35911_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -184,10 +209,6 @@ namespace GenioMVC.ViewModels.Faqs
 			Menu.SetFilters(false, false);
 
 
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
-
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
@@ -205,7 +226,6 @@ namespace GenioMVC.ViewModels.Faqs
 			// Limitations
 			// Limit "DB"
 			crs.Equal(CSGenioAfaqs.FldCodcfaqs, Navigation.GetValue("cfaqs"));
-
 			if (isToExport)
 			{
 				// EPH
@@ -301,21 +321,20 @@ namespace GenioMVC.ViewModels.Faqs
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAfaqs> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "35911"),
 				new("Module", "STY")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<STY_Menu_35911_RowViewModel>();
 
 				CriteriaSet sty_menu_35911Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
 
 
 
@@ -347,40 +366,39 @@ namespace GenioMVC.ViewModels.Faqs
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAfaqs model_limit_area = new CSGenioAfaqs(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML35911");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAfaqs model_limit_area = new CSGenioAfaqs(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML35911");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
-			// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
-			// Limit origin: menu 
+				// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
+				// Limit origin: menu 
 
-			//Limit type: "DB"
-			//Current Area = "FAQS"
-			//1st Area Limit: "CFAQS"
-			//1st Area Field: "CODCFAQS"
-			//1st Area Value: ""
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.DB;
-				limit.NaoAplicaSeNulo = false;
-				CSGenioAcfaqs model_limit_area = new CSGenioAcfaqs(m_userContext.User);
-				string limit_field = "codcfaqs", limit_field_value = "";
-				object this_limit_field = Navigation.GetStrValue(limit_field_value);
-				Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
-				if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
-					this.tableLimits.Add(limit);
-			}
+				//Limit type: "DB"
+				//Current Area = "FAQS"
+				//1st Area Limit: "CFAQS"
+				//1st Area Field: "CODCFAQS"
+				//1st Area Value: ""
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.DB;
+					limit.NaoAplicaSeNulo = false;
+					CSGenioAcfaqs model_limit_area = new CSGenioAcfaqs(m_userContext.User);
+					string limit_field = "codcfaqs", limit_field_value = "";
+					object this_limit_field = Navigation.GetStrValue(limit_field_value);
+					Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
+					if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
+						this.tableLimits.Add(limit);
+				}
 
 				if (conditions == null)
 					conditions = CriteriaSet.And();
@@ -427,7 +445,6 @@ namespace GenioMVC.ViewModels.Faqs
 					if (pageNumber < 1)
 						pageNumber = 1;
 
-
 					//Set document field values to objects
 					SetDocumentFields(listing);
 
@@ -448,18 +465,12 @@ namespace GenioMVC.ViewModels.Faqs
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -467,7 +478,7 @@ namespace GenioMVC.ViewModels.Faqs
 
 		private List<STY_Menu_35911_RowViewModel> MapSTY_Menu_35911(ListingMVC<CSGenioAfaqs> Qlisting)
 		{
-			var Elements = new List<STY_Menu_35911_RowViewModel>();
+			List<STY_Menu_35911_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -484,7 +495,6 @@ namespace GenioMVC.ViewModels.Faqs
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAfaqs row
 		/// to a STY_Menu_35911_RowViewModel object.
@@ -493,7 +503,9 @@ namespace GenioMVC.ViewModels.Faqs
 		private STY_Menu_35911_RowViewModel MapSTY_Menu_35911(CSGenioAfaqs row)
 		{
 			var model = new STY_Menu_35911_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -505,32 +517,7 @@ namespace GenioMVC.ViewModels.Faqs
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
-
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(STY_Menu_35911_RowViewModel model)
-		{
-			bool canView = false;
-			bool canEdit = false;
-			bool canDelete = false;
-			bool canDuplicate = false;
-			bool canInsert = false;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -544,37 +531,43 @@ namespace GenioMVC.ViewModels.Faqs
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAfaqs> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAfaqs row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Faqs m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Faqs m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM STY_MENU_35911]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Faqs", "Faqs.ValCodfaqs", "Faqs.ValZzstate", "Faqs.ValQuestion", "Faqs.ValAnswer", "Faqs.ValCodcfaqs", "BtnPermission"
+			"Faqs", "Faqs.ValCodfaqs", "Faqs.ValZzstate", "Faqs.ValQuestion", "Faqs.ValAnswer", "Faqs.ValCodcfaqs"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValQuestion", CSGenioAfaqs.FldQuestion, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValAnswer", CSGenioAfaqs.FldAnswer, typeof(string))
 		];
-
-
-
 	}
 }

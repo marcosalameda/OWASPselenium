@@ -23,6 +23,7 @@ import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 import eventBus from '@/api/global/eventBus.js'
 import { BlockConditionStack, HideConditionStack, RequiredConditionStack } from '@/models/fields/conditionStack.js'
 import { useSystemDataStore } from '@/stores/systemData.js'
+import { validateFormula } from  '@/utils/formula.js'
 
 import getSpecialRenderingControls from './customControl.js'
 import controlsResources from './controlsResources.js'
@@ -30,26 +31,6 @@ import formFunctions from './formFunctions.js'
 import genericFunctions from './genericFunctions.js'
 import listFunctions from './listFunctions.js'
 import qEnums from './quidgest.mainEnums.js'
-
-/**
- * Runs the specified field formula.
- * @param {object} formula The formula
- * @param {object} context The context from where the formula should be invoked
- * @param {any} params The parameters to pass when calling the formula
- * @returns A promise with the result of the formula call.
- */
-function validateFieldFormula(formula, context, params)
-{
-	return new Promise((resolve, reject) => {
-		if (_isEmpty(formula))
-			reject('The specified formula is empty.')
-		else
-		{
-			const evalResult = formula.fnFormula.call(context, params)
-			resolve(evalResult)
-		}
-	})
-}
 
 /**
  * Base form control
@@ -136,6 +117,8 @@ export class BaseControl
 		this.loaded = computed(() => this.componentOnLoadProc.loaded)
 		/** Translated texts */
 		this.texts = new controlsResources.BaseResources(vueContext.$getResource)
+		/** Indicates whether the field should display an alternative visualization (simpler than the standard ViewModes) */
+		this.showAlternativeView = false
 
 		_merge(this, options || {})
 	}
@@ -148,7 +131,8 @@ export class BaseControl
 			loading: !this.loaded,
 			required: this.isRequired,
 			texts: this.texts,
-			ariaLabel: this.label
+			ariaLabel: this.label,
+			size: this.size
 		}
 	}
 
@@ -245,7 +229,7 @@ export class BaseControl
 		if (!_isEmpty(this.showWhen))
 		{
 			const events = _unionWith(this.showWhen.dependencyEvents, ['CALC_SHOW_WHEN_FORMULAS'])
-			const res = this.addHideSource('FORMULA_SHOW_WHEN', async () => await validateFieldFormula(this.showWhen, ctx), events)
+			const res = this.addHideSource('FORMULA_SHOW_WHEN', async () => await validateFormula(this.showWhen, ctx), events)
 			promises.push(res)
 		}
 
@@ -253,7 +237,7 @@ export class BaseControl
 		if (!_isEmpty(this.blockWhen))
 		{
 			const events = _unionWith(this.blockWhen.dependencyEvents, ['CALC_BLOCK_WHEN_FORMULAS'])
-			const res = this.addBlockSource('FORMULA_BLOCK_WHEN', async () => await validateFieldFormula(this.blockWhen, ctx), events)
+			const res = this.addBlockSource('FORMULA_BLOCK_WHEN', async () => await validateFormula(this.blockWhen, ctx), events)
 			promises.push(res)
 		}
 
@@ -261,7 +245,7 @@ export class BaseControl
 		if (!_isEmpty(this.requiredConditions))
 		{
 			const events = _unionWith(this.requiredConditions.dependencyEvents, ['CALC_REQUIRED_FORMULAS'])
-			const res = this.addRequiredSource('FORMULA_REQUIRED', async () => await validateFieldFormula(this.requiredConditions, ctx), events)
+			const res = this.addRequiredSource('FORMULA_REQUIRED', async () => await validateFormula(this.requiredConditions, ctx), events)
 			promises.push(res)
 		}
 
@@ -271,7 +255,7 @@ export class BaseControl
 			if (!_isEmpty(modelFieldRef.fillWhen))
 			{
 				const events = _unionWith(modelFieldRef.fillWhen.dependencyEvents, ['CALC_FILL_WHEN_FORMULAS'])
-				const res = this.modelFieldRef.fillWhenConditions.add('FORMULA_FILL_WHEN', async () => await validateFieldFormula(modelFieldRef.fillWhen, ctx), events)
+				const res = this.modelFieldRef.fillWhenConditions.add('FORMULA_FILL_WHEN', async () => await validateFormula(modelFieldRef.fillWhen, ctx), events)
 				promises.push(res)
 
 				if (typeof modelFieldRef.fillWhen.clearValue !== 'function')
@@ -286,7 +270,7 @@ export class BaseControl
 			if (!_isEmpty(modelFieldRef.showWhen))
 			{
 				const events = _unionWith(modelFieldRef.showWhen.dependencyEvents, ['CALC_SHOW_WHEN_FORMULAS'])
-				const res = this.modelFieldRef.showWhenConditions.add('FORMULA_SHOW_WHEN', async () => await validateFieldFormula(modelFieldRef.showWhen, ctx), events)
+				const res = this.modelFieldRef.showWhenConditions.add('FORMULA_SHOW_WHEN', async () => await validateFormula(modelFieldRef.showWhen, ctx), events)
 				promises.push(res)
 			}
 
@@ -294,7 +278,7 @@ export class BaseControl
 			if (!_isEmpty(modelFieldRef.blockWhen))
 			{
 				const events = _unionWith(modelFieldRef.blockWhen.dependencyEvents, ['CALC_BLOCK_WHEN_FORMULAS'])
-				const res = this.modelFieldRef.blockWhenConditions.add('FORMULA_BLOCK_WHEN', async () => await validateFieldFormula(modelFieldRef.blockWhen, ctx), events)
+				const res = this.modelFieldRef.blockWhenConditions.add('FORMULA_BLOCK_WHEN', async () => await validateFormula(modelFieldRef.blockWhen, ctx), events)
 				promises.push(res)
 			}
 		}
@@ -416,11 +400,11 @@ export class BaseControl
 		const limitsValues = {},
 			model = this.vueContext.model
 
-		/** Dynamic limits (value getter + identifier). Used in requests for the new rows list */
+		// Dynamic limits (value getter + identifier). Used in requests for the new rows list
 		if (model && !_isEmpty(this.controlLimits))
 		{
 			_forEach(this.controlLimits, (limitInfo) => {
-				let limitValue = limitInfo.fnValueSelector(model)
+				const limitValue = limitInfo.fnValueSelector(model)
 				if (Array.isArray(limitInfo.identifier))
 				{
 					_forEach(limitInfo.identifier, (limitIdentifier) => {
@@ -553,9 +537,9 @@ export class BaseControl
 }
 
 /**
- * Represents a control type whose size can change.
+ * Represents a control type whose value comes from the database.
  */
-class SizeableControl extends BaseControl
+class DatabaseControl extends BaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -568,15 +552,30 @@ class SizeableControl extends BaseControl
 	{
 		return {
 			...super.props,
-			size: this.size
+			modelValue: this.modelFieldRef?.value
 		}
+	}
+
+	/**
+	 * @override
+	 */
+	initHandlers()
+	{
+		super.initHandlers()
+
+		const handlers = {
+			'update:model-value': (eventData) => this.modelFieldRef?.fnUpdateValue(eventData)
+		}
+
+		// Apply handlers without overriding. The handler can come from outside at initialization.
+		_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
 	}
 }
 
 /**
  * Represents a control type that shouldn't be blocked just because the form is in "SHOW" mode.
  */
-class NonBlockableControl extends SizeableControl
+class NonBlockableControl extends BaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -597,7 +596,7 @@ class NonBlockableControl extends SizeableControl
 /**
  * Form string control
  */
-export class StringControl extends SizeableControl
+export class StringControl extends DatabaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -685,6 +684,8 @@ export class CodeEditorControl extends StringControl
 	{
 		super({
 			type: 'CodeEditor',
+			language: '',
+			rows: 15,
 			texts: new controlsResources.CodeEditorResources(_vueContext.$getResource)
 		}, _vueContext)
 
@@ -695,7 +696,28 @@ export class CodeEditorControl extends StringControl
 	{
 		return {
 			...super.props,
-			texts: this.texts
+			language: this.language,
+			rows: this.rows
+		}
+	}
+
+	/**
+	 * @override
+	 */
+	async init(isEditableForm)
+	{
+		await super.init(isEditableForm)
+
+		if (this.languageData && typeof this.languageData.getLanguage !== 'function')
+		{
+			this.languageData.getLanguage = async () => {
+				this.language = await validateFormula(this.languageData, this.vueContext.model)
+			}
+			this.languageData.getLanguage()
+
+			const events = this.languageData.dependencyEvents
+			this.vueContext.internalEvents.offMany(events, this.languageData.getLanguage)
+			this.vueContext.internalEvents.onMany(events, this.languageData.getLanguage)
 		}
 	}
 }
@@ -718,7 +740,7 @@ export class PasswordControl extends StringControl
 /**
  * Form boolean control
  */
-export class BooleanControl extends BaseControl
+export class BooleanControl extends DatabaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -732,17 +754,17 @@ export class BooleanControl extends BaseControl
 
 	get props()
 	{
-		return {
-			...super.props,
-			modelValue: this.modelFieldRef?.value
-		}
+		const boolProps = super.props
+		// Checkboxes have no size property.
+		delete boolProps.size
+		return boolProps
 	}
 }
 
 /**
  * Form numeric control
  */
-export class NumberControl extends SizeableControl
+export class NumberControl extends DatabaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -767,7 +789,6 @@ export class NumberControl extends SizeableControl
 	{
 		return {
 			...super.props,
-			modelValue: this.modelFieldRef?.value,
 			name: this.name,
 			labelId: this.labelId,
 			disabled: this.disabled,
@@ -820,7 +841,7 @@ export class CurrencyControl extends NumberControl
 /**
  * Form date control
  */
-export class DateControl extends SizeableControl
+export class DateControl extends DatabaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -843,7 +864,7 @@ export class DateControl extends SizeableControl
 			type: this.type,
 			locale: this.locale,
 			format: this.format,
-			texts: this.texts,
+			texts: this.texts
 		}
 	}
 }
@@ -866,7 +887,7 @@ export class TimeControl extends DateControl
 /**
  * The base class for the Array controls
  */
-class BaseArrayControl extends SizeableControl
+class BaseArrayControl extends DatabaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -997,7 +1018,7 @@ class BaseArrayControl extends SizeableControl
 		_forEach(allOptions, (arrayEl) => {
 			res.push(
 				new Promise((resolve) => {
-					validateFieldFormula(this.arrayElShowWhen, this.vueContext.model, { arrayEl })
+					validateFormula(this.arrayElShowWhen, this.vueContext.model, { arrayEl })
 						.then((result) => resolve({ el: arrayEl, show: result }))
 				})
 			)
@@ -1067,7 +1088,7 @@ export class ArrayBooleanControl extends BaseArrayControl
 /**
  * Form Coordinates control
  */
-export class CoordinatesControl extends SizeableControl
+export class CoordinatesControl extends DatabaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -1113,7 +1134,7 @@ export class MaskControl extends StringControl
 /**
  * Form List control (DB)
  */
-export class LookupControl extends SizeableControl
+export class LookupControl extends BaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -1580,7 +1601,7 @@ export class LookupControl extends SizeableControl
 /**
  * Form Table list control
  */
-export class TableListControl extends SizeableControl
+export class TableListControl extends BaseControl
 {
 	constructor(options, _vueContext, store)
 	{
@@ -1624,6 +1645,8 @@ export class TableListControl extends SizeableControl
 			searchBarFilters: {},
 			groupFilters: [],
 			activeFilters: {},
+			globalEvents: [],
+			internalEvents: [],
 			columnSorting: {},
 			dataImportResponse: {},
 			rowComponent: 'q-table-row',
@@ -1653,7 +1676,7 @@ export class TableListControl extends SizeableControl
 				hasTextWrap: false,
 				rowValidation: {
 					message: computed(() => tableTexts.pendingRecords),
-					fnValidate: (row) => row.Fields.ValZzstate === 0
+					fnValidate: (row) => row.Fields.isValid
 				},
 				allowFileExport: false,
 				allowFileImport: false,
@@ -1694,14 +1717,9 @@ export class TableListControl extends SizeableControl
 					canDelete: true,
 					canInsert: true
 				},
-				crudConditions: {
-					view: () => true,
-					update: () => true,
-					delete: () => true,
-					insert: {
-						handler: () => true,
-						dependencyEvents: []
-					}
+				insertCondition: {
+					fnFormula: () => true,
+					dependencyEvents: []
 				},
 				canInsert: false,
 				rowActionClasses: {
@@ -1722,7 +1740,7 @@ export class TableListControl extends SizeableControl
 			headerRow: {
 				isNavigated: false
 			},
-			// The custom callback method for hydrate the page view model data
+			// The custom callback method to hydrate the page view model data
 			fnHydrateViewModel: undefined,
 			linkedForm: undefined,
 			activeViewModeId: 'LIST',
@@ -1766,6 +1784,11 @@ export class TableListControl extends SizeableControl
 
 		this.initEvents()
 		this.initUserConfig()
+
+		// If there's a change in the visibility of a column, updates the entire list
+		// to ensure all watchers are triggered.
+		for (let column of this.columnsOriginal)
+			column.addVisibilityListener(() => this.columnsOriginal = [...this.columnsOriginal])
 	}
 
 	/**
@@ -1775,20 +1798,22 @@ export class TableListControl extends SizeableControl
 	{
 		if (this.config.permissions.canInsert)
 		{
-			const insertCondition = this.config.crudConditions.insert
+			const insertCondition = this.config.insertCondition
 
 			if (typeof insertCondition.runFormula !== 'function')
 			{
-				insertCondition.runFormula = () => {
-					Promise.resolve(insertCondition.handler()).then((result) => {
-						this.config.canInsert = typeof result === 'boolean' ? result : false
-					})
+				insertCondition.runFormula = async () => {
+					this.config.canInsert = await validateFormula(insertCondition, this.vueContext.model)
 				}
 				insertCondition.runFormula()
-			}
 
-			this.vueContext.internalEvents?.offMany(insertCondition.dependencyEvents, insertCondition.runFormula)
-			this.vueContext.internalEvents?.onMany(insertCondition.dependencyEvents, insertCondition.runFormula)
+				const events = insertCondition.dependencyEvents
+				
+				// Add event handling if necessary
+				// internalEvents does not exist in some cases like in "see more" popups
+				this.vueContext.internalEvents?.offMany(events, insertCondition.runFormula)
+				this.vueContext.internalEvents?.onMany(events, insertCondition.runFormula)
+			}
 		}
 	}
 
@@ -1802,6 +1827,7 @@ export class TableListControl extends SizeableControl
 		const handlers = {
 			onChangeQuery: (eventData) => this.onTableListChangeQuery(eventData),
 			saveView: (eventData) => this.onTableListSaveView(eventData),
+			renameView: (eventData) => this.onTableListRenameView(eventData),
 			copyView: (eventData) => this.onTableListCopyView(eventData),
 			selectView: (eventData) => this.onTableListSelectView(eventData),
 			closeView: (eventData) => this.onTableListCloseView(eventData),
@@ -1899,6 +1925,7 @@ export class TableListControl extends SizeableControl
 		}
 
 		if (this.config.allowColumnConfiguration && this.activeViewModeId === 'LIST')
+		{
 			configOptions.push({
 				id: 'columnConfig',
 				elementId: 'column-config',
@@ -1911,8 +1938,10 @@ export class TableListControl extends SizeableControl
 				active: true,
 				visible: true
 			})
+		}
 
 		if (this.config.allowAdvancedFilters)
+		{
 			configOptions.push({
 				id: 'advancedFilters',
 				elementId: 'advanced-filters',
@@ -1924,6 +1953,7 @@ export class TableListControl extends SizeableControl
 				active: true,
 				visible: computed(() => this.advancedFilters?.length > 0)
 			})
+		}
 
 		if (this.config.allowManageViews)
 		{
@@ -1959,6 +1989,7 @@ export class TableListControl extends SizeableControl
 
 	onTableListChangeQuery(eventData) { this.componentOnLoadProc.addWL(this.vueContext.onTableListChangeQuery(this, eventData)) }
 	onTableListSaveView(eventData) { this.vueContext.onTableListSaveView(this, eventData) }
+	onTableListRenameView(eventData) { this.componentOnLoadProc.addWL(this.vueContext.onTableListRenameView(this, eventData)) }
 	onTableListCopyView(eventData) { this.vueContext.onTableListCopyView(this, eventData) }
 	onTableListCloseView(eventData) { this.componentOnLoadProc.addWL(this.vueContext.onTableListCloseView(this, eventData)) }
 	onTableListSelectView(eventData) { this.componentOnLoadProc.addWL(this.vueContext.onTableListSelectView(this, eventData)) }
@@ -1984,7 +2015,7 @@ export class TableListControl extends SizeableControl
 	onTableListApplyColumnConfig(eventData) { this.vueContext.onTableListApplyColumnConfig(this, eventData) }
 	onTableListResetColumnConfig(eventData) { this.vueContext.onTableListResetColumnConfig(this, eventData) }
 	onTableListResetColumnSizes(eventData) { this.vueContext.onTableListResetColumnSizes(this, eventData) }
-	onTableListResetColumnOrdering() { this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this)) }
+	onTableListResetColumnOrdering() { this.reload() }
 	setInfoMessage(eventData) { this.vueContext.setInfoMessage(eventData) }
 	setAdvancedFiltersPopup(eventData) { this.vueContext.setAdvancedFiltersPopup(this, eventData[0], eventData[1]) }
 	addAdvancedFilter(eventData) { this.componentOnLoadProc.addWL(this.vueContext.addAdvancedFilter(this, eventData)) }
@@ -2014,7 +2045,7 @@ export class TableListControl extends SizeableControl
 		}
 
 		this.vueContext.updateConfig(this)
-		this.vueContext.fetchListData(this, params)
+		this.reload(params)
 	}
 
 	/**
@@ -2029,7 +2060,7 @@ export class TableListControl extends SizeableControl
 		}
 
 		this.vueContext.updateConfig(this)
-		this.vueContext.fetchListData(this, params)
+		this.reload(params)
 	}
 
 	/**
@@ -2097,6 +2128,15 @@ export class TableListControl extends SizeableControl
 	 */
 	reload(params)
 	{
+		const model = this.vueContext.model?.serverObjModel
+		if (model)
+		{
+			params = {
+				...(params ?? {}),
+				model
+			}
+		}
+
 		return this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this, params, this.fnHydrateViewModel))
 	}
 }
@@ -2293,7 +2333,7 @@ export class MultipleValuesControl extends TableListControl
 /**
  * Multiple Values extension control
  */
-export class MultipleValuesExtensionControl extends SizeableControl
+export class MultipleValuesExtensionControl extends BaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -2310,7 +2350,7 @@ export class MultipleValuesExtensionControl extends SizeableControl
 /**
  * Document control
  */
-export class DocumentControl extends SizeableControl
+export class DocumentControl extends DatabaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -2344,7 +2384,6 @@ export class DocumentControl extends SizeableControl
 	{
 		return {
 			...super.props,
-			modelValue: this.modelFieldRef?.value,
 			versioning: this.versioningIsOn,
 			editing: this.editing,
 			currentVersion: this.currentVersion,
@@ -2835,7 +2874,7 @@ export class DocumentControl extends SizeableControl
 /**
  * Image control
  */
-export class ImageControl extends SizeableControl
+export class ImageControl extends DatabaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -3290,7 +3329,8 @@ export class TabControl extends NonBlockableControl
 
 		// When tabs become visible, they re-emit an event for all their children
 		this.showWhenConditions.addOnShowListener(() => {
-			for (let childId of this.directChildren) {
+			for (let childId of this.directChildren)
+			{
 				const child = this.vueContext.controls[childId]
 				child.showWhenConditions.emitShowEvent()
 			}
@@ -3431,7 +3471,7 @@ export class SubformControl extends NonBlockableControl
 /**
  * Container control for nested forms
  */
-export class FormContainerControl extends SizeableControl
+export class FormContainerControl extends BaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -3689,7 +3729,7 @@ export class NestedFormConfig
 /**
  * The Grid Table List control
  */
-export class GridTableListControl extends SizeableControl
+export class GridTableListControl extends BaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -3900,7 +3940,7 @@ export class WizardControl extends BaseControl
 	}
 }
 
-export class PropertyListControl extends SizeableControl
+export class PropertyListControl extends BaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -3914,6 +3954,7 @@ export class PropertyListControl extends SizeableControl
 				noPanel: false,
 				readonly: false,
 				panelPosition: 'bottom',
+				block: false,
 				texts: {
 					emptyMessage: propertyListResources.emptyMessage
 				}
@@ -3951,7 +3992,7 @@ export class PropertyListControl extends SizeableControl
 	/**
 	 * When a field changes, updates the model.
 	 * @param {object} field The field that changed
-	 * @param {unknown} value The new value of the field
+	 * @param {any} value The new value of the field
 	 */
 	onFieldChange(field, value)
 	{
@@ -3965,10 +4006,10 @@ export class PropertyListControl extends SizeableControl
 		}
 
 		const propertyModel = this.modelFieldRef.value[field.id]
-		if(propertyModel)
+		if (propertyModel)
 			this.modelFieldRef.value[field.id].value = value
 
-		this.modelFieldRef.addProperty(fieldData)		
+		this.modelFieldRef.addProperty(fieldData)
 	}
 
 	parseToServerValue(value, fieldType)
@@ -4002,7 +4043,7 @@ export class PropertyListControl extends SizeableControl
 	}
 }
 
-export class KanbanControl extends SizeableControl
+export class KanbanControl extends BaseControl
 {
 	constructor(options, _vueContext)
 	{

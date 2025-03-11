@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER AGENT]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Agent01" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -58,6 +60,7 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Agent02" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -71,6 +74,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Agent)
 			);
 		}
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Agent05" form. (++, CT, SR, CL and U1)

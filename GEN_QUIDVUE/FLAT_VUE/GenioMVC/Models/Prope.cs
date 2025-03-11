@@ -57,20 +57,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValCodagent")]
 		public string ValCodagent { get { return klass.ValCodagent; } set { klass.ValCodagent = value; } }
+
 		private Agent _agent;
 		[DisplayName("Agent")]
 		[ShouldSerialize("Agent")]
-		public virtual Agent Agent {
-			get {
-				if (!this.isEmptyModel && (_agent == null || (!string.IsNullOrEmpty(ValCodagent) && (_agent.isEmptyModel || _agent.klass.QPrimaryKey != ValCodagent))))
+		public virtual Agent Agent
+		{
+			get
+			{
+				if (!isEmptyModel && (_agent == null || (!string.IsNullOrEmpty(ValCodagent) && (_agent.isEmptyModel || _agent.klass.QPrimaryKey != ValCodagent))))
 					_agent = Models.Agent.Find(ValCodagent, m_userContext, Identifier, _fieldsToSerialize);
-				if (_agent == null)
-					_agent = new Models.Agent(m_userContext, true, _fieldsToSerialize);
+				_agent ??= new Models.Agent(m_userContext, true, _fieldsToSerialize);
 				return _agent;
 			}
 			set { _agent = value; }
 		}
-
 
 		[DisplayName("Size (m2)")]
 		/// <summary>Field : "Size (m2)" Tipo: "ND" Formula:  ""</summary>
@@ -99,20 +100,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "City" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValCodcity")]
 		public string ValCodcity { get { return klass.ValCodcity; } set { klass.ValCodcity = value; } }
+
 		private City _city;
 		[DisplayName("City")]
 		[ShouldSerialize("City")]
-		public virtual City City {
-			get {
-				if (!this.isEmptyModel && (_city == null || (!string.IsNullOrEmpty(ValCodcity) && (_city.isEmptyModel || _city.klass.QPrimaryKey != ValCodcity))))
+		public virtual City City
+		{
+			get
+			{
+				if (!isEmptyModel && (_city == null || (!string.IsNullOrEmpty(ValCodcity) && (_city.isEmptyModel || _city.klass.QPrimaryKey != ValCodcity))))
 					_city = Models.City.Find(ValCodcity, m_userContext, Identifier, _fieldsToSerialize);
-				if (_city == null)
-					_city = new Models.City(m_userContext, true, _fieldsToSerialize);
+				_city ??= new Models.City(m_userContext, true, _fieldsToSerialize);
 				return _city;
 			}
 			set { _city = value; }
 		}
-
 
 		[DisplayName("Building type")]
 		/// <summary>Field : "Building type" Tipo: "AC" Formula:  ""</summary>
@@ -156,8 +158,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Prope.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Prope(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -176,7 +178,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAprope csgenioa)
 		{
 			if (csgenioa == null)
@@ -187,13 +188,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "agent":
-						if (_agent == null)
-							_agent = new Agent(m_userContext, true, _fieldsToSerialize);
+						_agent ??= new Agent(m_userContext, true, _fieldsToSerialize);
 						_agent.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "city":
-						if (_city == null)
-							_city = new City(m_userContext, true, _fieldsToSerialize);
+						_city ??= new City(m_userContext, true, _fieldsToSerialize);
 						_city.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

@@ -32,7 +32,7 @@ let configSimple = {
 							ValNum: '711',
 							ValNome: 'CARA3',
 							ValTipomenu: 'DB',
-							ValZzstate: 0
+							isValid: true
 						}
 					}
 				],
@@ -49,7 +49,7 @@ let configSimple = {
 					ValNum: '71',
 					ValNome: 'CARA2',
 					ValTipomenu: 'DB',
-					ValZzstate: 0
+					isValid: true
 				}
 			},
 			{
@@ -68,7 +68,7 @@ let configSimple = {
 					ValNum: '72',
 					ValNome: 'CARA3',
 					ValTipomenu: 'DB',
-					ValZzstate: 0
+					isValid: true
 				}
 			}
 		],
@@ -85,7 +85,7 @@ let configSimple = {
 			ValNum: '7',
 			ValNome: 'Características',
 			ValTipomenu: 'M',
-			ValZzstate: 0
+			isValid: true
 		}
 	},
 	uniqueId: 'a7497575-ce83-47af-aec6-16a09334f8a9',
@@ -105,12 +105,10 @@ let configSimple = {
 			params: { 'type': 'form', 'formName': 'MENUW', 'mode': 'SHOW' },
 			cellAction: true,
 			hasTreeShowHide: true,
-			visibility: true,
+			isVisible: true,
 			sortable: true,
 			array: null,
 			useDistinctValues: false,
-			textColor: null,
-			bgColor: null,
 			isOrderingColumn: false,
 			initialSort: false,
 			initialSortOrder: '',
@@ -131,15 +129,13 @@ let configSimple = {
 			supportFormIsPopup: false,
 			params: null,
 			cellAction: false,
-			visibility: true,
+			isVisible: true,
 			sortable: false,
 			array: {
 				'': 'Sem Continuação',
 				'M': 'Menu',
 			},
 			useDistinctValues: false,
-			textColor: null,
-			bgColor: null,
 			isOrderingColumn: false,
 			initialSort: false,
 			initialSortOrder: '',
@@ -161,12 +157,10 @@ let configSimple = {
 			supportFormIsPopup: false,
 			params: null,
 			cellAction: false,
-			visibility: true,
+			isVisible: true,
 			sortable: true,
 			array: null,
 			useDistinctValues: false,
-			textColor: null,
-			bgColor: null,
 			isOrderingColumn: false,
 			initialSort: false,
 			initialSortOrder: '',
@@ -215,7 +209,7 @@ let configSubTable = {
 							ValNum: '711',
 							ValNome: 'CARA3',
 							ValTipomenu: 'DB',
-							ValZzstate: 0
+							isValid: true
 						}
 					}
 				],
@@ -231,7 +225,7 @@ let configSubTable = {
 					ValCodtest: 'a7497575-ce83-47af-aec6-16a09334f8a9',
 					ValNum: '71',
 					ValNome: 'CARA2',
-					ValZzstate: 0
+					isValid: true
 				}
 			},
 			{
@@ -249,7 +243,7 @@ let configSubTable = {
 					ValCodtest: 'b7497575-ce83-47af-aec6-16a09334f8a9',
 					ValNum: '72',
 					ValNome: 'CARA3',
-					ValZzstate: 0
+					isValid: true
 				}
 			}
 		],
@@ -266,7 +260,7 @@ let configSubTable = {
 			ValNum: '7',
 			ValNome: 'Características',
 			ValTipomenu: 'M',
-			ValZzstate: 0
+			isValid: true
 		}
 	},
 	uniqueId: 'a7497575-ce83-47af-aec6-16a09334f8a9',
@@ -286,12 +280,10 @@ let configSubTable = {
 			params: { 'type': 'form', 'formName': 'MENUW', 'mode': 'SHOW' },
 			cellAction: true,
 			hasTreeShowHide: true,
-			visibility: true,
+			isVisible: true,
 			sortable: true,
 			array: null,
 			useDistinctValues: false,
-			textColor: null,
-			bgColor: null,
 			isOrderingColumn: false,
 			initialSort: false,
 			initialSortOrder: '',
@@ -312,15 +304,13 @@ let configSubTable = {
 			supportFormIsPopup: false,
 			params: null,
 			cellAction: false,
-			visibility: true,
+			isVisible: true,
 			sortable: false,
 			array: {
 				'': 'Sem Continuação',
 				'M': 'Menu',
 			},
 			useDistinctValues: false,
-			textColor: null,
-			bgColor: null,
 			isOrderingColumn: false,
 			initialSort: false,
 			initialSortOrder: '',
@@ -342,12 +332,10 @@ let configSubTable = {
 			supportFormIsPopup: false,
 			params: null,
 			cellAction: false,
-			visibility: true,
+			isVisible: true,
 			sortable: true,
 			array: null,
 			useDistinctValues: false,
-			textColor: null,
-			bgColor: null,
 			isOrderingColumn: false,
 			initialSort: false,
 			initialSortOrder: '',
@@ -368,12 +356,10 @@ let configSubTable = {
 			supportFormIsPopup: false,
 			params: null,
 			cellAction: false,
-			visibility: true,
+			isVisible: true,
 			sortable: true,
 			array: null,
 			useDistinctValues: false,
-			textColor: null,
-			bgColor: null,
 			isOrderingColumn: false,
 			initialSort: false,
 			initialSortOrder: '',
@@ -395,12 +381,10 @@ let configSubTable = {
 			supportFormIsPopup: false,
 			params: null,
 			cellAction: false,
-			visibility: true,
+			isVisible: true,
 			sortable: true,
 			array: null,
 			useDistinctValues: false,
-			textColor: null,
-			bgColor: null,
 			isOrderingColumn: false,
 			initialSort: false,
 			initialSortOrder: '',

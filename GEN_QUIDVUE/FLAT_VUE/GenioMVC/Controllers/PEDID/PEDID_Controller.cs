@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER PEDID]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Pedid" form. (++, CT, SR, CL and U1)
 		/// </summary>

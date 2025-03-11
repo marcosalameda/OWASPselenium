@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.GENUS37471),
 								dataLength: 20,
 								scrollData: 20,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
 								name: 'ValAgencont',
@@ -161,7 +161,7 @@
 								scrollData: 1,
 								array: qProjArrays.QArrayGenconta.setResources(vm.$getResource).elements,
 								arrayType: qProjArrays.QArrayGenconta.type,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValBackcolo',
@@ -170,8 +170,8 @@
 								label: computed(() => this.Resources.BACKGROUND_COLOR47883),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValTextcolo',
@@ -180,8 +180,8 @@
 								label: computed(() => this.Resources.TEXT_COLOR24820),
 								dataLength: 50,
 								scrollData: 30,
-								visibility: false,
-							}),
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'TBS_Menu_161',
@@ -202,10 +202,6 @@
 							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
-							// eslint-disable-next-line no-unused-vars
-							rowTextColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValTextcolo)===1,qApi.RGB(0,0,0),row.Fields.ValTextcolo),
-							// eslint-disable-next-line no-unused-vars
-							rowBgColor: (row) => qApi.iif(qApi.emptyC(row.Fields.ValBackcolo)===1,qApi.RGB(255,255,255),row.Fields.ValBackcolo),
 							crudActions: [
 								{
 									id: 'show',
@@ -327,11 +323,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-GENRE'],
+						globalEvents: ['changed-GENRE'],
 						uuid: '367a8002-7b01-45e4-9022-ea27414db6de',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

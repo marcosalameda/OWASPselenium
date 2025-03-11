@@ -74,17 +74,6 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValCoddeco))
 		watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('equip.coddeco', this.ValCoddeco, newValue, oldValue))
 
-		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodempre',
-			originId: 'ValCodempre',
-			area: 'EQUIP',
-			field: 'CODEMPRE',
-			relatedArea: 'CMPNY',
-			description: computed(() => this.Resources._COMPANY02087),
-			isFixed: true,
-		}).cloneFrom(values?.ValCodempre))
-		watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('equip.codempre', this.ValCodempre, newValue, oldValue))
-
 		this.ValCodwareh = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodwareh',
 			originId: 'ValCodwareh',
@@ -106,6 +95,17 @@ export default class ViewModel extends ViewModelBase
 			isFixed: true,
 		}).cloneFrom(values?.ValCoditem))
 		watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('equip.coditem', this.ValCoditem, newValue, oldValue))
+
+		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodempre',
+			originId: 'ValCodempre',
+			area: 'EQUIP',
+			field: 'CODEMPRE',
+			relatedArea: 'CMPNY',
+			description: computed(() => this.Resources._COMPANY02087),
+			isFixed: true,
+		}).cloneFrom(values?.ValCodempre))
+		watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('equip.codempre', this.ValCodempre, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodpess1 = reactive(new modelFieldType.ForeignKey({

@@ -149,7 +149,7 @@
 								field: 'STATUS',
 								dataLength: 50,
 								scrollData: 50,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'ValOrder',
@@ -158,7 +158,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValDescript',
@@ -166,7 +166,7 @@
 								field: 'DESCRIPT',
 								dataLength: 50,
 								scrollData: 50,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_251',
@@ -308,11 +308,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-DISST'],
+						globalEvents: ['changed-DISST'],
 						uuid: '8396af2d-3423-474d-82bf-a8886b01cd72',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

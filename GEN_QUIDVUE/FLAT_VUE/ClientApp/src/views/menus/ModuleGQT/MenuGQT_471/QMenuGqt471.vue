@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.CATEGORY_TYPE23058),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_471',
@@ -292,11 +292,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-CATTP', 'changed-SBCAT'],
+						globalEvents: ['changed-CATTP', 'changed-SBCAT'],
 						uuid: '89135f85-cd25-47c2-9123-e03635f2c802',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

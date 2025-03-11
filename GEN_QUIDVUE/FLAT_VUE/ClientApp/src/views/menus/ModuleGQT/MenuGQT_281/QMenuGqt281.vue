@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'ValNrpedido',
@@ -160,7 +160,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValMotivo',
@@ -168,7 +168,7 @@
 								field: 'MOTIVO',
 								label: computed(() => this.Resources.REASON00008),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_281',
@@ -310,11 +310,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-PEDID'],
+						globalEvents: ['changed-PEDID'],
 						uuid: 'e172238c-5c3e-42f9-9f7b-ccff6d20ea76',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

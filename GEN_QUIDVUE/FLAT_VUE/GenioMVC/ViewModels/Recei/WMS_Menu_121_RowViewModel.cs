@@ -1,37 +1,157 @@
-﻿
+﻿using System.Text.Json.Serialization;
+
 using CSGenio.business;
 using CSGenio.framework;
 using GenioMVC.Models.Navigation;
-using System.Text.Json.Serialization;
 
-namespace GenioMVC.ViewModels.Recei
+namespace GenioMVC.ViewModels.Recei;
+
+public class WMS_Menu_121_RowViewModel : Models.Recei
 {
-    public class WMS_Menu_121_RowViewModel : Models.Recei
-    {
-		#region constructors
-		public WMS_Menu_121_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize) { }
-		public WMS_Menu_121_RowViewModel(UserContext userContext, CSGenioArecei val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize) { }
-		#endregion
+	#region Constructors
 
-		[JsonPropertyName("btnPermission")]
-		public TableRowCrudButtonPermissions BtnPermission { get; set; } = null;
+	public WMS_Menu_121_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize)
+	{
+		InitRowData();
+	}
 
+	public WMS_Menu_121_RowViewModel(UserContext userContext, CSGenioArecei val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize)
+	{
+		InitRowData();
+	}
 
-		///// <summary>
-		///// Foreground color formula 
-		///// 
-		///// </summary> 
-		//[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-		//public string? ForegroundColor => null;
+	#endregion
 
-		///// <summary>
-		///// Background color formula 
-		///// 
-		///// </summary> 
-		////[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-		////public string? BackgroundColor => null;
+	#region Private methods
 
+	private void InitRowData()
+	{
+		SetColumns();
+		SetButtonPermissions();
+		SetCustomActions();
+	}
 
+	private void SetColumns()
+	{
+		Columns ??= [
+			new ListColumn()
+			{
+				Order = 1,
+				Area = "RECEI",
+				Field = "NUMBER",
+			},
+			new ListColumn()
+			{
+				Order = 2,
+				Area = "RECEI",
+				Field = "DTRECEIP",
+			},
+			new ListColumn()
+			{
+				Order = 3,
+				Area = "ENTIT",
+				Field = "NAME",
+			},
+			new ListColumn()
+			{
+				Order = 4,
+				Area = "RECEI",
+				Field = "DTCHECK",
+			},
+			new ListColumn()
+			{
+				Order = 5,
+				Area = "RECEI",
+				Field = "CHECKED",
+			},
+			new ListColumn()
+			{
+				Order = 6,
+				Area = "RECEI",
+				Field = "TOCHECK",
+			},
+			new ListColumn()
+			{
+				Order = 7,
+				Area = "RECEI",
+				Field = "DTSTORAG",
+			},
+		];
+	}
 
-    }
+	private void SetButtonPermissions()
+	{
+		if (BtnPermission != null)
+			return;
+
+		bool canView = true;
+		bool canEdit = true;
+		bool canDelete = true;
+		bool canDuplicate = true;
+		bool canInsert = true;
+
+		using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport))
+		{
+		}
+
+		BtnPermission = new TableRowCrudButtonPermissions()
+		{
+			ViewBtnDisabled = !canView,
+			EditBtnDisabled = !canEdit,
+			DeleteBtnDisabled = !canDelete,
+			DuplicateBtnDisabled = !canDuplicate,
+			InsertBtnDisabled = !canInsert
+		};
+	}
+
+	private void SetCustomActions()
+	{
+		CustomActions ??= new()
+		{
+		};
+	}
+
+	#endregion
+
+	/// <summary>
+	/// The state of the row (it's an internal value, therefore it shouldn't be sent to the client-side)
+	/// </summary>
+	[JsonIgnore]
+	public override int ValZzstate => base.ValZzstate;
+
+	/// <summary>
+	/// Whether the row is in a valid state
+	/// </summary>
+	[JsonPropertyName("isValid")]
+	public bool IsValid => ValZzstate == 0;
+
+	/// <summary>
+	/// The list columns
+	/// </summary>
+	[JsonPropertyName("columns")]
+	public List<ListColumn> Columns { get; private set; }
+
+	/// <summary>
+	/// The button permissions
+	/// </summary>
+	[JsonPropertyName("btnPermission")]
+	public TableRowCrudButtonPermissions BtnPermission { get; private set; }
+
+	/// <summary>
+	/// The custom action buttons
+	/// </summary>
+	[JsonPropertyName("customActions")]
+	public Dictionary<string, ListCustomAction> CustomActions { get; private set; }
+
+	/// <summary>
+	/// The foreground color
+	/// </summary>
+	[JsonPropertyName("foregroundColor")]
+	public string ForegroundColor => "";
+
+	/// <summary>
+	/// The background color
+	/// </summary>
+	[JsonPropertyName("backgroundColor")]
+	public string BackgroundColor => "";
 }

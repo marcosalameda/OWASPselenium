@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER WAREH]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Armaz" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -57,6 +59,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Wareh)
 			);
 		}
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Armaz03" form. (++, CT, SR, CL and U1)
@@ -72,6 +75,7 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Armazpop" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -85,6 +89,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Wareh)
 			);
 		}
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Authent" form. (++, CT, SR, CL and U1)
@@ -100,6 +105,7 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Btnsform" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -113,6 +119,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Wareh)
 			);
 		}
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Extforms" form. (++, CT, SR, CL and U1)
@@ -128,6 +135,7 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Mltform" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -142,6 +150,7 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Tmline" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -152,6 +161,21 @@ namespace GenioMVC.Controllers
 		{
 			return GenericRecalculateFormulas(formData, "wareh",
 				(primaryKey) => Models.Wareh.Find(primaryKey, UserContext.Current, "FTMLINE"),
+				(model) => formData.MapToModel(model as Models.Wareh)
+			);
+		}
+
+
+		/// <summary>
+		/// Recalculate formulas of the "Ware_ws" form. (++, CT, SR, CL and U1)
+		/// </summary>
+		/// <param name="formData">Current form data</param>
+		/// <returns></returns>
+		[HttpPost]
+		public JsonResult RecalculateFormulas_Ware_ws([FromBody]Ware_ws_ViewModel formData)
+		{
+			return GenericRecalculateFormulas(formData, "wareh",
+				(primaryKey) => Models.Wareh.Find(primaryKey, UserContext.Current, "FWARE_WS"),
 				(model) => formData.MapToModel(model as Models.Wareh)
 			);
 		}

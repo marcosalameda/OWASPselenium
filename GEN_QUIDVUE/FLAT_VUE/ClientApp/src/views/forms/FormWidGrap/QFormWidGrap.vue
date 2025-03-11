@@ -10,8 +10,8 @@
 			class="c-action-bar">
 			<h1
 				v-if="formControl.uiComponents.header && formInfo.designation"
-				class="form-header"
-				:id="formTitleId">
+				:id="formTitleId"
+				class="form-header">
 				{{ formInfo.designation }}
 			</h1>
 
@@ -170,8 +170,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -361,7 +359,7 @@
 								label: computed(() => this.Resources.COMPANY52963),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
 								name: 'ValQtdpesso',
@@ -371,7 +369,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValField001',
@@ -411,7 +409,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-CMPNY', 'changed-CNTRY'],
+						globalEvents: ['changed-CMPNY', 'changed-CNTRY'],
 						uuid: 'Wid_grap_ValField001',
 						allSelectedRows: 'false',
 						viewModes: [

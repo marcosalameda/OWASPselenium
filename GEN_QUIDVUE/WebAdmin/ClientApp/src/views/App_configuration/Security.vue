@@ -459,7 +459,7 @@
 	export default {
 		name: 'security',
 		components: { QAlert },
-		emits: ['updateModal', 'alertClass'],
+		emits: ['update-model', 'alert-class'],
 		props: {
 			model: {
 				required: true
@@ -674,10 +674,10 @@
 				QUtils.postData('Config', 'SaveConfigSecurity', this.Security, null, (data) => {
 					QUtils.log("SaveConfigSecurity - Response", data);
 					if (data.Success) {
-						this.$emit('alertClass', { ResultMsg: this.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
+						this.$emit('alert-class', { ResultMsg: this.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
 						this.statusError = false;
 					} else {
-						this.$emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 						this.statusError = true;
 					}
 				});
@@ -958,16 +958,18 @@
 			},
 			SaveIdentityProvider() {
 				let config;
-				if (this.rowType === 'GenioServer.security.LdapQueryIdentityProvider' ||
-				this.rowType === 'GenioServer.security.LdapIdentityProvider') {
-					config = Object.entries(this.tempConfig.reduce((acc, curr) => {
-						acc[curr.PropertyName] = curr.Value;
-						return acc;
-					}, {}))
-					.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-					.join('&');
-				} else {
-					config = this.buildConfigFromTempConfig(this.tempConfig);
+				if (this.tempConfig && Object.keys(this.tempConfig).length > 0) {
+					if (this.rowType === 'GenioServer.security.LdapQueryIdentityProvider' ||
+					this.rowType === 'GenioServer.security.LdapIdentityProvider') {
+						config = Object.entries(this.tempConfig.reduce((acc, curr) => {
+							acc[curr.PropertyName] = curr.Value;
+							return acc;
+						}, {}))
+						.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+						.join('&');
+					} else {
+						config = this.buildConfigFromTempConfig(this.tempConfig);
+					}
 				}
 				const idProValues = {
 					Name: this.rowName,
@@ -1011,7 +1013,7 @@
 						}
 						this.clearIdentityProviderValues()
 						// Update model data
-						this.$emit('updateModal')
+						this.$emit('update-model')
 					}
 				});
 			},
@@ -1034,15 +1036,11 @@
 				this.rowType = identityProvidersRows.Type;
 				this.rowNum = identityProvidersRows.Rownum;
 				let configString = identityProvidersRows.Config;
-				if (configString.startsWith("Options=")) {
-					configString = configString.substring(8);
-				}
-				try {
-					const parsedConfig = JSON.parse(configString);
-					this.tempConfig = parsedConfig
-				} catch (error) {
-					this.tempConfig = [];
-				}
+
+				this.tempConfig = configString?.startsWith("Options=")
+				? configString.substring(8)
+				: configString || {};
+
 				this.showIdentityProviderModal('edit');
 			},
 			deleteIdentityProvider(identityProvidersRows) {
@@ -1051,15 +1049,11 @@
 				this.rowType = identityProvidersRows.Type;
 				this.rowNum = identityProvidersRows.Rownum;
 				let configString = identityProvidersRows.Config;
-				if (configString.startsWith("Options=")) {
-					configString = configString.substring(8);
-				}
-				try {
-					const parsedConfig = JSON.parse(configString);
-					this.tempConfig = parsedConfig
-				} catch (error) {
-					this.tempConfig = [];
-				}
+
+				this.tempConfig = configString?.startsWith("Options=")
+				? configString.substring(8)
+				: configString || {};
+				
 				this.showIdentityProviderModal('delete');
 			},
 			createIdentityProvider() {
@@ -1098,12 +1092,12 @@
 						}
 					}
 					else {
-						this.$emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 					}
 
 					this.clearUserCfg()
 					// Update model data
-					this.$emit('updateModal')
+					this.$emit('update-model')
 				});
 			},
 			typeMapping(userType) {
@@ -1191,12 +1185,12 @@
 						}
 					}
 					else {
-						this.$emit('alertClass', { ResultMsg: data.Message, AlertType: 'danger' });
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 						}
 
 					this.clearRoleProvider()
 					// Update model data
-					this.$emit('updateModal')
+					this.$emit('update-model')
 				});
 			},
 			clearRoleProvider() {

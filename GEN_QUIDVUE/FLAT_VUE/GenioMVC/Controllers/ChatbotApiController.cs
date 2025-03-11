@@ -1,7 +1,8 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Text;
+
 using CSGenio.core.ai;
 using GenioMVC.Models.Navigation;
-using System.Text;
 
 namespace GenioMVC.Controllers
 {
@@ -53,6 +54,7 @@ namespace GenioMVC.Controllers
             request.Content = new StringContent(JsonConvert.SerializeObject(newContent), Encoding.UTF8, "application/json");
             return await _chatbotService.SendChatbotRequestAsync(request);
         }
+
         public async Task<T> ChatbotApiFunction<T>(StringContent content)
         {
             // Convert StringContent to object for the service call

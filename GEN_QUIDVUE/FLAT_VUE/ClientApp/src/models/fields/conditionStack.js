@@ -36,7 +36,7 @@ class ConditionSource
 		this.isMet = isMetVal
 
 		if (eventList.length > 0)
-			events?.onMany(eventList, () => this.validateCondition())
+			events.onMany(eventList, () => this.validateCondition())
 	}
 
 	/**
@@ -225,7 +225,7 @@ class ConditionStack
 	async add(sourceId, condition, eventIds)
 	{
 		if (typeof sourceId !== 'string' || sourceId.length === 0)
-			throw new Error('An invalid source was specified, the value should be a string.')
+			throw new Error('An invalid source was specified, the value should be a non-empty string.')
 
 		if (sourceId in this.sources)
 			return false
@@ -248,7 +248,7 @@ class ConditionStack
 	remove(sourceId)
 	{
 		if (typeof sourceId !== 'string' || sourceId.length === 0)
-			throw new Error('An invalid source was specified, the value should be a string.')
+			throw new Error('An invalid source was specified, the value should be a non-empty string.')
 
 		if (!(sourceId in this.sources))
 			return false

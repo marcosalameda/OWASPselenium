@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER GRPB]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Grpb" form. (++, CT, SR, CL and U1)
 		/// </summary>

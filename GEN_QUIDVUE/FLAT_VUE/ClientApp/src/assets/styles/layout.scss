@@ -949,7 +949,7 @@ nav.main-header .c-header__link--sidebar.action-item {
 }
 
 .main-sidebar .nav-sidebar .nav-item > .c-tab__item-header {
-    white-space: nowrap;
+	white-space: nowrap;
 }
 
 .main-sidebar .nav-sidebar > .nav-item.menu-open > .nav-link,
@@ -1465,11 +1465,11 @@ div.navbar .n-menu__aside-icon {
 
 		& .c-right-sidebar__control,
 		& #right-sidenav {
-			top: calc(var(--visible-header-height)* 1px + 3.5rem);
+			top: calc(var(--visible-header-height) * 1px + 3.5rem);
 		}
 	}
 
 	.content-wrapper {
-		margin-top: 3.5rem
+		margin-top: 3.5rem;
 	}
 }

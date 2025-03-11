@@ -2,42 +2,100 @@
     <div id="role_container">
         <div class="q-stack--column">
 			<h1 class="f-header__title">
-			{{Model.ModuleDescription}} - <strong v-if="Model.Description">{{$t(Model.Designation)}}</strong>
+			{{ Resources.GESTAO_DE_UTILIZADOR06990 }}
 			</h1>
 		</div>
 		<hr>
-        <QGroupBoxContainer :label="Resources.UTILIZADORES39761">
-			<q-row-container id="row-description" v-if="Model.Description">
-                <p id="title-parag">{{Resources.DESCRICAO07528}}:</p>
-                <p>{{$t(Model.Description)}}</p>
-            </q-row-container>
+        <q-card
+            class="q-card--admin-default"
+            width="block"
+            :title="Resources.DESCRICAO_DA_FUNCAO21982">
             <q-row-container>
-				<qtable
-                    :rows="Model.UserAboveList"
-                    :columns="userListColumns">
-                    <template #role="props">
-                        <q-badge
-                            variant="bold" >
-                            {{$t(props.row.Designation)}}
-                        </q-badge>
-                    </template>
-                </qtable>
-			</q-row-container>
-		</QGroupBoxContainer>
-        <QGroupBoxContainer :label="Resources.HIERARQUIA22557">
-            <q-row-container>
-                <div class="col-sm">
-                    <svg class="graph" ref="svg">
-                        <g ref="graph"/>
-                    </svg>
+                <div class="description-container">
+                    <q-badge
+                        variant="bold" >
+                        {{  getDesignation() }}
+                    </q-badge>
+                    <div class="module-container">
+                        <span>{{ Resources.MODULO59907 }}:</span><br />
+                        <span>{{ Model.ModuleDescription }}</span><br />
+                    </div>
+                    <div v-if="Model.Description" class="module-container">
+                        <span>{{ Resources.DESIGNACAO25444 }}:</span><br />
+                        <span>{{ Model.Description }}</span>
+                    </div>
                 </div>
-                <br>
-                <q-button
-                    :label='Resources.VOLTAR01353'
-                    @click="goBack" />
-			</q-row-container>
-		</QGroupBoxContainer>
+                <q-row-container>
+                    <qtable
+                        :rows="Model.UserAboveList"
+                        :columns="userList.userListColumns"
+                        :config="userList.config"
+                        class="q-table--borderless">
+                        <!--Action column-->
+                        <template #actions="props">
+                            <q-button-group borderless>
+                                <q-button
+                                    :title="Resources.ELIMINAR21155"
+                                    @click="deleteUser(props.row)">
+                                    <q-icon icon="bin" />
+                                </q-button>
+                            </q-button-group>
+                        </template>
+                        <template #role="props">
+                            <q-badge
+                                variant="bold" >
+                                {{$t(props.row.Designation)}}
+                            </q-badge>
+                        </template>
+                    </qtable>
+                    <q-button
+                        :label="Resources.ATRIBUIR_UTILIZADORE53600"
+                        b-style="primary"
+                        @click="assignUsers" />
+                </q-row-container>
+                <q-card
+                    class="q-card--admin-default"
+                    width="block"
+                    :title="Resources.HIERARQUIA22557">
+                    <q-row-container>
+                        <div class="col-sm">
+                            <svg class="graph" ref="svg">
+                                <g ref="graph"/>
+                            </svg>
+                        </div>
+                    </q-row-container>
+                </q-card>
+                <row class="footer-btn">
+                    <q-button
+                    :label="Resources.VOLTAR01353"
+                    @click.stop="navigateTo($event, 'users', false)" />
+                </row>
+            </q-row-container>
+		</q-card>
     </div>
+    <q-dialog
+        v-model="showAsignUsers"
+        :title="Resources.SELECIONE_OS_UTILIZA16987"
+        dismissible
+        :buttons="confirmButtons">
+        <template #body.content>
+            <div class="q-dialog-container">
+                <qtable
+                    ref="userAsignTable"
+                    :rows="userAsign.rows"
+                    :columns="userAsign.columns"
+                    :config="userAsign.config"
+                    class="q-table--borderless">
+                </qtable>
+            </div>
+        </template>
+    </q-dialog>
+    <q-dialog
+        class="alert-dialog"
+		v-model="showDialog"
+		:text="dialogText"
+		:icon='{"icon":"check-circle-outline"}'
+        :buttons="dialogBtns" />
 </template>
 
 <script>
@@ -51,21 +109,24 @@
 	export default {
 		name: 'role-view',
 		mixins: [reusableMixin],
+        emits: ['alert-class'],
 		mounted() {
-			this.$nextTick(() =>
-			{
-				// access our input using template refs, then focus
-				this.$refs.svg.focus()
-				this.redrawGraph(); // <= It gives an error because the fetchRole may not have completed the load yet. The await in 'created' does not stop the process..
-			})
+            this.$nextTick(async () => {
+                await this.fetchRole();
+                this.redrawGraph();
+            });
 		},
 		created() {
 			// Ler dados
 			this.fetchRole();
 		},
         data() {
-            var vm = this;
             return {
+                showDialog: false,
+                showAsignUsers: false,
+                confirmButtons: [],
+                dialogBtns: [],
+                dialogText: "",
                 Model: {
                     Parents: [],
                     Children : [],
@@ -77,32 +138,81 @@
                     imports: [],
                     class: String
                 }],
-                userListColumns: [
-                    {
-                        label: () =>  vm.$t('UTILIZADOR52387'),
-                        name: "UserName",
-                        sort: true,
-                        initial_sort: true,
-                        initial_sort_order: "asc"
-                    },
-                    {
-                        label: () => vm.$t('ULTIMA_ALTERACAO22785'),
-                        name: "ChangedDate",
-                        sort: true,
-                        initial_sort: false,
-                    },
-                    {
-                        label: () => vm.$t('ROLE60946'),
-                        name: "role",
-                        slot_name : "role",
-                        sort: false,
+                userList: {
+                    userListColumns: [
+                        {
+                            label: () => this.$t('ACOES22599'),
+                            name: "actions",
+                            slot_name: "actions",
+                            sort: false,
+                            column_classes: "thead-actions",
+                            row_text_alignment: 'text-center',
+                            column_text_alignment: 'text-center'
+                        },
+                        {
+                            label: () =>  this.$t('UTILIZADOR52387'),
+                            name: "UserName",
+                            sort: true,
+                            initial_sort: true,
+                            initial_sort_order: "asc"
+                        },
+                        {
+                            label: () => this.$t('ULTIMA_ALTERACAO22785'),
+                            name: "ChangedDate",
+                            sort: true,
+                            initial_sort: false,
+                        },
+                        {
+                            label: () => this.$t('ROLE60946'),
+                            name: "role",
+                            slot_name : "role",
+                            sort: false,
+                        },
+                    ],
+                    config: {
+                        table_title: () => this.$t('UTILIZADORES39761'),
+                        global_search: {
+                            visibility: false,
+                        }
                     }
-                ],
+                },
+                userAsign: {
+                    columns: [
+                        {
+                            label: () =>  this.$t('UTILIZADOR52387'),
+                            name: "UserName",
+                            sort: true,
+                            initial_sort: true,
+                            initial_sort_order: "asc"
+                        }
+                    ],
+                    config: {
+                        table_title: () => this.$t('TODOS_OS_UTILIZADORE41512'),
+                        global_search: {
+                            classes: "qtable-global-search",
+							placeholder : this.$t('PESQUISAR_UTILIZADOR60804'),
+							searchOnPressEnter: true,
+							showRefreshButton: true,
+							searchDebounceRate: 1000
+                        },
+                        checkbox_rows: true
+                    }
+                },
                 graph: null
             };
         },
     methods: {
-        fetchRole: async function () {
+        getDesignation() {
+            const designationKey = this.Model?.Designation;
+
+            if (!designationKey) {
+                return this.Resources.A_CARREGAR___34906;  
+            }
+
+            const translated = this.$t(designationKey);
+            return translated !== designationKey ? translated : designationKey;
+        },
+        async fetchRole() {
             var vm = this;
             QUtils.log("Fetch data - Role");
 			let data = await QUtils.FetchData(QUtils.apiActionURL('Role', 'GetRole', { module: vm.$route.params.module, roleId: vm.$route.params.role }));
@@ -110,23 +220,119 @@
 			vm.Model = data;
 			vm.RoleOnly = 'only';
         },
-        viewRole: async function (role) {
+        async viewRole(role) {
             //In vue, instead of reloading the page, you're supposed to reload the data
             this.$route.params.role = role;
             await this.fetchRole();
             this.resetGraph();
             this.redrawGraph();
         },
-        assignRole: function () {
+        assignRole() {
             this.$router.push({
                 name: 'assign_role',
                 params: { role: this.$route.params.role, module: this.$route.params.module, culture: this.currentLang, system: this.currentYear }
             });
         },
-        goBack: function () {
-            return this.$router.go(-1);
+        assignUsers() {
+            const module = this.$route.params.module;
+            const roleId = this.$route.params.role;
+            const url = QUtils.apiActionURL('Role', 'GetUsersForModule', { module, roleId });
+            QUtils.FetchData(url, true).then((data) => {
+                if (data.Success) {
+                    this.userAsign.rows = data.UserList;
+                    this.getButtons() 
+                    this.showAsignUsers = true;
+                } else {
+                    this.$emit('alert-class', { ResultMsg: this.Resources.ERRO_AO_CARREGAR_UTI62612, AlertType: 'danger' });
+                }
+            });
         },
-        resetGraph: function () {
+        getDialogText(action) {
+            switch (action) {
+                case 'delete':
+                    this.dialogText = this.Resources.UTILIZADOR_EXCLUIDO_17794;
+                    break;
+                case 'add':
+                    this.dialogText = this.Resources.UTILIZADOR_ADICIONAD13862;
+                    break;
+                default:
+                    break;
+            }
+        },
+        getButtons() {
+            this.confirmButtons = [
+                {
+                    id: 'confirm-btn',
+                    props: {
+                        label: this.Resources.ASSOCIAR58485,
+                        bStyle: "primary"
+                    },
+                    action: () => {
+                        this.submit()
+                        
+                    }
+                },
+                {
+                    id: 'cancel-btn',
+                    props: {
+                        label: this.Resources.CANCELAR49513,
+                        bStyle: "secondary"
+                    }
+                }
+            ]
+        },
+        async submit() {
+            const selectedUsers = this.$refs.userAsignTable.selected_items;
+            if (selectedUsers.length === 0) {
+                $emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
+            }
+            const users = selectedUsers.map((user) => user.Codpsw).join(',');
+            const module = this.$route.params.module;
+            const roleId = this.$route.params.role;
+            QUtils.postData('ManageUsers', 'AssignRoleToUsers', null, { users, module, roleId }, (data) => {
+                if (data.Success) {
+                    this.fetchRole();
+                    this.getShowDialog('add')
+                } else {
+                    $emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
+                }
+            });
+        },
+        async deleteUser(row) {
+            const cod = row.Codpsw;
+            const module = this.$route.params.module;
+            const roleId = this.$route.params.role;
+            QUtils.postData('ManageUsers', 'RemoveUserRole', null, { cod, module, roleId }, (data) => {
+                if (data.Success) {
+                    this.fetchRole()
+                    this.getShowDialog('delete');
+                }
+                else {
+                    this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
+                }
+            });
+        },
+        getShowDialog(action) {
+            this.dialogBtns = [
+                {
+                    id: 'confirm-btn',
+                    props: {
+                        label: this.Resources.OK57387,
+                        bStyle: "primary"
+                    },
+                    action: () => {
+                        if (!this.Model.Username) {
+                            this.$router.replace({ name: 'users', params: { culture: this.currentLang, system: this.currentYear } });
+                            return;
+                        }
+                        this.$router.replace({ name: 'users', params: { culture: this.currentLang, system: this.currentYear } });
+                    }
+                }
+            ]
+            this.getDialogText(action);
+            this.showDialog = true
+        },
+        resetGraph() {
             while(this.graphic.length > 1){
                 this.graphic.pop();
             }
@@ -152,12 +358,12 @@
 
             var vm = this;
             //Setup the label for the origin and its edges( imports )
-            this.graph.setNode(this.$t(this.Model.Designation), {label: this.$t(this.Model.Designation), class: "origin"});
-            vm.graphic.push({
-                    name: vm.$t(vm.Model.Designation),
-                    imports: vm.Model.Children,
-                    class: "origin"
-            });
+                this.graph.setNode(this.$t(this.Model.Designation), {label: this.$t(this.Model.Designation), class: "origin"});
+                vm.graphic.push({
+                        name: vm.$t(vm.Model.Designation),
+                        imports: vm.Model.Children,
+                        class: "origin"
+                });
 
             //Setup the children of the selected role and its edges
             //For each child we also fetch its children
@@ -205,7 +411,7 @@
 
             // Set up zoom support
 
-           this.zoom = d3.zoom().on("zoom", this.nodeZoomHandler);
+            this.zoom = d3.zoom().on("zoom", this.nodeZoomHandler);
 
             svg.call(this.zoom);
             svg.on("dblclick.zoom", null);
@@ -218,7 +424,7 @@
                 .on("dblclick", this.nodeDblClickHandler);
                 //.on("click", this.nodeClickHandler);
         },
-        updateEdges: function() {
+        updateEdges() {
             //remove all the previous edges
             this.graph.edges().forEach( edge=> {
                 this.graph.removeEdge(edge.v, edge.w);
@@ -240,7 +446,7 @@
                 }, this);
             }, this);
         },
-        updateRender: function() {
+        updateRender() {
 
             var svg = d3.select(this.$refs.svg);
             this.inner = svg.select("g");
@@ -253,7 +459,7 @@
             this.fitSize();
 
         },
-        fitSize: function() {
+        fitSize() {
             var width = this.$refs.svg.clientWidth;
 
             // Center the graph
@@ -265,7 +471,7 @@
                 initialScale = 0.75;
             this.rescale(initialScale);
         },
-        rescale: function(newScale) {
+        rescale(newScale) {
             var svg = d3.select(this.$refs.svg);
 
             var width = this.$refs.svg.clientWidth;
@@ -280,7 +486,7 @@
             svg.attr('height', this.graph.graph().height + 40);
 
         },
-        nodeDblClickHandler : function(d) {
+        nodeDblClickHandler (d) {
 
             this.Model.Children.forEach(element => {
                 if(this.$t(element.Designation) == d.path[1].__data__){
@@ -296,7 +502,7 @@
                 }
             })
         },
-        nodeZoomHandler : function(e) {
+        nodeZoomHandler (e) {
             this.$refs.graph.setAttribute("transform", e.transform);
         }
     }
@@ -373,7 +579,6 @@
 
   .graph {
   width: 100%;
-  border: 1px solid #EEE;
   }
 
   #row-description {

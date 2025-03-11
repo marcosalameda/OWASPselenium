@@ -151,7 +151,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
 								name: 'ValDtdeco',
@@ -160,7 +160,7 @@
 								label: computed(() => this.Resources.DECOMISSION14486),
 								scrollData: 8,
 								dateTimeType: 'dateTime',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'ValNote',
@@ -168,7 +168,7 @@
 								field: 'NOTE',
 								label: computed(() => this.Resources.NOTES05274),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'GQT_Menu_2C111',
@@ -297,7 +297,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-DECOM'],
+						globalEvents: ['changed-DECOM'],
 						uuid: 'e6356714-1875-490b-820c-71ac269df34f',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -305,7 +305,7 @@
 						controlLimits: [
 							/** DE */
 						]
-					}, this)
+					}, this),
 				}
 			}
 		},

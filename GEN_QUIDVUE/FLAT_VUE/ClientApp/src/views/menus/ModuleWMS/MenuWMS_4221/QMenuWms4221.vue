@@ -152,7 +152,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Entit.ValName',
@@ -162,7 +162,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								pkColumn: 'ValCodentit',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
 								name: 'ValIncorpor',
@@ -171,7 +171,7 @@
 								label: computed(() => this.Resources.INCORPORATION10135),
 								scrollData: 8,
 								dateTimeType: 'date',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
 								name: 'ValName',
@@ -180,7 +180,7 @@
 								label: computed(() => this.Resources.FACILITY_NAME19514),
 								dataLength: 85,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
 								name: 'Facty.ValType',
@@ -190,7 +190,7 @@
 								dataLength: 25,
 								scrollData: 25,
 								pkColumn: 'ValCodfacty',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
 								name: 'ValAddress',
@@ -198,7 +198,7 @@
 								field: 'ADDRESS',
 								label: computed(() => this.Resources.ADDRESS04342),
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
 								name: 'ValLatitude',
@@ -208,7 +208,7 @@
 								scrollData: 10,
 								maxDigits: 3,
 								decimalPlaces: 6,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
 								name: 'ValLongitud',
@@ -218,7 +218,7 @@
 								scrollData: 10,
 								maxDigits: 3,
 								decimalPlaces: 6,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 9,
 								name: 'ValGeocoord',
@@ -229,7 +229,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_4221',
@@ -371,11 +371,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FACTY', 'changed-CNTRY', 'changed-FACIL', 'changed-ENTIT'],
+						globalEvents: ['changed-FACTY', 'changed-FACIL', 'changed-CNTRY', 'changed-ENTIT'],
 						uuid: '2150bac1-850e-4286-9577-a349cdb3ea9a',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

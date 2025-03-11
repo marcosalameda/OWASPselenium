@@ -151,7 +151,7 @@
 								dataLength: 100,
 								scrollData: 20,
 								pkColumn: 'ValCodpsw',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Regio.ValRegiao',
@@ -161,7 +161,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodregia',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'IMO_Menu_LISTA_REGIAO',
@@ -217,11 +217,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-REGIO', 'changed-PSW', 'changed-PWREG'],
+						globalEvents: ['changed-REGIO', 'changed-PSW', 'changed-PWREG'],
 						uuid: '8b11f295-fa69-4195-a32e-829fc2eab416',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

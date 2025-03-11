@@ -1,10 +1,10 @@
-﻿@import "gridstack/dist/gridstack-extra.min.css";
-@import "gridstack/dist/gridstack.min.css";
+﻿@import 'gridstack/dist/gridstack-extra.min.css';
+@import 'gridstack/dist/gridstack.min.css';
 
 @mixin apply-widget-styles($color, $on-color, $on-color-rgb) {
 	background-color: $color;
 	color: $on-color;
-	
+
 	.q-input-group__prepend > span,
 	.q-menu-widget .q-icon__font,
 	.q-submenus-widget__link,
@@ -14,21 +14,21 @@
 	.i-checkbox,
 	input,
 	.form-header {
-	  color: $on-color;
+		color: $on-color;
 	}
-  
+
 	.q-submenus-widget__link:hover {
-	  color: $neutral-light;
+		color: $neutral-light;
 	}
-	
-	.q-field__control[type=Date] .q-icon__svg,
+
+	.q-field__control[type='Date'] .q-icon__svg,
 	.q-icon__svg,
 	.q-counter-widget .q-icon__svg {
-	  fill: $on-color;
+		fill: $on-color;
 	}
-  
+
 	.q-widget__group {
-	  color: rgb($on-color-rgb / 0.7);
+		color: rgb($on-color-rgb / 0.7);
 	}
 
 	.q-custom-widget .i-checkbox__container.disabled input:checked ~ span.i-checkbox__field::after {
@@ -36,7 +36,7 @@
 	}
 
 	.q-custom-widget .q-table-list {
-		.c-table {			
+		.c-table {
 			.row-action-btn .q-icon__svg {
 				fill: $color;
 			}
@@ -48,7 +48,7 @@
 					}
 				}
 			}
-			
+
 			&__footer-out {
 				.d-flex .q-btn {
 					color: $on-color;
@@ -64,13 +64,12 @@
 							}
 						}
 					}
-					
+
 					.q-icon__svg {
 						fill: $color;
 					}
 				}
 			}
-
 		}
 	}
 }
@@ -139,9 +138,7 @@
 		&:hover,
 		&:focus-within {
 			cursor: grab;
-			box-shadow:
-				0 3.2px 7.2px 0 rgba(0, 0, 0, 0.132),
-				0 0.6px 1.8px 0 rgba(0, 0, 0, 0.108);
+			box-shadow: 0 3.2px 7.2px 0 rgba(0, 0, 0, 0.132), 0 0.6px 1.8px 0 rgba(0, 0, 0, 0.108);
 		}
 	}
 }
@@ -151,14 +148,13 @@
 .q-widget {
 	display: flex;
 	flex-direction: column;
-	box-shadow:
-		0 1.6px 3.6px 0 rgba(0, 0, 0, 0.132),
-		0 0.3px 0.9px 0 rgba(0, 0, 0, 0.108);
+	box-shadow: 0 1.6px 3.6px 0 rgba(0, 0, 0, 0.132), 0 0.3px 0.9px 0 rgba(0, 0, 0, 0.108);
 	background-color: $white;
 	border-radius: $border-radius;
 
 	// Show focus outline on the widget element when focusing links in alert and menu widgets
-	&:has(.q-alert-widget), &:has(.q-menu-widget) {
+	&:has(.q-alert-widget),
+	&:has(.q-menu-widget) {
 		&:has(:focus-visible) {
 			outline: $action-focus-width $action-focus-style $action-focus-color;
 			outline-offset: -2px;
@@ -166,12 +162,9 @@
 	}
 
 	//Adds the hover effect to the widget when it doesn't have a custom widget
-	&:hover:not(:has(.q-custom-widget))
-	{	
+	&:hover:not(:has(.q-custom-widget)) {
 		cursor: pointer;
-		box-shadow:
-		0 3.2px 7.2px 0 rgba(0, 0, 0, 0.162),
-		0 0.6px 1.8px 0 rgba(0, 0, 0, 0.120);
+		box-shadow: 0 3.2px 7.2px 0 rgba(0, 0, 0, 0.162), 0 0.6px 1.8px 0 rgba(0, 0, 0, 0.12);
 	}
 
 	&--border-primary {
@@ -202,7 +195,7 @@
 		border-left: 5px solid $neutral;
 	}
 
-	&--secondary{
+	&--secondary {
 		@include apply-widget-styles($secondary, $on-secondary, $on-secondary-rgb);
 	}
 
@@ -432,19 +425,18 @@
 		letter-spacing: 0.02rem;
 		margin: 0;
 	}
-	
+
 	.q-icon {
 		font-size: 2.5rem;
 		line-height: 2.5rem;
 		color: $primary;
 	}
 
-
 	.q-icon__svg {
 		width: 2.5rem;
 		height: 2.5rem;
 
-		&.q-menu-widget__link-icon{
+		&.q-menu-widget__link-icon {
 			width: 1rem;
 			height: 1rem;
 		}
@@ -452,7 +444,7 @@
 }
 
 /* Sub Menu widget */
-.q-submenus-widget{
+.q-submenus-widget {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
@@ -468,7 +460,7 @@
 		margin: 0;
 	}
 
-	&__links{
+	&__links {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
@@ -492,10 +484,10 @@
 		}
 	}
 
-	&__link{
+	&__link {
 		cursor: pointer;
 
-		&:hover{
+		&:hover {
 			color: $primary;
 		}
 	}
@@ -504,13 +496,13 @@
 		width: 2.5rem;
 		height: 2.5rem;
 
-		&.q-submenus-widget__link-icon{
+		&.q-submenus-widget__link-icon {
 			width: 0.75rem;
 			height: 0.75rem;
 		}
 	}
 
-	& &__footer{
+	& &__footer {
 		position: absolute;
 		right: 10px;
 		bottom: 10px;
@@ -552,7 +544,7 @@
 		}
 	}
 
-	.i-checkbox__container.disabled input:checked ~ .i-checkbox__field{
+	.i-checkbox__container.disabled input:checked ~ .i-checkbox__field {
 		background: none;
 		border: none;
 
@@ -586,19 +578,17 @@
 	}
 
 	// To override table styles
-	.q-table-list{
-
+	.q-table-list {
 		.c-table {
 			border: none;
 			border-collapse: separate;
-			border-spacing: 0 .2rem;
+			border-spacing: 0 0.2rem;
 			background: transparent;
 
 			&__head {
 				.column-header-content {
-					padding: .2rem .5rem;
+					padding: 0.2rem 0.5rem;
 				}
-	
 			}
 
 			&__body {
@@ -618,7 +608,7 @@
 			}
 
 			&__footer-out {
-				background-color: rgba($neutral-light-rgb, .3);
+				background-color: rgba($neutral-light-rgb, 0.3);
 				border: none;
 
 				.d-flex .q-btn {
@@ -635,7 +625,7 @@
 			.q-btn:not(.q-btn--active) {
 				background: $background;
 
-				&:hover{
+				&:hover {
 					background: $primary-dark;
 				}
 			}

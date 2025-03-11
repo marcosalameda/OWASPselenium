@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -140,7 +140,7 @@
 											<q-checkbox-input
 												v-if="controls.FLDSCONDFLDS_TBLCOND_.isVisible"
 												v-bind="controls.FLDSCONDFLDS_TBLCOND_.props"
-												@update:model-value="model.ValTblcond.fnUpdateValue" />
+												v-on="controls.FLDSCONDFLDS_TBLCOND_.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -160,7 +160,7 @@
 											<q-checkbox-input
 												v-if="controls.FLDSCONDFLDS_FORMCOND.isVisible"
 												v-bind="controls.FLDSCONDFLDS_FORMCOND.props"
-												@update:model-value="model.ValFormcond.fnUpdateValue" />
+												v-on="controls.FLDSCONDFLDS_FORMCOND.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -268,7 +268,7 @@
 											<q-checkbox-input
 												v-if="controls.FLDSCONDFLDS_FCLIENT2.isVisible"
 												v-bind="controls.FLDSCONDFLDS_FCLIENT2.props"
-												@update:model-value="model.ValFclient2.fnUpdateValue" />
+												v-on="controls.FLDSCONDFLDS_FCLIENT2.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -530,8 +530,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {
@@ -1163,7 +1161,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						directChildren: ['FLDSCONDPSEUDSTATICTX', 'FLDSCONDPSEUDGRIDTBL_', 'FLDSCONDPSEUDLISTTBL_', 'FLDSCONDPSEUDLISTBTN_'],
+						directChildren: ['FLDSCONDPSEUDSTATICTX', 'FLDSCONDPSEUDGRIDTBL_', 'FLDSCONDPSEUDLISTTBL_', 'FLDSCONDPSEUDLISTBTN_', 'FLDSCONDPSEUDLISTBTN2'],
 						controlLimits: [
 						],
 					}, this),
@@ -1234,7 +1232,7 @@
 								label: computed(() => this.Resources.FEEDBACK52855),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						controlLimits: [
 							{
@@ -1286,7 +1284,7 @@
 								label: computed(() => this.Resources.FEEDBACK52855),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValListtbl',
@@ -1404,7 +1402,22 @@
 									isVisible: computed(() => vm.controls.FLDSCONDPSEUDLISTBTN_.isVisible),
 									disabled: computed(() => vm.controls.FLDSCONDPSEUDLISTBTN_.isBlocked),
 									params: {
-										action: (c, o, d) => vm.controls.FLDSCONDPSEUDLISTBTN_.action(d || c),
+										action: (c, _, d) => vm.controls.FLDSCONDPSEUDLISTBTN_.action(d || c),
+										isControlled: true,
+										isRoute: true
+									}
+								},
+								{
+									id: 'BE_LISTBTN2',
+									name: 'LISTBTN2',
+									title: computed(() => this.Resources.FORM54242),
+									isInReadOnly: true,
+									checkIsVisible: (row) => row.Fields.customActions.FLDSCONDPSEUDLISTBTN2.isVisible,
+									checkIsDisabled: (row) => row.Fields.customActions.FLDSCONDPSEUDLISTBTN2.isBlocked,
+									isVisible: true,
+									disabled: false,
+									params: {
+										action: (c, _, d) => vm.controls.FLDSCONDPSEUDLISTBTN2.action(d || c),
 										isControlled: true,
 										isRoute: true
 									}
@@ -1439,7 +1452,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-FLDS', 'changed-FEECA'],
+						globalEvents: ['changed-FLDS', 'changed-FEECA'],
 						uuid: 'Fldscond_ValListtbl',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1529,6 +1542,33 @@
 							dependencyEvents: ['fieldChange:flds.formcond', 'fieldChange:flds.cond'],
 							isServerRecalc: false,
 						},
+					}, this),
+					FLDSCONDPSEUDLISTBTN2: new fieldControlClass.ButtonControl({
+						id: 'FLDSCONDPSEUDLISTBTN2',
+						name: 'LISTBTN2',
+						size: 'mini',
+						hasLabel: false,
+						label: computed(() => this.Resources.FORM54242),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'FLDSCONDPSEUDGROUP5__',
+						// eslint-disable-next-line
+						action: (event) => {
+							let btnAction = () => {
+								const params = {
+									id: event?.rowKey,
+									mode: vm.formModes.edit,
+									modes: 'vedai',
+									isControlled: false,
+									extraData: JSON.stringify(event)
+								}
+
+								vm.navigateToForm('FEECA', params.mode, event?.rowKey, params)
+							}
+							btnAction()
+						},
+						controlLimits: [
+						],
 					}, this),
 				},
 

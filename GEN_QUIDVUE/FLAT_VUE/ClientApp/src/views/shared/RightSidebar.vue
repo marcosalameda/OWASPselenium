@@ -4,7 +4,7 @@
 		v-show="!isSidebarEmpty"
 		class="wrapper">
 		<div class="c-right-sidebar__control">
-			<!--This button must use the v-show because the button must always exist-->
+			<!-- This button must use the v-show because the button must always exist -->
 			<q-button
 				v-show="rightSidebarIsCollapsed"
 				ref="sidebarOpenButton"
@@ -345,7 +345,7 @@
 			{
 				return this.extendedTab === 'widgets-panel'
 			},
-			
+
 			/**
 			 * True if the alerts tab should be visible, false otherwise.
 			 */
@@ -384,12 +384,14 @@
 				return 'chatbotapi'
 			},
 
+			/**
+			 * The component classes.
+			 */
 			classes()
 			{
-				let classes = []
+				const classes = ['c-right-sidebar']
 
-				classes.push('c-right-sidebar')
-				if(!this.rightSidebarIsVisible)
+				if (!this.rightSidebarIsVisible)
 					classes.push('invisible')
 
 				return classes
@@ -422,12 +424,12 @@
 
 			openSidebar()
 			{
-				/**
+				/*
 				 * Check if the open button was focused and save this value which is checked after the CSS transition ends.
-				 * This must be done here because the button element disappears and loses focus during this function, 
+				 * This must be done here because the button element disappears and loses focus during this function,
 				 * after setting the collapse state.
 				 */
-				if(document?.activeElement?.id === this.sidebarOpenButtonId)
+				if (document?.activeElement?.id === this.sidebarOpenButtonId)
 					this.focusedSidebarButtonId = this.sidebarOpenButtonId
 
 				this.setRightSidebarCollapseState(false)
@@ -444,30 +446,26 @@
 			 */
 			onTransitionEnd()
 			{
-				/**
-				 * If the right sidebar is being closed, set the actual value for visibility to false.
-				 * Must be done here, after the transition ends so it doesn't disappear before the CSS transition.
-				 */
-				if(this.rightSidebarIsCollapsed)
+				// If the right sidebar is being closed, set the actual value for visibility to false.
+				// Must be done here, after the transition ends so it doesn't disappear before the CSS transition.
+				if (this.rightSidebarIsCollapsed)
 					this.setRightSidebarVisibility(false)
 
-				/**
-				 * Check if any of the sidebar buttons were focused and, if so, decide which one the focus should move to. 
-				 * Must be done here, after the CSS transition ends so the element that will be focused is visible and can be focused.
-				 */
+				// Check if any of the sidebar buttons were focused and, if so, decide which one the focus should move to.
+				// Must be done here, after the CSS transition ends so the element that will be focused is visible and focusable.
 				let sidebarOpenButton = this.$refs?.sidebarOpenButton
 				let sidebarCloseButton = this.$refs?.sidebarCloseButton
 				let sidebar = this.$refs?.sidebar
 
 				// If the open button was focused
-				if(this.focusedSidebarButtonId === this.sidebarOpenButtonId)
+				if (this.focusedSidebarButtonId === this.sidebarOpenButtonId)
 				{
 					// Focus on the close button
 					sidebarCloseButton?.$el?.focus()
 					this.focusedSidebarButtonId = null
 				}
 				// If any of the buttons within the sidebar were focused
-				else if(sidebar?.contains(document?.activeElement))
+				else if (sidebar?.contains(document?.activeElement))
 				{
 					// Focus on the open button
 					sidebarOpenButton?.$el?.focus()
@@ -476,16 +474,15 @@
 
 			toggleSidebarTab(tabId)
 			{
-				if (this.extendedTab === tabId) {
+				if (this.extendedTab === tabId)
 					this.extendedTab = ''
-				}
-				else {
+				else
+				{
 					this.extendedTab = tabId
-					if(this.mobileLayoutActive)
-					{
-						//This closes any other menu that is currently open
+
+					// Close any other menu that is currently open.
+					if (this.mobileLayoutActive)
 						this.$eventHub.emit('right-sidebar-open')
-					}
 				}
 			},
 

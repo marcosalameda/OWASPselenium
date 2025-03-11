@@ -38,39 +38,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Itemc.ValCoditem")]
 		public string ValCoditem { get { return klass.ValCoditem; } set { klass.ValCoditem = value; } }
+
 		private Item _item;
 		[DisplayName("Item")]
 		[ShouldSerialize("Item")]
-		public virtual Item Item {
-			get {
-				if (!this.isEmptyModel && (_item == null || (!string.IsNullOrEmpty(ValCoditem) && (_item.isEmptyModel || _item.klass.QPrimaryKey != ValCoditem))))
+		public virtual Item Item
+		{
+			get
+			{
+				if (!isEmptyModel && (_item == null || (!string.IsNullOrEmpty(ValCoditem) && (_item.isEmptyModel || _item.klass.QPrimaryKey != ValCoditem))))
 					_item = Models.Item.Find(ValCoditem, m_userContext, Identifier, _fieldsToSerialize);
-				if (_item == null)
-					_item = new Models.Item(m_userContext, true, _fieldsToSerialize);
+				_item ??= new Models.Item(m_userContext, true, _fieldsToSerialize);
 				return _item;
 			}
 			set { _item = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Itemc.ValCodtpcat")]
 		public string ValCodtpcat { get { return klass.ValCodtpcat; } set { klass.ValCodtpcat = value; } }
+
 		private Cattp _cattp;
 		[DisplayName("Cattp")]
 		[ShouldSerialize("Cattp")]
-		public virtual Cattp Cattp {
-			get {
-				if (!this.isEmptyModel && (_cattp == null || (!string.IsNullOrEmpty(ValCodtpcat) && (_cattp.isEmptyModel || _cattp.klass.QPrimaryKey != ValCodtpcat))))
+		public virtual Cattp Cattp
+		{
+			get
+			{
+				if (!isEmptyModel && (_cattp == null || (!string.IsNullOrEmpty(ValCodtpcat) && (_cattp.isEmptyModel || _cattp.klass.QPrimaryKey != ValCodtpcat))))
 					_cattp = Models.Cattp.Find(ValCodtpcat, m_userContext, Identifier, _fieldsToSerialize);
-				if (_cattp == null)
-					_cattp = new Models.Cattp(m_userContext, true, _fieldsToSerialize);
+				_cattp ??= new Models.Cattp(m_userContext, true, _fieldsToSerialize);
 				return _cattp;
 			}
 			set { _cattp = value; }
 		}
-
 
 		[DisplayName("Category type")]
 		/// <summary>Field : "Category type" Tipo: "C" Formula: ++ "[CATTP->TPCATEGO]"</summary>
@@ -79,8 +81,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Itemc.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Itemc(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -99,7 +101,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAitemc csgenioa)
 		{
 			if (csgenioa == null)
@@ -110,13 +111,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "item":
-						if (_item == null)
-							_item = new Item(m_userContext, true, _fieldsToSerialize);
+						_item ??= new Item(m_userContext, true, _fieldsToSerialize);
 						_item.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "cattp":
-						if (_cattp == null)
-							_cattp = new Cattp(m_userContext, true, _fieldsToSerialize);
+						_cattp ??= new Cattp(m_userContext, true, _fieldsToSerialize);
 						_cattp.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

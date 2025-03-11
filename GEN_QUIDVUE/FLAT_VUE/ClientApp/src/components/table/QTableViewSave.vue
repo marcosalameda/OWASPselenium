@@ -75,7 +75,7 @@
 	export default {
 		name: 'QTableViewSave',
 
-		emits: ['show-popup', 'hide-popup', 'set-property', 'save-view', 'copy-view'],
+		emits: ['show-popup', 'hide-popup', 'set-property', 'save-view', 'rename-view', 'copy-view'],
 
 		components: {
 			QControlWrapper,
@@ -159,14 +159,23 @@
 			 * @returns Array
 			 */
 			saveOrCopyView() {
-				if (this.signal.copyFromName !== undefined && this.signal.copyFromName !== null) {
+				if (this.signal.mode === 'DUPLICATE' && this.signal.copyFromName !== undefined && this.signal.copyFromName !== null) {
 					this.$emit('copy-view', {
 						name: this.saveViewName,
 						isSelected: this.saveViewIsSelected,
 						copyFromName: this.signal.copyFromName
 					})
 					this.fnHidePopup()
-				} else {
+				}
+				else if (this.signal.mode === 'RENAME' && this.signal.renameFromName !== undefined && this.signal.renameFromName !== null) {
+					this.$emit('rename-view', {
+						name: this.saveViewName,
+						isSelected: this.saveViewIsSelected,
+						renameFromName: this.signal.renameFromName
+					})
+					this.fnHidePopup()
+				}
+				else {
 					this.$emit('save-view', {
 						name: this.saveViewName,
 						isSelected: this.saveViewIsSelected
@@ -203,7 +212,7 @@
 				}
 
 				// View with this name already exists.
-				if (viewExists) {
+				if (viewExists && !this.signal?.renameFromName) {
 					genericFunctions.displayMessage(`${this.texts.viewExistsText} ${this.texts.wantToOverwriteText}`, 'warning', null, buttons)
 				}
 				// No view with this name already exists.

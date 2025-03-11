@@ -57,11 +57,11 @@
 
 	&:not(.control-dynamic-group):not(:has(.c-groupbox)) {
 		align-self: flex-start;
-	
+
 		&:has(.i-button, .i-checkbox) {
 			align-self: flex-end;
 		}
-	
+
 		&:has(.i-dbedit) {
 			align-self: flex-end;
 		}
@@ -134,7 +134,7 @@
 		align-self: flex-start;
 		margin-top: calc(1.5 * 0.9rem + 0.9rem);
 	}
-	
+
 	.control-join-group:not(.control-dynamic-group):not(:has(.c-groupbox)):has(.i-button) {
 		align-self: flex-start;
 		margin-top: calc(1.5 * 0.9rem);

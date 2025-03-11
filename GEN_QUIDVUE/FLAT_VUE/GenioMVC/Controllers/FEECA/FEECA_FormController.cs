@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Feeca_FldsValDescripModel : RequestLookupModel
+		{
+			public Feeca_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Feeca/Feeca_FldsValDescrip
 		// POST: /Feeca/Feeca_FldsValDescrip
 		[ActionName("Feeca_FldsValDescrip")]
-		public ActionResult Feeca_FldsValDescrip([FromBody]RequestLookupModel requestModel)
+		public ActionResult Feeca_FldsValDescrip([FromBody] Feeca_FldsValDescripModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Feeca_FldsValDescrip_ViewModel model = new Feeca_FldsValDescrip_ViewModel(UserContext.Current);
-			
+
+			Models.Feeca parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Feeca_FldsValDescrip_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

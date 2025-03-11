@@ -45,39 +45,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Movim.ValCodequip")]
 		public string ValCodequip { get { return klass.ValCodequip; } set { klass.ValCodequip = value; } }
+
 		private Equip _equip;
 		[DisplayName("Equip")]
 		[ShouldSerialize("Equip")]
-		public virtual Equip Equip {
-			get {
-				if (!this.isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
+		public virtual Equip Equip
+		{
+			get
+			{
+				if (!isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
 					_equip = Models.Equip.Find(ValCodequip, m_userContext, Identifier, _fieldsToSerialize);
-				if (_equip == null)
-					_equip = new Models.Equip(m_userContext, true, _fieldsToSerialize);
+				_equip ??= new Models.Equip(m_userContext, true, _fieldsToSerialize);
 				return _equip;
 			}
 			set { _equip = value; }
 		}
 
-
 		[DisplayName(">ROOM")]
 		/// <summary>Field : ">ROOM" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Movim.ValCodrooms")]
 		public string ValCodrooms { get { return klass.ValCodrooms; } set { klass.ValCodrooms = value; } }
+
 		private Rooms _rooms;
 		[DisplayName("Rooms")]
 		[ShouldSerialize("Rooms")]
-		public virtual Rooms Rooms {
-			get {
-				if (!this.isEmptyModel && (_rooms == null || (!string.IsNullOrEmpty(ValCodrooms) && (_rooms.isEmptyModel || _rooms.klass.QPrimaryKey != ValCodrooms))))
+		public virtual Rooms Rooms
+		{
+			get
+			{
+				if (!isEmptyModel && (_rooms == null || (!string.IsNullOrEmpty(ValCodrooms) && (_rooms.isEmptyModel || _rooms.klass.QPrimaryKey != ValCodrooms))))
 					_rooms = Models.Rooms.Find(ValCodrooms, m_userContext, Identifier, _fieldsToSerialize);
-				if (_rooms == null)
-					_rooms = new Models.Rooms(m_userContext, true, _fieldsToSerialize);
+				_rooms ??= new Models.Rooms(m_userContext, true, _fieldsToSerialize);
 				return _rooms;
 			}
 			set { _rooms = value; }
 		}
-
 
 		[DisplayName("Observation")]
 		/// <summary>Field : "Observation" Tipo: "MO" Formula:  ""</summary>
@@ -92,8 +94,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Movim.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Movim(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -112,7 +114,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAmovim csgenioa)
 		{
 			if (csgenioa == null)
@@ -123,13 +124,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "equip":
-						if (_equip == null)
-							_equip = new Equip(m_userContext, true, _fieldsToSerialize);
+						_equip ??= new Equip(m_userContext, true, _fieldsToSerialize);
 						_equip.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "rooms":
-						if (_rooms == null)
-							_rooms = new Rooms(m_userContext, true, _fieldsToSerialize);
+						_rooms ??= new Rooms(m_userContext, true, _fieldsToSerialize);
 						_rooms.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

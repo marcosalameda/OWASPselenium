@@ -6,7 +6,7 @@
 			:disabled="disabled"
 			:readonly="readonly"
 			:title="title"
-			data-table-action-selected="false"
+			:data-table-action-selected="rowKey ?? false"
 			tabindex="-1"
 			@mousedown="onMousedown"
 			@click="onSelect" />

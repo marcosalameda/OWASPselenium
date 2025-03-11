@@ -150,7 +150,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
 								name: 'Grpb.ValName',
@@ -160,7 +160,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodgrpb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
 								name: 'Trsb.ValName',
@@ -170,7 +170,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								pkColumn: 'ValCodtrsb',
-							}),
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_3151',
@@ -312,11 +312,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						changeEvents: ['changed-TBLK', 'changed-GRPB', 'changed-TRSB'],
+						globalEvents: ['changed-TBLK', 'changed-GRPB', 'changed-TRSB'],
 						uuid: '3b185cfa-ac50-486e-9679-724d526a89a7',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-					}, this)
+					}, this),
 				}
 			}
 		},

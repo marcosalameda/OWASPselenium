@@ -1408,25 +1408,28 @@ dl.wa-environment {
 		justify-content: space-between;
 		gap: 2rem;
 	}
+}
 
-	.modal-body {
-		.script-details {
-			&__block {
-				max-height: 15rem;
-				overflow-y: auto;
-			}
+.script-details {
+	&__block {
+		max-height: 15rem;
+		overflow-y: auto;
 
-			&__line {
-				display: flex;
-				justify-content: space-between;
+		// increases max-height - for log details page
+		&--extended {
+			max-height: 45vh;
+			overflow-y: auto;
+		}
+	}
 
-				padding: 0 0.5rem;
-				color: rgb(var(--q-theme-neutral-dark-rgb) / .75);
+	&__line {
+		display: flex;
+		justify-content: space-between;
+		padding: 0 0.5rem;
+		color: rgb(var(--q-theme-neutral-dark-rgb) / .75);
 
-				&-error {
-					color: var(--q-theme-danger);
-				}
-			}
+		&-error {
+			color: var(--q-theme-danger);
 		}
 	}
 }
@@ -1819,6 +1822,11 @@ legend {
 			}
 		}
 	}
+
+	.q-table__actions-btns {
+		display:flex;
+		justify-content: center;
+	}
 }
 
 // Table alert
@@ -1906,6 +1914,20 @@ legend {
 			color: $success;
 		}
 	}
+
+	&__body-actions:has(.q-btn) {
+		align-self: flex-start;
+	}
+}
+
+.alert-dialog {
+    .q-dialog__body-text {
+        text-align: center;
+    }
+
+	.q-dialog__body-actions {
+		align-self: center;
+	}
 }
 
 // Data systems tab
@@ -1933,13 +1955,6 @@ legend {
         width: 100%;
         padding: 0 1rem;
     }
-
-	&__table {
-		&--btns {
-			display:flex;
-			justify-content: center;
-		}
-	}
 }
 
 .alert-dialog {
@@ -2005,6 +2020,67 @@ legend {
 			padding-left: 0;
 			padding-right: 0;
 		}
+	}
+
+	// Fill empty card space with the card content, not the header
+	// For setting cards side by side with the same height, but different contents (use class on both cards, within a div with flex: 1)
+	&--admin-fill {
+		>.q-card__header {
+			flex: unset;
+		}
+	}
+}
+
+.q-btn {
+	// Variants
+	&--admin-start {
+		.q-btn__content {
+			justify-content: flex-start;
+		}
+	}
+}
+
+.log-details {
+	&__overview {
+		.q-card__content {
+			gap: 1rem;
+		}
+	}
+
+	&__wrapper {
+		.q-card__content {
+			flex-direction: column;
+		}
+	}
+
+	&__content {
+		display: flex;
+		flex: 1;
+		gap: 1rem;
+	}
+
+	&__task-list, &__task-details {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+	}
+
+	&__no-task {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+
+		justify-content: flex-start;
+		padding-top: 5em;
+
+		>.q-icon {
+			font-size: 3em;
+			padding: 0.25rem;
+		}
+
+		// icon and placeholder color
+		color: var(--q-theme-neutral-dark);
 	}
 }
 

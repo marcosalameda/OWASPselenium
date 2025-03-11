@@ -11,8 +11,8 @@
 				class="c-action-bar">
 				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					class="form-header"
-					:id="formTitleId">
+					:id="formTitleId"
+					class="form-header">
 					{{ formInfo.designation }}
 				</h1>
 
@@ -213,7 +213,7 @@
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_PROSPECC.isVisible"
 												v-bind="controls.VENDA___SALE_PROSPECC.props"
-												@update:model-value="model.ValProspecc.fnUpdateValue" />
+												v-on="controls.VENDA___SALE_PROSPECC.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -248,7 +248,7 @@
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_INTERESS.isVisible"
 												v-bind="controls.VENDA___SALE_INTERESS.props"
-												@update:model-value="model.ValInteress.fnUpdateValue" />
+												v-on="controls.VENDA___SALE_INTERESS.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -266,7 +266,7 @@
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_SEMRFINA.isVisible"
 												v-bind="controls.VENDA___SALE_SEMRFINA.props"
-												@update:model-value="model.ValSemrfina.fnUpdateValue" />
+												v-on="controls.VENDA___SALE_SEMRFINA.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -284,7 +284,7 @@
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_SEMCAPAC.isVisible"
 												v-bind="controls.VENDA___SALE_SEMCAPAC.props"
-												@update:model-value="model.ValSemcapac.fnUpdateValue" />
+												v-on="controls.VENDA___SALE_SEMCAPAC.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -320,7 +320,7 @@
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_QUALIFIC.isVisible"
 												v-bind="controls.VENDA___SALE_QUALIFIC.props"
-												@update:model-value="model.ValQualific.fnUpdateValue" />
+												v-on="controls.VENDA___SALE_QUALIFIC.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -373,7 +373,7 @@
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_HOMEWORK.isVisible"
 												v-bind="controls.VENDA___SALE_HOMEWORK.props"
-												@update:model-value="model.ValHomework.fnUpdateValue" />
+												v-on="controls.VENDA___SALE_HOMEWORK.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -426,7 +426,7 @@
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_APPROACH.isVisible"
 												v-bind="controls.VENDA___SALE_APPROACH.props"
-												@update:model-value="model.ValApproach.fnUpdateValue" />
+												v-on="controls.VENDA___SALE_APPROACH.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -479,7 +479,7 @@
 											<q-checkbox-input
 												v-if="controls.VENDA___SALE_APRESENT.isVisible"
 												v-bind="controls.VENDA___SALE_APRESENT.props"
-												@update:model-value="model.ValApresent.fnUpdateValue" />
+												v-on="controls.VENDA___SALE_APRESENT.handlers" />
 										</template>
 									</base-input-structure>
 								</q-control-wrapper>
@@ -745,8 +745,6 @@
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: ''
 				},
-
-				formTitleId: computed(() => this.formInfo.identifier + "_title"),
 
 				formButtons: {
 					changeToShow: {

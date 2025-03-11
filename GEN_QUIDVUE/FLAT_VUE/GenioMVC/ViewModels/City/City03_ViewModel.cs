@@ -166,6 +166,7 @@ namespace GenioMVC.ViewModels.City
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.City m)
 		{
 			if (m == null)
@@ -187,20 +188,13 @@ namespace GenioMVC.ViewModels.City
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.City m)
 		{
 			if (m == null)
@@ -598,8 +592,6 @@ namespace GenioMVC.ViewModels.City
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

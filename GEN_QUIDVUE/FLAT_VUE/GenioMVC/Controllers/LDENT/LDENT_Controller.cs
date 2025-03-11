@@ -43,7 +43,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER LDENT]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -56,13 +55,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Ldent row = null;
-
-			if (row == null)
-			{
-				row = new Models.Ldent(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("ldent");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Ldent row = new Models.Ldent(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("ldent");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +75,7 @@ namespace GenioMVC.Controllers
 				{
 					case "LDENT___INDOCDOCUMENR":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Ldent_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Ldent_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Ldent___indocdocumenr(qs);
 							result = model.TableIndocDocumenr;
@@ -84,8 +83,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "LDENT___WAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Ldent_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Ldent_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Ldent___warehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -93,8 +91,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "LDENT___ITEM_ITEMDES_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Ldent_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Ldent_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Ldent___item_itemdes_(qs);
 							result = model.TableItemItemdes;
@@ -102,8 +99,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "LDENTNORINDOCDOCUMENR":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Ldentnor_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Ldentnor_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Ldentnorindocdocumenr(qs);
 							result = model.TableIndocDocumenr;
@@ -111,8 +107,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "LDENTNORWAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Ldentnor_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Ldentnor_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Ldentnorwarehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -120,8 +115,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "LDENTNORITEM_ITEMDES_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Ldentnor_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Ldentnor_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Ldentnoritem_itemdes_(qs);
 							result = model.TableItemItemdes;
@@ -203,6 +197,8 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Ldent" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -216,6 +212,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Ldent)
 			);
 		}
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Ldentnor" form. (++, CT, SR, CL and U1)

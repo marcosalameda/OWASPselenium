@@ -1,5 +1,4 @@
 ﻿import listFunctions from '@/mixins/listFunctions'
-import qapi from '@/api/genio/quidgestFunctions'
 import controlClass from '@/mixins/fieldControl'
 
 export default {
@@ -28,7 +27,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -52,7 +51,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -76,7 +75,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -100,7 +99,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -124,7 +123,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -148,7 +147,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -172,7 +171,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -196,7 +195,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -220,7 +219,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 11
+							isValid: false
 						}
 					},
 					{
@@ -244,7 +243,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 1
+							isValid: false
 						}
 					},
 					{
@@ -268,7 +267,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -292,7 +291,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 				],
@@ -302,7 +301,7 @@ export default {
 						label: "",
 						name: "PrimaryKey",
 						dataType: "Text",
-						visibility: false,
+						isVisible: false,
 					},
 					{
 						label: "KEY",
@@ -315,7 +314,6 @@ export default {
 						sortable: false,
 						initialSort: true,
 						initialSortOrder: "asc",
-						bgColor: (row) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
 						params: {
 							"type": "form",
 							"formName": "FORMX",
@@ -333,7 +331,6 @@ export default {
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
 						sortable: false,
-						textColor: (row) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
 						distinctValues: [],
 					},
 					{
@@ -457,10 +454,8 @@ export default {
 					addAction: { "name":"INSERT", "title": "INSERIR", "isInsertEnabled": () => true, "icon": "plus-sign", isInReadOnly: false, "params": {"type": "form", "formName": "FORMX", "mode": "NEW"} },
 					rowClickAction: { "name":"EDIT", "title": "EDITAR11616", "icon": "pencil", "params": {"type": "form", "formName": "FORMX", "mode": "EDIT"} },
 					actionsPlacement: "left",
-					rowTextColor: (row) => { return qapi.iif(row.Fields.Currency > 100, "#00A000", "#000000"); },
-					rowBgColor: (row) => { return qapi.iif(row.Fields.Array === "5", "#E0E0E0", "#FFFFFF"); },
 					rowValidation: {
-						fnValidate: (row) => { return row.Fields.ValZzstate === 0 },
+						fnValidate: (row) => row.Fields.isValid,
 						message: 'ATENCAO__ESTA_FICHA_24725'
 					},
 				},
@@ -543,7 +538,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -567,7 +562,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -591,7 +586,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -615,7 +610,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -639,7 +634,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -663,7 +658,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -687,7 +682,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -711,7 +706,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -735,7 +730,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 11
+							isValid: false
 						}
 					},
 					{
@@ -759,7 +754,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 1
+							isValid: false
 						}
 					},
 					{
@@ -783,7 +778,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -807,7 +802,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 				],
@@ -817,7 +812,7 @@ export default {
 						label: "",
 						name: "PrimaryKey",
 						dataType: "Text",
-						visibility: false,
+						isVisible: false,
 					},
 					{
 						label: "KEY",
@@ -830,7 +825,6 @@ export default {
 						sortable: false,
 						initialSort: true,
 						initialSortOrder: "asc",
-						bgColor: (row) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
 						params: {
 							"type": "form",
 							"formName": "FORMX",
@@ -848,7 +842,6 @@ export default {
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
 						sortable: false,
-						textColor: (row) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
 						distinctValues: [],
 					},
 					{
@@ -936,10 +929,8 @@ export default {
 					addAction: { "name":"INSERT", "title": "INSERIR", "isInsertEnabled": () => true, "icon": "plus-sign", isInReadOnly: false, "params": {"type": "form", "formName": "FORMX", "mode": "NEW"} },
 					rowClickAction: { "name":"EDIT", "title": "EDITAR11616", "icon": "pencil", "params": {"type": "form", "formName": "FORMX", "mode": "EDIT"} },
 					actionsPlacement: "left",
-					rowTextColor: (row) => { return qapi.iif(row.Fields.Currency > 100, "#00A000", "#000000"); },
-					rowBgColor: (row) => { return qapi.iif(row.Fields.Array === "5", "#E0E0E0", "#FFFFFF"); },
 					rowValidation: {
-						fnValidate: (row) => { return row.Fields.ValZzstate === 0 },
+						fnValidate: (row) => row.Fields.isValid,
 						message: 'ATENCAO__ESTA_FICHA_24725'
 					},
 				},
@@ -955,7 +946,6 @@ export default {
 								value: {text: 'POR_DEVOLVER13204', selected: false},
 								id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
 							},
-
 							{
 								key: '1',
 								value: {text: 'DEVOLVIDOS52106', selected: false},
@@ -1018,7 +1008,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1042,7 +1032,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1066,7 +1056,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1090,7 +1080,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1114,7 +1104,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1138,7 +1128,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1162,7 +1152,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1186,7 +1176,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1210,7 +1200,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 11
+							isValid: false
 						}
 					},
 					{
@@ -1234,7 +1224,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 1
+							isValid: false
 						}
 					},
 					{
@@ -1258,7 +1248,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1282,7 +1272,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 				],
@@ -1292,7 +1282,7 @@ export default {
 						label: "",
 						name: "PrimaryKey",
 						dataType: "Text",
-						visibility: false,
+						isVisible: false,
 					},
 					{
 						label: "KEY",
@@ -1305,7 +1295,6 @@ export default {
 						sortable: false,
 						initialSort: true,
 						initialSortOrder: "asc",
-						bgColor: (row) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
 						params: {
 							"type": "form",
 							"formName": "FORMX",
@@ -1324,7 +1313,6 @@ export default {
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
 						sortable: false,
-						textColor: (row) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
 						distinctValues: [],
 					},
 					{
@@ -1412,10 +1400,8 @@ export default {
 					addAction: { "name":"INSERT", "title": "INSERIR", "isInsertEnabled": () => true, "icon": "plus-sign", isInReadOnly: false, "params": {"type": "form", "formName": "FORMX", "mode": "NEW"} },
 					rowClickAction: { "name":"EDIT", "title": "EDITAR11616", "icon": "pencil", "params": {"type": "form", "formName": "FORMX", "mode": "EDIT"} },
 					actionsPlacement: "left",
-					rowTextColor: (row) => { return qapi.iif(row.Fields.Currency > 100, "#00A000", "#000000"); },
-					rowBgColor: (row) => { return qapi.iif(row.Fields.Array === "5", "#E0E0E0", "#FFFFFF"); },
 					rowValidation: {
-						fnValidate: (row) => { return row.Fields.ValZzstate === 0 },
+						fnValidate: (row) => row.Fields.isValid,
 						message: 'ATENCAO__ESTA_FICHA_24725'
 					},
 				},
@@ -1493,7 +1479,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1517,7 +1503,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1541,7 +1527,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1565,7 +1551,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1589,7 +1575,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1613,7 +1599,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1637,7 +1623,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1661,7 +1647,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1685,7 +1671,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 11
+							isValid: false
 						}
 					},
 					{
@@ -1709,7 +1695,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 1
+							isValid: false
 						}
 					},
 					{
@@ -1733,7 +1719,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1757,7 +1743,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 				],
@@ -1767,7 +1753,7 @@ export default {
 						label: "",
 						name: "PrimaryKey",
 						dataType: "Text",
-						visibility: false,
+						isVisible: false,
 					},
 					{
 						label: "KEY",
@@ -1781,7 +1767,6 @@ export default {
 						sortable: false,
 						initialSort: true,
 						initialSortOrder: "asc",
-						bgColor: (row) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
 						supportForm: {
 							"type": "form",
 							"formName": "FORMX",
@@ -1805,7 +1790,6 @@ export default {
 						dataDisplayText: listFunctions.textTextCell,
 						dataSearch: listFunctions.textSearchCell,
 						sortable: false,
-						textColor: (row) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
 						scrollData: 5,
 					},
 					{
@@ -1942,10 +1926,8 @@ export default {
 					addAction: { "name":"INSERT", "title": "INSERIR", "isInsertEnabled": () => true, "icon": "plus-sign", isInReadOnly: false, "params": {"type": "form", "formName": "FORMX", "mode": "NEW"} },
 					rowClickAction: { "name":"EDIT", "title": "EDITAR11616", "icon": "pencil", "params": {"type": "form", "formName": "FORMX", "mode": "EDIT"} },
 					actionsPlacement: "left",
-					rowTextColor: (row) => { return qapi.iif(row.Fields.Currency > 100, "#00A000", "#000000"); },
-					rowBgColor: (row) => { return qapi.iif(row.Fields.Array === "5", "#E0E0E0", "#FFFFFF"); },
 					rowValidation: {
-						fnValidate: (row) => { return row.Fields.ValZzstate === 0 },
+						fnValidate: (row) => row.Fields.isValid,
 						message: 'ATENCAO__ESTA_FICHA_24725'
 					}
 				}
@@ -1973,7 +1955,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -1997,7 +1979,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2021,7 +2003,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2045,7 +2027,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2069,7 +2051,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2093,7 +2075,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2117,7 +2099,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2141,7 +2123,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2165,7 +2147,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 11
+							isValid: false
 						}
 					},
 					{
@@ -2189,7 +2171,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 1
+							isValid: false
 						}
 					},
 					{
@@ -2213,7 +2195,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2237,7 +2219,7 @@ export default {
 							"Action": "",
 							"Geographic": "",
 							"Unknown": "",
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 				],
@@ -2247,7 +2229,7 @@ export default {
 						label: "",
 						name: "PrimaryKey",
 						dataType: "Text",
-						visibility: false,
+						isVisible: false,
 					},
 					{
 						label: "KEY",
@@ -2260,7 +2242,6 @@ export default {
 						sortable: false,
 						initialSort: true,
 						initialSortOrder: "asc",
-						bgColor: (row) => { return qapi.iif(row.Fields.Key.length > 3, "#C0C0C0", "#FFFFFF"); },
 						params: {
 							"type": "form",
 							"formName": "FORMX",
@@ -2279,7 +2260,6 @@ export default {
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
 						sortable: false,
-						textColor: (row) => { return qapi.iif(row.Fields.Val.length > 3, "#C08000", "#000000"); },
 						distinctValues: [],
 					},
 					{
@@ -2367,10 +2347,8 @@ export default {
 					addAction: { "name":"INSERT", "title": "INSERIR", "isInsertEnabled": () => true, "icon": "plus-sign", isInReadOnly: false, "params": {"type": "form", "formName": "FORMX", "mode": "NEW"} },
 					rowClickAction: { "name":"EDIT", "title": "EDITAR11616", "icon": "pencil", "params": {"type": "form", "formName": "FORMX", "mode": "EDIT"} },
 					actionsPlacement: "left",
-					rowTextColor: (row) => { return qapi.iif(row.Fields.Currency > 100, "#00A000", "#000000"); },
-					rowBgColor: (row) => { return qapi.iif(row.Fields.Array === "5", "#E0E0E0", "#FFFFFF"); },
 					rowValidation: {
-						fnValidate: (row) => { return row.Fields.ValZzstate === 0 },
+						fnValidate: (row) => row.Fields.isValid,
 						message: 'ATENCAO__ESTA_FICHA_24725'
 					},
 				},
@@ -2441,7 +2419,7 @@ export default {
 							"Currency1": 4.24,
 							"Currency2": 35.37,
 							"Currency3": 6.38,
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2457,7 +2435,7 @@ export default {
 							"Currency1": 3.89,
 							"Currency2": 47.45,
 							"Currency3": 12.56,
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2473,7 +2451,7 @@ export default {
 							"Currency1": 4.35,
 							"Currency2": 53.50,
 							"Currency3": 67.35,
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2489,7 +2467,7 @@ export default {
 							"Currency1": 5.23,
 							"Currency2": 28.37,
 							"Currency3": 45.24,
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2505,7 +2483,7 @@ export default {
 							"Currency1": 7.38,
 							"Currency2": 67.34,
 							"Currency3": 34.34,
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2521,7 +2499,7 @@ export default {
 							"Currency1": 5.28,
 							"Currency2": 73.85,
 							"Currency3": 46.54,
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2537,7 +2515,7 @@ export default {
 							"Currency1": 7.55,
 							"Currency2": 89.50,
 							"Currency3": 25.00,
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2553,7 +2531,7 @@ export default {
 							"Currency1": 6.64,
 							"Currency2": 68.84,
 							"Currency3": 45.75,
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2569,7 +2547,7 @@ export default {
 							"Currency1": 5.36,
 							"Currency2": 67.68,
 							"Currency3": 64.58,
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 					{
@@ -2585,7 +2563,7 @@ export default {
 							"Currency1": 9.36,
 							"Currency2": 78.93,
 							"Currency3": 86.46,
-							"ValZzstate": 0
+							isValid: true
 						}
 					},
 				],
@@ -2595,7 +2573,7 @@ export default {
 						label: "",
 						name: "PrimaryKey",
 						dataType: "Text",
-						visibility: false,
+						isVisible: false,
 					},
 					{
 						label: "KEY",
@@ -2631,7 +2609,7 @@ export default {
 						decimalPlaces: 3,
 						sortable: false,
 						showTotal: true,
-						visibility: false,
+						isVisible: false,
 					},
 					{
 						label: "Numeric2",
@@ -2644,7 +2622,7 @@ export default {
 						decimalPlaces: 2,
 						sortable: false,
 						showTotal: true,
-						visibility: false,
+						isVisible: false,
 					},
 					{
 						label: "Numeric3",
@@ -2656,7 +2634,7 @@ export default {
 						dataSearch: listFunctions.numericSearchCell,
 						decimalPlaces: 0,
 						sortable: false,
-						visibility: false,
+						isVisible: false,
 					},
 					{
 						label: "Currency1",
@@ -2670,7 +2648,7 @@ export default {
 						currency: "eur",
 						sortable: false,
 						showTotal: true,
-						visibility: false,
+						isVisible: false,
 					},
 					{
 						label: "Currency2",
@@ -2684,7 +2662,7 @@ export default {
 						currency: "eur",
 						sortable: false,
 						showTotal: true,
-						visibility: false,
+						isVisible: false,
 					},
 					{
 						label: "Currency3",
@@ -2697,7 +2675,7 @@ export default {
 						decimalPlaces: 2,
 						currency: "eur",
 						sortable: false,
-						visibility: false,
+						isVisible: false,
 					},
 				],
 				config: {

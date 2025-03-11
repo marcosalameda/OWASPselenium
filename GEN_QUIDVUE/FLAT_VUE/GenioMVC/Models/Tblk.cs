@@ -38,39 +38,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Foreign Key 1" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Tblk.ValFkey1")]
 		public string ValFkey1 { get { return klass.ValFkey1; } set { klass.ValFkey1 = value; } }
+
 		private Grpb _grpb;
 		[DisplayName("Grpb")]
 		[ShouldSerialize("Grpb")]
-		public virtual Grpb Grpb {
-			get {
-				if (!this.isEmptyModel && (_grpb == null || (!string.IsNullOrEmpty(ValFkey1) && (_grpb.isEmptyModel || _grpb.klass.QPrimaryKey != ValFkey1))))
+		public virtual Grpb Grpb
+		{
+			get
+			{
+				if (!isEmptyModel && (_grpb == null || (!string.IsNullOrEmpty(ValFkey1) && (_grpb.isEmptyModel || _grpb.klass.QPrimaryKey != ValFkey1))))
 					_grpb = Models.Grpb.Find(ValFkey1, m_userContext, Identifier, _fieldsToSerialize);
-				if (_grpb == null)
-					_grpb = new Models.Grpb(m_userContext, true, _fieldsToSerialize);
+				_grpb ??= new Models.Grpb(m_userContext, true, _fieldsToSerialize);
 				return _grpb;
 			}
 			set { _grpb = value; }
 		}
 
-
 		[DisplayName("Foreign Key 2")]
 		/// <summary>Field : "Foreign Key 2" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Tblk.ValFkey2")]
 		public string ValFkey2 { get { return klass.ValFkey2; } set { klass.ValFkey2 = value; } }
+
 		private Trsb _trsb;
 		[DisplayName("Trsb")]
 		[ShouldSerialize("Trsb")]
-		public virtual Trsb Trsb {
-			get {
-				if (!this.isEmptyModel && (_trsb == null || (!string.IsNullOrEmpty(ValFkey2) && (_trsb.isEmptyModel || _trsb.klass.QPrimaryKey != ValFkey2))))
+		public virtual Trsb Trsb
+		{
+			get
+			{
+				if (!isEmptyModel && (_trsb == null || (!string.IsNullOrEmpty(ValFkey2) && (_trsb.isEmptyModel || _trsb.klass.QPrimaryKey != ValFkey2))))
 					_trsb = Models.Trsb.Find(ValFkey2, m_userContext, Identifier, _fieldsToSerialize);
-				if (_trsb == null)
-					_trsb = new Models.Trsb(m_userContext, true, _fieldsToSerialize);
+				_trsb ??= new Models.Trsb(m_userContext, true, _fieldsToSerialize);
 				return _trsb;
 			}
 			set { _trsb = value; }
 		}
-
 
 		[DisplayName("Name")]
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>
@@ -79,8 +81,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Tblk.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Tblk(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -99,7 +101,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAtblk csgenioa)
 		{
 			if (csgenioa == null)
@@ -110,13 +111,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "grpb":
-						if (_grpb == null)
-							_grpb = new Grpb(m_userContext, true, _fieldsToSerialize);
+						_grpb ??= new Grpb(m_userContext, true, _fieldsToSerialize);
 						_grpb.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "trsb":
-						if (_trsb == null)
-							_trsb = new Trsb(m_userContext, true, _fieldsToSerialize);
+						_trsb ??= new Trsb(m_userContext, true, _fieldsToSerialize);
 						_trsb.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

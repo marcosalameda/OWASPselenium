@@ -142,7 +142,7 @@
 </template>
 
 <script>
-	import { getColumnTotalValueDisplay } from '@/mixins/listFunctions'
+	import { getColumnTotalValueDisplay, isVisibleColumn } from '@/mixins/listFunctions'
 
 	export default {
 		name: 'QGridTableList',
@@ -279,9 +279,7 @@
 			 */
 			visibleColumns()
 			{
-				return this.columns.filter(
-					(column) => column.visibility === undefined || column.visibility
-				)
+				return this.columns.filter((column) => isVisibleColumn(column))
 			},
 
 			/**

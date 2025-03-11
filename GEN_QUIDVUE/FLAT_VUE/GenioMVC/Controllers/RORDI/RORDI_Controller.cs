@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER RORDI]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Rordi" form. (++, CT, SR, CL and U1)
 		/// </summary>

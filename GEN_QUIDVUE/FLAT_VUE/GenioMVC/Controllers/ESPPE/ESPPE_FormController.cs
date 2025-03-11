@@ -392,11 +392,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Esppe_PessoValNameModel : RequestLookupModel
+		{
+			public Esppe_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Esppe/Esppe_PessoValName
 		// POST: /Esppe/Esppe_PessoValName
 		[ActionName("Esppe_PessoValName")]
-		public ActionResult Esppe_PessoValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Esppe_PessoValName([FromBody] Esppe_PessoValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +426,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Esppe_PessoValName_ViewModel model = new Esppe_PessoValName_ViewModel(UserContext.Current);
-			
+
+			Models.Esppe parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Esppe_PessoValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +463,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Esppe_SpeciValEspecialModel : RequestLookupModel
+		{
+			public Esppe_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Esppe/Esppe_SpeciValEspecial
 		// POST: /Esppe/Esppe_SpeciValEspecial
 		[ActionName("Esppe_SpeciValEspecial")]
-		public ActionResult Esppe_SpeciValEspecial([FromBody]RequestLookupModel requestModel)
+		public ActionResult Esppe_SpeciValEspecial([FromBody] Esppe_SpeciValEspecialModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +497,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Esppe_SpeciValEspecial_ViewModel model = new Esppe_SpeciValEspecial_ViewModel(UserContext.Current);
-			
+
+			Models.Esppe parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Esppe_SpeciValEspecial_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

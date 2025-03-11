@@ -43,7 +43,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER PWCOM]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -56,13 +55,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Pwcom row = null;
-
-			if (row == null)
-			{
-				row = new Models.Pwcom(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("pwcom");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Pwcom row = new Models.Pwcom(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("pwcom");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +75,7 @@ namespace GenioMVC.Controllers
 				{
 					case "PWCOM___PSW__NOME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pwcom_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pwcom_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pwcom___psw__nome____(qs);
 							result = model.TablePswNome;
@@ -84,8 +83,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PWCOM___PESS1NAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pwcom_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pwcom_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pwcom___pess1name____(qs);
 							result = model.TablePess1Name;
@@ -153,6 +151,8 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
 
 
 		/// <summary>

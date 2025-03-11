@@ -44,6 +44,8 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MANUAL_CONTROLLER SBCAT]/
 
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Sbcat" form. (++, CT, SR, CL and U1)
 		/// </summary>

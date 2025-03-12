@@ -50,13 +50,13 @@ else {
 
 		@Html.HiddenFor(model=> model.ValRegistnr, new { @pers_cs_area = "Equip", @pers_cs_field = "ValRegistnr", @data_identifier = "LED_GMAPS___EQUIPREGISTNR" })
 
+			@Html.HiddenFor(model => model.ValCodtpequ, new { @pers_cs_field="ValCodtpequ", @pers_cs_area="Equip", @data_value = Model.ValCodtpequ, @db_field="ValCodtpequ", @trelate="Tpequ", @tfrelate="Codtpequ", @data_identifier="LED_GMAPS___TPEQUCODTPEQU" })
 			@Html.HiddenFor(model => model.ValCodrooms, new { @pers_cs_field="ValCodrooms", @pers_cs_area="Equip", @data_value = Model.ValCodrooms, @db_field="ValCodrooms", @trelate="Room1", @tfrelate="Codrooms", @data_identifier="LED_GMAPS___ROOM1CODROOMS" })
 			@Html.HiddenFor(model => model.ValCoddeco, new { @pers_cs_field="ValCoddeco", @pers_cs_area="Equip", @data_value = Model.ValCoddeco, @db_field="ValCoddeco", @trelate="Decom", @tfrelate="Coddeco", @data_identifier="LED_GMAPS___DECOMCODDECO_" })
 			@Html.HiddenFor(model => model.ValCodpess1, new { @pers_cs_field="ValCodpess1", @pers_cs_area="Equip", @data_value = Model.ValCodpess1, @db_field="ValCodpess1", @trelate="Pess1", @tfrelate="Codpesso", @data_identifier="LED_GMAPS___PESS1CODPESSO" })
-			@Html.HiddenFor(model => model.ValCodtpequ, new { @pers_cs_field="ValCodtpequ", @pers_cs_area="Equip", @data_value = Model.ValCodtpequ, @db_field="ValCodtpequ", @trelate="Tpequ", @tfrelate="Codtpequ", @data_identifier="LED_GMAPS___TPEQUCODTPEQU" })
-			@Html.HiddenFor(model => model.ValCodempre, new { @pers_cs_field="ValCodempre", @pers_cs_area="Equip", @data_value = Model.ValCodempre, @db_field="ValCodempre", @trelate="Cmpny", @tfrelate="Codempre", @data_identifier="LED_GMAPS___CMPNYCODEMPRE" })
 			@Html.HiddenFor(model => model.ValCodwareh, new { @pers_cs_field="ValCodwareh", @pers_cs_area="Equip", @data_value = Model.ValCodwareh, @db_field="ValCodwareh", @trelate="Wareh", @tfrelate="Codwareh", @data_identifier="LED_GMAPS___WAREHCODWAREH" })
 			@Html.HiddenFor(model => model.ValCoditem, new { @pers_cs_field="ValCoditem", @pers_cs_area="Equip", @data_value = Model.ValCoditem, @db_field="ValCoditem", @trelate="Item", @tfrelate="Coditem", @data_identifier="LED_GMAPS___ITEM_CODITEM_" })
+			@Html.HiddenFor(model => model.ValCodempre, new { @pers_cs_field="ValCodempre", @pers_cs_area="Equip", @data_value = Model.ValCodempre, @db_field="ValCodempre", @trelate="Cmpny", @tfrelate="Codempre", @data_identifier="LED_GMAPS___CMPNYCODEMPRE" })
 
 			@Html.HiddenFor(model => model.ValCodequip, new { @pers_cs_field="ValCodequip", @pers_cs_area="Equip", data_refresh = "true", @form_area="true", @data_value = Model.ValCodequip, @data_identifier = "LED_GMAPS___EQUIPCODEQUIP" })
 

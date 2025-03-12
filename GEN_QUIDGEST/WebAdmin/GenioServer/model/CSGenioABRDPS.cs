@@ -205,8 +205,8 @@ namespace CSGenio.business
 			info.Pathways.Add("fltsc","fltsc");
 			info.Pathways.Add("airln","fligh");
 			info.Pathways.Add("airpt","fligh");
-			info.Pathways.Add("airfr","fligh");
 			info.Pathways.Add("airto","fligh");
+			info.Pathways.Add("airfr","fligh");
 			info.Pathways.Add("cntry","fligh");
 		}
 

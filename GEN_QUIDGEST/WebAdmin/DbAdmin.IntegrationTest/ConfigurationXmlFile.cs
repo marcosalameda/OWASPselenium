@@ -10,6 +10,7 @@ namespace DbAdmin.IntegrationTest
     public class ConfigurationXmlFile
     {
         private static string workspace = Path.Combine(Path.GetTempPath(), "IntegrationTests");
+        private static string configPathEnv;
 
         [SetUp]
         public void Setup()
@@ -21,12 +22,21 @@ namespace DbAdmin.IntegrationTest
             }
             Directory.CreateDirectory(workspace);
 
+            // Save env variables that are currently declared in the machine
+            // This is to make sure the tests don't mess up the value
+            configPathEnv = Environment.GetEnvironmentVariable("CONFIG_PATH");
 
 #if(DEBUG)
             //This tests don't execute in debug compilation, because this mode fetches the configuration from aditional places and the reliability can't be ensured
             Assert.Ignore("Skipping test because it's running in Debug mode.");
 #endif
+        }
 
+        [TearDown]
+        public void Teardown()
+        {
+            // Set the machine value of the envs back to the original
+            Environment.SetEnvironmentVariable("CONFIG_PATH", configPathEnv);
         }
 
         [Test]
@@ -47,10 +57,23 @@ namespace DbAdmin.IntegrationTest
         public void CreateNewConfigFile()
         {
             var workingSpaceDir = Path.Combine(workspace, "newFile");
-            Directory.CreateDirectory(workingSpaceDir);
-            FileConfigurationManager manager = new FileConfigurationManager(workingSpaceDir);
+            CreateConfig(workingSpaceDir, out FileConfigurationManager manager);
 
-            manager.CreateNewConfig();
+            string destination = Path.Combine(workingSpaceDir, "Configuracoes.xml");
+            Assert.IsTrue(File.Exists(destination));
+
+            var readConfig = manager.GetExistingConfig();
+            Assert.AreEqual(ConfigXMLMigration.CurConfigurationVerion.ToString(), readConfig.ConfigVersion);
+        }
+
+        [Test]
+        public void CreateNewConfigFileEnv()
+        {
+            var workingSpaceDir = Path.Combine(workspace, "newFileEnv");
+            Environment.SetEnvironmentVariable("CONFIG_PATH", workingSpaceDir);
+            Directory.CreateDirectory(workingSpaceDir);
+
+            CreateConfig("C:\\invalidPath", out FileConfigurationManager manager);
 
             string destination = Path.Combine(workingSpaceDir, "Configuracoes.xml");
             Assert.IsTrue(File.Exists(destination));
@@ -63,15 +86,12 @@ namespace DbAdmin.IntegrationTest
         public void CreateOverExistingConfig()
         {
             var workingSpaceDir = Path.Combine(workspace, "createExisting");
-            Directory.CreateDirectory(workingSpaceDir);
-            FileConfigurationManager manager = new FileConfigurationManager(workingSpaceDir);
-            manager.CreateNewConfig();
+            CreateConfig(workingSpaceDir, out FileConfigurationManager manager);
 
             //Act and Assert
-             Assert.Throws<FrameworkException>(()=>
+            Assert.Throws<FrameworkException>(()=>
                 manager.CreateNewConfig()
-             );
-
+            );
         }
 
         [Test]
@@ -79,9 +99,7 @@ namespace DbAdmin.IntegrationTest
         {
             //Arrange
             var workingSpaceDir = Path.Combine(workspace, "storeFile");
-            Directory.CreateDirectory(workingSpaceDir);
-            FileConfigurationManager manager = new FileConfigurationManager(workingSpaceDir);
-            var config = manager.CreateNewConfig();
+            var config = CreateConfig(workingSpaceDir, out FileConfigurationManager manager);
 
             //Act
             config.ConfigVersion = "3";
@@ -94,6 +112,17 @@ namespace DbAdmin.IntegrationTest
             Assert.AreEqual("3", readConfig.ConfigVersion);
         }
 
+        private ConfigurationXML CreateConfig(string workingSpaceDir)
+        {
+            return CreateConfig(workingSpaceDir, out FileConfigurationManager _);
+        }
 
+        private ConfigurationXML CreateConfig(string workingSpaceDir, out FileConfigurationManager manager)
+        {
+            Directory.CreateDirectory(workingSpaceDir);
+            manager = new FileConfigurationManager(workingSpaceDir);
+            
+            return manager.CreateNewConfig();
+        }
     }
 }

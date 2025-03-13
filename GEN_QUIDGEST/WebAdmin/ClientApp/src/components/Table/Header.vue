@@ -121,21 +121,6 @@
                 }
             }
 
-        },
-        /*components: {
-            Column
-        },*/
-        computed: {
-
         }
     }
 </script>
-
-<style scoped>
-    .vbt-select-all-checkbox {
-        margin-bottom: 20px;
-    }
-    .vbt-sort-cursor {
-        cursor: pointer;
-    }
-</style>

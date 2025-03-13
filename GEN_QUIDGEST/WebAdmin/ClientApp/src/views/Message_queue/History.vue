@@ -9,10 +9,11 @@
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<select-input
+						<q-select
 							v-model="queryParamQueue"
-							:options="queuesFilter"
-							:label="Resources.QUEUE45251" />
+							:items="queuesFilter"
+							:label="Resources.QUEUE45251"
+							size="xlarge" />
 					</base-input-structure>
 				</q-control-wrapper>
 				<q-control-wrapper>

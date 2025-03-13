@@ -39,21 +39,11 @@
             curValue: {
                 get: function () { return this.modelValue; },
                 set: function (newValue) { this.$emit('update:modelValue', newValue); }
-            }/*,
-            style_class: function () {
-                return String.format('i-textarea__field i-textarea input-{0}', this.size || 'xxlarge');
-            }*/
+            }
         },
         mounted: function () {
-            var vm = this;//, comp = $(vm.$el);
+            var vm = this;
             vm.id = 'input_ta_' + vm._.uid;
-
-            //console.warn("Textarea-input Mounted");
         },
     };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-
-</style>

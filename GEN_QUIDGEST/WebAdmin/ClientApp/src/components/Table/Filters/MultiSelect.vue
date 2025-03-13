@@ -133,13 +133,6 @@ export default {
 
             if (this.selected_option_indexes.length > 0 && this.selected_option_indexes.length <= 1) {
                 return this.options[this.selected_option_indexes[0]].name;
-                // let filtered_options = filter(this.options, (option, index) => {
-                //     return includes(this.selected_option_indexes, index)
-                // });
-                // let names = map(filtered_options, (option) => {
-                //     return option.name
-                // });
-                // return join(names, ",  ");
             } else {
                 return this.selected_option_indexes.length + " selected";
             }
@@ -200,11 +193,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.scrollable-menu {
-    height: auto;
-    max-height: 200px;
-    overflow-x: hidden;
-}
-</style>

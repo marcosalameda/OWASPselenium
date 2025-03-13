@@ -2,7 +2,6 @@
 import text_input from '@/components/Text_input.vue';
 import numeric_input from '@/components/Numeric_input.vue';
 import radio_input from '@/components/Radio_input.vue';
-import select_input from '@/components/Select_input.vue';
 import password_input from '@/components/Password_input.vue';
 import static_text from '@/components/Static_text.vue';
 import datetime_picker from '@/components/DateTime_input.vue';
@@ -50,7 +49,6 @@ export default function ComponentsInit(app) {
     app.component('text-input', text_input);
     app.component('numeric-input', numeric_input);
     app.component('radio-input', radio_input);
-    app.component('select-input', select_input);
     app.component('password-input', password_input);
     app.component('datetime-picker', datetime_picker);
     app.component('image-input', image_input);

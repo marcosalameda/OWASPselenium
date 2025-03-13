@@ -132,7 +132,7 @@ export default {
      */
     searchable: {
       type: Boolean,
-      default: true
+      default: false
     },
     /**
      * Clear the search input after `)

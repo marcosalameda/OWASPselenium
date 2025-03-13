@@ -775,38 +775,3 @@ export default {
     }
 }
 </script>
-
-<style>
-  h1 {
-  font-size : 32px;
-  }
-
-  h2 {
-  font-size: 24px;
-  }
-
-  h3 {
-  font-size: 18px;
-  }
-  .centerdiv{
-  width: 500px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  }
-  .list-group .input-xxlarge {
-  width: 280px !important;
-  }
-  .list-group {
-  width: 100%;
-  min-height:500px;
-  }
-  #module-list {
-  height: 40px;
-  margin-bottom: 10px;
-  }
-  .input-group.col-sm-2{
-  display:none;
-  }
-</style>

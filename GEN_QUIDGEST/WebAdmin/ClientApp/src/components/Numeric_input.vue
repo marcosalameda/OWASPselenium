@@ -32,15 +32,8 @@
       }
     },
     mounted: function () {
-      var vm = this;//, comp = $(vm.$el);
+      var vm = this;
       vm.id = "input_n_" + vm._.uid;
-
-      //console.warn("Text-input Mounted");
     },
   };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-
-</style>

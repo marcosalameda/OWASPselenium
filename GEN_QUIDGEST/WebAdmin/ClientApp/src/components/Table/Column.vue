@@ -88,11 +88,3 @@ export default {
     }
 };
 </script>
-
-// TODO icon color
-
-<style scoped>
-.vbt-sort-cursor {
-    cursor: pointer;
-}
-</style>

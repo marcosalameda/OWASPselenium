@@ -129,7 +129,12 @@
 	</qtable>
 
 	<row v-if="hasAdIdentityProviders">
-		<select-input v-model="domainprovider" :options="identityProviders" :label="'Select the domain'"></select-input>
+		<q-select
+			v-model="domainprovider"
+			item-value="Value"
+			item-label="Text"
+			:items="identityProviders"
+			:label="'Select the domain'" />
 		<q-button
 			b-style="primary"
 			:label="Resources.IMPORTAR_UTILIZADORE27134"

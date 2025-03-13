@@ -6,6 +6,7 @@
                 <!-- BEGIN: First page button -->
                 <q-button aria-label="First"
                     b-style="secondary"
+                    size="small"
                     :disabled="!prevButtonEnabled"
                     @click="pageHandler(1)">
                     <q-icon icon="chevron-double-left" />
@@ -14,6 +15,7 @@
                 <!-- BEGIN: Previous page button -->
                 <q-button aria-label="Previous"
                     b-style="secondary"
+                    size="small"
                     :disabled="!prevButtonEnabled"
                     @click="pageHandler(page - 1)">
                     <q-icon icon="chevron-left" />
@@ -23,6 +25,7 @@
                 <template v-if="totalPages">
                     <q-button v-for="index in range"
                         b-style="secondary"
+                        size="small"
                         :key="index"
                         :label="index"
                         :active="index === page"
@@ -35,6 +38,7 @@
                 <!-- BEGIN: Next page button -->
                 <q-button aria-label="Next"
                     b-style="secondary"
+                    size="small"
                     :disabled="!nextButtonEnabled"
                     @click="pageHandler(page + 1)">
                     <q-icon icon="chevron-right" />
@@ -43,6 +47,7 @@
                 <!-- BEGIN: Last page button -->
                 <q-button aria-label="Last"
                     b-style="secondary"
+                    size="small"
                     :disabled="!nextButtonEnabled"
                     @click="pageHandler(totalPages)">
                     <q-icon icon="chevron-double-right" />
@@ -202,12 +207,3 @@ includes,
         }
     }
 </script>
-
-<style scoped>
-    ul.pagination {
-        margin-bottom: 0;
-    }
-    .vbt-per-page-dropdown {
-        margin-left: 8px;
-    }
-</style>

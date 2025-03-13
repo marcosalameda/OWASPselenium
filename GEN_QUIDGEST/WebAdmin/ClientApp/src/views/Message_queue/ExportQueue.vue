@@ -19,10 +19,22 @@
                     <hr />
                     <section>{{Resources.CONDICAO44011}}</section>
                     <row>
-                        <select-input v-model="conditionField" :options="fields" :label="Resources.CAMPO46284" :size="'xlarge'"></select-input>
+                        <q-select
+                            v-model="conditionField"
+                            item-value="Value"
+                            item-label="Text"
+                            :items="fields"
+                            :label="Resources.CAMPO46284"
+                            size="xlarge" />
                     </row>
                     <row>
-                        <select-input v-model="conditionOp" :options="ops" :label="Resources.OPERACAO29482" :size="'xlarge'"></select-input>
+                        <q-select
+                            v-model="conditionOp"
+                            item-value="Value"
+                            item-label="Text"
+                            :items="ops"
+                            :label="Resources.OPERACAO29482"
+                            size="xlarge" />
                     </row>
                     <row>
                         <text-input v-model="conditionValue" :label="Resources.VALOR32448" :size="'xlarge'"></text-input>

@@ -6,11 +6,13 @@
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<select-input
+						<q-select
 							v-model="queue"
-							:options="queuesFilter"
+							item-value="Value"
+							item-label="Text"
+							:items="queuesFilter"
 							:label="Resources.QUEUE45251"
-							:size="'xlarge'" />
+							size="xlarge" />
 					</base-input-structure>
 					<base-input-structure
 						class="i-text">

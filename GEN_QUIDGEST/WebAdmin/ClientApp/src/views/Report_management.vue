@@ -51,7 +51,7 @@
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<select-input
+						<q-select
 							v-model="deployForm.scope"
 							:options="deployScope"
 							:size="'xlarge'" />

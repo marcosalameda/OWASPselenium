@@ -61,7 +61,14 @@
 					<q-control-wrapper class="control-row-group">
 						<base-input-structure
 							class="i-text">
-							<select-input v-model="Model.Encryption" v-if="Model.SelectLists" :options="Model.SelectLists.DisplayEncrypt" :label="Resources.ALGORITMO_DE_ENCRIPT09649" is-required></select-input>
+							<q-select
+								v-model="Model.Encryption"
+								v-if="Model.SelectLists"
+								item-value="Value"
+								item-label="Text"
+								:items="Model.SelectLists.DisplayEncrypt"
+								:label="Resources.ALGORITMO_DE_ENCRIPT09649"
+								required />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper class="control-row-group">

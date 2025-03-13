@@ -37,10 +37,14 @@
 								class="control-row-group">
 								<base-input-structure
 									class="i-text">
-									<select-input
+									<q-select
 										v-model="Model.SrcYear"
-										:options="Model.Years"
-										:label="'Source database'" />
+										item-value="Value"
+										item-label="Text"
+										:items="Model.Years"
+										:label="'Source database'"
+										clearable
+										size="large" />
 								</base-input-structure>
 							</q-control-wrapper>
 							<q-control-wrapper class="control-row-group">

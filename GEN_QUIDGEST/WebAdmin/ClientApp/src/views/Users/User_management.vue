@@ -92,7 +92,7 @@
 							v-model="Model.AssignedRoles[props.row.Cod]"
 							:options="Model.AvaiableRoles[props.row.Cod]"
 							:multiple="!Model.OnlyLevels"
-							:taggable="true"
+							taggable
 							:max="props.row.OnlyLevels?1:999"
 							:custom-label="roleName"
 							label="Designation"
@@ -538,75 +538,3 @@
 		}
 	};
 </script>
-<style>
-    /*Permissions table must be fixed, since the content will be changed */
-    #PrivilegeTable .c-table {
-        table-layout : fixed;
-    }
-    #PrivilegeTable th:nth-child(1) {
-        width: 10%;
-    }
-    #PrivilegeTable th:nth-child(2) {
-        width: 30%;
-    }
-</style>
-<style scoped>
-	meter {
-		width: 100%;
-		height: 10px;
-	}
-
-    /* WebKit */
-    meter::-webkit-meter-bar {
-		background: #EEE;
-		box-shadow: 0 2px 3px rgba(0,0,0,0.2) inset;
-		border-radius: 3px;
-    }
-
-    /* Webkit based browsers */
-    meter::-webkit-meter-optimum-value {
-		transition: width .4s linear;
-    }
-
-    meter[value="0"]::-webkit-meter-optimum-value {
-		background: grey;
-    }
-
-    meter[value="1"]::-webkit-meter-optimum-value {
-		background: red;
-    }
-
-    meter[value="2"]::-webkit-meter-optimum-value {
-		background: orange;
-    }
-
-    meter[value="3"]::-webkit-meter-optimum-value {
-		background: yellow;
-    }
-
-    meter[value="4"]::-webkit-meter-optimum-value {
-		background: green;
-    }
-
-    /* Gecko based browsers */
-    meter[value="0"]::-moz-meter-bar {
-		background: grey;
-    }
-
-    meter[value="1"]::-moz-meter-bar {
-		background: red;
-    }
-
-    meter[value="2"]::-moz-meter-bar {
-		background: orange;
-    }
-
-    meter[value="3"]::-moz-meter-bar {
-		background: yellow;
-    }
-
-    meter[value="4"]::-moz-meter-bar {
-		background: green;
-    }
-
-</style>

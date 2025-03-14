@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using CSGenio.business;
 using CSGenio.framework;
-using CSGenio.business;
+using CSGenio.framework.Geography;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -518,59 +519,49 @@ namespace CSGenio.persistence
 
         public static object ToValidDbValue(object value, Field field)
         {
+            //Empty keys and dates are represented as null in the database
+            if ((field.isKey() || value is DateTime) && field.isEmptyValue(value))
+                return DBNull.Value;
 
-			if (field.FieldType == FieldType.CHAVE_ESTRANGEIRA || field.FieldType == FieldType.CHAVE_FALSA)
+            //Convert keys into their correct database type
+            if (field.isKey())
             {
-                if (string.IsNullOrEmpty(Convert.ToString(value)))
-                   return DBNull.Value;
-                else
+                if (field.FieldFormat == FieldFormatting.GUID)
+                    return new Guid(value.ToString());
+                //Currently integer keys are formatted as text, so this will never be called here
+                //There would need to exist a new format for integer keys that is internal string and external int.
+                else if (field.FieldFormat == FieldFormatting.INTEIRO)
+                    return int.Parse(value.ToString());
+                else if (field.FieldFormat == FieldFormatting.CARACTERES)
                     return value;
             }
 
-            if(field.FieldFormat == FieldFormatting.ENCRYPTED)
-            {
+            //Encrypt secure data before sending to database
+            if (field.FieldFormat == FieldFormatting.ENCRYPTED)
                 return (value as EncryptedDataType)?.EncryptedValue;
-            }
-			else if (value is DateTime && ((DateTime)value) == DateTime.MinValue)
-            {
-                return null;
-            }
-			else if (field.FieldFormat == FieldFormatting.GUID)
-			{
-				if (string.IsNullOrEmpty(Convert.ToString(value)))
-				{
-					return null;
-				}
-				else
-				{
-					return value.ToString();
-				}
-			}
-			else if (field.FieldType == FieldType.MEMO_COMP_RTF)
-			{
-				if (string.IsNullOrEmpty(Convert.ToString(value)))
-				{
-					return System.Text.Encoding.UTF8.GetBytes("");
-				}
-				else
-				{
-					return System.Text.Encoding.UTF8.GetBytes(value.ToString());
-				}
-			}
-			else if (field.FieldType == FieldType.GEOGRAPHY)
+
+            //Truncate time of days of date-only fields
+            if (field.FieldType == FieldType.DATA)
+                return ((DateTime)value).Date;
+
+            //Convert custom type fields
+            if (field.FieldType == FieldType.MEMO_COMP_RTF)
             {
                 if (string.IsNullOrEmpty(Convert.ToString(value)))
-                    return null;
+                    return System.Text.Encoding.UTF8.GetBytes("");
                 else
-                    return value;
+                    return System.Text.Encoding.UTF8.GetBytes(value.ToString());
             }
-            else if (field.FieldType == FieldType.GEO_SHAPE || field.FieldType == FieldType.GEOMETRIC)
+            if (field.FieldType == FieldType.GEOGRAPHY)
+            {
+                if (string.IsNullOrEmpty(Convert.ToString(value)))
+                    return DBNull.Value;
+                else
+                    return GeographicData.GetPointFromText(Convert.ToString(value));
+            }
+            if (field.FieldType == FieldType.GEO_SHAPE || field.FieldType == FieldType.GEOMETRIC)
             {
                 return value?.ToString();
-            }
-            else if (field.FieldType == FieldType.DATA)
-            {
-                return ((DateTime)value).Date;
             }
 
             return value;

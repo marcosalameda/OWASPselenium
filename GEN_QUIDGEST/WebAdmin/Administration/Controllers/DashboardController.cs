@@ -98,6 +98,8 @@ namespace Administration.Controllers
                 sp.openConnection();
                 if (tpConn == DatabaseType.ORACLE)
                     sql = "SELECT* FROM v$version WHERE banner LIKE 'Oracle%'";
+                if (tpConn == DatabaseType.POSTGRES)
+                    sql = "SELECT version();";
                 else
                     sql = "SELECT @@version";
                 model.SGBDVersion = (string)sp.executeScalar(sql);

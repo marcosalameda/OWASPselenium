@@ -36,7 +36,7 @@ namespace CSGenio.business
 			AreaInfo info = new AreaInfo();
 			
 			/*Information das areas*/
-			info.TableName = "UserAuthorization";
+			info.TableName = "userauthorization";
 			info.ShadowTabName = "";
 			info.PrimaryKeyName = "codua";
             info.HumanKeyName = "codua";
@@ -62,6 +62,7 @@ namespace CSGenio.business
 			info.DBFields["codpsw"].FieldSize = 36;
 			info.RegisterFieldDB(new Field("sistema", FieldType.TEXTO));
 			info.RegisterFieldDB(new Field("modulo", FieldType.TEXTO));
+            info.RegisterFieldDB(new Field("naodupli", FieldType.TEXTO));
             info.RegisterFieldDB(new Field("role", FieldType.TEXTO));
 			info.RegisterFieldDB(new Field("nivel", FieldType.NUMERO));
             info.RegisterFieldDB(new Field("opercria", FieldType.OPERCRIA));
@@ -85,7 +86,7 @@ namespace CSGenio.business
 			// Relações Mãe
 			//------------------------------
 			info.ParentTables = new Dictionary<string, Relation>();
-			info.ParentTables.Add("psw", new Relation("GQT", "userauthorization", "userauthorization", "codua", "codpsw", "$mae.TabelaDestino.TabelaDominio.Schema.ToUpper()", "userlogin", "psw", "codpsw", "codpsw"));
+			info.ParentTables.Add("psw", new Relation("GQT", "userauthorization", "userauthorization", "codua", "codpsw", "GQT", "userlogin", "psw", "codpsw", "codpsw"));
 
 			// Pathways
 			//------------------------------
@@ -196,7 +197,16 @@ namespace CSGenio.business
             get { return (string)returnValueField(FldModulo); }
             set { insertNameValueField(FldModulo, value); }
         }
-        
+
+        public static FieldRef FldNaodupli { get { return m_FldNaodupli; } }
+        private static FieldRef m_FldNaodupli = new FieldRef("userauthorization", "naodupli");
+
+        public string ValNaodupli
+        {
+            get { return (string)returnValueField(FldNaodupli); }
+            set { insertNameValueField(FldNaodupli, value); }
+        }
+
         public static FieldRef FldNivel { get { return m_FldNivel; } }
         private static FieldRef m_FldNivel = new FieldRef("userauthorization", "nivel");
 
@@ -336,6 +346,7 @@ namespace CSGenio.business
             CSGenioAuserauthorization userauth = new CSGenioAuserauthorization(user, module);
             userauth.ValSistema = "GQT";
             userauth.ValModulo = module;
+            userauth.ValNaodupli = codpsw.Replace("{", "").Replace("}", "").Replace("-", "").ToUpper() + module;
             userauth.ValRole = role.Id;
             if (role.Type != RoleType.ROLE)
                 userauth.ValNivel = role.GetLevelInt();

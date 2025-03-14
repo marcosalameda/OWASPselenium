@@ -2,6 +2,7 @@
 using CSGenio.core.di;
 using CSGenio.core.messaging;
 using CSGenio.framework;
+using CSGenio.framework.Geography;
 using ExecuteQueryCore;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
@@ -433,36 +434,12 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         {
             try
             {
-                // Extract the required values from the DataSystemXml object
-                string server = dataSystem.Server;
-                string database = dataSystem.Schemas[0].Schema;
-                string user = dataSystem.Login;
-                string password = dataSystem.Password;
-
-                // Create a connection string using the extracted values
-                var connectionStringBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder
-                {
-                    DataSource = server,
-                    InitialCatalog = database,
-                    UserID = user,
-                    Password = password,
-                    IntegratedSecurity = false,
-                    Encrypt = false
-                };
-
-                // Create SQL connection
-                using (var connection = new SqlConnection(connectionStringBuilder.ConnectionString))
-                {
-                    try {
-                        connection.Open();
-                    }
-                    catch(Exception) {
-                        return false;
-                    }
-                    finally {
-                        connection.Close();
-                    }
-                }
+                var sp = GenioDI.SpFactory(dataSystem.GetDatabaseType());
+                sp.DatabaseType = dataSystem.GetDatabaseType();
+                sp.Id = dataSystem.Name;
+                sp.BuildConnection(dataSystem);
+                sp.openConnection();
+                sp.closeConnection();
                 return true;
             }
             catch (Exception)
@@ -2626,7 +2603,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                                 insert.Value(CSGenioAdocums.FldVersao, forCheckout ? "CHECKOUT" : "1");
                                 insert.Value(CSGenioAdocums.FldZzstate, 0);
                                 insert.Value(CSGenioAdocums.FldOpercria, area.User.Name);
-                                insert.Value(CSGenioAdocums.FldTamanho, matrix.GetString(0, CSGenioAdocums.FldTamanho));
+                                insert.Value(CSGenioAdocums.FldTamanho, matrix.GetNumeric(0, CSGenioAdocums.FldTamanho));
                                 insert.Value(CSGenioAdocums.FldExtensao, extension);
                                 Execute(insert);
 
@@ -4086,6 +4063,8 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         public virtual IDbDataParameter CreateParameter(object value)
         {
             var p = CreateParameter();
+            if (value is GeographicPoint gp)
+                value = gp.ToString();
             p.Value = value ?? DBNull.Value;
 			if (!Configuration.IsDbUnicode && value != null && value.GetType() == typeof(string))
                 p.DbType = DbType.AnsiString;

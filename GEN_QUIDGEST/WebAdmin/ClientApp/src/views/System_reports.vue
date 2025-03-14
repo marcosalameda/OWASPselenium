@@ -35,7 +35,12 @@
         </row>
 
         <row>
-          <div id="textAreaErrorLog" ref="textAreaErrorLog" class="i-textarea__field i-textarea"><span style="white-space: pre-line">{{ Model.ErrorLog }}</span></div>
+          <q-text-area
+            v-model="Model.ErrorLog"
+            ref="textAreaErrorLog"
+            :rows="5"
+            size="xlarge"
+            autosize />
         </row>
       </template>
     </row>

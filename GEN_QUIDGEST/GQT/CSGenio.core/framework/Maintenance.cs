@@ -1,4 +1,5 @@
 using CSGenio.persistence;
+using Quidgest.Persistence.GenericQuery;
 using System;
 using System.Threading;
 
@@ -50,7 +51,11 @@ namespace CSGenio.framework
                     Status.IsScheduled = false;
 
                     sp.openConnection();
-                    Status.Schedule = CSGenio.persistence.DBConversion.ToDateTime(sp.executeScalar("SELECT MANUTDAT FROM " + Configuration.Program + "cfg order by checkdat desc"));
+                    SelectQuery query = new SelectQuery()
+                        .Select(Configuration.Program + "cfg", "manutdat")
+                        .From(Configuration.Program + "cfg")
+                        .OrderBy(Configuration.Program + "cfg", "checkdat", SortOrder.Descending);
+                    Status.Schedule = CSGenio.persistence.DBConversion.ToDateTime(sp.ExecuteScalar(query));
                     sp.closeConnection();
 
                     if (Status.Schedule != null && Status.Schedule != DateTime.MinValue)

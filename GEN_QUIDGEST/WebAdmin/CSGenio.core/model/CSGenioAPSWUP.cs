@@ -36,7 +36,7 @@ namespace CSGenio.business
 			AreaInfo info = new AreaInfo();
 			
 			/*Information das areas*/
-			info.TableName = "UserLogin";
+			info.TableName = "userlogin";
 			info.ShadowTabName = "";
 			info.PrimaryKeyName = "codpsw";
             info.HumanKeyName = "nome";

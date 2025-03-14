@@ -31,6 +31,9 @@ namespace CSGenio.persistence
                     case DatabaseType.MYSQL:
                         res = new PersistentSupportMySql();
                         break;
+                    case DatabaseType.POSTGRES:
+                        res = new PersistentSupportPostgres();
+                        break;
                     default:
                         throw new PersistenceException("Não foi possível estabelecer ligação à base de dados.", "PersistentSupport.getPersistentSupport", "Unknown database type: " + dbType);
                 }

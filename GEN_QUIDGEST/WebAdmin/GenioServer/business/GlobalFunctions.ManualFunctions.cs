@@ -132,12 +132,13 @@ return DateTime.Now.ToString("HH:mm");
 		{
 			try
 			{
-				List<IDbDataParameter> parameters = new List<IDbDataParameter>();
-				parameters.Add(sp.CreateParameter("lat", lat));
-				parameters.Add(sp.CreateParameter("lng", lng));
-
-				string selectQuery = "select dbo.GetGeoFromLatLng(@lat,@lng);";
-				return DBConversion.ToGeography(sp.executeScalar(selectQuery, parameters));
+				SelectQuery query = new SelectQuery()
+					.Select(new SqlFunction(SqlFunctionType.Custom, 
+						"GetGeoFromLatLng"
+						, lat,lng
+						), "x");
+				var result = sp.ExecuteScalar(query);
+				return DBConversion.ToGeography(result);
 			}
 			catch (Exception e)
 			{

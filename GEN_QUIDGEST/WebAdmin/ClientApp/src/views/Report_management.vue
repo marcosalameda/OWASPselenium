@@ -381,7 +381,7 @@
 			},
 
 			showError: function (row) {
-				var _html = `<div class="i-textarea"><div class="i-textarea__field i-textarea">${row.Error}</div></div>`;
+				var _html = `<span>${row.Error}</span>`;
 				bootbox.alert(_html)
 			},
 

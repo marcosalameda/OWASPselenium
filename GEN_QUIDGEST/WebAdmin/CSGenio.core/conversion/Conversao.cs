@@ -489,6 +489,8 @@ namespace CSGenio.framework
 
             if (fieldValue == null || fieldValue == DBNull.Value)
                 return stringValue;
+            else if (fieldValue is NpgsqlTypes.NpgsqlPoint np)
+                return $"POINT({np.X} {np.Y})";
             else
             {
                 stringValue = fieldValue.ToString();

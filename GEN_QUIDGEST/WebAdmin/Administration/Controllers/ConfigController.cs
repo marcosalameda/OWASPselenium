@@ -459,7 +459,10 @@ namespace Administration.Controllers
         {
             try
             {
-                bool connectionSuccess = PersistentSupport.TestServerConnection(model.GetDataSystemXml());
+                var dataSystem = model.GetDataSystemXml();
+                dataSystem.Login = Convert.ToBase64String(Encoding.Unicode.GetBytes(dataSystem.Login ?? string.Empty));
+                dataSystem.Password = Convert.ToBase64String(Encoding.Unicode.GetBytes(dataSystem.Password ?? string.Empty));
+                bool connectionSuccess = PersistentSupport.TestServerConnection(dataSystem);
 
                 if (connectionSuccess)
                 {
@@ -1235,10 +1238,18 @@ namespace Administration.Controllers
 
         private int CountBlacklistedPasswords(PersistentSupport sp)
         {
-            SelectQuery select = new SelectQuery()
-                .Select(SqlFunctions.Count(1), "COUNT")
-                .From("PswBlacklist");
-            return DBConversion.ToInteger(sp.executeScalar(select));
+            try
+            {
+                SelectQuery select = new SelectQuery()
+                    .Select(SqlFunctions.Count(1), "COUNT")
+                    .From("PswBlacklist");
+                return DBConversion.ToInteger(sp.executeScalar(select));
+            }
+            catch
+            {
+                //if there is an error or the db does not exist yet, return 0
+                return 0;
+            }
         }
 
         [HttpGet]

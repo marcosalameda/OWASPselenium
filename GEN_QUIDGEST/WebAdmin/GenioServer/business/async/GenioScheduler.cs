@@ -126,19 +126,10 @@ namespace CSGenio.business.async
         private void ReorderWorks()
         {
             var executing = _works.Where(w => SchedulerBroker.IsExecuting(w.Process));
-            var notExecuting = _works.Where(w => !SchedulerBroker.IsExecuting(w.Process)).ToList();
+            var notExecuting = _works.Where(w => !SchedulerBroker.IsExecuting(w.Process)).OrderBy(w => w).ToList();
 
-            notExecuting.Sort(CompareWorks);
             _works.Clear();
             _works.AddRange(executing.Concat(notExecuting));
-        }
-
-        private int CompareWorks(GenioWork first, GenioWork second)
-        {
-            if (first.Priority != second.Priority)
-                return first.Priority.CompareTo(second.Priority) * -1;
-
-            return first.Process.ValId.CompareTo(second.Process.ValId) * -1;
         }
     }
 

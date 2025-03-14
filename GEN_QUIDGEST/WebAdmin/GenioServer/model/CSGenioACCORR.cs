@@ -171,8 +171,8 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(11);
 			info.Pathways.Add("item","item");
 			info.Pathways.Add("indoc","indoc");
-			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("wareh","item");
+			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("cntry","indoc");
 			info.Pathways.Add("ware1","indoc");
 			info.Pathways.Add("cmpny","indoc");

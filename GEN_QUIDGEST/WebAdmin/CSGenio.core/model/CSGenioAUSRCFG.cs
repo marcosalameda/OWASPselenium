@@ -36,7 +36,7 @@ namespace CSGenio.business
 			AreaInfo info = new AreaInfo();
 			
 			/*Information das areas*/
-			info.TableName = "GQTusrcfg";
+			info.TableName = "gqtusrcfg";
 			info.ShadowTabName = "";
 			info.PrimaryKeyName = "codusrcfg";
             info.HumanKeyName = "codusrcfg";

@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DbAdmin\DbAdmin.csproj" />
     <ProjectReference Include="..\GenioServer\GenioServer.csproj" />
   </ItemGroup>
 

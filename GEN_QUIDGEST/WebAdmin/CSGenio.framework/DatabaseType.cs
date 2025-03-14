@@ -12,6 +12,7 @@ namespace CSGenio.framework
         SQLSERVERCOMPAT,
         SQLITE,
 		MYSQL,
+        POSTGRES,
         ERRO
 	}
 	

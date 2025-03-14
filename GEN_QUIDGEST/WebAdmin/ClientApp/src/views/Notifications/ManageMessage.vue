@@ -118,11 +118,13 @@
 					<q-control-wrapper class="row-line-group">
 						<base-input-structure
 							class="i-text">
-							<textarea-input
+							<q-text-area
 								v-model="Model.ValMensagem"
 								:label="Resources.MENSAGEM32641"
-								:isReadOnly="blockForm"
-								:rows="5" />
+								:readonly="blockForm"
+								:rows="5"
+								size="xxlarge"
+								autosize />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper class="row-line-group">

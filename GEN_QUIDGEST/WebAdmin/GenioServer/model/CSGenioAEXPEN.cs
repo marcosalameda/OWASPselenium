@@ -212,8 +212,8 @@ namespace CSGenio.business
 			//Actualiza as seguintes somas que criam registos:
 			info.SumCreateRecords = new SumsCreatesRecords[1];
 
-			info.SumCreateRecords[0] = new SumsCreatesRecords("gqtagreg", "agreg", "codaggre", "codaggre", new string[]{"codyear","codproje"}, new string[]{"codyear","codproje"});
-			info.ObtainAllFields = new string[] {"codyear","codproje"};
+			info.SumCreateRecords[0] = new SumsCreatesRecords("gqtagreg", "agreg", "codaggre", "codaggre", new string[]{"codproje","codyear"}, new string[]{"codproje","codyear"});
+			info.ObtainAllFields = new string[] {"codproje","codyear"};
 
 			info.CheckTableFields = new string[] {
 			 "prevval"

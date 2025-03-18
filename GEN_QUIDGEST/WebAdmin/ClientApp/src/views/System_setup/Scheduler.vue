@@ -14,7 +14,7 @@
 					</base-input-structure>
 				</q-control-wrapper>
 				<qtable
-					:rows="job"
+					:rows="jobs"
 					:columns="tJobs.columns"
 					:config="tJobs.config"
 					:totalRows="tJobs.total_rows"
@@ -46,12 +46,6 @@
 						</tr>
 					</template>
 				</qtable>
-				<row class="footer-btn">
-					<q-button
-						b-style="primary"
-						:label="Resources.GRAVAR_CONFIGURACAO36308"
-						@click="SaveSchedulerConfig" />
-				</row>
 			</q-row-container>
 		</q-card>
 	</row>
@@ -146,7 +140,7 @@
 		data () {
 			return {
 				showDialog: false,
-				job: [],
+				jobs: [],
 				buttons: [],
 				dialogMode: '',
 				rowOptions: {},
@@ -222,20 +216,6 @@
 		},
 
 		methods: {
-			SaveSchedulerConfig() {
-				QUtils.log("SaveSchedulerConfig - Request", QUtils.apiActionURL('Config', 'SaveSchedulerConfig'));
-				QUtils.postData('Config', 'SaveSchedulerConfig', this.model, null, function (data) {
-					QUtils.log("SaveSchedulerConfig - Response", data);          
-					this.$emit('update-model', data);
-					if (data.Success) {
-						this.$emit('alert-class', { ResultMsg: this.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
-						this.statusError = false;
-					} else {
-						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
-					}
-				});
-			},
-
 			SaveScheduledJob() {
 				const schedulerValues = {
 					Data: {
@@ -249,23 +229,7 @@
 				}
 
 				QUtils.postData('Config', 'SaveScheduledJob', schedulerValues, null, (data) => {
-					if (data.Success) {
-						switch (schedulerValues.FormMode) {
-							case 'new':
-								this.job.push(schedulerValues.Data);
-							break;
-							case 'edit':
-								const newjobIndex = this.job.findIndex(value => value.Id == this.rowId)
-								Object.assign(this.job[newjobIndex], schedulerValues.Data)
-								break;
-							case 'delete':
-								this.job = this.job.filter(prop => prop.Id != this.rowId);
-								break;
-							default:
-							break;
-						}
-					}
-					else {
+					if (!data.Success) {
 						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 					}
 
@@ -285,7 +249,7 @@
 				this.buttons = []
 			},
 
-			showScheduledJobModal(mode, job) {
+			showScheduledJobModal(mode, jobs) {
 				this.dialogMode = mode
 				this.getButtonsDialog()
 				this.showDialog = true
@@ -330,36 +294,36 @@
 					action: () => this.clearSchedulerValues()
 				})
 			},
-			changeJob(job) {
-				this.rowId = job.Id
-				this.rowOptions = job.Options || {}
-				this.rowCron = job.Cron
-				this.rowEnabled = job.Enabled
-				this.rowTaskType = job.TaskType
-				this.showScheduledJobModal('edit', job);
+			changeJob(jobs) {
+				this.rowId = jobs.Id
+				this.rowOptions = jobs.Options || {}
+				this.rowCron = jobs.Cron
+				this.rowEnabled = jobs.Enabled
+				this.rowTaskType = jobs.TaskType
+				this.showScheduledJobModal('edit', jobs);
 			},
-			deleteJob(job) {
-				this.rowId = job.Id
-				this.rowOptions = job.Options
-				this.rowCron = job.Cron
-				this.rowEnabled = job.Enabled
-				this.rowTaskType = job.TaskType
-				this.showScheduledJobModal('delete', job);
+			deleteJob(jobs) {
+				this.rowId = jobs.Id
+				this.rowOptions = jobs.Options
+				this.rowCron = jobs.Cron
+				this.rowEnabled = jobs.Enabled
+				this.rowTaskType = jobs.TaskType
+				this.showScheduledJobModal('delete', jobs);
 			},
 			createJob() {
-				let job = {
+				let jobs = {
 					rowId: '',
 					TaskType: '',
 					rowCron: '',
 					rowEnabled: true,
 					rowOptions: {}
 				};
-				this.showScheduledJobModal('new', job);
+				this.showScheduledJobModal('new', jobs);
 			}
 		},
 
 		mounted() {
-			this.job = this.model.Jobs || [];
+			this.jobs = this.model.Scheduler.Jobs || [];
 		},
 
 		watch: {
@@ -373,6 +337,12 @@
 					}
 				});
 			},
+			model: {
+				handler(newModel) {
+					this.jobs = newModel.Scheduler.Jobs || [];
+				},
+				deep: true
+			}
 		}
 	}
 </script>

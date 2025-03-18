@@ -161,61 +161,56 @@
 		},
 		computed: {
 			Paths() {
-				var vm = this;
-				if ($.isEmptyObject(vm.currentApp) || $.isEmptyObject(vm.Model.Paths))
+				if (!this.currentApp || !this.Model.Paths || Object.keys(this.Model.Paths).length === 0)
 				return null;
-				vm.Model.Paths[vm.currentApp].app = vm.currentApp;
-				return vm.Model.Paths[vm.currentApp] || null;
+				this.Model.Paths[this.currentApp].app = this.currentApp;
+				return this.Model.Paths[this.currentApp] || null;
 			},
 			Cores() {
-				var vm = this;
-				return !$.isEmptyObject(vm.currentApp) && !$.isEmptyObject(vm.Model.Cores) ? (vm.Model.Cores[vm.currentApp] || null) : null;
+				return this.currentApp && this.Model.Cores ? this.Model.Cores[this.currentApp] : null;
 			}
 		},
 		methods: {
 			fetchData() {
-				var vm = this;
 				QUtils.log("Fetch data - Config", QUtils.apiActionURL('Config', 'Index'));
-				QUtils.FetchData(QUtils.apiActionURL('Config', 'Index')).done(function (data) {
+				QUtils.FetchData(QUtils.apiActionURL('Config', 'Index')).done( (data) => {
 					QUtils.log("Fetch data - OK (Config)", data);
 					if(data.redirect) {
-						vm.$router.replace({ name: data.redirect, params: { culture: vm.currentLang, system: vm.currentYear } });
+						this.$router.replace({ name: data.redirect, params: { culture: this.currentLang, system: this.currentYear } });
 					}
 					else if (data.reload) {
-						vm.currentYear = data.system;
-						vm.fetchData();
+						this.currentYear = data.system;
+						this.fetchData();
 					}
 					else {
-						vm.setModel(data);
+						this.setModel(data);
 					}
 				});
 			},
 			setModel(data) {
-				var vm = this;
-				$.extend(vm.Model, data);
+				this.Model = { ...data };
 				// Select the first exists application
-				if ($.isEmptyObject(vm.currentApp) && !$.isEmptyObject(vm.Model.Applications)) {
-					vm.currentApp = vm.Model.Applications[0].Id;
+				if (!this.currentApp && Array.isArray(this.Model.Applications) && this.Model.Applications.length) {
+					this.currentApp = this.Model.Applications[0].Id;
 				}
 				// Focus on errors div
-				if (!$.isEmptyObject(vm.Model.ResultMsg)) {
+				if (this.Model.ResultMsg) {
 					window.scrollTo(0,0);
 					this.updateAlert(data);
 				}
 			},
 			reloadMQueues() {
-				var vm = this;
-				QUtils.FetchData(QUtils.apiActionURL('Config', 'ReloadMQueues')).done(function (data) {
+				QUtils.FetchData(QUtils.apiActionURL('Config', 'ReloadMQueues')).done((data) => {
 					if (data.Success) {
-						$.each(data.MQueues, function (propName, value) {
-							if ($.isArray(vm.Model.MQueues[propName])) { vm.Model.MQueues[propName].splice(0); }
-							$.extend(vm.Model.MQueues[propName], value);
+						$.each(data.MQueues, (propName, value) => {
+							if ($.isArray(this.Model.MQueues[propName])) { this.Model.MQueues[propName].splice(0); }
+							$.extend(this.Model.MQueues[propName], value);
 						});
 					}
 				});
 			},
 			updateUsers(eventData) {
-				if ($.isEmptyObject(this.Model.Security[eventData.currentApp].Users))
+				if (!Object.keys(this.Model.Security[eventData.currentApp].Users).length)
 					$.extend(this.Model.Security[eventData.currentApp], reactive({ Users: [] }));
 				else
 					this.Model.Security[eventData.currentApp].Users.splice(0);
@@ -261,15 +256,14 @@
 			}
 		},
 		mounted() {
-			var vm = this;
-			vm.observer = new MutationObserver(mutations => {
+			this.observer = new MutationObserver(mutations => {
 				for (const m of mutations) {
-				const newValue = m.target.getAttribute(m.attributeName);
-				vm.$nextTick(() => {
-					if (newValue.indexOf('active')) {
-					vm.selectedTab = m.target.id;
-					}
-				});
+					const newValue = m.target.getAttribute(m.attributeName);
+					this.$nextTick(() => {
+						if (newValue.indexOf('active')) {
+						this.selectedTab = m.target.id;
+						}
+					});
 				}
 			});
 		},

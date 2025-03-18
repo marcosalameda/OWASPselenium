@@ -254,8 +254,8 @@ namespace Administration.Controllers
             model.MQueues.Queues = new List<Models.QueueCfg>();
             if (conf.MessageQueueing != null)
             {
-                conf.MessageQueueing.Journaltimeout = GlobalFunctions.atoi(model.MQueues.Journaltimeout);
-                conf.MessageQueueing.Maxsendnumber = GlobalFunctions.atoi(model.MQueues.Maxsendnumber);
+                model.MQueues.Journaltimeout = conf.MessageQueueing.Journaltimeout.ToString();
+                model.MQueues.Maxsendnumber = conf.MessageQueueing.Maxsendnumber.ToString();
 
                 foreach (var q in conf.MessageQueueing.Queues)
                 {
@@ -459,10 +459,7 @@ namespace Administration.Controllers
         {
             try
             {
-                var dataSystem = model.GetDataSystemXml();
-                dataSystem.Login = Convert.ToBase64String(Encoding.Unicode.GetBytes(dataSystem.Login ?? string.Empty));
-                dataSystem.Password = Convert.ToBase64String(Encoding.Unicode.GetBytes(dataSystem.Password ?? string.Empty));
-                bool connectionSuccess = PersistentSupport.TestServerConnection(dataSystem);
+                bool connectionSuccess = PersistentSupport.TestServerConnection(model.GetDataSystemXml());
 
                 if (connectionSuccess)
                 {
@@ -841,23 +838,6 @@ namespace Administration.Controllers
             return Json(new { Success = true });
         }
 
-
-        public IActionResult SaveSchedulerConfig([FromBody]SchedulerXml model)
-        {
-            var conf = configManager.GetExistingConfig();
-            conf.Scheduler.Enabled = model.Enabled;
-            configManager.StoreConfig(conf);
-
-            // Reload Configuration static instance in server with the new Configuracoes.xml data
-            CSGenio.framework.Configuration.ReadConfiguration(conf);
-
-            // Dynamically update the scheduler service with the new configuration
-            var service = this.HttpContext.RequestServices.GetRequiredService<SchedulerServiceHost>();
-            service.UpdateEnable();
-
-            return Json(new { Success = true });
-        }
-
         public class FormRecordOperation<T>
         {
             public T Data { get; set; }
@@ -1008,57 +988,85 @@ namespace Administration.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveConfigMessageQueue([FromBody] Models.ConfigModel model)
+        public IActionResult SaveIntegrationConfig([FromBody] ConfigModel model)
         {
             var conf = configManager.GetExistingConfig();
-            try
-            {
-                if ((!string.IsNullOrEmpty(model.MQueues.Journaltimeout) && string.IsNullOrEmpty(model.MQueues.Maxsendnumber)) || (string.IsNullOrEmpty(model.MQueues.Journaltimeout) && !string.IsNullOrEmpty(model.MQueues.Maxsendnumber)))
-                    throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "ConfigController.Queue", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
 
-				if (conf.MessageQueueing == null)
+            if (model.Messaging != null)
+            {
+                model.Messaging.Host.Username = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.Messaging.Host.Username));
+                    model.Messaging.Host.Password = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.Messaging.Host.Password));
+
+                conf.Messaging = model.Messaging;
+            }
+
+            if (model.MQueues != null)
+            {
+                if (string.IsNullOrEmpty(model.MQueues.Journaltimeout) != string.IsNullOrEmpty(model.MQueues.Maxsendnumber))
+                {
+                    return Json(new
+                    {
+                        Status = "ERROR",
+                        Message = Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860,
+                        AlertType = "danger"
+                    });
+                }
+
+                if (conf.MessageQueueing == null)
                     conf.MessageQueueing = new messagequeueing();
 
-				model.MQueues.Journaltimeout = conf.MessageQueueing.Journaltimeout.ToString();
-				model.MQueues.Maxsendnumber = conf.MessageQueueing.Maxsendnumber.ToString();
+                conf.MessageQueueing.Journaltimeout = int.Parse(model.MQueues.Journaltimeout);
+                conf.MessageQueueing.Maxsendnumber = int.Parse(model.MQueues.Maxsendnumber);
+            }
 
+            try
+            {
                 configManager.StoreConfig(conf);
-                model.ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR18806 + " " + Resources.Resources.SERA_REDIRECIONADO_E06592;
-
-				// Reload Configuration static instance in server with the new Configuracoes.xml data
                 CSGenio.framework.Configuration.ReadConfiguration(conf);
             }
             catch (Exception e)
             {
-                var resultMsg = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
+                var resultMsg = e.Message;
                 return Json(new { Status = "ERROR", Message = resultMsg, AlertType = "danger" });
             }
+            var message = string.IsNullOrEmpty(model.ResultMsg) ? Resources.Resources.FICHEIRO_DE_CONFIGUR18806 : model.ResultMsg;
 
-            return Json(new { Status = "OK", Message = model.ResultMsg, AlertType = "success" });
+            return Json(new { Status = "OK", Message = message, AlertType = "success" });
         }
 
         [HttpPost]
-        public IActionResult SaveConfigAudit([FromBody]Models.ConfigModel model)
+        public IActionResult SaveSystemConfig([FromBody] ConfigModel model)
         {
             var conf = configManager.GetExistingConfig();
+
             conf.Audit = new AuditCfgEl();
+            conf.Audit.RegistActions = model.RegistActions;
+            conf.Audit.RegistLoginOut = model.RegistLoginOut;
+            conf.Audit.AuditInterface = model.AuditInterface;
+
+            conf.EventTracking = model.EventTracking;
+
+            if (model.Scheduler != null)
+            {
+                conf.Scheduler.Enabled = model.Scheduler.Enabled;
+            }
+
             try
             {
-                conf.Audit.RegistActions = model.RegistActions;
-                conf.Audit.RegistLoginOut = model.RegistLoginOut;
-				conf.Audit.AuditInterface = model.AuditInterface;
-
-                // Event tracing feature
-                conf.EventTracking = model.EventTracking;
-
                 configManager.StoreConfig(conf);
 
-				// Reload Configuration static instance in server with the new Configuracoes.xml data
-                CSGenio.framework.Configuration.ReadConfiguration(conf);
+                Configuration.ReadConfiguration(conf);
+
+                var service = this.HttpContext.RequestServices.GetRequiredService<SchedulerServiceHost>();
+                service.UpdateEnable();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return Json(new { Success = false, Message = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper()) });
+                return Json(new
+                {
+                    Success = false,
+                    Message = Translations.Get(ex.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper())
+                });
             }
 
             return Json(new { Success = true });

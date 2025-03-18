@@ -17,12 +17,6 @@
                 <q-checkbox
                     v-model="model.EventTracking"
                     :label="Resources.REGISTO_DE_EVENTOS65341" />
-                <row class="footer-btn">
-                    <q-button
-                        b-style="primary"
-                        :label="Resources.GRAVAR_CONFIGURACAO36308"
-                        @click="SaveConfigAudit" />
-                </row>
             </q-row-container>
         </q-card>
     </row>
@@ -43,22 +37,6 @@
 			model: {
 				required: true
 			}
-		},
-
-        methods: {
-            SaveConfigAudit() {
-				var vm = this;
-				QUtils.log("SaveConfigAudit - Request", QUtils.apiActionURL('Config', 'SaveConfigAudit'));
-				QUtils.postData('Config', 'SaveConfigAudit', vm.model, null, function (data) {
-					QUtils.log("SaveConfigAudit - Response", data);
-					if (data.Success) {
-						vm.$emit('alert-class', { ResultMsg: vm.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
-					}
-					else {
-						vm.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
-					}
-				});
-			},
-        }
+		}
     }
 </script>

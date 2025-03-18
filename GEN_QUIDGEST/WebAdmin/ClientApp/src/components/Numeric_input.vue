@@ -3,7 +3,12 @@
         <div class="d-flex" v-if="label">
             <label class="i-text__label" :for="id">{{ label }}</label>
         </div>
-        <input type="number" :class="style_class" :id="id" v-model="curValue" :readonly="isReadOnly">
+        <input
+          type="number"
+          :class="style_class"
+          :id="id"
+          v-model="curValue"
+          :readonly="isReadOnly">
     </div>
 </template>
 
@@ -15,25 +20,34 @@
       modelValue: [Number, String],
       label: String,
       size: String,
-      isReadOnly: Boolean
+      isReadOnly: Boolean,
+      integerOnly: {
+        type: Boolean,
+        default: false
+      }
     },
-    data: function () {
+    data() {
       return {
         id: null
       }
     },
     computed: {
       curValue: {
-        get: function () { return this.modelValue; },
-        set: function (newValue) { this.$emit('update:modelValue', newValue); }
+        get() { return this.modelValue; },
+        set(newValue) {
+          let valueToEmit = newValue;
+          if (this.integerOnly && newValue !== '' && !isNaN(newValue)) {
+            valueToEmit = parseInt(newValue);
+          }
+          this.$emit('update:modelValue', valueToEmit);
+        }
       },
-      style_class: function () {
+      style_class() {
           return 'i-text__field i-text input-' + (this.size || 'xxlarge');
       }
     },
-    mounted: function () {
-      var vm = this;
-      vm.id = "input_n_" + vm._.uid;
+    mounted() {
+      this.id = "input_n_" + this._.uid;
     },
   };
 </script>

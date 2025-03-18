@@ -49,6 +49,13 @@ namespace GenioServer.business
                 LoadXML(messageData);
         }
 
+        private DateTime GetQueueTimestamp()
+        {
+            if (long.TryParse(GetAttributeIfExists(queueXml.DocumentElement, "timestamp") ?? "", out long tsmili))
+                return DateTimeOffset.FromUnixTimeMilliseconds(tsmili).UtcDateTime;
+            return DateTime.UtcNow;
+        }
+
         public QueueResponse ProcessQueue(string channelId)
         {
             try

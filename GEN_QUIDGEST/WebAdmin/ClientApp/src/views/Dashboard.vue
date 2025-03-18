@@ -28,7 +28,7 @@
 			</div>
 			<br v-if="Model.ResultErrors">
 			<!-- Maintenance banner -->
-			<div v-if="CurentMaintenance.IsActive || CurentMaintenance.IsScheduled" class="alert alert--info">
+			<div v-if="CurrentMaintenance.IsActive || CurrentMaintenance.IsScheduled" class="alert alert--info">
 				<h4>{{ Resources.INFORMACAO46082 }}</h4>
 				<div>
 					<q-icon icon="alert" />
@@ -40,10 +40,9 @@
 					:label="maintenanceBtnText"
 					@click.stop="navigateTo($event, 'maintenance', false, 'schedule_maintenance-tab')" />
 			</div>
-			<br v-if="CurentMaintenance.IsActive || CurentMaintenance.IsScheduled" >
+			<br v-if="CurrentMaintenance.IsActive || CurrentMaintenance.IsScheduled" >
 			<!-- Is Beta Test -->
-			<div v-if="Model.IsBetaTestig" class="alert alert--warning">
-				<p />
+			<div v-if="Model.IsBetaTesting" class="alert alert--warning">
 				<p><b>
 					{{ Resources.AMBIENTE_DE_QUALIDAD42119 }}
 				</b></p>
@@ -146,66 +145,21 @@ export default {
 		return {
 			loaded: false,
 			Model: {},
-			modules: [],
-			CurentMaintenance: {},
-			UsersCount: 0,
-			queryParams: {
-				sort: [],
-				filters: [],
-				global_search: "",
-				per_page: 10,
-				page: 1,
-				component: "user",
-			},
-			tModules: {
-				rows: [],
-				total_rows: 0,
-				columns: [
-				{
-					label: () => this.$t('SIGLA14738'),
-					name: "Codiprog",
-					sort: true,
-					initial_sort: true,
-					initial_sort_order: "asc"
-				},
-				{
-					label: () => this.$t('NOME47814'),
-					name: "Prog",
-					sort: true
-				},
-				{
-					label: () => this.$t('PLATAFORMA28085'),
-					name: "Platafor",
-					sort: true
-				},
-				{
-					label: () => this.$t('VALIDADE07300'),
-					name: "Vate",
-					sort: true
-				}],
-				config: {
-					table_title: () => this.$t('MODULOS17298'),
-					pagination: false,
-					pagination_info: false,
-					global_search: {
-						visibility: false
-					}
-				}
-			}
+			CurrentMaintenance: {}
 		};
 	},
 
 	computed: {
 		maintenanceBtnText() {
-			return this.CurentMaintenance.IsActive 
+			return this.CurrentMaintenance.IsActive 
 				? this.Resources.DESACTIVAR_MANUTENCA45568 
 				: this.Resources.MUDAR_AGENDAMENTO_DE08195;
 		},
 
 		maintenanceText() {
-			return this.CurentMaintenance.IsActive 
+			return this.CurrentMaintenance.IsActive 
 				? this.Resources.O_SISTEMA_ENCONTRA_S37912 
-				: this.Resources.O_SISTEMA_IRA_ENTRAR46754.replace('{0}', this.formatDate(this.CurentMaintenance.Schedule));
+				: this.Resources.O_SISTEMA_IRA_ENTRAR46754.replace('{0}', this.formatDate(this.CurrentMaintenance.Schedule));
 		},
 	},
 
@@ -218,7 +172,7 @@ export default {
 				if (!this.Model.HasConfig) {
 					this.navigateTo(null, 'no_configuration', this.hasSubmenu);
 				}
-				Object.entries(data.CurentMaintenance).forEach(([propName, value]) => {  this.CurentMaintenance[propName] = value; })
+				Object.entries(data.CurrentMaintenance).forEach(([propName, value]) => {  this.CurrentMaintenance[propName] = value; })
 				this.loaded = true;
 			});
 		},
@@ -228,88 +182,6 @@ export default {
 	},
 
 	created() {
-		this.modules = [];
-		this.modules.push({
-			Codiprog: 'GQT',
-			Prog: 'Genio Quality Tests',
-			Platafor: 'MVC',
-			Vate: '01/01/0001'
-		});
-		this.modules.push({
-			Codiprog: 'PTN',
-			Prog: 'Patterns',
-			Platafor: 'MVC',
-			Vate: '01/01/0001'
-		});
-		this.modules.push({
-			Codiprog: 'STY',
-			Prog: 'Style',
-			Platafor: 'MVC',
-			Vate: '01/01/0001'
-		});
-		this.modules.push({
-			Codiprog: 'TBS',
-			Prog: 'Base tables',
-			Platafor: 'MVC',
-			Vate: '12/31/2020'
-		});
-		this.modules.push({
-			Codiprog: 'PTN',
-			Prog: 'Genio Patterns',
-			Platafor: 'MVC',
-			Vate: '01/01/0001'
-		});
-		this.modules.push({
-			Codiprog: 'GQT',
-			Prog: 'Genio Quality Tests',
-			Platafor: 'MVC',
-			Vate: '12/31/2019'
-		});
-		this.modules.push({
-			Codiprog: 'REG',
-			Prog: 'Registration',
-			Platafor: 'MVC',
-			Vate: '01/01/0001'
-		});
-		this.modules.push({
-			Codiprog: 'STY',
-			Prog: 'Style',
-			Platafor: 'MVC',
-			Vate: '01/01/0001'
-		});
-		this.modules.push({
-			Codiprog: 'IMO',
-			Prog: 'Real estate',
-			Platafor: 'MVC',
-			Vate: '01/01/0001'
-		});
-		this.modules.push({
-			Codiprog: 'WMS',
-			Prog: 'Warehouse Management System',
-			Platafor: 'MVC',
-			Vate: '01/01/0001'
-		});
-		this.modules.push({
-			Codiprog: 'STY',
-			Prog: 'Style',
-			Platafor: 'MVC',
-			Vate: '01/01/0001'
-		});
-		this.modules.push({
-			Codiprog: 'PTN',
-			Prog: 'Patterns',
-			Platafor: 'MVC',
-			Vate: '01/01/0001'
-		});
-		this.modules.push({
-			Codiprog: 'GQT',
-			Prog: 'Genio Quality Tests',
-			Platafor: 'MVC',
-			Vate: '01/01/0001'
-		});
-		this.tModules.rows = this.modules;
-		this.tModules.total_rows = this.modules.length;
-
 		// Ler dados
 		this.fetchData();
 	},

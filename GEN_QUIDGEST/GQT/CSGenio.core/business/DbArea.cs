@@ -3561,6 +3561,7 @@ namespace CSGenio.business
                     xmlMainElem.SetAttribute("queue", queue.Name);
                     xmlMainElem.SetAttribute("tp", operation);
                     xmlMainElem.SetAttribute("year", DBConversion.ToString(user.Year));
+                    xmlMainElem.SetAttribute("timestamp", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString());
 
                     foreach (Field Qfield in this.DBFields.Values)//percorre area corrente
                     {

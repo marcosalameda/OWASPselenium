@@ -283,7 +283,7 @@ namespace GenioMVC.Helpers
                                 * will add a coma if the number has 4 digits or more, which breaks the graph
                                 * Example: 5831 -> 5,831
                                 */
-                                else if(tc.DataType != ColumnDataType.Numeric)
+                                else if(tc.DataType != ColumnDataType.Numeric && tc.DataType != ColumnDataType.Currency)
                                 {
                                     value = tc.Evaluate(model);
                                 }

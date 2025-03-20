@@ -420,6 +420,57 @@ namespace Quidgest.Persistence.GenericQuery
         }
 
         /// <summary>
+        /// Generated a multi-row insert query and the necessary parameters
+        /// </summary>
+        /// <param name="query">A list of individual insert queries to join into a single one</param>
+        /// <returns>The query command text</returns>
+        /// <remarks>Callers are responsible for ensuring parameter number limits are respected</remarks>
+        public string GetSql(List<InsertQuery> query)
+        {
+            if (query.Count == 0)
+                throw new ArgumentException("Must have at least one row", nameof(query));
+
+            ClearParameters();
+
+            var dialect = PersistentSupport.Dialect;
+
+            //use the first row as the header, every row needs to have the same header
+            var header = query[0];
+
+            StringBuilder sql = new StringBuilder("INSERT INTO ");
+            sql.Append(GetSql(header.IntoTable));
+            sql.Append(" (");
+
+            for (int i = 0; i < header.Values.Count; i++)
+            {
+                if (i > 0)
+                {
+                    sql.Append(", ");
+                }
+                sql.Append(dialect.QuoteForColumnName(header.Values[i].Column.ColumnName));
+            }
+
+            sql.Append(") VALUES");
+
+            foreach (var row in query)
+            {
+                sql.Append(" (");
+                for (int i = 0; i < row.Values.Count; i++)
+                {
+                    if (i > 0)
+                    {
+                        sql.Append(", ");
+                    }
+                    sql.Append(ParseTerm(row.Values[i].Value));
+                }
+                sql.Append("),");
+            }
+            sql.Length -= 1;
+
+            return sql.ToString();
+        }
+
+        /// <summary>
         /// Generates the sql and the necessary parameters to run the query
         /// </summary>
         /// <returns>The sql for the query</returns>
@@ -1144,15 +1195,13 @@ namespace Quidgest.Persistence.GenericQuery
                 return dialect.NullString;
             }
 
-            var expr = term as ISqlExpression;
-            if (expr != null)
+            if (term is ISqlExpression expr)
             {
                 // each ISqlExpression knows what sql should generate
                 return GetSql(expr);
             }
 
-            var collection = term as IEnumerable;
-            if (collection != null && !(collection is string) && !(collection is byte[]) && !(collection is IEnumerable<byte>))
+            if (term is IEnumerable collection && !(collection is string) && !(collection is byte[]) && !(collection is IEnumerable<byte>))
             {
                 // collections of items have their item rendered individualy and are rendered as a list of values
                 // so that they may be used with the operator IN
@@ -1167,10 +1216,16 @@ namespace Quidgest.Persistence.GenericQuery
                 return "(" + String.Join("),(", parsedTerms) + ")";
             }
 
-            var fieldRef = term as FieldRef;
-            if (fieldRef != null)
+            if (term is FieldRef fieldRef)
             {
                 return GetSql(fieldRef);//"[" + fieldRef.Area + "]." + "[" + fieldRef.Field + "]";
+            }
+
+            if (term is DataTable datatable)
+            {
+                string tvpname = NextParameterName();
+                MakeParameter(tvpname, term);
+                return "SELECT " + datatable.Columns[0].ColumnName + " FROM " + (dialect.UseNamedPrefixInSql ? dialect.NamedPrefix : "") + tvpname;
             }
 
 			// otherwise, make a parameter for the value

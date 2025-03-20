@@ -41,7 +41,8 @@ import {
 	QSpinnerLoader,
 	QTextArea,
 	QTextField,
-	QTooltip
+	QTooltip,
+	QPasswordField
 }from '@quidgest/ui/components'
 
 export default function ComponentsInit(app) {
@@ -94,4 +95,5 @@ export default function ComponentsInit(app) {
 	app.component('QTextArea', QTextArea)
 	app.component('QTextField', QTextField)
 	app.component('QTooltip', QTooltip)
+	app.component('QPasswordField', QPasswordField)	
 }

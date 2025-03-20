@@ -2351,5 +2351,27 @@ namespace CSGenio.business
                 }
             }
         }
+
+
+        /// <summary>
+        /// Adds a message to the queue corresponding to the current row
+        /// Uses the old Quidserver based mechanism
+        /// </summary>
+        /// <param name="sp">Persistent support</param>
+        /// <param name="operation">Type of crud operation, C - Create, U - Update, D - Delete</param>
+        /// <param name="oldValues">Previous values of this row, send null for insertions</param>
+        /// <param name="queueId">Only send a specific queue, or null to send all queues associated with the row</param>
+        public abstract void insertQueue(PersistentSupport sp, string operation, Area oldValues, string queueId);
+
+        /// <summary>
+        /// Adds a message to the queue corresponding to the current row
+        /// Uses the new RabbitMq based mechanism
+        /// </summary>
+        /// <param name="sp">Persistent support</param>
+        /// <param name="operation">Type of crud operation, C - Create, U - Update, D - Delete</param>
+        /// <param name="oldValues">Previous values of this row, send null for insertions</param>
+        /// <param name="queueId">Only send a specific queue, or null to send all queues associated with the row</param>
+        public abstract void MessageQueue(PersistentSupport sp, string operation, Area oldValues);
+
     }
 }

@@ -2405,6 +2405,81 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         }
 
         /// <summary>
+        /// Bulk insert records into the database
+        /// </summary>
+        /// <typeparam name="A">Specific Area class of the rows</typeparam>
+        /// <param name="rows">The list of rows to insert</param>
+        public virtual void bulkInsert(IEnumerable<IArea> rows)
+        {
+            if (!rows.Any())
+                return;
+            var info = rows.First().Information;
+
+            //the first row will define the columns (every following row needs to have the exact same number of columns)
+            var columns = new List<Field>();
+            foreach (RequestedField rf in rows.First().Fields.Values)
+                columns.Add(info.DBFields[rf.Name]);
+
+            //batch the rows so that the number of parameter in each batch in under 500
+            //Max parameters is around 2000 but sql server degrades performance if too many parameters are passed
+            //so its actually faster to send more batches and less parameters. There is a tradeoff with the
+            //number of roundtrips, so the optimal spot seems to be around 200 - 500 parameters.
+            int batchSize = 500 / columns.Count;
+
+            var rowsIterator = rows.GetEnumerator();
+            while(rowsIterator.MoveNext())
+            {
+                List<InsertQuery> inserts = new List<InsertQuery>();
+                int batchIndex = 0;
+                do
+                {
+                    var row = rowsIterator.Current;
+                    InsertQuery query = new InsertQuery();
+                    QueryUtils.buildQueryInsert(query, row);
+                    inserts.Add(query);
+                    batchIndex++;
+                } while(batchIndex < batchSize && rowsIterator.MoveNext());
+
+                var renderer = new QueryRenderer(this);
+                renderer.SchemaMapping = SchemaMapping;
+
+                var sql = renderer.GetSql(inserts);
+                long st = DateTime.Now.Ticks;
+                if (Log.IsDebugEnabled) Log.Debug(string.Format("[bulkInsert] {0}.", sql) + Environment.NewLine + renderer.ParameterList.Count + " parameter sent.");
+                var parameters = renderer.ParameterList;
+
+                IDbCommand command = CreateCommand(sql, parameters);
+
+                command.ExecuteNonQuery();
+                if (Log.IsDebugEnabled) Log.Debug("[bulkInsert] " + (DateTime.Now.Ticks - st) / TimeSpan.TicksPerMillisecond + "ms");
+            }
+        }
+
+        /// <summary>
+        /// Bulk updates records in the database
+        /// </summary>
+        /// <typeparam name="A">Specific Area class of the rows</typeparam>
+        /// <param name="rows">The list of rows to update</param>
+        public virtual void bulkUpdate(IEnumerable<IArea> rows)
+        {
+            //non optimized version of bulk update (providers should specialize and optimize this method)
+            foreach (var row in rows)
+                change(row);
+        }
+
+        /// <summary>
+        /// Bulk delete records in the database
+        /// </summary>
+        /// <typeparam name="A">Specific Area class of the rows</typeparam>
+        /// <param name="rows">The list of rows to delete</param>
+        public virtual void bulkDelete(IEnumerable<IArea> rows)
+        {
+            //non optimized version of bulk delete (providers should specialize and optimize this method)
+            foreach (var row in rows)
+                deleteRecord(row, row.QPrimaryKey);
+        }
+
+        /// <summary>
         /// Function to construct a query insert
         /// </summary>
         /// <param name="area">Registration area to introduce</param>
@@ -4019,6 +4094,32 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 				throw new PersistenceException(ex.Message, "PersistentSupport.executaStoredProcedure",
 				                               "Error executing stored procedure '" + query + "' with timeout " + timeout.ToString() + ": " + ex.Message, ex);
             }
+        }
+
+        /// <summary>
+        /// Executes a stored procedure and returns a dataset if any is available by the procedure
+        /// </summary>
+        /// <param name="procedure">The name of the procedure to invoque</param>
+        /// <param name="parameters">The parameters of the procedure to invoque</param>
+        /// <param name="timeout"></param>
+        /// <returns>A dataset with the result set of the stored procedure. It can be empty or ignored for write only stored procedures.</returns>
+        public virtual DataMatrix ExecuteProcedure(string procedure, IList<IDbDataParameter> parameters = null, int timeout = 0)
+        {
+            IDbCommand command = CreateCommand("dbo." + procedure, parameters);
+            command.CommandType = CommandType.StoredProcedure;
+            if(timeout > 0)
+                command.CommandTimeout = timeout;
+
+            IDbDataAdapter adapter = CreateAdapter("dbo." + procedure);
+            adapter.SelectCommand = command;
+            DataSet ds = new DataSet();
+
+            var st = DateTime.Now.Ticks;
+            if (Log.IsDebugEnabled) Log.Debug(string.Format("[ExecuteProcedure] {0}.", procedure) + Environment.NewLine);
+            adapter.Fill(ds);
+            if (Log.IsDebugEnabled) Log.Debug("[ExecuteProcedure] " + (DateTime.Now.Ticks - st) / TimeSpan.TicksPerMillisecond + "ms");
+
+            return new DataMatrix(ds);
         }
 
         /// <summary>

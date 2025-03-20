@@ -947,34 +947,12 @@ namespace CSGenio.business
                 return;
             foreach (LastValueArgument arg in LastValueArgs)
             {
-                //ver se a relação mudou
-                Relation rel = Information.ParentTables[arg.AliasRUV];
-                object oldrel = oldvalues.returnValueField(Alias + "." + rel.SourceRelField);
-                object newrel = returnValueField(Alias + "." + rel.SourceRelField);
-
-                //se a ficha é pseudo-nova então é como se o Qvalue antigo não existisse
-                if (Zzstate != 0)
-                    oldrel = "";
-                //se a ficha foi apagada é como se a nova relação não existisse
-                if (deleted)
-                    newrel = "";
-
-                // TODO - se:
-                // o U1 não tem condição
-                // e a relação não mudar
-                // e o Qvalue da data não mudar
-                // e nenhum dos Qvalues dos fields consultados tiver sido alterado
-                // não é necessária nenhuma propagação
-
-                FieldFormatting formatacaoRelacao = DBFields[rel.SourceRelField].FieldFormat;
-
-                //se a nova relação não é nula é preciso actualizar a nova
-                if (!Field.isEmptyValue(newrel, formatacaoRelacao))
-                    auxActualizarUltimoValor(context, sp, arg, rel.SourceRelField, rel.TargetRelField, newrel, formatacaoRelacao);
-
-                //se a relação mudou e a antiga não era nula é preciso actualizar a antiga
-                if (!Field.isEmptyValue(oldrel, formatacaoRelacao) && !oldrel.Equals(newrel))
-                    auxActualizarUltimoValor(context, sp, arg, rel.SourceRelField, rel.TargetRelField, oldrel, formatacaoRelacao);
+                arg.DeterminePropagation(deleted ? null : this, oldvalues, (string alias, string pk, Area newrow, Area oldrow) =>
+                {
+                    Relation rel = Information.ParentTables[arg.AliasRUV];
+                    FieldFormatting formatacaoRelacao = DBFields[rel.SourceRelField].FieldFormat;
+                    auxActualizarUltimoValor(context, sp, arg, rel.SourceRelField, rel.TargetRelField, pk, formatacaoRelacao);
+                });
             }
         }
 
@@ -1031,60 +1009,10 @@ namespace CSGenio.business
             foreach (string campoFp in EndofPeriodFields)
             {
                 Field Qfield = (Field)this.DBFields[campoFp];
-				Field campoAgrupar = null;
                 EndPeriodFormula formula = (EndPeriodFormula)Qfield.Formula;
 
-                //ver se temos de actualizar o registo anterior ao actual
-                object primaryKeyValue = QPrimaryKey;
-
-                //obter os Qvalues actuais
-                object start = returnValueField(Alias + "." + formula.DateField);
-                object grouping = null;
-                if (formula.GroupField != null)
-                {
-                    grouping = returnValueField(Alias + "." + formula.GroupField);
-                    campoAgrupar = (Field)this.DBFields[formula.GroupField];
-                }
-
-                //obter os Qvalues antigos
-                object oldinicio = oldvalues.returnValueField(Alias + "." + formula.DateField);
-                object oldagrupamento = null;
-                if (formula.GroupField != null)
-                    oldagrupamento = oldvalues.returnValueField(Alias + "." + formula.GroupField);
-
-                //se a ficha está a ser apagada então é como se os Qvalues novos fossem zero
-                if (deleted)
-                {
-                    start = Qfield.GetValorEmpty();
-                    grouping = (campoAgrupar != null) ? campoAgrupar.GetValorEmpty() : null;
-                }
-
-                //se a ficha não é nova entao é como se os Qvalues antigos fossem zero
-                if (oldvalues.Zzstate == 1)
-                {
-                    oldinicio = Qfield.GetValorEmpty();
-                    oldagrupamento = (campoAgrupar != null) ? campoAgrupar.GetValorEmpty() : null;
-                }
-
-                //se a data e o grouping forem iguais não é preciso propagar
-                if (start.Equals(oldinicio) && (formula.GroupField == null || (oldagrupamento != null && oldagrupamento.Equals(grouping))))
-                    continue;
-
-                //actualiza a ficha que ficou atras dos novos Qvalues
-                if (!Qfield.isEmptyValue(start))
-                {
-                    string chaveAnterior = formula.getPreviousRecord(sp, this, start, grouping);
-                    if (!string.IsNullOrEmpty(chaveAnterior))
-                        auxActualizaFimPeriodo(context, sp, campoFp, formula, chaveAnterior);
-                }
-
-                //actualiza a ficha que estava atras dos Qvalues antigos
-                if (!Qfield.isEmptyValue(oldinicio))
-                {
-                    string chaveAnterior = formula.getPreviousRecord(sp, this, oldinicio, oldagrupamento);
-                    if (!string.IsNullOrEmpty(chaveAnterior))
-                        auxActualizaFimPeriodo(context, sp, campoFp, formula, chaveAnterior);
-                }
+                formula.DeterminePropagation(sp, deleted ? null : this, oldvalues, (string alias, string pk, Area newrow, Area oldrow) 
+                    => auxActualizaFimPeriodo(context, sp, campoFp, formula, pk));
             }
         }
 
@@ -1115,84 +1043,27 @@ namespace CSGenio.business
             if (Zzstate == 1 || Zzstate == 11)
                 return;
 
-            Dictionary<string, DbArea> areasPosicionadas = new Dictionary<string, DbArea>();
-
-            // JMN (17/07/2020) - HACK: There is a scenario where a group of SRs affects the same row but have different areas associated.
+            // There is a scenario where a group of SRs affects the same row but have different areas associated.
             // In this scenario, SR values computed for the first area were being overriden by the values from the second area SR.
             // This happens because we read all the information before updating the values, causing the second area SR to use the old values and overriding the values set by the first area SR.
-            // The fix consists in dealing with each area separately and applying the updates once SRs from that area are computed.
-            var linkedSumAlias = RelatedSumArgs.Select(x => x.AliasSR).Distinct();
-            foreach (string aliasSR in linkedSumAlias)
+            // It does not happen here, just because we are only updating 1 column in each area, so the 2nd time the row is read its value is not overriden.
+            // Should the algorithm change, this use case needs to be taken into account.
+            foreach (RelatedSumArgument argSR in RelatedSumArgs)
             {
-                foreach (RelatedSumArgument argSR in RelatedSumArgs)
-                {
-                    if (!argSR.AliasSR.Equals(aliasSR))
-                        continue;
-
-                    AreaInfo source = Area.GetInfoArea(argSR.AliasSource);
-                    Relation relacao = source.ParentTables[argSR.AliasSR];
-
-                    FieldFormatting formatacaoRel = returnFormattingDBField(relacao.SourceRelField);
-                    object valorRel = returnValueField(Alias + "." + relacao.SourceRelField);
-                    object oldValorRel = oldValues.returnValueField(Alias + "." + relacao.SourceRelField);
-
-                    decimal novoValor;
-                    decimal oldValor;
-                    if (argSR.IsField) //se for um Qfield vai buscar o Qvalue senão é uma contagem
-                    {
-                        novoValor = Convert.ToDecimal(returnValueField(Alias + "." + argSR.ArgField));
-                        oldValor = Convert.ToDecimal(oldValues.returnValueField(Alias + "." + argSR.ArgField));
-                    }
-                    else //a contagem é feita com um number fixo (tipicamente 1.0)
-                    {
-                        novoValor = decimal.Parse(argSR.ArgField);
-                        oldValor = novoValor;
-                    }
-
-                    //se antes a ficha era pseudo-nova então é como se o Qvalue antigo fosse 0
-                    if (oldValues.Zzstate == 1)
-                    {
-                        oldValor = 0;
-                        oldValorRel = "";
-                    }
-
-                    //se a ficha vai ser apagada então é como se o Qvalue novo fosse 0
-                    if (delete)
-                    {
-                        novoValor = 0;
-                        valorRel = "";
-                    }
-
-                    //calcula a diferença a causar na relação antiga e na relação nova
-                    decimal olddiff = -oldValor;
-                    decimal newdiff = novoValor;
-                    //se a relação ficou igual agregamos tudo no newdiff
-                    if (oldValorRel.Equals(valorRel))
-                    {
-                        newdiff -= oldValor;
-                        olddiff = 0;
-                    }
-
-                    //ao novo Qvalue da relação adicionamos a diferença
-                    if (newdiff != 0 && !Field.isEmptyValue(valorRel, formatacaoRel))
-                        AuxUpdateSr(context, sp, argSR, relacao, valorRel, newdiff, areasPosicionadas);
-
-                    //ao Qvalue antigo da relação
-                    if (olddiff != 0 && !Field.isEmptyValue(oldValorRel, formatacaoRel))
-                        AuxUpdateSr(context, sp, argSR, relacao, oldValorRel, olddiff, areasPosicionadas);
-                }
+                argSR.DeterminePropagation(delete ? null : this, oldValues, (string alias, string pk, Area newrow, Area oldrow, decimal diff)
+                    => AuxUpdateSr(context, sp, argSR, alias, pk, diff));
             }
         }
 
-        private void AuxUpdateSr(FormulaDbContext context, PersistentSupport sp, RelatedSumArgument argSR, Relation relacao, object valorRel, decimal diff, Dictionary<string, DbArea> areasPosicionadas)
+        private void AuxUpdateSr(FormulaDbContext context, PersistentSupport sp, RelatedSumArgument argSR, string areaTarget, string valorRel, decimal diff)
         {
-            Area other = context.UpdateRecord(relacao.AliasTargetTab, valorRel.ToString());
+            Area other = context.UpdateRecord(areaTarget, valorRel);
             var srFieldName = other.Alias + "." + argSR.SRField;
 
             //if the field is not already set in the target record we need to fetch it from the database values
             if (!other.Fields.ContainsKey(argSR.SRField))
             {
-                var dboutra = context.ReadRecord(relacao.AliasTargetTab, valorRel as string, sp);
+                var dboutra = context.ReadRecord(areaTarget, valorRel, sp);
                 other.insertNameValueField(srFieldName, dboutra.returnValueField(srFieldName));
             }
             decimal valorSR = Convert.ToDecimal(other.returnValueField(srFieldName));
@@ -1214,7 +1085,7 @@ namespace CSGenio.business
         /// <param name="deleted">True se o registo está a ser apagado</param>
         public void propagateListAggregate(FormulaDbContext context, PersistentSupport sp, Area oldValues, bool delete)
         {
-            if (ArgsListAggregate == null)//fields argumentos de fórmulas do tipo soma relacionada
+            if (ArgsListAggregate == null)
                 return;
 
             //com zzstate a 1 não somamos nada
@@ -1223,33 +1094,12 @@ namespace CSGenio.business
 
             foreach (ListAggregateArgument argLG in ArgsListAggregate)
             {
-                AreaInfo source = Area.GetInfoArea(argLG.AliasSource);
-                Relation relacao = source.ParentTables[argLG.AliasLG];
-
-                FieldFormatting formatacaoRel = returnFormattingDBField(relacao.SourceRelField);
-                object valorRel = returnValueField(Alias + "." + relacao.SourceRelField);
-                object oldValorRel = oldValues.returnValueField(Alias + "." + relacao.SourceRelField);
-
-                Field infoValorLG = source.DBFields[argLG.ArgField];
-                object novoValorLG = returnValueField(Alias + "." + argLG.ArgField);
-                object oldValorLG = oldValues.returnValueField(Alias + "." + argLG.ArgField);
-
-                object novoValorOrdenacao = returnValueField(Alias + "." + argLG.SortField);
-                object oldValorOrdenacao = oldValues.returnValueField(Alias + "." + argLG.SortField);
-
-                // To the new value of the relationship, we add the difference.
-                if (!Equals(valorRel, oldValorRel) || !Equals(novoValorLG, oldValorLG) || !Equals(novoValorOrdenacao, oldValorOrdenacao)
-                    //we are deleting this value and we has something that was propagated
-                    || (delete && !infoValorLG.isEmptyValue(oldValorLG))
-                    //zzstate was pseudo new state and we have something to actually propagate
-                    || (oldValues.Zzstate != 0 && !infoValorLG.isEmptyValue(novoValorLG)))
+                argLG.DeterminePropagation(delete ? null : this, oldValues, (string alias, string pk, Area newrow, Area oldrow) =>
                 {
-                    //AJA 2016-04-06 - Verifica se a relação exists. Se estiver fazia não calcula a formula.
-                    if (!Field.isEmptyValue(valorRel, formatacaoRel))
-                        AuxUpdateLG(context, sp, argLG, relacao, valorRel);
-                    if (!delete && !Field.isEmptyValue(oldValorRel, formatacaoRel) && !Equals(valorRel, oldValorRel))
-                        AuxUpdateLG(context, sp, argLG, relacao, oldValorRel);
-                }
+                    AreaInfo source = Area.GetInfoArea(argLG.AliasSource);
+                    Relation relacao = source.ParentTables[argLG.AliasLG];
+                    AuxUpdateLG(context, sp, argLG, relacao, pk);
+                });
             }
         }
 
@@ -3331,8 +3181,8 @@ namespace CSGenio.business
             return false;
         }
 
-
-        private void MessageQueue(PersistentSupport sp, string operation, Area oldValues)
+        /// <inheritdoc/>
+        public override void MessageQueue(PersistentSupport sp, string operation, Area oldValues)
         {
             if(!Configuration.Messaging.Enabled)
                 return;
@@ -3503,15 +3353,8 @@ namespace CSGenio.business
             return false;
         }
 
-        /// <summary>
-        /// Método to enviar queues(estas ficam na db, posteriormente deverão ser enviadas pelo integrador)
-        /// </summary>
-        /// <param name="sp">suporte persistente</param>
-        /// <param name="operacao">Type de Operação, C - Create, U - Update, D - Delete </param>
-		/// <param name="oldValues">Valores originais to validar se algum Qfield mudou. Passar a null caso seja uma inserção ou quisermos forçar o envio</param>
-		/// <param name="queueId">Id da queue a enviar ou passar a null to enviar todas as queues desta area</param>
-        /// <returns>o status e a mensagem resposta da inserção</returns>
-        public virtual void insertQueue(PersistentSupport sp, string operation, Area oldValues, string queueId)
+        /// <inheritdoc/>
+        public override void insertQueue(PersistentSupport sp, string operation, Area oldValues, string queueId)
         {
             //TODO - Actualmente as queues só estão a ser criadas no Area.Alterar e Area.Apagar, verificar por casos praticos se faz sentido estender isto
             try

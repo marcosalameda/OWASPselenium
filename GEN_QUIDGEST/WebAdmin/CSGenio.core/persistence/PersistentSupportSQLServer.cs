@@ -1,13 +1,13 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlClient;
+﻿using CSGenio.business;
 using CSGenio.framework;
-using CSGenio.business;
 using Quidgest.Persistence.Dialects;
 using Quidgest.Persistence.GenericQuery;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 
 namespace CSGenio.persistence
 {
@@ -16,11 +16,6 @@ namespace CSGenio.persistence
     /// </summary>
     public class PersistentSupportSQLServer : PersistentSupport
     {
-        public override IDbDataParameter CreateParameter()
-        {
-            return new SqlParameter();
-        }
-
         private static readonly Dialect m_dialect_singleton = new SqlServerDialect();
 
         /// <summary>
@@ -28,7 +23,37 @@ namespace CSGenio.persistence
         /// </summary>
         public PersistentSupportSQLServer()
         {
-			Dialect = m_dialect_singleton;
+            Dialect = m_dialect_singleton;
+        }
+
+        /// <inheritdoc/>
+        public override IDbDataParameter CreateParameter()
+        {
+            return new SqlParameter();
+        }
+
+        /// <inheritdoc/>
+        public override IDbDataParameter CreateParameter(object value)
+        {
+            var p = CreateParameter() as SqlParameter;
+            p.Value = value ?? DBNull.Value;
+            if (!Configuration.IsDbUnicode && value != null && value.GetType() == typeof(string))
+                p.DbType = DbType.AnsiString;
+            if (value is IEnumerable<string> ev)
+            {
+                //convert to table value parameter
+                DataTable tableValueParam = QueryUtils.CreateKeyListType(ev);
+
+                p.SqlDbType = SqlDbType.Structured;
+                p.TypeName = tableValueParam.TableName;
+                p.Value = tableValueParam;
+            }
+            if(value is DataTable dt)
+            {
+                p.SqlDbType = SqlDbType.Structured;
+                p.TypeName = "dbo." + dt.TableName;
+            }
+            return p;
         }
 
         protected override void BuildConnection(DataSystemXml dataSystem, string login, string password, int connectionTimeout = 0)
@@ -742,5 +767,121 @@ namespace CSGenio.persistence
                 return result != null;
             }
         }
+
+        /// <inheritdoc/>
+        public override void bulkInsert(IEnumerable<IArea> rows)
+        {
+            if (!rows.Any())
+                return;
+            var info = rows.First().Information;
+
+            SqlBulkCopy copy = new SqlBulkCopy(Connection as SqlConnection, SqlBulkCopyOptions.Default, Transaction as SqlTransaction);
+            copy.DestinationTableName = info.TableName;
+
+            //Could not make this work, it ignored me marking the Guids in the schema
+            //var reader = new CSGenio.core.persistence.CSAreaDataReader<A>(rows);
+            //for (int i = 0; i < reader.FieldCount; i++)
+            //    copy.ColumnMappings.Add(reader.GetName(i), reader.GetName(i).ToUpperInvariant());
+            //copy.WriteToServer(reader);
+
+            //SqlBulkCopy is case sensitive in the column mappings if you use manual mappings
+            //We will let the datatable do the mapping for us and that auto-mapping appears to handle case-sensitivity
+            //foreach (var col in info.DBFields)
+            //    copy.ColumnMappings.Add(col.Key, col.Key.ToUpperInvariant());
+
+            DataTable dt = SetupBulkDataTable(rows, info, true);
+
+            //execute the bulk copy
+            long st = DateTime.Now.Ticks;
+            if (Log.IsDebugEnabled) Log.Debug("[bulkInsert]" + Environment.NewLine + rows.Count() + " rows sent.");
+            copy.WriteToServer(dt);
+            if (Log.IsDebugEnabled) Log.Debug("[bulkInsert] " + (DateTime.Now.Ticks - st) / TimeSpan.TicksPerMillisecond + "ms");
+        }
+
+        private static DataTable SetupBulkDataTable(IEnumerable<IArea> rows, AreaInfo info, bool changeDatatypes = false)
+        {
+            DataTable dt = new DataTable();
+            //Setup the schema
+            foreach (var col in info.DBFields)
+            {
+                var dataType = col.Value.FieldType.Type;
+
+                if (changeDatatypes)
+                {
+                    //SqlBulkCopy does not handle implicit conversion unless you set the correct type
+                    if (col.Value.isKey() && info.KeyType == CodeType.GUID_KEY)
+                        dataType = typeof(Guid);
+                }
+
+                dt.Columns.Add(col.Key, dataType);
+            }
+            //Setup the data
+            foreach (var row in rows)
+            {
+                var dr = dt.NewRow();
+                foreach (RequestedField fld in row.Fields.Values)
+                    dr[fld.Name] = QueryUtils.ToValidDbValue(fld.Value, info.DBFields[fld.Name]);
+                dt.Rows.Add(dr);
+            }            
+
+            return dt;
+        }
+
+        /// <inheritdoc/>
+        public override void bulkUpdate(IEnumerable<IArea> rows)
+        {
+            if (!rows.Any())
+                return;
+            var info = rows.First().Information;
+
+            //setup the datatable
+            var dataTable = SetupBulkDataTable(rows, info);
+            dataTable.AcceptChanges();
+            foreach(DataRow dr in dataTable.Rows)
+                dr.SetModified();
+
+            //use the first row as a header to create the update query
+            UpdateQuery query = new UpdateQuery();
+            QueryUtils.fillQueryUpdate(query, rows.First());
+            var renderer = new QueryRenderer(this);
+            renderer.SchemaMapping = SchemaMapping;
+            var sql = renderer.GetSql(query);
+            var parameters = renderer.ParameterList;
+
+            //the data adapter needs to know how to match the parameter name to the corresponding column in the dataTable
+            for (int i = 0; i < query.SetValues.Count; i++)
+                parameters[i].SourceColumn = query.SetValues[i].Column.ColumnName;
+            //the last parameter should always be the pk
+            parameters[parameters.Count - 1].SourceColumn = info.PrimaryKeyName;
+
+            //use an adapter to batch the updates
+            var adapter = new SqlDataAdapter();
+            adapter.UpdateCommand = CreateCommand(sql, parameters) as SqlCommand;
+            adapter.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
+            adapter.UpdateBatchSize = 500;
+
+            long st = DateTime.Now.Ticks;
+            if (Log.IsDebugEnabled) Log.Debug("[bulkUpdate]" + Environment.NewLine + rows.Count() + " rows sent.");
+            adapter.Update(dataTable);
+            if (Log.IsDebugEnabled) Log.Debug("[bulkUpdate] " + (DateTime.Now.Ticks - st) / TimeSpan.TicksPerMillisecond + "ms");
+        }
+
+        /// <inheritdoc/>
+        public override void bulkDelete(IEnumerable<IArea> rows)
+        {
+            if (!rows.Any())
+                return;
+            var info = rows.First().Information;
+
+            //put keys into a table value parameter
+            var tableValueParam = QueryUtils.CreateKeyListType(rows.Select(x => x.QPrimaryKey));
+
+            DeleteQuery queryDelete = new DeleteQuery()
+                .Delete(info.QSystem, info.TableName)
+                .Where(CriteriaSet.And()
+                .In(info.TableName, info.PrimaryKeyName, tableValueParam));
+
+            int linha = Execute(queryDelete);
+        }        
     }
 }

@@ -576,19 +576,30 @@ namespace Administration.Models
         public string FormMode { get; set; }
         public int Rownum { get; set; }
 
-        public static IEnumerable<SelectListItem> PropertyList
+        public static IEnumerable<AdvancedPropertyItem> PropertyList
         {
             get
             {
-                List<SelectListItem> res = new List<SelectListItem>();
+                List<AdvancedPropertyItem> res = new List<AdvancedPropertyItem>();
                 foreach (string t in ExtraProperties.GetInitialKeys())
                 {
-                    res.Add(new SelectListItem() { Value = t, Text = t });
+                    res.Add(new AdvancedPropertyItem() { Value = t, Text = t });
                 }
-
+                
+                foreach (var t in ExtraProperties.GetAdvancedProperties())
+                {
+                    res.Add(new AdvancedPropertyItem() { Value = t.Id, Text = t.Label,Type= t.Type });
+                }
                 return res;
             }
         }
+    }
+
+    public class AdvancedPropertyItem
+    {
+        public string Value { get; set; }
+        public string Text { get; set; }
+        public string Type { get; set; }
     }
 
     public class DateFormatCfg

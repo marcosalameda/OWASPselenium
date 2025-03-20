@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@quidgest/ui':
-        specifier: 0.14.17
-        version: 0.14.17(vue@3.4.20)
+        specifier: 0.14.19
+        version: 0.14.19(vue@3.4.20)
       '@r2rka/vue3-treeselect':
         specifier: 0.2.4
         version: 0.2.4(sass@1.77.6)(vue@3.4.20)
@@ -582,8 +582,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@quidgest/ui@0.14.17':
-    resolution: {integrity: sha512-cCVcLmNAl0VMj5hxP73kENRMcnR6tghKK1PGrsHQ1jTqX9mhM6j4xpNv1Bo/tFWMHkyGiZCC2HkaQ/Qy2TDepA==}
+  '@quidgest/ui@0.14.19':
+    resolution: {integrity: sha512-ho4N+r/Ab+At5qOrouNR8TOjM6j/Q99gsn25DEo0ysN8nbh5gyuF6/fjnL5N7CKE0x9NMHyUXZI5bTC6duC9zg==}
     peerDependencies:
       vue: ^3.4.15
 
@@ -2291,7 +2291,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  '@quidgest/ui@0.14.17(vue@3.4.20)':
+  '@quidgest/ui@0.14.19(vue@3.4.20)':
     dependencies:
       '@vuepic/vue-datepicker': 11.0.1(vue@3.4.20)
       '@vueuse/core': 13.0.0(vue@3.4.20)

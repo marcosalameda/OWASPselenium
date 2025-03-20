@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 
 namespace CSGenio.persistence
 {
@@ -300,26 +301,24 @@ namespace CSGenio.persistence
                 RequestedField campoPedido = (RequestedField)enumCampos.Current;
                 if (!campoPedido.Name.Equals(area.PrimaryKeyName) && camposBD[campoPedido.Name] != null)
                 {
-                    Field campoBD = (Field)camposBD[campoPedido.Name];
+                    Field campoBD = camposBD[campoPedido.Name];
+
+                    //virtual vields do not support updates
 					if (campoBD.IsVirtual)
                         continue;
 
-                    if (!campoBD.FieldType.Equals(FieldType.IMAGEM_JPEG) && !campoBD.FieldType.Equals(FieldType.PATH)
-                        && !campoBD.FieldType.Equals(FieldType.DATACRIA) && !campoBD.FieldType.Equals(FieldType.OPERCRIA)
-                        && !campoBD.FieldType.Equals(FieldType.HORACRIA) && !campoBD.FieldType.Equals(FieldType.INSTANTECRIA) /*&& !campoBD.FieldType.Equals(FieldType.FICHEIRO_BD)*/)
-                    {
-						query.Set(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
-                    }
-                    else
-                    {
-                        // testa se foi feito o upload (* significa que o file não foi alterado)
-                        if (campoPedido.Value.ToString().Length != 0 && !campoPedido.Value.ToString().StartsWith("*")
-                            && !campoBD.FieldType.Equals(FieldType.DATACRIA) && !campoBD.FieldType.Equals(FieldType.OPERCRIA)
-                            && !campoBD.FieldType.Equals(FieldType.HORACRIA) && !campoBD.FieldType.Equals(FieldType.INSTANTECRIA))
-                        {
-                            query.Set(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
-                        }
-                    }
+                    //always skip creation audit fields during update
+                    if (campoBD.FieldType.Equals(FieldType.DATACRIA) || campoBD.FieldType.Equals(FieldType.OPERCRIA)
+                        || campoBD.FieldType.Equals(FieldType.HORACRIA) || campoBD.FieldType.Equals(FieldType.INSTANTECRIA))
+                        continue;
+
+                    //skip empty binary fields
+                    if (campoBD.FieldType.Equals(FieldType.IMAGEM_JPEG) || campoBD.FieldType.Equals(FieldType.PATH)
+                        || campoBD.FieldType.Equals(FieldType.MEMO_COMP_RTF) /*|| campoBD.FieldType.Equals(FieldType.FICHEIRO_BD)*/
+                        && (campoPedido.Value.ToString().Length == 0 || campoPedido.Value.ToString().StartsWith("*")))
+                        continue;
+
+                    query.Set(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
                 }
             }
         }
@@ -736,5 +735,19 @@ namespace CSGenio.persistence
             return res;
         }
 
+        /// <summary>
+        /// Creates a KeyList compatible DataTable from a collection of keys
+        /// </summary>
+        /// <param name="keys">A collection of keys</param>
+        /// <returns>The configured Datatable to use in Queries</returns>
+        public static DataTable CreateKeyListType(IEnumerable<string> keys)
+        {
+            var tvp = new DataTable();
+            tvp.TableName = "KeyListType";
+            tvp.Columns.Add("item", typeof(string));
+            foreach (var pk in keys)
+                tvp.Rows.Add(pk);
+            return tvp;
+        }
     }
 }

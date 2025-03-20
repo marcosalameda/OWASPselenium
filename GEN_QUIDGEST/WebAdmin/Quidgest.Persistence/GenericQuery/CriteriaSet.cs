@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 
 namespace Quidgest.Persistence.GenericQuery
 {
@@ -507,6 +508,16 @@ namespace Quidgest.Persistence.GenericQuery
         {
             return InCore(new ColumnReference(field.Area, field.Field), rightTerm);
         }
+
+        public CriteriaSet In(string tableAlias, string column, DataTable rightTerm)
+        {
+            return InCore(new ColumnReference(tableAlias, column), rightTerm);
+        }
+
+        public CriteriaSet In(FieldRef field, DataTable rightTerm)
+        {
+            return InCore(new ColumnReference(field.Area, field.Field), rightTerm);
+        }        
 
         private CriteriaSet InCore(object leftTerm, object rightTerm)
         {

@@ -8,9 +8,11 @@
     <hr>
     
     <row>
-      <select class="form-control" style="float:right; width: 200px;" v-model="currentApp">
-        <option v-for="app in Model.Applications" v-bind:key="app.Id" v-bind:value="app.Id">{{ app.Name }}</option>
-      </select>
+      <q-select
+        v-model="currentApp"
+        item-value="Id"
+        item-label="Name"
+        :items="Model.Applications" />
     </row>
     <row>
       <div v-if="!isEmptyObject(Model.ResultMsg)" class="alert alert-danger">
@@ -20,18 +22,18 @@
       </div>
       <template v-else>
         <row>
-        <!-- TODO: Input group aqui-->
-            <div class="input-group i-input-group">
-                <input type="text" v-model="searchError" ref="searchError" class="form-control i-input-group__field" placeholder="Search for..." v-on:keyup="searchErro">
-                <div class="input-group-append i-input-group--right">
-                    <q-button
-                      b-style="primary"
-                      ref="searchErrorBtn" 
-                      @click="highlightSearchErro">
-                      <q-icon icon=magnify />
-                    </q-button>
-                </div>
-            </div>
+          <q-text-field
+            v-model="searchError"
+            placeholder="Search for..."
+            @update:model-value="searchErro">
+            <template #append>
+              <q-button
+                b-style="primary"
+                @click="highlightSearchErro">
+                <q-icon icon=magnify />
+              </q-button>
+            </template>
+          </q-text-field>
         </row>
 
         <row>

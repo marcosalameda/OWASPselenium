@@ -1,4 +1,5 @@
-﻿using CSGenio.framework;
+﻿using CSGenio.core.ai;
+using CSGenio.framework;
 using CSGenio.persistence;
 using System;
 using System.Collections.Generic;
@@ -240,6 +241,7 @@ namespace CSGenio.business.Triggers
 		/// </value>
 		public Dictionary<string, Dictionary<string, DbArea>> DirtyRows { get; }
 			= new Dictionary<string, Dictionary<string, DbArea>>();
+
 	}
 
 	/// <summary>

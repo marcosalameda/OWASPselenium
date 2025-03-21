@@ -131,8 +131,8 @@
 	@*Hidden Foreign Keys Controls*@
 			this.Controls.LED_EXTERNO_CATEGCODCATEG = new QHiddenControl($('[data-identifier="LED_EXTERNO_CATEGCODCATEG"]', this.element), window.Form_Externo);
 			this.Controls.LED_EXTERNO_REGI1CODREGIA = new QHiddenControl($('[data-identifier="LED_EXTERNO_REGI1CODREGIA"]', this.element), window.Form_Externo);
-			this.Controls.LED_EXTERNO_PAIS1CODCNTRY = new QHiddenControl($('[data-identifier="LED_EXTERNO_PAIS1CODCNTRY"]', this.element), window.Form_Externo);
 			this.Controls.LED_EXTERNO_CNTRYCODCNTRY = new QHiddenControl($('[data-identifier="LED_EXTERNO_CNTRYCODCNTRY"]', this.element), window.Form_Externo);
+			this.Controls.LED_EXTERNO_PAIS1CODCNTRY = new QHiddenControl($('[data-identifier="LED_EXTERNO_PAIS1CODCNTRY"]', this.element), window.Form_Externo);
 	</text>
 }
 			this.Controls.LED_EXTERNO_PESSOCODPESSO = new QHiddenControl($('[data-identifier="LED_EXTERNO_PESSOCODPESSO"]', this.element), window.Form_Externo);
@@ -206,8 +206,8 @@
 		window.Form_Externo.Data.RelationKeysSelector = {
 				get categ() { return $(':not([elem-identifier="Multiform"]) > #ValCodcateg', $('[data-form="Externo"]')); /* Hidden */ },
 				get regi1() { return $(':not([elem-identifier="Multiform"]) > #ValCodregia', $('[data-form="Externo"]')); /* Hidden */ },
-				get pais1() { return $(':not([elem-identifier="Multiform"]) > #ValCodcntry', $('[data-form="Externo"]')); /* Hidden */ },
 				get cntry() { return $(':not([elem-identifier="Multiform"]) > #ValCodpaise', $('[data-form="Externo"]')); /* Hidden */ },
+				get pais1() { return $(':not([elem-identifier="Multiform"]) > #ValCodcntry', $('[data-form="Externo"]')); /* Hidden */ },
 				get cmpny() { return $(':not([elem-identifier="Multiform"]) > #ValCodempre[pers-cs-area="Cmpny"]', $('[data-form="Externo"]')); /* DBEdit */ },
 		};
 
@@ -222,10 +222,10 @@
 			set categ(newValue) { (this.formContext.Data.RelationKeysSelector.categ.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get regi1() { return (this.formContext.Data.RelationKeysSelector.regi1.getQControl() || {}).Value; /* Hidden FK */ },
 			set regi1(newValue) { (this.formContext.Data.RelationKeysSelector.regi1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
-			get pais1() { return (this.formContext.Data.RelationKeysSelector.pais1.getQControl() || {}).Value; /* Hidden FK */ },
-			set pais1(newValue) { (this.formContext.Data.RelationKeysSelector.pais1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get cntry() { return (this.formContext.Data.RelationKeysSelector.cntry.getQControl() || {}).Value; /* Hidden FK */ },
 			set cntry(newValue) { (this.formContext.Data.RelationKeysSelector.cntry.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get pais1() { return (this.formContext.Data.RelationKeysSelector.pais1.getQControl() || {}).Value; /* Hidden FK */ },
+			set pais1(newValue) { (this.formContext.Data.RelationKeysSelector.pais1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get cmpny() { return (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value; /* DBEdit */ },
 			set cmpny(newValue) { (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value = newValue; /* DBEdit */ },
 		};

@@ -55,6 +55,7 @@
 		<template #user-roles="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -63,6 +64,7 @@
 		<template #GQT="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'GQT' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -71,6 +73,7 @@
 		<template #PTN="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'PTN' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -79,6 +82,7 @@
 		<template #STY="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'STY' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -87,6 +91,7 @@
 		<template #TBS="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'TBS' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -95,6 +100,7 @@
 		<template #REG="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'REG' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -103,6 +109,7 @@
 		<template #IMO="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'IMO' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -111,6 +118,7 @@
 		<template #WMS="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'WMS' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}

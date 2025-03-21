@@ -313,8 +313,8 @@ namespace CSGenio.persistence
                         continue;
 
                     //skip empty binary fields
-                    if (campoBD.FieldType.Equals(FieldType.IMAGEM_JPEG) || campoBD.FieldType.Equals(FieldType.PATH)
-                        || campoBD.FieldType.Equals(FieldType.MEMO_COMP_RTF) /*|| campoBD.FieldType.Equals(FieldType.FICHEIRO_BD)*/
+                    if ((campoBD.FieldType.Equals(FieldType.IMAGEM_JPEG) || campoBD.FieldType.Equals(FieldType.PATH)
+                        || campoBD.FieldType.Equals(FieldType.MEMO_COMP_RTF) /*|| campoBD.FieldType.Equals(FieldType.FICHEIRO_BD)*/)
                         && (campoPedido.Value.ToString().Length == 0 || campoPedido.Value.ToString().StartsWith("*")))
                         continue;
 

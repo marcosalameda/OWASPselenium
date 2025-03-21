@@ -400,4 +400,21 @@ namespace CSGenio.business.Triggers
 			viewModel.RunOpen(_context.PersistentSupport, _context.User);
 		}
 	}
+
+
+	public class CallAiAgentAction : Action
+	{
+
+		private readonly core.ai.ModelAiAgent _agent;
+
+		public CallAiAgentAction(TriggerContext context, core.ai.ModelAiAgent agent) : base(context)
+		{
+			_agent = agent;
+		}
+
+		public override void Execute()
+		{
+			_agent.Execute(_context.Area, _context.PersistentSupport, _context.User);
+		}
+	}
 }

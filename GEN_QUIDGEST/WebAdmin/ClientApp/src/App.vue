@@ -146,7 +146,7 @@
 </template>
 
 <script>
-import '@/assets/styles/style.scss';
+import '@/assets/styles/main.scss';
 import '@/utils/globalUtils.js';
 import { reusableMixin } from '@/mixins/mainMixin';
 import { QUtils } from '@/utils/mainUtils';

@@ -1,4 +1,4 @@
-// Temporary: should be removed when QMultiSelect is implemented
+// TODO: should be removed when QMultiSelect is implemented
 .multiselect {
     position: relative;
 
@@ -19,7 +19,9 @@
     }
 
     &__tags {
+        display: flex;
         flex: 1;
+        gap: 0.25rem;
 
         &-wrapper {
             display:flex;

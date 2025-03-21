@@ -30,7 +30,7 @@
                         :label="index"
                         :active="index === page"
                         :disabled="disabled"
-                        :class="pageButtonClass(index, page)"
+                        :class="pageButtonClasses(index, page)"
                         @click="pageHandler(index)">
                     </q-button>
                 </template>
@@ -152,23 +152,27 @@ includes,
                 return /^\+?(0|[1-9]\d*)$/.test(str);
             },
             /**
-             * Get the class for the paging button
+             * Get the classes for the paging button
              * @param index {Number} Index of the button
              * @param page {Number} Active page number
              * @returns String
              */
-            pageButtonClass(index, page) {
+             pageButtonClasses(index, page) {
+                const classes = ['btn-page']
                 // Difference between the index and active page number
                 const diff = Math.abs(index - page)
 
-                // Index is the active page
-                if (diff === 0)
-                    return null
-                // Index is next to the active page
-                else if (diff === 1)
-                    return 'btn-page-adjacent'
-                // Index is farther from the active page
-                return 'btn-page-other'
+				switch (diff) {
+                    case 1:
+						// Index is next to the active page
+						classes.push('btn-page-adjacent')
+						break
+                    default:
+						// If 0, index is the active page, else, index is farther from the active page
+						if (diff !== 0) classes.push('btn-page-other')
+				}
+
+				return classes
             }
         },
         computed: {

@@ -1,11 +1,16 @@
 ﻿<template>
     <div class="i-date-picker">
-      <div class="d-flex" v-if="label">
-        <label class="i-text__label i-text" :for="id">{{ label }}</label>
-      </div>
-      <div class="i-input-group date">
-		<Datepicker :id="id" :modelValue="modelValue" @update:modelValue="updateValue" :readonly="isReadOnly" data-ref="cur_elem"></Datepicker>
-      </div>
+        <div class="d-flex" v-if="label">
+            <label class="i-text__label i-text" :for="id">{{ label }}</label>
+        </div>
+
+	    <Datepicker
+            :id="id"
+            :model-value="modelValue"
+            class="input-medium"
+            :readonly="isReadOnly"
+            data-ref="cur_elem"
+            @update:modelValue="updateValue" />
     </div>
 </template>
 

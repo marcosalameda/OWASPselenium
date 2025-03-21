@@ -186,7 +186,6 @@
 }
 
 .q-table--borderless {
-
 	.search:has( + .export-btn) {
 		padding: 0;
 	}
@@ -260,13 +259,17 @@
 	}
 }
 
+.clickable {
+    cursor : pointer;
+}
+
 // Table alert
 .q-table__alert {
 	margin-top: 2rem;
 }
 
 
-// Used in UserManagement -> Edit User table. Fixes multi-select size.
+// Used in User Management -> Edit User table. Fixes multi-select size.
 #PrivilegeTable {
 	.c-table {
         table-layout : fixed;
@@ -279,7 +282,25 @@
     }
 }
 
+// Used in User Management -> Roles -> Role Assign form table.
+.assigned > td {
+    font-weight : bold;
+}
+
 // Table header
+.form-header {
+	color: $dark;
+	padding-top: 0;
+	padding-top: 1.5rem;
+	display: block;
+	letter-spacing: 0.02rem;
+	font-size: 1.05rem;
+	line-height: 1.5rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	white-space: nowrap;
+	margin-bottom: 0;
+}
 
 .search-input {
 	.q-field__append {
@@ -303,9 +324,32 @@
 }
 
 // Table footer
-
 #pagination {
 	.q-btn-group {
 		background-color: $white;
+
+		// Page buttons need extra styling because the content is a string, not an icon
+		.btn-page {
+			padding: 0.25rem 0.4rem;
+		}
 	}
+}
+
+// Variants
+// Highlighted rows
+.table tbody > tr.highlighted > td,
+.highlighted {
+	cursor: pointer;
+	color: $hover-primary;
+}
+
+// Image cells
+.dbeditimage {
+	height: 32px;
+	width: 32px;
+}
+
+// Multiple elements within cells
+.q-table__cell--multiple {
+	margin: 0 0.15rem;
 }

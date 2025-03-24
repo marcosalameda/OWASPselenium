@@ -423,6 +423,26 @@ namespace CSGenio.business.Triggers
 	}
 
 	/// <summary>
+	/// Trigger REPAIR_AGENT
+	/// </summary>
+	/// <seealso cref="CSGenio.business.Trigger" />
+	public class TriggerRepairAgent : Trigger
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TriggerRepairAgent" /> class.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		public TriggerRepairAgent(TriggerContext context) : base(context)
+		{
+			_id = "REPAIR_AGENT";
+
+			// Actions
+			var agent = new GenioServer.ai.RepairsCategorizerAgent(core.di.GenioDI.GetService<IChatbotService>());
+			AddAction(1, new CallAiAgentAction(context, agent));
+		}
+	}
+
+	/// <summary>
 	/// Trigger FILLDESCRIPTION2
 	/// </summary>
 	/// <seealso cref="CSGenio.business.Trigger" />

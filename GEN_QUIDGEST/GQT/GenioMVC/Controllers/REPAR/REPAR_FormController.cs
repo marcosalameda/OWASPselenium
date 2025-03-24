@@ -1076,6 +1076,96 @@ namespace GenioMVC.Controllers
 		}
 
   
+		/// <summary>
+		/// Server-side component of action #1 (AGENT) of trigger REPAIR_AGENT
+		/// Button CATEG_AI
+		/// </summary>
+		/// <param name="data">The client-side context of the trigger.</param>
+		/// <returns>
+		/// Success message
+		/// </returns>
+		[AuthorizeForUsers]
+		public ActionResult Repar_BT_CATEG_AI_REPAIR_AGENT_1(string key, Repar_ViewModel vm)
+		{
+			User user = UserContext.Current.User;
+			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
+
+			try 
+			{
+				var model = Models.Repar.Find(key, "FREPAR");
+				vm.MapToModel(model);
+				// Context
+				var context = new CSGenio.business.Triggers.TriggerContext()
+				{
+					Area = model.klass,
+					PersistentSupport = sp,
+					User = user,
+				};
+
+				// Should open a local transaction
+				// if the context did not provide an open transaction.
+				bool openLocalTransaction = sp.TransactionIsClosed;
+
+				// Should keep the connection alive
+				// if the context provided an open connection but not an open transaction.
+				bool keepConnectionAlive = !sp.ConnectionIsClosed && sp.TransactionIsClosed;
+
+				if (openLocalTransaction)
+					sp.openTransaction();
+
+				// Trigger REPAIR_AGENT
+				CSGenio.business.Triggers.ITrigger trigger_REPAIR_AGENT = new CSGenio.business.Triggers.TriggerRepairAgent(context);
+				CSGenio.business.Triggers.IAction action = trigger_REPAIR_AGENT.GetAction(1);
+				trigger_REPAIR_AGENT.ExecuteAction(action);
+
+				// If a local transaction was opened, it should also be closed.
+				if (openLocalTransaction)
+				{
+					sp.closeTransaction();
+
+					// Reopen the connection if it needs to be kept alive.
+					if (keepConnectionAlive)
+						sp.openConnection();
+				}
+
+			}
+			catch(Exception)
+			{
+				sp.rollbackTransaction();
+				return Json(
+					new {
+						success = "E",
+						message = Resources.Resources.PEDIMOS_DESCULPA__OC63848
+					},
+                    JsonRequestBehavior.AllowGet
+				);
+			}
+
+			return Json(
+				new {
+					success = "OK",
+					message = Resources.Resources.A_OPERACAO_FOI_CONCL36721
+				},
+				JsonRequestBehavior.AllowGet
+			);
+		}
+
+		/// <summary>
+		/// Gets the value in the database of the field repar.tipoarea.
+		/// Invoked during the execution of action #2 (CREFRESH) of trigger REPAIR_AGENT.
+		/// </summary>
+		/// <param name="id">The identifier.</param>
+		[AuthorizeForUsers]
+		[ActionName("Repar_ValTipoarea")]
+		[ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
+		public ActionResult Repar_ValTipoarea(string id)
+		{
+			var model = new Repar_ViewModel(Navigation, id, false, new string[] { CSGenioArepar.FldTipoarea.Field });
+
+			return Json(new { model.ValTipoarea }, JsonRequestBehavior.AllowGet);
+		}
+
+ 
 		// POST: /Repar/Repar_SaveEdit
 		[AuthorizeForUsers]
 		[HttpPost]

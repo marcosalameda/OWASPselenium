@@ -20,6 +20,7 @@ public class ReparForm: PageObject {
 	public LookupControl IFF_REPAR___SPECIESPECIAL => new LookupControl(driver, "CONTAINER_IFF_REPAR___SPECIESPECIAL", "ValCodespec_chzn");
 	public LookupControl IFF_REPAR___PESSONAME____ => new LookupControl(driver, "CONTAINER_IFF_REPAR___PESSONAME____", "ValCodpesso_chzn");
 	public BaseInputControl LED_REPAR___REPARDESCRIPT => new BaseInputControl(driver, "[data-identifier='LED_REPAR___REPARDESCRIPT']");
+	public IWebElement IFF_REPAR___PSEUDCATEG_AI => throw new NotImplementedException();
 	public BaseInputControl LED_REPAR___REPARHOURS___ => new BaseInputControl(driver, "[data-identifier='LED_REPAR___REPARHOURS___']");
 
 	private IWebElement saveBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='ok']"));

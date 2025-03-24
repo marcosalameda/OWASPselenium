@@ -54,7 +54,7 @@ namespace GenioMVC.ViewModels.Repar
 		/// <summary>Campo : "Photo" Tipo:"IJ"</summary>
 		[Display(Name = "PHOTO51874", ResourceType = typeof(Resources.Resources))]
 		[UIHint("DBJpegImage")]
-		[Newtonsoft.Json.JsonConverter(typeof(Helpers.ResizeImageSerializer), 100, 50, false, true)]
+		[Newtonsoft.Json.JsonConverter(typeof(Helpers.ResizeImageSerializer), 30, 50, false, true)]
 		public byte[] EquipValPhotogra { get { return funcEquipValPhotogra != null ? funcEquipValPhotogra() : _auxEquipValPhotogra; } set { funcEquipValPhotogra = () => value; } }
 		[JsonIgnore]
 		public Func<byte[]> funcEquipValPhotogra { get; set; }
@@ -92,6 +92,7 @@ namespace GenioMVC.ViewModels.Repar
 		[AllowHtml]
 		[DataType(DataType.MultilineText)]
 		public string ValDescript { get; set; }
+
 
 		/// <summary>Campo : "Spent in Hours" Tipo:"N"</summary>
 		[Display(Name = "SPENT_IN_HOURS19366", ResourceType = typeof(Resources.Resources))]

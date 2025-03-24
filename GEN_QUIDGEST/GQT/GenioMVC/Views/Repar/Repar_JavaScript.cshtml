@@ -116,6 +116,8 @@
 
 			this.Controls.LED_REPAR___REPARDESCRIPT = new QGenericControl($('[data-identifier="LED_REPAR___REPARDESCRIPT"]', this.element), window.Form_Repar);
 
+			this.Controls.IFF_REPAR___PSEUDCATEG_AI = new QButtonControl($('[data-identifier="IFF_REPAR___PSEUDCATEG_AI"]', this.element), window.Form_Repar);
+
 			this.Controls.LED_REPAR___REPARHOURS___ = new QNumericControl($('[data-identifier="LED_REPAR___REPARHOURS___"]', this.element), window.Form_Repar);
 
 
@@ -332,6 +334,51 @@
 
 
  
+
+	/// <summary>
+	/// Execute the triggers of the trigger button CATEG_AI.
+	/// Event triggered by a click on the trigger button CATEG_AI.
+	/// <param name="id">The primary key of the record.</param>
+	/// </summary>
+	function Repar_BT_CATEG_AI(id)
+	{
+
+		const run = () => { Repar_BT_CATEG_AI_REPAIR_AGENT_1(id); }
+
+		run()
+	}
+
+	/// <summary>
+	/// Client-side component of action #1 (AGENT) of trigger REPAIR_AGENT.
+	/// <param name="id">The primary key of the record.</param>
+	/// </summary>
+	function Repar_BT_CATEG_AI_REPAIR_AGENT_1(id)
+	{
+
+		$.ajax({
+			url: '@Url.Action("Repar_BT_CATEG_AI_REPAIR_AGENT_1")',
+			type: "POST",
+			data: $.extend({ key: id }, getInputsForNestedForm($(window.Form_Repar.element)))
+		}).done(function(data) {
+			if (data.success == "OK") {
+				Repar_BT_CATEG_AI_REPAIR_AGENT_2(id)
+			} else {
+				bootbox.alert(data.message);
+			}
+		}).fail(function(data) {
+			bootbox.alert(data.message);
+		});
+	}
+
+	/// <summary>
+	/// Client-side component of action #2 (CREFRESH) of trigger REPAIR_AGENT.
+	/// <param name="id">The primary key of the record.</param>
+	/// </summary>
+	function Repar_BT_CATEG_AI_REPAIR_AGENT_2(id)
+	{
+		window.Form_Repar.Controls.LED_REPAR___REPARTIPOAREA.Reload();
+
+	}
 
     $($('[elem-identifier="FormActions"]'), $('[data-form="Repar"]')).click(function(event){
         var form = $(this).closest('[data-form]').data('form');

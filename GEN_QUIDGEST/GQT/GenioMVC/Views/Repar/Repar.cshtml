@@ -70,13 +70,19 @@ else {
 								@Html.ValidationMessageFor(model => model.EquipValPhotogra)
 							</div>
 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
 						<div class="control-join-group">
 						<div class="i-date-picker draggable " id="CONTAINER_LED_REPAR___REPARDTREPARA">
 								<div class="d-inline-flex">
 								@Html.LabelFor(model => model.ValDtrepara, new { label_id="LED_REPAR___REPARDTREPARA", @class = " i-text__label", id="LABEL_LED_REPAR___REPARDTREPARA"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_REPAR___REPARDTREPARA','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.DateFor(model => model.ValDtrepara, new {help_id = "LED_REPAR___REPARDTREPARA", @class = "i-input-group__field b-icon-text input-medium", data_identifier = "LED_REPAR___REPARDTREPARA", @pers_cs_area = "Repar", @pers_cs_field = "ValDtrepara", @db_field = "ValDtrepara", title = @Resources.REPAIRED_ON23617 })
+								@Html.DateFor(model => model.ValDtrepara, new {help_id = "LED_REPAR___REPARDTREPARA", @class = "i-input-group__field b-icon-text input-large", data_identifier = "LED_REPAR___REPARDTREPARA", @pers_cs_area = "Repar", @pers_cs_field = "ValDtrepara", @db_field = "ValDtrepara", title = @Resources.REPAIRED_ON23617 })
 								@Html.ValidationMessageFor(model => model.ValDtrepara)
 							</div>
 						</div>
@@ -97,12 +103,12 @@ else {
 				<div class="col-12">
 					<div class="control-row-group">
 						<div class="control-join-group">
-						<div class="i-radio__control labelleft draggable " id="CONTAINER_LED_REPAR___REPARTIPOAREA">
+						<div class="i-radio__control draggable " id="CONTAINER_LED_REPAR___REPARTIPOAREA">
 								<div class="d-flex">
 								@Html.LabelFor(model => model.ValTipoarea, new { label_id="LED_REPAR___REPARTIPOAREA", @class = " i-text__label", id="LABEL_LED_REPAR___REPARTIPOAREA"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_REPAR___REPARTIPOAREA','Areatecn')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.RadioButtonForSelectList(model => model.ValTipoarea, Model.List_ValTipoarea, @Resources.ESCOLHA___40245, new {help_id = "LED_REPAR___REPARTIPOAREA", @class = "input-small", data_identifier = "LED_REPAR___REPARTIPOAREA", @pers_cs_area = "Repar", @pers_cs_field = "ValTipoarea", @db_field = "ValTipoarea", title = @Resources.TECHNICAL_AREA50773, data_array_type = "AC" }, 1)
+								@Html.RadioButtonForSelectList(model => model.ValTipoarea, Model.List_ValTipoarea, @Resources.ESCOLHA___40245, new {help_id = "LED_REPAR___REPARTIPOAREA", @class = "input-mini", data_identifier = "LED_REPAR___REPARTIPOAREA", @pers_cs_area = "Repar", @pers_cs_field = "ValTipoarea", @db_field = "ValTipoarea", title = @Resources.TECHNICAL_AREA50773, data_array_type = "AC" }, 4)
 								@Html.ValidationMessageFor(model => model.ValTipoarea)
 							</div>
 						</div>
@@ -148,13 +154,28 @@ else {
 								@Html.ValidationMessageFor(model => model.ValDescript)
 							</div>
 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+										<div class="i-dbedit"> <button type="submit" id="repar_Categ_ai" onclick="Repar_BT_CATEG_AI('@Model.ValCodrepar'); return false;" name="CATEG_AI" data-identifier = "IFF_REPAR___PSEUDCATEG_AI" class="b-icon-text b-icon-text--secondary" data-frtnb="Repar" data-frtnb-text="@Resources.CATEGORIZE52450" >@Resources.CATEGORIZE52450</button></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
 						<div class="control-join-group">
 						<div class="i-text draggable " id="CONTAINER_LED_REPAR___REPARHOURS___">
 								<div class="d-flex">
 								@Html.LabelFor(model => model.ValHours, new { label_id="LED_REPAR___REPARHOURS___", @class = " i-text__label", id="LABEL_LED_REPAR___REPARHOURS___"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_REPAR___REPARHOURS___','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.NumberFor(model => model.ValHours, new {help_id = "LED_REPAR___REPARHOURS___", @class = "Number text-right i-text__field i-text input-small", data_identifier = "LED_REPAR___REPARHOURS___", @pers_cs_area = "Repar", @pers_cs_field = "ValHours", @db_field = "ValHours", title = @Resources.SPENT_IN_HOURS19366, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+								@Html.NumberFor(model => model.ValHours, new {help_id = "LED_REPAR___REPARHOURS___", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_REPAR___REPARHOURS___", @pers_cs_area = "Repar", @pers_cs_field = "ValHours", @db_field = "ValHours", title = @Resources.SPENT_IN_HOURS19366, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
 								@Html.ValidationMessageFor(model => model.ValHours)
 							</div>
 						</div>

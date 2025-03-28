@@ -198,17 +198,17 @@ namespace GenioMVC.ViewModels.Equip
 			}
 			try
 			{
- 				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
- 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
- 				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
- 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
- 				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
- 				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
- 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
- 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
- 				funcItemValItemdes = () => ViewModelConversion.ToString(m.Item.ValItemdes);
- 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
+				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
+				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
+				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
+				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
+				funcItemValItemdes = () => ViewModelConversion.ToString(m.Item.ValItemdes);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
 			catch (Exception)
 			{

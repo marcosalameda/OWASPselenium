@@ -415,6 +415,7 @@ namespace CSGenio.business.Triggers
 		public override void Execute()
 		{
 			_agent.Execute(_context.Area, _context.PersistentSupport, _context.User);
+			_agent.PersistRecord(_context.PersistentSupport);
 		}
 	}
 }

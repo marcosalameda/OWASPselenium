@@ -187,10 +187,10 @@ namespace GenioMVC.ViewModels.Year
 			}
 			try
 			{
- 				ValYear = ViewModelConversion.ToString(m.ValYear);
- 				ValYearnum = ViewModelConversion.ToNumeric(m.ValYearnum);
- 				ValValue = ViewModelConversion.ToNumeric(m.ValValue);
- 				ValCodyear = ViewModelConversion.ToString(m.ValCodyear);
+				ValYear = ViewModelConversion.ToString(m.ValYear);
+				ValYearnum = ViewModelConversion.ToNumeric(m.ValYearnum);
+				ValValue = ViewModelConversion.ToNumeric(m.ValValue);
+				ValCodyear = ViewModelConversion.ToString(m.ValCodyear);
 			}
 			catch (Exception)
 			{

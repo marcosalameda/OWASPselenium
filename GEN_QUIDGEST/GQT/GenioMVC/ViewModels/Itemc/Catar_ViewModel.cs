@@ -179,10 +179,10 @@ namespace GenioMVC.ViewModels.Itemc
 			}
 			try
 			{
- 				ValCodtpcat = ViewModelConversion.ToString(m.ValCodtpcat);
- 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
- 				ValTpcateg = ViewModelConversion.ToString(m.ValTpcateg);
- 				ValCodcatar = ViewModelConversion.ToString(m.ValCodcatar);
+				ValCodtpcat = ViewModelConversion.ToString(m.ValCodtpcat);
+				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
+				ValTpcateg = ViewModelConversion.ToString(m.ValTpcateg);
+				ValCodcatar = ViewModelConversion.ToString(m.ValCodcatar);
 			}
 			catch (Exception)
 			{

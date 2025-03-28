@@ -173,9 +173,9 @@ namespace GenioMVC.ViewModels.Rordi
 			}
 			try
 			{
- 				ValOrder = ViewModelConversion.ToNumeric(m.ValOrder);
- 				ValTitle = ViewModelConversion.ToString(m.ValTitle);
- 				ValCodrordi = ViewModelConversion.ToString(m.ValCodrordi);
+				ValOrder = ViewModelConversion.ToNumeric(m.ValOrder);
+				ValTitle = ViewModelConversion.ToString(m.ValTitle);
+				ValCodrordi = ViewModelConversion.ToString(m.ValCodrordi);
 			}
 			catch (Exception)
 			{

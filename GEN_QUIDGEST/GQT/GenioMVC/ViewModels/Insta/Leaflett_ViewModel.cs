@@ -237,21 +237,21 @@ namespace GenioMVC.ViewModels.Insta
 			}
 			try
 			{
- 				funcTpequValTipoequi = () => ViewModelConversion.ToString(m.Tpequ.ValTipoequi);
- 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
- 				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
- 				ValDtiniage = ViewModelConversion.ToDateTime(m.ValDtiniage);
- 				ValDtfimage = ViewModelConversion.ToDateTime(m.ValDtfimage);
- 				ValAllday = ViewModelConversion.ToLogic(m.ValAllday);
- 				ValSince = ViewModelConversion.ToDateTime(m.ValSince);
- 				ValUntil = ViewModelConversion.ToDateTime(m.ValUntil);
- 				ValHours = ViewModelConversion.ToNumeric(m.ValHours);
- 				ValPrecohor = ViewModelConversion.ToNumeric(m.ValPrecohor);
- 				ValValue = ViewModelConversion.ToNumeric(m.ValValue);
- 				ValCoordgeo = ViewModelConversion.ToString(m.ValCoordgeo);
- 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
- 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
- 				ValCodinsta = ViewModelConversion.ToString(m.ValCodinsta);
+				funcTpequValTipoequi = () => ViewModelConversion.ToString(m.Tpequ.ValTipoequi);
+				ValDescript = ViewModelConversion.ToString(m.ValDescript);
+				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
+				ValDtiniage = ViewModelConversion.ToDateTime(m.ValDtiniage);
+				ValDtfimage = ViewModelConversion.ToDateTime(m.ValDtfimage);
+				ValAllday = ViewModelConversion.ToLogic(m.ValAllday);
+				ValSince = ViewModelConversion.ToDateTime(m.ValSince);
+				ValUntil = ViewModelConversion.ToDateTime(m.ValUntil);
+				ValHours = ViewModelConversion.ToNumeric(m.ValHours);
+				ValPrecohor = ViewModelConversion.ToNumeric(m.ValPrecohor);
+				ValValue = ViewModelConversion.ToNumeric(m.ValValue);
+				ValCoordgeo = ViewModelConversion.ToString(m.ValCoordgeo);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
+				ValCodinsta = ViewModelConversion.ToString(m.ValCodinsta);
 			}
 			catch (Exception)
 			{

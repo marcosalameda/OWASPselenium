@@ -204,13 +204,13 @@ namespace GenioMVC.ViewModels.Item
 			}
 			try
 			{
- 				funcGitemValItemgcod = () => ViewModelConversion.ToString(m.Gitem.ValItemgcod);
- 				ValItemdes = ViewModelConversion.ToString(m.ValItemdes);
- 				ValItemcod = ViewModelConversion.ToString(m.ValItemcod);
- 				ValImage = ViewModelConversion.ToImage(m.ValImage);
- 				ValCodgitem = ViewModelConversion.ToString(m.ValCodgitem);
- 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
+				funcGitemValItemgcod = () => ViewModelConversion.ToString(m.Gitem.ValItemgcod);
+				ValItemdes = ViewModelConversion.ToString(m.ValItemdes);
+				ValItemcod = ViewModelConversion.ToString(m.ValItemcod);
+				ValImage = ViewModelConversion.ToImage(m.ValImage);
+				ValCodgitem = ViewModelConversion.ToString(m.ValCodgitem);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
 			}
 			catch (Exception)
 			{

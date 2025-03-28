@@ -167,8 +167,8 @@ namespace GenioMVC.ViewModels.Tppro
 			}
 			try
 			{
- 				ValTppropri = ViewModelConversion.ToString(m.ValTppropri);
- 				ValCodtppro = ViewModelConversion.ToString(m.ValCodtppro);
+				ValTppropri = ViewModelConversion.ToString(m.ValTppropri);
+				ValCodtppro = ViewModelConversion.ToString(m.ValCodtppro);
 			}
 			catch (Exception)
 			{

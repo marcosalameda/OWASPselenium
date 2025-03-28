@@ -185,11 +185,11 @@ namespace GenioMVC.ViewModels.Photo
 			}
 			try
 			{
- 				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
- 				ValTitle = ViewModelConversion.ToString(m.ValTitle);
- 				ValAnexed = ViewModelConversion.ToDateTime(m.ValAnexed);
- 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
- 				ValCodphoto = ViewModelConversion.ToString(m.ValCodphoto);
+				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
+				ValTitle = ViewModelConversion.ToString(m.ValTitle);
+				ValAnexed = ViewModelConversion.ToDateTime(m.ValAnexed);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValCodphoto = ViewModelConversion.ToString(m.ValCodphoto);
 			}
 			catch (Exception)
 			{

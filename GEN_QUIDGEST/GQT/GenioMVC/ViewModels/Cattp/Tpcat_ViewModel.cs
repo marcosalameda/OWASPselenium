@@ -174,9 +174,9 @@ namespace GenioMVC.ViewModels.Cattp
 			}
 			try
 			{
- 				ValTpcatego = ViewModelConversion.ToString(m.ValTpcatego);
- 				ValCodsbcat = ViewModelConversion.ToString(m.ValCodsbcat);
- 				ValCodtpcat = ViewModelConversion.ToString(m.ValCodtpcat);
+				ValTpcatego = ViewModelConversion.ToString(m.ValTpcatego);
+				ValCodsbcat = ViewModelConversion.ToString(m.ValCodsbcat);
+				ValCodtpcat = ViewModelConversion.ToString(m.ValCodtpcat);
 			}
 			catch (Exception)
 			{

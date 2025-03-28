@@ -185,10 +185,10 @@ namespace GenioMVC.ViewModels.Outpt
 			}
 			try
 			{
- 				ValDocumenr = ViewModelConversion.ToNumeric(m.ValDocumenr);
- 				ValDhdocume = ViewModelConversion.ToDateTime(m.ValDhdocume);
- 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValCodoutpt = ViewModelConversion.ToString(m.ValCodoutpt);
+				ValDocumenr = ViewModelConversion.ToNumeric(m.ValDocumenr);
+				ValDhdocume = ViewModelConversion.ToDateTime(m.ValDhdocume);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				ValCodoutpt = ViewModelConversion.ToString(m.ValCodoutpt);
 			}
 			catch (Exception)
 			{

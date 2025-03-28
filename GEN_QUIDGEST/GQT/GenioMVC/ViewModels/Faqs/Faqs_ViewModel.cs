@@ -175,10 +175,10 @@ namespace GenioMVC.ViewModels.Faqs
 			}
 			try
 			{
- 				ValQuestion = ViewModelConversion.ToString(m.ValQuestion);
- 				ValAnswer = ViewModelConversion.ToString(m.ValAnswer);
- 				ValCodcfaqs = ViewModelConversion.ToString(m.ValCodcfaqs);
- 				ValCodfaqs = ViewModelConversion.ToString(m.ValCodfaqs);
+				ValQuestion = ViewModelConversion.ToString(m.ValQuestion);
+				ValAnswer = ViewModelConversion.ToString(m.ValAnswer);
+				ValCodcfaqs = ViewModelConversion.ToString(m.ValCodcfaqs);
+				ValCodfaqs = ViewModelConversion.ToString(m.ValCodfaqs);
 			}
 			catch (Exception)
 			{

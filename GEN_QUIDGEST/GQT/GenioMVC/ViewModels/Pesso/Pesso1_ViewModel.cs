@@ -279,26 +279,26 @@ namespace GenioMVC.ViewModels.Pesso
 			}
 			try
 			{
- 				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
- 				ValIdfuncio = ViewModelConversion.ToNumeric(m.ValIdfuncio);
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValDtnascim = ViewModelConversion.ToDateTime(m.ValDtnascim);
- 				ValIdade = ViewModelConversion.ToNumeric(m.ValIdade);
- 				ValGender = ViewModelConversion.ToString(m.ValGender);
- 				ValInterna = ViewModelConversion.ToLogic(m.ValInterna);
- 				ValExterna = ViewModelConversion.ToLogic(m.ValExterna);
- 				ValDtultcat = ViewModelConversion.ToDateTime(m.ValDtultcat);
- 				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
- 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
- 				funcCntryValCountry = () => ViewModelConversion.ToString(m.Cntry.ValCountry);
- 				funcPais1ValCountry = () => ViewModelConversion.ToString(m.Pais1.ValCountry);
- 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
- 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
- 				ValCodpaise = ViewModelConversion.ToString(m.ValCodpaise);
- 				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
- 				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
- 				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
- 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
+				ValIdfuncio = ViewModelConversion.ToNumeric(m.ValIdfuncio);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValDtnascim = ViewModelConversion.ToDateTime(m.ValDtnascim);
+				ValIdade = ViewModelConversion.ToNumeric(m.ValIdade);
+				ValGender = ViewModelConversion.ToString(m.ValGender);
+				ValInterna = ViewModelConversion.ToLogic(m.ValInterna);
+				ValExterna = ViewModelConversion.ToLogic(m.ValExterna);
+				ValDtultcat = ViewModelConversion.ToDateTime(m.ValDtultcat);
+				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
+				ValEmail = ViewModelConversion.ToString(m.ValEmail);
+				funcCntryValCountry = () => ViewModelConversion.ToString(m.Cntry.ValCountry);
+				funcPais1ValCountry = () => ViewModelConversion.ToString(m.Pais1.ValCountry);
+				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValCodpaise = ViewModelConversion.ToString(m.ValCodpaise);
+				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
+				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
+				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 			}
 			catch (Exception)
 			{

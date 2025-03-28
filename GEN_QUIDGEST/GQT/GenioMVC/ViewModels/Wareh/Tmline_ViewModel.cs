@@ -168,8 +168,8 @@ namespace GenioMVC.ViewModels.Wareh
 			}
 			try
 			{
- 				ValWarehdes = ViewModelConversion.ToString(m.ValWarehdes);
- 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				ValWarehdes = ViewModelConversion.ToString(m.ValWarehdes);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
 			}
 			catch (Exception)
 			{

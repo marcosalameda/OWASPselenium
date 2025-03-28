@@ -214,18 +214,18 @@ namespace GenioMVC.ViewModels.Pesso
 			}
 			try
 			{
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValGender = ViewModelConversion.ToString(m.ValGender);
- 				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
- 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
- 				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
- 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
- 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
- 				ValCodpaise = ViewModelConversion.ToString(m.ValCodpaise);
- 				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
- 				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
- 				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
- 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValGender = ViewModelConversion.ToString(m.ValGender);
+				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
+				ValEmail = ViewModelConversion.ToString(m.ValEmail);
+				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
+				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValCodpaise = ViewModelConversion.ToString(m.ValCodpaise);
+				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
+				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
+				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 			}
 			catch (Exception)
 			{

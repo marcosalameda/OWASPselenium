@@ -203,14 +203,14 @@ namespace GenioMVC.ViewModels.Evcat
 			}
 			try
 			{
- 				ValSince = ViewModelConversion.ToDateTime(m.ValSince);
- 				ValUntil = ViewModelConversion.ToDateTime(m.ValUntil);
- 				ValUntilman = ViewModelConversion.ToDateTime(m.ValUntilman);
- 				ValFimperio = ViewModelConversion.ToDateTime(m.ValFimperio);
- 				ValObservat = ViewModelConversion.ToString(m.ValObservat);
- 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
- 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
- 				ValCodprogr = ViewModelConversion.ToString(m.ValCodprogr);
+				ValSince = ViewModelConversion.ToDateTime(m.ValSince);
+				ValUntil = ViewModelConversion.ToDateTime(m.ValUntil);
+				ValUntilman = ViewModelConversion.ToDateTime(m.ValUntilman);
+				ValFimperio = ViewModelConversion.ToDateTime(m.ValFimperio);
+				ValObservat = ViewModelConversion.ToString(m.ValObservat);
+				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValCodprogr = ViewModelConversion.ToString(m.ValCodprogr);
 			}
 			catch (Exception)
 			{

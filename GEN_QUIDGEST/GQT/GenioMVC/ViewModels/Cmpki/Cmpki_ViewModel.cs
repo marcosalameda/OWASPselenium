@@ -207,14 +207,14 @@ namespace GenioMVC.ViewModels.Cmpki
 			}
 			try
 			{
- 				ValOrder = ViewModelConversion.ToNumeric(m.ValOrder);
- 				ValQuantida = ViewModelConversion.ToNumeric(m.ValQuantida);
- 				ValCode = ViewModelConversion.ToString(m.ValCode);
- 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
- 				ValUrl = ViewModelConversion.ToString(m.ValUrl);
- 				ValCodtpeq1 = ViewModelConversion.ToString(m.ValCodtpeq1);
- 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
- 				ValCodcmpki = ViewModelConversion.ToString(m.ValCodcmpki);
+				ValOrder = ViewModelConversion.ToNumeric(m.ValOrder);
+				ValQuantida = ViewModelConversion.ToNumeric(m.ValQuantida);
+				ValCode = ViewModelConversion.ToString(m.ValCode);
+				ValDescript = ViewModelConversion.ToString(m.ValDescript);
+				ValUrl = ViewModelConversion.ToString(m.ValUrl);
+				ValCodtpeq1 = ViewModelConversion.ToString(m.ValCodtpeq1);
+				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
+				ValCodcmpki = ViewModelConversion.ToString(m.ValCodcmpki);
 			}
 			catch (Exception)
 			{

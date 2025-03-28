@@ -199,13 +199,13 @@ namespace GenioMVC.ViewModels.Ldent
 			}
 			try
 			{
- 				ValLine = ViewModelConversion.ToNumeric(m.ValLine);
- 				ValQtdentra = ViewModelConversion.ToNumeric(m.ValQtdentra);
- 				funcIndocValCodwareh = () => ViewModelConversion.ToString(m.Indoc.ValCodwareh);
- 				ValCoddentr = ViewModelConversion.ToString(m.ValCoddentr);
- 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
- 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValCodldent = ViewModelConversion.ToString(m.ValCodldent);
+				ValLine = ViewModelConversion.ToNumeric(m.ValLine);
+				ValQtdentra = ViewModelConversion.ToNumeric(m.ValQtdentra);
+				funcIndocValCodwareh = () => ViewModelConversion.ToString(m.Indoc.ValCodwareh);
+				ValCoddentr = ViewModelConversion.ToString(m.ValCoddentr);
+				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				ValCodldent = ViewModelConversion.ToString(m.ValCodldent);
 			}
 			catch (Exception)
 			{

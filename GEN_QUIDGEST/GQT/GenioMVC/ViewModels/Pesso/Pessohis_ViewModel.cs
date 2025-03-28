@@ -197,16 +197,16 @@ namespace GenioMVC.ViewModels.Pesso
 			}
 			try
 			{
- 				ValIdfuncio = ViewModelConversion.ToNumeric(m.ValIdfuncio);
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
- 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
- 				ValCodpaise = ViewModelConversion.ToString(m.ValCodpaise);
- 				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
- 				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
- 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
- 				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
- 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValIdfuncio = ViewModelConversion.ToNumeric(m.ValIdfuncio);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValCodpaise = ViewModelConversion.ToString(m.ValCodpaise);
+				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
+				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
+				ValEmail = ViewModelConversion.ToString(m.ValEmail);
+				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 			}
 			catch (Exception)
 			{

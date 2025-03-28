@@ -175,9 +175,9 @@ namespace GenioMVC.ViewModels.Speci
 			}
 			try
 			{
- 				ValEspecial = ViewModelConversion.ToString(m.ValEspecial);
- 				ValAreatecn = ViewModelConversion.ToString(m.ValAreatecn);
- 				ValCodespec = ViewModelConversion.ToString(m.ValCodespec);
+				ValEspecial = ViewModelConversion.ToString(m.ValEspecial);
+				ValAreatecn = ViewModelConversion.ToString(m.ValAreatecn);
+				ValCodespec = ViewModelConversion.ToString(m.ValCodespec);
 			}
 			catch (Exception)
 			{

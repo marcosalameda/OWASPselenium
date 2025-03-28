@@ -185,11 +185,11 @@ namespace GenioMVC.ViewModels.Uicom
 			}
 			try
 			{
- 				ValThumbnai = ViewModelConversion.ToImage(m.ValThumbnai);
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValCategory = ViewModelConversion.ToString(m.ValCategory);
- 				ValMenuid = ViewModelConversion.ToString(m.ValMenuid);
- 				ValCoduicom = ViewModelConversion.ToString(m.ValCoduicom);
+				ValThumbnai = ViewModelConversion.ToImage(m.ValThumbnai);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValCategory = ViewModelConversion.ToString(m.ValCategory);
+				ValMenuid = ViewModelConversion.ToString(m.ValMenuid);
+				ValCoduicom = ViewModelConversion.ToString(m.ValCoduicom);
 			}
 			catch (Exception)
 			{

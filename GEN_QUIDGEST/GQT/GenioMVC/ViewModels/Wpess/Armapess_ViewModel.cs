@@ -243,20 +243,20 @@ namespace GenioMVC.ViewModels.Wpess
 			}
 			try
 			{
- 				ValNfunc = ViewModelConversion.ToNumeric(m.ValNfunc);
- 				ValPfoto = ViewModelConversion.ToImage(m.ValPfoto);
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
- 				ValSex = ViewModelConversion.ToString(m.ValSex);
- 				ValNaturali = ViewModelConversion.ToString(m.ValNaturali);
- 				ValNacional = ViewModelConversion.ToString(m.ValNacional);
- 				ValAdress = ViewModelConversion.ToString(m.ValAdress);
- 				ValZipcode = ViewModelConversion.ToString(m.ValZipcode);
- 				ValCountry = ViewModelConversion.ToString(m.ValCountry);
- 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
- 				ValCellphon = ViewModelConversion.ToNumeric(m.ValCellphon);
- 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValCodpess = ViewModelConversion.ToString(m.ValCodpess);
+				ValNfunc = ViewModelConversion.ToNumeric(m.ValNfunc);
+				ValPfoto = ViewModelConversion.ToImage(m.ValPfoto);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
+				ValSex = ViewModelConversion.ToString(m.ValSex);
+				ValNaturali = ViewModelConversion.ToString(m.ValNaturali);
+				ValNacional = ViewModelConversion.ToString(m.ValNacional);
+				ValAdress = ViewModelConversion.ToString(m.ValAdress);
+				ValZipcode = ViewModelConversion.ToString(m.ValZipcode);
+				ValCountry = ViewModelConversion.ToString(m.ValCountry);
+				ValEmail = ViewModelConversion.ToString(m.ValEmail);
+				ValCellphon = ViewModelConversion.ToNumeric(m.ValCellphon);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				ValCodpess = ViewModelConversion.ToString(m.ValCodpess);
 			}
 			catch (Exception)
 			{

@@ -188,11 +188,11 @@ namespace GenioMVC.ViewModels.Conta
 			}
 			try
 			{
- 				ValContacto = ViewModelConversion.ToString(m.ValContacto);
- 				ValCodgenre = ViewModelConversion.ToString(m.ValCodgenre);
- 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
- 				ValCodtpcon = ViewModelConversion.ToString(m.ValCodtpcon);
- 				ValCodconta = ViewModelConversion.ToString(m.ValCodconta);
+				ValContacto = ViewModelConversion.ToString(m.ValContacto);
+				ValCodgenre = ViewModelConversion.ToString(m.ValCodgenre);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValCodtpcon = ViewModelConversion.ToString(m.ValCodtpcon);
+				ValCodconta = ViewModelConversion.ToString(m.ValCodconta);
 			}
 			catch (Exception)
 			{

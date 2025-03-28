@@ -175,9 +175,9 @@ namespace GenioMVC.ViewModels.Pworg
 			}
 			try
 			{
- 				ValCodorgan = ViewModelConversion.ToString(m.ValCodorgan);
- 				ValCodpsw = ViewModelConversion.ToString(m.ValCodpsw);
- 				ValCodpworg = ViewModelConversion.ToString(m.ValCodpworg);
+				ValCodorgan = ViewModelConversion.ToString(m.ValCodorgan);
+				ValCodpsw = ViewModelConversion.ToString(m.ValCodpsw);
+				ValCodpworg = ViewModelConversion.ToString(m.ValCodpworg);
 			}
 			catch (Exception)
 			{

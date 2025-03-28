@@ -182,10 +182,10 @@ namespace GenioMVC.ViewModels.Decom
 			}
 			try
 			{
- 				ValDecomnr = ViewModelConversion.ToNumeric(m.ValDecomnr);
- 				ValNote = ViewModelConversion.ToString(m.ValNote);
- 				ValDtdeco = ViewModelConversion.ToDateTime(m.ValDtdeco);
- 				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
+				ValDecomnr = ViewModelConversion.ToNumeric(m.ValDecomnr);
+				ValNote = ViewModelConversion.ToString(m.ValNote);
+				ValDtdeco = ViewModelConversion.ToDateTime(m.ValDtdeco);
+				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
 			}
 			catch (Exception)
 			{

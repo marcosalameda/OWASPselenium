@@ -175,9 +175,9 @@ namespace GenioMVC.ViewModels.Pwreg
 			}
 			try
 			{
- 				ValCodpsw = ViewModelConversion.ToString(m.ValCodpsw);
- 				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
- 				ValCodpwreg = ViewModelConversion.ToString(m.ValCodpwreg);
+				ValCodpsw = ViewModelConversion.ToString(m.ValCodpsw);
+				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
+				ValCodpwreg = ViewModelConversion.ToString(m.ValCodpwreg);
 			}
 			catch (Exception)
 			{

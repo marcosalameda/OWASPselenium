@@ -194,12 +194,12 @@ namespace GenioMVC.ViewModels.Regis
 			}
 			try
 			{
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValNif = ViewModelConversion.ToString(m.ValNif);
- 				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
- 				ValEmail1 = ViewModelConversion.ToString(m.ValEmail1);
- 				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
- 				ValCodregis = ViewModelConversion.ToString(m.ValCodregis);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValNif = ViewModelConversion.ToString(m.ValNif);
+				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
+				ValEmail1 = ViewModelConversion.ToString(m.ValEmail1);
+				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
+				ValCodregis = ViewModelConversion.ToString(m.ValCodregis);
 			}
 			catch (Exception)
 			{

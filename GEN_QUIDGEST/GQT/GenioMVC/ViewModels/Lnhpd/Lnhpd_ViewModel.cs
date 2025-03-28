@@ -198,12 +198,12 @@ namespace GenioMVC.ViewModels.Lnhpd
 			}
 			try
 			{
- 				ValLine = ViewModelConversion.ToNumeric(m.ValLine);
- 				ValQuantida = ViewModelConversion.ToNumeric(m.ValQuantida);
- 				ValQuantdec = ViewModelConversion.ToNumeric(m.ValQuantdec);
- 				ValCodpedid = ViewModelConversion.ToString(m.ValCodpedid);
- 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
- 				ValCodlnhpd = ViewModelConversion.ToString(m.ValCodlnhpd);
+				ValLine = ViewModelConversion.ToNumeric(m.ValLine);
+				ValQuantida = ViewModelConversion.ToNumeric(m.ValQuantida);
+				ValQuantdec = ViewModelConversion.ToNumeric(m.ValQuantdec);
+				ValCodpedid = ViewModelConversion.ToString(m.ValCodpedid);
+				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
+				ValCodlnhpd = ViewModelConversion.ToString(m.ValCodlnhpd);
 			}
 			catch (Exception)
 			{

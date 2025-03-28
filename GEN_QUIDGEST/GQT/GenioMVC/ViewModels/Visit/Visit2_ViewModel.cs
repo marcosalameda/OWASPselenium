@@ -204,15 +204,15 @@ namespace GenioMVC.ViewModels.Visit
 			}
 			try
 			{
- 				ValTitle = ViewModelConversion.ToString(m.ValTitle);
- 				ValStartdt = ViewModelConversion.ToDateTime(m.ValStartdt);
- 				ValDtfim = ViewModelConversion.ToDateTime(m.ValDtfim);
- 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
- 				ValTodoodia = ViewModelConversion.ToLogic(m.ValTodoodia);
- 				ValColor = ViewModelConversion.ToString(m.ValColor);
- 				ValBack = ViewModelConversion.ToLogic(m.ValBack);
- 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
- 				ValCodvisit = ViewModelConversion.ToString(m.ValCodvisit);
+				ValTitle = ViewModelConversion.ToString(m.ValTitle);
+				ValStartdt = ViewModelConversion.ToDateTime(m.ValStartdt);
+				ValDtfim = ViewModelConversion.ToDateTime(m.ValDtfim);
+				ValDescript = ViewModelConversion.ToString(m.ValDescript);
+				ValTodoodia = ViewModelConversion.ToLogic(m.ValTodoodia);
+				ValColor = ViewModelConversion.ToString(m.ValColor);
+				ValBack = ViewModelConversion.ToLogic(m.ValBack);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValCodvisit = ViewModelConversion.ToString(m.ValCodvisit);
 			}
 			catch (Exception)
 			{

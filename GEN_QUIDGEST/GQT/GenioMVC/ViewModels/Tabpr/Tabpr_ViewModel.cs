@@ -179,10 +179,10 @@ namespace GenioMVC.ViewModels.Tabpr
 			}
 			try
 			{
- 				ValSince = ViewModelConversion.ToDateTime(m.ValSince);
- 				ValPrecohor = ViewModelConversion.ToNumeric(m.ValPrecohor);
- 				ValCodtpeq1 = ViewModelConversion.ToString(m.ValCodtpeq1);
- 				ValCodtabpr = ViewModelConversion.ToString(m.ValCodtabpr);
+				ValSince = ViewModelConversion.ToDateTime(m.ValSince);
+				ValPrecohor = ViewModelConversion.ToNumeric(m.ValPrecohor);
+				ValCodtpeq1 = ViewModelConversion.ToString(m.ValCodtpeq1);
+				ValCodtabpr = ViewModelConversion.ToString(m.ValCodtabpr);
 			}
 			catch (Exception)
 			{

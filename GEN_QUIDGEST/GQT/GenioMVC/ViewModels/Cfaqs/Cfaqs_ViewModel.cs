@@ -183,10 +183,10 @@ namespace GenioMVC.ViewModels.Cfaqs
 			}
 			try
 			{
- 				ValIcon = ViewModelConversion.ToImage(m.ValIcon);
- 				ValCategory = ViewModelConversion.ToString(m.ValCategory);
- 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
- 				ValCodcfaqs = ViewModelConversion.ToString(m.ValCodcfaqs);
+				ValIcon = ViewModelConversion.ToImage(m.ValIcon);
+				ValCategory = ViewModelConversion.ToString(m.ValCategory);
+				ValDescript = ViewModelConversion.ToString(m.ValDescript);
+				ValCodcfaqs = ViewModelConversion.ToString(m.ValCodcfaqs);
 			}
 			catch (Exception)
 			{

@@ -173,9 +173,9 @@ namespace GenioMVC.ViewModels.Langu
 			}
 			try
 			{
- 				ValLangua = ViewModelConversion.ToString(m.ValLangua);
- 				ValAcron = ViewModelConversion.ToString(m.ValAcron);
- 				ValCodlang = ViewModelConversion.ToString(m.ValCodlang);
+				ValLangua = ViewModelConversion.ToString(m.ValLangua);
+				ValAcron = ViewModelConversion.ToString(m.ValAcron);
+				ValCodlang = ViewModelConversion.ToString(m.ValCodlang);
 			}
 			catch (Exception)
 			{

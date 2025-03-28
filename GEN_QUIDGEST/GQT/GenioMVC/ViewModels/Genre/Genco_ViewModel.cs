@@ -187,11 +187,11 @@ namespace GenioMVC.ViewModels.Genre
 			}
 			try
 			{
- 				ValAgencont = ViewModelConversion.ToString(m.ValAgencont);
- 				ValGender = ViewModelConversion.ToString(m.ValGender);
- 				ValBackcolo = ViewModelConversion.ToString(m.ValBackcolo);
- 				ValTextcolo = ViewModelConversion.ToString(m.ValTextcolo);
- 				ValCodgenre = ViewModelConversion.ToString(m.ValCodgenre);
+				ValAgencont = ViewModelConversion.ToString(m.ValAgencont);
+				ValGender = ViewModelConversion.ToString(m.ValGender);
+				ValBackcolo = ViewModelConversion.ToString(m.ValBackcolo);
+				ValTextcolo = ViewModelConversion.ToString(m.ValTextcolo);
+				ValCodgenre = ViewModelConversion.ToString(m.ValCodgenre);
 			}
 			catch (Exception)
 			{

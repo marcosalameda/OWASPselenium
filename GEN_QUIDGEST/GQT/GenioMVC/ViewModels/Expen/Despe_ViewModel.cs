@@ -213,15 +213,15 @@ namespace GenioMVC.ViewModels.Expen
 			}
 			try
 			{
- 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
- 				ValValue = ViewModelConversion.ToNumeric(m.ValValue);
- 				ValPrevval = ViewModelConversion.ToNumeric(m.ValPrevval);
- 				ValYearprev = ViewModelConversion.ToNumeric(m.ValYearprev);
- 				ValCodaggre = ViewModelConversion.ToString(m.ValCodaggre);
- 				ValCodproje = ViewModelConversion.ToString(m.ValCodproje);
- 				ValCodyear = ViewModelConversion.ToString(m.ValCodyear);
- 				funcYearValYearnum = () => ViewModelConversion.ToNumeric(m.Year.ValYearnum);
- 				ValCoddespe = ViewModelConversion.ToString(m.ValCoddespe);
+				ValDescript = ViewModelConversion.ToString(m.ValDescript);
+				ValValue = ViewModelConversion.ToNumeric(m.ValValue);
+				ValPrevval = ViewModelConversion.ToNumeric(m.ValPrevval);
+				ValYearprev = ViewModelConversion.ToNumeric(m.ValYearprev);
+				ValCodaggre = ViewModelConversion.ToString(m.ValCodaggre);
+				ValCodproje = ViewModelConversion.ToString(m.ValCodproje);
+				ValCodyear = ViewModelConversion.ToString(m.ValCodyear);
+				funcYearValYearnum = () => ViewModelConversion.ToNumeric(m.Year.ValYearnum);
+				ValCoddespe = ViewModelConversion.ToString(m.ValCoddespe);
 			}
 			catch (Exception)
 			{

@@ -180,10 +180,10 @@ namespace GenioMVC.ViewModels.Cmpny
 			}
 			try
 			{
- 				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
- 				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
- 				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
- 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
+				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
+				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
 			}
 			catch (Exception)
 			{

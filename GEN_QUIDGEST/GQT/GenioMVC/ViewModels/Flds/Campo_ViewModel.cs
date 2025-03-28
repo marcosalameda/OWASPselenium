@@ -303,33 +303,33 @@ namespace GenioMVC.ViewModels.Flds
 			}
 			try
 			{
- 				ValDescrip = ViewModelConversion.ToString(m.ValDescrip);
- 				ValNpassage = ViewModelConversion.ToNumeric(m.ValNpassage);
- 				ValDuration = ViewModelConversion.ToNumeric(m.ValDuration);
- 				ValPrice = ViewModelConversion.ToNumeric(m.ValPrice);
- 				ValPrecobil = ViewModelConversion.ToNumeric(m.ValPrecobil);
- 				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
- 				ValDatetime = ViewModelConversion.ToDateTime(m.ValDatetime);
- 				ValDateseco = ViewModelConversion.ToDateTime(m.ValDateseco);
- 				ValTime = ViewModelConversion.ToString(m.ValTime);
- 				ValYear = ViewModelConversion.ToNumeric(m.ValYear);
- 				ValPrimviag = ViewModelConversion.ToLogic(m.ValPrimviag);
- 				ValConditio = ViewModelConversion.ToNumeric(m.ValConditio);
- 				ValClass = ViewModelConversion.ToString(m.ValClass);
- 				ValClassnum = ViewModelConversion.ToNumeric(m.ValClassnum);
- 				ValLogicenu = ViewModelConversion.ToInteger(m.ValLogicenu);
- 				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
- 				ValAttach = ViewModelConversion.ToString(m.ValAttach);
+				ValDescrip = ViewModelConversion.ToString(m.ValDescrip);
+				ValNpassage = ViewModelConversion.ToNumeric(m.ValNpassage);
+				ValDuration = ViewModelConversion.ToNumeric(m.ValDuration);
+				ValPrice = ViewModelConversion.ToNumeric(m.ValPrice);
+				ValPrecobil = ViewModelConversion.ToNumeric(m.ValPrecobil);
+				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
+				ValDatetime = ViewModelConversion.ToDateTime(m.ValDatetime);
+				ValDateseco = ViewModelConversion.ToDateTime(m.ValDateseco);
+				ValTime = ViewModelConversion.ToString(m.ValTime);
+				ValYear = ViewModelConversion.ToNumeric(m.ValYear);
+				ValPrimviag = ViewModelConversion.ToLogic(m.ValPrimviag);
+				ValConditio = ViewModelConversion.ToNumeric(m.ValConditio);
+				ValClass = ViewModelConversion.ToString(m.ValClass);
+				ValClassnum = ViewModelConversion.ToNumeric(m.ValClassnum);
+				ValLogicenu = ViewModelConversion.ToInteger(m.ValLogicenu);
+				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
+				ValAttach = ViewModelConversion.ToString(m.ValAttach);
 				ValAttachfk = ViewModelConversion.ToString(m.ValAttachfk);
- 				ValCreatuse = ViewModelConversion.ToString(m.ValCreatuse);
- 				ValCreatdat = ViewModelConversion.ToDateTime(m.ValCreatdat);
- 				ValCreathou = ViewModelConversion.ToString(m.ValCreathou);
- 				ValCreatins = ViewModelConversion.ToDateTime(m.ValCreatins);
- 				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
- 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
- 				ValTblcond = ViewModelConversion.ToLogic(m.ValTblcond);
- 				ValCond = ViewModelConversion.ToString(m.ValCond);
- 				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
+				ValCreatuse = ViewModelConversion.ToString(m.ValCreatuse);
+				ValCreatdat = ViewModelConversion.ToDateTime(m.ValCreatdat);
+				ValCreathou = ViewModelConversion.ToString(m.ValCreathou);
+				ValCreatins = ViewModelConversion.ToDateTime(m.ValCreatins);
+				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValTblcond = ViewModelConversion.ToLogic(m.ValTblcond);
+				ValCond = ViewModelConversion.ToString(m.ValCond);
+				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
 			}
 			catch (Exception)
 			{

@@ -168,9 +168,9 @@ namespace GenioMVC.ViewModels.Glob
 			}
 			try
 			{
- 				ValHome = ViewModelConversion.ToString(m.ValHome);
- 				ValCodfacty = ViewModelConversion.ToString(m.ValCodfacty);
- 				ValCodglob = ViewModelConversion.ToString(m.ValCodglob);
+				ValHome = ViewModelConversion.ToString(m.ValHome);
+				ValCodfacty = ViewModelConversion.ToString(m.ValCodfacty);
+				ValCodglob = ViewModelConversion.ToString(m.ValCodglob);
 			}
 			catch (Exception)
 			{

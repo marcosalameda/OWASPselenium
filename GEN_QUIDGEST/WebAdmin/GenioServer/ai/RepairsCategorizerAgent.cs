@@ -68,6 +68,11 @@ namespace GenioServer.ai
             repar.ValTipoarea = response.Category;
         }
 
+        public override void PersistRecord(PersistentSupport sp)
+        {
+            repar.apply(sp);
+        }
+
         public override string BuildUserPrompt()
         {
                 return

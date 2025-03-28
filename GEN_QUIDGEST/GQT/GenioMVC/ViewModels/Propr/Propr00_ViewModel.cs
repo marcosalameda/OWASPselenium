@@ -271,26 +271,26 @@ namespace GenioMVC.ViewModels.Propr
 			}
 			try
 			{
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValPrecoest = ViewModelConversion.ToNumeric(m.ValPrecoest);
- 				ValMobilada = ViewModelConversion.ToLogic(m.ValMobilada);
- 				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
- 				ValQtd_wc = ViewModelConversion.ToNumeric(m.ValQtd_wc);
- 				ValQtdquart = ViewModelConversion.ToNumeric(m.ValQtdquart);
- 				ValM2 = ViewModelConversion.ToNumeric(m.ValM2);
- 				ValDtdispon = ViewModelConversion.ToDateTime(m.ValDtdispon);
- 				ValEndereco = ViewModelConversion.ToString(m.ValEndereco);
- 				ValLocalida = ViewModelConversion.ToString(m.ValLocalida);
- 				ValPostalco = ViewModelConversion.ToString(m.ValPostalco);
- 				ValPostallo = ViewModelConversion.ToString(m.ValPostallo);
- 				ValCoordgeo = ViewModelConversion.ToString(m.ValCoordgeo);
- 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
- 				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
- 				ValCodpais1 = ViewModelConversion.ToString(m.ValCodpais1);
- 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
- 				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
- 				ValCodtppro = ViewModelConversion.ToString(m.ValCodtppro);
- 				ValCodpropr = ViewModelConversion.ToString(m.ValCodpropr);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValPrecoest = ViewModelConversion.ToNumeric(m.ValPrecoest);
+				ValMobilada = ViewModelConversion.ToLogic(m.ValMobilada);
+				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
+				ValQtd_wc = ViewModelConversion.ToNumeric(m.ValQtd_wc);
+				ValQtdquart = ViewModelConversion.ToNumeric(m.ValQtdquart);
+				ValM2 = ViewModelConversion.ToNumeric(m.ValM2);
+				ValDtdispon = ViewModelConversion.ToDateTime(m.ValDtdispon);
+				ValEndereco = ViewModelConversion.ToString(m.ValEndereco);
+				ValLocalida = ViewModelConversion.ToString(m.ValLocalida);
+				ValPostalco = ViewModelConversion.ToString(m.ValPostalco);
+				ValPostallo = ViewModelConversion.ToString(m.ValPostallo);
+				ValCoordgeo = ViewModelConversion.ToString(m.ValCoordgeo);
+				ValDescript = ViewModelConversion.ToString(m.ValDescript);
+				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
+				ValCodpais1 = ViewModelConversion.ToString(m.ValCodpais1);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
+				ValCodtppro = ViewModelConversion.ToString(m.ValCodtppro);
+				ValCodpropr = ViewModelConversion.ToString(m.ValCodpropr);
 			}
 			catch (Exception)
 			{

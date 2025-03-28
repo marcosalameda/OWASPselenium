@@ -354,40 +354,40 @@ namespace GenioMVC.ViewModels.Flds
 			}
 			try
 			{
- 				ValTxtfield = ViewModelConversion.ToString(m.ValTxtfield);
- 				ValDescrip = ViewModelConversion.ToString(m.ValDescrip);
- 				ValNpassage = ViewModelConversion.ToNumeric(m.ValNpassage);
- 				ValDuration = ViewModelConversion.ToNumeric(m.ValDuration);
- 				ValPrice = ViewModelConversion.ToNumeric(m.ValPrice);
- 				ValPrecobil = ViewModelConversion.ToNumeric(m.ValPrecobil);
- 				ValYear = ViewModelConversion.ToNumeric(m.ValYear);
- 				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
- 				ValDatetime = ViewModelConversion.ToDateTime(m.ValDatetime);
- 				ValDateseco = ViewModelConversion.ToDateTime(m.ValDateseco);
- 				ValTime = ViewModelConversion.ToString(m.ValTime);
- 				ValZipfield = ViewModelConversion.ToString(m.ValZipfield);
- 				ValVatnumbr = ViewModelConversion.ToString(m.ValVatnumbr);
- 				ValLicplate = ViewModelConversion.ToString(m.ValLicplate);
- 				ValSsnumber = ViewModelConversion.ToString(m.ValSsnumber);
- 				ValBanknmbr = ViewModelConversion.ToString(m.ValBanknmbr);
- 				ValEmailfld = ViewModelConversion.ToString(m.ValEmailfld);
- 				ValIbanfiel = ViewModelConversion.ToString(m.ValIbanfiel);
- 				ValUpprtext = ViewModelConversion.ToString(m.ValUpprtext);
- 				ValClassnum = ViewModelConversion.ToNumeric(m.ValClassnum);
- 				ValClass = ViewModelConversion.ToString(m.ValClass);
- 				ValLogicenu = ViewModelConversion.ToInteger(m.ValLogicenu);
- 				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
- 				ValAttach = ViewModelConversion.ToString(m.ValAttach);
+				ValTxtfield = ViewModelConversion.ToString(m.ValTxtfield);
+				ValDescrip = ViewModelConversion.ToString(m.ValDescrip);
+				ValNpassage = ViewModelConversion.ToNumeric(m.ValNpassage);
+				ValDuration = ViewModelConversion.ToNumeric(m.ValDuration);
+				ValPrice = ViewModelConversion.ToNumeric(m.ValPrice);
+				ValPrecobil = ViewModelConversion.ToNumeric(m.ValPrecobil);
+				ValYear = ViewModelConversion.ToNumeric(m.ValYear);
+				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
+				ValDatetime = ViewModelConversion.ToDateTime(m.ValDatetime);
+				ValDateseco = ViewModelConversion.ToDateTime(m.ValDateseco);
+				ValTime = ViewModelConversion.ToString(m.ValTime);
+				ValZipfield = ViewModelConversion.ToString(m.ValZipfield);
+				ValVatnumbr = ViewModelConversion.ToString(m.ValVatnumbr);
+				ValLicplate = ViewModelConversion.ToString(m.ValLicplate);
+				ValSsnumber = ViewModelConversion.ToString(m.ValSsnumber);
+				ValBanknmbr = ViewModelConversion.ToString(m.ValBanknmbr);
+				ValEmailfld = ViewModelConversion.ToString(m.ValEmailfld);
+				ValIbanfiel = ViewModelConversion.ToString(m.ValIbanfiel);
+				ValUpprtext = ViewModelConversion.ToString(m.ValUpprtext);
+				ValClassnum = ViewModelConversion.ToNumeric(m.ValClassnum);
+				ValClass = ViewModelConversion.ToString(m.ValClass);
+				ValLogicenu = ViewModelConversion.ToInteger(m.ValLogicenu);
+				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
+				ValAttach = ViewModelConversion.ToString(m.ValAttach);
 				ValAttachfk = ViewModelConversion.ToString(m.ValAttachfk);
- 				ValCreatuse = ViewModelConversion.ToString(m.ValCreatuse);
- 				ValCreatdat = ViewModelConversion.ToDateTime(m.ValCreatdat);
- 				ValCreathou = ViewModelConversion.ToString(m.ValCreathou);
- 				ValCreatins = ViewModelConversion.ToDateTime(m.ValCreatins);
- 				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
- 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
- 				ValTblcond = ViewModelConversion.ToLogic(m.ValTblcond);
- 				ValCond = ViewModelConversion.ToString(m.ValCond);
- 				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
+				ValCreatuse = ViewModelConversion.ToString(m.ValCreatuse);
+				ValCreatdat = ViewModelConversion.ToDateTime(m.ValCreatdat);
+				ValCreathou = ViewModelConversion.ToString(m.ValCreathou);
+				ValCreatins = ViewModelConversion.ToDateTime(m.ValCreatins);
+				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValTblcond = ViewModelConversion.ToLogic(m.ValTblcond);
+				ValCond = ViewModelConversion.ToString(m.ValCond);
+				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
 			}
 			catch (Exception)
 			{

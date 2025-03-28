@@ -261,26 +261,26 @@ namespace GenioMVC.ViewModels.Sale
 			}
 			try
 			{
- 				ValIdentifi = ViewModelConversion.ToString(m.ValIdentifi);
- 				ValPotcompr = ViewModelConversion.ToString(m.ValPotcompr);
- 				ValProspecc = ViewModelConversion.ToLogic(m.ValProspecc);
- 				ValInteress = ViewModelConversion.ToLogic(m.ValInteress);
- 				ValSemrfina = ViewModelConversion.ToLogic(m.ValSemrfina);
- 				ValSemcapac = ViewModelConversion.ToLogic(m.ValSemcapac);
- 				ValDtqualif = ViewModelConversion.ToDateTime(m.ValDtqualif);
- 				ValQualific = ViewModelConversion.ToLogic(m.ValQualific);
- 				ValPreabord = ViewModelConversion.ToDateTime(m.ValPreabord);
- 				ValHomework = ViewModelConversion.ToLogic(m.ValHomework);
- 				ValDtaborda = ViewModelConversion.ToDateTime(m.ValDtaborda);
- 				ValApproach = ViewModelConversion.ToLogic(m.ValApproach);
- 				ValDtaprese = ViewModelConversion.ToDateTime(m.ValDtaprese);
- 				ValApresent = ViewModelConversion.ToLogic(m.ValApresent);
- 				ValDtsupera = ViewModelConversion.ToDateTime(m.ValDtsupera);
- 				ValTentfech = ViewModelConversion.ToDateTime(m.ValTentfech);
- 				ValDtvenda = ViewModelConversion.ToDateTime(m.ValDtvenda);
- 				ValDtacompa = ViewModelConversion.ToDateTime(m.ValDtacompa);
- 				ValCodorgan = ViewModelConversion.ToString(m.ValCodorgan);
- 				ValCodvenda = ViewModelConversion.ToString(m.ValCodvenda);
+				ValIdentifi = ViewModelConversion.ToString(m.ValIdentifi);
+				ValPotcompr = ViewModelConversion.ToString(m.ValPotcompr);
+				ValProspecc = ViewModelConversion.ToLogic(m.ValProspecc);
+				ValInteress = ViewModelConversion.ToLogic(m.ValInteress);
+				ValSemrfina = ViewModelConversion.ToLogic(m.ValSemrfina);
+				ValSemcapac = ViewModelConversion.ToLogic(m.ValSemcapac);
+				ValDtqualif = ViewModelConversion.ToDateTime(m.ValDtqualif);
+				ValQualific = ViewModelConversion.ToLogic(m.ValQualific);
+				ValPreabord = ViewModelConversion.ToDateTime(m.ValPreabord);
+				ValHomework = ViewModelConversion.ToLogic(m.ValHomework);
+				ValDtaborda = ViewModelConversion.ToDateTime(m.ValDtaborda);
+				ValApproach = ViewModelConversion.ToLogic(m.ValApproach);
+				ValDtaprese = ViewModelConversion.ToDateTime(m.ValDtaprese);
+				ValApresent = ViewModelConversion.ToLogic(m.ValApresent);
+				ValDtsupera = ViewModelConversion.ToDateTime(m.ValDtsupera);
+				ValTentfech = ViewModelConversion.ToDateTime(m.ValTentfech);
+				ValDtvenda = ViewModelConversion.ToDateTime(m.ValDtvenda);
+				ValDtacompa = ViewModelConversion.ToDateTime(m.ValDtacompa);
+				ValCodorgan = ViewModelConversion.ToString(m.ValCodorgan);
+				ValCodvenda = ViewModelConversion.ToString(m.ValCodvenda);
 			}
 			catch (Exception)
 			{

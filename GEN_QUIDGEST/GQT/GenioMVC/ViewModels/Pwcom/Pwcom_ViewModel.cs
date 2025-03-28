@@ -185,11 +185,11 @@ namespace GenioMVC.ViewModels.Pwcom
 			}
 			try
 			{
- 				ValFoto = ViewModelConversion.ToImage(m.ValFoto);
- 				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
- 				ValCodpsw = ViewModelConversion.ToString(m.ValCodpsw);
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValCodpwcom = ViewModelConversion.ToString(m.ValCodpwcom);
+				ValFoto = ViewModelConversion.ToImage(m.ValFoto);
+				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
+				ValCodpsw = ViewModelConversion.ToString(m.ValCodpsw);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValCodpwcom = ViewModelConversion.ToString(m.ValCodpwcom);
 			}
 			catch (Exception)
 			{

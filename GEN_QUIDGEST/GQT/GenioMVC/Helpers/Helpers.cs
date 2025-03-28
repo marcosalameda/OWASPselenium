@@ -763,7 +763,8 @@ namespace GenioMVC.Helpers
 
             //Download link
 			// Last updated by [HTA] at [2019.10.01]
-			HtmlString showLink = html.ActionLinkWithIcon(Resources.Resources.DESCARREGAR58418, "GetFile", baseArea, "icon-download-alt", routeValuesDropdwon, htmlProperties, "PrepareFileLink", "Home", baseArea, baseAreaKey);
+            // remove action to open documents in addin
+			HtmlString showLink = html.ActionLinkWithIcon(Resources.Resources.DESCARREGAR58418, "GetFile", baseArea, "icon-download-alt", routeValuesDropdwon, htmlProperties, ""/*"PrepareFileLink"*/, ""/*"Home"*/, baseArea, baseAreaKey);
 
             TagBuilder firstDiv = new TagBuilder("div");
             firstDiv.AddCssClass("i-input-group " + fieldSize);

@@ -174,9 +174,9 @@ namespace GenioMVC.ViewModels.Tpcon
 			}
 			try
 			{
- 				ValTipocont = ViewModelConversion.ToString(m.ValTipocont);
- 				ValCodgenre = ViewModelConversion.ToString(m.ValCodgenre);
- 				ValCodtpcon = ViewModelConversion.ToString(m.ValCodtpcon);
+				ValTipocont = ViewModelConversion.ToString(m.ValTipocont);
+				ValCodgenre = ViewModelConversion.ToString(m.ValCodgenre);
+				ValCodtpcon = ViewModelConversion.ToString(m.ValCodtpcon);
 			}
 			catch (Exception)
 			{

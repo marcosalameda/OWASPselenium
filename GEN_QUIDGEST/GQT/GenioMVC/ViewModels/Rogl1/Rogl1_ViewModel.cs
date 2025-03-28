@@ -167,8 +167,8 @@ namespace GenioMVC.ViewModels.Rogl1
 			}
 			try
 			{
- 				ValTitle = ViewModelConversion.ToString(m.ValTitle);
- 				ValCodrogl1 = ViewModelConversion.ToString(m.ValCodrogl1);
+				ValTitle = ViewModelConversion.ToString(m.ValTitle);
+				ValCodrogl1 = ViewModelConversion.ToString(m.ValCodrogl1);
 			}
 			catch (Exception)
 			{

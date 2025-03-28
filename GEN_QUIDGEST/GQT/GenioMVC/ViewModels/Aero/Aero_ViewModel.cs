@@ -173,9 +173,9 @@ namespace GenioMVC.ViewModels.Aero
 			}
 			try
 			{
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValCodcmaer = ViewModelConversion.ToNumeric(m.ValCodcmaer);
- 				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValCodcmaer = ViewModelConversion.ToNumeric(m.ValCodcmaer);
+				ValCodaero = ViewModelConversion.ToString(m.ValCodaero);
 			}
 			catch (Exception)
 			{

@@ -190,10 +190,10 @@ namespace GenioMVC.ViewModels.Pedid
 			}
 			try
 			{
- 				ValDtpedido = ViewModelConversion.ToDateTime(m.ValDtpedido);
- 				ValNrpedido = ViewModelConversion.ToNumeric(m.ValNrpedido);
- 				ValMotivo = ViewModelConversion.ToString(m.ValMotivo);
- 				ValCodpedid = ViewModelConversion.ToString(m.ValCodpedid);
+				ValDtpedido = ViewModelConversion.ToDateTime(m.ValDtpedido);
+				ValNrpedido = ViewModelConversion.ToNumeric(m.ValNrpedido);
+				ValMotivo = ViewModelConversion.ToString(m.ValMotivo);
+				ValCodpedid = ViewModelConversion.ToString(m.ValCodpedid);
 			}
 			catch (Exception)
 			{

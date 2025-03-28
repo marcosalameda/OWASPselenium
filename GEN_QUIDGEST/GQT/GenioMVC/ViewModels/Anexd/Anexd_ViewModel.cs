@@ -206,15 +206,15 @@ namespace GenioMVC.ViewModels.Anexd
 			}
 			try
 			{
- 				ValDthranex = ViewModelConversion.ToDateTime(m.ValDthranex);
- 				ValReferenc = ViewModelConversion.ToString(m.ValReferenc);
- 				ValTitle = ViewModelConversion.ToString(m.ValTitle);
- 				ValTittradu = ViewModelConversion.ToString(m.ValTittradu);
- 				ValDocument = ViewModelConversion.ToString(m.ValDocument);
+				ValDthranex = ViewModelConversion.ToDateTime(m.ValDthranex);
+				ValReferenc = ViewModelConversion.ToString(m.ValReferenc);
+				ValTitle = ViewModelConversion.ToString(m.ValTitle);
+				ValTittradu = ViewModelConversion.ToString(m.ValTittradu);
+				ValDocument = ViewModelConversion.ToString(m.ValDocument);
 				ValDocumentfk = ViewModelConversion.ToString(m.ValDocumentfk);
- 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
- 				ValCodlang = ViewModelConversion.ToString(m.ValCodlang);
- 				ValCodanexd = ViewModelConversion.ToString(m.ValCodanexd);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValCodlang = ViewModelConversion.ToString(m.ValCodlang);
+				ValCodanexd = ViewModelConversion.ToString(m.ValCodanexd);
 			}
 			catch (Exception)
 			{

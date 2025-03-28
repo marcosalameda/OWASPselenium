@@ -167,8 +167,8 @@ namespace GenioMVC.ViewModels.Sbcat
 			}
 			try
 			{
- 				ValSubcateg = ViewModelConversion.ToString(m.ValSubcateg);
- 				ValCodsbcat = ViewModelConversion.ToString(m.ValCodsbcat);
+				ValSubcateg = ViewModelConversion.ToString(m.ValSubcateg);
+				ValCodsbcat = ViewModelConversion.ToString(m.ValCodsbcat);
 			}
 			catch (Exception)
 			{

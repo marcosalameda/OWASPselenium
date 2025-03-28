@@ -244,20 +244,20 @@ namespace GenioMVC.ViewModels.Repar
 			}
 			try
 			{
- 				funcEquipValDesignat = () => ViewModelConversion.ToString(m.Equip.ValDesignat);
- 				funcEquipValPhotogra = () => ViewModelConversion.ToImage(m.Equip.ValPhotogra);
- 				ValDtrepara = ViewModelConversion.ToDateTime(m.ValDtrepara);
- 				ValNrrepara = ViewModelConversion.ToNumeric(m.ValNrrepara);
- 				ValTipoarea = ViewModelConversion.ToString(m.ValTipoarea);
- 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
- 				ValHours = ViewModelConversion.ToNumeric(m.ValHours);
- 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
- 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
- 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
- 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
- 				ValCodespec = ViewModelConversion.ToString(m.ValCodespec);
- 				funcSpeciValAreatecn = () => ViewModelConversion.ToString(m.Speci.ValAreatecn);
- 				ValCodrepar = ViewModelConversion.ToString(m.ValCodrepar);
+				funcEquipValDesignat = () => ViewModelConversion.ToString(m.Equip.ValDesignat);
+				funcEquipValPhotogra = () => ViewModelConversion.ToImage(m.Equip.ValPhotogra);
+				ValDtrepara = ViewModelConversion.ToDateTime(m.ValDtrepara);
+				ValNrrepara = ViewModelConversion.ToNumeric(m.ValNrrepara);
+				ValTipoarea = ViewModelConversion.ToString(m.ValTipoarea);
+				ValDescript = ViewModelConversion.ToString(m.ValDescript);
+				ValHours = ViewModelConversion.ToNumeric(m.ValHours);
+				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValCodespec = ViewModelConversion.ToString(m.ValCodespec);
+				funcSpeciValAreatecn = () => ViewModelConversion.ToString(m.Speci.ValAreatecn);
+				ValCodrepar = ViewModelConversion.ToString(m.ValCodrepar);
 			}
 			catch (Exception)
 			{

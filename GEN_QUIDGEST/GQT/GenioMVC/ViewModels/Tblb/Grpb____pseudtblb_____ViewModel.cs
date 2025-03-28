@@ -240,21 +240,21 @@ namespace GenioMVC.ViewModels.Tblb
 			}
 			try
 			{
- 				ValText = ViewModelConversion.ToString(m.ValText);
- 				ValTextml = ViewModelConversion.ToString(m.ValTextml);
- 				ValNumint = ViewModelConversion.ToNumeric(m.ValNumint);
- 				ValNumdec = ViewModelConversion.ToNumeric(m.ValNumdec);
- 				ValCurint = ViewModelConversion.ToNumeric(m.ValCurint);
- 				ValCurdec = ViewModelConversion.ToNumeric(m.ValCurdec);
- 				ValBool = ViewModelConversion.ToLogic(m.ValBool);
- 				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
- 				ValDatetm = ViewModelConversion.ToDateTime(m.ValDatetm);
- 				ValDatets = ViewModelConversion.ToDateTime(m.ValDatets);
- 				ValTimehm = ViewModelConversion.ToString(m.ValTimehm);
- 				ValEnumt = ViewModelConversion.ToString(m.ValEnumt);
- 				ValEnumn = ViewModelConversion.ToNumeric(m.ValEnumn);
- 				ValFkey1 = ViewModelConversion.ToString(m.ValFkey1);
- 				ValCodtblb = ViewModelConversion.ToString(m.ValCodtblb);
+				ValText = ViewModelConversion.ToString(m.ValText);
+				ValTextml = ViewModelConversion.ToString(m.ValTextml);
+				ValNumint = ViewModelConversion.ToNumeric(m.ValNumint);
+				ValNumdec = ViewModelConversion.ToNumeric(m.ValNumdec);
+				ValCurint = ViewModelConversion.ToNumeric(m.ValCurint);
+				ValCurdec = ViewModelConversion.ToNumeric(m.ValCurdec);
+				ValBool = ViewModelConversion.ToLogic(m.ValBool);
+				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
+				ValDatetm = ViewModelConversion.ToDateTime(m.ValDatetm);
+				ValDatets = ViewModelConversion.ToDateTime(m.ValDatets);
+				ValTimehm = ViewModelConversion.ToString(m.ValTimehm);
+				ValEnumt = ViewModelConversion.ToString(m.ValEnumt);
+				ValEnumn = ViewModelConversion.ToNumeric(m.ValEnumn);
+				ValFkey1 = ViewModelConversion.ToString(m.ValFkey1);
+				ValCodtblb = ViewModelConversion.ToString(m.ValCodtblb);
 			}
 			catch (Exception)
 			{

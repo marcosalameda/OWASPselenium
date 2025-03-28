@@ -233,18 +233,18 @@ namespace GenioMVC.ViewModels.Lnhde
 			}
 			try
 			{
- 				ValOrdem = ViewModelConversion.ToNumeric(m.ValOrdem);
- 				ValQuantida = ViewModelConversion.ToNumeric(m.ValQuantida);
- 				ValQuantdec = ViewModelConversion.ToNumeric(m.ValQuantdec);
- 				ValCode = ViewModelConversion.ToString(m.ValCode);
- 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
- 				ValUrl = ViewModelConversion.ToString(m.ValUrl);
- 				ValCodlnhag = ViewModelConversion.ToString(m.ValCodlnhag);
- 				ValCodlnhpd = ViewModelConversion.ToString(m.ValCodlnhpd);
- 				ValCodpedid = ViewModelConversion.ToString(m.ValCodpedid);
- 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
- 				funcLnhpdValQuantdec = () => ViewModelConversion.ToNumeric(m.Lnhpd.ValQuantdec);
- 				ValCodlnhde = ViewModelConversion.ToString(m.ValCodlnhde);
+				ValOrdem = ViewModelConversion.ToNumeric(m.ValOrdem);
+				ValQuantida = ViewModelConversion.ToNumeric(m.ValQuantida);
+				ValQuantdec = ViewModelConversion.ToNumeric(m.ValQuantdec);
+				ValCode = ViewModelConversion.ToString(m.ValCode);
+				ValDescript = ViewModelConversion.ToString(m.ValDescript);
+				ValUrl = ViewModelConversion.ToString(m.ValUrl);
+				ValCodlnhag = ViewModelConversion.ToString(m.ValCodlnhag);
+				ValCodlnhpd = ViewModelConversion.ToString(m.ValCodlnhpd);
+				ValCodpedid = ViewModelConversion.ToString(m.ValCodpedid);
+				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
+				funcLnhpdValQuantdec = () => ViewModelConversion.ToNumeric(m.Lnhpd.ValQuantdec);
+				ValCodlnhde = ViewModelConversion.ToString(m.ValCodlnhde);
 			}
 			catch (Exception)
 			{

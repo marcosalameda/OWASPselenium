@@ -193,12 +193,12 @@ namespace GenioMVC.ViewModels.Tradu
 			}
 			try
 			{
- 				ValReferenc = ViewModelConversion.ToString(m.ValReferenc);
- 				ValAtraduzi = ViewModelConversion.ToString(m.ValAtraduzi);
- 				ValTraduzid = ViewModelConversion.ToString(m.ValTraduzid);
- 				ValCodidio1 = ViewModelConversion.ToString(m.ValCodidio1);
- 				ValCodidio2 = ViewModelConversion.ToString(m.ValCodidio2);
- 				ValCodtradu = ViewModelConversion.ToString(m.ValCodtradu);
+				ValReferenc = ViewModelConversion.ToString(m.ValReferenc);
+				ValAtraduzi = ViewModelConversion.ToString(m.ValAtraduzi);
+				ValTraduzid = ViewModelConversion.ToString(m.ValTraduzid);
+				ValCodidio1 = ViewModelConversion.ToString(m.ValCodidio1);
+				ValCodidio2 = ViewModelConversion.ToString(m.ValCodidio2);
+				ValCodtradu = ViewModelConversion.ToString(m.ValCodtradu);
 			}
 			catch (Exception)
 			{

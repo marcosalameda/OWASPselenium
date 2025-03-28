@@ -275,27 +275,27 @@ namespace GenioMVC.ViewModels.Equip
 			}
 			try
 			{
- 				ValSequennr = ViewModelConversion.ToNumeric(m.ValSequennr);
- 				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
- 				ValSitefabr = ViewModelConversion.ToString(m.ValSitefabr);
- 				ValDtdeco = ViewModelConversion.ToDateTime(m.ValDtdeco);
- 				funcRoom1ValDesignat = () => ViewModelConversion.ToString(m.Room1.ValDesignat);
- 				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
- 				ValDtaquisi = ViewModelConversion.ToDateTime(m.ValDtaquisi);
- 				ValValortot = ViewModelConversion.ToNumeric(m.ValValortot);
- 				ValFrequenc = ViewModelConversion.ToNumeric(m.ValFrequenc);
- 				ValDtrefere = ViewModelConversion.ToDateTime(m.ValDtrefere);
- 				ValFirst = ViewModelConversion.ToString(m.ValFirst);
- 				ValBefore = ViewModelConversion.ToString(m.ValBefore);
- 				ValBought = ViewModelConversion.ToLogic(m.ValBought);
- 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
- 				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
- 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
- 				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
- 				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
- 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
- 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValSequennr = ViewModelConversion.ToNumeric(m.ValSequennr);
+				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
+				ValSitefabr = ViewModelConversion.ToString(m.ValSitefabr);
+				ValDtdeco = ViewModelConversion.ToDateTime(m.ValDtdeco);
+				funcRoom1ValDesignat = () => ViewModelConversion.ToString(m.Room1.ValDesignat);
+				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
+				ValDtaquisi = ViewModelConversion.ToDateTime(m.ValDtaquisi);
+				ValValortot = ViewModelConversion.ToNumeric(m.ValValortot);
+				ValFrequenc = ViewModelConversion.ToNumeric(m.ValFrequenc);
+				ValDtrefere = ViewModelConversion.ToDateTime(m.ValDtrefere);
+				ValFirst = ViewModelConversion.ToString(m.ValFirst);
+				ValBefore = ViewModelConversion.ToString(m.ValBefore);
+				ValBought = ViewModelConversion.ToLogic(m.ValBought);
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
+				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
+				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
+				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
+				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
 			catch (Exception)
 			{

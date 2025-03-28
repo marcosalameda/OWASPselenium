@@ -188,14 +188,14 @@ namespace GenioMVC.ViewModels.Sale
 			}
 			try
 			{
- 				ValInteress = ViewModelConversion.ToLogic(m.ValInteress);
- 				ValSemrfina = ViewModelConversion.ToLogic(m.ValSemrfina);
- 				ValSemcapac = ViewModelConversion.ToLogic(m.ValSemcapac);
- 				ValDtqualif = ViewModelConversion.ToDateTime(m.ValDtqualif);
- 				ValQualific = ViewModelConversion.ToLogic(m.ValQualific);
- 				ValCodorgan = ViewModelConversion.ToString(m.ValCodorgan);
- 				ValIdentifi = ViewModelConversion.ToString(m.ValIdentifi);
- 				ValCodvenda = ViewModelConversion.ToString(m.ValCodvenda);
+				ValInteress = ViewModelConversion.ToLogic(m.ValInteress);
+				ValSemrfina = ViewModelConversion.ToLogic(m.ValSemrfina);
+				ValSemcapac = ViewModelConversion.ToLogic(m.ValSemcapac);
+				ValDtqualif = ViewModelConversion.ToDateTime(m.ValDtqualif);
+				ValQualific = ViewModelConversion.ToLogic(m.ValQualific);
+				ValCodorgan = ViewModelConversion.ToString(m.ValCodorgan);
+				ValIdentifi = ViewModelConversion.ToString(m.ValIdentifi);
+				ValCodvenda = ViewModelConversion.ToString(m.ValCodvenda);
 			}
 			catch (Exception)
 			{

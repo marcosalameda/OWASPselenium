@@ -229,19 +229,19 @@ namespace GenioMVC.ViewModels.Tpeq1
 			}
 			try
 			{
- 				ValTpequcod = ViewModelConversion.ToString(m.ValTpequcod);
- 				ValNivel = ViewModelConversion.ToNumeric(m.ValNivel);
- 				ValTipoequi = ViewModelConversion.ToString(m.ValTipoequi);
- 				ValTpequpai = ViewModelConversion.ToString(m.ValTpequpai);
- 				ValBackcolo = ViewModelConversion.ToString(m.ValBackcolo);
- 				ValCorletra = ViewModelConversion.ToString(m.ValCorletra);
- 				ValPrecomax = ViewModelConversion.ToNumeric(m.ValPrecomax);
- 				ValPrecoult = ViewModelConversion.ToNumeric(m.ValPrecoult);
- 				ValSince = ViewModelConversion.ToDateTime(m.ValSince);
- 				ValQtdequip = ViewModelConversion.ToNumeric(m.ValQtdequip);
- 				ValKit = ViewModelConversion.ToLogic(m.ValKit);
- 				ValCodfamil = ViewModelConversion.ToString(m.ValCodfamil);
- 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
+				ValTpequcod = ViewModelConversion.ToString(m.ValTpequcod);
+				ValNivel = ViewModelConversion.ToNumeric(m.ValNivel);
+				ValTipoequi = ViewModelConversion.ToString(m.ValTipoequi);
+				ValTpequpai = ViewModelConversion.ToString(m.ValTpequpai);
+				ValBackcolo = ViewModelConversion.ToString(m.ValBackcolo);
+				ValCorletra = ViewModelConversion.ToString(m.ValCorletra);
+				ValPrecomax = ViewModelConversion.ToNumeric(m.ValPrecomax);
+				ValPrecoult = ViewModelConversion.ToNumeric(m.ValPrecoult);
+				ValSince = ViewModelConversion.ToDateTime(m.ValSince);
+				ValQtdequip = ViewModelConversion.ToNumeric(m.ValQtdequip);
+				ValKit = ViewModelConversion.ToLogic(m.ValKit);
+				ValCodfamil = ViewModelConversion.ToString(m.ValCodfamil);
+				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
 			}
 			catch (Exception)
 			{

@@ -182,11 +182,11 @@ namespace GenioMVC.ViewModels.Gitem
 			}
 			try
 			{
- 				ValItemdes = ViewModelConversion.ToString(m.ValItemdes);
- 				ValItemgcod = ViewModelConversion.ToString(m.ValItemgcod);
- 				ValDocument = ViewModelConversion.ToString(m.ValDocument);
+				ValItemdes = ViewModelConversion.ToString(m.ValItemdes);
+				ValItemgcod = ViewModelConversion.ToString(m.ValItemgcod);
+				ValDocument = ViewModelConversion.ToString(m.ValDocument);
 				ValDocumentfk = ViewModelConversion.ToString(m.ValDocumentfk);
- 				ValCodgitem = ViewModelConversion.ToString(m.ValCodgitem);
+				ValCodgitem = ViewModelConversion.ToString(m.ValCodgitem);
 			}
 			catch (Exception)
 			{

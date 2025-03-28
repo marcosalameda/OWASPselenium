@@ -194,12 +194,12 @@ namespace GenioMVC.ViewModels.Feeca
 			}
 			try
 			{
- 				ValFeedback = ViewModelConversion.ToString(m.ValFeedback);
- 				funcFldsValAttach = () => ViewModelConversion.ToString(m.Flds.ValAttach);
+				ValFeedback = ViewModelConversion.ToString(m.ValFeedback);
+				funcFldsValAttach = () => ViewModelConversion.ToString(m.Flds.ValAttach);
 				FldsValAttachfk = ViewModelConversion.ToString(m.Flds.ValAttachfk);
- 				funcFldsValNpassage = () => ViewModelConversion.ToNumeric(m.Flds.ValNpassage);
- 				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
- 				ValCodfeeca = ViewModelConversion.ToString(m.ValCodfeeca);
+				funcFldsValNpassage = () => ViewModelConversion.ToNumeric(m.Flds.ValNpassage);
+				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
+				ValCodfeeca = ViewModelConversion.ToString(m.ValCodfeeca);
 			}
 			catch (Exception)
 			{

@@ -173,9 +173,9 @@ namespace GenioMVC.ViewModels.Rordf
 			}
 			try
 			{
- 				ValOrder = ViewModelConversion.ToNumeric(m.ValOrder);
- 				ValTitle = ViewModelConversion.ToString(m.ValTitle);
- 				ValCodrordf = ViewModelConversion.ToString(m.ValCodrordf);
+				ValOrder = ViewModelConversion.ToNumeric(m.ValOrder);
+				ValTitle = ViewModelConversion.ToString(m.ValTitle);
+				ValCodrordf = ViewModelConversion.ToString(m.ValCodrordf);
 			}
 			catch (Exception)
 			{

@@ -248,20 +248,20 @@ namespace GenioMVC.ViewModels.Item
 			}
 			try
 			{
- 				ValImage = ViewModelConversion.ToImage(m.ValImage);
- 				ValItemtype = ViewModelConversion.ToString(m.ValItemtype);
- 				ValItemcod = ViewModelConversion.ToString(m.ValItemcod);
- 				ValItemdes = ViewModelConversion.ToString(m.ValItemdes);
- 				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
- 				ValEntries = ViewModelConversion.ToNumeric(m.ValEntries);
- 				ValExits = ViewModelConversion.ToNumeric(m.ValExits);
- 				ValExistenc = ViewModelConversion.ToNumeric(m.ValExistenc);
- 				ValCategory = ViewModelConversion.ToString(m.ValCategory);
- 				ValDisponib = ViewModelConversion.ToString(m.ValDisponib);
- 				ValCodgitem = ViewModelConversion.ToString(m.ValCodgitem);
- 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				funcGitemValItemgcod = () => ViewModelConversion.ToString(m.Gitem.ValItemgcod);
- 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
+				ValImage = ViewModelConversion.ToImage(m.ValImage);
+				ValItemtype = ViewModelConversion.ToString(m.ValItemtype);
+				ValItemcod = ViewModelConversion.ToString(m.ValItemcod);
+				ValItemdes = ViewModelConversion.ToString(m.ValItemdes);
+				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
+				ValEntries = ViewModelConversion.ToNumeric(m.ValEntries);
+				ValExits = ViewModelConversion.ToNumeric(m.ValExits);
+				ValExistenc = ViewModelConversion.ToNumeric(m.ValExistenc);
+				ValCategory = ViewModelConversion.ToString(m.ValCategory);
+				ValDisponib = ViewModelConversion.ToString(m.ValDisponib);
+				ValCodgitem = ViewModelConversion.ToString(m.ValCodgitem);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				funcGitemValItemgcod = () => ViewModelConversion.ToString(m.Gitem.ValItemgcod);
+				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
 			}
 			catch (Exception)
 			{

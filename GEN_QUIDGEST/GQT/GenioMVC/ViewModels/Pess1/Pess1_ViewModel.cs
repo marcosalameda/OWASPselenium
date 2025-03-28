@@ -246,22 +246,22 @@ namespace GenioMVC.ViewModels.Pess1
 			}
 			try
 			{
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValGender = ViewModelConversion.ToString(m.ValGender);
- 				ValDtnascim = ViewModelConversion.ToDateTime(m.ValDtnascim);
- 				ValIdfuncio = ViewModelConversion.ToNumeric(m.ValIdfuncio);
- 				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
- 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
- 				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
- 				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
- 				ValDtultcat = ViewModelConversion.ToDateTime(m.ValDtultcat);
- 				ValExterna = ViewModelConversion.ToLogic(m.ValExterna);
- 				ValInterna = ViewModelConversion.ToLogic(m.ValInterna);
- 				ValIdade = ViewModelConversion.ToNumeric(m.ValIdade);
- 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
- 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
- 				ValCodparte = ViewModelConversion.ToString(m.ValCodparte);
- 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValGender = ViewModelConversion.ToString(m.ValGender);
+				ValDtnascim = ViewModelConversion.ToDateTime(m.ValDtnascim);
+				ValIdfuncio = ViewModelConversion.ToNumeric(m.ValIdfuncio);
+				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
+				ValEmail = ViewModelConversion.ToString(m.ValEmail);
+				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
+				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
+				ValDtultcat = ViewModelConversion.ToDateTime(m.ValDtultcat);
+				ValExterna = ViewModelConversion.ToLogic(m.ValExterna);
+				ValInterna = ViewModelConversion.ToLogic(m.ValInterna);
+				ValIdade = ViewModelConversion.ToNumeric(m.ValIdade);
+				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValCodparte = ViewModelConversion.ToString(m.ValCodparte);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 			}
 			catch (Exception)
 			{

@@ -177,11 +177,11 @@ namespace GenioMVC.ViewModels.Sale
 			}
 			try
 			{
- 				ValTentfech = ViewModelConversion.ToDateTime(m.ValTentfech);
- 				ValDtvenda = ViewModelConversion.ToDateTime(m.ValDtvenda);
- 				ValCodorgan = ViewModelConversion.ToString(m.ValCodorgan);
- 				ValIdentifi = ViewModelConversion.ToString(m.ValIdentifi);
- 				ValCodvenda = ViewModelConversion.ToString(m.ValCodvenda);
+				ValTentfech = ViewModelConversion.ToDateTime(m.ValTentfech);
+				ValDtvenda = ViewModelConversion.ToDateTime(m.ValDtvenda);
+				ValCodorgan = ViewModelConversion.ToString(m.ValCodorgan);
+				ValIdentifi = ViewModelConversion.ToString(m.ValIdentifi);
+				ValCodvenda = ViewModelConversion.ToString(m.ValCodvenda);
 			}
 			catch (Exception)
 			{

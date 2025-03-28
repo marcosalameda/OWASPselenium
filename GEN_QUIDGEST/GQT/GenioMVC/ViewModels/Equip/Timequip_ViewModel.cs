@@ -191,15 +191,15 @@ namespace GenioMVC.ViewModels.Equip
 			}
 			try
 			{
- 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
- 				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
- 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
- 				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
- 				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
- 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
- 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
- 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
+				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
+				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
+				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
+				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
 			catch (Exception)
 			{

@@ -207,14 +207,14 @@ namespace GenioMVC.ViewModels.Outpu
 			}
 			try
 			{
- 				funcOutptValCodwareh = () => ViewModelConversion.ToString(m.Outpt.ValCodwareh);
- 				ValLine = ViewModelConversion.ToNumeric(m.ValLine);
- 				ValExitqnty = ViewModelConversion.ToNumeric(m.ValExitqnty);
- 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
- 				ValCoddocsd = ViewModelConversion.ToString(m.ValCoddocsd);
- 				ValCodoutpt = ViewModelConversion.ToString(m.ValCodoutpt);
- 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValCodoutpu = ViewModelConversion.ToString(m.ValCodoutpu);
+				funcOutptValCodwareh = () => ViewModelConversion.ToString(m.Outpt.ValCodwareh);
+				ValLine = ViewModelConversion.ToNumeric(m.ValLine);
+				ValExitqnty = ViewModelConversion.ToNumeric(m.ValExitqnty);
+				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
+				ValCoddocsd = ViewModelConversion.ToString(m.ValCoddocsd);
+				ValCodoutpt = ViewModelConversion.ToString(m.ValCodoutpt);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				ValCodoutpu = ViewModelConversion.ToString(m.ValCodoutpu);
 			}
 			catch (Exception)
 			{

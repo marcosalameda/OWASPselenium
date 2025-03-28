@@ -174,9 +174,9 @@ namespace GenioMVC.ViewModels.Cate1
 			}
 			try
 			{
- 				ValAbbreviation = ViewModelConversion.ToString(m.ValAbbreviation);
- 				ValCategoria = ViewModelConversion.ToString(m.ValCategoria);
- 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
+				ValAbbreviation = ViewModelConversion.ToString(m.ValAbbreviation);
+				ValCategoria = ViewModelConversion.ToString(m.ValCategoria);
+				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
 			}
 			catch (Exception)
 			{

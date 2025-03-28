@@ -240,21 +240,21 @@ namespace GenioMVC.ViewModels.Notif
 			}
 			try
 			{
- 				ValNrcomoda = ViewModelConversion.ToNumeric(m.ValNrcomoda);
- 				ValBegin = ViewModelConversion.ToDateTime(m.ValBegin);
- 				ValEnd = ViewModelConversion.ToDateTime(m.ValEnd);
- 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
- 				ValIdnotif = ViewModelConversion.ToString(m.ValIdnotif);
- 				ValIdmsg = ViewModelConversion.ToString(m.ValIdmsg);
- 				ValMessage = ViewModelConversion.ToString(m.ValMessage);
- 				ValMailerr = ViewModelConversion.ToString(m.ValMailerr);
- 				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
- 				ValCreatdat = ViewModelConversion.ToDateTime(m.ValCreatdat);
- 				ValCreatope = ViewModelConversion.ToString(m.ValCreatope);
- 				ValReturned = ViewModelConversion.ToLogic(m.ValReturned);
- 				ValDtdevolu = ViewModelConversion.ToDateTime(m.ValDtdevolu);
- 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
- 				ValCodnotif = ViewModelConversion.ToString(m.ValCodnotif);
+				ValNrcomoda = ViewModelConversion.ToNumeric(m.ValNrcomoda);
+				ValBegin = ViewModelConversion.ToDateTime(m.ValBegin);
+				ValEnd = ViewModelConversion.ToDateTime(m.ValEnd);
+				ValEmail = ViewModelConversion.ToString(m.ValEmail);
+				ValIdnotif = ViewModelConversion.ToString(m.ValIdnotif);
+				ValIdmsg = ViewModelConversion.ToString(m.ValIdmsg);
+				ValMessage = ViewModelConversion.ToString(m.ValMessage);
+				ValMailerr = ViewModelConversion.ToString(m.ValMailerr);
+				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
+				ValCreatdat = ViewModelConversion.ToDateTime(m.ValCreatdat);
+				ValCreatope = ViewModelConversion.ToString(m.ValCreatope);
+				ValReturned = ViewModelConversion.ToLogic(m.ValReturned);
+				ValDtdevolu = ViewModelConversion.ToDateTime(m.ValDtdevolu);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValCodnotif = ViewModelConversion.ToString(m.ValCodnotif);
 			}
 			catch (Exception)
 			{

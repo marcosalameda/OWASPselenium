@@ -170,8 +170,8 @@ namespace GenioMVC.ViewModels.Grpb
 			}
 			try
 			{
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValCodgrpb = ViewModelConversion.ToString(m.ValCodgrpb);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValCodgrpb = ViewModelConversion.ToString(m.ValCodgrpb);
 			}
 			catch (Exception)
 			{

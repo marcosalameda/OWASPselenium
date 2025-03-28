@@ -172,10 +172,10 @@ namespace GenioMVC.ViewModels.Wpess
 			}
 			try
 			{
- 				ValFtbackgr = ViewModelConversion.ToImage(m.ValFtbackgr);
- 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValCodpess = ViewModelConversion.ToString(m.ValCodpess);
+				ValFtbackgr = ViewModelConversion.ToImage(m.ValFtbackgr);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValCodpess = ViewModelConversion.ToString(m.ValCodpess);
 			}
 			catch (Exception)
 			{

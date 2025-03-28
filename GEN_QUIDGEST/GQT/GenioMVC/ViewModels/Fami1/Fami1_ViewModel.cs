@@ -175,8 +175,8 @@ namespace GenioMVC.ViewModels.Fami1
 			}
 			try
 			{
- 				ValFamily = ViewModelConversion.ToString(m.ValFamily);
- 				ValCodfamil = ViewModelConversion.ToString(m.ValCodfamil);
+				ValFamily = ViewModelConversion.ToString(m.ValFamily);
+				ValCodfamil = ViewModelConversion.ToString(m.ValCodfamil);
 			}
 			catch (Exception)
 			{

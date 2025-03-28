@@ -293,10 +293,10 @@ namespace GenioMVC.ViewModels.Rules
 			}
 			try
 			{
- 				ValTipocond = ViewModelConversion.ToString(m.ValTipocond);
- 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
- 				ValLocal = ViewModelConversion.ToString(m.ValLocal);
- 				ValCodregra = ViewModelConversion.ToString(m.ValCodregra);
+				ValTipocond = ViewModelConversion.ToString(m.ValTipocond);
+				ValDescript = ViewModelConversion.ToString(m.ValDescript);
+				ValLocal = ViewModelConversion.ToString(m.ValLocal);
+				ValCodregra = ViewModelConversion.ToString(m.ValCodregra);
 			}
 			catch (Exception)
 			{

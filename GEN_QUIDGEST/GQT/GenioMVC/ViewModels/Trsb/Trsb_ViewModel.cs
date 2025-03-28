@@ -167,8 +167,8 @@ namespace GenioMVC.ViewModels.Trsb
 			}
 			try
 			{
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValCodtrsb = ViewModelConversion.ToString(m.ValCodtrsb);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValCodtrsb = ViewModelConversion.ToString(m.ValCodtrsb);
 			}
 			catch (Exception)
 			{

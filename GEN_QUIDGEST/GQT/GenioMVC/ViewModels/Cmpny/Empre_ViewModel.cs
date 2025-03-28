@@ -216,16 +216,16 @@ namespace GenioMVC.ViewModels.Cmpny
 			}
 			try
 			{
- 				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
- 				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
- 				ValAcronym = ViewModelConversion.ToString(m.ValAcronym);
- 				ValNif = ViewModelConversion.ToString(m.ValNif);
- 				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
- 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
- 				ValQtdpesso = ViewModelConversion.ToNumeric(m.ValQtdpesso);
- 				ValHeadloc = ViewModelConversion.ToString(m.ValHeadloc);
- 				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
- 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValLogo = ViewModelConversion.ToImage(m.ValLogo);
+				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
+				ValAcronym = ViewModelConversion.ToString(m.ValAcronym);
+				ValNif = ViewModelConversion.ToString(m.ValNif);
+				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
+				ValEmail = ViewModelConversion.ToString(m.ValEmail);
+				ValQtdpesso = ViewModelConversion.ToNumeric(m.ValQtdpesso);
+				ValHeadloc = ViewModelConversion.ToString(m.ValHeadloc);
+				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
 			}
 			catch (Exception)
 			{

@@ -181,10 +181,10 @@ namespace GenioMVC.ViewModels.Lnhag
 			}
 			try
 			{
- 				ValQtdtpequ = ViewModelConversion.ToNumeric(m.ValQtdtpequ);
- 				ValCodpedid = ViewModelConversion.ToString(m.ValCodpedid);
- 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
- 				ValCodlnhag = ViewModelConversion.ToString(m.ValCodlnhag);
+				ValQtdtpequ = ViewModelConversion.ToNumeric(m.ValQtdtpequ);
+				ValCodpedid = ViewModelConversion.ToString(m.ValCodpedid);
+				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
+				ValCodlnhag = ViewModelConversion.ToString(m.ValCodlnhag);
 			}
 			catch (Exception)
 			{

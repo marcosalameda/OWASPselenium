@@ -181,10 +181,10 @@ namespace GenioMVC.ViewModels.Agreg
 			}
 			try
 			{
- 				ValValue = ViewModelConversion.ToNumeric(m.ValValue);
- 				ValCodproje = ViewModelConversion.ToString(m.ValCodproje);
- 				ValCodyear = ViewModelConversion.ToString(m.ValCodyear);
- 				ValCodaggre = ViewModelConversion.ToString(m.ValCodaggre);
+				ValValue = ViewModelConversion.ToNumeric(m.ValValue);
+				ValCodproje = ViewModelConversion.ToString(m.ValCodproje);
+				ValCodyear = ViewModelConversion.ToString(m.ValCodyear);
+				ValCodaggre = ViewModelConversion.ToString(m.ValCodaggre);
 			}
 			catch (Exception)
 			{

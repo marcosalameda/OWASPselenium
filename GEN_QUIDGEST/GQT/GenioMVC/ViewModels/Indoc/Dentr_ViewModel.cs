@@ -211,14 +211,14 @@ namespace GenioMVC.ViewModels.Indoc
 			}
 			try
 			{
- 				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
- 				ValDocumenr = ViewModelConversion.ToNumeric(m.ValDocumenr);
- 				ValDhdocume = ViewModelConversion.ToDateTime(m.ValDhdocume);
- 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
- 				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
- 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
- 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
- 				ValCoddentr = ViewModelConversion.ToString(m.ValCoddentr);
+				ValDate = ViewModelConversion.ToDateTime(m.ValDate);
+				ValDocumenr = ViewModelConversion.ToNumeric(m.ValDocumenr);
+				ValDhdocume = ViewModelConversion.ToDateTime(m.ValDhdocume);
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				ValCoddentr = ViewModelConversion.ToString(m.ValCoddentr);
 			}
 			catch (Exception)
 			{

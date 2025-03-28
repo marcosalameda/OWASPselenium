@@ -36,7 +36,7 @@ namespace CSGenio.core.di
         /// <summary>
         /// Error logger
         /// </summary>
-        public static ILogImpl Log { get; set; } = null;
+        public static ILogImpl Log { get; set; } = new CSGenio.core.logger.NullLogger();
 
         /// <summary>
         /// EPH association manager for user registration functions

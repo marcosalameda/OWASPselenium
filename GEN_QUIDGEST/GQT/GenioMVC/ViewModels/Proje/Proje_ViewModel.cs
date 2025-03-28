@@ -218,15 +218,15 @@ namespace GenioMVC.ViewModels.Proje
 			}
 			try
 			{
- 				ValProjecto = ViewModelConversion.ToString(m.ValProjecto);
- 				ValPrimeiro = ViewModelConversion.ToNumeric(m.ValPrimeiro);
- 				ValBefore = ViewModelConversion.ToNumeric(m.ValBefore);
- 				ValFollowin = ViewModelConversion.ToNumeric(m.ValFollowin);
- 				ValUltimo = ViewModelConversion.ToNumeric(m.ValUltimo);
- 				ValSaldo1 = ViewModelConversion.ToNumeric(m.ValSaldo1);
- 				ValSaldo2 = ViewModelConversion.ToNumeric(m.ValSaldo2);
- 				ValCodyear = ViewModelConversion.ToString(m.ValCodyear);
- 				ValCodproje = ViewModelConversion.ToString(m.ValCodproje);
+				ValProjecto = ViewModelConversion.ToString(m.ValProjecto);
+				ValPrimeiro = ViewModelConversion.ToNumeric(m.ValPrimeiro);
+				ValBefore = ViewModelConversion.ToNumeric(m.ValBefore);
+				ValFollowin = ViewModelConversion.ToNumeric(m.ValFollowin);
+				ValUltimo = ViewModelConversion.ToNumeric(m.ValUltimo);
+				ValSaldo1 = ViewModelConversion.ToNumeric(m.ValSaldo1);
+				ValSaldo2 = ViewModelConversion.ToNumeric(m.ValSaldo2);
+				ValCodyear = ViewModelConversion.ToString(m.ValCodyear);
+				ValCodproje = ViewModelConversion.ToString(m.ValCodproje);
 			}
 			catch (Exception)
 			{

@@ -185,10 +185,10 @@ namespace GenioMVC.ViewModels.Regio
 			}
 			try
 			{
- 				ValRegiao = ViewModelConversion.ToString(m.ValRegiao);
- 				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
- 				ValCodpais1 = ViewModelConversion.ToString(m.ValCodpais1);
- 				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
+				ValRegiao = ViewModelConversion.ToString(m.ValRegiao);
+				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
+				ValCodpais1 = ViewModelConversion.ToString(m.ValCodpais1);
+				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
 			}
 			catch (Exception)
 			{

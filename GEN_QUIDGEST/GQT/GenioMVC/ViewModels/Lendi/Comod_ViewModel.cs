@@ -241,19 +241,19 @@ namespace GenioMVC.ViewModels.Lendi
 			}
 			try
 			{
- 				funcEquipValDesignat = () => ViewModelConversion.ToString(m.Equip.ValDesignat);
- 				funcEquipValFrequenc = () => ViewModelConversion.ToNumeric(m.Equip.ValFrequenc);
- 				ValLendinnr = ViewModelConversion.ToNumeric(m.ValLendinnr);
- 				ValStart = ViewModelConversion.ToDateTime(m.ValStart);
- 				ValWarndt = ViewModelConversion.ToDateTime(m.ValWarndt);
- 				ValEnd = ViewModelConversion.ToDateTime(m.ValEnd);
- 				ValObservat = ViewModelConversion.ToString(m.ValObservat);
- 				ValReturndt = ViewModelConversion.ToDateTime(m.ValReturndt);
- 				ValReturned = ViewModelConversion.ToLogic(m.ValReturned);
- 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
- 				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
- 				ValCodpess2 = ViewModelConversion.ToString(m.ValCodpess2);
- 				ValCodlendi = ViewModelConversion.ToString(m.ValCodlendi);
+				funcEquipValDesignat = () => ViewModelConversion.ToString(m.Equip.ValDesignat);
+				funcEquipValFrequenc = () => ViewModelConversion.ToNumeric(m.Equip.ValFrequenc);
+				ValLendinnr = ViewModelConversion.ToNumeric(m.ValLendinnr);
+				ValStart = ViewModelConversion.ToDateTime(m.ValStart);
+				ValWarndt = ViewModelConversion.ToDateTime(m.ValWarndt);
+				ValEnd = ViewModelConversion.ToDateTime(m.ValEnd);
+				ValObservat = ViewModelConversion.ToString(m.ValObservat);
+				ValReturndt = ViewModelConversion.ToDateTime(m.ValReturndt);
+				ValReturned = ViewModelConversion.ToLogic(m.ValReturned);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValCodpess1 = ViewModelConversion.ToString(m.ValCodpess1);
+				ValCodpess2 = ViewModelConversion.ToString(m.ValCodpess2);
+				ValCodlendi = ViewModelConversion.ToString(m.ValCodlendi);
 			}
 			catch (Exception)
 			{

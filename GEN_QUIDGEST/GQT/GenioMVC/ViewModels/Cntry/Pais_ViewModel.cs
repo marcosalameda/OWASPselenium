@@ -203,13 +203,13 @@ namespace GenioMVC.ViewModels.Cntry
 			}
 			try
 			{
- 				ValCountry = ViewModelConversion.ToString(m.ValCountry);
- 				ValActive = ViewModelConversion.ToLogic(m.ValActive);
- 				ValCodigonr = ViewModelConversion.ToString(m.ValCodigonr);
- 				ValAlfa2 = ViewModelConversion.ToString(m.ValAlfa2);
- 				ValAlfa3 = ViewModelConversion.ToString(m.ValAlfa3);
- 				ValFlag = ViewModelConversion.ToImage(m.ValFlag);
- 				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
+				ValCountry = ViewModelConversion.ToString(m.ValCountry);
+				ValActive = ViewModelConversion.ToLogic(m.ValActive);
+				ValCodigonr = ViewModelConversion.ToString(m.ValCodigonr);
+				ValAlfa2 = ViewModelConversion.ToString(m.ValAlfa2);
+				ValAlfa3 = ViewModelConversion.ToString(m.ValAlfa3);
+				ValFlag = ViewModelConversion.ToImage(m.ValFlag);
+				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
 			}
 			catch (Exception)
 			{

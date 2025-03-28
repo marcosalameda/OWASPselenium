@@ -208,12 +208,12 @@ namespace GenioMVC.ViewModels.Wareh
 			}
 			try
 			{
- 				ValWarehcod = ViewModelConversion.ToString(m.ValWarehcod);
- 				ValWarehdes = ViewModelConversion.ToString(m.ValWarehdes);
- 				ValActivity = ViewModelConversion.ToInteger(m.ValActivity);
- 				ValShowreco = ViewModelConversion.ToLogic(m.ValShowreco);
- 				ValNum_employee = ViewModelConversion.ToNumeric(m.ValNum_employee);
- 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
+				ValWarehcod = ViewModelConversion.ToString(m.ValWarehcod);
+				ValWarehdes = ViewModelConversion.ToString(m.ValWarehdes);
+				ValActivity = ViewModelConversion.ToInteger(m.ValActivity);
+				ValShowreco = ViewModelConversion.ToLogic(m.ValShowreco);
+				ValNum_employee = ViewModelConversion.ToNumeric(m.ValNum_employee);
+				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
 			}
 			catch (Exception)
 			{

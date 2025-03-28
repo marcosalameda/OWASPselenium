@@ -180,10 +180,10 @@ namespace GenioMVC.ViewModels.Roigi
 			}
 			try
 			{
- 				ValOrder = ViewModelConversion.ToNumeric(m.ValOrder);
- 				ValTitle = ViewModelConversion.ToString(m.ValTitle);
- 				ValCodrogl1 = ViewModelConversion.ToString(m.ValCodrogl1);
- 				ValCodroigi = ViewModelConversion.ToString(m.ValCodroigi);
+				ValOrder = ViewModelConversion.ToNumeric(m.ValOrder);
+				ValTitle = ViewModelConversion.ToString(m.ValTitle);
+				ValCodrogl1 = ViewModelConversion.ToString(m.ValCodrogl1);
+				ValCodroigi = ViewModelConversion.ToString(m.ValCodroigi);
 			}
 			catch (Exception)
 			{

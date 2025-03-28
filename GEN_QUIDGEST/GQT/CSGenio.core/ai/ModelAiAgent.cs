@@ -28,6 +28,11 @@ namespace CSGenio.core.ai
         public abstract void Execute(DbArea area, PersistentSupport sp, User user);
 
         /// <summary>
+        /// Persists the changes in the base area record
+        /// </summary>
+        public abstract void PersistRecord(PersistentSupport sp);
+
+        /// <summary>
         /// Loads records from the database that are relevant to the agent's operation.
         /// This method must be implemented by derived classes to retrieve necessary data.
         /// </summary>

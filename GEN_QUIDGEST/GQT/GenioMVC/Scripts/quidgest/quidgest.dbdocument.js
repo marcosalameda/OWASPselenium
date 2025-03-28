@@ -121,13 +121,14 @@ DBDocument = (function () {
                         }).done(function (data) {
 							if (mode == "Checkout") {
 								// Last updated by [HTA] at [2019.10.01]
-								var extra = anchor.data("extra");
+                                //TODO: remove action to open in addin office
+								//var extra = anchor.data("extra");
 								obj.reloadDocumsControl(data.controlUpdate);
-								if (extra != undefined && extra != "") {
-									CallCustomScheme(extra, obj.downloadAnchor.attr("data-url"));
-								} else {
-									QUtils.NavigateTo = obj.downloadAnchor.attr("data-url");
-								}
+								//if (extra != undefined && extra != "") {
+								//	CallCustomScheme(extra, obj.downloadAnchor.attr("data-url"));
+								//} else {
+                                    QUtils.NavigateTo = obj.downloadAnchor.attr("href");
+								//}
 							}
 							else {
 								obj.submitVersionResponse(data);

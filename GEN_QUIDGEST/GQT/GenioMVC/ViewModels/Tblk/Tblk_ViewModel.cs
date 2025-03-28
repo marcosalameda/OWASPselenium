@@ -181,10 +181,10 @@ namespace GenioMVC.ViewModels.Tblk
 			}
 			try
 			{
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValFkey1 = ViewModelConversion.ToString(m.ValFkey1);
- 				ValFkey2 = ViewModelConversion.ToString(m.ValFkey2);
- 				ValCodtblk = ViewModelConversion.ToString(m.ValCodtblk);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValFkey1 = ViewModelConversion.ToString(m.ValFkey1);
+				ValFkey2 = ViewModelConversion.ToString(m.ValFkey2);
+				ValCodtblk = ViewModelConversion.ToString(m.ValCodtblk);
 			}
 			catch (Exception)
 			{

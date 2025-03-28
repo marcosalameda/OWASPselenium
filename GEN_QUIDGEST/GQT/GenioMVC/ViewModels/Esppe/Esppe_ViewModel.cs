@@ -175,9 +175,9 @@ namespace GenioMVC.ViewModels.Esppe
 			}
 			try
 			{
- 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
- 				ValCodespec = ViewModelConversion.ToString(m.ValCodespec);
- 				ValCodesppe = ViewModelConversion.ToString(m.ValCodesppe);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValCodespec = ViewModelConversion.ToString(m.ValCodespec);
+				ValCodesppe = ViewModelConversion.ToString(m.ValCodesppe);
 			}
 			catch (Exception)
 			{

@@ -252,23 +252,23 @@ namespace GenioMVC.ViewModels.Pesso
 			}
 			try
 			{
- 				ValIdfuncio = ViewModelConversion.ToNumeric(m.ValIdfuncio);
- 				ValName = ViewModelConversion.ToString(m.ValName);
- 				ValDtnascim = ViewModelConversion.ToDateTime(m.ValDtnascim);
- 				ValGender = ViewModelConversion.ToString(m.ValGender);
- 				ValInterna = ViewModelConversion.ToLogic(m.ValInterna);
- 				ValExterna = ViewModelConversion.ToLogic(m.ValExterna);
- 				ValDtultcat = ViewModelConversion.ToDateTime(m.ValDtultcat);
- 				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
- 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
- 				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
- 				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
- 				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
- 				ValCodpaise = ViewModelConversion.ToString(m.ValCodpaise);
- 				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
- 				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
- 				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
- 				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
+				ValIdfuncio = ViewModelConversion.ToNumeric(m.ValIdfuncio);
+				ValName = ViewModelConversion.ToString(m.ValName);
+				ValDtnascim = ViewModelConversion.ToDateTime(m.ValDtnascim);
+				ValGender = ViewModelConversion.ToString(m.ValGender);
+				ValInterna = ViewModelConversion.ToLogic(m.ValInterna);
+				ValExterna = ViewModelConversion.ToLogic(m.ValExterna);
+				ValDtultcat = ViewModelConversion.ToDateTime(m.ValDtultcat);
+				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
+				ValEmail = ViewModelConversion.ToString(m.ValEmail);
+				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
+				ValCodcateg = ViewModelConversion.ToString(m.ValCodcateg);
+				ValCodempre = ViewModelConversion.ToString(m.ValCodempre);
+				ValCodpaise = ViewModelConversion.ToString(m.ValCodpaise);
+				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
+				ValCodregia = ViewModelConversion.ToString(m.ValCodregia);
+				ValEmail2 = ViewModelConversion.ToString(m.ValEmail2);
+				ValCodpesso = ViewModelConversion.ToString(m.ValCodpesso);
 			}
 			catch (Exception)
 			{

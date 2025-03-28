@@ -185,7 +185,9 @@ namespace Administration.Controllers
             model.DSName = dataSystem.Name;
 
             List<RdxOperationLog> scriptLog = RdxOperationLog.readAggregateXML(PersistentSupport.LogReindexPath());
-            RdxOperationLog lastLog = scriptLog.Count > 0 ? scriptLog.LastOrDefault(log => log.DataSystem == model.DSName) : null;
+            RdxOperationLog lastLog = scriptLog?
+                .Where(log => log != null && log.DataSystem == model.DSName)
+                .LastOrDefault();
 
             List<ReIndexFunction> modelItems = model.reindexMenu.ReIndexItems
                 .Where(item =>

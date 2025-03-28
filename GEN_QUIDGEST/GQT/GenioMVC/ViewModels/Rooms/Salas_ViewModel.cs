@@ -173,9 +173,9 @@ namespace GenioMVC.ViewModels.Rooms
 			}
 			try
 			{
- 				ValRoomnr = ViewModelConversion.ToString(m.ValRoomnr);
- 				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
- 				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
+				ValRoomnr = ViewModelConversion.ToString(m.ValRoomnr);
+				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
+				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
 			}
 			catch (Exception)
 			{

@@ -172,10 +172,10 @@ namespace GenioMVC.ViewModels.Sale
 			}
 			try
 			{
- 				ValDtsupera = ViewModelConversion.ToDateTime(m.ValDtsupera);
- 				ValCodorgan = ViewModelConversion.ToString(m.ValCodorgan);
- 				ValIdentifi = ViewModelConversion.ToString(m.ValIdentifi);
- 				ValCodvenda = ViewModelConversion.ToString(m.ValCodvenda);
+				ValDtsupera = ViewModelConversion.ToDateTime(m.ValDtsupera);
+				ValCodorgan = ViewModelConversion.ToString(m.ValCodorgan);
+				ValIdentifi = ViewModelConversion.ToString(m.ValIdentifi);
+				ValCodvenda = ViewModelConversion.ToString(m.ValCodvenda);
 			}
 			catch (Exception)
 			{

@@ -187,11 +187,11 @@ namespace GenioMVC.ViewModels.Movim
 			}
 			try
 			{
- 				ValDhmudanc = ViewModelConversion.ToDateTime(m.ValDhmudanc);
- 				ValObservat = ViewModelConversion.ToString(m.ValObservat);
- 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
- 				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
- 				ValCodmovim = ViewModelConversion.ToString(m.ValCodmovim);
+				ValDhmudanc = ViewModelConversion.ToDateTime(m.ValDhmudanc);
+				ValObservat = ViewModelConversion.ToString(m.ValObservat);
+				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
+				ValCodrooms = ViewModelConversion.ToString(m.ValCodrooms);
+				ValCodmovim = ViewModelConversion.ToString(m.ValCodmovim);
 			}
 			catch (Exception)
 			{

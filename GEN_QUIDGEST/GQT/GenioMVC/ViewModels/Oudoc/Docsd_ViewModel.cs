@@ -178,10 +178,10 @@ namespace GenioMVC.ViewModels.Oudoc
 			}
 			try
 			{
- 				ValNrdocsda = ViewModelConversion.ToNumeric(m.ValNrdocsda);
- 				ValDtdocsda = ViewModelConversion.ToDateTime(m.ValDtdocsda);
- 				ValTitle = ViewModelConversion.ToString(m.ValTitle);
- 				ValCoddocsd = ViewModelConversion.ToString(m.ValCoddocsd);
+				ValNrdocsda = ViewModelConversion.ToNumeric(m.ValNrdocsda);
+				ValDtdocsda = ViewModelConversion.ToDateTime(m.ValDtdocsda);
+				ValTitle = ViewModelConversion.ToString(m.ValTitle);
+				ValCoddocsd = ViewModelConversion.ToString(m.ValCoddocsd);
 			}
 			catch (Exception)
 			{

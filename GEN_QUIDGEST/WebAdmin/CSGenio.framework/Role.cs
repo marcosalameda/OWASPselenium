@@ -7,18 +7,18 @@ namespace CSGenio.framework
 
     public enum RoleType {
         LEVEL,
-        ROLE, 
-        SYSTEM   
+        ROLE,
+        SYSTEM
     }
 
-	public class Role 
+	public class Role
 	{
 		//Access Levels
         public static readonly Role UNAUTHORIZED;
         public static readonly Role ADMINISTRATION;
         public static readonly Role AUTHORIZED;
         public static readonly Role INVALID;
-        
+
         public static readonly Role ROLE_1; //Query
         public static readonly Role ROLE_2; //Vendedor
         public static readonly Role ROLE_3; //Officer
@@ -40,12 +40,12 @@ namespace CSGenio.framework
 		private readonly List<Role> directSubRoles;
         private List<Role> allSubRoles;
         private readonly LevelAccess level;
-    
+
         public RoleType Type
         {
             get;
         }
- 
+
         public List<string> AvaiableModules
         {
             get; private set;
@@ -73,7 +73,7 @@ namespace CSGenio.framework
             //Hardcoded role to represent unauthorized access. This can also be interpreted as the public access
             UNAUTHORIZED = new Role(RoleType.SYSTEM, "DESAUTORIZADO34584");
             //A role that is below every role except unauthorized. Used when no role was definied in an item.
-            AUTHORIZED = new Role(RoleType.SYSTEM, "AUTORIZADO16093"); 
+            AUTHORIZED = new Role(RoleType.SYSTEM, "AUTORIZADO16093");
             //Represents an invalid role
             INVALID = new Role(RoleType.SYSTEM, "INVALID40876");
 
@@ -120,80 +120,35 @@ namespace CSGenio.framework
             ROLE_20 = new Role(LevelAccess.NV20, "MANAGER60821");
             ALL_ROLES.Add("20", ROLE_20);
 
-            //This roles are hardcoded and have these values for backwards compatibility reasons
-            ALL_ROLES.Add("0",  UNAUTHORIZED);
-            ALL_ROLES.Add("99",  ADMINISTRATION);
+            //These roles are hardcoded and have these values for backwards compatibility reasons
+            ALL_ROLES.Add("0", UNAUTHORIZED);
+            ALL_ROLES.Add("99", ADMINISTRATION);
             ALL_ROLES.Add("SYSTEM_AUTHORIZED", AUTHORIZED);
 
             //Add subroles
-			ROLE_A.Add(ADMINISTRATION);         
-			ROLE_A.Add(ROLE_20);         
-			ROLE_A.Add(ADMINISTRATION);         
-			ROLE_A.Add(ROLE_20);         
-			ROLE_A.Add(ADMINISTRATION);         
-			ROLE_A.Add(ROLE_20);         
-			ROLE_A.Add(ADMINISTRATION);         
-			ROLE_A.Add(ROLE_20);         
+			ROLE_A.Add(ADMINISTRATION);
+			ROLE_A.Add(ROLE_20);
 
-			ROLE_ADMINISTRATOR.Add(ROLE_SYSADMIN);         
-			ROLE_ADMINISTRATOR.Add(ROLE_SYSADMIN);         
-			ROLE_ADMINISTRATOR.Add(ROLE_SYSADMIN);         
-			ROLE_ADMINISTRATOR.Add(ROLE_SYSADMIN);         
+			ROLE_ADMINISTRATOR.Add(ROLE_SYSADMIN);
 
-			ROLE_EDIT.Add(ROLE_MANAGER);         
-			ROLE_EDIT.Add(ROLE_SYSADMIN);         
-			ROLE_EDIT.Add(ROLE_ADMINISTRATOR);         
-			ROLE_EDIT.Add(ROLE_MANAGER);         
-			ROLE_EDIT.Add(ROLE_SYSADMIN);         
-			ROLE_EDIT.Add(ROLE_ADMINISTRATOR);         
-			ROLE_EDIT.Add(ROLE_MANAGER);         
-			ROLE_EDIT.Add(ROLE_SYSADMIN);         
-			ROLE_EDIT.Add(ROLE_ADMINISTRATOR);         
-			ROLE_EDIT.Add(ROLE_MANAGER);         
-			ROLE_EDIT.Add(ROLE_SYSADMIN);         
-			ROLE_EDIT.Add(ROLE_ADMINISTRATOR);         
+			ROLE_EDIT.Add(ROLE_MANAGER);
+			ROLE_EDIT.Add(ROLE_SYSADMIN);
+			ROLE_EDIT.Add(ROLE_ADMINISTRATOR);
 
-			ROLE_EDIT_PESSO.Add(ROLE_20);         
-			ROLE_EDIT_PESSO.Add(ROLE_ADMINISTRATOR);         
-			ROLE_EDIT_PESSO.Add(ROLE_20);         
-			ROLE_EDIT_PESSO.Add(ROLE_ADMINISTRATOR);         
-			ROLE_EDIT_PESSO.Add(ROLE_20);         
-			ROLE_EDIT_PESSO.Add(ROLE_ADMINISTRATOR);         
-			ROLE_EDIT_PESSO.Add(ROLE_20);         
-			ROLE_EDIT_PESSO.Add(ROLE_ADMINISTRATOR);         
+			ROLE_EDIT_PESSO.Add(ROLE_20);
+			ROLE_EDIT_PESSO.Add(ROLE_ADMINISTRATOR);
 
-			ROLE_EMPLOYEE.Add(ROLE_MANAGER);         
-			ROLE_EMPLOYEE.Add(ROLE_MANAGER);         
-			ROLE_EMPLOYEE.Add(ROLE_MANAGER);         
-			ROLE_EMPLOYEE.Add(ROLE_MANAGER);         
+			ROLE_EMPLOYEE.Add(ROLE_MANAGER);
 
-			ROLE_MANAGER.Add(ROLE_ADMINISTRATOR);         
-			ROLE_MANAGER.Add(ROLE_ADMINISTRATOR);         
-			ROLE_MANAGER.Add(ROLE_ADMINISTRATOR);         
-			ROLE_MANAGER.Add(ROLE_ADMINISTRATOR);         
+			ROLE_MANAGER.Add(ROLE_ADMINISTRATOR);
 
 
-			ROLE_VIEW.Add(ROLE_EDIT);         
-			ROLE_VIEW.Add(ROLE_EMPLOYEE);         
-			ROLE_VIEW.Add(ROLE_EDIT);         
-			ROLE_VIEW.Add(ROLE_EMPLOYEE);         
-			ROLE_VIEW.Add(ROLE_EDIT);         
-			ROLE_VIEW.Add(ROLE_EMPLOYEE);         
-			ROLE_VIEW.Add(ROLE_EDIT);         
-			ROLE_VIEW.Add(ROLE_EMPLOYEE);         
+			ROLE_VIEW.Add(ROLE_EDIT);
+			ROLE_VIEW.Add(ROLE_EMPLOYEE);
 
-			ROLE_VIEW_PESSO.Add(ROLE_EDIT_PESSO);         
-			ROLE_VIEW_PESSO.Add(ROLE_1);         
-			ROLE_VIEW_PESSO.Add(ROLE_EMPLOYEE);         
-			ROLE_VIEW_PESSO.Add(ROLE_EDIT_PESSO);         
-			ROLE_VIEW_PESSO.Add(ROLE_1);         
-			ROLE_VIEW_PESSO.Add(ROLE_EMPLOYEE);         
-			ROLE_VIEW_PESSO.Add(ROLE_EDIT_PESSO);         
-			ROLE_VIEW_PESSO.Add(ROLE_1);         
-			ROLE_VIEW_PESSO.Add(ROLE_EMPLOYEE);         
-			ROLE_VIEW_PESSO.Add(ROLE_EDIT_PESSO);         
-			ROLE_VIEW_PESSO.Add(ROLE_1);         
-			ROLE_VIEW_PESSO.Add(ROLE_EMPLOYEE);         
+			ROLE_VIEW_PESSO.Add(ROLE_EDIT_PESSO);
+			ROLE_VIEW_PESSO.Add(ROLE_1);
+			ROLE_VIEW_PESSO.Add(ROLE_EMPLOYEE);
 
 
 			UNAUTHORIZED.Add(ROLE_1);
@@ -217,10 +172,11 @@ namespace CSGenio.framework
 			ROLE_4.Add(ROLE_20);
 			ROLE_4.Add(ADMINISTRATION);
 			ROLE_20.Add(ADMINISTRATION);
+
 			foreach(Role role in ALL_ROLES.Values)
 				role.FlattenRole();
         }
-		
+
 		private void FlattenRole()
         {
             if (allSubRoles == null)
@@ -253,7 +209,7 @@ namespace CSGenio.framework
                 return ALL_ROLES.First(p=>p.Value == this).Key;
             }
         }
-		
+
 		public string Title { get; private set; }
 
         public bool IsAdmin
@@ -268,7 +224,7 @@ namespace CSGenio.framework
         {
             return allSubRoles;
         }
-		
+
 		/// <summary>
         /// Returns a list of all roles below this role. It includes the role itself.
         /// </summary>
@@ -289,25 +245,25 @@ namespace CSGenio.framework
             // Add the role itself
             if (!allRolesBelow.Contains(this))
                 allRolesBelow.Add(this);
-            
+
             return allRolesBelow;
         }
 
         /// <summary>
-        /// Checks if role @other is in the hierarchy above this role. 
+        /// Checks if role @other is in the hierarchy above this role.
         /// For example ROLE_3.HasRole(ROLE_4) should return true
         /// </summary>
 		public bool HasRole(Role other)
         {
-            //First check system roles            
+            //First check system roles
             if (this == INVALID || other == INVALID)//Check invalid roles
-                return false; 
-            else if (this == UNAUTHORIZED) //Unauthorized is below everything            
-                return true;            
+                return false;
+            else if (this == UNAUTHORIZED) //Unauthorized is below everything
+                return true;
             else if(this == AUTHORIZED) //Authorized is below everything except Unauthorized
                 return other != UNAUTHORIZED;
             else if(other == ADMINISTRATION && this.Type != RoleType.ROLE) //Administration is above all levels
-                return true; 
+                return true;
 
             return this.allSubRoles.Contains(other);
         }
@@ -321,7 +277,7 @@ namespace CSGenio.framework
         public bool HasLevel(LevelAccess levelAccess)
         {
             return this.allSubRoles.Contains(GetRole(levelAccess));
-        }	
+        }
 
         public int GetLevelInt()
         {
@@ -335,11 +291,10 @@ namespace CSGenio.framework
                 throw new InvalidOperationException();
         }
 
-        
         public static Role GetRole(LevelAccess levelAccess)
         {
             return ALL_ROLES.Values.First(x => x.level == levelAccess);
-        }	
+        }
 
         /// <summary>
         /// Returns a role with the specified id. If it doesn't exist returns UNAUTHORIZED role

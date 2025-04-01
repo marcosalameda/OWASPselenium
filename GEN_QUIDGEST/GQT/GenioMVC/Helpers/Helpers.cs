@@ -743,7 +743,7 @@ namespace GenioMVC.Helpers
 
             if (onlyShow)
             {
-                if ((!externalDoc && GlobalFunctions.emptyG(documentFk) == 1) || (externalDoc && String.IsNullOrEmpty(value)))
+                if ((!externalDoc && GenFunctions.emptyG(documentFk) == 1) || (externalDoc && String.IsNullOrEmpty(value)))
                 {
                     htmlProperties.Add("class", "btn disabled");
                     htmlProperties.Add("href", "#");
@@ -795,7 +795,7 @@ namespace GenioMVC.Helpers
             if (html.ViewData["data_identifier"] != null)
                 displayName.Attributes.Add("data-identifier", Convert.ToString(html.ViewData["data_identifier"]));
 
-            if (GlobalFunctions.emptyG(documentFk) == 0)
+            if (GenFunctions.emptyG(documentFk) == 0)
             {
                 displayName.Attributes.Add("style", "cursor:pointer");
                 string url = html.Raw(urlHelper.Action("GetFile", baseArea, routeValues)).ToHtmlString();
@@ -967,7 +967,7 @@ namespace GenioMVC.Helpers
         {
             var dItem = new TagBuilder("div");
             dItem.AddCssClass("dropdown-item");
-            if ((!externalDoc && GlobalFunctions.emptyG(documentFk) == 1) || (externalDoc && String.IsNullOrEmpty(modelValue)))
+            if ((!externalDoc && GenFunctions.emptyG(documentFk) == 1) || (externalDoc && String.IsNullOrEmpty(modelValue)))
                 dItem.AddCssClass("disabled");
             dItem.InnerHtml = showLink.ToHtmlString();
             return MvcHtmlString.Create(dItem.ToString(TagRenderMode.Normal));
@@ -1048,7 +1048,7 @@ namespace GenioMVC.Helpers
             string allowedTypes = html.ViewData["allowedTypes"] == null ? "" : html.ViewData["allowedTypes"].ToString();
             TagBuilder div = new TagBuilder("div");
             div.AddCssClass("dropdown-item");
-            if ((!externalDoc && GlobalFunctions.emptyG(documentFk) == 1) || (externalDoc && String.IsNullOrEmpty(modelValue)) || docProps.IsCheckout)
+            if ((!externalDoc && GenFunctions.emptyG(documentFk) == 1) || (externalDoc && String.IsNullOrEmpty(modelValue)) || docProps.IsCheckout)
                 div.AddCssClass("disabled");
             IDictionary<string, object> htmlProperties = new Dictionary<string, object>();
             htmlProperties.Add("href", "#");
@@ -1071,7 +1071,7 @@ namespace GenioMVC.Helpers
 
                 TagBuilder div = new TagBuilder("div");
                 div.AddCssClass("dropdown-item");
-                if (GlobalFunctions.emptyG(documentFk) == 1)
+                if (GenFunctions.emptyG(documentFk) == 1)
                     div.AddCssClass("disabled");
 				RouteValueDictionary routeValues = new RouteValueDictionary();
                 routeValues.Add("identifier", identifier);

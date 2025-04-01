@@ -1085,8 +1085,8 @@ namespace GenioMVC.Controllers
 				model.ValTodoodia = allDay;
 				if (allDay)
 				{
-					model.ValStartdt = dateTimeINI = GlobalFunctions.DateSetTime(GlobalFunctions.DateFloorDay(dateTimeINI), minTime);
-					model.ValDtfim = dateTimeFIM = GlobalFunctions.DateSetTime(GlobalFunctions.DateFloorDay(dateTimeINI), maxTime);
+					model.ValStartdt = dateTimeINI = GenFunctions.DateSetTime(GenFunctions.DateFloorDay(dateTimeINI), minTime);
+					model.ValDtfim = dateTimeFIM = GenFunctions.DateSetTime(GenFunctions.DateFloorDay(dateTimeINI), maxTime);
 				}
 				else
 				{

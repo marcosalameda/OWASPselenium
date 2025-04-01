@@ -261,7 +261,7 @@ namespace GenioMVC.Controllers
                 var ticketContent = QResources.DecryptTicketBase64(ticket);
                 ResourceUser resource = ticketContent[2] as ResourceUser;
                 //Check if ticket expired
-                if (GlobalFunctions.Diferenca_entre_Datas(resource.CreationDate, DateTime.UtcNow, "M") < 60)
+                if (GenFunctions.DateDiffPart(resource.CreationDate, DateTime.UtcNow, "M") < 60)
                 {
                     var model = new PasswordRecoverChangeModel();
                     model.UserId = resource.Name;
@@ -570,7 +570,7 @@ namespace GenioMVC.Controllers
 				// log login (audit)
                 CSGenio.framework.Audit.registLoginOut(user, Resources.Resources.ENTRADA31905, Resources.Resources.ENTRADA_ATRAVES_DA_P48446, Request.UserHostName, Request.GetClientIpAddress());
 
-				if (GlobalFunctions.emptyN(user.Status) == 0 && user.Status == 1 || (Configuration.Security.Mandatory2FA && !user.Auth2FA))
+				if (GenFunctions.emptyN(user.Status) == 0 && user.Status == 1 || (Configuration.Security.Mandatory2FA && !user.Auth2FA))
                 {
                     if (Val2FA)
                         return Json(new { Success = true, Redirect = Url.Action("Profile", "Home"), Val2FA = true });

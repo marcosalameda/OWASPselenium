@@ -461,7 +461,7 @@ namespace GenioMVC.ViewModels.Regio
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -514,7 +514,7 @@ namespace GenioMVC.ViewModels.Regio
                 // Fill List fields
                 this.ValCodcntry = ViewModelConversion.ToString(row["cntry.codcntry"]);
                 TableCntryCountry.Value = ViewModelConversion.ToString(row["cntry.country"]);
-                if (GlobalFunctions.emptyG(this.ValCodcntry) == 1)
+                if (GenFunctions.emptyG(this.ValCodcntry) == 1)
                 {
                     this.ValCodcntry = "";
                     TableCntryCountry.Value = "";

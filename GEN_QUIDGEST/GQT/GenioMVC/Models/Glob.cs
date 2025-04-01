@@ -37,7 +37,7 @@ namespace GenioMVC.Models
 		[DisplayName("0%")]
 		/// <summary>Field : "0%" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPzero { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPzero, 2)); } set { klass.ValPzero = Convert.ToDecimal(value); } }
+		public decimal? ValPzero { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPzero, 2)); } set { klass.ValPzero = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPzero() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPzero");
 
 		[DisplayName("Sender Email")]
@@ -73,73 +73,73 @@ namespace GenioMVC.Models
 		[DisplayName("Minimum")]
 		/// <summary>Field : "Minimum" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPvalmin { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPvalmin, 2)); } set { klass.ValPvalmin = Convert.ToDecimal(value); } }
+		public decimal? ValPvalmin { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPvalmin, 2)); } set { klass.ValPvalmin = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPvalmin() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPvalmin");
 
 		[DisplayName("Bad")]
 		/// <summary>Field : "Bad" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPlimmau { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimmau, 2)); } set { klass.ValPlimmau = Convert.ToDecimal(value); } }
+		public decimal? ValPlimmau { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPlimmau, 2)); } set { klass.ValPlimmau = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPlimmau() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPlimmau");
 
 		[DisplayName("Alert")]
 		/// <summary>Field : "Alert" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPalert { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPalert, 2)); } set { klass.ValPalert = Convert.ToDecimal(value); } }
+		public decimal? ValPalert { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPalert, 2)); } set { klass.ValPalert = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPalert() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPalert");
 
 		[DisplayName("Good")]
 		/// <summary>Field : "Good" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPlimbom { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimbom, 2)); } set { klass.ValPlimbom = Convert.ToDecimal(value); } }
+		public decimal? ValPlimbom { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPlimbom, 2)); } set { klass.ValPlimbom = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPlimbom() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPlimbom");
 
 		[DisplayName("Overcome")]
 		/// <summary>Field : "Overcome" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPlimsup { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimsup, 2)); } set { klass.ValPlimsup = Convert.ToDecimal(value); } }
+		public decimal? ValPlimsup { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPlimsup, 2)); } set { klass.ValPlimsup = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPlimsup() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPlimsup");
 
 		[DisplayName("Maximum")]
 		/// <summary>Field : "Maximum" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPvalmax { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPvalmax, 2)); } set { klass.ValPvalmax = Convert.ToDecimal(value); } }
+		public decimal? ValPvalmax { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPvalmax, 2)); } set { klass.ValPvalmax = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPvalmax() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPvalmax");
 
 		[DisplayName("0%")]
 		/// <summary>Field : "0%" Tipo: "N" Formula: + "100+(100-[GLOB->PZERO])"</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPzerod { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPzerod, 2)); } set { klass.ValPzerod = Convert.ToDecimal(value); } }
+		public decimal? ValPzerod { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPzerod, 2)); } set { klass.ValPzerod = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPzerod() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPzerod");
 
 		[DisplayName("Minimum")]
 		/// <summary>Field : "Minimum" Tipo: "N" Formula: + "100+(100-[GLOB->PVALMAX])"</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPvalmind { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPvalmind, 2)); } set { klass.ValPvalmind = Convert.ToDecimal(value); } }
+		public decimal? ValPvalmind { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPvalmind, 2)); } set { klass.ValPvalmind = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPvalmind() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPvalmind");
 
 		[DisplayName("Alert")]
 		/// <summary>Field : "Alert" Tipo: "N" Formula: + "100+(100-[GLOB->PALERT])"</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPalertd { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPalertd, 2)); } set { klass.ValPalertd = Convert.ToDecimal(value); } }
+		public decimal? ValPalertd { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPalertd, 2)); } set { klass.ValPalertd = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPalertd() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPalertd");
 
 		[DisplayName("Good")]
 		/// <summary>Field : "Good" Tipo: "N" Formula: + "100+(100-[GLOB->PLIMBOM])"</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPlimbomd { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimbomd, 2)); } set { klass.ValPlimbomd = Convert.ToDecimal(value); } }
+		public decimal? ValPlimbomd { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPlimbomd, 2)); } set { klass.ValPlimbomd = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPlimbomd() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPlimbomd");
 
 		[DisplayName("Overcome")]
 		/// <summary>Field : "Overcome" Tipo: "N" Formula: + "100+(100-[GLOB->PLIMSUP])"</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPlimsupd { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimsupd, 2)); } set { klass.ValPlimsupd = Convert.ToDecimal(value); } }
+		public decimal? ValPlimsupd { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPlimsupd, 2)); } set { klass.ValPlimsupd = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPlimsupd() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPlimsupd");
 
 		[DisplayName("Maximum")]
 		/// <summary>Field : "Maximum" Tipo: "N" Formula: + "100+(100-[GLOB->PVALMIN])"</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPvalmaxd { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPvalmaxd, 2)); } set { klass.ValPvalmaxd = Convert.ToDecimal(value); } }
+		public decimal? ValPvalmaxd { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPvalmaxd, 2)); } set { klass.ValPvalmaxd = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPvalmaxd() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPvalmaxd");
 
 		[DisplayName("Beginning of the year")]
@@ -153,67 +153,67 @@ namespace GenioMVC.Models
 		[DisplayName("0%")]
 		/// <summary>Field : "0%" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPzeroc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPzeroc, 2)); } set { klass.ValPzeroc = Convert.ToDecimal(value); } }
+		public decimal? ValPzeroc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPzeroc, 2)); } set { klass.ValPzeroc = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPzeroc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPzeroc");
 
 		[DisplayName("Minimum")]
 		/// <summary>Field : "Minimum" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPminc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPminc, 2)); } set { klass.ValPminc = Convert.ToDecimal(value); } }
+		public decimal? ValPminc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPminc, 2)); } set { klass.ValPminc = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPminc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPminc");
 
 		[DisplayName("Bad")]
 		/// <summary>Field : "Bad" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPmauc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPmauc, 2)); } set { klass.ValPmauc = Convert.ToDecimal(value); } }
+		public decimal? ValPmauc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPmauc, 2)); } set { klass.ValPmauc = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPmauc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPmauc");
 
 		[DisplayName("Alert")]
 		/// <summary>Field : "Alert" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPalertc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPalertc, 2)); } set { klass.ValPalertc = Convert.ToDecimal(value); } }
+		public decimal? ValPalertc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPalertc, 2)); } set { klass.ValPalertc = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPalertc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPalertc");
 
 		[DisplayName("Bad")]
 		/// <summary>Field : "Bad" Tipo: "N" Formula: + "100+(100-[GLOB->PLIMMAU])"</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPlimmaud { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPlimmaud, 2)); } set { klass.ValPlimmaud = Convert.ToDecimal(value); } }
+		public decimal? ValPlimmaud { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPlimmaud, 2)); } set { klass.ValPlimmaud = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPlimmaud() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPlimmaud");
 
 		[DisplayName("Good")]
 		/// <summary>Field : "Good" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPbomc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPbomc, 2)); } set { klass.ValPbomc = Convert.ToDecimal(value); } }
+		public decimal? ValPbomc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPbomc, 2)); } set { klass.ValPbomc = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPbomc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPbomc");
 
 		[DisplayName("Good sup.")]
 		/// <summary>Field : "Good sup." Tipo: "N" Formula: + "100+(100-[GLOB->PBOMC])"</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPbomsc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPbomsc, 2)); } set { klass.ValPbomsc = Convert.ToDecimal(value); } }
+		public decimal? ValPbomsc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPbomsc, 2)); } set { klass.ValPbomsc = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPbomsc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPbomsc");
 
 		[DisplayName("Alert sup.")]
 		/// <summary>Field : "Alert sup." Tipo: "N" Formula: + "100+(100-[GLOB->PALERTC])"</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPalertsc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPalertsc, 2)); } set { klass.ValPalertsc = Convert.ToDecimal(value); } }
+		public decimal? ValPalertsc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPalertsc, 2)); } set { klass.ValPalertsc = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPalertsc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPalertsc");
 
 		[DisplayName("Bad")]
 		/// <summary>Field : "Bad" Tipo: "N" Formula: + "100+(100-[GLOB->PMAUC])"</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPmausc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPmausc, 2)); } set { klass.ValPmausc = Convert.ToDecimal(value); } }
+		public decimal? ValPmausc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPmausc, 2)); } set { klass.ValPmausc = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPmausc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPmausc");
 
 		[DisplayName("Maximum Sup.")]
 		/// <summary>Field : "Maximum Sup." Tipo: "N" Formula: + "100+(100-[GLOB->PMINC])"</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPmaxsc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPmaxsc, 2)); } set { klass.ValPmaxsc = Convert.ToDecimal(value); } }
+		public decimal? ValPmaxsc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPmaxsc, 2)); } set { klass.ValPmaxsc = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPmaxsc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPmaxsc");
 
 		[DisplayName("100%")]
 		/// <summary>Field : "100%" Tipo: "N" Formula: + "100+(100-[GLOB->PZEROC])"</summary>
 		[NumericAttribute(2)]
-		public decimal? ValPzerosc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPzerosc, 2)); } set { klass.ValPzerosc = Convert.ToDecimal(value); } }
+		public decimal? ValPzerosc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPzerosc, 2)); } set { klass.ValPzerosc = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPzerosc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValPzerosc");
 
 		[DisplayName("Scorecard type")]
@@ -323,7 +323,7 @@ namespace GenioMVC.Models
 		[DisplayName("SMTP Port")]
 		/// <summary>Field : "SMTP Port" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValSmtpport { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSmtpport, 0)); } set { klass.ValSmtpport = Convert.ToDecimal(value); } }
+		public decimal? ValSmtpport { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValSmtpport, 0)); } set { klass.ValSmtpport = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValSmtpport() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValSmtpport");
 
 		[DisplayName("SSL?")]
@@ -421,7 +421,7 @@ namespace GenioMVC.Models
 		[DisplayName("Gantt - Forward")]
 		/// <summary>Field : "Gantt - Forward" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValGantstep { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValGantstep, 0)); } set { klass.ValGantstep = Convert.ToDecimal(value); } }
+		public decimal? ValGantstep { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValGantstep, 0)); } set { klass.ValGantstep = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValGantstep() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Glob.ValGantstep");
 
 		[DisplayName("Migrate status/report on initiatives and tasks")]

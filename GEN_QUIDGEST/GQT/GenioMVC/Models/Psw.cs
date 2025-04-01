@@ -102,7 +102,7 @@ namespace GenioMVC.Models
 		[DisplayName("Login attempts")]
 		/// <summary>Field : "Login attempts" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValAttempts { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAttempts, 0)); } set { klass.ValAttempts = Convert.ToDecimal(value); } }
+		public decimal? ValAttempts { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValAttempts, 0)); } set { klass.ValAttempts = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValAttempts() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Psw.ValAttempts");
 
 		[DisplayName("Phone number")]
@@ -113,7 +113,7 @@ namespace GenioMVC.Models
 		[DisplayName("Status")]
 		/// <summary>Field : "Status" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValStatus { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValStatus, 0)); } set { klass.ValStatus = Convert.ToDecimal(value); } }
+		public decimal? ValStatus { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValStatus, 0)); } set { klass.ValStatus = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValStatus() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Psw.ValStatus");
 
 		[DisplayName("Has login?")]

@@ -40,7 +40,7 @@ namespace GenioMVC.Models
 		[DisplayName("Airplane ID")]
 		/// <summary>Field : "Airplane ID" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValAirplid { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAirplid, 0)); } set { klass.ValAirplid = Convert.ToDecimal(value); } }
+		public decimal? ValAirplid { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValAirplid, 0)); } set { klass.ValAirplid = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValAirplid() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Airpl.ValAirplid");
 
 		[DisplayName("Airplane Name")]
@@ -57,7 +57,7 @@ namespace GenioMVC.Models
 		[DisplayName("Seating Capacity")]
 		/// <summary>Field : "Seating Capacity" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValSeatcap { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSeatcap, 0)); } set { klass.ValSeatcap = Convert.ToDecimal(value); } }
+		public decimal? ValSeatcap { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValSeatcap, 0)); } set { klass.ValSeatcap = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValSeatcap() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Airpl.ValSeatcap");
 
 		[DisplayName("")]

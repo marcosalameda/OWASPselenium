@@ -446,7 +446,7 @@ namespace GenioMVC.Helpers.Table.Renderer
                                 string CampoLimita_Name = limit.AreaLimita.DBFields[CampoLimita].Name;
                                 CampoLimita_HTML = (!string.IsNullOrEmpty(CampoLimita_FieldDescription) ? CampoLimita_FieldDescription : CampoLimita_Name) ;
                             }
-                            else if (limit.AreaLimita.Alias == table.Alias && CampoLimita == limit.AreaLimita.Information.PrimaryKeyName && CSGenio.business.GlobalFunctions.emptyC(limit.AreaLimita.Information.HumanKeyName) == 0) //special case
+                            else if (limit.AreaLimita.Alias == table.Alias && CampoLimita == limit.AreaLimita.Information.PrimaryKeyName && CSGenio.framework.GenFunctions.emptyC(limit.AreaLimita.Information.HumanKeyName) == 0) //special case
                             {
                                 //Naming with Translations
                                 //CampoLimita (as humankey)

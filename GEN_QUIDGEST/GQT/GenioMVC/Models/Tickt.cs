@@ -49,13 +49,13 @@ namespace GenioMVC.Models
 		[DisplayName("Ticket ID")]
 		/// <summary>Field : "Ticket ID" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValTktid { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValTktid, 0)); } set { klass.ValTktid = Convert.ToDecimal(value); } }
+		public decimal? ValTktid { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValTktid, 0)); } set { klass.ValTktid = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValTktid() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tickt.ValTktid");
 
 		[DisplayName("Price")]
 		/// <summary>Field : "Price" Tipo: "$" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrice { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrice, 2)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
+		public decimal? ValPrice { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrice, 2)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPrice() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tickt.ValPrice");
 
 		[DisplayName("ZZSTATE")]

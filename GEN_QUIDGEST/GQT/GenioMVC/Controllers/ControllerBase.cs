@@ -2177,7 +2177,7 @@ namespace GenioMVC.Controllers
 
 					// Retrieve the latest version provided for this document.
 					CSGenio.business.DBFile oldFile = null;
-					if (versioning && GlobalFunctions.emptyG(filefk) == 0)
+					if (versioning && GenFunctions.emptyG(filefk) == 0)
 						oldFile = GenioMVC.Models.ModelBase.GetDocumentsLatestVersion(filefk);
 
 					DocumsProperties_ViewModel infoDoc = null;
@@ -3104,8 +3104,8 @@ namespace GenioMVC.Controllers
 			bool colides = false;
 			if (model.CalendarOptions.minTime != "" && model.CalendarOptions.maxTime != "")
 			{
-				var virtualSTART = GlobalFunctions.DateSetTime(GlobalFunctions.DateFloorDay(dateSTART), model.CalendarOptions.minTime); //created from the time defined in the calendar options
-				var virtualEND = GlobalFunctions.DateSetTime(GlobalFunctions.DateFloorDay(dateEND), model.CalendarOptions.maxTime);
+				var virtualSTART = GenFunctions.DateSetTime(GenFunctions.DateFloorDay(dateSTART), model.CalendarOptions.minTime); //created from the time defined in the calendar options
+				var virtualEND = GenFunctions.DateSetTime(GenFunctions.DateFloorDay(dateEND), model.CalendarOptions.maxTime);
 
 				//colides if start date is before or after range
 				if ((dateSTART < virtualSTART || dateSTART > virtualEND))
@@ -3154,8 +3154,8 @@ namespace GenioMVC.Controllers
 				//Adjust DateTime fields on model
 				DateTime dateSTART = model.GetMethodInvoke(model.CalendarOptions.startDateField);
 				DateTime dateEND = model.GetMethodInvoke(model.CalendarOptions.endDateField);
-				var virtualSTART = GlobalFunctions.DateSetTime(GlobalFunctions.DateFloorDay(dateSTART), model.CalendarOptions.minTime); //created from the time defined in the calendar options
-				var virtualEND = GlobalFunctions.DateSetTime(GlobalFunctions.DateFloorDay(dateEND), model.CalendarOptions.maxTime);
+				var virtualSTART = GenFunctions.DateSetTime(GenFunctions.DateFloorDay(dateSTART), model.CalendarOptions.minTime); //created from the time defined in the calendar options
+				var virtualEND = GenFunctions.DateSetTime(GenFunctions.DateFloorDay(dateEND), model.CalendarOptions.maxTime);
 				model.SetMethodInvoke(model.CalendarOptions.startDateField, virtualSTART);
 				model.SetMethodInvoke(model.CalendarOptions.endDateField, virtualEND);
 
@@ -3175,7 +3175,7 @@ namespace GenioMVC.Controllers
 				RequestReflectHeader("RecalculateFormulasRequestNumber");
 
 				var primaryKey = Navigation.GetStrValue(area);
-				if (form_data == null || GlobalFunctions.emptyG(primaryKey) == 1)
+				if (form_data == null || GenFunctions.emptyG(primaryKey) == 1)
 					return Json(new { Success = "NONE", Data = "" }, "application/json", JsonRequestBehavior.AllowGet);
 
 				var model = find(primaryKey);

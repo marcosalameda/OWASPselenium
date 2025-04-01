@@ -14,7 +14,7 @@
             :text="alert.message"
             :icon="alert.icon"
 			:title="Resources.ESTADO_DA_OPERACAO38065"
-			:dismissTime="5"
+			:dismissTime="4"
 			@message-dismissed="handleAlertDismissed" />
 
 		<div>

@@ -61,7 +61,7 @@
         .TableList(hasFilters: true)
         .RequestLink(@Url.Action("Insta_EquipValRegistnr", new { id = Model.ValCodinsta, partialView = "Insta_EquipValRegistnr", TpequValCodtpequ = Model.ValCodtpequ}))
         .Filters(this.Model.Menu.Filters)
-        .BackgroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.business.GlobalFunctions.emptyD((p.ValDtdeco))==1)?("RGB(255,255,255)"):("RGB(194,24,7)")))
+        .BackgroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.framework.GenFunctions.emptyD((p.ValDtdeco))==1)?("RGB(255,255,255)"):("RGB(194,24,7)")))
         .Permissions(canView: false, canInsert: false, canEdit: false, canDelete: false, canDuplicate: false)
 		;
         

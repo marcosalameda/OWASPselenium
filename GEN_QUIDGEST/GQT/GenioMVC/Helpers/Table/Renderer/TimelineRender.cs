@@ -177,7 +177,7 @@ namespace GenioMVC.Helpers.Table.Renderer
             {
                 //Models.TimelineItem tlItem = model as Models.TimelineItem;
 
-                if (CSGenio.business.GlobalFunctions.emptyD(tlItem.Data) == 0 && !string.IsNullOrEmpty(tlItem.Texto))
+                if (CSGenio.framework.GenFunctions.emptyD(tlItem.Data) == 0 && !string.IsNullOrEmpty(tlItem.Texto))
                 {
                     TagBuilder item = new TagBuilder("div");
                     item.AddCssClass("c-timeline__item");

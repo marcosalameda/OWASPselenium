@@ -50,13 +50,13 @@ namespace GenioMVC.Models
 		[DisplayName("Year")]
 		/// <summary>Field : "Year" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValYearnumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDecimal(value); } }
+		public decimal? ValYearnumb { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValYearnumb() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Expe1.ValYearnumb");
 
 		[DisplayName("Previous year")]
 		/// <summary>Field : "Previous year" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValYearprev { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearprev, 0)); } set { klass.ValYearprev = Convert.ToDecimal(value); } }
+		public decimal? ValYearprev { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValYearprev, 0)); } set { klass.ValYearprev = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValYearprev() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Expe1.ValYearprev");
 
 		[DisplayName(">AGGREGATOR")]
@@ -72,13 +72,13 @@ namespace GenioMVC.Models
 		[DisplayName("Value")]
 		/// <summary>Field : "Value" Tipo: "$D" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
+		public decimal? ValValue { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValValue() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Expe1.ValValue");
 
 		[DisplayName("Previous value")]
 		/// <summary>Field : "Previous value" Tipo: "$D" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrevval { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrevval, 2)); } set { klass.ValPrevval = Convert.ToDecimal(value); } }
+		public decimal? ValPrevval { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrevval, 2)); } set { klass.ValPrevval = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPrevval() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Expe1.ValPrevval");
 
 		[DisplayName("ZZSTATE")]

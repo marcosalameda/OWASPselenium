@@ -550,7 +550,7 @@ namespace GenioMVC.ViewModels.Tpequ
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -603,7 +603,7 @@ namespace GenioMVC.ViewModels.Tpequ
                 // Fill List fields
                 this.ValCodfamil = ViewModelConversion.ToString(row["famil.codfamil"]);
                 TableFamilFamily.Value = ViewModelConversion.ToString(row["famil.family"]);
-                if (GlobalFunctions.emptyG(this.ValCodfamil) == 1)
+                if (GenFunctions.emptyG(this.ValCodfamil) == 1)
                 {
                     this.ValCodfamil = "";
                     TableFamilFamily.Value = "";

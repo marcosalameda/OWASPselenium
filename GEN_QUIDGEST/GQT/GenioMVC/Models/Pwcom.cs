@@ -69,7 +69,7 @@ namespace GenioMVC.Models
 		[DisplayName("Identification")]
 		/// <summary>Field : "Identification" Tipo: "N" Formula: ++ "[PESS1->IDFUNCIO]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValNridenti { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNridenti, 0)); } set { klass.ValNridenti = Convert.ToDecimal(value); } }
+		public decimal? ValNridenti { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNridenti, 0)); } set { klass.ValNridenti = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNridenti() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Pwcom.ValNridenti");
 
 		[DisplayName("ZZSTATE")]

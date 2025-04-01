@@ -132,7 +132,7 @@ namespace CSGenio.business
 			argumentsListByArea= new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"periodstart","periodend","periodstart","periodend"},new int[] {0,1,2,3},"perio","codperio"));
 			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 4, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return GlobalFunctions.emptyD(((DateTime)args[0]))==1||GlobalFunctions.emptyD(((DateTime)args[1]))==1||GlobalFunctions.CompareDates(((DateTime)args[2]),((DateTime)args[3]))<=0;
+				return GenFunctions.emptyD(((DateTime)args[0]))==1||GenFunctions.emptyD(((DateTime)args[1]))==1||GenFunctions.CompareDates(((DateTime)args[2]),((DateTime)args[3]))<=0;
 			});
 			writeCondition.ErrorWarning = "If present, Start SHALL have a lower value than End";
             writeCondition.Type =  ConditionType.ERROR;

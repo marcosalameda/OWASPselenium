@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocPreviewService", "DocPre
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbAdmin.Test.Unit", "DbAdmin.Test.Unit\DbAdmin.Test.Unit.csproj", "{CDFE0078-F215-469C-9A95-8C729E01D7AC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSGenio.core.Test", "CSGenio.core.Test\CSGenio.core.Test.csproj", "{0009F6AC-F00F-4CAE-A088-AC027CF603B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{1B3CF324-C999-41E6-AF8D-6BA6049A446A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B3CF324-C999-41E6-AF8D-6BA6049A446A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B3CF324-C999-41E6-AF8D-6BA6049A446A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0009F6AC-F00F-4CAE-A088-AC027CF603B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0009F6AC-F00F-4CAE-A088-AC027CF603B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0009F6AC-F00F-4CAE-A088-AC027CF603B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0009F6AC-F00F-4CAE-A088-AC027CF603B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

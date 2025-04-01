@@ -32,8 +32,8 @@
     var tbl = data
         .DBEdit()
         .Filters(this.Model.Menu.Filters)
-        .BackgroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.business.GlobalFunctions.emptyC((p.ValBackcolo))==1)?("RGB(255,255,255)"):((p.ValBackcolo))))
-        .ForegroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.business.GlobalFunctions.emptyC((p.ValTextcolo))==1)?("RGB(0,0,0)"):((p.ValTextcolo))))
+        .BackgroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.framework.GenFunctions.emptyC((p.ValBackcolo))==1)?("RGB(255,255,255)"):((p.ValBackcolo))))
+        .ForegroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.framework.GenFunctions.emptyC((p.ValTextcolo))==1)?("RGB(0,0,0)"):((p.ValTextcolo))))
         .Form("Genco", false, false)
         .SetFollowUp("Genco_Show", "Genre" , (Func<GenioMVC.Models.Genre, object>)(item => new { id = item.ValCodgenre }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
         .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)

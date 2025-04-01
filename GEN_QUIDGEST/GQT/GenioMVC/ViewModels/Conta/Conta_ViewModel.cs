@@ -477,7 +477,7 @@ namespace GenioMVC.ViewModels.Conta
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -530,7 +530,7 @@ namespace GenioMVC.ViewModels.Conta
                 // Fill List fields
                 this.ValCodpesso = ViewModelConversion.ToString(row["pesso.codpesso"]);
                 TablePessoName.Value = ViewModelConversion.ToString(row["pesso.name"]);
-                if (GlobalFunctions.emptyG(this.ValCodpesso) == 1)
+                if (GenFunctions.emptyG(this.ValCodpesso) == 1)
                 {
                     this.ValCodpesso = "";
                     TablePessoName.Value = "";
@@ -682,7 +682,7 @@ namespace GenioMVC.ViewModels.Conta
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -735,7 +735,7 @@ namespace GenioMVC.ViewModels.Conta
                 // Fill List fields
                 this.ValCodgenre = ViewModelConversion.ToString(row["genre.codgenre"]);
                 TableGenreGender.Value = ViewModelConversion.ToString(row["genre.gender"]);
-                if (GlobalFunctions.emptyG(this.ValCodgenre) == 1)
+                if (GenFunctions.emptyG(this.ValCodgenre) == 1)
                 {
                     this.ValCodgenre = "";
                     TableGenreGender.Value = "";
@@ -893,7 +893,7 @@ namespace GenioMVC.ViewModels.Conta
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -901,7 +901,7 @@ namespace GenioMVC.ViewModels.Conta
                 object hValue = Navigation.GetValue("genre");
                 if (!(hValue is Array))
                 {
-                    if (GlobalFunctions.emptyG(hValue) == 1)
+                    if (GenFunctions.emptyG(hValue) == 1)
                         returnEmptyDependants = true;
                     else
                         wherecodition.Equal(CSGenioAtpcon.FldCodgenre, hValue);
@@ -956,7 +956,7 @@ namespace GenioMVC.ViewModels.Conta
                 // Fill List fields
                 this.ValCodtpcon = ViewModelConversion.ToString(row["tpcon.codtpcon"]);
                 TableTpconTipocont.Value = ViewModelConversion.ToString(row["tpcon.tipocont"]);
-                if (GlobalFunctions.emptyG(this.ValCodtpcon) == 1)
+                if (GenFunctions.emptyG(this.ValCodtpcon) == 1)
                 {
                     this.ValCodtpcon = "";
                     TableTpconTipocont.Value = "";

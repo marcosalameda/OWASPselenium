@@ -40,7 +40,7 @@ namespace GenioMVC.Models
 		[DisplayName("Boarding Pass ID")]
 		/// <summary>Field : "Boarding Pass ID" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValBrdpsid { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBrdpsid, 0)); } set { klass.ValBrdpsid = Convert.ToDecimal(value); } }
+		public decimal? ValBrdpsid { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValBrdpsid, 0)); } set { klass.ValBrdpsid = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValBrdpsid() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Brdps.ValBrdpsid");
 
 		[DisplayName("Emission Date")]

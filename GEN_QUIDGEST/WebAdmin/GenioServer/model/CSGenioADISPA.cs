@@ -130,7 +130,7 @@ namespace CSGenio.business
 			argumentsListByArea= new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"isprepar"},new int[] {0},"dispa","coddispa"));
 			Qfield.DefaultValue = new DefaultValue(new InternalOperationFormula(argumentsListByArea, 1, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return (object)(((GlobalFunctions.emptyL(((int)args[0]))==1)?(DateTime.MinValue):(DateTime.Today)));
+				return (object)(((GenFunctions.emptyL(((int)args[0]))==1)?(DateTime.MinValue):(DateTime.Today)));
 			}));
 
 			info.RegisterFieldDB(Qfield);
@@ -158,7 +158,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"dispadt","prepared"}, new int[] {0,1}, "dispa", "coddispa"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((GlobalFunctions.emptyD(((DateTime)args[0]))==0)?("D"):(((GlobalFunctions.emptyD(((DateTime)args[1]))==0)?("P"):("I"))));
+				return ((GenFunctions.emptyD(((DateTime)args[0]))==0)?("D"):(((GenFunctions.emptyD(((DateTime)args[1]))==0)?("P"):("I"))));
 			});
             Qfield.ArrayName = "dbo.GetValArrayCdispstat";
             Qfield.ArrayClassName = "Dispstat";

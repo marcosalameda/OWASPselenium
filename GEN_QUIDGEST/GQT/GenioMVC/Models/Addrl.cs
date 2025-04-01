@@ -50,7 +50,7 @@ namespace GenioMVC.Models
 		[DisplayName("Address Number")]
 		/// <summary>Field : "Address Number" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValAddressnumber { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAddressnumber, 0)); } set { klass.ValAddressnumber = Convert.ToDecimal(value); } }
+		public decimal? ValAddressnumber { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValAddressnumber, 0)); } set { klass.ValAddressnumber = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValAddressnumber() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Addrl.ValAddressnumber");
 
 		[DisplayName("Object Type")]

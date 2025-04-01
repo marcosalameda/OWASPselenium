@@ -547,7 +547,7 @@ namespace Administration.Controllers
                 int indiceOrder = 0;
 
                 if (!String.IsNullOrEmpty(order))
-                    indiceOrder = GlobalFunctions.atoi(order);
+                    indiceOrder = GenFunctions.atoi(order);
 
                 SortOrder sortOrder = SortOrder.Ascending;
                 if (orderDir == "desc")

@@ -212,7 +212,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"year"}, new int[] {0}, "prope", "codprope"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return GlobalFunctions.Year(DateTime.Today)-GlobalFunctions.Year(GlobalFunctions.DateAddYears(DateTime.MinValue,GlobalFunctions.atoi(((string)args[0]))));
+				return GenFunctions.Year(DateTime.Today)-GenFunctions.Year(GenFunctions.DateAddYears(DateTime.MinValue,GenFunctions.atoi(((string)args[0]))));
 			});
 			info.RegisterFieldDB(Qfield);
 

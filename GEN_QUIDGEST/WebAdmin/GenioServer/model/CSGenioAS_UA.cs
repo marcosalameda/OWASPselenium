@@ -104,7 +104,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"codpsw","modulo"}, new int[] {0,1}, "s_ua", "codua"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return GlobalFunctions.KeyToString(((string)args[0]))+((string)args[1]);
+				return GenFunctions.KeyToString(((string)args[0]))+((string)args[1]);
 			});
 			info.RegisterFieldDB(Qfield);
 

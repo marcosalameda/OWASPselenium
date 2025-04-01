@@ -45,13 +45,13 @@ namespace GenioMVC.Models
 		[DisplayName("Value")]
 		/// <summary>Field : "Value" Tipo: "$D" Formula: SR "[AGREG->VALUE]"</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
+		public decimal? ValValue { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValValue() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Year.ValValue");
 
 		[DisplayName("Year (numbers)")]
 		/// <summary>Field : "Year (numbers)" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValYearnum { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearnum, 0)); } set { klass.ValYearnum = Convert.ToDecimal(value); } }
+		public decimal? ValYearnum { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValYearnum, 0)); } set { klass.ValYearnum = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValYearnum() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Year.ValYearnum");
 
 		[DisplayName("ZZSTATE")]

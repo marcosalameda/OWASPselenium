@@ -749,8 +749,8 @@ namespace Administration.Controllers
             int rownum = 0;
             if (conf.MessageQueueing != null)
             {
-                conf.MessageQueueing.Journaltimeout = GlobalFunctions.atoi(MQueues.Journaltimeout);
-                conf.MessageQueueing.Maxsendnumber = GlobalFunctions.atoi(MQueues.Maxsendnumber);
+                conf.MessageQueueing.Journaltimeout = GenFunctions.atoi(MQueues.Journaltimeout);
+                conf.MessageQueueing.Maxsendnumber = GenFunctions.atoi(MQueues.Maxsendnumber);
 
                 foreach (var q in conf.MessageQueueing.Queues)
                 {

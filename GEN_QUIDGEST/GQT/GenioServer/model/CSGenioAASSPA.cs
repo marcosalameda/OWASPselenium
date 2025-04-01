@@ -161,7 +161,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"datatype","text","datatype","quantity","datatype","date","date","date"}, new int[] {0,1,2,3,4,5,6,7}, "asspa", "codasspa"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 8, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((((string)args[0])=="T")?(((string)args[1])):(((((string)args[2])=="N")?(GlobalFunctions.NumericToString(((decimal)args[3]),0)):(((((string)args[4])=="D")?(GlobalFunctions.NumericToString(GlobalFunctions.Year(((DateTime)args[5])),0)+"-"+GlobalFunctions.RIGHT("00"+GlobalFunctions.NumericToString(GlobalFunctions.Month(((DateTime)args[6])),0),2)+"-"+GlobalFunctions.RIGHT("00"+GlobalFunctions.NumericToString(GlobalFunctions.Day(((DateTime)args[7])),0),2)):(""))))));
+				return ((((string)args[0])=="T")?(((string)args[1])):(((((string)args[2])=="N")?(GenFunctions.NumericToString(((decimal)args[3]),0)):(((((string)args[4])=="D")?(GenFunctions.NumericToString(GenFunctions.Year(((DateTime)args[5])),0)+"-"+GenFunctions.RIGHT("00"+GenFunctions.NumericToString(GenFunctions.Month(((DateTime)args[6])),0),2)+"-"+GenFunctions.RIGHT("00"+GenFunctions.NumericToString(GenFunctions.Day(((DateTime)args[7])),0),2)):(""))))));
 			});
 			info.RegisterFieldDB(Qfield);
 

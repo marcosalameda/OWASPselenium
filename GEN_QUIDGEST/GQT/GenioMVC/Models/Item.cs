@@ -76,19 +76,19 @@ namespace GenioMVC.Models
 		[DisplayName("Entries")]
 		/// <summary>Field : "Entries" Tipo: "N" Formula: SR "[LDENT->QTDENTRA]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValEntries { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValEntries, 0)); } set { klass.ValEntries = Convert.ToDecimal(value); } }
+		public decimal? ValEntries { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValEntries, 0)); } set { klass.ValEntries = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValEntries() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Item.ValEntries");
 
 		[DisplayName("Outputs")]
 		/// <summary>Field : "Outputs" Tipo: "N" Formula: SR "[OUTPU->EXITQNTY]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValExits { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValExits, 0)); } set { klass.ValExits = Convert.ToDecimal(value); } }
+		public decimal? ValExits { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValExits, 0)); } set { klass.ValExits = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValExits() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Item.ValExits");
 
 		[DisplayName("Stocks")]
 		/// <summary>Field : "Stocks" Tipo: "N" Formula: SR "[LDENT->QTDENTRA]-[OUTPU->EXITQNTY]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValExistenc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValExistenc, 0)); } set { klass.ValExistenc = Convert.ToDecimal(value); } }
+		public decimal? ValExistenc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValExistenc, 0)); } set { klass.ValExistenc = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValExistenc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Item.ValExistenc");
 
 		[DisplayName("Image")]

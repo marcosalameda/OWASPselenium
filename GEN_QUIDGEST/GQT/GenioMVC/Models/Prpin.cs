@@ -49,7 +49,7 @@ namespace GenioMVC.Models
 		[DisplayName("Mechanografic number")]
 		/// <summary>Field : "Mechanografic number" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValNummecan { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNummecan, 0)); } set { klass.ValNummecan = Convert.ToDecimal(value); } }
+		public decimal? ValNummecan { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNummecan, 0)); } set { klass.ValNummecan = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNummecan() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Prpin.ValNummecan");
 
 		[DisplayName("Name")]

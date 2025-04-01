@@ -497,7 +497,7 @@ namespace GenioMVC.ViewModels.Evcat
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -550,7 +550,7 @@ namespace GenioMVC.ViewModels.Evcat
                 // Fill List fields
                 this.ValCodpesso = ViewModelConversion.ToString(row["pesso.codpesso"]);
                 TablePessoName.Value = ViewModelConversion.ToString(row["pesso.name"]);
-                if (GlobalFunctions.emptyG(this.ValCodpesso) == 1)
+                if (GenFunctions.emptyG(this.ValCodpesso) == 1)
                 {
                     this.ValCodpesso = "";
                     TablePessoName.Value = "";
@@ -702,7 +702,7 @@ namespace GenioMVC.ViewModels.Evcat
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -755,7 +755,7 @@ namespace GenioMVC.ViewModels.Evcat
                 // Fill List fields
                 this.ValCodcateg = ViewModelConversion.ToString(row["cate1.codcateg"]);
                 TableCate1Category.Value = ViewModelConversion.ToString(row["cate1.categoria"]);
-                if (GlobalFunctions.emptyG(this.ValCodcateg) == 1)
+                if (GenFunctions.emptyG(this.ValCodcateg) == 1)
                 {
                     this.ValCodcateg = "";
                     TableCate1Category.Value = "";

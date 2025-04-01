@@ -45,17 +45,17 @@ namespace GenioMVC.Models
 		[DisplayName("Posição")]
 		/// <summary>Field : "Posição" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValPosicao { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPosicao, 0)); } set { klass.ValPosicao = Convert.ToDecimal(value); } }
+		public decimal? ValPosicao { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPosicao, 0)); } set { klass.ValPosicao = Convert.ToDecimal(value); } }
 
 		[DisplayName("Operação")]
 		/// <summary>Field : "Operação" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValOperacao { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOperacao, 0)); } set { klass.ValOperacao = Convert.ToDecimal(value); } }
+		public decimal? ValOperacao { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOperacao, 0)); } set { klass.ValOperacao = Convert.ToDecimal(value); } }
 
 		[DisplayName("Tipo")]
 		/// <summary>Field : "Tipo" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValTipo { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValTipo, 0)); } set { klass.ValTipo = Convert.ToDecimal(value); } }
+		public decimal? ValTipo { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValTipo, 0)); } set { klass.ValTipo = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>

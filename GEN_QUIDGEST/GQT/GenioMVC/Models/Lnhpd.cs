@@ -49,7 +49,7 @@ namespace GenioMVC.Models
 		[DisplayName("Line")]
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValLine { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLine, 0)); } set { klass.ValLine = Convert.ToDecimal(value); } }
+		public decimal? ValLine { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValLine, 0)); } set { klass.ValLine = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValLine() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Lnhpd.ValLine");
 
 		[DisplayName("TYPE OF EQUIPMENT")]
@@ -64,13 +64,13 @@ namespace GenioMVC.Models
 		[DisplayName("Amount")]
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValQuantida { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantida, 0)); } set { klass.ValQuantida = Convert.ToDecimal(value); } }
+		public decimal? ValQuantida { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQuantida, 0)); } set { klass.ValQuantida = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQuantida() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Lnhpd.ValQuantida");
 
 		[DisplayName("Amount")]
 		/// <summary>Field : "Amount" Tipo: "ND" Formula:  ""</summary>
 		[NumericAttribute(2)]
-		public decimal? ValQuantdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantdec, 2)); } set { klass.ValQuantdec = Convert.ToDecimal(value); } }
+		public decimal? ValQuantdec { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQuantdec, 2)); } set { klass.ValQuantdec = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQuantdec() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Lnhpd.ValQuantdec");
 
 		[DisplayName("ZZSTATE")]

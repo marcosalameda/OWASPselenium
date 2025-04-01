@@ -45,7 +45,7 @@ namespace GenioMVC.Models
 		[DisplayName("VAT Number")]
 		/// <summary>Field : "VAT Number" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValNumbgro { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumbgro, 0)); } set { klass.ValNumbgro = Convert.ToDecimal(value); } }
+		public decimal? ValNumbgro { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNumbgro, 0)); } set { klass.ValNumbgro = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNumbgro() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Inpgr.ValNumbgro");
 
 		[DisplayName("Text Field")]
@@ -97,7 +97,7 @@ namespace GenioMVC.Models
 		[DisplayName("Phone number")]
 		/// <summary>Field : "Phone number" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValPhone { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPhone, 0)); } set { klass.ValPhone = Convert.ToDecimal(value); } }
+		public decimal? ValPhone { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPhone, 0)); } set { klass.ValPhone = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPhone() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Inpgr.ValPhone");
 
 		[DisplayName("E-mail")]

@@ -45,7 +45,7 @@ namespace GenioMVC.Models
 		[DisplayName("Estimated price")]
 		/// <summary>Field : "Estimated price" Tipo: "$D" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecoest { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecoest, 2)); } set { klass.ValPrecoest = Convert.ToDecimal(value); } }
+		public decimal? ValPrecoest { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrecoest, 2)); } set { klass.ValPrecoest = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPrecoest() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Propr.ValPrecoest");
 
 		[DisplayName("")]
@@ -104,19 +104,19 @@ namespace GenioMVC.Models
 		[DisplayName("Bathrooms")]
 		/// <summary>Field : "Bathrooms" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValQtd_wc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtd_wc, 0)); } set { klass.ValQtd_wc = Convert.ToDecimal(value); } }
+		public decimal? ValQtd_wc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQtd_wc, 0)); } set { klass.ValQtd_wc = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQtd_wc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Propr.ValQtd_wc");
 
 		[DisplayName("Rooms")]
 		/// <summary>Field : "Rooms" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValQtdquart { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdquart, 0)); } set { klass.ValQtdquart = Convert.ToDecimal(value); } }
+		public decimal? ValQtdquart { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQtdquart, 0)); } set { klass.ValQtdquart = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQtdquart() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Propr.ValQtdquart");
 
 		[DisplayName("Square meters")]
 		/// <summary>Field : "Square meters" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValM2 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValM2, 0)); } set { klass.ValM2 = Convert.ToDecimal(value); } }
+		public decimal? ValM2 { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValM2, 0)); } set { klass.ValM2 = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValM2() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Propr.ValM2");
 
 		[DisplayName("Available from")]

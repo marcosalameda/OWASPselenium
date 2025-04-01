@@ -505,921 +505,373 @@ namespace CSGenio.business
             return (test == 1 ? v1 : v2);
         }
 
-        /// <summary>
-        /// Converte um objecto num inteiro
-        /// </summary>
-        /// <param name="a">objecto a converter</param>
-        /// <returns>retorna o inteiro correspondente ao objecto</returns>
+        /// <inheritdoc cref="GenFunctions.DateAddDays"/>
+		[Obsolete("Use GenFunctions.DateAddDays instead")]
         public static DateTime SumDays(DateTime data, decimal days)
-        {
-            if (data == DateTime.MinValue)
-                return DateTime.MinValue;
-            return data.AddDays((double)days);
-        }
+			=> GenFunctions.DateAddDays(data, days);
 
-        /// <summary>
-        /// Verifica se um Qyear é bissexto
-        /// </summary>
-        /// <param name="year">Qyear a verificar</param>
-        /// <returns>true caso seja bissexto. Caso contrário false.</returns>
-        public static bool IsLeapYear(int year){ return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0); }
+        /// <inheritdoc cref="GenFunctions.IsLeapYear"/>
+		[Obsolete("Use GenFunctions.IsLeapYear instead")]
+		public static bool IsLeapYear(int year)
+			=> GenFunctions.IsLeapYear(year);
 
-        /// <summary>
-        /// Coloca a primeira letra da frase/palavra em maiúscula
-        /// </summary>
-        /// <param name="text">text ou palavra a converter</param>
-        /// <returns></returns>
+        /// <inheritdoc cref="GenFunctions.Capitalize"/>
+		[Obsolete("Use GenFunctions.Capitalize instead")]
         public static string Capitalize(string text)
-        {
-            return string.IsNullOrEmpty(text) ? string.Empty : char.ToUpper(text[0]) + text.Substring(1, text.Length-1);
-        }
+			=> GenFunctions.Capitalize(text);
 
-        /// <summary>
-        /// Coloca a primeira letra de cada palavra na frase em maiúsculas.
-        /// </summary>
-        /// <param name="text">text ou palavra a converter</param>
-        /// <returns></returns>
+        /// <inheritdoc cref="GenFunctions.CapitalizeInitials"/>
+		[Obsolete("Use GenFunctions.CapitalizeInitials instead")]
         public static string CapitalizeInitials(string text)
-        {
-            return new System.Globalization.CultureInfo(System.Globalization.CultureInfo.CurrentUICulture.LCID).TextInfo.ToTitleCase(text.ToLower());
-        }
+			=> GenFunctions.CapitalizeInitials(text);
 
-        /// <summary>
-        /// Converte um objecto num inteiro
-        /// </summary>
-        /// <param name="a">objecto a converter</param>
-        /// <returns>retorna o inteiro correspondente ao objecto</returns>
+        /// <inheritdoc cref="GenFunctions.atoi"/>
+		[Obsolete("Use GenFunctions.atoi instead")]
         public static int atoi(object a)
-        {
-            if (string.IsNullOrEmpty(a as string)) //DQ 01/09/2006 : se a string é vazia retorna 0;
-            {
-                return 0;
-            }
-            return int.Parse(a.ToString());
-        }
+			=> GenFunctions.atoi(a);
 
-        /// <summary>
-        /// Método que permite converter um inteiro to string
-        /// </summary>
-        /// <param name="a">parametro que vai ser convertido</param>
-        /// <returns>string com o Qvalue convertido</returns>
+        /// <inheritdoc cref="GenFunctions.IntToString"/>
+		[Obsolete("Use GenFunctions.IntToString instead")]
         public static string IntToString(decimal a)
-        {
-            return ((int)a).ToString();
-        }
+			=> GenFunctions.IntToString(a);
 
-        /// <summary>
-        /// Método que permite converter um numérico para string
-        /// </summary>
-        /// <param name="valor">Qvalue que vai ser convertido</param>
-        /// <param name="casasDecimais">número de digits decimais</param>
-        /// <returns>string com o Qvalue convertido</returns>
+        /// <inheritdoc cref="GenFunctions.NumericToString"/>
+		[Obsolete("Use GenFunctions.NumericToString instead")]
         public static string NumericToString(decimal Qvalue, int decimalDigits)
-        {
-            return Math.Round(Qvalue, decimalDigits).ToString();
-        }
+			=> GenFunctions.NumericToString(Qvalue, decimalDigits);
 
-        /// <summary>
-        /// Método que verifica se uma data está vazia
-        /// </summary>
-        /// <param name="data">verifica se uma data está vazia</param>
-        /// <returns>1 se a data está vazia, 0 o caso contrário</returns>
+        /// <inheritdoc cref="GenFunctions.emptyD"/>
+		[Obsolete("Use GenFunctions.emptyD instead")]
         public static int emptyD(object data)
-        {
-            if (data == DBNull.Value || data == null)
-                return 1;
-            else
-                if (data.Equals(DateTime.MinValue)) //SO 20061006 alteração das datas de DateTime to DateTime
-                    return 1;
-                return 0;
-        }
+			=> GenFunctions.emptyD(data);
 
-        /// <summary>
-        /// Método que verifica se uma key interna está vazia
-        /// </summary>
-        /// <param name="data">verifica se uma key interna está vazia</param>
-        /// <returns>1 se a key interna está vazia, 0 o caso contrário</returns>
+        /// <inheritdoc cref="GenFunctions.emptyG"/>
+		[Obsolete("Use GenFunctions.emptyG instead")]
         public static int emptyG(object characters)
-        {
-            if (characters == null || characters.Equals("") || characters.Equals(Guid.Empty.ToString()) || characters.Equals(Guid.Empty.ToString("B")) || characters.Equals("0"))
-                return 1;
-            else
-                return 0;
-        }
+			=> GenFunctions.emptyG(characters);
 
-        /// <summary>
-        /// Função que verifica se um objecto está vazio
-        /// </summary>
-        /// <param name="caracteres">objecto que vai ser testado</param>
-        /// <returns>true se está vazia, false caso contrário</returns>
+        /// <inheritdoc cref="GenFunctions.emptyC"/>
+		[Obsolete("Use GenFunctions.emptyC instead")]
         public static int emptyC(object characters)
-        {
-            if (characters == null || characters.Equals(""))
-                return 1;
-            else if (characters.Equals(Guid.Empty.ToString()))
-                return 1;
-            else
-                return 0;
-        }
+			=> GenFunctions.emptyC(characters);
 
-        /// <summary>
-        /// Verifica se um numérico está vazio
-        /// </summary>
-        /// <param name="valor">número a ser comparado</param>
-        /// <returns>1 se está vazio, 0 caso contrário</returns>
+        /// <inheritdoc cref="GenFunctions.emptyN"/>
+		[Obsolete("Use GenFunctions.emptyN instead")]
         public static int emptyN(object Qvalue)
-        {
-            if (Qvalue == null || Qvalue.Equals(0m) || Qvalue.Equals(0d) || Qvalue.Equals(0))
-                return 1;
-            else
-                return 0;
-        }
+			=> GenFunctions.emptyN(Qvalue);
 
-        /// <summary>
-        /// verifica se uma hour está vazia
-        /// </summary>
-        /// <param name="caracteres">hour a ser comparada</param>
-        /// <returns>true se está vazia, false caso contrário</returns>
+        /// <inheritdoc cref="GenFunctions.emptyT"/>
+		[Obsolete("Use GenFunctions.emptyT instead")]
         public static int emptyT(object characters)
-        {
-            if (characters == null || characters.Equals("__:__") || characters.Equals(""))
-                return 1;
-            else
-                return 0;
-        }
+			=> GenFunctions.emptyT(characters);
 
-        /// <summary>
-        /// verifica se um int está vazio
-        /// </summary>
-        /// <param name="valor">número a ser comparado</param>
-        /// <returns>true se está vazio, false caso contrário</returns>
+        /// <inheritdoc cref="GenFunctions.emptyL"/>
+		[Obsolete("Use GenFunctions.emptyL instead")]
         public static int emptyL(object Qvalue)
-        {
-            string type = Qvalue?.GetType().Name;
-            if (Qvalue == null || type == null || Qvalue.Equals(0) || Qvalue.Equals(0.0) || Qvalue.Equals(0m) || Qvalue.Equals(0d) || (type.Contains("Bool") && !((bool)Qvalue)) || (type.Contains("Logical") && !((Logical)Qvalue)))
-                return 1;
-            else
-                return 0;
-        }
+			=> GenFunctions.emptyL(Qvalue);
 
-        /// <summary>
-        /// Função que permite formatar uma data
-        /// </summary>
-        /// <param name="valor">Qvalue da data</param>
-        /// <param name="format">formatação</param>
-        /// <returns>A data formatada</returns>
+        /// <inheritdoc cref="GenFunctions.FormatDate"/>
+		[Obsolete("Use GenFunctions.FormatDate instead")]
         public static string FormatDate(DateTime Qvalue, string format)
-        {
-            //TODO: o metodo anterior tambem nao usava a formatação mas convém compatibilizar com o backoffice
-            return Qvalue.ToString("{dd/mm/yyyy}");
-        }
+			=> GenFunctions.FormatDate(Qvalue, format);
 
-        /// <summary>
-        /// Função que tira os espaços à esquerda de uma função
-        /// </summary>
-        /// <param name="valor">Qvalue que queremos tirar os espaços</param>
-        /// <returns>a string sem os espaços à esquerda</returns>
+        /// <inheritdoc cref="GenFunctions.LTRIM"/>
+		[Obsolete("Use GenFunctions.LTRIM instead")]
         public static string LTRIM(string Qvalue)
-        {
-            return Qvalue.TrimStart();
-        }
+			=> GenFunctions.LTRIM(Qvalue);
 
-        /// <summary>
-        /// Função que tira os espaços à direita de uma função
-        /// </summary>
-        /// <param name="valor">Qvalue que queremos tirar os espaços</param>
-        /// <returns>a string sem os espaços à direita</returns>
+        /// <inheritdoc cref="GenFunctions.RTRIM"/>
+		[Obsolete("Use GenFunctions.RTRIM instead")]
         public static string RTRIM(string Qvalue)
-        {
-            return Qvalue.TrimEnd();
-        }
+			=> GenFunctions.RTRIM(Qvalue);
 
-        /// <summary>
-        /// Função que permite obter o Qyear de uma data
-        /// </summary>
-        /// <param name="valor">Qvalue com a data</param>
-        /// <returns>o Qyear da data</returns>
+        /// <inheritdoc cref="GenFunctions.Year"/>
+		[Obsolete("Use GenFunctions.Year instead")]
         public static int Year(DateTime Qvalue)
-        {
-            //SO 20061006 alteração das datas de DateTime to DateTime
-            if (Qvalue==null || Qvalue==DateTime.MinValue)
-                return 0;
-            return Qvalue.Year;
-        }
+			=> GenFunctions.Year(Qvalue);
 
-        /// <summary>
-        /// Função que permite obter o mês de uma data
-        /// </summary>
-        /// <param name="valor">Qvalue com a data</param>
-        /// <returns>o mês da data</returns>
+        /// <inheritdoc cref="GenFunctions.Month"/>
+		[Obsolete("Use GenFunctions.Month instead")]
         public static int Month(DateTime Qvalue)
-        {
-            //SO 20061006 alteração das datas de DateTime to DateTime
-            if (Qvalue == null || Qvalue == DateTime.MinValue)
-                return 0;
-            return Qvalue.Month;
-        }
+			=> GenFunctions.Month(Qvalue);
 
-        /// <summary>
-        /// Função que permite obter o day de uma data
-        /// </summary>
-        /// <param name="valor">Qvalue com a data</param>
-        /// <returns>o day da data</returns>
+        /// <inheritdoc cref="GenFunctions.Day"/>
+		[Obsolete("Use GenFunctions.Day instead")]
         public static int Day(DateTime Qvalue)
-        {
-            //SO 20061006 alteração das datas de DateTime to DateTime
-            if (Qvalue == null || Qvalue == DateTime.MinValue)
-                return 0;
-            return Qvalue.Day;
-        }
+			=> GenFunctions.Day(Qvalue);
 
-        /// <summary>
-        /// Função que retorna string referente ao Qyear de uma data
-        /// </summary>
-        /// <param name="valor">Qvalue com a data</param>
-        /// <returns>o Qyear da data</returns>
+        /// <inheritdoc cref="GenFunctions.strYear"/>
+		[Obsolete("Use GenFunctions.strYear instead")]
         public static string strYear(DateTime Qvalue)
-        {
-            //SO 20061006 alteração das datas de DateTime to DateTime
-            if (Qvalue==null || Qvalue==DateTime.MinValue)
-                return IntToString(0);
-            return IntToString(Qvalue.Year);
-        }
+			=> GenFunctions.strYear(Qvalue);
 
-        /// <summary>
-        /// Função que devolve a data de hoje
-        /// </summary>
-        /// <returns>DateTime com a data de hoje</returns>
-        ///SO 20061006 alteração das datas de DateTime to DateTime
+        /// <inheritdoc cref="GenFunctions.Today"/>
+		[Obsolete("Use GenFunctions.Today instead")]
         public static DateTime Today()
-        {
-            return DateTime.Today;
-        }
+			=> GenFunctions.Today();
 
-        /// <summary>
-        /// Method that return date and time
-        /// </summary>
-        /// <returns>Date and time in DateTime format</returns>
+        /// <inheritdoc cref="GenFunctions.Now"/>
+		[Obsolete("Use GenFunctions.Now instead")]
         public static DateTime Now()
-        {
-            return DateTime.Now;
-        }
+			=> GenFunctions.Now();
 
-        /// <summary>
-        // Converte um Qfield com o format de horas do Genio em um real com o
-        // número de horas decorridas desde 00:00 com os minutes nas digits decimais
-        /// </summary>
-        /// <param name="time">A hour em format __:__</param>
-        /// <returns>O número de horas decorridos desde 00:00</returns>
+        /// <inheritdoc cref="GenFunctions.HoursToDouble"/>
+		[Obsolete("Use GenFunctions.HoursToDouble instead")]
         public static decimal HoursToDouble(string time)
-        {
-            return HourFunctions.HoursToDouble(time);
-        }
+			=> GenFunctions.HoursToDouble(time);
 
-        /// <summary>
-        ///  Adiciona minutes a um fields no format de horas do Genio
-        /// Não decresce de 00:00 ou incrementa de 23:59
-        /// </summary>
-        /// <param name="time">A hour em format __:__</param>
-        /// <param name="minutos">O number de minutes a adicionar</param>
-        /// <returns>A nova hour com os minutes adicionados</returns>
+        /// <inheritdoc cref="GenFunctions.HoursAdd"/>
+		[Obsolete("Use GenFunctions.HoursAdd instead")]
         public static string HoursAdd(string time, decimal minutes)
-        {
-            return HourFunctions.HoursAdd(time, minutes);
-        }
+			=> GenFunctions.HoursAdd(time, minutes);
 
-        /// <summary>
-        /// Transforma uma key (guid ou interna) numa string
-        /// </summary>
-        /// <param name="chave">O Qvalue da key</param>
-        /// <returns>Uma string com representado a key interna</returns>
+        /// <inheritdoc cref="GenFunctions.KeyToString"/>
+		[Obsolete("Use GenFunctions.KeyToString instead")]
         public static string KeyToString(string key)
-        {
-            if (emptyG(key) == 1)
-                return "";
+			=> GenFunctions.KeyToString(key);
 
-            string res = key;
-            res = res.Replace("{", "");
-            res = res.Replace("}", "");
-            res = res.Replace("-", "");
-            return res.ToUpper();
-        }
-
+        /// <inheritdoc cref="GenFunctions.StringToKey"/>
+		[Obsolete("Use GenFunctions.StringToKey instead")]
         public static string StringToKey(string str)
-        {
-            string res = str;
-            if (res.Length == 32)
-            {
-                res = res.Insert(8, "-");
-                res = res.Insert(13, "-");
-                res = res.Insert(18, "-");
-                res = res.Insert(23, "-");
-            }
+			=> GenFunctions.StringToKey(str);
 
-            if (res.Length == 36)
-                res = "{"+res+"}";
-
-            return res;
-        }
-
-        /// <summary>
-        // Converte um Qfield real com o número de horas decorridas desde 00:00 em um
-        // Qfield no format de horas do Genio
-        /// </summary>
-        /// <param name="time">O número de horas decorridos desde 00:00</param>
-        /// <returns>A hour em format __:__</returns>
+        /// <inheritdoc cref="GenFunctions.DoubleToHours"/>
+		[Obsolete("Use GenFunctions.DoubleToHours instead")]
         public static string DoubleToHours(decimal time)
-        {
-            int minutosTotais = (int)Math.Round(time * 60);
-            int horasParte = minutosTotais / 60;
-            int minutosParte = minutosTotais % 60;
-            return horasParte.ToString("D2") + ':' + minutosParte.ToString("D2");
-        }
+			=> GenFunctions.DoubleToHours(time);
 
-        /// <summary>
-        /// Create a date from its parts.
-        /// </summary>
-        /// <param name="year">year</param>
-        /// <param name="month">month</param>
-        /// <param name="day">day</param>
-        /// <param name="hour">hour</param>
-        /// <param name="minute">minute</param>
-        /// <param name="second">second</param>
-        /// <returns>A DateTime with the specified parameters</returns>
+        /// <inheritdoc cref="GenFunctions.CreateDateTime"/>
+		[Obsolete("Use GenFunctions.CreateDateTime instead")]
         public static DateTime CreateDateTime(decimal year, decimal month, decimal day, decimal hour, decimal minute, decimal second)
-        {
-            try
-            {
-                return new DateTime((int)year, (int)month, (int)day, (int)hour, (int)minute, (int)second);
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                //É um pouco discutível se isto devia falhar silenciosamente, se alguém passa parâmetros inválidos
-                // to esta função devia ter cuidado com isso e ser avisado o mais cedo possível em desenvolvimento.
-                return DateTime.MinValue;
-            }
-        }
+			=> GenFunctions.CreateDateTime(year, month, day, hour, minute, second);
 
-        /// <summary>
-        /// Create a date from its parts.
-        /// </summary>
-        /// <param name="year">year</param>
-        /// <param name="month">month</param>
-        /// <param name="day">day</param>
-        /// <returns>A DateTime with the specified parameters</returns>
+        /// <inheritdoc cref="GenFunctions.CreateDateTime"/>
+		[Obsolete("Use GenFunctions.CreateDateTime instead")]
         public static DateTime CreateDateTime(decimal year, decimal month, decimal day)
-        {
-            return CreateDateTime(year, month, day, 0, 0, 0);
-        }
+			=> GenFunctions.CreateDateTime(year, month, day);
 
-        /// <summary>
-        /// Creates a date with the specified time included.
-        /// </summary>
-        /// <param name="date">A date</param>
-        /// <param name="time">A time with format __:__</param>
-        /// <returns>A DateTime with the specified parameters</returns>
-        [Obsolete("Use DateSetTime instead")]
-        public static DateTime CriaDataHora(DateTime date, string time)
-        {
-            if (emptyD(date)==1) return DateTime.MinValue;
-            int h0 = 0, m0 = 0;
-            if (time.Length == 5)
-            {
-                //corrigir a string
-                time = time.Replace('_', '0');
-                Int32.TryParse(time.Substring(0, 2), out h0);
-                Int32.TryParse(time.Substring(3, 2), out m0);
-                if (h0 < 0 || h0 > 23 || m0 < 0 || m0 > 59)
-                {
-                    h0 = 0;
-                    m0 = 0;
-                }
-            }
-            return CreateDateTime(date.Year, date.Month, date.Day, h0, m0, 0);
-        }
-
-        /// <summary>
-        /// Set a specific time on a date.
-        /// </summary>
-        /// <param name="date">A date</param>
-        /// <param name="time">A time with format __:__</param>
-        /// <returns>A DateTime with the specified parameters</returns>
+        /// <inheritdoc cref="GenFunctions.DateSetTime"/>
+		[Obsolete("Use GenFunctions.DateSetTime instead")]
         public static DateTime DateSetTime(DateTime date, string time)
-        {
-            if (date == DateTime.MinValue)
-                return date;
-            const decimal epsilon = 0.1m;
-            decimal full = HourFunctions.HoursToDouble(time);
-            int hh = (int)full;            
-            int mm = (int)(epsilon + (full - hh) * 60m);
-            return CreateDateTime(date.Year, date.Month, date.Day, hh, mm, 0);
-        }
+			=> GenFunctions.DateSetTime(date, time);
 
-        /// <summary>
-        /// Compare two dates and return an integer that indicates their chronology.
-        /// Whether the first instance is earlier than, the same as, or later than the second instance.
-        /// </summary>
-        /// <param name="date1">date1</param>
-        /// <param name="date2">date2</param>
-        /// <returns>0 if equal, <0 date1 is earlier than date2, >0 date1 is later than date2</returns>
+        /// <inheritdoc cref="GenFunctions.DateCompare"/>
+		[Obsolete("Use GenFunctions.DateCompare instead")]
         public static int DateCompare(DateTime date1, DateTime date2)
-        {
-            return DateTime.Compare(date1, date2);
-        }
+			=> GenFunctions.DateCompare(date1, date2);
 
-        /// <summary>
-        /// Create a duration/timespan from its parts.
-        /// </summary>
-        /// <param name="days">Number of days</param>
-        /// <param name="hours">Number of hours</param>
-        /// <param name="minutes">Number of minutes</param>
-        /// <param name="seconds">Number of seconds</param>
-        /// <returns>A TimeSpan with the specified parameters</returns>
+        /// <inheritdoc cref="GenFunctions.CreateDuration"/>
+		[Obsolete("Use GenFunctions.CreateDuration instead")]
         public static TimeSpan CreateDuration(int days, int hours, int minutes, int seconds)
-        {
-            // TODO: add try-catch to avoid runtime exceptions
-            return new TimeSpan(days, hours, minutes, seconds);
-        }
+			=> GenFunctions.CreateDuration(days, hours, minutes, seconds);
 
-        /// <summary>
-        /// Compare two dates and return the difference.
-        /// </summary>
-        /// <param name="startDate">startDate</param>
-        /// <param name="endDate">endDate</param>
-        /// <returns>Duration between startDate and endDate</returns>
+        /// <inheritdoc cref="GenFunctions.DateDiff"/>
+		[Obsolete("Use GenFunctions.DateDiff instead")]
         public static TimeSpan DateDiff(DateTime startDate, DateTime endDate)
-        {
-            return endDate.Subtract(startDate);
-        }
+			=> GenFunctions.DateDiff(startDate, endDate);
 
-        /// <summary>
-        /// Compare two dates and return the difference in a specific unit.
-        /// </summary>
-        /// <param name="startDate">startDate</param>
-        /// <param name="endDate">endDate</param>
-        /// <param name="unit">unit</param>
-        /// <returns>Duration between startDate and endDate</returns>
+        /// <inheritdoc cref="GenFunctions.DateDiffPart"/>
+		[Obsolete("Use GenFunctions.DateDiffPart instead")]
         public static decimal DateDiffPart(DateTime startDate, DateTime endDate, string unit)
-        {
-            TimeSpan diff = endDate.Subtract(startDate);
-            if (unit == "D")
-                return (decimal)Math.Floor(diff.TotalDays);
-            if (unit == "H")
-                return (decimal)Math.Floor(diff.TotalHours);
-            if (unit == "M")
-                return (decimal)Math.Floor(diff.TotalMinutes);
-            if (unit == "S")
-                return (decimal)Math.Floor(diff.TotalSeconds);
+			=> GenFunctions.DateDiffPart(startDate, endDate, unit);
 
-            return 0;
-        }
-
-        /// <summary>
-        /// Sum a duration to a date.
-        /// </summary>
-        /// <param name="date">Date to increment</param>
-        /// <param name="duration">A TimeSpan representing a duration</param>
-        /// <returns>A DateTime with the specified duration added</returns>
+        /// <inheritdoc cref="GenFunctions.DateAddDuration"/>
+		[Obsolete("Use GenFunctions.DateAddDuration instead")]
         public static DateTime DateAddDuration(DateTime date, TimeSpan duration)
-        {
-            return date + duration;
-        }
+			=> GenFunctions.DateAddDuration(date, duration);
 
-        /// <summary>
-        /// Subtract a duration from a date.
-        /// </summary>
-        /// <param name="date">Date to reduce</param>
-        /// <param name="duration">A TimeSpan representing a duration</param>
-        /// <returns>A DateTime with the specified duration subtracted</returns>
+        /// <inheritdoc cref="GenFunctions.DateSubtractDuration"/>
+		[Obsolete("Use GenFunctions.DateSubtractDuration instead")]
         public static DateTime DateSubtractDuration(DateTime date, TimeSpan duration)
-        {
-            return date - duration;
-        }
+			=> GenFunctions.DateSubtractDuration(date, duration);
 
-        /// <summary>
-        /// Add a duration to a date.
-        /// </summary>
-        /// <param name="date">Date to change</param>
-        /// <param name="years">Number of years, each year equals 365 days</param>
-        /// <returns>A DateTime with the specified duration added/subtracted</returns>
+        /// <inheritdoc cref="GenFunctions.DateAddYears"/>
+		[Obsolete("Use GenFunctions.DateAddYears instead")]
         public static DateTime DateAddYears(DateTime date, decimal years)
-        {
-            return date.AddYears((int)years);
-        }
+			=> GenFunctions.DateAddYears(date, years);
 
-        /// <summary>
-        /// Add a duration to a date.
-        /// </summary>
-        /// <param name="date">Date to change</param>
-        /// <param name="months">Number of months, each month equals 30 days</param>
-        /// <returns>A DateTime with the specified duration added/subtracted</returns>
+        /// <inheritdoc cref="GenFunctions.DateAddMonths"/>
+		[Obsolete("Use GenFunctions.DateAddMonths instead")]
         public static DateTime DateAddMonths(DateTime date, decimal months)
-        {
-            return date.AddMonths((int)months);
-        }
+			=> GenFunctions.DateAddMonths(date, months);
 
-        /// <summary>
-        /// Add a duration to a date.
-        /// </summary>
-        /// <param name="date">Date to change</param>
-        /// <param name="days">Number of days</param>
-        /// <returns>A DateTime with the specified duration added/subtracted</returns>
+        /// <inheritdoc cref="GenFunctions.DateAddDays"/>
+		[Obsolete("Use GenFunctions.DateAddDays instead")]
         public static DateTime DateAddDays(DateTime date, decimal days)
-        {
-            return date.AddDays((double)days);
-        }
+			=> GenFunctions.DateAddDays(date, days);
 
-        /// <summary>
-        /// Add a duration to a date.
-        /// </summary>
-        /// <param name="date">Date to change</param>
-        /// <param name="hours">Number of hours</param>
-        /// <returns>A DateTime with the specified duration added/subtracted</returns>
+        /// <inheritdoc cref="GenFunctions.DateAddHours"/>
+		[Obsolete("Use GenFunctions.DateAddHours instead")]
         public static DateTime DateAddHours(DateTime date, decimal hours)
-        {
-            return date.AddHours((double)hours);
-        }
+			=> GenFunctions.DateAddHours(date, hours);
 
-        /// <summary>
-        /// Add a duration to a date.
-        /// </summary>
-        /// <param name="date">Date to change</param>
-        /// <param name="minutes">Number of minutes</param>
-        /// <returns>A DateTime with the specified duration added/subtracted</returns>
+        /// <inheritdoc cref="GenFunctions.DateAddMinutes"/>
+		[Obsolete("Use GenFunctions.DateAddMinutes instead")]
         public static DateTime DateAddMinutes(DateTime date, decimal minutes)
-        {
-            return date.AddMinutes((double)minutes);
-        }
+			=> GenFunctions.DateAddMinutes(date, minutes);
 
-        /// <summary>
-        /// Add a duration to a date.
-        /// </summary>
-        /// <param name="date">Date to change</param>
-        /// <param name="seconds">Number of seconds</param>
-        /// <returns>A DateTime with the specified duration added/subtracted</returns>
+        /// <inheritdoc cref="GenFunctions.DateAddSeconds"/>
+		[Obsolete("Use GenFunctions.DateAddSeconds instead")]
         public static DateTime DateAddSeconds(DateTime date, decimal seconds)
-        {
-            return date.AddSeconds((double)seconds);
-        }
+			=> GenFunctions.DateAddSeconds(date, seconds);
 
-        /// <summary>
-        /// Get the year of the date.
-        /// </summary>
-        /// <param name="date">Date to read</param>
-        /// <returns>Year</returns>
+        /// <inheritdoc cref="GenFunctions.DateGetYear"/>
+		[Obsolete("Use GenFunctions.DateGetYear instead")]
         public static int DateGetYear(DateTime date)
-        {
-            return date.Year;
-        }
+			=> GenFunctions.DateGetYear(date);
 
-        /// <summary>
-        /// Get the month of year from the date.
-        /// </summary>
-        /// <param name="date">Date to read</param>
-        /// <returns>Month of year</returns>
+        /// <inheritdoc cref="GenFunctions.DateGetMonth"/>
+		[Obsolete("Use GenFunctions.DateGetMonth instead")]
         public static int DateGetMonth(DateTime date)
-        {
-            return date.Month;
-        }
+			=> GenFunctions.DateGetMonth(date);
 
-        /// <summary>
-        /// Get the day of month from the date.
-        /// </summary>
-        /// <param name="date">Date to read</param>
-        /// <returns>Day of month</returns>
+        /// <inheritdoc cref="GenFunctions.DateGetDay"/>
+		[Obsolete("Use GenFunctions.DateGetDay instead")]
         public static int DateGetDay(DateTime date)
-        {
-            return date.Day;
-        }
+			=> GenFunctions.DateGetDay(date);
 
-        /// <summary>
-        /// Get the hour in day from the date.
-        /// </summary>
-        /// <param name="date">Date to read</param>
-        /// <returns>Hour in day</returns>
+        /// <inheritdoc cref="GenFunctions.DateGetHour"/>
+		[Obsolete("Use GenFunctions.DateGetHour instead")]
         public static int DateGetHour(DateTime date)
-        {
-            return date.Hour;
-        }
+			=> GenFunctions.DateGetHour(date);
 
-        /// <summary>
-        /// Get the minute in hour from the date.
-        /// </summary>
-        /// <param name="date">Date to read</param>
-        /// <returns>Minute in hour</returns>
+        /// <inheritdoc cref="GenFunctions.DateGetMinute"/>
+		[Obsolete("Use GenFunctions.DateGetMinute instead")]
         public static int DateGetMinute(DateTime date)
-        {
-            return date.Minute;
-        }
+			=> GenFunctions.DateGetMinute(date);
 
-        /// <summary>
-        /// Get the second in minute from the date.
-        /// </summary>
-        /// <param name="date">Date to read</param>
-        /// <returns>Second in minute</returns>
+        /// <inheritdoc cref="GenFunctions.DateGetSecond"/>
+		[Obsolete("Use GenFunctions.DateGetSecond instead")]
         public static int DateGetSecond(DateTime date)
-        {
-            return date.Second;
-        }
+			=> GenFunctions.DateGetSecond(date);
 
-        /// <summary>
-        /// Get the total days in the duration.
-        /// </summary>
-        /// <param name="duration">Duration to read</param>
-        /// <returns>duration in days</returns>
+        /// <inheritdoc cref="GenFunctions.DurationTotalDays"/>
+		[Obsolete("Use GenFunctions.DurationTotalDays instead")]
         public static decimal DurationTotalDays(TimeSpan duration)
-        {
-            return (decimal)duration.TotalDays;
-        }
+			=> GenFunctions.DurationTotalDays(duration);
 
-        /// <summary>
-        /// Get the total hours in the duration.
-        /// </summary>
-        /// <param name="duration">Duration to read</param>
-        /// <returns>duration in hours</returns>
+        /// <inheritdoc cref="GenFunctions.DurationTotalHours"/>
+		[Obsolete("Use GenFunctions.DurationTotalHours instead")]
         public static decimal DurationTotalHours(TimeSpan duration)
-        {
-            return (decimal)duration.TotalHours;
-        }
+			=> GenFunctions.DurationTotalHours(duration);
 
-        /// <summary>
-        /// Get the total minutes in the duration.
-        /// </summary>
-        /// <param name="duration">Duration to read</param>
-        /// <returns>duration in minutes</returns>
+        /// <inheritdoc cref="GenFunctions.DurationTotalMinutes"/>
+		[Obsolete("Use GenFunctions.DurationTotalMinutes instead")]
         public static decimal DurationTotalMinutes(TimeSpan duration)
-        {
-            return (decimal)duration.TotalMinutes;
-        }
+			=> GenFunctions.DurationTotalMinutes(duration);
 
-        /// <summary>
-        /// Get the total seconds in the duration.
-        /// </summary>
-        /// <param name="duration">Duration to read</param>
-        /// <returns>duration in seconds</returns>
+        /// <inheritdoc cref="GenFunctions.DurationTotalSeconds"/>
+		[Obsolete("Use GenFunctions.DurationTotalSeconds instead")]
         public static decimal DurationTotalSeconds(TimeSpan duration)
-        {
-            return (decimal)duration.TotalSeconds;
-        }
+			=> GenFunctions.DurationTotalSeconds(duration);
 
         /*****/
 
-        /// <summary>
-        /// Truncates the time part of a datetime value.
-        /// </summary>
-        /// <param name="date">The source date</param>
-        /// <returns>A modified date with only the date part of the original datetime</returns>
+        /// <inheritdoc cref="GenFunctions.DateFloorDay"/>
+		[Obsolete("Use GenFunctions.DateFloorDay instead")]
         public static DateTime DateFloorDay(DateTime date)
-        {
-            return new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, date.Kind);
-        }
+			=> GenFunctions.DateFloorDay(date);
 
-        /// <summary>
-        /// Função que dados dois numéricos devolve o máximo
-        /// </summary>
-        /// <param name="obj1">numérico a comparar</param>
-        /// <param name="obj2">outro numérico a comparar</param>
-        /// <returns>o máximo entre os dois</returns>
+        /// <inheritdoc cref="GenFunctions.maxN"/>
+		[Obsolete("Use GenFunctions.maxN instead")]
         public static decimal maxN(decimal obj1, decimal obj2)
-        {
-            return (obj1 > obj2 ? obj1 : obj2);
-        }
+			=> GenFunctions.maxN(obj1, obj2);
 
-        /// <summary>
-        /// Função que dados dois numéricos devolve o mínimo
-        /// </summary>
-        /// <param name="obj1">numérico a comparar</param>
-        /// <param name="obj2">outro numérico a comparar</param>
-        /// <returns>o mínimo entre os dois</returns>
+        /// <inheritdoc cref="GenFunctions.minN"/>
+		[Obsolete("Use GenFunctions.minN instead")]
         public static decimal minN(decimal obj1, decimal obj2)
-        {
-            return (obj1 < obj2 ? obj1 : obj2);
-        }
+			=> GenFunctions.minN(obj1, obj2);
 
-        /// <summary>
-        /// Função que dadas duas datas devolve a data máxima
-        /// </summary>
-        /// <param name="obj1">data a comparar</param>
-        /// <param name="obj2">outra data a comparar</param>
-        /// <returns>a maior data</returns>
+        /// <inheritdoc cref="GenFunctions.maxD"/>
+		[Obsolete("Use GenFunctions.maxD instead")]
         public static DateTime maxD(DateTime obj1, DateTime obj2)
-        {
-            return (obj1 > obj2 ? obj1 : obj2);
-        }
+			=> GenFunctions.maxD(obj1, obj2);
 
-        /// <summary>
-        /// Função que dadas duas datas devolve a data mínima
-        /// </summary>
-        /// <param name="obj1">data a comparar</param>
-        /// <param name="obj2">outra data a comparar</param>
-        /// <returns>a menor data</returns>
+        /// <inheritdoc cref="GenFunctions.minD"/>
+		[Obsolete("Use GenFunctions.minD instead")]
         public static DateTime minD(DateTime obj1, DateTime obj2)
-        {
-            return (obj1 < obj2 ? obj1 : obj2);
-        }
+			=> GenFunctions.minD(obj1, obj2);
 
-        /// <summary>
-        /// Função que obtem o day actual
-        /// </summary>
-        /// <returns>DateTime com o day actual</returns>
+        /// <inheritdoc cref="GenFunctions.GetCurrentDay"/>
+		[Obsolete("Use GenFunctions.GetCurrentDay instead")]
         public static DateTime GetCurrentDay()
-        {
-            return DateTime.Today;
-        }
+			=> GenFunctions.GetCurrentDay();
 
-        /// <summary>
-        /// Função que obtem o mês actual
-        /// </summary>
-        /// <returns>int com o mês actual</returns>
+        /// <inheritdoc cref="GenFunctions.GetCurrentMonth"/>
+		[Obsolete("Use GenFunctions.GetCurrentMonth instead")]
         public static int GetCurrentMonth()
-        {
-            return Month(DateTime.Today);
-        }
+			=> GenFunctions.GetCurrentMonth();
 
-        /// <summary>
-        /// Função que obtem o Qyear actual
-        /// </summary>
-        /// <returns>int com o Qyear actual</returns>
+
+        /// <inheritdoc cref="GenFunctions.GetCurrentYear"/>
+		[Obsolete("Use GenFunctions.GetCurrentYear instead")]
         public static int GetCurrentYear()
-        {
-            return Year(DateTime.Today);
-        }
+			=> GenFunctions.GetCurrentYear();
 
-        /// <summary>
-        /// Função que permite obter o nº de characters desejado à esquerda de uma string
-        /// </summary>
-        /// <param name="arg">string</param>
-        /// <param name="nrElem">nº de characters</param>
-        /// <returns>nº de characters da string a count da esquerda</returns>
+
+        /// <inheritdoc cref="GenFunctions.LEFT"/>
+		[Obsolete("Use GenFunctions.LEFT instead")]
         public static string LEFT(string arg,int nrElem)
-        {
-            if (arg == null)
-                return "";
-            if (nrElem < 0)
-                return "";
-            if (nrElem > arg.Length)
-                return arg;
+			=> GenFunctions.LEFT(arg, nrElem);
 
-            return arg.Substring(0,nrElem);
-        }
 
-        /// <summary>
-        /// Função que permite obter o nº de characters desejado à direita de uma string
-        /// </summary>
-        /// <param name="arg">string</param>
-        /// <param name="nrElem">nº de characters</param>
-        /// <returns>nº de characters da string a count da direita</returns>
+        /// <inheritdoc cref="GenFunctions.RIGHT"/>
+		[Obsolete("Use GenFunctions.RIGHT instead")]
         public static string RIGHT(string arg,int nrElem)
-        {
-            if (arg == null)
-                return "";
-            if (nrElem < 0)
-                return "";
-            if (nrElem > arg.Length)
-                return arg;
-            return arg.Substring(arg.Length-nrElem,nrElem);
-        }
+			=> GenFunctions.RIGHT(arg, nrElem);
 
-        /// <summary>
-        /// Função que dada uma string permite obter o nº de elementos a count de uma posição
-        /// </summary>
-        /// <param name="arg">string</param>
-        /// <param name="inicio">posição apartir da qual se querem obter os characters</param>
-        /// <param name="nrElem">nº de characters desejados</param>
-        /// <returns>characters da string</returns>
+
+        /// <inheritdoc cref="GenFunctions.SubString"/>
+		[Obsolete("Use GenFunctions.SubString instead")]
         public static string SubString(string arg,int start,int nrElem)
-        {
-            if (arg == null)
-                return "";
-            if (nrElem < 0)
-                return "";
-            if (start < 0)
-                return "";
-            if (start > arg.Length)
-                return "";
-            if (nrElem > arg.Length - start)
-                nrElem = arg.Length - start;
-            return arg.Substring(start,nrElem);
-        }
+			=> GenFunctions.SubString(arg, start, nrElem);
 
-        /// <summary>
-        /// Returns the zero-based index of the first occurrence of the specified substring within the given string.
-        /// If the substring is not found or either input string is null or empty, returns -1.
-        /// </summary>
-        /// <param name="str">The string to search in.</param>
-        /// <param name="substr">The substring to search for.</param>
-        /// <returns>The zero-based index of the first occurrence of the specified substring, or -1 if not found.</returns>
+
+        /// <inheritdoc cref="GenFunctions.IndexOf"/>
+		[Obsolete("Use GenFunctions.IndexOf instead")]
         public static int IndexOf(string str, string substr)
-        {
-            if (string.IsNullOrEmpty(str) || string.IsNullOrEmpty(substr))
-                return -1;
-            return str.IndexOf(substr);
-        }
+			=> GenFunctions.IndexOf(str, substr);
 
-        /// <summary>
-        /// Função que permite arredondar um numérico com o número de digits decimais definido
-        /// </summary>
-        /// <param name="num">número a ser arredondamento</param>
-        /// <param name="casas">número de digits decimais</param>
-        /// <returns>o número arredondado</returns>
+
+		[Obsolete("Use GenFunctions.Round instead")]
         public static decimal Round(decimal num, int digits)
-        {
-            //HAP - Added casts due to diferences when field in Genio is from decimal type.
-			//Discussed with Rodrigo Serafim and Joao Ferro (2024/02/28) this solutions and it works with decimal and double/float
-			return System.Math.Round(num, digits, MidpointRounding.AwayFromZero);
-        }
+			=> GenFunctions.Round(num, digits);
 
-        /// <summary>
-        /// Função que permite obter o módulo de um número
-        /// </summary>
-        /// <param name="num"></param>
-        /// <returns></returns>
+
+        /// <inheritdoc cref="GenFunctions.abs"/>
+		[Obsolete("Use GenFunctions.abs instead")]
         public static decimal abs(decimal num)
-        {
-            return System.Math.Abs(num);
-        }
+			=> GenFunctions.abs(num);
 
-        /// <summary>
-        /// Validate if a date is valid and between an acceptable range
-        /// </summary>
-        /// <param name="date">date</param>
-        /// <returns>1 if its valid, 0 otherwise</returns>
-        [Obsolete("Use !emptyD(Datetime date) instead")]
-        public static int IsValid(DateTime date)
-        {
-            // SqlDateTime must be between 1/1/1753 12:00:00 AM and 12/31/9999 11:59:59 PM
-            if (date.Equals(DateTime.MinValue) || date < new DateTime(1753, 1, 1))
-                return 0;
-            else
-                return 1;
-        }
 
-        /// <summary>
-        /// Função que compara duas datas
-        /// </summary>
-        /// <param name="data1">date1</param>
-        /// <param name="data2">date2</param>
-        /// <returns>0 se sao iguais >0 se a 1ª é maior e <0 se a 1ª é menor </returns>
+        /// <inheritdoc cref="GenFunctions.CompareDates"/>
+		[Obsolete("Use GenFunctions.CompareDates instead")]
         public static int CompareDates(DateTime date1,DateTime date2)
-        {
-            return DateTime.Compare(date1,date2);
-        }
+			=> GenFunctions.CompareDates(date1, date2);
 
-        /// <summary>
-        /// Função que retorna o size de uma string
-        /// </summary>
-        /// <param name="a">string</param>
-        /// <returns>inteiro que corresponde ao size de uma string</returns>
+
+        /// <inheritdoc cref="GenFunctions.LengthString"/>
+		[Obsolete("Use GenFunctions.LengthString instead")]
         public static int LengthString(string a)
-        {
-            return a.Length;
-        }
+			=> GenFunctions.LengthString(a);
 
-        /// <summary>
-        /// Funcao que calcula o Qvalue da Incidencia
-        /// </summary>
-        /// <param name="valoruni">Qvalue unitário</param>
-        /// <param name="quantida">quantidade</param>
-        /// <param name="pdescont">percentagem de desconto</param>
-        /// <param name="prec">digits decimais de precisão</param>
-        /// <returns>o Qvalue da incidencia</returns>
+
+        /// <inheritdoc cref="GenFunctions.Incidenc"/>
+		[Obsolete("Use GenFunctions.Incidenc instead")]
         public static decimal Incidenc(decimal unitValue, decimal amount, decimal pdiscount, int prec)
-        {
-            decimal valorart = RoundQG(unitValue * amount, prec);
-            return valorart - RoundQG(pdiscount / 100.0m * valorart, prec);
-        }
+			=> GenFunctions.Incidenc(unitValue, amount, pdiscount, prec);
 
-        /// <summary>
-        /// Função que calcula o Qvalue do IVA
-        /// A incidencia pode entrar com iva ou sem iva sendo discriminada pelo parametro vatprice
-        /// </summary>
-        /// <param name="incidenc">O Qvalue com iva ou sem iva</param>
-        /// <param name="taxa_iva">taxa de IVA</param>
-        /// <param name="preciva">1 caso o incidenc seja o preço com iva, 0 caso seja o preço sem iva</param>
-        /// <param name="prec">precisão</param>
-        /// <returns>Qvalue do IVA</returns>
+
+        /// <inheritdoc cref="GenFunctions.VATValue"/>
+		[Obsolete("Use GenFunctions.VATValue instead")]
         public static decimal VATValue(decimal incidenc, decimal rate_iva, int vatprice, int prec)
-        {
-            return RoundQG(vatprice==1
-                ? incidenc / (1.0m + rate_iva / 100.0m) * (rate_iva / 100.0m)
-                : incidenc * (rate_iva / 100.0m), prec);
-        }
+			=> GenFunctions.VATValue(incidenc, rate_iva, vatprice, prec);
 
-        /// <summary>
-        /// Função que faz o arredondamento
-        /// O arredondamento é feito com uma folga de 0.001 o que significa que por exemplo:
-        /// RoundQG(0.499, 0) = 1.0 sendo que apenas 0.49899999 é que arredonda to baixo
-        /// </summary>
-        /// <param name="x">number a arrendondar</param>
-        /// <param name="c">number de digits</param>
-        /// <returns>Qvalue arredondado</returns>
+
+        /// <inheritdoc cref="GenFunctions.RoundQG"/>
+        [Obsolete("Use GenFunctions.RoundQG instead")]
         public static decimal RoundQG(decimal x, int c)
-        {
-            //(RS 2010.11.03) Reimplementei to dar os mesmos resultados que no BO e no SQL
-            if (c < 0) c = 0;
-            decimal folga = (decimal)(0.001 * Math.Pow(0.1, c) * Math.Sign(x));
-            return Math.Round(x + folga, c, MidpointRounding.AwayFromZero);
-        }
+            => GenFunctions.RoundQG(x, c);
 
         /// <summary>
         /// Função que devolve um bool se a string corresponder à expressão regular
@@ -1497,11 +949,9 @@ namespace CSGenio.business
             }
         }
 
-        /// <summary>
-        /// Implementação do método floor
-        /// </summary>
-        /// <param name="numero"></param>
-        /// <returns>floor de número</returns>
+
+        /// <inheritdoc cref="Math.Floor"/>
+        [Obsolete("Use Math.Floor instead")]
         public static decimal Floor(decimal number)
         {
             return Math.Floor(number);
@@ -1530,54 +980,11 @@ namespace CSGenio.business
             }
         }
 
-        /// <summary>
-        /// FS >2008-03-26
-        /// Permite calcular a diferença entre duas datas (DateTime).
-        ///Retorna um Qvalue (numerico) da diferença entre as duas datas.
-        /// </summary>
-        /// <param name="dt_inicio">data de início</param>
-        /// <param name="dt_fim">data de fim</param>
-        /// <param name="escala">em D(Dias), H(Horas), M(Minutos) ou S(Segundos)</param>
-        /// <returns>a diferença entre as datas na scale escolhida</returns>
+
+        /// <inheritdoc cref="GenFunctions.DateDiffPart"/>
+        [Obsolete("Use GenFunctions.DateDiffPart instead")]
         public static decimal Diferenca_entre_Datas(DateTime dt_start, DateTime dt_end, string scale)
-        {
-            // RS (2010.11.04) Acertei a função to ficar com a mesma semantica que no backoffice
-            decimal diferenca_valor;
-
-            if (emptyD(dt_start) == 1 || emptyD(dt_end) == 1)
-                return 0;
-
-            TimeSpan diferenca_tempo = dt_end - dt_start;
-            switch (scale.ToString().ToUpper())
-            {
-                case "D":
-                    {
-                        diferenca_valor = (decimal)Math.Floor(diferenca_tempo.TotalDays);
-                        break;
-                    }
-                case "H":
-                    {
-                        diferenca_valor = (decimal)Math.Floor(diferenca_tempo.TotalHours);
-                        break;
-                    }
-                case "M":
-                    {
-                        diferenca_valor = (decimal)Math.Floor(diferenca_tempo.TotalMinutes);
-                        break;
-                    }
-                case "S":
-                    {
-                        diferenca_valor = (decimal)Math.Floor(diferenca_tempo.TotalSeconds);
-                        break;
-                    }
-                default:
-                    {
-                        diferenca_valor = 0;
-                        break;
-                    }
-            }
-            return diferenca_valor;
-        }
+            => GenFunctions.DateDiffPart(dt_start, dt_end, scale);
 
         /// <summary>
         /// Created by [SF] at [2017.03.23]
@@ -2076,7 +1483,7 @@ namespace CSGenio.business
         {
             name = name.Trim();
 
-            if (GlobalFunctions.emptyC(name) == 1)
+            if (string.IsNullOrEmpty(name))
                 return "";
 
             //vamos fazer split do name pelos espaços to depois avaliarmos

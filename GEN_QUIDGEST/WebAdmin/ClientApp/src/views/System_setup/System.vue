@@ -20,7 +20,6 @@
 <script>
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
-	import QAlert from '@/components/QAlert.vue';
 	import scheduler from './Scheduler';
 	import audit from './Audit';
 
@@ -28,7 +27,6 @@
 		name: 'system',
 
 		components: {
-			QAlert,
 			scheduler,
 			audit
 		},

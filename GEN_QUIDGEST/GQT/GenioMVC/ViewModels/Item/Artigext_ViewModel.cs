@@ -500,7 +500,7 @@ namespace GenioMVC.ViewModels.Item
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -553,7 +553,7 @@ namespace GenioMVC.ViewModels.Item
                 // Fill List fields
                 this.ValCodwareh = ViewModelConversion.ToString(row["wareh.codwareh"]);
                 TableWarehWarehdes.Value = ViewModelConversion.ToString(row["wareh.warehdes"]);
-                if (GlobalFunctions.emptyG(this.ValCodwareh) == 1)
+                if (GenFunctions.emptyG(this.ValCodwareh) == 1)
                 {
                     this.ValCodwareh = "";
                     TableWarehWarehdes.Value = "";
@@ -705,7 +705,7 @@ namespace GenioMVC.ViewModels.Item
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -762,7 +762,7 @@ namespace GenioMVC.ViewModels.Item
                 // Fill List fields
                 this.ValCodgitem = ViewModelConversion.ToString(row["gitem.codgitem"]);
                 TableGitemItemdes.Value = ViewModelConversion.ToString(row["gitem.itemdes"]);
-                if (GlobalFunctions.emptyG(this.ValCodgitem) == 1)
+                if (GenFunctions.emptyG(this.ValCodgitem) == 1)
                 {
                     this.ValCodgitem = "";
                     TableGitemItemdes.Value = "";

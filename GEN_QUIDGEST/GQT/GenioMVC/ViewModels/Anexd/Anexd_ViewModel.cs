@@ -511,7 +511,7 @@ namespace GenioMVC.ViewModels.Anexd
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -564,7 +564,7 @@ namespace GenioMVC.ViewModels.Anexd
                 // Fill List fields
                 this.ValCodequip = ViewModelConversion.ToString(row["equip.codequip"]);
                 TableEquipRegistnr.Value = ViewModelConversion.ToString(row["equip.registnr"]);
-                if (GlobalFunctions.emptyG(this.ValCodequip) == 1)
+                if (GenFunctions.emptyG(this.ValCodequip) == 1)
                 {
                     this.ValCodequip = "";
                     TableEquipRegistnr.Value = "";
@@ -716,7 +716,7 @@ namespace GenioMVC.ViewModels.Anexd
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -769,7 +769,7 @@ namespace GenioMVC.ViewModels.Anexd
                 // Fill List fields
                 this.ValCodlang = ViewModelConversion.ToString(row["langu.codlang"]);
                 TableLanguLangua.Value = ViewModelConversion.ToString(row["langu.langua"]);
-                if (GlobalFunctions.emptyG(this.ValCodlang) == 1)
+                if (GenFunctions.emptyG(this.ValCodlang) == 1)
                 {
                     this.ValCodlang = "";
                     TableLanguLangua.Value = "";

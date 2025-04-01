@@ -379,7 +379,7 @@ namespace Administration.Models
         private static string GetHumanValue(PersistentSupport sp, AreaInfo area, CSGenio.framework.Field field, string text)
         {
             if ((field.FieldType == FieldType.CHAVE_ESTRANGEIRA ||
-                 field.FieldType == FieldType.CHAVE_ESTRANGEIRA_GUID) && GlobalFunctions.emptyG(text) == 0)
+                 field.FieldType == FieldType.CHAVE_ESTRANGEIRA_GUID) && GenFunctions.emptyG(text) == 0)
             {
                 // Foreign keys are replaced by referenced tables' human key
                 Relation relation = area.ParentTables.Values.First(x => x.SourceRelField == field.Name);

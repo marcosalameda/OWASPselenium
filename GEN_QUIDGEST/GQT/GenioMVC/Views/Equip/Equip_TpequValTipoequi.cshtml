@@ -66,8 +66,8 @@
         .TableList(hasFilters: true)
         .RequestLink(@Url.Action("Equip_TpequValTipoequi", new { id = Model.ValCodequip, partialView = "Equip_TpequValTipoequi"}))
         .Filters(this.Model.Menu.Filters)
-        .BackgroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.business.GlobalFunctions.emptyC((p.ValBackcolo))==1)?("RGB(255,255,255)"):((p.ValBackcolo))))
-        .ForegroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.business.GlobalFunctions.emptyC((p.ValCorletra))==1)?("RGB(0,0,0)"):((p.ValCorletra))))
+        .BackgroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.framework.GenFunctions.emptyC((p.ValBackcolo))==1)?("RGB(255,255,255)"):((p.ValBackcolo))))
+        .ForegroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.framework.GenFunctions.emptyC((p.ValCorletra))==1)?("RGB(0,0,0)"):((p.ValCorletra))))
         .Form("Tpequ", false, false, new { data_skip_prevalida = "true" })
         .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
 		;

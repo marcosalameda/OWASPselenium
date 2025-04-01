@@ -567,7 +567,7 @@ namespace GenioMVC.ViewModels.Pesso
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -620,7 +620,7 @@ namespace GenioMVC.ViewModels.Pesso
                 // Fill List fields
                 this.ValCodcateg = ViewModelConversion.ToString(row["categ.codcateg"]);
                 TableCategCategory.Value = ViewModelConversion.ToString(row["categ.categoria"]);
-                if (GlobalFunctions.emptyG(this.ValCodcateg) == 1)
+                if (GenFunctions.emptyG(this.ValCodcateg) == 1)
                 {
                     this.ValCodcateg = "";
                     TableCategCategory.Value = "";
@@ -775,7 +775,7 @@ namespace GenioMVC.ViewModels.Pesso
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -828,7 +828,7 @@ namespace GenioMVC.ViewModels.Pesso
                 // Fill List fields
                 this.ValCodempre = ViewModelConversion.ToString(row["cmpny.codempre"]);
                 TableCmpnyDesignat.Value = ViewModelConversion.ToString(row["cmpny.designat"]);
-                if (GlobalFunctions.emptyG(this.ValCodempre) == 1)
+                if (GenFunctions.emptyG(this.ValCodempre) == 1)
                 {
                     this.ValCodempre = "";
                     TableCmpnyDesignat.Value = "";

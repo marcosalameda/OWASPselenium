@@ -659,7 +659,7 @@ namespace GenioMVC.Controllers
 					success = true;
 
 					//recriar user logado, caso contrário
-					if (GlobalFunctions.emptyN(UserContext.Current.User.Status) == 0 && UserContext.Current.User.Status == 1)
+					if (GenFunctions.emptyN(UserContext.Current.User.Status) == 0 && UserContext.Current.User.Status == 1)
 						recreateUser();
 				}
 				catch (Exception e)

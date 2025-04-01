@@ -512,7 +512,7 @@ namespace GenioMVC.ViewModels.Equip
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -565,7 +565,7 @@ namespace GenioMVC.ViewModels.Equip
                 // Fill List fields
                 this.ValCodempre = ViewModelConversion.ToString(row["cmpny.codempre"]);
                 TableCmpnyDesignat.Value = ViewModelConversion.ToString(row["cmpny.designat"]);
-                if (GlobalFunctions.emptyG(this.ValCodempre) == 1)
+                if (GenFunctions.emptyG(this.ValCodempre) == 1)
                 {
                     this.ValCodempre = "";
                     TableCmpnyDesignat.Value = "";
@@ -757,7 +757,7 @@ namespace GenioMVC.ViewModels.Equip
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -765,7 +765,7 @@ namespace GenioMVC.ViewModels.Equip
                 object hValue = Navigation.GetValue("cmpny");
                 if (!(hValue is Array))
                 {
-                    if (GlobalFunctions.emptyG(hValue) == 1)
+                    if (GenFunctions.emptyG(hValue) == 1)
                         returnEmptyDependants = true;
                     else
                         wherecodition.Equal(CSGenioApess1.FldCodempre, hValue);
@@ -820,7 +820,7 @@ namespace GenioMVC.ViewModels.Equip
                 // Fill List fields
                 this.ValCodpess1 = ViewModelConversion.ToString(row["pess1.codpesso"]);
                 TablePess1Name.Value = ViewModelConversion.ToString(row["pess1.name"]);
-                if (GlobalFunctions.emptyG(this.ValCodpess1) == 1)
+                if (GenFunctions.emptyG(this.ValCodpess1) == 1)
                 {
                     this.ValCodpess1 = "";
                     TablePess1Name.Value = "";

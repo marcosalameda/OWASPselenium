@@ -159,7 +159,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"since","until","since","until"}, new int[] {0,1,2,3}, "insta", "codinsta"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 4, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((GlobalFunctions.emptyD(((DateTime)args[0]))==1||GlobalFunctions.emptyD(((DateTime)args[1]))==1)?(0):(GlobalFunctions.Diferenca_entre_Datas(((DateTime)args[2]),((DateTime)args[3]),"H")));
+				return ((GenFunctions.emptyD(((DateTime)args[0]))==1||GenFunctions.emptyD(((DateTime)args[1]))==1)?(0):(GenFunctions.DateDiffPart(((DateTime)args[2]),((DateTime)args[3]),"H")));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -240,11 +240,11 @@ namespace CSGenio.business
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("item","equip");
 			info.Pathways.Add("cmpny","equip");
+			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
-			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("cntry","equip");
+			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}

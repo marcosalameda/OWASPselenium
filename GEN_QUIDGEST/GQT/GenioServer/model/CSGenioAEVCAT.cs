@@ -96,7 +96,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"until"}, new int[] {0}, "evcat", "codprogr"));
 			Qfield.ShowWhen = new ConditionFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return GlobalFunctions.emptyD(((DateTime)args[0]))==1;
+				return GenFunctions.emptyD(((DateTime)args[0]))==1;
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -111,7 +111,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"untilman","until"}, new int[] {0,1}, "evcat", "codprogr"));
 			Qfield.ShowWhen = new ConditionFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return GlobalFunctions.emptyD(((DateTime)args[0]))==1&&GlobalFunctions.emptyD(((DateTime)args[1]))==0;
+				return GenFunctions.emptyD(((DateTime)args[0]))==1&&GenFunctions.emptyD(((DateTime)args[1]))==0;
 			});
       Qfield.Formula = new EndPeriodFormula("since", "codpesso");
 			info.RegisterFieldDB(Qfield);
@@ -138,7 +138,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"untilman","untilman","until"}, new int[] {0,1,2}, "evcat", "codprogr"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 3, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((GlobalFunctions.emptyD(((DateTime)args[0]))==0)?(((DateTime)args[1])):(((DateTime)args[2])));
+				return ((GenFunctions.emptyD(((DateTime)args[0]))==0)?(((DateTime)args[1])):(((DateTime)args[2])));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -177,8 +177,8 @@ namespace CSGenio.business
 			info.Pathways.Add("pesso","pesso");
 			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("cntry","pesso");
-			info.Pathways.Add("pais1","pesso");
 			info.Pathways.Add("cmpny","pesso");
+			info.Pathways.Add("pais1","pesso");
 			info.Pathways.Add("regi1","pesso");
 		}
 

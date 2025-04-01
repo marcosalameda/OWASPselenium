@@ -49,7 +49,7 @@ namespace GenioMVC.Models
 		[DisplayName("Line")]
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValLinenumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLinenumb, 0)); } set { klass.ValLinenumb = Convert.ToDecimal(value); } }
+		public decimal? ValLinenumb { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValLinenumb, 0)); } set { klass.ValLinenumb = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValLinenumb() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Relin.ValLinenumb");
 
 		[DisplayName(">>PRODUCT")]
@@ -64,19 +64,19 @@ namespace GenioMVC.Models
 		[DisplayName("Ordered")]
 		/// <summary>Field : "Ordered" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValOrdered { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrdered, 0)); } set { klass.ValOrdered = Convert.ToDecimal(value); } }
+		public decimal? ValOrdered { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOrdered, 0)); } set { klass.ValOrdered = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValOrdered() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Relin.ValOrdered");
 
 		[DisplayName("Received")]
 		/// <summary>Field : "Received" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValReceived { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValReceived, 0)); } set { klass.ValReceived = Convert.ToDecimal(value); } }
+		public decimal? ValReceived { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValReceived, 0)); } set { klass.ValReceived = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValReceived() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Relin.ValReceived");
 
 		[DisplayName("Outstanding")]
 		/// <summary>Field : "Outstanding" Tipo: "N" Formula: + "[RELIN->ORDERED]-[RELIN->RECEIVED]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValOutstand { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutstand, 0)); } set { klass.ValOutstand = Convert.ToDecimal(value); } }
+		public decimal? ValOutstand { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOutstand, 0)); } set { klass.ValOutstand = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValOutstand() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Relin.ValOutstand");
 
 		[DisplayName(">>SUPPLIER")]

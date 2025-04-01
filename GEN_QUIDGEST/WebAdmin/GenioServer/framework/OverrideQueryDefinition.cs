@@ -54,7 +54,7 @@ namespace GenioServer.framework
                 chavePedid = condition.SubSets[1].Criterias[0].RightTerm.ToString();
             }  
 
-			 if (GlobalFunctions.emptyC(pesquisa) == 1)
+            if (string.IsNullOrEmpty(pesquisa))
             {
 				SelectQuery TimelineQuery = new SelectQuery()
 					.Select("Timeline","Date")
@@ -176,7 +176,7 @@ namespace GenioServer.framework
                 chavePedid = condition.SubSets[1].Criterias[0].RightTerm.ToString();
             }  
 
-			 if (GlobalFunctions.emptyC(pesquisa) == 1)
+            if (string.IsNullOrEmpty(pesquisa))
             {
 				SelectQuery TimelineQuery = new SelectQuery()
 					.Select("Timeline","Date")
@@ -297,7 +297,7 @@ namespace GenioServer.framework
                 chavePedid = condition.SubSets[1].Criterias[0].RightTerm.ToString();
             }  
 
-			 if (GlobalFunctions.emptyC(pesquisa) == 1)
+            if (string.IsNullOrEmpty(pesquisa))
             {
 				SelectQuery TimelineQuery = new SelectQuery()
 					.Select("Timeline","Date")
@@ -425,7 +425,7 @@ namespace GenioServer.framework
                 chavePedid = condition.SubSets[1].Criterias[0].RightTerm.ToString();
             }  
 
-			 if (GlobalFunctions.emptyC(pesquisa) == 1)
+            if (string.IsNullOrEmpty(pesquisa))
             {
 				SelectQuery TimelineQuery = new SelectQuery()
 					.Select("Timeline","Date")
@@ -551,7 +551,7 @@ namespace GenioServer.framework
                 chavePedid = condition.SubSets[1].Criterias[0].RightTerm.ToString();
             }  
 
-			 if (GlobalFunctions.emptyC(pesquisa) == 1)
+            if (string.IsNullOrEmpty(pesquisa))
             {
 				SelectQuery TimelineQuery = new SelectQuery()
 					.Select("Timeline","Date")
@@ -675,7 +675,7 @@ namespace GenioServer.framework
                 chavePedid = condition.SubSets[1].Criterias[0].RightTerm.ToString();
             }  
 
-			 if (GlobalFunctions.emptyC(pesquisa) == 1)
+            if (string.IsNullOrEmpty(pesquisa))
             {
 				SelectQuery TimelineQuery = new SelectQuery()
 					.Select("Timeline","Date")
@@ -794,7 +794,7 @@ namespace GenioServer.framework
                 chavePedid = condition.SubSets[1].Criterias[0].RightTerm.ToString();
             }  
 
-			 if (GlobalFunctions.emptyC(pesquisa) == 1)
+            if (string.IsNullOrEmpty(pesquisa))
             {
 				SelectQuery TimelineQuery = new SelectQuery()
 					.Select("Timeline","Date")
@@ -913,7 +913,7 @@ namespace GenioServer.framework
                 chavePedid = condition.SubSets[1].Criterias[0].RightTerm.ToString();
             }  
 
-			 if (GlobalFunctions.emptyC(pesquisa) == 1)
+            if (string.IsNullOrEmpty(pesquisa))
             {
 				SelectQuery TimelineQuery = new SelectQuery()
 					.Select("Timeline","Date")

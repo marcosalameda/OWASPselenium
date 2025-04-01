@@ -470,7 +470,7 @@ namespace GenioMVC.ViewModels.Outpt
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -523,7 +523,7 @@ namespace GenioMVC.ViewModels.Outpt
                 // Fill List fields
                 this.ValCodwareh = ViewModelConversion.ToString(row["ware1.codwareh"]);
                 TableWare1Warehdes.Value = ViewModelConversion.ToString(row["ware1.warehdes"]);
-                if (GlobalFunctions.emptyG(this.ValCodwareh) == 1)
+                if (GenFunctions.emptyG(this.ValCodwareh) == 1)
                 {
                     this.ValCodwareh = "";
                     TableWare1Warehdes.Value = "";

@@ -39,7 +39,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN FAMI1_TIPOSEQU_TPEQ1_NIVEL]/
 		column.Expression(p => p.ValNivel).Title(@Resources.LEVEL06184).Field("ValNivel").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN FAMI1_TIPOSEQU_TPEQ1_BACKCOLO]/
-		column.Expression(p => p.ValBackcolo).Title(@Resources.BACKGROUND_COLOR47883).Field("ValBackcolo").Size(30).BackgroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.business.GlobalFunctions.emptyC((p.ValBackcolo))==1)?("RGB(255,255,255)"):((p.ValBackcolo)))).ForegroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.business.GlobalFunctions.emptyC((p.ValCorletra))==1)?("RGB(0,0,0)"):((p.ValCorletra))));
+		column.Expression(p => p.ValBackcolo).Title(@Resources.BACKGROUND_COLOR47883).Field("ValBackcolo").Size(30).BackgroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.framework.GenFunctions.emptyC((p.ValBackcolo))==1)?("RGB(255,255,255)"):((p.ValBackcolo)))).ForegroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.framework.GenFunctions.emptyC((p.ValCorletra))==1)?("RGB(0,0,0)"):((p.ValCorletra))));
 // USE /[MANUAL GQT CUSTOM_COLUMN FAMI1_TIPOSEQU_TPEQ1_CORLETRA]/
 		column.Expression(p => p.ValCorletra).Title(@Resources.LETTER_COLOR15736).Field("ValCorletra").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN FAMI1_TIPOSEQU_TPEQ1_PRECOMAX]/

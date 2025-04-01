@@ -225,7 +225,7 @@ namespace CSGenio.business
 			argumentsListByArea= new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"addressuse"},new int[] {0},"addre","codaddre"));
 			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 1, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return GlobalFunctions.emptyC(((string)args[0]))==0;
+				return GenFunctions.emptyC(((string)args[0]))==0;
 			});
 			writeCondition.ErrorWarning = "Filling in this field should not be safely ignored as it may lead to misinterpretation of the information contained in the record.";
             writeCondition.Type =  ConditionType.WARNING;
@@ -240,7 +240,7 @@ namespace CSGenio.business
 			argumentsListByArea= new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"periodstart","periodend","periodstart","periodend"},new int[] {0,1,2,3},"addre","codaddre"));
 			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 4, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return GlobalFunctions.emptyD(((DateTime)args[0]))==1||GlobalFunctions.emptyD(((DateTime)args[1]))==1||GlobalFunctions.CompareDates(((DateTime)args[2]),((DateTime)args[3]))<=0;
+				return GenFunctions.emptyD(((DateTime)args[0]))==1||GenFunctions.emptyD(((DateTime)args[1]))==1||GenFunctions.CompareDates(((DateTime)args[2]),((DateTime)args[3]))<=0;
 			});
 			writeCondition.ErrorWarning = "If present, Start SHALL have a lower value than End";
             writeCondition.Type =  ConditionType.ERROR;

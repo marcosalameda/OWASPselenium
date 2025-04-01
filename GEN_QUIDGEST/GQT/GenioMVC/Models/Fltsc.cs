@@ -40,7 +40,7 @@ namespace GenioMVC.Models
 		[DisplayName("Scale ID")]
 		/// <summary>Field : "Scale ID" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValScaleid { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValScaleid, 0)); } set { klass.ValScaleid = Convert.ToDecimal(value); } }
+		public decimal? ValScaleid { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValScaleid, 0)); } set { klass.ValScaleid = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValScaleid() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Fltsc.ValScaleid");
 
 		[DisplayName("")]

@@ -461,7 +461,7 @@ namespace GenioMVC.Models
 				//Value da BD
 				string Qfield = tblMae.Value.AliasSourceTab + "." + tblMae.Value.SourceRelField;
 				string fieldValue = baseklass.returnValueField(Qfield).ToString();
-				bool isEmptyVal = GlobalFunctions.emptyG(fieldValue) == 1;
+				bool isEmptyVal = GenFunctions.emptyG(fieldValue) == 1;
 
 				var isComputedField = false;
 				if (!allowOverrideComputed)
@@ -485,7 +485,7 @@ namespace GenioMVC.Models
 				//Value do Hist
 				object hValue = null;
 				bool hasKey = navigation.CheckKey(areaToLoad, out hValue, level);
-				bool isEmptyHistVal = GlobalFunctions.emptyG(hValue) == 1;
+				bool isEmptyHistVal = GenFunctions.emptyG(hValue) == 1;
 
 				// skip if unable to find a single value for this key
 				if (hValue is Array)

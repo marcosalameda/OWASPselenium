@@ -207,7 +207,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
 
 			// Limitations
 			crs.Equal(CSGenioAequip.FldCoddeco, Navigation.GetValue("decom"));
-			if (GlobalFunctions.emptyG(Navigation.GetValue("decom")) == 1)
+			if (GenFunctions.emptyG(Navigation.GetValue("decom")) == 1)
 				tableReload = false;
 
 			if (isToExport)

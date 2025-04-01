@@ -438,7 +438,7 @@ namespace GenioMVC.ViewModels
                             int x = 0;
                             foreach (string value in sfc.Values)
                             {
-                                if (DateTime.TryParse(value, System.Threading.Thread.CurrentThread.CurrentCulture, DateTimeStyles.None, out parsedValue) && CSGenio.business.GlobalFunctions.emptyD(parsedValue) == 0)
+                                if (DateTime.TryParse(value, System.Threading.Thread.CurrentThread.CurrentCulture, DateTimeStyles.None, out parsedValue) && CSGenio.framework.GenFunctions.emptyD(parsedValue) == 0)
                                     Values[x++] = parsedValue;
                             }
 
@@ -801,7 +801,7 @@ namespace GenioMVC.ViewModels
                 {
                     if (sc.FieldType.Equals(typeof(DateTime?)))
                     {
-                        if (DateTime.TryParse(query, System.Threading.Thread.CurrentThread.CurrentCulture, DateTimeStyles.None, out t) && CSGenio.business.GlobalFunctions.emptyD(t) == 0)
+                        if (DateTime.TryParse(query, System.Threading.Thread.CurrentThread.CurrentCulture, DateTimeStyles.None, out t) && CSGenio.framework.GenFunctions.emptyD(t) == 0)
                             search_filters.Equal(sc.AreaField, t);
                     }
                     else if (!String.IsNullOrEmpty(sc.ArrayName))
@@ -1117,7 +1117,7 @@ namespace GenioMVC.ViewModels
         protected bool AddCriteriaAreaLimit(CriteriaSet crs, FieldRef fieldref, string area, string fieldValue, bool isMandatory)
         {
             var histValue = Navigation.GetValue(area);
-            var value = GlobalFunctions.emptyG(histValue) == 1 ? fieldValue : histValue;
+            var value = GenFunctions.emptyG(histValue) == 1 ? fieldValue : histValue;
 
             // Add an 'In' condition if the value is an array
             if (value is Array arrayValue)
@@ -1125,7 +1125,7 @@ namespace GenioMVC.ViewModels
                 crs.In(fieldref, arrayValue);
             }
             // Handle empty value based on 'isMandatory'
-            else if (GlobalFunctions.emptyG(value) == 1)
+            else if (GenFunctions.emptyG(value) == 1)
             {
                 return isMandatory ? false : true;
             }
@@ -1431,9 +1431,9 @@ namespace GenioMVC.ViewModels
             //Tries to position area and field to a real record: if we have information about the area key, then it will be enough, otherwise, it will use a 'virtual' positioning on the first record and field variable will be manually set
             //Model has a field with the desired value filled acting as the limit (As an example Limit type "C" (field) is expecting this to be happening on AreaLimitaN)
             if ((field.FieldType == FieldType.CHAVE_PRIMARIA || field.FieldType == FieldType.CHAVE_PRIMARIA_GUID || field.FieldType == FieldType.CHAVE_ESTRANGEIRA || field.FieldType == FieldType.CHAVE_ESTRANGEIRA_GUID) && //field a key
-                (GlobalFunctions.emptyG(this_limit_field) == 0 || GlobalFunctions.emptyG(nav_limit_area) == 0)) //and the key is present either in this_limit_field or in nav_limit_area
+                (GenFunctions.emptyG(this_limit_field) == 0 || GenFunctions.emptyG(nav_limit_area) == 0)) //and the key is present either in this_limit_field or in nav_limit_area
             {
-                if (GlobalFunctions.emptyG(this_limit_field) == 0) //this will give priority to field value with key to position the record.
+                if (GenFunctions.emptyG(this_limit_field) == 0) //this will give priority to field value with key to position the record.
                     nav_limit_area = this_limit_field.ToString();
 
                 if (field.FieldType == FieldType.CHAVE_ESTRANGEIRA || field.FieldType == FieldType.CHAVE_ESTRANGEIRA_GUID) //if limit_field is refering to a related area, then update model to the correct parent
@@ -1451,7 +1451,7 @@ namespace GenioMVC.ViewModels
                 //decompose human key into fields:
                 string[] human_fields_array = area_info.HumanKeyName.Split(',');
 				human_fields_array = human_fields_array.Where(x => !string.IsNullOrEmpty(x)).ToArray();
-                if (GlobalFunctions.emptyC(area_info.HumanKeyName) == 0)
+                if (GenFunctions.emptyC(area_info.HumanKeyName) == 0)
                 {
                     foreach (string human_field in human_fields_array)
                     {
@@ -1470,11 +1470,11 @@ namespace GenioMVC.ViewModels
                 {
                     field = model_limit_area.DBFields[human_field];
                     field_value = ((CSGenio.framework.RequestedField)model_limit_area.Fields[model_limit_area.Alias + "." + field.Name]).Value.ToString();
-                    if (GlobalFunctions.emptyC(field_value) == 0) //if has a value, exit loop
+                    if (GenFunctions.emptyC(field_value) == 0) //if has a value, exit loop
                         break;
                 }
 
-                if (GlobalFunctions.emptyC(area_info.HumanKeyName) == 1 || GlobalFunctions.emptyC(field_value) == 1) //last resort: displays primary key, better check human key table definitions to avoid this
+                if (GenFunctions.emptyC(area_info.HumanKeyName) == 1 || GenFunctions.emptyC(field_value) == 1) //last resort: displays primary key, better check human key table definitions to avoid this
                 {
                     field = model_limit_area.DBFields[area_info.PrimaryKeyName];
                     field_value = ((CSGenio.framework.RequestedField)model_limit_area.Fields[model_limit_area.Alias + "." + field.Name]).Value.ToString();
@@ -1500,7 +1500,7 @@ namespace GenioMVC.ViewModels
                 }
                 field = model_limit_area.DBFields[limit_field];
 
-                field_value = GlobalFunctions.emptyC(this_limit_field) == 0 ? this_limit_field.ToString() : (!string.IsNullOrEmpty(Navigation.GetStrValue(limit_field_value)) ? Navigation.GetStrValue(limit_field_value) : limit_field_value);
+                field_value = GenFunctions.emptyC(this_limit_field) == 0 ? this_limit_field.ToString() : (!string.IsNullOrEmpty(Navigation.GetStrValue(limit_field_value)) ? Navigation.GetStrValue(limit_field_value) : limit_field_value);
 
                 //Get history value for fullname, on its variants (this should be consistent, but it isnt on some limit "S..." types, maybe review it later.)
                 string field_Fullname = string.Empty;

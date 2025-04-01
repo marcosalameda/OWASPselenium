@@ -51,12 +51,6 @@
 						</q-row-container>
 					</q-card>
 				</row>
-				<row class="footer-btn">
-					<q-button
-						b-style="primary"
-						:label="Resources.GRAVAR_CONFIGURACAO36308"
-						@click="SaveConfigOthers" />
-				</row>
 			</q-row-container>
 		</q-card>
 	</row>
@@ -75,23 +69,6 @@
 				required: true
 			},
 		},
-
-		mixins: [reusableMixin],
-
-		emits: ['alert-class'],
-
-		methods: {
-			SaveConfigOthers() {
-				var vm = this;
-				QUtils.log("SaveConfigOthers - Request", QUtils.apiActionURL('Config', 'SaveConfigOthers'));
-				QUtils.postData('Config', 'SaveConfigOthers', vm.model, null, function (data) {
-					QUtils.log("SaveConfigOthers - Response", data);
-						this.$emit('alert-class', {
-						ResultMsg: data.Success ? this.Resources.ALTERACOES_EFETUADAS10166 : data.Message,
-						AlertType: data.Success ? 'success' : 'danger'
-					});
-				});
-			},
-		}
+		mixins: [reusableMixin]
 	};
 </script>

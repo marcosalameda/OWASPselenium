@@ -524,7 +524,7 @@ namespace GenioMVC.ViewModels.Insta
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -577,7 +577,7 @@ namespace GenioMVC.ViewModels.Insta
                 // Fill List fields
                 this.ValCodtpequ = ViewModelConversion.ToString(row["tpequ.codtpequ"]);
                 TableTpequTipoequi.Value = ViewModelConversion.ToString(row["tpequ.tipoequi"]);
-                if (GlobalFunctions.emptyG(this.ValCodtpequ) == 1)
+                if (GenFunctions.emptyG(this.ValCodtpequ) == 1)
                 {
                     this.ValCodtpequ = "";
                     TableTpequTipoequi.Value = "";
@@ -788,7 +788,7 @@ namespace GenioMVC.ViewModels.Insta
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -796,7 +796,7 @@ namespace GenioMVC.ViewModels.Insta
                 object hValue = Navigation.GetValue("tpequ");
                 if (!(hValue is Array))
                 {
-                    if (GlobalFunctions.emptyG(hValue) == 1)
+                    if (GenFunctions.emptyG(hValue) == 1)
                         returnEmptyDependants = true;
                     else
                         wherecodition.Equal(CSGenioAequip.FldCodtpequ, hValue);
@@ -855,7 +855,7 @@ namespace GenioMVC.ViewModels.Insta
                 // Fill List fields
                 this.ValCodequip = ViewModelConversion.ToString(row["equip.codequip"]);
                 TableEquipRegistnr.Value = ViewModelConversion.ToString(row["equip.registnr"]);
-                if (GlobalFunctions.emptyG(this.ValCodequip) == 1)
+                if (GenFunctions.emptyG(this.ValCodequip) == 1)
                 {
                     this.ValCodequip = "";
                     TableEquipRegistnr.Value = "";

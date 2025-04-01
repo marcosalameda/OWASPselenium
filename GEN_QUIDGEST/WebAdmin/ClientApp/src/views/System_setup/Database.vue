@@ -215,7 +215,7 @@
 			<q-button b-style="primary"
 				:label="Resources.GRAVAR_CONFIGURACAO36308"
 				:disabled="isTestingConnection"
-				@click="SaveConfigDatabase" />
+				@click="saveConfigDatabase" />
 
 			<data-system-badge
 				:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
@@ -227,7 +227,6 @@
 // @ is an alias to /src
 import { reusableMixin } from '@/mixins/mainMixin';
 import { QUtils } from '@/utils/mainUtils';
-import { computed } from 'vue';
 
 export default {
 	name: 'database',
@@ -246,58 +245,69 @@ export default {
 		return {
 			showDialog: false,
 			showLoader: false,
-			isTestingConnection: false
+			isTestingConnection: false,
+			redirectTimeout: null,
+			globalClickHandler: null
 		}
 	},
 
 	methods: {
-		SaveConfigDatabase() {
-			var vm = this;
+		saveConfigDatabase() {
 			//let hasConfig = vm.model.HasConfig;
 			QUtils.log("SaveConfigDatabase - Request", QUtils.apiActionURL('Config', 'SaveConfigDatabase'));
-			QUtils.postData('Config', 'SaveConfigDatabase', vm.model, null, function (data) {
+			QUtils.postData('Config', 'SaveConfigDatabase', this.model, null, (data) => {
 				QUtils.log("SaveConfigDatabase - Response", data);
-				if (data.ResultMsg === vm.Resources.FICHEIRO_DE_CONFIGUR18806 + " " + vm.Resources.SERA_REDIRECIONADO_E06592) {
-					vm.$emit('update-model', data);
-					setTimeout(function () {
-						vm.$router.push({ name: 'dashboard', params: { culture: vm.currentLang, system: vm.currentYear } });
+				if (data.ResultMsg === this.Resources.FICHEIRO_DE_CONFIGUR18806 + " " + this.Resources.SERA_REDIRECIONADO_E06592) {
+					this.$emit('update-model', data);
+					this.redirectTimeout = setTimeout(() => {
+						this.$router.push({ name: 'dashboard', params: { culture: this.currentLang, system: this.currentYear } });
 					}, 3000);
+					this.globalClickHandler = (event) => {
+						if (event.target.closest('.nav-item')) {
+							clearTimeout(this.redirectTimeout);
+						}
+					}
+					document.addEventListener('click', this.globalClickHandler, true);
 				} else {
-					vm.$emit('update-model', data);
+					this.$emit('update-model', data);
 				};
 			});
 		},
 
 		TestServerConection() {
-			var vm = this;
 			// Verify that essential data is present
-			if (!vm.model.Server || !vm.model.Schema || !vm.model.DbUser || !vm.model.DbPsw) {
-				vm.$emit('alert-class', { ResultMsg: vm.Resources.POR_FAVOR__PREENCHA_05829, AlertType: 'danger' });
+			if (!this.model.Server || !this.model.Schema || !this.model.DbUser || !this.model.DbPsw) {
+				this.$emit('alert-class', { ResultMsg: this.Resources.POR_FAVOR__PREENCHA_05829, AlertType: 'danger' });
 				return;
 			}
 
 			// Prepare data to send
 			const testData = {
-				Server: vm.model.Server,
-				DbUser: vm.model.DbUser,
-				Schema: vm.model.Schema,
-				DbPsw: vm.model.DbPsw
+				Server: this.model.Server,
+				DbUser: this.model.DbUser,
+				Schema: this.model.Schema,
+				DbPsw: this.model.DbPsw
 			};
 
 			// Reset the loader and testing state
-			vm.showLoader = true;
-			vm.isTestingConnection = true;
+			this.showLoader = true;
+			this.isTestingConnection = true;
 
 			// Make API call to test the connection
 			QUtils.log("TestServerConection - Request", QUtils.apiActionURL('Config', 'TestDBConnection'));
 			QUtils.postData('Config', 'TestDBConnection', testData, null, (response) => {
 				QUtils.log("TestServerConection - Response", response);
-				vm.$emit('connection-tested', response);
+				this.$emit('connection-tested', response);
 
-				vm.showLoader = false;
-				vm.isTestingConnection = false;
+				this.showLoader = false;
+				this.isTestingConnection = false;
 			})
-		}
+		},
+		beforeUnmount() {
+			if (this.globalClickHandler) {
+				document.removeEventListener('click', this.globalClickHandler, true);
+			}
+		},
 	}
 };
 </script>

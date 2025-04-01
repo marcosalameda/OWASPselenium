@@ -2050,10 +2050,10 @@ namespace GenioMVC.Controllers
         {
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
-            if (GlobalFunctions.emptyD(minEquipValDtaquisi) == 1 && Navigation.GetValue("minEquipValDtaquisi") != null)
+            if (GenFunctions.emptyD(minEquipValDtaquisi) == 1 && Navigation.GetValue("minEquipValDtaquisi") != null)
                 minEquipValDtaquisi = Navigation.GetDateValue("minEquipValDtaquisi").GetValueOrDefault();
 
-            if (GlobalFunctions.emptyD(maxEquipValDtaquisi) == 1 && Navigation.GetValue("maxEquipValDtaquisi") != null)
+            if (GenFunctions.emptyD(maxEquipValDtaquisi) == 1 && Navigation.GetValue("maxEquipValDtaquisi") != null)
                 maxEquipValDtaquisi = Navigation.GetDateValue("maxEquipValDtaquisi").GetValueOrDefault();
             // MH - Compatibilidade com antiga versão dos menus SE / SU
             var ValMinvalue = minEquipValDtaquisi;

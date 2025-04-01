@@ -147,7 +147,7 @@ namespace GenioMVC.Helpers.Cav
 					newField.Type = type;
 
 				if (string.IsNullOrEmpty(field.CavDesignation))
-					newField.Description = CSGenio.business.GlobalFunctions.CapitalizeInitials(field.Name);
+					newField.Description = CSGenio.framework.GenFunctions.CapitalizeInitials(field.Name);
 				else
 					newField.Description = field.CavDesignation;
 

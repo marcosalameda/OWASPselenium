@@ -40,7 +40,7 @@ namespace GenioMVC.Models
 		[DisplayName("Order")]
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValNorder { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNorder, 0)); } set { klass.ValNorder = Convert.ToDecimal(value); } }
+		public decimal? ValNorder { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNorder, 0)); } set { klass.ValNorder = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNorder() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Ccorr.ValNorder");
 
 		[DisplayName("Instant")]
@@ -76,13 +76,13 @@ namespace GenioMVC.Models
 		[DisplayName("Amount")]
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValQnty { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQnty, 0)); } set { klass.ValQnty = Convert.ToDecimal(value); } }
+		public decimal? ValQnty { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQnty, 0)); } set { klass.ValQnty = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQnty() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Ccorr.ValQnty");
 
 		[DisplayName("Balance")]
 		/// <summary>Field : "Balance" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValBalance { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBalance, 0)); } set { klass.ValBalance = Convert.ToDecimal(value); } }
+		public decimal? ValBalance { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValBalance, 0)); } set { klass.ValBalance = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValBalance() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Ccorr.ValBalance");
 
 		[DisplayName("Ref")]

@@ -547,7 +547,7 @@ namespace GenioMVC.ViewModels.Notif
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -600,7 +600,7 @@ namespace GenioMVC.ViewModels.Notif
                 // Fill List fields
                 this.ValCodpesso = ViewModelConversion.ToString(row["pess2.codpesso"]);
                 TablePess2Name.Value = ViewModelConversion.ToString(row["pess2.name"]);
-                if (GlobalFunctions.emptyG(this.ValCodpesso) == 1)
+                if (GenFunctions.emptyG(this.ValCodpesso) == 1)
                 {
                     this.ValCodpesso = "";
                     TablePess2Name.Value = "";

@@ -274,11 +274,11 @@ namespace GenioMVC.Controllers
 			}
             Models.Expen expen = Models.Expen.Find(id, "MLLIST_DB_MC_T");
             Navigation.SetValue("expen", id);
-            if(expen != null && (CSGenio.business.GlobalFunctions.emptyC(((string)expen.ValDescript))==0))
+            if(expen != null && (CSGenio.framework.GenFunctions.emptyC(((string)expen.ValDescript))==0))
             {
                 return RedirectToAction("PTN_MenuTR_3B111", "Expen", new { id = expen.ValCoddespe, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
             }
-            if(expen != null && (CSGenio.business.GlobalFunctions.emptyC(((string)expen.ValDescript))==1))
+            if(expen != null && (CSGenio.framework.GenFunctions.emptyC(((string)expen.ValDescript))==1))
             {
                 return RedirectToAction("PTN_MenuTR_3B121", "Expen", new { id = expen.ValCoddespe, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
             }
@@ -376,11 +376,11 @@ namespace GenioMVC.Controllers
 			}
             Models.Expen expen = Models.Expen.Find(id, "MLLIST_DB_MB_MC_T");
             Navigation.SetValue("expen", id);
-            if(expen != null && (CSGenio.business.GlobalFunctions.emptyC(((string)expen.ValDescript))==0))
+            if(expen != null && (CSGenio.framework.GenFunctions.emptyC(((string)expen.ValDescript))==0))
             {
                 return RedirectToAction("PTN_MenuTR_3C1111", "Expen", new { id = expen.ValCoddespe, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
             }
-            if(expen != null && (CSGenio.business.GlobalFunctions.emptyC(((string)expen.ValDescript))==1))
+            if(expen != null && (CSGenio.framework.GenFunctions.emptyC(((string)expen.ValDescript))==1))
             {
                 return RedirectToAction("PTN_MenuTR_3C1121", "Expen", new { id = expen.ValCoddespe, nav = Navigation.NavigationId, niv = (Request.Params["niv"] == null) ? Navigation.CurrentLevel.Level.ToString() : Request.Params["niv"] });
             }

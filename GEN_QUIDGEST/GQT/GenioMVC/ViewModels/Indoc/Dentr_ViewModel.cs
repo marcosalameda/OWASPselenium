@@ -507,7 +507,7 @@ namespace GenioMVC.ViewModels.Indoc
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -560,7 +560,7 @@ namespace GenioMVC.ViewModels.Indoc
                 // Fill List fields
                 this.ValCodcntry = ViewModelConversion.ToString(row["cntry.codcntry"]);
                 TableCntryCountry.Value = ViewModelConversion.ToString(row["cntry.country"]);
-                if (GlobalFunctions.emptyG(this.ValCodcntry) == 1)
+                if (GenFunctions.emptyG(this.ValCodcntry) == 1)
                 {
                     this.ValCodcntry = "";
                     TableCntryCountry.Value = "";
@@ -718,7 +718,7 @@ namespace GenioMVC.ViewModels.Indoc
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -726,7 +726,7 @@ namespace GenioMVC.ViewModels.Indoc
                 object hValue = Navigation.GetValue("cntry");
                 if (!(hValue is Array))
                 {
-                    if (GlobalFunctions.emptyG(hValue) == 1)
+                    if (GenFunctions.emptyG(hValue) == 1)
                         returnEmptyDependants = true;
                     else
                         wherecodition.Equal(CSGenioAcmpny.FldCodcntry, hValue);
@@ -781,7 +781,7 @@ namespace GenioMVC.ViewModels.Indoc
                 // Fill List fields
                 this.ValCodempre = ViewModelConversion.ToString(row["cmpny.codempre"]);
                 TableCmpnyDesignat.Value = ViewModelConversion.ToString(row["cmpny.designat"]);
-                if (GlobalFunctions.emptyG(this.ValCodempre) == 1)
+                if (GenFunctions.emptyG(this.ValCodempre) == 1)
                 {
                     this.ValCodempre = "";
                     TableCmpnyDesignat.Value = "";
@@ -944,7 +944,7 @@ namespace GenioMVC.ViewModels.Indoc
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -952,7 +952,7 @@ namespace GenioMVC.ViewModels.Indoc
                 object hValue = Navigation.GetValue("cntry");
                 if (!(hValue is Array))
                 {
-                    if (GlobalFunctions.emptyG(hValue) == 1)
+                    if (GenFunctions.emptyG(hValue) == 1)
                         returnEmptyDependants = true;
                     else
                         wherecodition.Equal(CSGenioApesso.FldCodpaise, hValue);
@@ -962,7 +962,7 @@ namespace GenioMVC.ViewModels.Indoc
                 object hValue = Navigation.GetValue("cmpny");
                 if (!(hValue is Array))
                 {
-                    if (GlobalFunctions.emptyG(hValue) == 1)
+                    if (GenFunctions.emptyG(hValue) == 1)
                         returnEmptyDependants = true;
                     else
                         wherecodition.Equal(CSGenioApesso.FldCodempre, hValue);
@@ -1017,7 +1017,7 @@ namespace GenioMVC.ViewModels.Indoc
                 // Fill List fields
                 this.ValCodpesso = ViewModelConversion.ToString(row["pesso.codpesso"]);
                 TablePessoName.Value = ViewModelConversion.ToString(row["pesso.name"]);
-                if (GlobalFunctions.emptyG(this.ValCodpesso) == 1)
+                if (GenFunctions.emptyG(this.ValCodpesso) == 1)
                 {
                     this.ValCodpesso = "";
                     TablePessoName.Value = "";
@@ -1169,7 +1169,7 @@ namespace GenioMVC.ViewModels.Indoc
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -1222,7 +1222,7 @@ namespace GenioMVC.ViewModels.Indoc
                 // Fill List fields
                 this.ValCodwareh = ViewModelConversion.ToString(row["ware1.codwareh"]);
                 TableWare1Warehdes.Value = ViewModelConversion.ToString(row["ware1.warehdes"]);
-                if (GlobalFunctions.emptyG(this.ValCodwareh) == 1)
+                if (GenFunctions.emptyG(this.ValCodwareh) == 1)
                 {
                     this.ValCodwareh = "";
                     TableWare1Warehdes.Value = "";

@@ -130,7 +130,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.Fl
         public GQT_Menu_211_ViewModel(NavigationContext currentNavigation) : base(currentNavigation)
         {
             this.RoleToShow = CSGenio.framework.Role.ROLE_1;
-            this._dataRef = GlobalFunctions.Today();
+            this._dataRef = GenFunctions.Today();
         }
 
         /// <inheritdoc/>

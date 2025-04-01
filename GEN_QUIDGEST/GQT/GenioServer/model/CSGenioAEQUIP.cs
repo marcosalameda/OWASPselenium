@@ -104,7 +104,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"sequennr"}, new int[] {0}, "equip", "codequip"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return GlobalFunctions.RIGHT("000000"+GlobalFunctions.NumericToString(((decimal)args[0]),0),6);
+				return GenFunctions.RIGHT("000000"+GenFunctions.NumericToString(((decimal)args[0]),0),6);
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -196,7 +196,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"dtdeco"}, new int[] {0}, "equip", "codequip"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((GlobalFunctions.emptyD(((DateTime)args[0]))==1)?(0):(1));
+				return ((GenFunctions.emptyD(((DateTime)args[0]))==1)?(0):(1));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -246,7 +246,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"dtaquisi"}, new int[] {0}, "equip", "codequip"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((GlobalFunctions.emptyD(((DateTime)args[0]))==1)?(0):(1));
+				return ((GenFunctions.emptyD(((DateTime)args[0]))==1)?(0):(1));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -421,12 +421,12 @@ namespace CSGenio.business
 			info.Pathways.Add("wareh","wareh");
 			info.Pathways.Add("tpequ","tpequ");
 			info.Pathways.Add("room1","room1");
-			info.Pathways.Add("item","item");
 			info.Pathways.Add("cmpny","cmpny");
+			info.Pathways.Add("item","item");
 			info.Pathways.Add("pess1","pess1");
 			info.Pathways.Add("famil","tpequ");
-			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("cntry","cmpny");
+			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("stake","pess1");
 			info.Pathways.Add("cate2","pess1");
 		}

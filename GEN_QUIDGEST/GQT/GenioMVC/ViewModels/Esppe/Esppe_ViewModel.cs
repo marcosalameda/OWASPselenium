@@ -459,7 +459,7 @@ namespace GenioMVC.ViewModels.Esppe
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -512,7 +512,7 @@ namespace GenioMVC.ViewModels.Esppe
                 // Fill List fields
                 this.ValCodpesso = ViewModelConversion.ToString(row["pesso.codpesso"]);
                 TablePessoName.Value = ViewModelConversion.ToString(row["pesso.name"]);
-                if (GlobalFunctions.emptyG(this.ValCodpesso) == 1)
+                if (GenFunctions.emptyG(this.ValCodpesso) == 1)
                 {
                     this.ValCodpesso = "";
                     TablePessoName.Value = "";
@@ -664,7 +664,7 @@ namespace GenioMVC.ViewModels.Esppe
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -717,7 +717,7 @@ namespace GenioMVC.ViewModels.Esppe
                 // Fill List fields
                 this.ValCodespec = ViewModelConversion.ToString(row["speci.codespec"]);
                 TableSpeciEspecial.Value = ViewModelConversion.ToString(row["speci.especial"]);
-                if (GlobalFunctions.emptyG(this.ValCodespec) == 1)
+                if (GenFunctions.emptyG(this.ValCodespec) == 1)
                 {
                     this.ValCodespec = "";
                     TableSpeciEspecial.Value = "";

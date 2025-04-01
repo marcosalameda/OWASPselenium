@@ -7,6 +7,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+namespace WebTest.Messaging
+{
+    //temporary empty namespace just to prevent manwin errors
+    //remove after version upgrade
+}
 
 namespace WebTest
 {

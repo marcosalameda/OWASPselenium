@@ -65,7 +65,7 @@ namespace GenioMVC.Models
 		[DisplayName("No rumour in the Company")]
 		/// <summary>Field : "No rumour in the Company" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValNrrepara { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrrepara, 0)); } set { klass.ValNrrepara = Convert.ToDecimal(value); } }
+		public decimal? ValNrrepara { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNrrepara, 0)); } set { klass.ValNrrepara = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNrrepara() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Repar.ValNrrepara");
 
 		[DisplayName("Technical area")]
@@ -112,7 +112,7 @@ namespace GenioMVC.Models
 		[DisplayName("Spent on hours")]
 		/// <summary>Field : "Spent on hours" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValHours { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValHours, 0)); } set { klass.ValHours = Convert.ToDecimal(value); } }
+		public decimal? ValHours { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValHours, 0)); } set { klass.ValHours = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValHours() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Repar.ValHours");
 
 		[DisplayName("ZZSTATE")]

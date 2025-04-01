@@ -11,7 +11,7 @@
             column.Expression(p => p.ValCodtpequ, true).Hidden();
 
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2A1_TPEQU_TPEQUCOD]/
-		column.Expression(p => p.ValTpequcod).Title(@Resources.CODE49225).Field("ValTpequcod").Size(20).BackgroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.business.GlobalFunctions.emptyC((p.ValBackcolo))==1)?("RGB(255,255,255)"):((p.ValBackcolo)))).ForegroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.business.GlobalFunctions.emptyC((p.ValCorletra))==1)?("RGB(0,0,0)"):((p.ValCorletra))));
+		column.Expression(p => p.ValTpequcod).Title(@Resources.CODE49225).Field("ValTpequcod").Size(20).BackgroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.framework.GenFunctions.emptyC((p.ValBackcolo))==1)?("RGB(255,255,255)"):((p.ValBackcolo)))).ForegroundColourOnCondition(p => p.ValZzstate != 0 ? "" : ((CSGenio.framework.GenFunctions.emptyC((p.ValCorletra))==1)?("RGB(0,0,0)"):((p.ValCorletra))));
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2A1_TPEQU_TIPOEQUI]/
 		column.Expression(p => p.ValTipoequi).Title(@Resources.TYPE_OF_EQUIPMENT18080).Field("ValTipoequi").Size(30);
 // USE /[MANUAL GQT CUSTOM_COLUMN GQT_MENU_2A1_TPEQU_TPEQUPAI]/

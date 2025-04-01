@@ -60,25 +60,25 @@ namespace GenioMVC.Models
 		[DisplayName("Numeric (Integer)")]
 		/// <summary>Field : "Numeric (Integer)" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValNumint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumint, 0)); } set { klass.ValNumint = Convert.ToDecimal(value); } }
+		public decimal? ValNumint { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNumint, 0)); } set { klass.ValNumint = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNumint() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tblb.ValNumint");
 
 		[DisplayName("Numeric (Decimal)")]
 		/// <summary>Field : "Numeric (Decimal)" Tipo: "ND" Formula:  ""</summary>
 		[NumericAttribute(3)]
-		public decimal? ValNumdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumdec, 3)); } set { klass.ValNumdec = Convert.ToDecimal(value); } }
+		public decimal? ValNumdec { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNumdec, 3)); } set { klass.ValNumdec = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNumdec() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tblb.ValNumdec");
 
 		[DisplayName("Currency (Interger)")]
 		/// <summary>Field : "Currency (Interger)" Tipo: "$" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValCurint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCurint, 2)); } set { klass.ValCurint = Convert.ToDecimal(value); } }
+		public decimal? ValCurint { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValCurint, 2)); } set { klass.ValCurint = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValCurint() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tblb.ValCurint");
 
 		[DisplayName("Currency (Decimal)")]
 		/// <summary>Field : "Currency (Decimal)" Tipo: "$D" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 4)]
-		public decimal? ValCurdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCurdec, 4)); } set { klass.ValCurdec = Convert.ToDecimal(value); } }
+		public decimal? ValCurdec { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValCurdec, 4)); } set { klass.ValCurdec = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValCurdec() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tblb.ValCurdec");
 
 		[DisplayName("Boolean")]

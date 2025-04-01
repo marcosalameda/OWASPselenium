@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocPreviewService", "DocPre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSGenio.core", "CSGenio.core\CSGenio.core.csproj", "{B4208612-C332-4A48-BE24-6EF1799BE01C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSGenio.core.Test", "CSGenio.core.Test\CSGenio.core.Test.csproj", "{0009F6AC-F00F-4CAE-A088-AC027CF603B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{1B3CF324-C999-41E6-AF8D-6BA6049A446A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B3CF324-C999-41E6-AF8D-6BA6049A446A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B3CF324-C999-41E6-AF8D-6BA6049A446A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0009F6AC-F00F-4CAE-A088-AC027CF603B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0009F6AC-F00F-4CAE-A088-AC027CF603B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0009F6AC-F00F-4CAE-A088-AC027CF603B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0009F6AC-F00F-4CAE-A088-AC027CF603B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

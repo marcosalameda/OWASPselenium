@@ -294,7 +294,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"status","status","status","status","lastupdt","status","lastupdt","status","status","status"}, new int[] {0,1,2,3,4,5,6,7,8,9}, "s_apr", "codascpr"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 10, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((((string)args[0])=="EE"||((string)args[1])=="D"||((string)args[2])=="AC"||((string)args[3])=="AG")?((((GlobalFunctions.Diferenca_entre_Datas(((DateTime)args[4]),DateTime.Now,"S")>10&&((string)args[5])!="AG")||(GlobalFunctions.Diferenca_entre_Datas(((DateTime)args[6]),DateTime.Now,"S")>45&&((string)args[7])=="AG"))?("NR"):(((string)args[8])))):(((string)args[9])));
+				return ((((string)args[0])=="EE"||((string)args[1])=="D"||((string)args[2])=="AC"||((string)args[3])=="AG")?((((GenFunctions.DateDiffPart(((DateTime)args[4]),DateTime.Now,"S")>10&&((string)args[5])!="AG")||(GenFunctions.DateDiffPart(((DateTime)args[6]),DateTime.Now,"S")>45&&((string)args[7])=="AG"))?("NR"):(((string)args[8])))):(((string)args[9])));
 			});
             Qfield.ArrayName = "dbo.GetValArrayCs_prstat";
             Qfield.ArrayClassName = "S_prstat";

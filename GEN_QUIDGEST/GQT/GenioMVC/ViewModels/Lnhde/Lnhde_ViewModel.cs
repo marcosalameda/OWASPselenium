@@ -534,7 +534,7 @@ namespace GenioMVC.ViewModels.Lnhde
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -587,7 +587,7 @@ namespace GenioMVC.ViewModels.Lnhde
                 // Fill List fields
                 this.ValCodpedid = ViewModelConversion.ToString(row["pedid.codpedid"]);
                 TablePedidNrpedido.Value = ViewModelConversion.ToNumeric(row["pedid.nrpedido"]);
-                if (GlobalFunctions.emptyG(this.ValCodpedid) == 1)
+                if (GenFunctions.emptyG(this.ValCodpedid) == 1)
                 {
                     this.ValCodpedid = "";
                     TablePedidNrpedido.Value = 0m;
@@ -744,7 +744,7 @@ namespace GenioMVC.ViewModels.Lnhde
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -752,7 +752,7 @@ namespace GenioMVC.ViewModels.Lnhde
                 object hValue = Navigation.GetValue("pedid");
                 if (!(hValue is Array))
                 {
-                    if (GlobalFunctions.emptyG(hValue) == 1)
+                    if (GenFunctions.emptyG(hValue) == 1)
                         returnEmptyDependants = true;
                     else
                         wherecodition.Equal(CSGenioAlnhpd.FldCodpedid, hValue);
@@ -811,7 +811,7 @@ namespace GenioMVC.ViewModels.Lnhde
                 // Fill List fields
                 this.ValCodlnhpd = ViewModelConversion.ToString(row["lnhpd.codlnhpd"]);
                 TableLnhpdLine.Value = ViewModelConversion.ToNumeric(row["lnhpd.line"]);
-                if (GlobalFunctions.emptyG(this.ValCodlnhpd) == 1)
+                if (GenFunctions.emptyG(this.ValCodlnhpd) == 1)
                 {
                     this.ValCodlnhpd = "";
                     TableLnhpdLine.Value = 0m;
@@ -964,7 +964,7 @@ namespace GenioMVC.ViewModels.Lnhde
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -1017,7 +1017,7 @@ namespace GenioMVC.ViewModels.Lnhde
                 // Fill List fields
                 this.ValCodtpequ = ViewModelConversion.ToString(row["tpeq1.codtpequ"]);
                 TableTpeq1Tipoequi.Value = ViewModelConversion.ToString(row["tpeq1.tipoequi"]);
-                if (GlobalFunctions.emptyG(this.ValCodtpequ) == 1)
+                if (GenFunctions.emptyG(this.ValCodtpequ) == 1)
                 {
                     this.ValCodtpequ = "";
                     TableTpeq1Tipoequi.Value = "";

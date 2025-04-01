@@ -79,13 +79,13 @@ namespace GenioMVC.Models
 		[DisplayName("Maximum price")]
 		/// <summary>Field : "Maximum price" Tipo: "$D" Formula: U1 "TABPR[TABPR->PRECOHOR][TABPR->PRECOHOR]"</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecomax { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecomax, 2)); } set { klass.ValPrecomax = Convert.ToDecimal(value); } }
+		public decimal? ValPrecomax { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrecomax, 2)); } set { klass.ValPrecomax = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPrecomax() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tpequ.ValPrecomax");
 
 		[DisplayName("Last price")]
 		/// <summary>Field : "Last price" Tipo: "$D" Formula: U1 "TABPR[TABPR->SINCE][TABPR->PRECOHOR][Today]"</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecoult { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecoult, 2)); } set { klass.ValPrecoult = Convert.ToDecimal(value); } }
+		public decimal? ValPrecoult { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrecoult, 2)); } set { klass.ValPrecoult = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPrecoult() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tpequ.ValPrecoult");
 
 		[DisplayName("Since")]
@@ -98,7 +98,7 @@ namespace GenioMVC.Models
 		[DisplayName("Amount")]
 		/// <summary>Field : "Amount" Tipo: "N" Formula: SR "[EQUIP->1]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValQtdequip { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdequip, 0)); } set { klass.ValQtdequip = Convert.ToDecimal(value); } }
+		public decimal? ValQtdequip { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQtdequip, 0)); } set { klass.ValQtdequip = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValQtdequip() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Tpequ.ValQtdequip");
 
 		[DisplayName("Kit")]

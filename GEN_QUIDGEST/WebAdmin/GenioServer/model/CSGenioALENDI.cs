@@ -126,7 +126,7 @@ namespace CSGenio.business
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"start"}, new int[] {0}, "lendi", "codlendi"));
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"frequenc"}, new int[] {1}, "equip", "codequip"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return GlobalFunctions.SumDays(((DateTime)args[0]),((decimal)args[1]));
+				return GenFunctions.DateAddDays(((DateTime)args[0]),((decimal)args[1]));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -141,7 +141,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"warndt"}, new int[] {0}, "lendi", "codlendi"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return GlobalFunctions.SumDays(((DateTime)args[0]),1);
+				return GenFunctions.DateAddDays(((DateTime)args[0]),1);
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -177,7 +177,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"returndt"}, new int[] {0}, "lendi", "codlendi"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((GlobalFunctions.emptyD(((DateTime)args[0]))==1)?(0):(1));
+				return ((GenFunctions.emptyD(((DateTime)args[0]))==1)?(0):(1));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -193,7 +193,7 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"end","end"}, new int[] {0,1}, "lendi", "codlendi"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((GlobalFunctions.emptyD(((DateTime)args[0]))==1)?(0):(GlobalFunctions.Diferenca_entre_Datas(DateTime.Today,((DateTime)args[1]),"D")));
+				return ((GenFunctions.emptyD(((DateTime)args[0]))==1)?(0):(GenFunctions.DateDiffPart(DateTime.Today,((DateTime)args[1]),"D")));
 			});
 			info.RegisterFieldDB(Qfield);
 
@@ -244,13 +244,13 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(14);
-			info.Pathways.Add("pess1","pess1");
 			info.Pathways.Add("pess2","pess2");
+			info.Pathways.Add("pess1","pess1");
 			info.Pathways.Add("equip","equip");
-			info.Pathways.Add("stake","pess1");
+			info.Pathways.Add("stake","pess2");
+			info.Pathways.Add("cmpny","pess2");
+			info.Pathways.Add("cntry","pess2");
 			info.Pathways.Add("cate2","pess1");
-			info.Pathways.Add("cmpny","pess1");
-			info.Pathways.Add("cntry","pess1");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");

@@ -372,7 +372,7 @@ namespace GenioMVC.ViewModels
                     else if (
                         LimitArea.Alias == TableAlias
                         && FieldName == LimitArea.Information.PrimaryKeyName
-                        && CSGenio.business.GlobalFunctions.emptyC(
+                        && CSGenio.framework.GenFunctions.emptyC(
                             LimitArea.Information.HumanKeyName
                         ) == 0
                     ) //special case

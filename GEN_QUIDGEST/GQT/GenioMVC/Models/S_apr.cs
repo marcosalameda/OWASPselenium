@@ -113,7 +113,7 @@ namespace GenioMVC.Models
 		[DisplayName("Percentage")]
 		/// <summary>Field : "Percentage" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValPercenta { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPercenta, 0)); } set { klass.ValPercenta = Convert.ToDecimal(value); } }
+		public decimal? ValPercenta { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPercenta, 0)); } set { klass.ValPercenta = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPercenta() => this.SerializeAllFields || this.FieldsToSerialize.Contains("S_apr.ValPercenta");
 
 		[DisplayName("Process mode")]
@@ -132,7 +132,7 @@ namespace GenioMVC.Models
 		[DisplayName("Process ID")]
 		/// <summary>Field : "Process ID" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValId { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValId, 0)); } set { klass.ValId = Convert.ToDecimal(value); } }
+		public decimal? ValId { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValId, 0)); } set { klass.ValId = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValId() => this.SerializeAllFields || this.FieldsToSerialize.Contains("S_apr.ValId");
 
 		[DisplayName("Entid key")]

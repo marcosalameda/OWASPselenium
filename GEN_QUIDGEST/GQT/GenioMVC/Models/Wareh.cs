@@ -63,7 +63,7 @@ namespace GenioMVC.Models
 		[DisplayName("Number of employees")]
 		/// <summary>Field : "Number of employees" Tipo: "N" Formula: SR "[WPESS->1]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValNum_employee { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNum_employee, 0)); } set { klass.ValNum_employee = Convert.ToDecimal(value); } }
+		public decimal? ValNum_employee { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNum_employee, 0)); } set { klass.ValNum_employee = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNum_employee() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Wareh.ValNum_employee");
 
 		[DisplayName("ZZSTATE")]

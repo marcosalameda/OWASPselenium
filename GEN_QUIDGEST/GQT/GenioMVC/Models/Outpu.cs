@@ -49,7 +49,7 @@ namespace GenioMVC.Models
 		[DisplayName("Line")]
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(1)]
-		public decimal? ValLine { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLine, 1)); } set { klass.ValLine = Convert.ToDecimal(value); } }
+		public decimal? ValLine { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValLine, 1)); } set { klass.ValLine = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValLine() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Outpu.ValLine");
 
 		[DisplayName(">WAREHOUSE")]
@@ -89,7 +89,7 @@ namespace GenioMVC.Models
 		[DisplayName("Qtd output")]
 		/// <summary>Field : "Qtd output" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValExitqnty { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValExitqnty, 0)); } set { klass.ValExitqnty = Convert.ToDecimal(value); } }
+		public decimal? ValExitqnty { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValExitqnty, 0)); } set { klass.ValExitqnty = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValExitqnty() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Outpu.ValExitqnty");
 
 		[DisplayName("ZZSTATE")]

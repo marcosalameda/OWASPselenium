@@ -435,10 +435,10 @@ namespace GenioMVC.Controllers
         {
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
-            if (GlobalFunctions.emptyD(minLendiValStart) == 1 && Navigation.GetValue("minLendiValStart") != null)
+            if (GenFunctions.emptyD(minLendiValStart) == 1 && Navigation.GetValue("minLendiValStart") != null)
                 minLendiValStart = Navigation.GetDateValue("minLendiValStart").GetValueOrDefault();
 
-            if (GlobalFunctions.emptyD(maxLendiValStart) == 1 && Navigation.GetValue("maxLendiValStart") != null)
+            if (GenFunctions.emptyD(maxLendiValStart) == 1 && Navigation.GetValue("maxLendiValStart") != null)
                 maxLendiValStart = Navigation.GetDateValue("maxLendiValStart").GetValueOrDefault();
             // MH - Compatibilidade com antiga versão dos menus SE / SU
             var ValMinvalue = minLendiValStart;

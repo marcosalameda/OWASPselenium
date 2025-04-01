@@ -58,13 +58,13 @@ namespace GenioMVC.Models
 		[DisplayName("Year")]
 		/// <summary>Field : "Year" Tipo: "N" Formula: + "[YEAR->YEARNUM]"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValYearnumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDecimal(value); } }
+		public decimal? ValYearnumb { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValYearnumb() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Expen.ValYearnumb");
 
 		[DisplayName("Previous year")]
 		/// <summary>Field : "Previous year" Tipo: "N" Formula: + "[YEAR->YEARNUM]-1"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValYearprev { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearprev, 0)); } set { klass.ValYearprev = Convert.ToDecimal(value); } }
+		public decimal? ValYearprev { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValYearprev, 0)); } set { klass.ValYearprev = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValYearprev() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Expen.ValYearprev");
 
 		[DisplayName(">AGREGADOR")]
@@ -84,13 +84,13 @@ namespace GenioMVC.Models
 		[DisplayName("Value")]
 		/// <summary>Field : "Value" Tipo: "$D" Formula:  ""</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
+		public decimal? ValValue { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValValue() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Expen.ValValue");
 
 		[DisplayName("Previous Value")]
 		/// <summary>Field : "Previous Value" Tipo: "$D" Formula: CT "EXPE1[EXPEN->YEARPREV][EXPE1->YEARNUMB][EXPE1->VALUE](DESC)"</summary>
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrevval { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrevval, 2)); } set { klass.ValPrevval = Convert.ToDecimal(value); } }
+		public decimal? ValPrevval { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrevval, 2)); } set { klass.ValPrevval = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValPrevval() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Expen.ValPrevval");
 
 		[DisplayName("ZZSTATE")]

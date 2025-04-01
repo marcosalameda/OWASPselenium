@@ -471,7 +471,7 @@ namespace GenioMVC.ViewModels.Sale
             CriteriaSet wherecodition = CriteriaSet.And();
 
             // Return default values
-            if (GlobalFunctions.emptyG(PKey) == 1)
+            if (GenFunctions.emptyG(PKey) == 1)
                 returnEmptyDependants = true;
 
             // Check if the limit(s) is filled if exists
@@ -524,7 +524,7 @@ namespace GenioMVC.ViewModels.Sale
                 // Fill List fields
                 this.ValCodorgan = ViewModelConversion.ToString(row["organ.codorgan"]);
                 TableOrganOrganiza.Value = ViewModelConversion.ToString(row["organ.organiza"]);
-                if (GlobalFunctions.emptyG(this.ValCodorgan) == 1)
+                if (GenFunctions.emptyG(this.ValCodorgan) == 1)
                 {
                     this.ValCodorgan = "";
                     TableOrganOrganiza.Value = "";

@@ -249,7 +249,7 @@ namespace Administration.Controllers
 
         private string ConvertMQstatusString(string val)
         {
-            int Qvalue = GlobalFunctions.atoi(val);
+            int Qvalue = GenFunctions.atoi(val);
             return ((MQueueACK)Qvalue).ToString();
         }
 
@@ -426,7 +426,7 @@ namespace Administration.Controllers
                 int indiceOrder = 0;
 
                 if (!String.IsNullOrEmpty(order))
-                    indiceOrder = GlobalFunctions.atoi(order);
+                    indiceOrder = GenFunctions.atoi(order);
 
                 SortOrder sortOrder = SortOrder.Ascending;
                 if (orderDir == "desc")
@@ -539,7 +539,7 @@ namespace Administration.Controllers
                 int indiceOrder = 0;
 
                 if (!String.IsNullOrEmpty(order))
-                    indiceOrder = GlobalFunctions.atoi(order);
+                    indiceOrder = GenFunctions.atoi(order);
 
                 SortOrder sortOrder = SortOrder.Ascending;
                 if (orderDir == "desc")
@@ -694,7 +694,7 @@ namespace Administration.Controllers
                 int indiceOrder = 0;
 
                 if (!String.IsNullOrEmpty(order))
-                    indiceOrder = GlobalFunctions.atoi(order);
+                    indiceOrder = GenFunctions.atoi(order);
 
                 SortOrder sortOrder = SortOrder.Ascending;
                 if (orderDir == "desc")
@@ -800,7 +800,7 @@ namespace Administration.Controllers
 
                 for (int i = 0; i < dm.NumRows; i++)
                 {
-                    lst.Add(new[] { ToJavascriptTimestamp(GlobalFunctions.DateSetTime(dm.GetDate(i, 0), dm.GetString(i, 1))), dm.GetNumeric(i,2) });
+                    lst.Add(new[] { ToJavascriptTimestamp(GenFunctions.DateSetTime(dm.GetDate(i, 0), dm.GetString(i, 1))), dm.GetNumeric(i,2) });
                 }
                                 
                 sql = "WITH stats as (SELECT codmqqueues, datacria, CAST(datacria as DATE) as Dia,  Hora = FORMAT( cast( FORMAT(datacria,'HH:'+ CAST(CAST( DATEPART(minute, datacria)/20 as INT)*20 as varchar)) as time), N'hh\\.mm' ) " +
@@ -811,7 +811,7 @@ namespace Administration.Controllers
 
                 for (int i = 0; i < dm.NumRows; i++)
                 {
-                    lstAck.Add(new[] { ToJavascriptTimestamp(GlobalFunctions.DateSetTime(dm.GetDate(i, 0), dm.GetString(i, 1))), dm.GetNumeric(i, 2) });
+                    lstAck.Add(new[] { ToJavascriptTimestamp(GenFunctions.DateSetTime(dm.GetDate(i, 0), dm.GetString(i, 1))), dm.GetNumeric(i, 2) });
                 }
                 
                 sp.closeConnection();

@@ -64,7 +64,7 @@ namespace Administration
             try
             {
                 user = SysConfiguration.CreateWebAdminUser(yearApp);
-                user.Language = GlobalFunctions.emptyC(language) == 1 ? DEFAULTLANGUAGE.Replace("-", "").ToUpper() : language;
+                user.Language = string.IsNullOrEmpty(language) ? DEFAULTLANGUAGE.Replace("-", "").ToUpper() : language;
                 Log.SetContext("utilizador", "WebAPI_QApi");
 
                 sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
@@ -129,7 +129,7 @@ namespace Administration
                 IsAckResponse isACKTest = mqproc.IsACKQueue();
                 if (isACKTest.IsACK)
                 {
-                    if(GlobalFunctions.emptyG(isACKTest.QueueKey)==1)
+                    if(GenFunctions.emptyG(isACKTest.QueueKey)==1)
                         throw new BusinessException("Não existe a queue original da ACK - " + queueName, "WebAPI.ProcessMessage", "Não existe a queue original da ACK - " + queueName);
 
 					sp.openTransaction();

@@ -67,7 +67,7 @@ namespace GenioMVC.Models
 		[DisplayName("Number of lending")]
 		/// <summary>Field : "Number of lending" Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValLendinnr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLendinnr, 0)); } set { klass.ValLendinnr = Convert.ToDecimal(value); } }
+		public decimal? ValLendinnr { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValLendinnr, 0)); } set { klass.ValLendinnr = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValLendinnr() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Lendi.ValLendinnr");
 
 		[DisplayName("Beginning")]
@@ -112,7 +112,7 @@ namespace GenioMVC.Models
 		[DisplayName("Days for return period")]
 		/// <summary>Field : "Days for return period" Tipo: "N" Formula: +H "iif(emptyD([LENDI->END])==1,0,Diferenca_entre_Datas([Today],[LENDI->END],"D"))"</summary>
 		[NumericAttribute(0)]
-		public decimal? ValDayslimi { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDayslimi, 0)); } set { klass.ValDayslimi = Convert.ToDecimal(value); } }
+		public decimal? ValDayslimi { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDayslimi, 0)); } set { klass.ValDayslimi = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValDayslimi() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Lendi.ValDayslimi");
 
 		[DisplayName("If out of date")]

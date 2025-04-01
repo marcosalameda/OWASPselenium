@@ -40,7 +40,7 @@ namespace GenioMVC.Models
 		[DisplayName("No.")]
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
 		[NumericAttribute(0)]
-		public decimal? ValNrdocsda { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrdocsda, 0)); } set { klass.ValNrdocsda = Convert.ToDecimal(value); } }
+		public decimal? ValNrdocsda { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNrdocsda, 0)); } set { klass.ValNrdocsda = Convert.ToDecimal(value); } }
 		public bool ShouldSerializeValNrdocsda() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Oudoc.ValNrdocsda");
 
 		[DisplayName("Date")]

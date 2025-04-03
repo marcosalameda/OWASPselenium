@@ -261,7 +261,7 @@ namespace GenioMVC.ViewModels.Dashboard
 				},
 				new MenuWidget
 				{
-					Id = "Menu_311",
+					Id = "Menu_REPAIR_LIST",
 					Order = 18,
 					Width = 2,
 					Height = 2,
@@ -272,8 +272,8 @@ namespace GenioMVC.ViewModels.Dashboard
 					Title = Resources.Resources.MENU_432243,
 					Group = "_MENUS",
 					Module = "PTN",
-					Path = "PTN" + " > " + string.Join(" > ", GenioMVC.Helpers.Menus.Menus.MenuTextPath("PTN", "311")),
-					MenuEntry = GenioMVC.Helpers.Menus.Menus.FindMenu("PTN", "311")
+					Path = "PTN" + " > " + string.Join(" > ", GenioMVC.Helpers.Menus.Menus.MenuTextPath("PTN", "REPAIR_LIST")),
+					MenuEntry = GenioMVC.Helpers.Menus.Menus.FindMenu("PTN", "REPAIR_LIST")
 				},
 			};
 

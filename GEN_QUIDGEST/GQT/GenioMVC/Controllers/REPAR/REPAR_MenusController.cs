@@ -29,25 +29,25 @@ namespace GenioMVC.Controllers
     public partial class ReparController : ControllerBase
     {
         #region NavigationLocation Names
-		private static readonly NavigationLocation ACTION_GQT_MENU_311 = new NavigationLocation("REPAIRS18165", "GQT_Menu_311", "Repar") { vueRouteName = "menu-GQT_311" };
+		private static readonly NavigationLocation ACTION_GQT_MENU_REPAIR_LIST = new NavigationLocation("REPAIRS18165", "GQT_Menu_REPAIR_LIST", "Repar") { vueRouteName = "menu-GQT_REPAIR_LIST" };
         #endregion
 
         #region Menus
 
 
         //
-        // GET: /Repar/GQT_Menu_311
+        // GET: /Repar/GQT_Menu_REPAIR_LIST
         [AuthorizeForUsers]
 		[AuthorizeForUsers]
-        [ActionName("GQT_Menu_311")]
-        public ActionResult GQT_Menu_311(bool allSelected = false)
+        [ActionName("GQT_Menu_REPAIR_LIST")]
+        public ActionResult GQT_Menu_REPAIR_LIST(bool allSelected = false)
         {
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 
-            GQT_Menu_311_ViewModel model = new GQT_Menu_311_ViewModel(Navigation);
+            GQT_Menu_REPAIR_LIST_ViewModel model = new GQT_Menu_REPAIR_LIST_ViewModel(Navigation);
             bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
             if (isHomePage)
-                Navigation.SetValue("HomePage", "GQT_Menu_311");
+                Navigation.SetValue("HomePage", "GQT_Menu_REPAIR_LIST");
             ViewBag.isHomePage = isHomePage;
             //If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
             if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_repar")))
@@ -69,21 +69,21 @@ namespace GenioMVC.Controllers
             NameValueCollection querystring = Request.Form.Count > 0 ? Request.Form : Request.QueryString;
 			if (!isHomePage && !Request.IsAjaxRequest())
             {
-                if (Navigation.CurrentLevel == null || !ACTION_GQT_MENU_311.IsSameAction(Navigation.CurrentLevel.Location))
+                if (Navigation.CurrentLevel == null || !ACTION_GQT_MENU_REPAIR_LIST.IsSameAction(Navigation.CurrentLevel.Location))
                 {
                     // reset the selections for this new navigation flow
                     // TODO: This change still requires more testing
-                    Navigation.RemoveHistoryLevel(ACTION_GQT_MENU_311);
-                    if (Navigation.CurrentLevel.Location.Action != ACTION_GQT_MENU_311.Action)
+                    Navigation.RemoveHistoryLevel(ACTION_GQT_MENU_REPAIR_LIST);
+                    if (Navigation.CurrentLevel.Location.Action != ACTION_GQT_MENU_REPAIR_LIST.Action)
                     {
-                        Navigation.AddHistoryLevel(ACTION_GQT_MENU_311, FormMode.List);
+                        Navigation.AddHistoryLevel(ACTION_GQT_MENU_REPAIR_LIST, FormMode.List);
                         CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
                     }
 				}
             }
             else if (isHomePage)
             {
-                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_GQT_MENU_311.ShortDescription());
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_GQT_MENU_REPAIR_LIST.ShortDescription());
                 Navigation.SetValue("HomePageContainsList", true);
             }
 
@@ -91,7 +91,7 @@ namespace GenioMVC.Controllers
 
 			model.Navigation = Navigation;
 
-// USE /[MANUAL GQT MENU_GET 311]/
+// USE /[MANUAL GQT MENU_GET REPAIR_LIST]/
 
 
 			model.Load(perPage, querystring, Request.IsAjaxRequest());
@@ -101,11 +101,11 @@ namespace GenioMVC.Controllers
 
  
             if(isHomePage)
-                return PartialView("GQT_Menu_311", model);
+                return PartialView("GQT_Menu_REPAIR_LIST", model);
             else if (!Request.IsAjaxRequest())
                 return View(model);
             else
-                return PartialView("GQT_Menu_311_Partial", model);
+                return PartialView("GQT_Menu_REPAIR_LIST_Partial", model);
         }
 
 

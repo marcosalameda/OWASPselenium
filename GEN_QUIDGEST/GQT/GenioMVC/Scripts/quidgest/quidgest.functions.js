@@ -691,7 +691,7 @@ qapi.prototype.DateSetTime = function (date, time)
 	var hour = 0,
 		minute = 0;
 
-	if (this.emptyC(time) === 0 && time.length === 5)
+	if (this.emptyT(time) === 0 && time.length === 5)
 	{
 		time = time.replace(/_/g, '0');
 
@@ -974,7 +974,7 @@ qapi.prototype.RoundQG = function (val, prec)
 	{
 		prec = 0;
 	}
-	var sign = val > 0 ? 1 : -1;
+	var sign = val >= 0 ? 1 : -1;
 	var folga = 0.001 * Math.pow(0.1, prec) * sign;
 	return this.Round(val + folga, prec);
 }
@@ -1073,6 +1073,8 @@ qapi.prototype.SomaDias = function (data, dias)
 qapi.prototype.Floor = function (val)
 { //** retorna o metodo Floor
 	this.LogCmd("Floor", arguments);
+	if (val === null || val === undefined)
+		return 0;
 	return Math.floor(val);
 }
 

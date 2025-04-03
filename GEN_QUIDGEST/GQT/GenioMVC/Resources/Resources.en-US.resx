@@ -3028,6 +3028,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	<data name="__33861302" xml:space="preserve">
 		<value>Dado não apurado para a data da referência</value>
 	</data>
+	<data name="LIST__BASIC_TYPES__C41898" xml:space="preserve">
+		<value>List (Basic Types, Counter)</value>
+	</data>
 	<data name="GROUPS_AND_STYLE_CLA17010" xml:space="preserve">
 		<value>Groups and style classes</value>
 	</data>
@@ -5211,6 +5214,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="FOUR61011" xml:space="preserve">
 		<value>Four</value>
+	</data>
+	<data name="NORMAL_LIST__SHOW_WH30528" xml:space="preserve">
+		<value>Normal List (Show-when columns)</value>
 	</data>
 	<data name="VALOR_ANTERIOR54849" xml:space="preserve">
 		<value>Valor anterior</value>

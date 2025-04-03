@@ -769,7 +769,7 @@ window.onbeforeunload = function (e) {
 
 $(document).ready(function () {
 	var curLocalStorage = QLocalStorage.getLocalStorage('lastActiveElement');
-	$.each($('form'), function(i, form) {
+	$.each($('[data-form]'), function(i, form) {
 		var formName = $(form).data('form');
 		if($(curLocalStorage[formName]).length !== 0) {
 			var top = 0;

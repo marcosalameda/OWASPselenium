@@ -5,7 +5,7 @@
 @{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
 @using GenioMVC.ViewModels.Tblb;    
 @{
-    var data = Html.newTableFor<GenioMVC.Models.Tblb>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: true)
+    var data = Html.newTableFor<GenioMVC.Models.Tblb>(edit: Model.IsEditableMode, canPage: true, canSort: true, countRec: false)
         .Columns(column =>
         {
             column.Expression(p => p.ValCodtblb, true).Hidden();

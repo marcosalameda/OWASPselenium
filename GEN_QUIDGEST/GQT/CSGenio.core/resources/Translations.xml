@@ -2863,6 +2863,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
   <msg id="  338" code="__33861302">
     <ENUS>Dado não apurado para a data da referência</ENUS>
   </msg>
+  <msg id="List (Basic Types, Counter)" code="LIST__BASIC_TYPES__C41898">
+    <ENUS>List (Basic Types, Counter)</ENUS>
+  </msg>
   <msg id="Groups and style classes" code="GROUPS_AND_STYLE_CLA17010">
   </msg>
   <msg id="Data última notificação" code="DATA_ULTIMA_NOTIFICA44675">
@@ -5014,6 +5017,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </msg>
   <msg id="Four" code="FOUR61011">
     <ENUS>Four</ENUS>
+  </msg>
+  <msg id="Normal List (Show-when columns)" code="NORMAL_LIST__SHOW_WH30528">
+    <ENUS>Normal List (Show-when columns)</ENUS>
   </msg>
   <msg id="Valor anterior" code="VALOR_ANTERIOR54849">
     <ENUS>Valor anterior</ENUS>

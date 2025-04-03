@@ -102,7 +102,7 @@ namespace GenioMVC.ViewModels.Tblb
             // Checks for foreign tables in fields and conditions
 FieldRef[] fields = new FieldRef[] { CSGenioAtblb.FldCodtblb, CSGenioAtblb.FldZzstate, CSGenioAtblb.FldText, CSGenioAtblb.FldTextml, CSGenioAtblb.FldNumint, CSGenioAtblb.FldNumdec, CSGenioAtblb.FldCurint, CSGenioAtblb.FldCurdec, CSGenioAtblb.FldBool, CSGenioAtblb.FldDate, CSGenioAtblb.FldDatetm, CSGenioAtblb.FldDatets, CSGenioAtblb.FldTimehm, CSGenioAtblb.FldEnumt, CSGenioAtblb.FldEnumn };
 
-            ListingMVC<CSGenioAtblb> listing = new ListingMVC<CSGenioAtblb>(fields, null, 1, 1, false, user, true, string.Empty, true);
+            ListingMVC<CSGenioAtblb> listing = new ListingMVC<CSGenioAtblb>(fields, null, 1, 1, false, user, true, string.Empty, false);
             SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
             //Menu relations:
@@ -411,7 +411,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtblb.FldCodtblb, CSGenioAtblb.FldZz
 					}
 				}
 
-				ListingMVC<CSGenioAtblb> listing = Models.ModelBase.Where<CSGenioAtblb>(false, ptn_menu_3131Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML3131", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn);
+				ListingMVC<CSGenioAtblb> listing = Models.ModelBase.Where<CSGenioAtblb>(false, ptn_menu_3131Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML3131", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn);
 
 				if (listing.CurrentPage > 0)
 					pageNumber = listing.CurrentPage;

@@ -8719,6 +8719,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "List (Basic Types, Counter)"
+        /// </summary>
+        public static string LIST__BASIC_TYPES__C41898 {
+            get {
+                return ResourceManager.GetString("LIST__BASIC_TYPES__C41898", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Groups and style classes"
         /// </summary>
         public static string GROUPS_AND_STYLE_CLA17010 {
@@ -15231,6 +15240,15 @@ namespace Administration.Resources {
         public static string FOUR61011 {
             get {
                 return ResourceManager.GetString("FOUR61011", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Normal List (Show-when columns)"
+        /// </summary>
+        public static string NORMAL_LIST__SHOW_WH30528 {
+            get {
+                return ResourceManager.GetString("NORMAL_LIST__SHOW_WH30528", resourceCulture);
             }
         }
 

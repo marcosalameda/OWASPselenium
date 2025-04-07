@@ -152,7 +152,7 @@ namespace CSGenio.business
 
 
 			info.FieldsParametersReplicas = new string[] {
-			 "year","yearnum"
+			 "yearnum","year"
 			};
 
 			//Write conditions

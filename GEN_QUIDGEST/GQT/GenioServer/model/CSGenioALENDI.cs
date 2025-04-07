@@ -248,16 +248,16 @@ namespace CSGenio.business
 			info.Pathways.Add("pess2","pess2");
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("stake","pess1");
-			info.Pathways.Add("cate2","pess1");
 			info.Pathways.Add("cmpny","pess1");
+			info.Pathways.Add("cate2","pess1");
 			info.Pathways.Add("cntry","pess1");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
-			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("item","equip");
-			info.Pathways.Add("famil","equip");
+			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("famil","equip");
 		}
 
 		/// <summary>

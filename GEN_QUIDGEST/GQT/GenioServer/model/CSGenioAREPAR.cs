@@ -25,7 +25,6 @@ namespace CSGenio.business
 
 		public CSGenioArepar(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 			this.KeyType = CodeType.GUID_KEY;
@@ -46,30 +45,27 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codrepar", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codrepar", FieldType.CHAVE_PRIMARIA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codequip", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codequip", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_EQUIPMENT12605";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codempre", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codempre", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">COMPANY";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
@@ -78,20 +74,18 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dtrepara", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtrepara", FieldType.DATAHORA);
 			Qfield.FieldDescription = "Fixed in";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "FIXED_IN00179";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("nrrepara", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "nrrepara", FieldType.NUMERO);
 			Qfield.FieldDescription = "No rumour in the Company";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "NO_RUMOUR_IN_THE_COM15248";
 
@@ -103,10 +97,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("tipoarea", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "tipoarea", FieldType.ARRAY_COD_TEXTO);
 			Qfield.FieldDescription = "Technical area";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "TECHNICAL_AREA50773";
 
 			Qfield.Dupmsg = "";
@@ -115,40 +108,36 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codespec", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codespec", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">SPECIALTY";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_SPECIALTY24336";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codcateg", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codcateg", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">CATEGORy";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_CATEGORY37591";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpesso", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpesso", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">REPAIRER";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_REPAIRER36801";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("descript", FieldType.MEMO);
+			Qfield = new Field(info.Alias, "descript", FieldType.MEMO);
 			Qfield.FieldDescription = "Description of the repair";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.Decimals = 3;
 			Qfield.CavDesignation = "DESCRIPTION_OF_THE_R26085";
 
@@ -156,10 +145,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("hours", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "hours", FieldType.NUMERO);
 			Qfield.FieldDescription = "Spent on hours";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "SPENT_ON_HOURS19285";
 
@@ -167,9 +155,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 			info.SolrList.Add("PREPAIRS");
@@ -215,8 +202,8 @@ namespace CSGenio.business
 			info.Pathways.Add("regi1","pesso");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
-			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
+			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
 			info.Pathways.Add("famil","equip");

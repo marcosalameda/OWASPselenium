@@ -238,7 +238,7 @@ namespace GenioMVC.ViewModels
                     {
                         string minLimValue = limit.AreaLimita.Fields[
                             limit.AreaLimita.Alias + "." + "minLim"
-                        ].ToString();
+                        ].Value.ToString();
 
                         limitDisplayData.ValueMin = GenioMVC.Models.AuditModel.GetHumanValue(
                             sp,

@@ -25,7 +25,6 @@ namespace CSGenio.business
 
 		public CSGenioApropr(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 			this.KeyType = CodeType.GUID_KEY;
@@ -46,30 +45,27 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpropr", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codpropr", FieldType.CHAVE_PRIMARIA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("name", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "name", FieldType.TEXTO);
 			Qfield.FieldDescription = "Property name";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "PROPERTY_NAME18934";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("precoest", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "precoest", FieldType.VALOR);
 			Qfield.FieldDescription = "Estimated price";
 			Qfield.FieldSize =  12;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 9;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "ESTIMATED_PRICE02986";
@@ -78,20 +74,18 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codtppro", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codtppro", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("endereco", FieldType.MEMO);
+			Qfield = new Field(info.Alias, "endereco", FieldType.MEMO);
 			Qfield.FieldDescription = "Address";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "ADDRESS04342";
 
@@ -99,70 +93,63 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("localida", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "localida", FieldType.TEXTO);
 			Qfield.FieldDescription = "Locale";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "LOCALE34521";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codregia", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codregia", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("postalco", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "postalco", FieldType.TEXTO);
 			Qfield.FieldDescription = "Zip code";
 			Qfield.FieldSize =  20;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ZIP_CODE56964";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("postallo", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "postallo", FieldType.TEXTO);
 			Qfield.FieldDescription = "Postal location";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "POSTAL_LOCATION08708";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codcntry", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codcntry", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("mobilada", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "mobilada", FieldType.LOGICO);
 			Qfield.FieldDescription = "Furnished";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "FURNISHED37431";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("qtd_wc", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "qtd_wc", FieldType.NUMERO);
 			Qfield.FieldDescription = "Bathrooms";
 			Qfield.FieldSize =  6;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 6;
 			Qfield.CavDesignation = "BATHROOMS54249";
 
@@ -170,10 +157,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("qtdquart", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "qtdquart", FieldType.NUMERO);
 			Qfield.FieldDescription = "Rooms";
 			Qfield.FieldSize =  6;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 6;
 			Qfield.CavDesignation = "ROOMS06809";
 
@@ -181,10 +167,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("m2", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "m2", FieldType.NUMERO);
 			Qfield.FieldDescription = "Square meters";
 			Qfield.FieldSize =  6;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 6;
 			Qfield.CavDesignation = "SQUARE_METERS28913";
 
@@ -192,20 +177,18 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dtdispon", FieldType.DATA);
+			Qfield = new Field(info.Alias, "dtdispon", FieldType.DATA);
 			Qfield.FieldDescription = "Available from";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "AVAILABLE_FROM53703";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("photogra", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "photogra", FieldType.IMAGEM_JPEG);
 			Qfield.FieldDescription = "Photo";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.Decimals = 1;
 			Qfield.CavDesignation = "PHOTO51874";
 
@@ -213,10 +196,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("descript", FieldType.MEMO);
+			Qfield = new Field(info.Alias, "descript", FieldType.MEMO);
 			Qfield.FieldDescription = "Description";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.Decimals = 10;
 			Qfield.CavDesignation = "DESCRIPTION07383";
 
@@ -224,10 +206,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("coordgeo", FieldType.GEOGRAPHY);
+			Qfield = new Field(info.Alias, "coordgeo", FieldType.GEOGRAPHY);
 			Qfield.FieldDescription = "Geographic coordinate";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "GEOGRAPHIC_COORDINAT21394";
 
@@ -235,10 +216,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpesso", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpesso", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">SELLER";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "_SELLER11360";
 
@@ -246,10 +226,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpais1", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpais1", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">PERSON COUNTRY";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
@@ -258,9 +237,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}

@@ -25,7 +25,6 @@ namespace CSGenio.business
 
 		public CSGenioAexpen(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 			this.KeyType = CodeType.GUID_KEY;
@@ -46,20 +45,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("coddespe", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "coddespe", FieldType.CHAVE_PRIMARIA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codproje", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codproje", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">PROJECT";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "_PROJECT36907";
 
@@ -67,10 +64,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codyear", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codyear", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">ANO";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "_ANO30092";
 
@@ -78,10 +74,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("yearnumb", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "yearnumb", FieldType.NUMERO);
 			Qfield.FieldDescription = "Year";
 			Qfield.FieldSize =  4;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 4;
 			Qfield.CavDesignation = "YEAR61794";
@@ -95,10 +90,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("yearprev", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "yearprev", FieldType.NUMERO);
 			Qfield.FieldDescription = "Previous year";
 			Qfield.FieldSize =  4;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 4;
 			Qfield.CavDesignation = "PREVIOUS_YEAR11345";
@@ -112,10 +106,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codaggre", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codaggre", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">AGREGADOR";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "_AGREGADOR29397";
 
@@ -123,10 +116,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("descript", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "descript", FieldType.TEXTO);
 			Qfield.FieldDescription = "Description";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "DESCRIPTION07383";
 
@@ -134,10 +126,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("value", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "value", FieldType.VALOR);
 			Qfield.FieldDescription = "Value";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
@@ -147,10 +138,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("prevval", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "prevval", FieldType.VALOR);
 			Qfield.FieldDescription = "Previous Value";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "PREVIOUS_VALUE30042";
@@ -160,9 +150,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -212,8 +201,8 @@ namespace CSGenio.business
 			//Actualiza as seguintes somas que criam registos:
 			info.SumCreateRecords = new SumsCreatesRecords[1];
 
-			info.SumCreateRecords[0] = new SumsCreatesRecords("gqtagreg", "agreg", "codaggre", "codaggre", new string[]{"codproje","codyear"}, new string[]{"codproje","codyear"});
-			info.ObtainAllFields = new string[] {"codproje","codyear"};
+			info.SumCreateRecords[0] = new SumsCreatesRecords("gqtagreg", "agreg", "codaggre", "codaggre", new string[]{"codyear","codproje"}, new string[]{"codyear","codproje"});
+			info.ObtainAllFields = new string[] {"codyear","codproje"};
 
 			info.CheckTableFields = new string[] {
 			 "prevval"

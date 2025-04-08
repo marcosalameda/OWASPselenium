@@ -588,7 +588,16 @@ namespace Administration.Models
                 
                 foreach (var t in ExtraProperties.GetAdvancedProperties())
                 {
-                    res.Add(new AdvancedPropertyItem() { Value = t.Id, Text = t.Label,Type= t.Type });
+                    res.Add(
+                        new AdvancedPropertyItem() { 
+                            Value = t.Id,
+                            Text = t.Label,
+                            Type= t.Type,
+                            TextResourceId = t.ResourceId,
+                            TextHelpResourceId = t.HelpResourceId,
+                            TextHelpResourceVerboseId = t.HelpResourceVerboseId
+                        }
+                    );
                 }
                 return res;
             }
@@ -600,6 +609,10 @@ namespace Administration.Models
         public string Value { get; set; }
         public string Text { get; set; }
         public string Type { get; set; }
+        public string Default { get; set; }
+        public string TextResourceId { get; set; }
+        public string TextHelpResourceId { get; set; }
+        public string TextHelpResourceVerboseId { get; set; }
     }
 
     public class DateFormatCfg

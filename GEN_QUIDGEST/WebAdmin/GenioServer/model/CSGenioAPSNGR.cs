@@ -25,7 +25,6 @@ namespace CSGenio.business
 
 		public CSGenioApsngr(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 			this.KeyType = CodeType.GUID_KEY;
@@ -46,20 +45,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpsngr", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codpsngr", FieldType.CHAVE_PRIMARIA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("psngrid", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "psngrid", FieldType.NUMERO);
 			Qfield.FieldDescription = "Passenger ID";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "PASSENGER_ID27843";
@@ -68,10 +65,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("fstname", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "fstname", FieldType.TEXTO);
 			Qfield.FieldDescription = "First Name";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "FIRST_NAME10285";
 
@@ -79,10 +75,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("lstname", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "lstname", FieldType.TEXTO);
 			Qfield.FieldDescription = "Last Name";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "LAST_NAME49666";
 
@@ -90,10 +85,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("fullname", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "fullname", FieldType.TEXTO);
 			Qfield.FieldDescription = "Full Name";
 			Qfield.FieldSize =  100;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "FULL_NAME48109";
 
@@ -101,10 +95,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("passprtn", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "passprtn", FieldType.TEXTO);
 			Qfield.FieldDescription = "Passport Number";
 			Qfield.FieldSize =  15;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "PASSPORT_NUMBER36034";
 
@@ -112,10 +105,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("psngrdob", FieldType.DATA);
+			Qfield = new Field(info.Alias, "psngrdob", FieldType.DATA);
 			Qfield.FieldDescription = "Date of Birth";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "DATE_OF_BIRTH36542";
 
@@ -123,10 +115,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("paddress", FieldType.MEMO);
+			Qfield = new Field(info.Alias, "paddress", FieldType.MEMO);
 			Qfield.FieldDescription = "Address";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 10;
 			Qfield.CavDesignation = "ADDRESS04342";
@@ -135,10 +126,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("psemail", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "psemail", FieldType.TEXTO);
 			Qfield.FieldDescription = "Email Address";
 			Qfield.FieldSize =  100;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "EMAIL_ADDRESS30215";
 
@@ -146,10 +136,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("ctcnumbr", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "ctcnumbr", FieldType.TEXTO);
 			Qfield.FieldDescription = "Contact Number";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "CONTACT_NUMBER46354";
 
@@ -157,9 +146,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}

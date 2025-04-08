@@ -22,7 +22,6 @@ namespace CSGenio.business
 
 		public CSGenioAdocums(User user,string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 		}
@@ -55,23 +54,23 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-             info.RegisterFieldDB(new Field("coddocums", FieldType.CHAVE_PRIMARIA_GUID));
+             info.RegisterFieldDB(new Field(info.Alias, "coddocums", FieldType.CHAVE_PRIMARIA_GUID));
 			info.KeyType = CodeType.GUID_KEY;
-    		info.RegisterFieldDB(new Field("documid", FieldType.TEXTO));
-    		info.RegisterFieldDB(new Field("document", FieldType.FICHEIRO_BIN));
-            info.RegisterFieldDB(new Field("docpath", FieldType.TEXTO));
-    		info.RegisterFieldDB(new Field("nome", FieldType.TEXTO));
-    		info.RegisterFieldDB(new Field("tabela", FieldType.TEXTO));
-    		info.RegisterFieldDB(new Field("campo", FieldType.TEXTO));
-    		info.RegisterFieldDB(new Field("chave", FieldType.TEXTO));
-    		info.RegisterFieldDB(new Field("versao", FieldType.TEXTO));
-    		info.RegisterFieldDB(new Field("tamanho", FieldType.TEXTO));
-    		info.RegisterFieldDB(new Field("extensao", FieldType.TEXTO));
-    		info.RegisterFieldDB(new Field("opercria", FieldType.OPERCRIA) { Alias = "docums" });
-    		info.RegisterFieldDB(new Field("datacria", FieldType.DATACRIA) { Alias = "docums" });
-    		info.RegisterFieldDB(new Field("opermuda", FieldType.OPERMUDA) { Alias = "docums" });
-    		info.RegisterFieldDB(new Field("datamuda", FieldType.DATAMUDA) { Alias = "docums" });
-    		info.RegisterFieldDB(new Field("zzstate", FieldType.INTEIRO));
+    		info.RegisterFieldDB(new Field(info.Alias, "documid", FieldType.TEXTO));
+    		info.RegisterFieldDB(new Field(info.Alias, "document", FieldType.FICHEIRO_BIN));
+            info.RegisterFieldDB(new Field(info.Alias, "docpath", FieldType.TEXTO));
+    		info.RegisterFieldDB(new Field(info.Alias, "nome", FieldType.TEXTO));
+    		info.RegisterFieldDB(new Field(info.Alias, "tabela", FieldType.TEXTO));
+    		info.RegisterFieldDB(new Field(info.Alias, "campo", FieldType.TEXTO));
+    		info.RegisterFieldDB(new Field(info.Alias, "chave", FieldType.TEXTO));
+    		info.RegisterFieldDB(new Field(info.Alias, "versao", FieldType.TEXTO));
+    		info.RegisterFieldDB(new Field(info.Alias, "tamanho", FieldType.TEXTO));
+    		info.RegisterFieldDB(new Field(info.Alias, "extensao", FieldType.TEXTO));
+    		info.RegisterFieldDB(new Field(info.Alias, "opercria", FieldType.OPERCRIA));
+    		info.RegisterFieldDB(new Field(info.Alias, "datacria", FieldType.DATACRIA));
+    		info.RegisterFieldDB(new Field(info.Alias, "opermuda", FieldType.OPERMUDA));
+    		info.RegisterFieldDB(new Field(info.Alias, "datamuda", FieldType.DATAMUDA));
+    		info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));
 
     		info.DBFields["docpath"].FieldSize = 260;
     		info.DBFields["nome"].FieldSize = 255;

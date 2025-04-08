@@ -25,7 +25,6 @@ namespace CSGenio.business
 
 		public CSGenioAperso(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 			this.KeyType = CodeType.GUID_KEY;
@@ -46,20 +45,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codperso", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codperso", FieldType.CHAVE_PRIMARIA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("name", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "name", FieldType.TEXTO);
 			Qfield.FieldDescription = "Person name";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "PERSON_NAME40980";
 
@@ -67,10 +64,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("identifi", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "identifi", FieldType.TEXTO);
 			Qfield.FieldDescription = "Identification number";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "IDENTIFICATION_NUMBE11999";
 
@@ -78,10 +74,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("gender", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "gender", FieldType.ARRAY_COD_TEXTO);
 			Qfield.FieldDescription = "Gender";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "GENDER44172";
 
@@ -91,10 +86,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("photo", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "photo", FieldType.IMAGEM_JPEG);
 			Qfield.FieldDescription = "Photo";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 1;
 			Qfield.CavDesignation = "PHOTO51874";
@@ -103,10 +97,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("email", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "email", FieldType.TEXTO);
 			Qfield.FieldDescription = "E-mail";
 			Qfield.FieldSize =  254;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "E_MAIL42251";
 
@@ -114,10 +107,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("year", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "year", FieldType.NUMERO);
 			Qfield.FieldDescription = "Year";
 			Qfield.FieldSize =  4;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 4;
 			Qfield.CavDesignation = "YEAR61794";
@@ -126,10 +118,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("month", FieldType.ARRAY_COD_NUMERICO);
+			Qfield = new Field(info.Alias, "month", FieldType.ARRAY_COD_NUMERICO);
 			Qfield.FieldDescription = "Month";
 			Qfield.FieldSize =  2;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "MONTH46035";
 
@@ -139,10 +130,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dob", FieldType.DATA);
+			Qfield = new Field(info.Alias, "dob", FieldType.DATA);
 			Qfield.FieldDescription = "Date of birth";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "DATE_OF_BIRTH63058";
 
@@ -150,10 +140,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("tob", FieldType.TEMPO);
+			Qfield = new Field(info.Alias, "tob", FieldType.TEMPO);
 			Qfield.FieldDescription = "Time of birth";
 			Qfield.FieldSize =  5;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "TIME_OF_BIRTH04797";
 
@@ -161,10 +150,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("creatusr", FieldType.OPERCRIA);
+			Qfield = new Field(info.Alias, "creatusr", FieldType.OPERCRIA);
 			Qfield.FieldDescription = "Created by";
 			Qfield.FieldSize =  20;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "CREATED_BY12292";
 
@@ -172,10 +160,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("creatdat", FieldType.DATACRIA);
+			Qfield = new Field(info.Alias, "creatdat", FieldType.DATACRIA);
 			Qfield.FieldDescription = "Created on";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "CREATED_ON00051";
 
@@ -183,10 +170,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("modifusr", FieldType.OPERMUDA);
+			Qfield = new Field(info.Alias, "modifusr", FieldType.OPERMUDA);
 			Qfield.FieldDescription = "Modified by";
 			Qfield.FieldSize =  20;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "MODIFIED_BY02094";
 
@@ -194,10 +180,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("modifdat", FieldType.DATAMUDA);
+			Qfield = new Field(info.Alias, "modifdat", FieldType.DATAMUDA);
 			Qfield.FieldDescription = "Modified on";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "MODIFIED_ON31953";
 
@@ -205,9 +190,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}

@@ -25,7 +25,6 @@ namespace CSGenio.business
 
 		public CSGenioAlangu(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 			this.KeyType = CodeType.GUID_KEY;
@@ -46,39 +45,35 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codlang", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codlang", FieldType.CHAVE_PRIMARIA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("langua", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "langua", FieldType.TEXTO);
 			Qfield.FieldDescription = "Language";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "LANGUAGE16872";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("acron", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "acron", FieldType.TEXTO);
 			Qfield.FieldDescription = "Acronym";
 			Qfield.FieldSize =  5;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ACRONYM00872";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}

@@ -11,7 +11,10 @@ namespace CSGenio.config
         public string Id { get; set; }
         public string Label { get; set; }
         public string Type { get; set; }
-        public string DefaultValue { get; set; }     
+        public string DefaultValue { get; set; }  
+        public string ResourceId { get; set; }  
+        public string HelpResourceId { get; set; }  
+        public string HelpResourceVerboseId { get; set; }     
     }
 
     /// <summary>

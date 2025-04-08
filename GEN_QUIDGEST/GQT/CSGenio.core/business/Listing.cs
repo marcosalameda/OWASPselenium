@@ -572,7 +572,7 @@ namespace CSGenio.business
                 DataRow dr = dt.NewRow();
                 for (int col = 0; col < fieldsRequested.Length; col++)
                 {
-                    var cp = row.Fields[fieldsRequested[col]] as RequestedField;
+                    var cp = row.Fields[fieldsRequested[col]];
                     dr[col] = cp.Value;
                 }
                 dt.Rows.Add(dr);

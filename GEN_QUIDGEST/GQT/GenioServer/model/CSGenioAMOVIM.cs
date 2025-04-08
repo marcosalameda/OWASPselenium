@@ -25,7 +25,6 @@ namespace CSGenio.business
 
 		public CSGenioAmovim(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 			this.KeyType = CodeType.GUID_KEY;
@@ -46,20 +45,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codmovim", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codmovim", FieldType.CHAVE_PRIMARIA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dhmudanc", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dhmudanc", FieldType.DATAHORA);
 			Qfield.FieldDescription = "Change";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CHANGE36355";
 
             Qfield.NotNull = true;
@@ -68,30 +65,27 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codequip", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codequip", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_EQUIPMENT12605";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codrooms", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codrooms", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = ">ROOM";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_ROOM54790";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("observat", FieldType.MEMO);
+			Qfield = new Field(info.Alias, "observat", FieldType.MEMO);
 			Qfield.FieldDescription = "Observation";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "OBSERVATION37880";
 
@@ -99,10 +93,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("roomnr", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "roomnr", FieldType.TEXTO);
 			Qfield.FieldDescription = "N.R. Room";
 			Qfield.FieldSize =  65;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "N_R__ROOM43805";
 
 			Qfield.Dupmsg = "";
@@ -114,9 +107,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -148,8 +140,8 @@ namespace CSGenio.business
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
-			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
+			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");

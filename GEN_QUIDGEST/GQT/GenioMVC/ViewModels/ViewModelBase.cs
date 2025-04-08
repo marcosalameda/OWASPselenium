@@ -1520,8 +1520,8 @@ namespace GenioMVC.ViewModels
                 DateTime minLim = Navigation.GetDateValue("min" + StringUtils.CapFirst(model_limit_area.Alias) + "Val" + StringUtils.CapFirst(limit_field)).GetValueOrDefault();
                 DateTime maxLim = Navigation.GetDateValue("max" + StringUtils.CapFirst(model_limit_area.Alias) + "Val" + StringUtils.CapFirst(limit_field)).GetValueOrDefault();
 
-                model_limit_area.Fields.Add(model_limit_area.Alias + "." + "minLim", minLim);
-                model_limit_area.Fields.Add(model_limit_area.Alias + "." + "maxLim", maxLim);
+                model_limit_area.Fields.Add(model_limit_area.Alias + "." + "minLim", new RequestedField("minLim", "") { Value = minLim });
+                model_limit_area.Fields.Add(model_limit_area.Alias + "." + "maxLim", new RequestedField("maxLim", "") { Value = maxLim });
             }
 
 			switch (limitAreaType)

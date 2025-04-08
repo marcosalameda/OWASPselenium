@@ -25,7 +25,6 @@ namespace CSGenio.business
 
 		public CSGenioAlnhpd(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 			this.KeyType = CodeType.GUID_KEY;
@@ -46,20 +45,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codlnhpd", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codlnhpd", FieldType.CHAVE_PRIMARIA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpedid", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpedid", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
@@ -70,10 +67,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("line", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "line", FieldType.NUMERO);
 			Qfield.FieldDescription = "Line";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "LINE27983";
 
@@ -85,20 +81,18 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codtpequ", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codtpequ", FieldType.CHAVE_ESTRANGEIRA_GUID);
 			Qfield.FieldDescription = "TYPE OF EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "TYPE_OF_EQUIPMENT18080";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("quantida", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "quantida", FieldType.NUMERO);
 			Qfield.FieldDescription = "Amount";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "AMOUNT46885";
 
@@ -106,10 +100,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("quantdec", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "quantdec", FieldType.NUMERO);
 			Qfield.FieldDescription = "Amount";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
@@ -119,9 +112,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}

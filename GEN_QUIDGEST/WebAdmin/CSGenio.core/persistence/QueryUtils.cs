@@ -192,25 +192,10 @@ namespace CSGenio.persistence
         {
             query.Into(area.QSystem, area.TableName);
 
-            IEnumerator enumCampos = area.Fields.Values.GetEnumerator();
-            IDictionary<string, Field> camposBD = area.DBFields;
-            while (enumCampos.MoveNext())
-            {
-                RequestedField campoPedido = (RequestedField)enumCampos.Current;
-
+            foreach(var campoPedido in area.Fields.Values) 
                 // Foreign fields (EPHs) can be present in the requested fields list
-                if (!camposBD.ContainsKey(campoPedido.Name))
-                    continue;
-
-                if (camposBD[campoPedido.Name] != null)
-                {
-                    Field campoBD = (Field)camposBD[campoPedido.Name];
-					if (campoBD.IsVirtual)
-                        continue;
-
+                if(area.DBFields.TryGetValue(campoPedido.Name, out var campoBD) && !campoBD.IsVirtual)
                     query.Value(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
-                }
-            }
         }
 
         public static object getRandomValue(Field Qfield)
@@ -264,20 +249,10 @@ namespace CSGenio.persistence
         {
             query.Into(area.QSystem, area.ShadowTabName);
 
-            IEnumerator enumCampos = area.Fields.Values.GetEnumerator();
-            IDictionary<string, Field> camposBD = area.DBFields;
-            while (enumCampos.MoveNext())
-            {
-                RequestedField campoPedido = (RequestedField)enumCampos.Current;
-                if (camposBD[campoPedido.Name] != null)
-                {
-                    Field campoBD = (Field)camposBD[campoPedido.Name];
-                    if (campoBD.IsVirtual)
-                        continue;
-
+            foreach (var campoPedido in area.Fields.Values)
+                // Foreign fields (EPHs) can be present in the requested fields list
+                if (area.DBFields.TryGetValue(campoPedido.Name, out var campoBD) && !campoBD.IsVirtual)
                     query.Value(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
-                }
-            }
 
             //20051207 nao esquecer de preencher o operdel e de criar operation
             //The operation is going to be hardcoded for now.
@@ -290,19 +265,16 @@ namespace CSGenio.persistence
         {
             string QtableName = area.TableName.Trim();
             query.Update(area.QSystem, QtableName);
-
-            //SO 20060919
             query.Where(CriteriaSet.And()
                 .Equal(QtableName, area.PrimaryKeyName, area.returnValueField(area.Alias + "." + area.PrimaryKeyName)));
-            Dictionary<string, Field> camposBD = area.DBFields;
-            IEnumerator enumCampos = area.Fields.Values.GetEnumerator();
-            while (enumCampos.MoveNext())
-            {
-                RequestedField campoPedido = (RequestedField)enumCampos.Current;
-                if (!campoPedido.Name.Equals(area.PrimaryKeyName) && camposBD[campoPedido.Name] != null)
-                {
-                    Field campoBD = camposBD[campoPedido.Name];
 
+            foreach (var campoPedido in area.Fields.Values)
+            {
+                if (!area.DBFields.TryGetValue(campoPedido.Name, out var campoBD))
+                    continue;
+
+                if (!campoPedido.Name.Equals(area.PrimaryKeyName))
+                {
                     //virtual vields do not support updates
 					if (campoBD.IsVirtual)
                         continue;

@@ -22,7 +22,6 @@ namespace CSGenio.business
 
 		public CSGenioAnotificationemailsignature(User user,string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 		}
@@ -55,19 +54,19 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field("codsigna", FieldType.CHAVE_PRIMARIA_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "codsigna", FieldType.CHAVE_PRIMARIA_GUID));
 			info.DBFields["codsigna"].FieldSize = 36;
 
 			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field("name", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("image", FieldType.IMAGEM_JPEG));
-			info.RegisterFieldDB(new Field("textass", FieldType.TEXTO));
+			info.RegisterFieldDB(new Field(info.Alias, "name", FieldType.TEXTO));
+			info.RegisterFieldDB(new Field(info.Alias, "image", FieldType.IMAGEM_JPEG));
+			info.RegisterFieldDB(new Field(info.Alias, "textass", FieldType.TEXTO));
 			
-			info.RegisterFieldDB(new Field("opercria", FieldType.OPERCRIA));
-			info.RegisterFieldDB(new Field("datacria", FieldType.DATACRIA));
-            info.RegisterFieldDB(new Field("opermuda", FieldType.OPERMUDA));
-            info.RegisterFieldDB(new Field("datamuda", FieldType.DATAMUDA));
-			info.RegisterFieldDB(new Field("zzstate", FieldType.INTEIRO));
+			info.RegisterFieldDB(new Field(info.Alias, "opercria", FieldType.OPERCRIA));
+			info.RegisterFieldDB(new Field(info.Alias, "datacria", FieldType.DATACRIA));
+            info.RegisterFieldDB(new Field(info.Alias, "opermuda", FieldType.OPERMUDA));
+            info.RegisterFieldDB(new Field(info.Alias, "datamuda", FieldType.DATAMUDA));
+			info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));
 			
             // Carimbos automáticos na BD
             //------------------------------

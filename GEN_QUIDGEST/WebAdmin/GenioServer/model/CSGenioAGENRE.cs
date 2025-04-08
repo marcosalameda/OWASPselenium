@@ -25,7 +25,6 @@ namespace CSGenio.business
 
 		public CSGenioAgenre(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 			this.KeyType = CodeType.GUID_KEY;
@@ -46,30 +45,27 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codgenre", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codgenre", FieldType.CHAVE_PRIMARIA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("gender", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "gender", FieldType.TEXTO);
 			Qfield.FieldDescription = "Genre";
 			Qfield.FieldSize =  20;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "GENRE63303";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("agencont", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "agencont", FieldType.ARRAY_COD_TEXTO);
 			Qfield.FieldDescription = "Gender contact";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "GENDER_CONTACT17830";
 
 			Qfield.Dupmsg = "";
@@ -78,29 +74,26 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("backcolo", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "backcolo", FieldType.TEXTO);
 			Qfield.FieldDescription = "Background color";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "BACKGROUND_COLOR47883";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("textcolo", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "textcolo", FieldType.TEXTO);
 			Qfield.FieldDescription = "Text color";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "TEXT_COLOR24820";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}

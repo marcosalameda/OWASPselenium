@@ -465,14 +465,14 @@ namespace GenioMVC.Helpers.Table.Renderer
                         //between dates (min)
                         if (limit.AreaLimita.Fields.ContainsKey(limit.AreaLimita.Alias + "." + "minLim"))
                         {
-                            CampoLimita_MinLim_Value = limit.AreaLimita.Fields[limit.AreaLimita.Alias + "." + "minLim"].ToString();
+                            CampoLimita_MinLim_Value = limit.AreaLimita.Fields[limit.AreaLimita.Alias + "." + "minLim"].Value.ToString();
                             CampoLimita_MinLim_Value_HTML = GenioMVC.Models.AuditModel.GetHumanValue(sp, limit.AreaLimita.Information, limit.CampoLimita, CampoLimita_MinLim_Value);
                         }
 
                         //between dates (max)
                         if (limit.AreaLimita.Fields.ContainsKey(limit.AreaLimita.Alias + "." + "maxLim"))
                         {
-                            CampoLimita_MaxLim_Value = limit.AreaLimita.Fields[limit.AreaLimita.Alias + "." + "maxLim"].ToString();
+                            CampoLimita_MaxLim_Value = limit.AreaLimita.Fields[limit.AreaLimita.Alias + "." + "maxLim"].Value.ToString();
                             CampoLimita_MaxLim_Value_HTML = GenioMVC.Models.AuditModel.GetHumanValue(sp, limit.AreaLimita.Information, limit.CampoLimita, CampoLimita_MaxLim_Value);
                         }
 

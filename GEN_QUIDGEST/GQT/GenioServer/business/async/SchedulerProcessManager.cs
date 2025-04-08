@@ -818,7 +818,7 @@ namespace CSGenio.business.async
                 foreach (string key in DBprocess.Fields.Keys)
                 {
                     //vamos buscar o Qfield que estamos a ler
-                    RequestedField Qfield = DBprocess.Fields[key] as RequestedField;
+                    RequestedField Qfield = DBprocess.Fields[key];
                     //criar um Qfield mas com o alias da area que estamos a criar
                     FieldRef campoRef = new FieldRef(process.Alias, Qfield.Name);
                     process.insertNameValueField(campoRef.FullName, Qfield.Value);

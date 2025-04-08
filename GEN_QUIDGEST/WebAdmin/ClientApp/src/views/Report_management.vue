@@ -53,7 +53,9 @@
 						class="i-text">
 						<q-select
 							v-model="deployForm.scope"
-							:options="deployScope"
+							item-value="Value"
+							item-label="Text"
+							:items="deployScope"
 							:size="'xlarge'" />
 					</base-input-structure>
 					<base-input-structure

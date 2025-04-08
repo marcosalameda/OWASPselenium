@@ -22,7 +22,6 @@ namespace CSGenio.business
 
 		public CSGenioAusrwid(User user,string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 		}
@@ -55,18 +54,18 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field("codusrwid", FieldType.CHAVE_PRIMARIA_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "codusrwid", FieldType.CHAVE_PRIMARIA_GUID));
 			info.DBFields["codusrwid"].FieldSize = 36;
 			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field("codlstusr", FieldType.CHAVE_ESTRANGEIRA_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "codlstusr", FieldType.CHAVE_ESTRANGEIRA_GUID));
 			info.DBFields["codlstusr"].FieldSize = 36;
 
-            info.RegisterFieldDB(new Field("widget", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field("rowkey", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field("visible", FieldType.LOGICO));
-            info.RegisterFieldDB(new Field("hposition", FieldType.INTEIRO));
-            info.RegisterFieldDB(new Field("vposition", FieldType.INTEIRO));
-            info.RegisterFieldDB(new Field("zzstate", FieldType.INTEIRO));
+            info.RegisterFieldDB(new Field(info.Alias, "widget", FieldType.TEXTO));
+            info.RegisterFieldDB(new Field(info.Alias, "rowkey", FieldType.TEXTO));
+            info.RegisterFieldDB(new Field(info.Alias, "visible", FieldType.LOGICO));
+            info.RegisterFieldDB(new Field(info.Alias, "hposition", FieldType.INTEIRO));
+            info.RegisterFieldDB(new Field(info.Alias, "vposition", FieldType.INTEIRO));
+            info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));
 
 
 			// Relações Filhas

@@ -2167,50 +2167,33 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <summary>
         /// Place the data taken from the BD in the corresponding Area object
         /// </summary>
-        /// <param name="resultado">Query qresult</param>
+        /// <param name="qResult">Query result</param>
         /// <param name="area">Area to be filled</param>
         /// <returns>Filled area</returns>
-        public void fillAreaSelectOne(Hashtable Qresult, IArea area)
+        private void fillAreaSelectOne(Hashtable qResult, IArea area)
         {
-            if (Qresult.Count != 0)
+            if (qResult.Count != 0)
             {
-                int i = 0;
+                string pkFullname = area.Information.DBFields[area.PrimaryKeyName].FullName;
                 //fill in the value of the primaryKey
                 //if the primary key is in the query is the 1st value
                 //to be able to be used to fill in other fields namely images
-                if (area.Fields.ContainsKey(area.Alias + "." + area.PrimaryKeyName))
-                {
-                    area.insertNameValueField(area.Alias + "." + area.PrimaryKeyName
-                        , Qresult[area.Alias + "." + area.PrimaryKeyName]);
-                    i++;
-                }
+                if (area.Fields.ContainsKey(pkFullname))
+                    area.insertNameValueField(pkFullname , qResult[pkFullname]);
 
                 //AV 20090309 foreign keys to a table docums
                 if (area.Information.DocumsForeignKeys != null)
-				{
                     for (int j = 0; j < area.Information.DocumsForeignKeys.Count; j++)
-                    {
                         if (area.Fields.ContainsKey(area.Alias + "." + area.Information.DocumsForeignKeys[j]))
-                        {
                             area.insertNameValueField(area.Alias + "." + area.Information.DocumsForeignKeys[j],
-                                Qresult[area.Alias + "." + area.Information.DocumsForeignKeys[j]]);
-                            i++;
-                        }
-                    }
-				}
+                                qResult[area.Alias + "." + area.Information.DocumsForeignKeys[j]]);
 
-                IEnumerator enumerador = (IEnumerator)area.Fields.Keys.GetEnumerator();
-                while (enumerador.MoveNext())
-                {
-                    RequestedField campoPedido = (RequestedField)area.Fields[enumerador.Current];
-                    if (!enumerador.Current.Equals(area.Alias + "." + area.PrimaryKeyName)
+                foreach(RequestedField campoPedido in area.Fields.Values)
+                    if (!campoPedido.FullName.Equals(pkFullname)
                         && (area.Information.DocumsForeignKeys == null || !area.Information.DocumsForeignKeys.Contains(campoPedido.Name)))
                     {
-                        object Qvalue = Qresult[campoPedido.FullName];
-                        area.insertNameValueField(campoPedido.FullName, Qvalue);
-                        i++;
+                        area.insertNameValueField(campoPedido.FullName, qResult[campoPedido.FullName]);
                     }
-                }
 
                 return;
             }
@@ -2280,17 +2263,15 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             }
 
             //fields of the area
-            IEnumerator enumKeys = area.Fields.Keys.GetEnumerator();
-            while (enumKeys.MoveNext())
+            foreach (RequestedField campoPedido in area.Fields.Values)
             {
-                if (!enumKeys.Current.Equals(area.Alias + "." + area.PrimaryKeyName))
-                {
-                    RequestedField campoPedido = (RequestedField)area.Fields[enumKeys.Current];
-                    if (!campoPedido.WithoutArea && (area.Information.DocumsForeignKeys == null || !area.Information.DocumsForeignKeys.Contains(campoPedido.Name)))//if the field has area
-                    {
-                        query.Select(campoPedido.Area, campoPedido.Name);
-                    }
-                }
+                if (campoPedido.WithoutArea)
+                    continue;
+                if (campoPedido.Area == area.Alias && campoPedido.Name == area.PrimaryKeyName)
+                    continue;
+                if (area.Information.DocumsForeignKeys?.Contains(campoPedido.Name) ?? false)
+                    continue;
+                query.Select(campoPedido.Area, campoPedido.Name);
             }
             QueryUtils.setFromTabDirect(query, relations, area);
 
@@ -2479,43 +2460,6 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                 deleteRecord(row, row.QPrimaryKey);
         }
 
-        /// <summary>
-        /// Function to construct a query insert
-        /// </summary>
-        /// <param name="area">Registration area to introduce</param>
-        /// <param name="utilizador">user login making insertion</param>
-        /// <param name="codInt">internal code of the register to introduce</param>
-        /// <returns>returns the insertion query</returns>
-        public void fillAreaInsert(IArea area, string user, string codInt, string conditions, int zzStateValue)
-        {
-            Regex rx = new Regex("AND");
-            string[] condicoesIns = rx.Split(conditions);
-
-            for (int i = 0; i < condicoesIns.Length; i++)
-            {
-                if (!condicoesIns[i].Equals(""))
-                {
-                    string[] campoValor = condicoesIns[i].Trim().Split('=');
-                    if (campoValor.Length != 2)
-						throw new PersistenceException(null, "PersistentSupport.preencheAreaInserir", "The given conditions have a wrong format: " + conditions);
-                    else
-                    {
-                        campoValor[0] = campoValor[0].Trim();
-                        campoValor[1] = campoValor[1].Trim();
-                        if (!campoValor[0].Equals(area.Alias + "." + area.PrimaryKeyName))
-                        {
-                            //campoValor[1] = campoValor[1].Substring(1, campoValor[1].Length - 2);
-                            area.insertNameValueField(campoValor[0], campoValor[1]);
-                        }
-                    }
-                }
-            }
-            //fill in the primary key
-            area.insertNameValueField(area.Alias + "." + area.PrimaryKeyName, codInt);
-
-            //fill the zzstate
-            area.insertNameValueField(area.Alias + ".zzstate", zzStateValue);
-        }
 
         /// <summary>
         /// Function that returns the internal code to insert a new record
@@ -2633,8 +2577,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                     var formatacaoChaveDocums = CSGenioAdocums.GetInformation().KeyType;
                     foreach(var documForeignKey in area.Information.DocumsForeignKeys)
                     {
-                        RequestedField campoPedido = (RequestedField)area.Fields[area.Alias + "." + documForeignKey ];
-                        if (campoPedido != null)//if (!fieldRequest.Value.Equals(")) // JMA (04-01-2011) This gave problems when there was no field and of course, it was null and burst.
+                        if(area.Fields.TryGetValue(area.Alias + "." + documForeignKey, out RequestedField campoPedido))
                         {
                             // if the key value is blank, nothing is done because there is no document
                             // if this gets out of here to out, you can do -> Field.isEmptyValue()
@@ -3103,7 +3046,8 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                 {
                     //WARNING - In Queries, only the field designation can be
                     //          Insert usValue, one must enter [table designation]. [field designation]
-                    string[] level = areaLevel.Information.TreeTable.RecordLevelField.Split('.');
+                    string levelFullname = areaLevel.Information.TreeTable.RecordLevelField;
+                    string[] level = levelFullname.Split('.');
                     if (!keyValue[1].Equals("''")) //exists a previous level
                     {
                         if (paiIsNivel)
@@ -3112,11 +3056,11 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                             string[] pai = areaLevel.Information.TreeTable.ParentTableField.Split('.');
                             areaLevel.insertNameValueField(keyValue[0], null);
                             areaLevel.insertNameValueField(sigla, null);
-                            areaLevel.insertNameValueField(level[0] + "." + level[1], null);
+                            areaLevel.insertNameValueField(levelFullname, null);
 
                             //Devlove the father's record, from his primary key
                             getRecord(areaLevel, keyValue[1].Trim('\''));
-                            querySel.WhereCondition.Equal(areaLevel.Alias, level[1], Convert.ToInt32(areaLevel.returnValueField(level[0] + "." + level[1])) + 1);
+                            querySel.WhereCondition.Equal(areaLevel.Alias, level[1], Convert.ToInt32(areaLevel.returnValueField(levelFullname)) + 1);
                             querySel.WhereCondition.Equal(areaLevel.Alias, pai[1], areaLevel.returnValueField(sigla));
                         }
                         else
@@ -4225,9 +4169,9 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                         // and the database still to be had on the corresponding table. If the user querys with "*", the
                         // below call would try to search in the corresponding Area structure all fields returned by SQL query.
                         // Since this field no longer exists in the structure, an exception would obviously arise from this.
-
-                        if (area.DBFields.ContainsKey(dr.GetName(i).ToLower())) //I'm assuming that the keys are the long names and that's never going to change
-                            area.insertNameValueField(area.Alias + "." + dr.GetName(i).ToLower(), dr.GetValue(i));
+                        string colName = dr.GetName(i).ToLower();
+                        if (area.DBFields.TryGetValue(colName, out var fieldInfo))
+                            area.insertNameValueField(fieldInfo.FullName, dr.GetValue(i));
                     }
                 }
                 dr.Close();

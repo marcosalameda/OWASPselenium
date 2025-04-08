@@ -25,7 +25,6 @@ namespace CSGenio.business
 
 		public CSGenioAspeci(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 			this.KeyType = CodeType.GUID_KEY;
@@ -46,30 +45,27 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codespec", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codespec", FieldType.CHAVE_PRIMARIA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("especial", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "especial", FieldType.TEXTO);
 			Qfield.FieldDescription = "Specialty";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "SPECIALTY09304";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("areatecn", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "areatecn", FieldType.ARRAY_COD_TEXTO);
 			Qfield.FieldDescription = "Technical area";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "TECHNICAL_AREA50773";
 
 			Qfield.Dupmsg = "";
@@ -78,9 +74,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 			info.SolrList.Add("PREPAIRS");

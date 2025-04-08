@@ -22,7 +22,6 @@ namespace CSGenio.business
 
 		public CSGenioAreportlist(User user,string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 		}
@@ -55,15 +54,15 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-            info.RegisterFieldDB(new Field("codreport", FieldType.CHAVE_PRIMARIA_GUID));
+            info.RegisterFieldDB(new Field(info.Alias, "codreport", FieldType.CHAVE_PRIMARIA_GUID));
 			info.DBFields["codreport"].FieldSize = 36;
 			info.KeyType = CodeType.GUID_KEY;
-            info.RegisterFieldDB(new Field("report", FieldType.TEXTO));
-	        info.RegisterFieldDB(new Field("slotid", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("titulo", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("datacria", FieldType.DATACRIA));	  
-			info.RegisterFieldDB(new Field("opercria", FieldType.OPERCRIA)); 
-			info.RegisterFieldDB(new Field("zzstate", FieldType.INTEIRO));			
+            info.RegisterFieldDB(new Field(info.Alias, "report", FieldType.TEXTO));
+	        info.RegisterFieldDB(new Field(info.Alias, "slotid", FieldType.TEXTO));
+			info.RegisterFieldDB(new Field(info.Alias, "titulo", FieldType.TEXTO));
+			info.RegisterFieldDB(new Field(info.Alias, "datacria", FieldType.DATACRIA));	  
+			info.RegisterFieldDB(new Field(info.Alias, "opercria", FieldType.OPERCRIA)); 
+			info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));			
 
             // Carimbos automáticos na BD
             //------------------------------

@@ -25,7 +25,6 @@ namespace CSGenio.business
 
 		public CSGenioAfacty(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 			this.KeyType = CodeType.GUID_KEY;
@@ -46,20 +45,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codfacty", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codfacty", FieldType.CHAVE_PRIMARIA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("type", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "type", FieldType.TEXTO);
 			Qfield.FieldDescription = "Facility type";
 			Qfield.FieldSize =  25;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "FACILITY_TYPE44577";
 
@@ -67,10 +64,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("layrname", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "layrname", FieldType.TEXTO);
 			Qfield.FieldDescription = "Layer name";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "LAYER_NAME49545";
 
@@ -78,10 +74,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("iconurl", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "iconurl", FieldType.TEXTO);
 			Qfield.FieldDescription = "Icon URL";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "ICON_URL07016";
 
@@ -89,10 +84,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("shadowur", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "shadowur", FieldType.TEXTO);
 			Qfield.FieldDescription = "Shadow URL";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "SHADOW_URL57805";
 
@@ -100,10 +94,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("iconancx", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "iconancx", FieldType.NUMERO);
 			Qfield.FieldDescription = "Icon anchor (x-axis)";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ICON_ANCHOR__X_AXIS_18664";
@@ -112,10 +105,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("iconancy", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "iconancy", FieldType.NUMERO);
 			Qfield.FieldDescription = "Icon anchor (y-axis)";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ICON_ANCHOR__Y_AXIS_63725";
@@ -124,10 +116,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("iconheig", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "iconheig", FieldType.NUMERO);
 			Qfield.FieldDescription = "Icon height";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ICON_HEIGHT61896";
@@ -136,10 +127,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("iconwid", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "iconwid", FieldType.NUMERO);
 			Qfield.FieldDescription = "Icon width";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ICON_WIDTH02295";
@@ -148,10 +138,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("popupanx", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "popupanx", FieldType.NUMERO);
 			Qfield.FieldDescription = "Popup anchor (x-axis)";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "POPUP_ANCHOR__X_AXIS15060";
@@ -160,10 +149,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("popupany", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "popupany", FieldType.NUMERO);
 			Qfield.FieldDescription = "Popup anchor (y-axis)";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "POPUP_ANCHOR__Y_AXIS64670";
@@ -172,10 +160,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("shadowax", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "shadowax", FieldType.NUMERO);
 			Qfield.FieldDescription = "Shadow anchor (x-axis)";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "SHADOW_ANCHOR__X_AXI31230";
@@ -184,10 +171,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("shadoway", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "shadoway", FieldType.NUMERO);
 			Qfield.FieldDescription = "Shadow anchor (y-axis)";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "SHADOW_ANCHOR__Y_AXI51495";
@@ -196,10 +182,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("shadowhe", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "shadowhe", FieldType.NUMERO);
 			Qfield.FieldDescription = "Shadow height";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "SHADOW_HEIGHT64343";
@@ -208,10 +193,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("shadowwi", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "shadowwi", FieldType.NUMERO);
 			Qfield.FieldDescription = "Shadow width";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "SHADOW_WIDTH01769";
@@ -220,9 +204,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}

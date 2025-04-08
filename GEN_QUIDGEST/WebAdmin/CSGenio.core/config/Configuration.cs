@@ -55,7 +55,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static int Version { get; } = 4012;
+        public static int Version { get; } = 4017;
 
         /// <summary>
         /// System id
@@ -85,12 +85,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const int VersionDbGen = 4012;
+        public const int VersionDbGen = 4017;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1681;
+        public const int VersionIdxDbGen = 1686;
 
         /// <summary>
         /// Version of the latest upgrade index version
@@ -544,6 +544,8 @@ namespace CSGenio.framework
                 throw new FrameworkException("Erro nas configurações.", "Configuration.GetProperty", "Property not found: " + name);
             return maisPropriedades[name];
         }
+
+
 
         /// <summary>
         /// Retrieve a property using its key.

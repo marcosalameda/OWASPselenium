@@ -310,7 +310,7 @@ namespace CSGenio.business
             else
             {
                 // AV (2010/06/04) The fields that were erased in the forms were to be overlapped with the value in the DB so we have to test whether the field is in memory
-                if (areaBase.Fields[areaBase.Alias + "." + nomeChave] == null)//If the value is not in memory go read to BD
+                if (!areaBase.Fields.ContainsKey(areaBase.Alias + "." + nomeChave))//If the value is not in memory go read to BD
                 {
                     // TODO: The code should never have to come through here, if it passes we may have a problem of efficiency. You Must always read all the fields at once to the head. Review this if block.
                     string codIntValue = areaBase.QPrimaryKey;

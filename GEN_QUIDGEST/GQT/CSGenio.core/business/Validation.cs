@@ -107,17 +107,14 @@ namespace CSGenio.business
                                 // When we have a whole field name,
                                 // check if there is a field with that name in the current table
 
-                                foreach (DictionaryEntry fld in area.Fields)
-                                {
-
-                                    if (fld.Key.ToString().Replace(Qfield.Alias + ".", "").ToUpper() == currentField.ToUpper())
+                                foreach (var fld in area.Fields)
+                                    if(currentField.Equals(fld.Value.Name, StringComparison.OrdinalIgnoreCase))
                                     {
                                         //If we confirm there is a field in the current table with this name
                                         //Fetch its value and replace it in the string
                                         dupeMsg = dupeMsg.Replace("[" + currentField + "]", (fld.Value as RequestedField).Value.ToString());
                                         break;
                                     }
-                                }
 
                                 currentField = ""; //Clear currentField even if nothing was replaced
 

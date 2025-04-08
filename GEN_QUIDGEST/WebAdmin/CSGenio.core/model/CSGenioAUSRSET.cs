@@ -22,7 +22,6 @@ namespace CSGenio.business
 
 		public CSGenioAusrset(User user,string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 		}
@@ -55,15 +54,15 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-      info.RegisterFieldDB(new Field("codusrset", FieldType.CHAVE_PRIMARIA_GUID));
-		info.RegisterFieldDB(new Field("modulo", FieldType.TEXTO));
+      info.RegisterFieldDB(new Field(info.Alias, "codusrset", FieldType.CHAVE_PRIMARIA_GUID));
+		info.RegisterFieldDB(new Field(info.Alias, "modulo", FieldType.TEXTO));
 		info.KeyType = CodeType.GUID_KEY;
 		
-		info.RegisterFieldDB(new Field("codpsw", FieldType.CHAVE_ESTRANGEIRA_GUID));
+		info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.CHAVE_ESTRANGEIRA_GUID));
 
-        info.RegisterFieldDB(new Field("chave", FieldType.TEXTO));
-		info.RegisterFieldDB(new Field("valor", FieldType.TEXTO));
-		info.RegisterFieldDB(new Field("zzstate", FieldType.INTEIRO));
+        info.RegisterFieldDB(new Field(info.Alias, "chave", FieldType.TEXTO));
+		info.RegisterFieldDB(new Field(info.Alias, "valor", FieldType.TEXTO));
+		info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));
 
 
 			// Relações Filhas

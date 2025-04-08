@@ -49,6 +49,19 @@
 			<template #body.content>
 				<div class="q-dialog-container">
 					<div v-if="hasInitProperties && !showNewKeyInput">
+						<div id="help_container"  v-if="help">
+							<div class="q-help__info-banner">
+								<div class="q-help__info-banner-header">
+									<q-icon icon="information-outline" />									
+								</div>
+								<div class="q-help__info-banner-body">
+									<span style="white-space: pre-line">
+										{{ help }}<br>
+									</span>
+								</div>
+							</div>
+							<br />
+						</div>
 						<q-button v-if="!inDeleteModeAdvanced"
 							b-style="secondary"
 							@click="showNewKeyInput=true"
@@ -63,7 +76,7 @@
 							size="large"
 							:readonly="inDeleteModeAdvanced"
 							item-value="Value"
-							item-label="Text">
+							item-label="translatedLabel">
 						</q-select>
 					</div>
 					<div v-else>
@@ -176,7 +189,8 @@
 					}
 				},
 				valueComponent: QTextField,
-				showNewKeyInput : false,				
+				showNewKeyInput : false,
+				help:'',				
 			};
 		},
 
@@ -281,6 +295,7 @@
 				this.dialogModeAdvanced = ''
 				this.buttonsAdvanced = []
 				this.valueComponent = QTextField
+				this.help = ''
 			},
 			showAdvancedPropertyModal(mode) {
 				this.dialogModeAdvanced = mode;
@@ -324,8 +339,7 @@
 							this.valueComponent = numeric_input
 							break;
 						case 'L':
-							this.valueComponent = QCheckbox
-							this.rowValue = false
+							this.valueComponent = QCheckbox							
 							break;
 						case 'P':
 							this.valueComponent = QPasswordField
@@ -333,6 +347,14 @@
 						default:
 							this.valueComponent = QTextField
 					}
+					//Set default value if exists (Only for new properties).
+					if (this.dialogModeAdvanced ==='new' && advancedItem.Default) {
+						if (advancedItem.Type == 'L')
+							this.rowValue = advancedItem.Default.toLowerCase() === "true"
+						else
+							this.rowValue = advancedItem.Default
+					}
+					this.help = advancedItem.translatedHelpVerbose || advancedItem.translatedHelp
 				}
 			}
 		}

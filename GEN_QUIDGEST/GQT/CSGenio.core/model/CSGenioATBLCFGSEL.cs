@@ -22,7 +22,6 @@ namespace CSGenio.business
 
 		public CSGenioAtblcfgsel(User user,string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 		}
@@ -55,16 +54,16 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field("codtblcfgsel", FieldType.CHAVE_PRIMARIA_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "codtblcfgsel", FieldType.CHAVE_PRIMARIA_GUID));
 			info.DBFields["codtblcfgsel"].FieldSize = 36;
-			info.RegisterFieldDB(new Field("codpsw", FieldType.CHAVE_ESTRANGEIRA_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.CHAVE_ESTRANGEIRA_GUID));
 			info.DBFields["codpsw"].FieldSize = 36;
 			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field("uuid", FieldType.TEXTO){NotDup = true, PrefNDup = "codpsw"});
-			info.RegisterFieldDB(new Field("codtblcfg", FieldType.CHAVE_ESTRANGEIRA_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "uuid", FieldType.TEXTO){NotDup = true, PrefNDup = "codpsw"});
+			info.RegisterFieldDB(new Field(info.Alias, "codtblcfg", FieldType.CHAVE_ESTRANGEIRA_GUID));
 			info.DBFields["codtblcfg"].FieldSize = 36;
-            info.RegisterFieldDB(new Field("date", FieldType.DATACRIA));
-            info.RegisterFieldDB(new Field("zzstate", FieldType.INTEIRO));
+            info.RegisterFieldDB(new Field(info.Alias, "date", FieldType.DATACRIA));
+            info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));
 
             // Carimbos automáticos na BD
             //------------------------------

@@ -217,8 +217,8 @@
 	@*Hidden Foreign Keys Controls*@
 			this.Controls.LED_EQUIGROUROOM1CODROOMS = new QHiddenControl($('[data-identifier="LED_EQUIGROUROOM1CODROOMS"]', this.element), window.Form_Equigrou);
 			this.Controls.LED_EQUIGROUDECOMCODDECO_ = new QHiddenControl($('[data-identifier="LED_EQUIGROUDECOMCODDECO_"]', this.element), window.Form_Equigrou);
-			this.Controls.LED_EQUIGROUWAREHCODWAREH = new QHiddenControl($('[data-identifier="LED_EQUIGROUWAREHCODWAREH"]', this.element), window.Form_Equigrou);
 			this.Controls.LED_EQUIGROUCMPNYCODEMPRE = new QHiddenControl($('[data-identifier="LED_EQUIGROUCMPNYCODEMPRE"]', this.element), window.Form_Equigrou);
+			this.Controls.LED_EQUIGROUWAREHCODWAREH = new QHiddenControl($('[data-identifier="LED_EQUIGROUWAREHCODWAREH"]', this.element), window.Form_Equigrou);
 			this.Controls.LED_EQUIGROUITEM_CODITEM_ = new QHiddenControl($('[data-identifier="LED_EQUIGROUITEM_CODITEM_"]', this.element), window.Form_Equigrou);
 	</text>
 }
@@ -295,8 +295,8 @@
 		window.Form_Equigrou.Data.RelationKeysSelector = {
 				get room1() { return $(':not([elem-identifier="Multiform"]) > #ValCodrooms', $('[data-form="Equigrou"]')); /* Hidden */ },
 				get decom() { return $(':not([elem-identifier="Multiform"]) > #ValCoddeco', $('[data-form="Equigrou"]')); /* Hidden */ },
-				get wareh() { return $(':not([elem-identifier="Multiform"]) > #ValCodwareh', $('[data-form="Equigrou"]')); /* Hidden */ },
 				get cmpny() { return $(':not([elem-identifier="Multiform"]) > #ValCodempre', $('[data-form="Equigrou"]')); /* Hidden */ },
+				get wareh() { return $(':not([elem-identifier="Multiform"]) > #ValCodwareh', $('[data-form="Equigrou"]')); /* Hidden */ },
 				get item() { return $(':not([elem-identifier="Multiform"]) > #ValCoditem', $('[data-form="Equigrou"]')); /* Hidden */ },
 				get pess1() { return $(':not([elem-identifier="Multiform"]) > #ValCodpess1[pers-cs-area="Pess1"]', $('[data-form="Equigrou"]')); /* DBEdit */ },
 				get tpequ() { return $(':not([elem-identifier="Multiform"]) > #ValCodtpequ[pers-cs-area="Tpequ"]', $('[data-form="Equigrou"]')); /* DBEdit */ },
@@ -313,10 +313,10 @@
 			set room1(newValue) { (this.formContext.Data.RelationKeysSelector.room1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get decom() { return (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value; /* Hidden FK */ },
 			set decom(newValue) { (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value = newValue; /* Hidden FK */ },
-			get wareh() { return (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value; /* Hidden FK */ },
-			set wareh(newValue) { (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get cmpny() { return (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value; /* Hidden FK */ },
 			set cmpny(newValue) { (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get wareh() { return (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value; /* Hidden FK */ },
+			set wareh(newValue) { (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get item() { return (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value; /* Hidden FK */ },
 			set item(newValue) { (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get pess1() { return (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value; /* DBEdit */ },

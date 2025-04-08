@@ -25,7 +25,6 @@ namespace CSGenio.business
 
 		public CSGenioApais1(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 			this.KeyType = CodeType.GUID_KEY;
@@ -46,70 +45,63 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codcntry", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codcntry", FieldType.CHAVE_PRIMARIA_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("country", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "country", FieldType.TEXTO);
 			Qfield.FieldDescription = "Country";
 			Qfield.FieldSize =  90;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "COUNTRY64133";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("active", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "active", FieldType.LOGICO);
 			Qfield.FieldDescription = "Active";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ACTIVE03270";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codigonr", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "codigonr", FieldType.TEXTO);
 			Qfield.FieldDescription = "Numeric";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "NUMERIC19292";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("alfa2", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "alfa2", FieldType.TEXTO);
 			Qfield.FieldDescription = "Alphabetic 2";
 			Qfield.FieldSize =  2;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ALPHABETIC_232435";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("alfa3", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "alfa3", FieldType.TEXTO);
 			Qfield.FieldDescription = "Alphabetic 3";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ALPHABETIC_316640";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("flag", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "flag", FieldType.IMAGEM_JPEG);
 			Qfield.FieldDescription = "Flag";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.Decimals = 1;
 			Qfield.CavDesignation = "FLAG51937";
 
@@ -117,9 +109,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}

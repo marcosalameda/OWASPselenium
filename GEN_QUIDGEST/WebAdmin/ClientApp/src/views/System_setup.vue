@@ -188,6 +188,27 @@
 				});
 			},
 			setModel(data) {
+				if (data.SelectLists.PropertyList) {
+					for (var item in data.SelectLists.PropertyList) {
+						let listProperties = data.SelectLists.PropertyList[item]
+
+						if (listProperties.TextResourceId)
+							data.SelectLists.PropertyList[item].translatedLabel = computed(() => this.Resources[listProperties.TextResourceId])
+						else
+							data.SelectLists.PropertyList[item].translatedLabel = listProperties.Text
+
+						if (listProperties.TextHelpResourceId)
+							data.SelectLists.PropertyList[item].translatedHelp = computed(() => this.Resources[listProperties.TextHelpResourceId])
+						else
+							data.SelectLists.PropertyList[item].translatedHelp = undefined
+
+						if (listProperties.TextHelpResourceVerboseId)
+							data.SelectLists.PropertyList[item].translatedHelpVerbose = computed(() => this.Resources[listProperties.TextHelpResourceVerboseId])
+						else
+							data.SelectLists.PropertyList[item].translatedHelpVerbose = undefined
+					}						
+				}
+
 				this.Model = { ...data };
 				// Select the first exists application
 				if (!this.currentApp && Array.isArray(this.Model.Applications) && this.Model.Applications.length) {

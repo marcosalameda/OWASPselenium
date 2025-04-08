@@ -9,14 +9,19 @@ namespace CSGenio.framework
     /// </summary>
     public class Field
     {
+        private readonly string _fullname;
+
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="alias">Area of the field</param>
         /// <param name="name">Name of the field</param>
         /// <param name="fieldType">Type of the field</param>
-        public Field(string name, FieldType fieldType)
+        public Field(string alias, string name, FieldType fieldType)
         {
+            Alias = alias;
             Name = name;
+            _fullname = Alias + "." + Name;
             FieldType = fieldType;
             FieldFormat = fieldType.Formatting;
             NotNull = false;
@@ -60,12 +65,17 @@ namespace CSGenio.framework
         /// <summary>
         /// Field symbolic name
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         /// <summary>
 		/// Table alias
 		/// </summary>
-		public string Alias { get; set; }
+		public string Alias { get; private set; }
+
+        /// <summary>
+        /// Returns the fully qualified name of this field
+        /// </summary>
+        public string FullName { get => _fullname; }
 
         /// <summary>
         /// User description of the field

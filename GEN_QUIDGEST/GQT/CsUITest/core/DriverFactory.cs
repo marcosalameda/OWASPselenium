@@ -40,12 +40,20 @@ public class DriverFactory {
 				ChromeOptions chromeOptions = new ChromeOptions();
 				if(headless)
 					chromeOptions.AddArgument("--headless");
+				
 				chromeOptions.AddArgument("--allow-insecure-localhost");
+				
+				// Disable Chrome's built-in password manager and credential service
+				// to prevent prompts during automated tests.
+				chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
+				chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
+				chromeOptions.AddUserProfilePreference("profile.password_manager_leak_detection", false);
+
 				driver = new ChromeDriver(chromeOptions);
 				break;
 		}
 
 		driver.Manage().Timeouts().ImplicitWait = System.TimeSpan.FromMilliseconds(ImplicitWaitMilliseconds);
 		return driver;
-    }
+	}
 }

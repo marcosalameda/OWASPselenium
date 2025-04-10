@@ -25,8 +25,7 @@ namespace GenioServer.ai
                 {
                     type = "string",
                     description = "A one letter with the correct mapping"
-                }
-            }
+                }            }
         };
 
         public RepairsCategorizerAgent(IChatbotService service) : base(service)

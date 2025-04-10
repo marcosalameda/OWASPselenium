@@ -6,6 +6,8 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Net.Http.Headers;
 
 namespace CSGenio.core.ai
 {
@@ -94,6 +96,7 @@ namespace CSGenio.core.ai
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
+        
         /// <summary>
         /// Sends a prompt to the Chatbot API and retrieves the response as a stream.
         /// </summary>
@@ -106,7 +109,7 @@ namespace CSGenio.core.ai
                 jsonContent = await reader.ReadToEndAsync();
 
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var request = new HttpRequestMessage(HttpMethod.Post, BuildEndpoint("prompt/message"))
+            var request = new HttpRequestMessage(HttpMethod.Post, BuildEndpoint("prompt/submit"))
             {
                 Content = content
             };
@@ -114,6 +117,45 @@ namespace CSGenio.core.ai
             var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
 
+            return await response.Content.ReadAsStreamAsync();
+        }
+
+        /// <summary>
+        /// Sends a prompt to the Chatbot API and retrieves the response as a stream(formData Handling).
+        /// </summary>
+        /// <param name="fields">Formdata fields</param>
+        /// <param name="files">Formdata files</param>
+        /// <returns>The response stream from the API</returns>
+        public async Task<Stream> GetChatbotStreamAsync(
+            IEnumerable<KeyValuePair<string, string>> fields,
+            IEnumerable<(string FileName, string ContentType, Stream Content)> files)
+        {
+            var boundary = Guid.NewGuid().ToString();
+            var multipartContent = new MultipartFormDataContent(boundary);
+            //Add fields
+            foreach (var field in fields)
+            {
+                var stringContent = new StringContent(field.Value);
+                multipartContent.Add(stringContent, $"\"{field.Key}\"");
+            }
+            //Add files
+            foreach (var file in files)
+            {
+                var fileContent = new StreamContent(file.Content);
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(file.ContentType);
+                multipartContent.Add(fileContent, file.FileName);
+            }
+            // Set the Content-Type header with the boundary
+            multipartContent.Headers.ContentType = new MediaTypeHeaderValue("multipart/form-data")
+            {
+                Parameters = { new NameValueHeaderValue("boundary", boundary) }
+            };
+            var request = new HttpRequestMessage(HttpMethod.Post, BuildEndpoint("prompt/submit"))
+            {
+                Content = multipartContent
+            };
+            var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStreamAsync();
         }
 
@@ -155,6 +197,27 @@ namespace CSGenio.core.ai
             }
         }
 
+        /// <summary>
+        /// Sends an HTTP request to retrieve a file from the chatbot service and returns the response stream.
+        /// </summary>
+        /// <param name="fileName">The name of the file to retrieve.</param>
+        /// <param name="method">The HTTP method to use for the request.</param>
+        /// <returns>
+        /// A <see cref="Stream"/> containing the file content from the chatbot service.
+        /// </returns>
+        public async Task<Stream> GetChatbotFileAsync(string fileName, HttpMethod method)
+        {
+            var filePath = $"temp/{fileName}";
+            var request = new HttpRequestMessage
+            {
+                Method = method,
+                RequestUri = new Uri(BuildEndpoint(filePath))
+            };
+            var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStreamAsync();
+        }
+        
         // Represents the standard API response structure used by the Chatbot service.
         private class ApiResponse<T>
         {

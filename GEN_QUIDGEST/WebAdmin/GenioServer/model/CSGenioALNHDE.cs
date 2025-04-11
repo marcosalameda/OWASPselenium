@@ -201,12 +201,12 @@ namespace CSGenio.business
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(7);
 			info.Pathways.Add("pedid","pedid");
-			info.Pathways.Add("lnhpd","lnhpd");
 			info.Pathways.Add("tpeq1","tpeq1");
+			info.Pathways.Add("lnhpd","lnhpd");
 			info.Pathways.Add("lnhag","lnhag");
+			info.Pathways.Add("fami1","tpeq1");
 			info.Pathways.Add("tpequ","lnhpd");
 			info.Pathways.Add("famil","lnhpd");
-			info.Pathways.Add("fami1","tpeq1");
 		}
 
 		/// <summary>

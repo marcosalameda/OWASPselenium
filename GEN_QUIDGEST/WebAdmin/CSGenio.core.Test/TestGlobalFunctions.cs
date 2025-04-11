@@ -11,14 +11,14 @@ public class TestFuncoesGlobais
     [Test]
     public void TestSomaDias()
     {
-        DateTime res = GenFunctions.DateAddDays(new DateTime(2010,10,31), 1);
-        Assert.That(res, Is.EqualTo(new DateTime(2010,11,01)));
-        res = GenFunctions.DateAddDays(new DateTime(2010,12,01), 31);
-        Assert.That(res, Is.EqualTo(new DateTime(2011,01,01)));
-        res = GenFunctions.DateAddDays(new DateTime(2010,12,01), 0);
-        Assert.That(res, Is.EqualTo(new DateTime(2010,12,01)));
-        res = GenFunctions.DateAddDays(new DateTime(2010,12,01), -1);
-        Assert.That(res, Is.EqualTo(new DateTime(2010,11,30)));
+        DateTime res = GenFunctions.DateAddDays(new DateTime(2010, 10, 31), 1);
+        Assert.That(res, Is.EqualTo(new DateTime(2010, 11, 01)));
+        res = GenFunctions.DateAddDays(new DateTime(2010, 12, 01), 31);
+        Assert.That(res, Is.EqualTo(new DateTime(2011, 01, 01)));
+        res = GenFunctions.DateAddDays(new DateTime(2010, 12, 01), 0);
+        Assert.That(res, Is.EqualTo(new DateTime(2010, 12, 01)));
+        res = GenFunctions.DateAddDays(new DateTime(2010, 12, 01), -1);
+        Assert.That(res, Is.EqualTo(new DateTime(2010, 11, 30)));
         res = GenFunctions.DateAddDays(DateTime.MinValue, 1);
         Assert.That(res, Is.EqualTo(DateTime.MinValue));
     }
@@ -34,13 +34,15 @@ public class TestFuncoesGlobais
         Assert.That(res, Is.EqualTo(0));
         res = GenFunctions.atoi("-4567");
         Assert.That(res, Is.EqualTo(-4567));
-        Assert.Throws<FormatException>(() => {
+        Assert.Throws<FormatException>(() =>
+        {
             res = GenFunctions.atoi("98,76");
         });
-        Assert.Throws<FormatException>(() => {
+        Assert.Throws<FormatException>(() =>
+        {
             res = GenFunctions.atoi("xpto");
         });
-		}
+    }
 
     [Test]
     public void TestIntToString()
@@ -59,7 +61,7 @@ public class TestFuncoesGlobais
         //This is all kinds of wrong. Standard functions should not depend on current culture
         System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
 
-        string res = GenFunctions.NumericToString(23,3);
+        string res = GenFunctions.NumericToString(23, 3);
         Assert.That(res, Is.EqualTo("23")); //Não devia ser 23.000?
         res = GenFunctions.NumericToString(23.123m, 3);
         Assert.That(res, Is.EqualTo("23.123")); //Devia sair com virgula?
@@ -74,7 +76,7 @@ public class TestFuncoesGlobais
     {
         int res = GenFunctions.emptyD(DateTime.MinValue);
         Assert.That(res, Is.EqualTo(1));
-        res = GenFunctions.emptyD(new DateTime(2010,10,31));
+        res = GenFunctions.emptyD(new DateTime(2010, 10, 31));
         Assert.That(res, Is.EqualTo(0));
         res = GenFunctions.emptyD(DateTime.MaxValue);
         Assert.That(res, Is.EqualTo(0));
@@ -120,7 +122,7 @@ public class TestFuncoesGlobais
         res = GenFunctions.emptyN(null);
         Assert.That(res, Is.EqualTo(1));
     }
-    
+
     [Test]
     public void TestEmptyT()
     {
@@ -133,7 +135,7 @@ public class TestFuncoesGlobais
         res = GenFunctions.emptyT("12:34");
         Assert.That(res, Is.EqualTo(0));
     }
-    
+
     [Test]
     public void TestEmptyL()
     {
@@ -143,14 +145,14 @@ public class TestFuncoesGlobais
         Assert.That(res, Is.EqualTo(0));
         res = GenFunctions.emptyL(null);
         Assert.That(res, Is.EqualTo(1));
-			res = GenFunctions.emptyL(0m); 
-			Assert.That(res, Is.EqualTo(1));
-			res = GenFunctions.emptyL(1m);
-			Assert.That(res, Is.EqualTo(0));
-			res = GenFunctions.emptyL(0d);
-			Assert.That(res, Is.EqualTo(1));
-			res = GenFunctions.emptyL(1d);
-			Assert.That(res, Is.EqualTo(0));
+        res = GenFunctions.emptyL(0m);
+        Assert.That(res, Is.EqualTo(1));
+        res = GenFunctions.emptyL(1m);
+        Assert.That(res, Is.EqualTo(0));
+        res = GenFunctions.emptyL(0d);
+        Assert.That(res, Is.EqualTo(1));
+        res = GenFunctions.emptyL(1d);
+        Assert.That(res, Is.EqualTo(0));
     }
 
     [Test]
@@ -186,16 +188,25 @@ public class TestFuncoesGlobais
     [Test]
     public void TestYear()
     {
-        int res = GenFunctions.Year(new DateTime(2012,12,14));
+        int res = GenFunctions.Year(new DateTime(2012, 12, 14));
         Assert.That(res, Is.EqualTo(2012));
         res = GenFunctions.Year(DateTime.MinValue);
         Assert.That(res, Is.EqualTo(0));
     }
 
     [Test]
+    public void TestDateGetYear()
+    {
+        int res = GenFunctions.DateGetYear(new DateTime(2012, 12, 14));
+        Assert.That(res, Is.EqualTo(2012));
+        res = GenFunctions.DateGetYear(DateTime.MinValue);
+        Assert.That(res, Is.EqualTo(1));
+    }
+
+    [Test]
     public void TestMonth()
     {
-        int res = GenFunctions.Month(new DateTime(2012,12,14));
+        int res = GenFunctions.Month(new DateTime(2012, 12, 14));
         Assert.That(res, Is.EqualTo(12));
         res = GenFunctions.Month(DateTime.MinValue);
         Assert.That(res, Is.EqualTo(0)); //devia mesmo ser 0? não devia ser 1?
@@ -204,17 +215,61 @@ public class TestFuncoesGlobais
     [Test]
     public void TestDay()
     {
-        int res = GenFunctions.Day(new DateTime(2012,12,14));
+        int res = GenFunctions.Day(new DateTime(2012, 12, 14));
         Assert.That(res, Is.EqualTo(14));
         res = GenFunctions.Day(DateTime.MinValue);
         Assert.That(res, Is.EqualTo(0)); //devia mesmo ser 0? não devia ser 1?
     }
 
     [Test]
+    public void TestDateGetDay()
+    {
+        int res = GenFunctions.DateGetDay(new DateTime(2012, 12, 14));
+        Assert.That(res, Is.EqualTo(14));
+        res = GenFunctions.DateGetDay(DateTime.MinValue);
+        Assert.That(res, Is.EqualTo(1));
+        res = GenFunctions.DateGetDay(DateTime.MaxValue);
+        Assert.That(res, Is.EqualTo(31));
+    }
+
+    [Test]
+    public void TestDateGetHour()
+    {
+        int res = GenFunctions.DateGetHour(new DateTime(2012, 12, 14, 17, 59, 35));
+        Assert.That(res, Is.EqualTo(17));
+        res = GenFunctions.DateGetHour(DateTime.MinValue);
+        Assert.That(res, Is.EqualTo(0));
+        res = GenFunctions.DateGetHour(DateTime.MaxValue);
+        Assert.That(res, Is.EqualTo(23));
+    }
+
+    [Test]
+    public void TestDateGetMinute()
+    {
+        int res = GenFunctions.DateGetMinute(new DateTime(2012, 12, 14, 17, 59, 35));
+        Assert.That(res, Is.EqualTo(59));
+        res = GenFunctions.DateGetMinute(DateTime.MinValue);
+        Assert.That(res, Is.EqualTo(0));
+        res = GenFunctions.DateGetMinute(DateTime.MaxValue);
+        Assert.That(res, Is.EqualTo(59));
+    }
+
+    [Test]
+    public void TestDateGetSecond()
+    {
+        int res = GenFunctions.DateGetSecond(new DateTime(2012, 12, 14, 17, 59, 35));
+        Assert.That(res, Is.EqualTo(35));
+        res = GenFunctions.DateGetSecond(DateTime.MinValue);
+        Assert.That(res, Is.EqualTo(0));
+        res = GenFunctions.DateGetSecond(DateTime.MaxValue);
+        Assert.That(res, Is.EqualTo(59));
+    }
+
+    [Test]
     public void TestHorasToDouble()
     {
         decimal res = GenFunctions.HoursToDouble("10:30");
-        Assert.That(res, Is.EqualTo(10 + 30/60m));
+        Assert.That(res, Is.EqualTo(10 + 30 / 60m));
         res = GenFunctions.HoursToDouble("10:01");
         Assert.That(res, Is.EqualTo(10 + 01 / 60m));
         res = GenFunctions.HoursToDouble("_1:_1");
@@ -294,7 +349,7 @@ public class TestFuncoesGlobais
     public void TestCreateDateTime()
     {
         DateTime minDate = DateTime.MinValue;
-        
+
         DateTime res = GenFunctions.CreateDateTime(2010, 10, 30, 20, 30, 00);
         Assert.That(res, Is.EqualTo(new DateTime(2010, 10, 30, 20, 30, 00)));
 
@@ -308,7 +363,7 @@ public class TestFuncoesGlobais
         res = GenFunctions.CreateDateTime(2010, 10, 30, 20, 80, 00);
         Assert.That(res, Is.EqualTo(minDate));
     }
-    
+
     [Test]
     public void TestDateSetTime()
     {
@@ -321,7 +376,7 @@ public class TestFuncoesGlobais
         Assert.That(res, Is.EqualTo(minDate));
 
         res = GenFunctions.DateSetTime(baseDate, "20:30");
-        Assert.That(res, Is.EqualTo(new DateTime(2010,10,30,20,30,00)));
+        Assert.That(res, Is.EqualTo(new DateTime(2010, 10, 30, 20, 30, 00)));
 
         // invalid time will be ignored and original date returned
         res = GenFunctions.DateSetTime(baseDate, "30:30");
@@ -370,7 +425,7 @@ public class TestFuncoesGlobais
         Assert.That(res, Is.EqualTo("    1"));
         //test lower case
         res = GenFunctions.KeyToString("{234dceae-7c12-40e9-bbf5-b59f5f6dd890}");
-        Assert.That(res, Is.EqualTo("234DCEAE7C1240E9BBF5B59F5F6DD890"));            
+        Assert.That(res, Is.EqualTo("234DCEAE7C1240E9BBF5B59F5F6DD890"));
         //test upper case
         res = GenFunctions.KeyToString("{234DCEAE-7C12-40E9-BBF5-B59F5F6DD890}");
         Assert.That(res, Is.EqualTo("234DCEAE7C1240E9BBF5B59F5F6DD890"));
@@ -403,27 +458,27 @@ public class TestFuncoesGlobais
     [Test]
     public void TestMinD()
     {
-        DateTime res = GenFunctions.minD(new DateTime(2010,10,30), new DateTime(2010,10,31));
-        Assert.That(res, Is.EqualTo(new DateTime(2010,10,30)));
-        res = GenFunctions.minD(new DateTime(2010,10,31), new DateTime(2010,10,30));
-        Assert.That(res, Is.EqualTo(new DateTime(2010,10,30)));
-        res = GenFunctions.minD(new DateTime(2010,10,31), new DateTime(2010,10,31));
-        Assert.That(res, Is.EqualTo(new DateTime(2010,10,31)));
-        res = GenFunctions.minD(DateTime.MinValue, new DateTime(2010,10,31));
+        DateTime res = GenFunctions.minD(new DateTime(2010, 10, 30), new DateTime(2010, 10, 31));
+        Assert.That(res, Is.EqualTo(new DateTime(2010, 10, 30)));
+        res = GenFunctions.minD(new DateTime(2010, 10, 31), new DateTime(2010, 10, 30));
+        Assert.That(res, Is.EqualTo(new DateTime(2010, 10, 30)));
+        res = GenFunctions.minD(new DateTime(2010, 10, 31), new DateTime(2010, 10, 31));
+        Assert.That(res, Is.EqualTo(new DateTime(2010, 10, 31)));
+        res = GenFunctions.minD(DateTime.MinValue, new DateTime(2010, 10, 31));
         Assert.That(res, Is.EqualTo(DateTime.MinValue));
     }
 
     [Test]
     public void TestMaxD()
     {
-        DateTime res = GenFunctions.maxD(new DateTime(2010,10,30), new DateTime(2010,10,31));
-        Assert.That(res, Is.EqualTo(new DateTime(2010,10,31)));
-        res = GenFunctions.maxD(new DateTime(2010,10,31), new DateTime(2010,10,30));
-        Assert.That(res, Is.EqualTo(new DateTime(2010,10,31)));
-        res = GenFunctions.maxD(new DateTime(2010,10,31), new DateTime(2010,10,31));
-        Assert.That(res, Is.EqualTo(new DateTime(2010,10,31)));
-        res = GenFunctions.maxD(DateTime.MinValue, new DateTime(2010,10,31));
-        Assert.That(res, Is.EqualTo(new DateTime(2010,10,31)));
+        DateTime res = GenFunctions.maxD(new DateTime(2010, 10, 30), new DateTime(2010, 10, 31));
+        Assert.That(res, Is.EqualTo(new DateTime(2010, 10, 31)));
+        res = GenFunctions.maxD(new DateTime(2010, 10, 31), new DateTime(2010, 10, 30));
+        Assert.That(res, Is.EqualTo(new DateTime(2010, 10, 31)));
+        res = GenFunctions.maxD(new DateTime(2010, 10, 31), new DateTime(2010, 10, 31));
+        Assert.That(res, Is.EqualTo(new DateTime(2010, 10, 31)));
+        res = GenFunctions.maxD(DateTime.MinValue, new DateTime(2010, 10, 31));
+        Assert.That(res, Is.EqualTo(new DateTime(2010, 10, 31)));
     }
 
     [Test]
@@ -455,7 +510,7 @@ public class TestFuncoesGlobais
     [Test]
     public void TestSubString()
     {
-        string res = GenFunctions.SubString("ola adeus", 2 , 3);
+        string res = GenFunctions.SubString("ola adeus", 2, 3);
         Assert.That(res, Is.EqualTo("a a"));
         res = GenFunctions.SubString("ola adeus", 4, 30);
         Assert.That(res, Is.EqualTo("adeus"));
@@ -484,7 +539,7 @@ public class TestFuncoesGlobais
         //aproximação a pares
         tRoundQG(12346.5m, 0, 12347);
         tRoundQG(12346.4m, 0, 12346);
-        tRoundQG(12346.49m, 0, 12346);            
+        tRoundQG(12346.49m, 0, 12346);
         tRoundQG(12346.498m, 0, 12346);
         tRoundQG(12346.498999999m, 0, 12346);
         tRoundQG(12346.499m, 0, 12347);
@@ -492,7 +547,7 @@ public class TestFuncoesGlobais
         //aproximação a impares
         tRoundQG(12343.5m, 0, 12344);
         tRoundQG(12343.4m, 0, 12343);
-        tRoundQG(12343.49m, 0, 12343);            
+        tRoundQG(12343.49m, 0, 12343);
         tRoundQG(12343.498m, 0, 12343);
         tRoundQG(12343.498999999m, 0, 12343);
         tRoundQG(12343.499m, 0, 12344);
@@ -501,7 +556,7 @@ public class TestFuncoesGlobais
         //aproximação a pares
         tRoundQG(12345.65m, 1, 12345.7m);
         tRoundQG(12345.64m, 1, 12345.6m);
-        tRoundQG(12345.649m, 1, 12345.6m);            
+        tRoundQG(12345.649m, 1, 12345.6m);
         tRoundQG(12345.6498m, 1, 12345.6m);
         tRoundQG(12345.6498999999m, 1, 12345.6m);
         tRoundQG(12345.6499m, 1, 12345.7m);
@@ -509,7 +564,7 @@ public class TestFuncoesGlobais
         //aproximação a impares
         tRoundQG(12345.55m, 1, 12345.6m);
         tRoundQG(12345.54m, 1, 12345.5m);
-        tRoundQG(12345.549m, 1, 12345.5m);            
+        tRoundQG(12345.549m, 1, 12345.5m);
         tRoundQG(12345.5498m, 1, 12345.5m);
         tRoundQG(12345.5498999999m, 1, 12345.5m);
         tRoundQG(12345.5499m, 1, 12345.6m);
@@ -518,7 +573,7 @@ public class TestFuncoesGlobais
         //aproximação a pares
         tRoundQG(-12345.065m, 2, -12345.07m);
         tRoundQG(-12345.064m, 2, -12345.06m);
-        tRoundQG(-12345.0649m, 2, -12345.06m);            
+        tRoundQG(-12345.0649m, 2, -12345.06m);
         tRoundQG(-12345.06498m, 2, -12345.06m);
         tRoundQG(-12345.06498999999m, 2, -12345.06m);
         tRoundQG(-12345.06499m, 2, -12345.07m);
@@ -526,7 +581,7 @@ public class TestFuncoesGlobais
         //aproximação a impares
         tRoundQG(-12345.055m, 2, -12345.06m);
         tRoundQG(-12345.054m, 2, -12345.05m);
-        tRoundQG(-12345.0549m, 2, -12345.05m);            
+        tRoundQG(-12345.0549m, 2, -12345.05m);
         tRoundQG(-12345.05498m, 2, -12345.05m);
         tRoundQG(-12345.05498999999m, 2, -12345.05m);
         tRoundQG(-12345.05499m, 2, -12345.06m);
@@ -613,21 +668,21 @@ public class TestFuncoesGlobais
         res = GenFunctions.DateDiffPart(new DateTime(2010, 12, 01), new DateTime(2010, 11, 20), "D");
         Assert.That(res, Is.EqualTo(-11));
 
-        res = GenFunctions.DateDiffPart(new DateTime(2010,11,30), new DateTime(2010,12,01), "M");
+        res = GenFunctions.DateDiffPart(new DateTime(2010, 11, 30), new DateTime(2010, 12, 01), "M");
         Assert.That(res, Is.EqualTo(60 * 24));
-        res = GenFunctions.DateDiffPart(new DateTime(2010,11,30), new DateTime(2010,12,01, 01,11,02), "M");
+        res = GenFunctions.DateDiffPart(new DateTime(2010, 11, 30), new DateTime(2010, 12, 01, 01, 11, 02), "M");
         Assert.That(res, Is.EqualTo(60 * 24 + 1 * 60 + 11));
-        res = GenFunctions.DateDiffPart(new DateTime(2010,12,01), new DateTime(2010,11,30, 00,00,04), "M");
+        res = GenFunctions.DateDiffPart(new DateTime(2010, 12, 01), new DateTime(2010, 11, 30, 00, 00, 04), "M");
         Assert.That(res, Is.EqualTo(-60 * 24));
 
-        res = GenFunctions.DateDiffPart(new DateTime(2010,11,30), new DateTime(2010,12,01), "H");
+        res = GenFunctions.DateDiffPart(new DateTime(2010, 11, 30), new DateTime(2010, 12, 01), "H");
         Assert.That(res, Is.EqualTo(24));
-        res = GenFunctions.DateDiffPart(new DateTime(2010,11,30), new DateTime(2010,12,01, 01,11,02), "H");
+        res = GenFunctions.DateDiffPart(new DateTime(2010, 11, 30), new DateTime(2010, 12, 01, 01, 11, 02), "H");
         Assert.That(res, Is.EqualTo(24 + 1));
-        res = GenFunctions.DateDiffPart(new DateTime(2010,12,01), new DateTime(2010,11,30, 00,00,04), "H");
+        res = GenFunctions.DateDiffPart(new DateTime(2010, 12, 01), new DateTime(2010, 11, 30, 00, 00, 04), "H");
         Assert.That(res, Is.EqualTo(-24));
 
-        res = GenFunctions.DateDiffPart(new DateTime(2010,11,30), new DateTime(2010,12,01, 01,11,02), "S");
+        res = GenFunctions.DateDiffPart(new DateTime(2010, 11, 30), new DateTime(2010, 12, 01, 01, 11, 02), "S");
         Assert.That(res, Is.EqualTo(60 * 60 * 24 + 1 * 60 * 60 + 60 * 11 + 2));
     }
 

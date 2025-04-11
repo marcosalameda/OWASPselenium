@@ -216,8 +216,11 @@ namespace Administration.Models
             return new DataSystemXml
             {
                 Server = this.Server,
-                Password = this.DbPsw,
-                Login = this.DbUser,
+                Password = Convert.ToBase64String(System.Text.Encoding.Unicode.GetBytes(this.DbPsw)),
+                Login = Convert.ToBase64String(System.Text.Encoding.Unicode.GetBytes(this.DbUser)),
+                Name = this.Schema,
+                Port = this.Port,
+                Type = this.ServerType.ToString(),
                 Schemas = new List<DataXml>
                 {
                     new DataXml { Schema = this.Schema }

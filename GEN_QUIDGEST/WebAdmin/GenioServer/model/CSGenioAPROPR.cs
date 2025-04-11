@@ -270,8 +270,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(8);
-			info.Pathways.Add("tppro","tppro");
 			info.Pathways.Add("cntry","cntry");
+			info.Pathways.Add("tppro","tppro");
 			info.Pathways.Add("pais1","pais1");
 			info.Pathways.Add("regio","regio");
 			info.Pathways.Add("pesso","pesso");

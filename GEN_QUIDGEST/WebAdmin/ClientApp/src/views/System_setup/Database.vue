@@ -61,8 +61,8 @@
 		</row>
 
 		<row>
-			<q-card 
-				:title="Resources.AUTENTICACAO_DE__BAS42362" 
+			<q-card
+				:title="Resources.AUTENTICACAO_DE__BAS42362"
 				class="q-card--admin-default"
 				width="block">
 				<q-row-container>
@@ -183,7 +183,7 @@
 				</q-text-field>
 				<hr />
 				<q-text-field
-					v-model="model.Log_DbUser" 
+					v-model="model.Log_DbUser"
 					:label="Resources.LOGIN_DE_ACESSO_A_BA52816"
 					size="xlarge"
 					:readonly="isTestingConnection" />
@@ -195,7 +195,7 @@
 					:isReadOnly="isTestingConnection">
 				</password-input>
 				<password-input
-					v-model="model.Log_DbCheckPsw" 
+					v-model="model.Log_DbCheckPsw"
 					:label="Resources.CONFIRMAR_PALAVRA_PA30977"
 					size="xlarge"
 					:isReadOnly="isTestingConnection">
@@ -286,7 +286,9 @@ export default {
 				Server: this.model.Server,
 				DbUser: this.model.DbUser,
 				Schema: this.model.Schema,
-				DbPsw: this.model.DbPsw
+				DbPsw: this.model.DbPsw,
+				Port: this.model.Port,
+				DBType: this.model.ServerType
 			};
 
 			// Reset the loader and testing state

@@ -19,6 +19,11 @@
 		}
 	}
 
+	&--admin-border-less {
+		border-radius: 0;
+		border-color: transparent;
+	}
+
 	&--admin-compact {
 		.q-card__header-content, .q-card__content {
 			padding-left: 0;

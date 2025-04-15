@@ -475,7 +475,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.Fl
 
         private static readonly string[] _fieldsToSerialize =
         {
-            "Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Equip", "Equip.ValRegistnr", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Langu", "Langu.ValLangua", "Anexd.ValTittradu", "Anexd.ValCodequip", "Anexd.ValCodlang"
+            "Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Equip", "Equip.ValRegistnr", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Langu", "Langu.ValLangua", "Anexd.ValTittradu", "Equip.ValCodequip", "Anexd.ValCodequip", "Anexd.ValCodlang"
         };
 
         private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>

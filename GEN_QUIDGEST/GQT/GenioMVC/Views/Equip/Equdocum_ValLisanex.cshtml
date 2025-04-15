@@ -44,6 +44,10 @@
         .TableList(hasFilters: false)
         .RequestLink(@Url.Action("Equdocum_ValLisanex", new { id = Model.ValCodequip, partialView = "Equdocum_ValLisanex"}))
         .Form("Anexd", false, false)
+        .UpdateConditions((item)=>Anexd_ViewModel.UpdateConditions(item))
+        .ViewConditions((item)=>Anexd_ViewModel.ViewConditions(item))
+        .DeleteConditions((item)=>Anexd_ViewModel.DeleteConditions(item))
+        .InsertConditions((item)=>Anexd_ViewModel.InsertConditions(this.Model.Navigation))
         .SetFollowUp("Anexd_Show", "Anexd" , (Func<GenioMVC.Models.Anexd, object>)(item => new { id = item.ValCodanexd }), isRoutine: false, isSpecificPaths: false, isAjaxAction: false, htmlAttributes: new { }, openInPopup: false)
         .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
 		;

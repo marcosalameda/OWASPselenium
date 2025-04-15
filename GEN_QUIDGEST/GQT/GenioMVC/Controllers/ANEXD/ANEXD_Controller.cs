@@ -178,6 +178,31 @@ namespace GenioMVC.Controllers
 
         #region Recalculate Formulas (server side)
 
+		// POST: /Anexd/ANEXD_InsertCondition
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult ANEXD_InsertCondition(Anexd_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Anexd();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: HasRole("A") && !isEmptyG([EQUIP->CODEQUIP])
+				if (!((Logical)(CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A")&&!(((string)p.Equip.ValCodequip) == ""))))
+					return Json(new { Success = true, Result = false });
+
+				return Json(new { Success = true, Result = true });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
         /// <summary>
         /// Recalculate formulas of the "Anexd" form. (++, CT, SR, CL and U1)
         /// </summary>

@@ -248,7 +248,7 @@ namespace GenioMVC.ViewModels.Equip
 			List<ColumnSort> sorts = GetRequestSorts(this.Menu, "sValLisanex", "dValLisanex", requestValues, "anexd", allSortOrders);
 
 
-FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.FldZzstate, CSGenioAanexd.FldDthranex, CSGenioAanexd.FldTitle, CSGenioAanexd.FldDocument, CSGenioAanexd.FldDocumentfk, CSGenioAanexd.FldTittradu, CSGenioAanexd.FldReferenc };
+FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.FldZzstate, CSGenioAanexd.FldDthranex, CSGenioAanexd.FldTitle, CSGenioAanexd.FldDocument, CSGenioAanexd.FldDocumentfk, CSGenioAanexd.FldTittradu, CSGenioAanexd.FldReferenc, CSGenioAanexd.FldCodequip, CSGenioAequip.FldCodequip };
 
 
 			//columns by users list (TemplateDBEditViewModel)
@@ -430,7 +430,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.Fl
 
         private static readonly string[] _fieldsToSerialize =
         {
-            "Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Anexd.ValTittradu", "Anexd.ValReferenc", "Anexd.ValCodequip", "Anexd.ValCodlang"
+            "Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Anexd.ValTittradu", "Anexd.ValReferenc", "Equip", "Equip.ValCodequip", "Anexd.ValCodequip", "Anexd.ValCodlang"
         };
 
         private static readonly List<TableSearchColumn> _searchableColumns = new List<TableSearchColumn>

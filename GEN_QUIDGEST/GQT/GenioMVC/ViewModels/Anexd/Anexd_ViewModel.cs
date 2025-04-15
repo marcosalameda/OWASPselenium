@@ -100,6 +100,13 @@ namespace GenioMVC.ViewModels.Anexd
 		#endregion
 
 		#region Fields for formulas
+		// Field to formula
+		/// <summary>Used only for lazy loading of the EquipValCodequip field</summary>
+		[Newtonsoft.Json.JsonIgnore]
+		public Func<string> funcEquipValCodequip { get; set; }
+		private string _auxEquipValCodequip { get; set; }
+		/// <summary>Field : "" Tipo: "+"</summary>
+		public string EquipValCodequip { get { return funcEquipValCodequip != null ? funcEquipValCodequip() : _auxEquipValCodequip; } set { funcEquipValCodequip = () => value;} }
 		#endregion
 
 		public string ValCodanexd { get; set; }
@@ -214,6 +221,7 @@ namespace GenioMVC.ViewModels.Anexd
 				ValDocumentfk = ViewModelConversion.ToString(m.ValDocumentfk);
 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 				ValCodlang = ViewModelConversion.ToString(m.ValCodlang);
+				funcEquipValCodequip = () => ViewModelConversion.ToString(m.Equip.ValCodequip);
 				ValCodanexd = ViewModelConversion.ToString(m.ValCodanexd);
 			}
 			catch (Exception)
@@ -560,6 +568,10 @@ namespace GenioMVC.ViewModels.Anexd
             try
             {
                 // That code doesn't include fields of the own control and can be empty if no one dependant field present on the form.
+                {
+                    var tempValue = ViewModelConversion.ToString(row["equip.codequip"]);
+                    this.funcEquipValCodequip = () => tempValue;
+                }
 
                 // Fill List fields
                 this.ValCodequip = ViewModelConversion.ToString(row["equip.codequip"]);

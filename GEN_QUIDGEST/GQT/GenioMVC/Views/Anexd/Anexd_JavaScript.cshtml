@@ -118,6 +118,8 @@
 			this.Controls.LED_ANEXD___ANEXDCODANEXD = new QHiddenControl($('[data-identifier="LED_ANEXD___ANEXDCODANEXD"]', this.element), window.Form_Anexd);
 
 	@* Hidden Required Form Fields Controls for Formulas *@
+			this.Controls.LED_ANEXD___EQUIPCODEQUIP = new QSpecialControl($('[data-identifier="LED_ANEXD___EQUIPCODEQUIP"]', this.element), window.Form_Anexd);
+			this.Controls.LED_ANEXD___EQUIPCODEQUIP.InitData(@JavaScriptConversion.ToString(@Model.EquipValCodequip));
 
 @if(Model.FormMode == FormMode.New || Model.FormMode == FormMode.Edit || Model.FormMode == FormMode.Duplicate)
 {

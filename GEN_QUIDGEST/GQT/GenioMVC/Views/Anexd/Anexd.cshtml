@@ -147,6 +147,7 @@ else {
 			</div>
 
 
+		@Html.HiddenFor(model=> model.EquipValCodequip, new { @pers_cs_area = "Equip", @pers_cs_field = "ValCodequip", @data_identifier = "LED_ANEXD___EQUIPCODEQUIP" })
 
 
 			@Html.HiddenFor(model => model.ValCodanexd, new { @pers_cs_field="ValCodanexd", @pers_cs_area="Anexd", data_refresh = "true", @form_area="true", @data_value = Model.ValCodanexd, @data_identifier = "LED_ANEXD___ANEXDCODANEXD" })

@@ -155,9 +155,9 @@ namespace CSGenio.business
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
+			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");
-			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("pess1","equip");
 			info.Pathways.Add("cntry","equip");
@@ -188,6 +188,20 @@ namespace CSGenio.business
 
 			//Write conditions
 			List<ConditionFormula> conditions = new List<ConditionFormula>();
+
+			// HasRole("A") && !isEmptyG([EQUIP->CODEQUIP])
+			{
+			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea= new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"codequip"},new int[] {0},"equip","codequip"));
+			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 1, delegate(object []args,User user,string module,PersistentSupport sp) {
+				return GlobalFunctions.HasRole(user,"A")&&!(((string)args[0]) == "");
+			});
+			writeCondition.ErrorWarning = "";
+            writeCondition.Type =  ConditionType.INSERT;
+            writeCondition.Validate = true;
+			conditions.Add(writeCondition);
+			}
 			info.WriteConditions = conditions.Where(c=> c.IsWriteCondition()).ToList();
 			info.CrudConditions = conditions.Where(c=> c.IsCrudCondition()).ToList();
 

@@ -191,8 +191,8 @@ namespace CSGenio.business
 			info.Pathways.Add("perso","perso");
 			info.Pathways.Add("disst","disst");
 			info.Pathways.Add("entit","entit");
-			info.Pathways.Add("faci1","entit");
 			info.Pathways.Add("faci2","entit");
+			info.Pathways.Add("faci1","entit");
 		}
 
 		/// <summary>

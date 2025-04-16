@@ -112,7 +112,7 @@
 							disabled: false,
 							isVisible: true,
 							props: { model: computed(() => vm.Model), Scheduler: computed(() => vm.Model?.Scheduler), TaskList: computed(() => vm.Model?.SelectLists.SchedulerTaskList) },
-							events: { 'update-model': () => vm.fetchData() || vm.setModel(), 'alert-class': vm.updateAlert }
+							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'display-tab',

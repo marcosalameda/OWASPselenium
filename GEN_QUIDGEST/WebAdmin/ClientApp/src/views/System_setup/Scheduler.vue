@@ -9,7 +9,7 @@
 					<base-input-structure
 						class="i-text">
 						<q-checkbox 
-							v-model="model.Enabled"
+							v-model="model.Scheduler.Enabled"
 							:label="Resources.ATIVO_00196" />
 					</base-input-structure>
 				</q-control-wrapper>

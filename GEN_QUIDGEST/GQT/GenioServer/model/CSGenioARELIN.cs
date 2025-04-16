@@ -183,8 +183,8 @@ namespace CSGenio.business
 			info.Pathways.Add("entit","entit");
 			info.Pathways.Add("recei","recei");
 			info.Pathways.Add("produ","produ");
-			info.Pathways.Add("faci1","entit");
 			info.Pathways.Add("faci2","entit");
+			info.Pathways.Add("faci1","entit");
 			info.Pathways.Add("locat","produ");
 			info.Pathways.Add("lcext","produ");
 			info.Pathways.Add("facil","produ");

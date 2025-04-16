@@ -107,13 +107,13 @@
 {
 	<text>
 	@*Hidden Foreign Keys Controls*@
+			this.Controls.LED_GMAPS___TPEQUCODTPEQU = new QHiddenControl($('[data-identifier="LED_GMAPS___TPEQUCODTPEQU"]', this.element), window.Form_Gmaps);
 			this.Controls.LED_GMAPS___ROOM1CODROOMS = new QHiddenControl($('[data-identifier="LED_GMAPS___ROOM1CODROOMS"]', this.element), window.Form_Gmaps);
 			this.Controls.LED_GMAPS___DECOMCODDECO_ = new QHiddenControl($('[data-identifier="LED_GMAPS___DECOMCODDECO_"]', this.element), window.Form_Gmaps);
-			this.Controls.LED_GMAPS___PESS1CODPESSO = new QHiddenControl($('[data-identifier="LED_GMAPS___PESS1CODPESSO"]', this.element), window.Form_Gmaps);
 			this.Controls.LED_GMAPS___CMPNYCODEMPRE = new QHiddenControl($('[data-identifier="LED_GMAPS___CMPNYCODEMPRE"]', this.element), window.Form_Gmaps);
 			this.Controls.LED_GMAPS___WAREHCODWAREH = new QHiddenControl($('[data-identifier="LED_GMAPS___WAREHCODWAREH"]', this.element), window.Form_Gmaps);
 			this.Controls.LED_GMAPS___ITEM_CODITEM_ = new QHiddenControl($('[data-identifier="LED_GMAPS___ITEM_CODITEM_"]', this.element), window.Form_Gmaps);
-			this.Controls.LED_GMAPS___TPEQUCODTPEQU = new QHiddenControl($('[data-identifier="LED_GMAPS___TPEQUCODTPEQU"]', this.element), window.Form_Gmaps);
+			this.Controls.LED_GMAPS___PESS1CODPESSO = new QHiddenControl($('[data-identifier="LED_GMAPS___PESS1CODPESSO"]', this.element), window.Form_Gmaps);
 	</text>
 }
 			this.Controls.LED_GMAPS___EQUIPCODEQUIP = new QHiddenControl($('[data-identifier="LED_GMAPS___EQUIPCODEQUIP"]', this.element), window.Form_Gmaps);
@@ -185,13 +185,13 @@
 @{
 	<text>
 		window.Form_Gmaps.Data.RelationKeysSelector = {
+				get tpequ() { return $(':not([elem-identifier="Multiform"]) > #ValCodtpequ', $('[data-form="Gmaps"]')); /* Hidden */ },
 				get room1() { return $(':not([elem-identifier="Multiform"]) > #ValCodrooms', $('[data-form="Gmaps"]')); /* Hidden */ },
 				get decom() { return $(':not([elem-identifier="Multiform"]) > #ValCoddeco', $('[data-form="Gmaps"]')); /* Hidden */ },
-				get pess1() { return $(':not([elem-identifier="Multiform"]) > #ValCodpess1', $('[data-form="Gmaps"]')); /* Hidden */ },
 				get cmpny() { return $(':not([elem-identifier="Multiform"]) > #ValCodempre', $('[data-form="Gmaps"]')); /* Hidden */ },
 				get wareh() { return $(':not([elem-identifier="Multiform"]) > #ValCodwareh', $('[data-form="Gmaps"]')); /* Hidden */ },
 				get item() { return $(':not([elem-identifier="Multiform"]) > #ValCoditem', $('[data-form="Gmaps"]')); /* Hidden */ },
-				get tpequ() { return $(':not([elem-identifier="Multiform"]) > #ValCodtpequ', $('[data-form="Gmaps"]')); /* Hidden */ },
+				get pess1() { return $(':not([elem-identifier="Multiform"]) > #ValCodpess1', $('[data-form="Gmaps"]')); /* Hidden */ },
 		};
 
 		window.Form_Gmaps.getAllForeignKeySelectors = function () {
@@ -201,20 +201,20 @@
 
 		window.Form_Gmaps.Data.RelationKeys = {
 			get formContext() { return window.Form_Gmaps; },
+			get tpequ() { return (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value; /* Hidden FK */ },
+			set tpequ(newValue) { (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get room1() { return (this.formContext.Data.RelationKeysSelector.room1.getQControl() || {}).Value; /* Hidden FK */ },
 			set room1(newValue) { (this.formContext.Data.RelationKeysSelector.room1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get decom() { return (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value; /* Hidden FK */ },
 			set decom(newValue) { (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value = newValue; /* Hidden FK */ },
-			get pess1() { return (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value; /* Hidden FK */ },
-			set pess1(newValue) { (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get cmpny() { return (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value; /* Hidden FK */ },
 			set cmpny(newValue) { (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get wareh() { return (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value; /* Hidden FK */ },
 			set wareh(newValue) { (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get item() { return (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value; /* Hidden FK */ },
 			set item(newValue) { (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value = newValue; /* Hidden FK */ },
-			get tpequ() { return (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value; /* Hidden FK */ },
-			set tpequ(newValue) { (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get pess1() { return (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value; /* Hidden FK */ },
+			set pess1(newValue) { (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 		};
 	</text>
 }

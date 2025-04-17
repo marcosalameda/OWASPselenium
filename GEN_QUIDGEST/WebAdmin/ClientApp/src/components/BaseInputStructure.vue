@@ -1,60 +1,47 @@
-﻿<template>
-	<div
-		v-if="isVisible"
-		:id="controlId"
-		ref="mainWrapper"
-		v-bind="wrapperAttrs"
-		:data-loading="loading">
-		<div
-			style="align-items: center"
-			:class="[classObject.labelContainerFlex, ...classes]">
-
-			<label
-				v-if="hasLabel && !isEmpty(label)"
-				:id="labelId"
-				v-bind="labelAttrs"
-				:for="id"
-				:data-val-required="isRequired && !(readonly || disabled)"
-				:class="[{ disabled: disabled }, ...(classObject.labelClass || [])]">
-				{{ label }}
-			</label>
-			<!-- Button and popover for additional information -->
-			<q-button
+﻿<template v-if="isVisible">
+	<div :class="[...classes]">
+		<q-label
+			v-if="showLabel"
+			:id="labelId"
+			:label="label"
+			:for="id"
+			:required="isRequired && !(readonly || disabled)">
+			<template
 				v-if="showPopoverButton"
-				:id="popoverButtonId"
-				class="btn-popover"
-				b-style="plain">
-				<q-icon icon="information-outline" />
-			</q-button>
-			<q-popover
-				v-if="showPopoverButton"
-				:anchor="`#${popoverButtonId}`"
-				:title="popoverTitle"
-				:text="popoverText" />
-		</div>
+				#append>
+				<q-button
+					:id="popoverButtonId"
+					borderless
+					size="small"
+					variant="text"
+					color="neutral">
+					<q-icon icon="information-outline" />
+				</q-button>
+				<q-popover
+					:anchor="`#${popoverButtonId}`"
+					:title="popoverTitle"
+					:text="popoverText" />
+			</template>
+		</q-label>
 		<slot />
 	</div>
 </template>
 
 <script>
+	import { getCurrentInstance } from 'vue'
 	import _isEmpty from 'lodash-es/isEmpty'
 
 	export default {
 		name: 'QBaseInputStructure',
 
-		inheritAttrs: false,
 		props: {
 			/**
 			 * Unique identifier for the control.
 			 */
 			id: {
-				type: String
+				type: String,
+				default: ''
 			},
-
-			/**
-			 * Text strings which might be used to override default texts within the component.
-			 */
-			texts: Object,
 
 			/**
 			 * The label text for the input field.
@@ -105,22 +92,6 @@
 			},
 
 			/**
-			 * The name of the array if this control is part of an array structure.
-			 */
-			arrayName: {
-				type: String,
-				default: ''
-			},
-
-			/**
-			 * Set flexbox to display inline if true.
-			 */
-			dFlexInline: {
-				type: Boolean,
-				default: false
-			},
-
-			/**
 			 * An array of additional CSS classes to apply to the component.
 			 */
 			classes: {
@@ -129,29 +100,24 @@
 			},
 
 			/**
-			 * Information about the model that the input is bound to, such as the table and field IDs.
+			 * True if the control should show the popover help button, false otherwise.
 			 */
-			modelInfo: {
-				// tableId | fieldId
-				type: Object,
-				default: null
-			},
-
-			/**
-			 * Whether the control is currently loading.
-			 */
-			loading: {
-				type: Boolean,
-				default: false
-			},
 			showPopoverButton: {
 				type: Boolean,
 				default: false
 			},
+
+			/**
+			 * Title of the popover help.
+			 */
 			popoverTitle: {
 				type: String,
-				default: 'Information'
+				default: ''
 			},
+
+			/**
+			 * Text of the popover help.
+			 */
 			popoverText: {
 				type: String,
 				default: ''
@@ -160,23 +126,11 @@
 
 		expose: [],
 
-		data()
-		{
+		data() {
 			return {
-				controlId: `container-${this.id || this._.uid}`,
-
-				classObject: {
-					labelContainerFlex: this.dFlexInline ? 'label-container--inline' : 'label-container'
-				},
-
-				wrapperAttrs: {
-					class: this.$attrs.class ?? ''
-				},
-
-				labelAttrs: this.$attrs.labelAttrs ?? {},
-
+				controlId: `container-${this.id || getCurrentInstance().uid}`,
 				sortablePlugin: null,
-				popoverButtonId: `popover-btn-${this.id || this._.uid}`,
+				popoverButtonId: `popover-btn-${this.id}`
 			}
 		},
 
@@ -184,9 +138,12 @@
 			/**
 			 * The identifier for the label element associated with the control.
 			 */
-			labelId()
-			{
+			labelId() {
 				return `label_${this.id}`
+			},
+
+			showLabel() {
+				return this.hasLabel && !this.isEmpty(this.label)
 			}
 		},
 

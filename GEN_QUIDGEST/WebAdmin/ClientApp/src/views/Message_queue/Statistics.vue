@@ -30,7 +30,7 @@
 
 				<row class="footer-btn">
 					<q-button
-						b-style="primary"
+						variant="bold"
 						:label="Resources.ATUALIZAR_ESTATISTIC07525"
 						@click="UpdateStats" />
 

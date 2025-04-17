@@ -97,7 +97,6 @@
 						:readonly="isTestingConnection" />
 					<q-button
 						id="testServer"
-						b-style="secondary"
 						:label="Resources.TESTAR_CONEXAO_COM_O06434"
 						:disabled="isTestingConnection"
 						size="xlarge"
@@ -212,7 +211,8 @@
 		</row>
 
 		<row class="footer-btn">
-			<q-button b-style="primary"
+			<q-button
+				variant="bold"
 				:label="Resources.GRAVAR_CONFIGURACAO36308"
 				:disabled="isTestingConnection"
 				@click="saveConfigDatabase" />

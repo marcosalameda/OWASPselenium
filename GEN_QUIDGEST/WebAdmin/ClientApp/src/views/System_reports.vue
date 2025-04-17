@@ -28,7 +28,7 @@
             @update:model-value="searchErro">
             <template #append>
               <q-button
-                b-style="primary"
+                variant="bold"
                 @click="highlightSearchErro">
                 <q-icon icon=magnify />
               </q-button>

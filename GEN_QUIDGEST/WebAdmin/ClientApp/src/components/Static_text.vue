@@ -1,48 +1,92 @@
 ﻿<template>
-  <div class="i-text i-static-text">
-    <div v-if="label">
-      <label class="i-text__label" :for="id">
-        <span :class="{ 'i-text__label--bold': boldLabel }">
-          {{ label + ":" }}
-        </span>
-      </label>
-    </div>
-    <span
-      :class="{ 'i-text__label--bold': bold }"
-      :id="id">
-      {{ modelValue }}
-    </span>
-  </div>
+	<div :class="staticClasses">
+		<q-label
+			v-if="label"
+			:for="id">
+			<q-label
+				class="q-static__label"
+				:for="id"
+				:label="label + ':'" />
+		</q-label>
+		<span
+			:id="id"
+			class="q-static__value">
+			{{ modelValue }}
+		</span>
+	</div>
 </template>
 
 <script>
-  export default {
-    name: 'static-text',
-    props: {
-      modelValue: [String, Number, Object],
+	import { getCurrentInstance } from 'vue'
 
-      label: String,
+	export default {
+		name: 'StaticText',
 
-      bold: {
-        type: Boolean,
-        default: false
-      },
+		props: {
+			/**
+			 * Component value.
+			 */
+			modelValue: {
+				type: [String, Number, Object],
+				default: ''
+			},
 
-      boldLabel: {
-        type: Boolean,
-        default: false
-      }
-    },
+			/**
+			 * Component label.
+			 */
+			label: {
+				type: String,
+				default: ''
+			},
 
-    data() {
-      return {
-        id: null
-      }
-    },
+			/**
+			 * True if the component should show its value in bold text, false otherwise.
+			 */
+			bold: {
+				type: Boolean,
+				default: false
+			},
 
-    mounted() {
-      var vm = this
-      vm.id = 'static_text_' + vm._.uid
-    }
-  }
+			/**
+			 * True if the component should show its label in bold text, false otherwise.
+			 */
+			boldLabel: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
+			 * The static value's positioning in relation to the label - 'horizontal' (in front) or 'vertical' (below)
+			 */
+			orientation: {
+				type: String,
+				default: 'horizontal'
+			}
+		},
+
+		expose: [],
+
+		data() {
+			return {
+				id: null
+			}
+		},
+
+		computed: {
+			staticClasses() {
+				return [
+					'q-static',
+					`q-static--${this.orientation}`,
+					{
+						'q-static--bold': this.bold,
+						'q-static--bold-label': this.boldLabel
+					}
+				]
+			}
+		},
+
+		mounted() {
+			this.id = 'static_text_' + getCurrentInstance().uid
+		}
+	}
 </script>

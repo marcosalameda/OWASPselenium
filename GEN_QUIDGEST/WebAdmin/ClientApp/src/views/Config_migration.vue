@@ -18,7 +18,7 @@
     <row>
       <div class="q-button-container">
         <q-button
-            b-style="primary"
+            variant="bold"
             :label="Resources.INICIAR08126"
             @click="MigrateConfig" />
         <q-button

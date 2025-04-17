@@ -40,20 +40,20 @@
 							width="block">
 							<q-row-container>
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionApp"
-									:label="Resources.VERSAO_DA_APLICACAO45955"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.VERSAO_DA_APLICACAO45955" />
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionReIdx"
-									:label="Resources.VERSAO_DOS_SCRIPTS52566"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.VERSAO_DOS_SCRIPTS52566" />
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionUpgrScripts"
-									:label="Resources.VERSAO_DOS_SCRIPTS_D32532"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.VERSAO_DOS_SCRIPTS_D32532" />
 							</q-row-container>
 						</q-card>
 
@@ -86,9 +86,9 @@
 								<q-icon
 									v-if="props.row.LastLogInfo"
 									:icon="props.row.LastLogInfo.Success ? 'check' : 'close'"
-									:class="props.row.LastLogInfo.Success  ?
-										'database-options__status-success' :
-										'database-options__status-error'" />
+									:color="props.row.LastLogInfo.Success  ?
+										'success' :
+										'danger'" />
 							</template>
 						</qtable>
 					</div>
@@ -100,15 +100,15 @@
 							width="block">
 							<q-row-container>
 								<static-text
-									class="database-data"
 									v-model="currentModel.DBSchema"
-									:label="Resources.BASE_DE_DADOS58234"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.BASE_DE_DADOS58234" />
 								<static-text
-									class="database-data"
 									v-model="currentModel.DBSize"
-									:label="Resources.TAMANHO_DA_BD56664"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.TAMANHO_DA_BD56664" />
 							</q-row-container>
 						</q-card>
 						<q-card
@@ -118,20 +118,19 @@
 							width="block">
 							<q-row-container>
 								<static-text
-								class="database-data"
-								v-model="currentModel.VersionDb"
-								:label="Resources.DATABASE_VERSION15344"
-								bold-label />
+									v-model="currentModel.VersionDb"
+									:label="Resources.DATABASE_VERSION15344"
+									bold-label />
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionApp"
-									:label="Resources.VERSAO_DA_APLICACAO45955"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.VERSAO_DA_APLICACAO45955" />
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionReIdx"
-									:label="Resources.VERSAO_DOS_SCRIPTS52566"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.VERSAO_DOS_SCRIPTS52566" />
 							</q-row-container>
 						</q-card>
 						<q-card
@@ -141,15 +140,15 @@
 							width="block">
 							<q-row-container>
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionUpgrIndx"
-									:label="Resources.DATABASE_VERSION15344"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.DATABASE_VERSION15344" />
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionUpgrScripts"
-									:label="Resources.APPLICATION_VERSION32207"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.APPLICATION_VERSION32207" />
 							</q-row-container>
 						</q-card>
 					</div>
@@ -170,27 +169,22 @@
 					width="block">
 					<div class="database-options__last-rdx">
 						<static-text
-							class="database-data"
 							:model-value="currentModel.LastLogInfo.Success ? Resources.SIM28552 : Resources.NAO06521"
 							:label="Resources.TAREFA_BEM_SUCEDIDA33448"
 							bold-label />
 						<static-text
-							class="database-data"
 							:model-value="`${ currentModel.LastLogInfo.Duration }ms`"
 							:label="Resources.DURATION40426"
 							bold-label />
 						<static-text
-							class="database-data"
 							v-model="currentModel.LastLogInfo.DataSystem"
 							:label="Resources.NOME_DO_SISTEMA_DE_D18974"
 							bold-label />
 						<static-text
-							class="database-data"
 							v-model="currentModel.LastLogInfo.Database"
 							:label="Resources.NOME_DA_BD63025"
 							bold-label />
 						<static-text
-							class="database-data"
 							:model-value="currentModel.LastLogInfo.StartTime"
 							:label="Resources.STARTED_AT44034"
 							bold-label />
@@ -226,14 +220,13 @@
 									@update:model-value="itemValueUpdate(group)" />
 								<q-button
 									v-if="formatDate(sqlFunc.LastRun) != '-'"
-									b-style="tertiary"
-									borderless
+									variant="text"
 									size="small"
 									:label="Resources._INFO15849"
 									:title="sqlFunc.Result"
 									@click="changeSelectedScript(sqlFunc)">
 									<q-icon
-										:class="sqlFunc.Result.length > 0 ? 'database-options__status-error' : 'database-options__status-success'"
+										:color="sqlFunc.Result.length > 0 ? 'danger' : 'success'"
 										:icon="sqlFunc.Result.length > 0 ? 'close' : 'check'" />
 								</q-button>
 							</div>
@@ -252,7 +245,7 @@
 
 		<row class="footer-btn">
 			<q-button
-				b-style="primary"
+				variant="bold"
 				:label="Resources.EXECUTAR_TAREFAS_DE_40767"
 				@click="Reindex" />
 		</row>
@@ -272,7 +265,7 @@
 						{{ selectedScript.Description }}
 					</h5>
 					<q-button
-						b-style="plain"
+						variant="text"
 						borderless
 						@click="closeOverlay">
 						<q-icon icon="close" />
@@ -280,7 +273,6 @@
 				</div>
 				<div class="modal-body">
 					<static-text
-						class="database-data"
 						v-if="selectedScript.Result != ''"
 						v-model="selectedScript.Result"
 						:label="Resources.ERRO38355"
@@ -557,7 +549,7 @@
 						const buttons = [{
 							id: 'close-dialog-btn',
 							props: {
-								bStyle: 'primary',
+								variant: 'bold',
 								label: this.Resources.OK15819
 							},
 							action: () => {
@@ -885,7 +877,7 @@
 				this.dialogButtons = [{
 					id: 'ok-btn',
 					props: {
-						bStyle: 'primary',
+						variant: 'bold',
 						label: this.Resources.OK15819
 					}
 				}]

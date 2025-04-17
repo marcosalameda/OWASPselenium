@@ -39,11 +39,11 @@
 
 				<row class="footer-btn">
 					<q-button
-						b-style="primary"
+						variant="bold"
 						:label="Resources.VALIDACAO46021"
 						@click="Check" />
 					<q-button
-						b-style="primary"
+						variant="bold"
 						:label="Resources.INSTALACAO62245"
 						@click="Deploy" />
 				</row>
@@ -81,7 +81,8 @@
 					<template #status="props">
 						<q-button
 							v-if="!isEmptyObject(props.row.Error)"
-							b-style="tertiary"
+							variant="text"
+							color="danger"
 							:title="props.row.Error"
 							@click.stop="showError(props.row)">
 							<q-icon icon="alert-circle" />
@@ -102,11 +103,13 @@
 					<template #actions="props">
 						<q-button-group borderless>
 							<q-button
+								variant="text"
 								:title="Resources.EDITAR11616"
 								@click="ManageSlotReport('edit', props.row[0])">
 								<q-icon icon="pencil" />
 							</q-button>
 							<q-button
+								variant="text"
 								:title="Resources.APAGAR04097"
 								@click="ManageSlotReport('delete', props.row[0])">
 								<q-icon icon="bin" />

@@ -29,12 +29,13 @@
                 <div class="modal-footer">
                     <q-button
                         v-if="Model.FormMode == 'delete'"
-                        b-style="danger"
+                        variant="bold"
+                        color="danger"
                         :label="Resources.APAGAR04097"
                         @click="fnSubmit" />
                     <q-button
                         v-else
-                        b-style="primary"
+                        variant="bold"
                         :label="Resources.GRAVAR45301"
                         @click="fnSubmit" />
                     <q-button

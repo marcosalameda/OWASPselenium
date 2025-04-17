@@ -9,11 +9,13 @@
               <template #actions="props">
                 <q-button-group borderless>
                   <q-button
+                    variant="text"
                     :title="Resources.EDITAR11616"
                     @click="ManageSignature(2, props.row)">
                     <q-icon icon="pencil" />
                   </q-button>
                   <q-button
+                    variant="text"
                     :title="Resources.APAGAR04097"
                     @click="ManageSignature(3, props.row)">
                     <q-icon icon="bin" />

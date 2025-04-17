@@ -43,7 +43,6 @@
 
 					<row class="footer-btn">
 						<q-button
-							b-style="secondary"
 							:label="Resources.EXECUTAR_ATUALIZACAO61833"
 							@click="DataQualityStart" />
 						<data-system-badge
@@ -101,9 +100,9 @@
 				</row>
 
 				<row v-if="Model.Active">
-					<label :for="'progressbarVw_' + Model.Num">
-						{{ Resources.PROGRESSO52692 }}
-					</label>
+					<q-label
+						:for="'progressbarVw_' + Model.Num"
+						:label="Resources.PROGRESSO52692" />
 					<div
 						class="progress"
 						:id="'progressbarVw_' + Model.Num">

@@ -114,8 +114,8 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(5);
 			info.Pathways.Add("item","item");
 			info.Pathways.Add("cattp","cattp");
-			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("wareh","item");
+			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("sbcat","cattp");
 		}
 

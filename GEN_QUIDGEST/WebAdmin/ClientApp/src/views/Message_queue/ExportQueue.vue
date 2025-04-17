@@ -42,7 +42,7 @@
                     <p>{{Resources.MENSAGENS_A_SER_EXPO34711}}: {{count}}</p>
 
                     <row v-if="progressModel.Active">
-                        <label>{{ Resources.PROGRESSO52692 }}</label>
+                        <q-label :label="Resources.PROGRESSO52692" />
                         <div class="progress">
                             <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{ width: progressModel.Count + '%' }">
                                 {{ progressModel.Count }}%
@@ -57,7 +57,7 @@
                         @click="close" />
                     <q-button
                         ref="export"
-                        b-style="primary"
+                        variant="bold"
                         :label="Resources.EXPORTAR35632"
                         @click="exportQueue" />
                 </div>

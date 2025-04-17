@@ -40,11 +40,13 @@
 		<template #actions="props">
 		<q-button-group borderless>
 			<q-button
+				variant="text"
 				:title="Resources.EDITAR11616"
 				@click="editUser(props.row)">
 				<q-icon icon="pencil" />
 			</q-button>
 			<q-button
+				variant="text"
 				:title="Resources.ELIMINAR21155"
 				@click="deleteUser(props.row)">
 				<q-icon icon="bin" />
@@ -144,18 +146,19 @@
 			:items="identityProviders"
 			:label="'Select the domain'" />
 		<q-button
-			b-style="primary"
+			variant="bold"
 			:label="Resources.IMPORTAR_UTILIZADORE27134"
 			@click="ImportarUsersAD" />
 	</row>
 	<q-dialog
 		v-model="showConfirmDialog"
 		:text="Resources.DESEJA_ELIMINAR_ESTA24564"
+		:icon="{ icon: 'alert', color: 'warning' }"
 		:buttons="confirmBtns" />
 	<q-dialog
 		v-model="showDialog"
 		:text="Resources.UTILIZADOR_EXCLUIDO_17794"
-		:icon='{"icon":"check-circle-outline"}'
+		:icon="{ icon: 'check-circle-outline', color: 'success' }"
 		:buttons="dialogBtns" />
 </template>
 
@@ -318,7 +321,7 @@
 						id: 'confirm-btn',
 						props: {
 							label: this.Resources.OK57387,
-							bStyle: "primary"
+							variant: 'bold'
 						},
 						action: () => {
 							if (!this.Model.Username) {
@@ -337,7 +340,8 @@
 						id: 'confirm-btn',
 						props: {
 							label: this.Resources.SIM28552,
-							bStyle: "primary"
+							variant: 'bold',
+							color: 'danger'
 						},
 						action: () => {
 							this.submit()
@@ -347,8 +351,7 @@
 					{
 						id: 'cancel-btn',
 						props: {
-							label: this.Resources.NAO06521,
-							bStyle: "secondary"
+							label: this.Resources.NAO06521
 						}
 					}
 				]

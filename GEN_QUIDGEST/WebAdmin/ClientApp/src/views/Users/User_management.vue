@@ -108,7 +108,7 @@
 					<div class="q-button-container">
 						<q-button
 							ref="submitBtn"
-							b-style="primary"
+							variant="bold"
 							:label="Resources[Model.SubmitValue]"
 							:disabled="submitBtnLock"
 							@click="showDialog('confirm')" />
@@ -265,21 +265,23 @@
 				switch (type) {
 					case 'confirm':
 						this.dialog.text = this.Resources.DESEJA_GRAVAR_ESTA_F03881;
-						this.dialog.icon = { icon: 'alert' };
+						this.dialog.icon = { 
+							icon: 'alert',
+							color: 'warning'
+						};
 						this.dialog.buttons = [
 							{
 								id: 'confirm-btn',
 								props: {
 									label: this.Resources.SIM28552,
-									bStyle: 'primary',
+									variant: 'bold'
 								},
 								action: this.submit
 							},
 							{
 								id: 'cancel-btn',
 								props: {
-									label: this.Resources.NAO06521,
-									bStyle: 'secondary',
+									label: this.Resources.NAO06521
 								},
 							},
 						];
@@ -287,21 +289,23 @@
 
 					case 'cancel':
 						this.dialog.text = this.Resources.ATENCAO__AS_ALTERACO04365;
-						this.dialog.icon = { icon: 'alert' };
+						this.dialog.icon = { 
+							icon: 'alert',
+							color: 'warning'
+						};
 						this.dialog.buttons = [
 							{
 								id: 'confirm-btn',
 								props: {
 									label: this.Resources.SIM28552,
-									bStyle: 'primary',
+									variant: 'bold'
 								},
 								action: this.redirectToAllUsers
 							},
 							{
 								id: 'cancel-btn',
 								props: {
-									label: this.Resources.NAO06521,
-									bStyle: 'secondary',
+									label: this.Resources.NAO06521
 								},
 							},
 						];
@@ -309,13 +313,16 @@
 
 					case 'info':
 						this.dialog.text = this.Resources.UTILIZADOR_ALTERADO_42131;
-						this.dialog.icon = { icon: 'check-circle-outline' };
+						this.dialog.icon = {
+							icon: "check-circle-outline",
+							color: 'success'
+						};
 						this.dialog.buttons = [
 							{
 								id: 'ok-btn',
 								props: {
 									label: this.Resources.OK57387,
-									bStyle: 'primary',
+									variant: 'bold'
 								},
 								action: this.redirectToAllUsers
 							},
@@ -422,10 +429,16 @@
 							let message = this.Resources.ATENCAO__UTILIZADOR_05890 + "<br>";
 							message += ignoredRolesList.join("<br>") + ".";
 							this.dialog.text = message;
-							this.dialog.icon = { icon: "alert" };
+							this.dialog.icon = { 
+								icon: 'alert',
+								color: 'warning'
+							};
 						}
 						else {
-							this.dialog.icon = { icon: "check-circle-outline" };
+							this.dialog.icon = {
+								icon: "check-circle-outline",
+								color: 'success'
+							};
 							this.dialog.text = this.dialogText;
 						}
 
@@ -434,7 +447,7 @@
 								id: 'ok-btn',
 								props: {
 									label: this.Resources.OK57387,
-									bStyle: "primary"
+									variant: 'bold'
 								},
 								action: () => {
 									this.redirectToAllUsers()

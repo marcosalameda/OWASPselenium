@@ -2,7 +2,7 @@
 	<div
 		:class="['alert', `alert--${messageType}`]"
 		role="alert">
-		<div class="c-alert__header">			
+		<div class="c-alert__header">
 			<h4
 				v-if="title"
 				class="alert__title">
@@ -15,8 +15,15 @@
 				{{ text }}
 			</div>
 
-			<div v-if="isArray" class="alert__list">
-				<span v-for="(message, index) in text" :key="index" class="status-message">{{ message }}</span>
+			<div
+				v-if="isArray"
+				class="alert__list">
+				<span
+					v-for="(message, index) in text"
+					:key="index"
+					class="status-message"
+					>{{ message }}</span
+				>
 			</div>
 		</div>
 	</div>
@@ -25,8 +32,6 @@
 <script>
 	export default {
 		name: 'QAlert',
-
-		emits: ['message-dismissed'],
 
 		inheritAttrs: false,
 
@@ -60,8 +65,7 @@
 			 */
 			type: {
 				type: String,
-				default: 'info',
-				
+				default: 'info'
 			},
 
 			/**
@@ -82,49 +86,44 @@
 			}
 		},
 
+		emits: ['message-dismissed'],
+
 		expose: [],
 
-		data()
-		{
+		data() {
 			return {
 				timeoutId: null
 			}
 		},
 
-		mounted()
-		{
+		computed: {
+			messageType() {
+				return this.type
+			},
+
+			// Computed property to check if `text` is a string
+			isString() {
+				return typeof this.text === 'string'
+			},
+
+			// Computed property to check if `text` is an array
+			isArray() {
+				return Array.isArray(this.text)
+			}
+		},
+
+		mounted() {
 			// Sets the timeout to automatically dismiss the message when the time limit is reached.
 			if (this.dismissTime > 0)
 				this.timeoutId = setTimeout(this.dismissMessage, this.dismissTime * 2000)
 		},
 
-		beforeUnmount()
-		{
-			if (this.timeoutId !== null)
-				clearTimeout(this.timeoutId)
-		},
-
-		computed: {
-
-			messageType()
-			{
-				return this.type;
-			},
-
-			// Computed property to check if `text` is a string
-			isString() {
-				return typeof this.text === 'string';
-			},
-
-			// Computed property to check if `text` is an array
-			isArray() {
-				return Array.isArray(this.text);
-			}
+		beforeUnmount() {
+			if (this.timeoutId !== null) clearTimeout(this.timeoutId)
 		},
 
 		methods: {
-			dismissMessage()
-			{
+			dismissMessage() {
 				this.$emit('message-dismissed', this.id)
 			}
 		}

@@ -1,90 +1,90 @@
 // TODO: Remove when QRadioButton is implemented
 .i-radio {
-	display: block;
-	position: relative;
-	padding-left: 1.65rem;
-	margin-bottom: 0px;
-	margin-top: 0.3rem;
-	cursor: pointer;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+  display: block;
+  position: relative;
+  padding-left: 1.65rem;
+  margin-bottom: 0px;
+  margin-top: 0.3rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 
-	&__control {
-		display: inline-block;
-		margin-right: 0.25rem;
-		margin-top: 0.25rem;
-		margin-bottom: 0.25rem;
-	}
+  &__control {
+    display: inline-block;
+    margin-right: 0.25rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
 
-	input {
-		position: absolute;
-		opacity: 0;
-		cursor: pointer;
-	}
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
 
-	&--inline {
-		margin-right: .75rem;
-	}
+  &--inline {
+    margin-right: 0.75rem;
+  }
 
-	&__field {
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 22px !important;
-		width: 22px !important;
-		background-color:  $white;
-		border-radius: 50%;
-		border: 1px solid $input-border-color !important;
+  &__field {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 22px !important;
+    width: 22px !important;
+    background-color: $white;
+    border-radius: 50%;
+    border: 1px solid $input-border-color !important;
 
-		&:after {
-			content: "";
-			position: absolute;
-			display: none;
-		}
-	}
+    &:after {
+      content: '';
+      position: absolute;
+      display: none;
+    }
+  }
 
-	&:hover input ~ &__field {
-		background-color: $light;
-	}
-	/* When the radio button is checked, add a blue background */
-	& input:checked ~ &__field {
-		background-color: $primary;
-		border: 1px solid $primary !important;
-	}
-	/* Show the indicator (dot/circle) when checked */
-	& input:checked ~ &__field:after {
-		display: block;
-	}
-	/* Style the indicator (dot/circle) */
-	& &__field:after {
-		top: 6px;
-		left: 6px;
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
-		background: white;
-		background-color: $input-bg;
-	}
+  &:hover input ~ &__field {
+    background-color: $light;
+  }
+  /* When the radio button is checked, add a blue background */
+  & input:checked ~ &__field {
+    background-color: $primary;
+    border: 1px solid $primary !important;
+  }
+  /* Show the indicator (dot/circle) when checked */
+  & input:checked ~ &__field:after {
+    display: block;
+  }
+  /* Style the indicator (dot/circle) */
+  & &__field:after {
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+    background-color: $input-bg;
+  }
 
-	&__label {
-		color: $secondary;
-		cursor: pointer;
-	}
+  &__label {
+    color: $secondary;
+    cursor: pointer;
+  }
 
-	&--disabled {
-		cursor: not-allowed;
-	}
+  &--disabled {
+    cursor: not-allowed;
+  }
 
-	&__error {
-		color: $danger;
-		font-size: 0.875rem;
-	}
+  &__error {
+    color: $danger;
+    font-size: 0.875rem;
+  }
 }
 
 label {
-    &.i-radio__label {
-        color: $input-label;
-    }
+  &.i-radio__label {
+    color: $input-label;
+  }
 }

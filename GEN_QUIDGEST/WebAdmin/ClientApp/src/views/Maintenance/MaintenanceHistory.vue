@@ -13,9 +13,9 @@
 
 				<template #actions="props">
 					<div class="q-table__actions-btns">
-						<q-button 
+						<q-button
+							variant="text"
 							:title="Resources.DETALHES04088"
-							bStyle="tertiary"
 							@click="checkDetails(props.row.Id)">
 							<q-icon icon="view" />
 						</q-button>
@@ -25,9 +25,9 @@
 			<template #Success="props">
 				<q-icon
 					:icon="props.row.Success ? 'check' : 'close'"
-					:class="props.row.Success ?
-						'database-options__status-success' :
-						'database-options__status-error'" />
+					:color="props.row.Success ?
+						'success' :
+						'danger'" />
 			</template>
 			</qtable>
 		</q-collapsible>

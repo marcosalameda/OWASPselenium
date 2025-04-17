@@ -1,355 +1,334 @@
 //Table
 .c-table {
-	@extend table;
-	font-size: .9rem;
-	text-align: left;
-	word-wrap: break-word;
-	width: 100%;
-	border: 1px solid $border-dark-color;
-	background-color: $container-bg-color;
+  @extend table;
+  font-size: 0.9rem;
+  text-align: left;
+  word-wrap: break-word;
+  width: 100%;
+  border: 1px solid $border-dark-color;
+  background-color: $container-bg-color;
 
-	@if $compactstyle {
-		margin: 0.5rem 0;
-	}
-	@else {
-		margin: 1rem 0;
-	}
+  @if $compactstyle {
+    margin: 0.5rem 0;
+  } @else {
+    margin: 1rem 0;
+  }
 
-	& th, & td {
-		vertical-align: top;
-		border-bottom: 1px solid $border-dark-color;
-		padding-left: 0.5rem;
-		padding-right: 0.5rem;
+  & th,
+  & td {
+    vertical-align: top;
+    border-bottom: 1px solid $border-dark-color;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 
-		@if $compactstyle {
-			padding-top: 0.1rem;
-			padding-bottom: 0.1rem;
-		}
-		@else {
-			padding: 0.5rem;
-		}
-	}
+    @if $compactstyle {
+      padding-top: 0.1rem;
+      padding-bottom: 0.1rem;
+    } @else {
+      padding: 0.5rem;
+    }
+  }
 
-	thead th {
-		border-bottom: none;
-		vertical-align: top;
+  thead th {
+    border-bottom: none;
+    vertical-align: top;
 
-		@if $compactstyle {
-			padding: 0.5rem;
-		}
-		@else {
-			padding: 0.75rem;
-		}
-	}
+    @if $compactstyle {
+      padding: 0.5rem;
+    } @else {
+      padding: 0.75rem;
+    }
+  }
 
-	thead a {
-		@if $table-head-inverse {
-			color: $primary;
-		}
-		@else {
-			color: $white;
-		}
-	}
+  thead a {
+    @if $table-head-inverse {
+      color: $primary;
+    } @else {
+      color: $white;
+    }
+  }
 
-	.thead-actions {
-		width: 5rem;
-	}
+  .thead-actions {
+    width: 5rem;
+  }
 
-	&--bordered {
-		border: 1px solid $table-border-color;
+  &--bordered {
+    border: 1px solid $table-border-color;
 
-		& th, & td {
-			border: 1px solid $table-border-color;
-		}
-	}
+    & th,
+    & td {
+      border: 1px solid $table-border-color;
+    }
+  }
 
-	&-hover tbody tr:hover {
-		background-color: rgba(0, 0, 0, 0.05);
-	}
+  &-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
 
-	&__export-btn {
-		margin-right: 15px;
-	}
+  &__title-row {
+    display: flex;
+    margin-top: 1rem;
+    justify-content: space-between;
+  }
 
-	&__head {
-		@if $table-head-inverse {
-			color: $primary;
-			background-color: $container-bg-color;
-		}
-		@else {
-		color: $white;
-		background-color: $primary;
-		}
+  &__tools {
+    display: inline-flex;
+    gap: 0.25rem;
+  }
 
-		th {
-			font-size: 0.75rem;
-			letter-spacing: .02rem;
-			font-weight: 700;
-			text-transform: uppercase;
-			text-align: left;
-			vertical-align: top;
-			line-height: 1rem;
+  &__head {
+    @if $table-head-inverse {
+      color: $primary;
+      background-color: $container-bg-color;
+    } @else {
+      color: $white;
+      background-color: $primary;
+    }
 
-			@if $table-head-inverse {
-				border: none;
-				border-bottom: 1px solid $primary !important;
-			}
-			@else {
-			border: 1px solid $primary;
-		}
-		}
+    th {
+      font-size: 0.75rem;
+      letter-spacing: 0.02rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1rem;
 
-		thead th {
-			vertical-align: top;
-		}
+      @if $table-head-inverse {
+        border: none;
+        border-bottom: 1px solid $primary !important;
+      } @else {
+        border: 1px solid $primary;
+      }
+    }
 
-		&-numeric {
-			@extend .text-right;
-		}
-	}
+    thead th {
+      vertical-align: top;
+    }
 
-	&__caption {
-		padding-top: 0.5rem;
-		padding-bottom: 0.5rem;
-		color: $secondary;
-		text-align: left;
-		caption-side: bottom;
-	}
+    &-numeric {
+      @extend .text-right;
+    }
+  }
 
-	&__body {
-		th {
-			vertical-align: middle;
-			font-weight: 500;
-		}
+  &__caption {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    color: $secondary;
+    text-align: left;
+    caption-side: bottom;
+  }
 
-		tr {
-			vertical-align: middle;
-		}
+  &__body {
+    th {
+      vertical-align: middle;
+      font-weight: 500;
+    }
 
-		td {
-			vertical-align: middle;
-			font-weight: 400;
+    tr {
+      vertical-align: middle;
+    }
 
-			@if $table-vertical-border {
-				border-left: 1px solid $border-dark-color;
-			}
-			@else {
-				border-left: none;
-			}
+    td {
+      vertical-align: middle;
+      font-weight: 400;
 
-			a:not(.dropdown-item) {
-				font-weight: 600;
+      @if $table-vertical-border {
+        border-left: 1px solid $border-dark-color;
+      } @else {
+        border-left: none;
+      }
 
-				&:hover {
-					font-weight: 600;
-				}
-			}
-		}
-	}
+      a:not(.dropdown-item) {
+        font-weight: 600;
 
-	&__footer {
-		padding: 0.5rem;
-		border-top: 2px solid $border-dark-color;
-		border-bottom: none;
+        &:hover {
+          font-weight: 600;
+        }
+      }
+    }
+  }
 
-		th {
-			font-weight: 600;
-			border-bottom: none;
-			padding-left: 1rem;
-		}
+  &__footer {
+    padding: 0.5rem;
+    border-top: 2px solid $border-dark-color;
+    border-bottom: none;
 
-		td {
-			font-weight: 600;
-			border-bottom: none;
-			vertical-align: middle;
+    th {
+      font-weight: 600;
+      border-bottom: none;
+      padding-left: 1rem;
+    }
 
-			@if $compactstyle {
-				padding-top: 0.2rem;
-			}
-			@else {
-				padding-top: 1rem;
-			}
-		}
-	}
+    td {
+      font-weight: 600;
+      border-bottom: none;
+      vertical-align: middle;
 
-	&__title {
-		color: $gray;
-		padding-top: 0.5rem;
-		display: block;
-		letter-spacing: 0.02rem;
-		font-size: 1.05rem;
-		line-height: 1.5rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		white-space: nowrap;
-	}
+      @if $compactstyle {
+        padding-top: 0.2rem;
+      } @else {
+        padding-top: 1rem;
+      }
+    }
+  }
+
+  &__title {
+    color: $gray;
+    padding-top: 0.5rem;
+    display: block;
+    letter-spacing: 0.02rem;
+    font-size: 1.05rem;
+    line-height: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
 }
 
 .q-table--borderless {
-	.search:has( + .export-btn) {
-		padding: 0;
-	}
+  .search:has(+ .export-btn) {
+    padding: 0;
+  }
 
-	.export-btn {
-		padding-right: 15px;
-		padding-left: .25rem;
-	}
+  .export-btn {
+    padding-right: 15px;
+    padding-left: 0.25rem;
+  }
 
-	.form-group {
-		margin-top: 1rem;
-		margin-bottom: 0;
-	}
+  .form-group {
+    margin-top: 1rem;
+    margin-bottom: 0;
+  }
 
-	.c-table {
-		border: none;
+  .c-table {
+    border: none;
 
-		tr, td {
-			border: none;
-		}
+    tr,
+    td {
+      border: none;
+    }
 
-		&__head {
-			color: rgb(var(--q-theme-on-background-rgb)/.9);
-			background-color: rgb(var(--q-theme-primary-light-rgb)/.5);
-			border-bottom: 3px solid var(--q-theme-container);
+    &__head {
+      color: rgb(var(--q-theme-on-background-rgb) / 0.9);
+      background-color: rgb(var(--q-theme-primary-light-rgb) / 0.5);
+      border-bottom: 3px solid var(--q-theme-container);
 
-			th {
-				border: none;
-			}
-		}
+      th {
+        border: none;
+      }
+    }
 
-		&__body {
+    &__body {
+      tr {
+        color: rgb(var(--q-theme-on-background-rgb) / 0.75);
+        background-color: rgb(var(--q-theme-neutral-light-rgb) / 0.25);
+        border-bottom: 3px solid var(--q-theme-container);
+      }
+    }
 
-			tr {
-				color: rgb(var(--q-theme-on-background-rgb)/.75);
-				background-color: rgb(var(--q-theme-neutral-light-rgb)/.25);
-				border-bottom: 3px solid var(--q-theme-container);
-			}
-		}
-
-		&__footer {
-
-			td {
-				padding: .25rem 0 0 0;
-			}
-		}
-	}
+    &__footer {
+      td {
+        padding: 0.25rem 0 0 0;
+      }
+    }
+  }
 }
 
 // Row classes
 .q-table--borderless .c-table__body {
-	tr {
-		cursor: default;
+  tr {
+    cursor: default;
 
-		&.q-table__row {
-			&-warning {
-				background-color: var(--q-theme-warning-light);
-				box-shadow: inset 4px 0 0 var(--q-theme-warning);
-			}
+    &.q-table__row {
+      &-warning {
+        background-color: var(--q-theme-warning-light);
+        box-shadow: inset 4px 0 0 var(--q-theme-warning);
+      }
 
-			&-error {
-				background-color: var(--q-theme-danger-light);
-				box-shadow: inset 4px 0 0 var(--q-theme-danger);
-			}
-		}
-	}
+      &-error {
+        background-color: var(--q-theme-danger-light);
+        box-shadow: inset 4px 0 0 var(--q-theme-danger);
+      }
+    }
+  }
 
-	.q-table__actions-btns {
-		display:flex;
-		justify-content: center;
-	}
+  .q-table__actions-btns {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .clickable {
-    cursor : pointer;
+  cursor: pointer;
 }
 
 // Table alert
 .q-table__alert {
-	margin-top: 2rem;
+  margin-top: 2rem;
 }
-
 
 // Used in User Management -> Edit User table. Fixes multi-select size.
 #PrivilegeTable {
-	.c-table {
-        table-layout : fixed;
-    }
-    th:nth-child(1) {
-        width: 10%;
-    }
-    th:nth-child(2) {
-        width: 30%;
-    }
+  .c-table {
+    table-layout: fixed;
+  }
+  th:nth-child(1) {
+    width: 10%;
+  }
+  th:nth-child(2) {
+    width: 30%;
+  }
 }
 
 // Used in User Management -> Roles -> Role Assign form table.
 .assigned > td {
-    font-weight : bold;
+  font-weight: bold;
 }
 
 // Table header
 .form-header {
-	color: $dark;
-	padding-top: 0;
-	padding-top: 1.5rem;
-	display: block;
-	letter-spacing: 0.02rem;
-	font-size: 1.05rem;
-	line-height: 1.5rem;
-	font-weight: 700;
-	text-transform: uppercase;
-	white-space: nowrap;
-	margin-bottom: 0;
-}
-
-.search-input {
-	.q-field__append {
-		button.q-btn {
-			margin-top: 0;
-			padding: 0;
-
-			span {
-				padding-right: .25rem;
-			}
-		}
-	}
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: $dark;
+  text-transform: uppercase;
+  align-self: flex-end;
+  margin-bottom: 0;
 }
 
 .vbt-column-header div {
-	display: inline;
+  display: inline;
 }
 
 .vbt-global-search-clear {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 // Table footer
-#pagination {
-	.q-btn-group {
-		background-color: $white;
+#pagination .q-button-group {
+  background-color: $white;
 
-		// Page buttons need extra styling because the content is a string, not an icon
-		.btn-page {
-			padding: 0.25rem 0.4rem;
-		}
-	}
+  // Page buttons need extra styling because the content is a string, not an icon
+  .btn-page {
+    padding: 0.25rem 0.4rem;
+  }
 }
 
 // Variants
 // Highlighted rows
 .table tbody > tr.highlighted > td,
 .highlighted {
-	cursor: pointer;
-	color: $hover-primary;
+  cursor: pointer;
+  color: $hover-primary;
 }
 
 // Image cells
 .dbeditimage {
-	height: 32px;
-	width: 32px;
+  height: 32px;
+  width: 32px;
 }
 
 // Multiple elements within cells
 .q-table__cell--multiple {
-	margin: 0 0.15rem;
+  margin: 0 0.15rem;
 }

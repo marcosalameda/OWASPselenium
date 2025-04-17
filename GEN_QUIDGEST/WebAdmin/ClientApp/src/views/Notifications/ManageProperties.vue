@@ -197,12 +197,13 @@
 				<row class="footer-btn">
 					<q-button
 						v-if="Model.FormMode !== 3"
-						b-style="primary"
+						variant="bold"
 						:label="Resources.GRAVAR_CONFIGURACAO36308"
 						@click="SaveProperties" />
 					<q-button
 						v-else
-						b-style="danger"
+						variant="bold"
+						color="danger"
 						:label="Resources.APAGAR04097"
 						@click="SaveProperties" />
 					<q-button

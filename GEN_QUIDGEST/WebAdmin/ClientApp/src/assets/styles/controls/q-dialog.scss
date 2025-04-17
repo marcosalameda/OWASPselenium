@@ -1,29 +1,19 @@
 .q-dialog {
-	&-container {
-		padding: 0.5rem .75rem;
-	}
+  &-container {
+    padding: 0.5rem 0.75rem;
+  }
 
-	&__body-icon {
-		&:has(svg#alert) {
-			color: $warning;
-		}
-	
-		&:has(svg#check-circle-outline) {
-			color: $success;
-		}
-	}
-
-	&__body-actions:has(.q-btn) {
-		align-self: flex-start;
-	}
+  &__body-actions:has(.q-button) {
+    align-self: flex-start;
+  }
 }
 
 .alert-dialog {
-    .q-dialog__body-text {
-        text-align: center;
-    }
+  .q-dialog__body-text {
+    text-align: center;
+  }
 
-	.q-dialog__body-actions {
-		align-self: center;
-	}
+  .q-dialog__body-actions {
+    align-self: center;
+  }
 }

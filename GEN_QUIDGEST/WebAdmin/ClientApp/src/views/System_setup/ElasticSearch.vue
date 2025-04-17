@@ -15,14 +15,16 @@
 					<template #actions="props">
 					<q-button-group borderless>
 						<q-button
-						:title="Resources.EDITAR11616"
-						@click="editCore(props.row)">
-						<q-icon icon="pencil" />
+							variant="text"
+							:title="Resources.EDITAR11616"
+							@click="editCore(props.row)">
+							<q-icon icon="pencil" />
 						</q-button>
 						<q-button
-						:title="Resources.ELIMINAR21155"
-						@click="deleteCore(props.row)">
-						<q-icon icon="bin" />
+							variant="text"
+							:title="Resources.ELIMINAR21155"
+							@click="deleteCore(props.row)">
+							<q-icon icon="bin" />
 						</q-button>
 					</q-button-group>
 					</template>
@@ -295,7 +297,8 @@
 							id: 'delete-btn',
 							props: {
 								label: this.Resources.APAGAR04097,
-								bStyle: "danger"
+								variant: 'bold',
+								color: "danger"
 							},
 							action: () => {
 								this.SaveCoreCfg()
@@ -308,7 +311,7 @@
 							id: 'save-btn',
 							props: {
 								label: this.Resources.GRAVAR45301,
-								bStyle: "primary",
+								variant: 'bold',
 								disabled: this.invalidProps
 							},
 							action: () => {

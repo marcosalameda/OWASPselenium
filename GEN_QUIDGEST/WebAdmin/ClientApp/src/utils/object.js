@@ -6,7 +6,7 @@ import { isDefined } from '@/utils/common'
  * @returns {boolean} True if the value is an object, false otherwise.
  */
 export function isObject(object) {
-    return isDefined(object) && typeof object === 'object' && !Array.isArray(object)
+	return isDefined(object) && typeof object === 'object' && !Array.isArray(object)
 }
 
 /**
@@ -29,27 +29,26 @@ export function shallowCopy(object) {
 export function merge(target, source = {}, priorityRules = {}) {
 	const merged = createInstance(target)
 
-    const mergedKeys = new Set([...Object.keys(source), ...Object.keys(target)]) 
+	const mergedKeys = new Set([...Object.keys(source), ...Object.keys(target)])
 
-    for (const key of mergedKeys) {
-        const targetProperty = target[key]
-        const sourceProperty = source[key]
-        const keepSourceProp = keepSource(targetProperty, priorityRules[key])
+	for (const key of mergedKeys) {
+		const targetProperty = target[key]
+		const sourceProperty = source[key]
+		const keepSourceProp = keepSource(targetProperty, priorityRules[key])
 
-        if (isObject(targetProperty) && isObject(sourceProperty)) {
+		if (isObject(targetProperty) && isObject(sourceProperty)) {
+			// To keep the source property, swap target with source and pass no priority rules
+			merged[key] = keepSourceProp
+				? merge(sourceProperty, targetProperty)
+				: merge(targetProperty, sourceProperty)
 
-            // To keep the source property, swap target with source and pass no priority rules
-            merged[key] = keepSourceProp ?
-				merge(sourceProperty, targetProperty) :
-				merge(targetProperty, sourceProperty)
-
-            continue
-        }
+			continue
+		}
 
 		merged[key] = keepSourceProp ? source[key] : target[key]
-    }
+	}
 
-    return merged
+	return merged
 }
 
 /**
@@ -61,7 +60,7 @@ export function merge(target, source = {}, priorityRules = {}) {
 function keepSource(targetProperty, priorityRule) {
 	if (isDefined(priorityRule)) return priorityRule
 
-    return !isDefined(targetProperty)
+	return !isDefined(targetProperty)
 }
 
 /**

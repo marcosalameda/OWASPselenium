@@ -184,8 +184,8 @@ namespace CSGenio.business
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(3);
 			info.Pathways.Add("entit","entit");
-			info.Pathways.Add("faci2","entit");
 			info.Pathways.Add("faci1","entit");
+			info.Pathways.Add("faci2","entit");
 		}
 
 		/// <summary>

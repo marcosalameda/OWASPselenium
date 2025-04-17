@@ -1,249 +1,301 @@
 ﻿<template>
-    <tr :data-id="rowId" ref="vbt_row" :class='rowClasses' @click="handleRowSelect">
-        <td v-if="checkboxRows" class="checkbox-column">
-            <q-checkbox
-                v-model="rowSelected"
-                class="q-checkbox--table"
-                @update:model-value="emitSelectValue" />
-        </td>
-        <template v-for="(column, key) in columns">
-            <td v-if="canShowColumn(column)" :key="key" :class="cellClasses(column)">
-                <slot :name="'vbt-'+getCellSlotName(column)">
-                </slot>
-            </td>
-        </template>
-    </tr>
+	<tr
+		ref="vbt_row"
+		:data-id="rowId"
+		:class="rowClasses"
+		@click="handleRowSelect">
+		<td
+			v-if="checkboxRows"
+			class="checkbox-column">
+			<q-checkbox
+				v-model="rowSelected"
+				class="q-checkbox--table"
+				@update:model-value="emitSelectValue" />
+		</td>
+		<template v-for="(column, key) in columns">
+			<td
+				v-if="canShowColumn(column)"
+				:key="key"
+				:class="cellClasses(column)">
+				<slot :name="'vbt-' + getCellSlotName(column)"> </slot>
+			</td>
+		</template>
+	</tr>
 </template>
 
 <script>
-    import {
-        has,
-        get,
-        differenceWith,
-        isEqual,
-        includes,
-    } from "lodash-es"
+	import { has, get, differenceWith, isEqual, includes } from 'lodash-es'
 
-    import { isDefined } from "@/utils/common"
+	import { isDefined } from '@/utils/common'
 
-    export default {
-        name: 'Row',
+	export default {
+		name: 'QTableRow',
 
-        emits: ['add-row', 'remove-row', 'single-row-select'],
+		props: {
+			/**
+			 * Object that contains all necessary information regarding a row of the table.
+			 */
+			row: {
+				type: Object,
+				required: true
+			},
 
-        props: {
-            row: {
-                type: Object,
-                required:true
-            },
-            propRowClasses: {
-                type: [Object, String],
-                required:false
-            },
-            propCellClasses: {
-                type: [Object, String],
-                required:false
-            },
-            columns: {
-                type: Array,
-                default: function() {
-                    return [];
-                }
-            },
-            uniqueId: {
-                type: [Number, String]
-            },
-            selectedItems: {
-                type: Array,
-                default: function() {
-                    return [];
-                }
-            },
-            checkboxRows: {
-                type: Boolean,
-                default: false
-            },
-            highlightRowHover: {
-                type: Boolean,
-                default: false
-            },
-            highlightRowHoverColor: {
-                type: String,
-                default: "#d6d6d6"
-            },
-            rowIndex: {
-                type: Number,
-                required: true
-            },
-            singleRowSelectable: {
-                type: Boolean,
-                default: false
-            }
-        },
-        data() {
-            return {
-                rowSelected: false,
-                rowHiglighted:false
-            }
-        },
-        mounted() {
-            if (this.highlightRowHover) {
-                this.$refs.vbt_row.addEventListener('mouseover', () => { this.rowHiglighted = true })
-                this.$refs.vbt_row.addEventListener('mouseleave', () => { this.rowHiglighted = false })
-            }
-            this.checkInSelecteditems(this.selectedItems,this.row)
-        },
-        methods: {
-            emitSelectValue(newVal) {
-                if (newVal)
-                    this.addRow(false)
-                else
-                    this.removeRow(false)
-            },
+			/**
+			 * Row-specific classes.
+			 */
+			propRowClasses: {
+				type: [Object, String],
+				default: ''
+			},
 
-            addRow(shiftKey) {
-                this.$emit('add-row', {'shiftKey':shiftKey,"rowIndex":this.rowIndex});
-            },
+			/**
+			 * Cell-specific classes.
+			 */
+			propCellClasses: {
+				type: [Object, String],
+				default: ''
+			},
 
-            removeRow(shiftKey) {
-                this.$emit('remove-row', {'shiftKey':shiftKey,"rowIndex":this.rowIndex});
-            },
+			/**
+			 * List of row columns.
+			 */
+			columns: {
+				type: Array,
+				default: () => []
+			},
 
-            handleRowSelect() {
-                if (this.singleRowSelectable)
-                    this.$emit('single-row-select', { 'rowIndex' : this.rowIndex })
-            },
+			/**
+			 * The row's unique identifier.
+			 */
+			uniqueId: {
+				type: [Number, String],
+				default: undefined
+			},
 
-            // compare the selected items list with current row item and update checkbox accordingly
-            checkInSelecteditems(selectedItems, row) {
-                if (!this.checkboxRows)
-                    return
+			/**
+			 * Array of the table's selected records.
+			 */
+			selectedItems: {
+				type: Array,
+				default: () => []
+			},
 
-                if (isDefined(this.uniqueId)) {
-                    this.rowSelected = selectedItems.some(item => item[this.uniqueId] === row[this.uniqueId])
-                    return
-                }
+			/**
+			 * True if the table has a checkbox column, false otherwise.
+			 */
+			checkboxRows: {
+				type: Boolean,
+				default: false
+			},
 
-                let difference = differenceWith(selectedItems, [row], isEqual)
-                const isSelected = difference.length != selectedItems.length
-                this.rowSelected = isSelected
-            },
+			/**
+			 * True if hovering a row should change its color, false otherwise.
+			 */
+			highlightRowHover: {
+				type: Boolean,
+				default: false
+			},
 
-            rowHover(state) {
-                this.rowHiglighted = state;
-            },
+			/**
+			 * Row-hover color.
+			 */
+			highlightRowHoverColor: {
+				type: String,
+				default: '#d6d6d6'
+			},
 
-            getValueFromRow(row, name) {
-                return get(row, name)
-            },
+			/**
+			 * The index of the row within the table's records.
+			 */
+			rowIndex: {
+				type: Number,
+				required: true
+			},
 
-            cellClasses(column) {
-                let classes = "";
+			/**
+			 * True if the row has an action associated with it, false otherwise.
+			 */
+			singleRowSelectable: {
+				type: Boolean,
+				default: false
+			}
+		},
 
-                let default_text_alignment = "text-left";
+		emits: ['add-row', 'remove-row', 'single-row-select'],
 
-                //decide text alignment class - starts here
-                let alignments = ["text-justify","text-right","text-left","text-center"];
-                if (has(column, "row_text_alignment") && includes(alignments, column.row_text_alignment)) {
-                    classes = classes + " " + column.row_text_alignment;
-                } else {
-                    classes = classes + " " + default_text_alignment;
-                }
-                //decide text alignment class - ends here
+		expose: [],
 
-                // adding user defined classes from column config to rows - starts here
-                if (has(column, "row_classes")) {
-                    classes = classes + " " + column.row_classes;
-                }
-                // adding user defined classes from column config to rows - ends here
+		data() {
+			return {
+				rowSelected: false,
+				rowHiglighted: false
+			}
+		},
+		computed: {
+			rowClasses() {
+				let classes = this.userRowClasses
 
+				if (this.rowSelected) {
+					classes += ' '
+					classes += 'vbt-row-selected'
+				}
 
-                if (typeof this.propCellClasses == "string") {
-                    return this.propCellClasses
-                } 
-                else if (typeof this.propCellClasses == "object") {
-                    Object.entries(this.propCellClasses).forEach(([key, value]) => {
-                        if (typeof value == "boolean" && value) {
-                            classes += (" " + key)
-                        } 
-                        else if (typeof value == "function") {
-                            let truth = value(this.row, column, this.getValueFromRow(this.row, column.name))
-                            if (typeof truth == "boolean" && truth) {
-                                classes += " "
-                                classes += key
-                            }
-                        }
-                    })
-                }
+				if (this.singleRowSelectable) {
+					classes += ' clickable'
+				}
 
-                return classes
-            },
+				classes += this.rowHiglighted ? ' highlighted' : ''
 
-            getCellSlotName(column) {
-                if (has(column,"slot_name")) {
-                    return column.slot_name
-                }
+				return classes
+			},
+			userRowClasses() {
+				let classes = ''
+				if (typeof this.propRowClasses === 'string') {
+					return this.propRowClasses
+				} else if (typeof this.propRowClasses === 'object') {
+					Object.entries(this.propRowClasses).forEach(([key, value]) => {
+						if (typeof value === 'boolean' && value) {
+							classes += key
+						} else if (typeof value === 'function') {
+							const truth = value(this.row)
+							if (typeof truth === 'boolean' && truth) {
+								classes += ' '
+								classes += key
+							}
+						}
+					})
+				}
 
-                return column.name.replace(/\./g,'_');
-            },
+				return classes
+			},
+			rowId() {
+				if (!isDefined(this.uniqueId)) return 'vbt_id'
 
-            canShowColumn(column) {
-                return (column.visibility == undefined || column.visibility) ? true : false
-            }
-        },
-        computed: {
-            rowClasses() {
-                let classes = this.userRowClasses
+				return this.getValueFromRow(this.row, this.uniqueId)
+			}
+		},
+		watch: {
+			row: {
+				handler(newVal) {
+					this.checkInSelecteditems(this.selectedItems, newVal)
+				},
+				deep: true
+			}
+		},
+		mounted() {
+			if (this.highlightRowHover) {
+				this.$refs.vbt_row.addEventListener('mouseover', () => {
+					this.rowHiglighted = true
+				})
+				this.$refs.vbt_row.addEventListener('mouseleave', () => {
+					this.rowHiglighted = false
+				})
+			}
+			this.checkInSelecteditems(this.selectedItems, this.row)
+		},
+		methods: {
+			emitSelectValue(newVal) {
+				if (newVal) this.addRow(false)
+				else this.removeRow(false)
+			},
 
-                if (this.rowSelected) {
-                    classes += " "
-                    classes += "vbt-row-selected"
-                }
+			addRow(shiftKey) {
+				this.$emit('add-row', { shiftKey: shiftKey, rowIndex: this.rowIndex })
+			},
 
-                if (this.singleRowSelectable) {
-                    classes += " clickable"
-                }
+			removeRow(shiftKey) {
+				this.$emit('remove-row', {
+					shiftKey: shiftKey,
+					rowIndex: this.rowIndex
+				})
+			},
 
-                classes += this.rowHiglighted ? " highlighted" : ""
+			handleRowSelect() {
+				if (this.singleRowSelectable)
+					this.$emit('single-row-select', { rowIndex: this.rowIndex })
+			},
 
-                return classes
-            },
-            userRowClasses() {
-                let classes = ""
-                if (typeof this.propRowClasses == "string") {
-                    return this.propRowClasses
-                } 
-                else if (typeof this.propRowClasses == "object") {
-                    Object.entries(this.propRowClasses).forEach(([key, value]) => {
-                        if (typeof value == "boolean" && value) {
-                            classes += key
-                        } 
-                        else if (typeof value == "function") {
-                            let truth = value(this.row)
-                            if (typeof truth == "boolean" && truth) {
-                                classes += " "
-                                classes += key
-                            }
-                        }
-                    })
-                }
+			// compare the selected items list with current row item and update checkbox accordingly
+			checkInSelecteditems(selectedItems, row) {
+				if (!this.checkboxRows) return
 
-                return classes
-            },
-            rowId() {
-                if (!isDefined(this.uniqueId))
-                    return 'vbt_id'
+				if (isDefined(this.uniqueId)) {
+					this.rowSelected = selectedItems.some(
+						(item) => item[this.uniqueId] === row[this.uniqueId]
+					)
+					return
+				}
 
-                return this.getValueFromRow(this.row, this.uniqueId)
-            }
-        },
-        watch: {
-            row: {
-                handler(newVal) {
-                    this.checkInSelecteditems(this.selectedItems, newVal)
-                },
-                deep: true
-            }
-        }
-    }
+				const difference = differenceWith(selectedItems, [row], isEqual)
+				const isSelected = difference.length !== selectedItems.length
+				this.rowSelected = isSelected
+			},
+
+			rowHover(state) {
+				this.rowHiglighted = state
+			},
+
+			getValueFromRow(row, name) {
+				return get(row, name)
+			},
+
+			cellClasses(column) {
+				let classes = ''
+
+				const default_text_alignment = 'text-left'
+
+				//decide text alignment class - starts here
+				const alignments = ['text-justify', 'text-right', 'text-left', 'text-center']
+				if (
+					has(column, 'row_text_alignment') &&
+					includes(alignments, column.row_text_alignment)
+				) {
+					classes = classes + ' ' + column.row_text_alignment
+				} else {
+					classes = classes + ' ' + default_text_alignment
+				}
+				//decide text alignment class - ends here
+
+				// adding user defined classes from column config to rows - starts here
+				if (has(column, 'row_classes')) {
+					classes = classes + ' ' + column.row_classes
+				}
+				// adding user defined classes from column config to rows - ends here
+
+				if (typeof this.propCellClasses === 'string') {
+					return this.propCellClasses
+				} else if (typeof this.propCellClasses === 'object') {
+					Object.entries(this.propCellClasses).forEach(([key, value]) => {
+						if (typeof value === 'boolean' && value) {
+							classes += ' ' + key
+						} else if (typeof value === 'function') {
+							const truth = value(
+								this.row,
+								column,
+								this.getValueFromRow(this.row, column.name)
+							)
+							if (typeof truth === 'boolean' && truth) {
+								classes += ' '
+								classes += key
+							}
+						}
+					})
+				}
+
+				return classes
+			},
+
+			getCellSlotName(column) {
+				if (has(column, 'slot_name')) {
+					return column.slot_name
+				}
+
+				return column.name.replace(/\./g, '_')
+			},
+
+			canShowColumn(column) {
+				return column.visibility === undefined || column.visibility ? true : false
+			}
+		}
+	}
 </script>

@@ -18,7 +18,7 @@
 		</row>
 		<row>
 			<q-button
-				b-style="primary"
+				variant="bold"
 				:label="Resources.GRAVAR45301"
 				@click="SaveEmail" />
 		</row>

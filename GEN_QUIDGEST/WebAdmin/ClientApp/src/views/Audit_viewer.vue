@@ -30,11 +30,17 @@
 					item-value="Value"
 					:items="Model.SelectLists.LogTables" />
 
-				<radio-input
+				<q-radio-group
 					v-if="Model.LogDatabaseExists"
 					v-model="Model.LogDatabaseSelected"
-					:options="logDatabase"
-					:label="Resources.DADOS_43180" />
+					size="large"
+					:label="Resources.DADOS_43180">
+					<q-radio-button
+						v-for="(option, idx) in logDatabase"
+						:key="'log-database-opt-' + idx"
+						:label="option.Text"
+						:value="option.Value" />
+				</q-radio-group>
 
 				<qtable 
 					:rows="tAudit.rows"
@@ -47,7 +53,7 @@
 					<row class="footer-btn">
 						<q-button
 							id="logExportActivator"
-							b-style="primary"
+							variant="bold"
 							:label="Resources.EXPORTAR35632" />
 						<q-dropdown-menu
 							:activator="`#logExportActivator`"
@@ -60,7 +66,7 @@
 							v-if="Model.LogDatabaseExists">
 							<q-button
 								id="logTransferActivator"
-								b-style="primary"
+								variant="bold"
 								:label="Resources.TRANSFERIR_DADOS_PAR38484" />
 							<q-dropdown-menu
 								:activator="`#logTransferActivator`"

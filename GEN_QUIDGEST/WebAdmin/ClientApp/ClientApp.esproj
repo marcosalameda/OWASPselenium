@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.113-alpha">
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.1184077">
   <PropertyGroup>
     <!-- We turn off the SDK hardcoded npm install task, and replace it with our own Pnpm restore task -->
     <ShouldRunNpmInstall>false</ShouldRunNpmInstall>

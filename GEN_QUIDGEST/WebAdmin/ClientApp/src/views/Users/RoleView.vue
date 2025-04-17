@@ -35,6 +35,7 @@
                         <template #actions="props">
                             <q-button-group borderless>
                                 <q-button
+                                    variant="text"
                                     :title="Resources.ELIMINAR21155"
                                     @click="deleteUser(props.row)">
                                     <q-icon icon="bin" />
@@ -49,8 +50,8 @@
                         </template>
                     </qtable>
                     <q-button
+                        variant="bold"
                         :label="Resources.ATRIBUIR_UTILIZADORE53600"
-                        b-style="primary"
                         @click="assignUsers" />
                 </q-row-container>
                 <q-card
@@ -193,7 +194,8 @@
 							placeholder : this.$t('PESQUISAR_UTILIZADOR60804'),
 							searchOnPressEnter: true,
 							showRefreshButton: true,
-							searchDebounceRate: 1000
+							searchDebounceRate: 1000,
+                            size: 'large'
                         },
                         checkbox_rows: true
                     }
@@ -265,7 +267,7 @@
                     id: 'confirm-btn',
                     props: {
                         label: this.Resources.ASSOCIAR58485,
-                        bStyle: "primary"
+                        variant: 'bold'
                     },
                     action: () => {
                         this.submit()
@@ -275,8 +277,7 @@
                 {
                     id: 'cancel-btn',
                     props: {
-                        label: this.Resources.CANCELAR49513,
-                        bStyle: "secondary"
+                        label: this.Resources.CANCELAR49513
                     }
                 }
             ]
@@ -318,7 +319,7 @@
                     id: 'confirm-btn',
                     props: {
                         label: this.Resources.OK57387,
-                        bStyle: "primary"
+                        variant: 'bold'
                     },
                     action: () => {
                         if (!this.Model.Username) {

@@ -1,126 +1,117 @@
 ﻿<template>
-    <thead>
-        <tr>
-            <th v-show="checkboxRows" class="text-center justify-content-center" @click="selectCheckbox">
-                <div class="form-check vbt-select-all-checkbox">
-                    <input class="form-check-input" type="checkbox" v-model="select_all_rows" value="" @change="handleChange($event)">
-                </div>
-            </th>
+	<thead>
+		<tr>
+			<th v-if="checkboxRows" />
+			<slot
+				name="columns"
+				:columns="columns">
+				<th
+					v-for="(column, key, index) in columns"
+					:key="index"
+					class="text-center"
+					:class="{ 'vbt-sort-cursor': isSortableColumn(column) }"
+					v-on="
+						isSortableColumn(column)
+							? { click: () => $emit('update-sort', column) }
+							: {}
+					">
+					<slot
+						name="column"
+						:column="column"
+						>{{ column.label }}</slot
+					>
 
-            <slot name="columns" :columns="columns">
-                <th v-for="(column, key, index) in columns" :key="index" v-on="isSortableColumn(column) ? { click: () => $emit('update-sort',column) } : {}" class="text-center" v-bind:class="{'vbt-sort-cursor':isSortableColumn(column)}">
-                    <slot name="column" :column="column">{{column.label}}</slot>
+					<template v-if="isSortableColumn(column)">
+						<template v-if="!isSort(column)">
+							<div>
+								<slot name="no-sort-icon"> &#x1F825;&#x1F827; </slot>
+							</div>
+						</template>
 
-                    <template v-if='isSortableColumn(column)'>
-                        <template v-if="!isSort(column)">
-                            <div>
-                                <slot name="no-sort-icon">
-                                    &#x1F825;&#x1F827;
-                                </slot>
-                            </div>
-                        </template>
+						<template v-else>
+							<template v-if="query.sort.order === 'asc'">
+								<div>
+									<slot name="sort-asc-icon"> &#x1F825; </slot>
+								</div>
+							</template>
 
-                        <template v-else>
-                            <template v-if="query.sort.order==='asc'">
-                                <div>
-                                    <slot name="sort-asc-icon">
-                                        &#x1F825;
-                                    </slot>
-                                </div>
-                            </template>
+							<template v-else-if="query.sort.order === 'desc'">
+								<slot name="sort-desc-icon">
+									<div>&#x1F827;</div>
+								</slot>
+							</template>
 
-                            <template v-else-if="query.sort.order==='desc'">
-                                <slot name="sort-desc-icon">
-                                    <div>&#x1F827;</div>
-                                </slot>
-                            </template>
-
-                            <template v-else>
-                                <div>
-                                    <slot name="no-sort-icon">
-                                        &#x1F825;&#x1F827;
-                                    </slot>
-                                </div>
-                            </template>
-                        </template>
-                    </template>
-                </th>
-            </slot>
-        </tr>
-    </thead>
+							<template v-else>
+								<div>
+									<slot name="no-sort-icon"> &#x1F825;&#x1F827; </slot>
+								</div>
+							</template>
+						</template>
+					</template>
+				</th>
+			</slot>
+		</tr>
+	</thead>
 </template>
 
 <script>
-    import has from "lodash-es/has";
+	import has from 'lodash-es/has'
 
-    //import Column from "./Column.vue";
+	export default {
+		name: 'QTableHeader',
 
-    export default {
-        name: 'QTableHeader',
-        emits: ['update-sort', 'select-all-items', 'unselect-all-items'],
-        props: {
-            columns: {
-                type: Array,
-                default: function() {
-                    return [];
-                }
-            },
-            query: {
-                type: Object,
-                default: function() {
-                    return {};
-                }
-            },
-            checkboxRows: {
-                type: Boolean,
-                default: false
-            }
-        },
-        data: function() {
-            return {
-                select_all_rows: false
-            }
-        },
-        mounted() {
-          this.$eventHub.on('unselect-select-all-items-checkbox', (msg) => {
-                this.select_all_rows = false;
-            });
-          this.$eventHub.on('select-select-all-items-checkbox', (msg) => {
-                this.select_all_rows = true;
-            });
-        },
-        methods: {
-            handleChange(event) {
-                if (event.target.checked) {
-                    this.$emit('select-all-items');
-                } else {
-                    this.$emit('unselect-all-items');
-                }
-            },
-            selectCheckbox() {
-                if (this.select_all_rows) {
-                    this.$emit('unselect-all-items');
-                } else {
-                    this.$emit('select-all-items');
-                }
-                this.select_all_rows = !this.select_all_rows;
-            },
-            isSort(column) {
-                if (this.query.sort.name == null) {
-                    return false;
-                }
+		props: {
+			/**
+			 * Array of table columns.
+			 */
+			columns: {
+				type: Array,
+				default: () => []
+			},
 
-                return this.query.sort.name === column.name;
-            },
+			/**
+			 * The object containing the necessary data to render query results.
+			 */
+			query: {
+				type: Object,
+				default: () => {}
+			},
 
-            isSortableColumn(column) {
-                if (!has(column,'sort')) {
-                    return false;
-                } else {
-                    return column.sort;
-                }
-            }
+			/**
+			 * True if the table has a checkbox column, false otherwise.
+			 */
+			checkboxRows: {
+				type: Boolean,
+				default: false
+			}
+		},
 
-        }
-    }
+		emits: ['update-sort'],
+
+		expose: [],
+
+		data() {
+			return {
+				select_all_rows: false
+			}
+		},
+
+		methods: {
+			isSort(column) {
+				if (this.query.sort.name === null) {
+					return false
+				}
+
+				return this.query.sort.name === column.name
+			},
+
+			isSortableColumn(column) {
+				if (!has(column, 'sort')) {
+					return false
+				} else {
+					return column.sort
+				}
+			}
+		}
+	}
 </script>

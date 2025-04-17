@@ -13,12 +13,14 @@
                 <template #actions="props">
                     <q-button-group borderless>
                         <q-button
+                            variant="text"
                             :disabled="props.row.InRole"
                             :title='Resources.ASSOCIAR58485'
                             @click="addUser(props.row.Cod)">
                             <q-icon icon="add" />
                         </q-button>
                         <q-button
+                            variant="text"
                             :disabled="!props.row.InRole"
                             :title='Resources.REMOVER14367'
                             @click="removeUser(props.row.Cod)">

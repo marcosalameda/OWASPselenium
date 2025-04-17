@@ -82,7 +82,7 @@
 
 						<row class="footer-btn">
 							<q-button
-								b-style="primary"
+								variant="bold"
 								:label="Resources.INICIAR_O_PROCESSO_D34168"
 								@click="changeYear" />
 						</row>

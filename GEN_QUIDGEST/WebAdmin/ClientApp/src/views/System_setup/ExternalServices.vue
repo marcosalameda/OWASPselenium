@@ -29,7 +29,7 @@
             @alert-class="forwardAlert" />
 		<row class="footer-btn">
 			<q-button
-				b-style="primary"
+				variant="bold"
 				:label="Resources.GRAVAR_CONFIGURACAO36308"
 				@click="saveConfigOthers" />
 		</row>

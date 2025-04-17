@@ -12,6 +12,8 @@ namespace AdminCLI
         private static DBMaintenance dBMaintenance;
         private static SysConfiguration sysConfiguration;
 
+        private static IConfigurationManager _configManager;
+
         static int Main(string[] args)
         {
             //Starting procedure for SP
@@ -21,7 +23,7 @@ namespace AdminCLI
             try
             {
                 var parsedArgs = CommandLine.Parser.Default.ParseArguments<ReindexOptions, ListReindexScriptsOptions, WriteConfigurationOptions, 
-                    ReadConfigurationOptions, BackupOptions, RestoreOptions, RemoveBackupOptions, CreateRedirectOptions>(args);
+                    ReadConfigurationOptions, BackupOptions, RestoreOptions, RemoveBackupOptions, CreateRedirectOptions, ConfigOptions>(args);
 
                 return parsedArgs.MapResult(
                     (ReindexOptions opts) => Reindex(opts),
@@ -32,6 +34,7 @@ namespace AdminCLI
                     (RestoreOptions opts) => Restore(opts),
                     (RemoveBackupOptions opts) => RemoveBackup(opts),
                     (CreateRedirectOptions opts) => CreateNewRedirect(opts),
+                    (ConfigOptions opts) => HandleConfig(opts),
                     errs => 1);
             }
             catch (Exception e) {
@@ -47,8 +50,8 @@ namespace AdminCLI
 
             //Initialize library classes
             dBMaintenance = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory);
-            var fileConfigManager = new FileConfigurationManager(CSGenio.framework.Configuration.GetConfigPath());
-            sysConfiguration = new SysConfiguration(fileConfigManager);
+            _configManager = new FileConfigurationManager(CSGenio.framework.Configuration.GetConfigPath());
+            sysConfiguration = new SysConfiguration(_configManager);
         }
     }
 }

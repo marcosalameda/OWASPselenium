@@ -14,13 +14,15 @@
 							<template #actions="props">
 								<q-button-group borderless>
 									<q-button
-									:title="Resources.EDITAR11616"
-									@click="changeAdvancedProperty(props.row)">
-									<q-icon icon="pencil" />
+										variant="text"
+										:title="Resources.EDITAR11616"
+										@click="changeAdvancedProperty(props.row)">
+										<q-icon icon="pencil" />
 									</q-button>
 									<q-button
-									:title="Resources.ELIMINAR21155"
-									@click="deleteAdvancedProperty(props.row)">
+										variant="text"
+										:title="Resources.ELIMINAR21155"
+										@click="deleteAdvancedProperty(props.row)">
 									<q-icon icon="bin" />
 									</q-button>
 								</q-button-group>
@@ -63,7 +65,6 @@
 							<br />
 						</div>
 						<q-button v-if="!inDeleteModeAdvanced"
-							b-style="secondary"
 							@click="showNewKeyInput=true"
 							:label="Resources.INSERT_NEW_KEY15186">
 								<q-icon icon="pencil" />
@@ -81,10 +82,9 @@
 					</div>
 					<div v-else>
 						<q-button
-							b-style="secondary"
 							@click="showNewKeyInput=false"
 							:label="Resources.LIST_DEFAULT_KEYS58194"
-							v-show="hasInitProperties && !inDeleteModeAdvanced">
+							v-if="hasInitProperties && !inDeleteModeAdvanced">
 								<q-icon icon="list" />
 						</q-button>
 						<q-text-field
@@ -220,7 +220,8 @@
 							id: 'delete-btn',
 							props: {
 								label: this.Resources.APAGAR04097,
-								bStyle: "danger"
+								variant: 'bold',
+								color: "danger"
 							},
 							action: () => {
 								this.SaveMoreProperty()
@@ -233,7 +234,7 @@
 							id: 'save-btn',
 							props: {
 								label: this.Resources.GRAVAR45301,
-								bStyle: "primary",
+								variant: 'bold',
 								disabled: this.invalidProps
 							},
 							action: () => {

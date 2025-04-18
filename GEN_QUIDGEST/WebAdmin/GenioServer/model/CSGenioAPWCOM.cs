@@ -140,8 +140,8 @@ namespace CSGenio.business
 			info.Pathways.Add("psw","psw");
 			info.Pathways.Add("pess1","pess1");
 			info.Pathways.Add("stake","pess1");
-			info.Pathways.Add("cate2","pess1");
 			info.Pathways.Add("cmpny","pess1");
+			info.Pathways.Add("cate2","pess1");
 			info.Pathways.Add("cntry","pess1");
 		}
 

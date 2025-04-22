@@ -56,6 +56,10 @@
 							{{ Resources._SISTEMA__ANO__E_G__40394 }}
 						</template>
 					</q-text-field>
+					<q-checkbox 
+						v-model="model.DatabaseSidePk"
+						label="Database-side primary key"
+						:readonly="isTestingConnection" />
 				</q-row-container>
 			</q-card>
 		</row>

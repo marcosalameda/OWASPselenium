@@ -303,6 +303,7 @@ namespace Administration.Controllers
 
                 Enum.TryParse(dataSystem.GetDatabaseType().ToString(), out HardCodedLists.DBMS serverType);// Default: SQLSERVER
                 model.ServerType = serverType;
+                model.DatabaseSidePk = dataSystem.DatabaseSidePk;
 
                 /*
                 *  Read Log Database config
@@ -393,18 +394,37 @@ namespace Administration.Controllers
 
         private DataSystemXml createDataSystem(string year, string schemaName, ConfigurationXML conf, string dsType = "", string dsServer = "")
         {
+            //in case the user set a name that already existed just return that one
             var dataSystem = conf.DataSystems.FirstOrDefault(ds => ds.Name == year);
             if (dataSystem != null)
                 return dataSystem;
             else
-                dataSystem = new DataSystemXml() { Name = year, Type = dsType, Server = dsServer }; // Type and server are set when duplicating a data system
+            {
+                //find the default datasystem in case it exists, otherwise creat a new one
+                var defaultDs = conf.DataSystems.FirstOrDefault(ds => ds.Name == conf.anoDefault);
+                dataSystem = defaultDs?.ShallowCopy() ?? new DataSystemXml();
+                // Type and server are set when duplicating a data system
+                dataSystem.Name = year;
+                if(!string.IsNullOrEmpty(dsType))
+                    dataSystem.Type = dsType;
+                if (!string.IsNullOrEmpty(dsServer))
+                    dataSystem.Server = dsServer;
+            }
 
-            var schema = new DataXml();
-            schema.Id = CSGenio.framework.Configuration.Program;
-            schema.Schema = schemaName;
-			schema.ConnEncrypt = conf.connEncrypt;
-			schema.ConnWithDomainUser = conf.connWithDomainUser;
-            dataSystem.Schemas = new List<DataXml>() { schema };
+            //Add the main schema in case there is none yet
+            if (dataSystem.Schemas is null || dataSystem.Schemas.Count == 0)
+            {
+                var schema = new DataXml();
+                schema.Id = CSGenio.framework.Configuration.Program;
+                schema.Schema = schemaName;
+                schema.ConnEncrypt = conf.connEncrypt;
+                schema.ConnWithDomainUser = conf.connWithDomainUser;
+                dataSystem.Schemas = new List<DataXml>() { schema };
+            }
+            else //there was already one, we need to override the main schema database
+            {
+                dataSystem.Schemas[0].Schema = schemaName;
+            }
 
             conf.DataSystems.Add(dataSystem);
             return dataSystem;
@@ -527,7 +547,7 @@ namespace Administration.Controllers
                 {
                     //Configure main database
                     sysConfiguration.SaveDatabaseConfig(model.DbUser, model.DbPsw, model.Server, model.ServerType.ToString(), model.Schema, 
-                    model.Port, model.ConnEncrypt, model.ConnWithDomainUser, year);
+                    model.Port, model.ConnEncrypt, model.ConnWithDomainUser, year, model.DatabaseSidePk);
 
                     // Configure log database
                     if(hasLogDB) {

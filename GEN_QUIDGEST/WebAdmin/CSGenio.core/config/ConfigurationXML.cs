@@ -455,6 +455,7 @@ namespace CSGenio
         public string Password { get; set; }
         public string Project { get; set; }
         public string Div { get; set; }
+        public bool DatabaseSidePk { get; set; } = false;
 
 		public DataSystemXml ShallowCopy() {
 

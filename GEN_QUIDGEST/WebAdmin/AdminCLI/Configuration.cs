@@ -43,6 +43,9 @@ namespace AdminCLI
 
         [Option("path", HelpText = "The location of the configuration file. Creates a new one if not exists")]
         public string Path { get; set; }
+
+        [Option("is-db-pk", HelpText = "Specify if the primary keys are to be calculated on the database side")]
+        public bool IsDbPk { get; set; }
     }
 
     [Verb("dbconfig-read", HelpText = "Database Configuration")]
@@ -157,7 +160,7 @@ namespace AdminCLI
                         options.Port, options.EncryptConnection, options.DomainUser);
                 else
                     sysConfig.SaveDatabaseConfig(options.Username, options.Password, options.Server, options.Type, options.Schema,
-                        options.Port, options.EncryptConnection, options.DomainUser);
+                        options.Port, options.EncryptConnection, options.DomainUser, "", options.IsDbPk);
             }
             catch (Exception e)
             {

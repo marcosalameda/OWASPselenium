@@ -159,6 +159,12 @@ namespace CSGenio.persistence
         /// </summary>
         public virtual bool IsMaster { get; protected set; }
 
+        /// <summary>
+        /// Enable for support of database side primary key allocation during inserts.
+        /// Disable for the application to generate or persist primary key sequences in separate requests.
+        /// </summary>
+        public bool DatabaseSidePk { get; protected set; } = false;
+
         /**
          * Static Constructor
          * - The hashtable controls are keyed to the identifier of the loaded menu option and
@@ -317,7 +323,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// Reviewed:
         /// -->
         /// </remarks>
-        public int Execute(InsertQuery query)
+        public object Execute(InsertQuery query)
         {
             var renderer = new QueryRenderer(this);
             renderer.SchemaMapping = SchemaMapping;
@@ -329,7 +335,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
             IDbCommand command = CreateCommand(sql, parameters);
 
-            int result = command.ExecuteNonQuery();
+            object result = command.ExecuteScalar();
 			if (Log.IsDebugEnabled) Log.Debug("[QueryExecuteInsert] " + (DateTime.Now.Ticks - st) / TimeSpan.TicksPerMillisecond + "ms");
 			return result;
         }
@@ -894,6 +900,9 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         {
             var ds = Configuration.ResolveDataSystem(id, dbType);
             var res = GenioDI.SpFactory(ds.GetDatabaseType());
+            res.DatabaseSidePk = ds.DatabaseSidePk;
+            if (res.DatabaseSidePk && !res.Dialect.SupportsOutput)
+                throw new PersistenceException("Configuration is requesting database side primary keys, but this sql dialect does not support it.", "PersistentSupport.getPersistentSupport", "Configuration is requesting database side primary keys, but this sql dialect does not support it.");
             res.DatabaseType = ds.GetDatabaseType();
             res.Id = id;
             res.ClientId = user;
@@ -1208,22 +1217,21 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         }
         //---------------------------------------------------------
 
-		public delegate void RetryableAction();
-
 		/// <summary>
-        /// Encapsulates a generic asção in a retryable transaction
-        /// If the action throws a retryable exception, try to perform the action again up to a limit of 5 attempts
+        /// Encapsulates a generic Action in a retryable transaction
+        /// If the action throws a retryable exception, try to perform the action again up to a limit of n attempts
         /// </summary>
         /// <param name="a">The action to be taken</param>
+        /// <param name="maxRetry">Maximum numer of retries</param>
         /// <example>
         /// sp.TransactionRetry(() => { model.Save(); });
         /// </example>
-        public void TransactionRetry(RetryableAction a)
+        public void TransactionRetry(Action a, int maxRetry=5)
         {
             int retry = 0;
             bool sucess = false;
 
-            while (!sucess && retry < 5)
+            while (!sucess)
             {
                 try
                 {
@@ -1242,8 +1250,12 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                     Exception level = e;
                     while (level != null)
                     {
-                        PersistenceException ep = level as PersistenceException;
-                        if(ep != null && ep.IsRetryable)
+                        if(level is PersistenceException ep && ep.IsRetryable)
+                        {
+                            retryable = true;
+                            break;
+                        }
+                        if(IsErrorTransient(level))
                         {
                             retryable = true;
                             break;
@@ -1251,21 +1263,34 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                         level = level.InnerException;
                     }
 
+                    //retry a few times
                     if (retryable)
                     {
                         if (CSGenio.framework.Log.IsDebugEnabled) Log.Debug("RETRY from error" + (level == null ? "" : level.Message));
                         retry++;
+                        if (retry >= maxRetry)
+                            throw;
+                        //transient failures can improve their probability of success if we wait a tiny bit before retrying
+                        Thread.Sleep(50*retry);
                     }
                     else
                     {
-						if (e is GenioException)
-							throw new PersistenceException((e as GenioException).UserMessage, "PersistentSupport.TransactionRetry", "Exception is not retryable: " + e.Message, e);
-						else
-							throw new PersistenceException(null, "PersistentSupport.TransactionRetry", "Exception is not retryable: " + e.Message, e);
+                        throw;
                     }
                 }
             }
         }
+
+        /// <summary>
+        /// Evaluates if a low level exception should be classified as transient when giving origin to a PersisteceException
+        /// </summary>
+        /// <param name="ex">The exception to evaluate</param>
+        /// <returns>True if the error is considered transiente</returns>
+        /// <remarks>
+        /// Transient errors are those that have a chance of sucess if they are executed again with the same imputs.
+        /// For example, a deadlock exception is a transiente error.
+        /// </remarks>
+        public abstract bool IsErrorTransient(Exception ex);
 
 
         /// <summary>
@@ -2374,15 +2399,17 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <returns>Returns the inserted area</returns>
         public void insertPseud(IArea area)
         {
+            //if we are allocating pk's in the application then make sure we have one before building the query
+            if (!DatabaseSidePk && string.IsNullOrEmpty(area.QPrimaryKey))
+                area.insertNameValueField(area.PrimaryKeyName, codIntInsertion(area, false));
+
             InsertQuery query = new InsertQuery();
-            QueryUtils.buildQueryInsert(query, area);
+            QueryUtils.buildQueryInsert(query, area, DatabaseSidePk);
+            var res = Execute(query);
 
-            // RR 24-02-2011 - the parameters of the query are passed to the function that will execute it
-            int linha = Execute(query);
-
-            //if it goes well, line!=0
-            if (linha <= 0)
-				throw new PersistenceException("Erro ao inserir dados na tabela.", "PersistentSupport.inserir", "The query to area " + area.ToString() + " returned value less than 1.");
+            //if we are allocating pk's in the database then read back the result of the query
+            if(DatabaseSidePk)
+                area.insertNameValueField(area.PrimaryKeyName, DBConversion.ToKey(res));
         }
 
         /// <summary>
@@ -2464,20 +2491,19 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <summary>
         /// Function that returns the internal code to insert a new record
         /// </summary>
-        /// <param name="isTabelaBase">true if it is table hardcoded</param>
         /// <param name="area">Name of the area to which the record that will be inserted belongs.
         /// Does not assume an open connection and closes the connection</param>
+        /// <param name="shadow">Get a primary key for the shadow table instead</param>
         /// <returns>returns the new internal code</returns>
-        //20051207 to as tables shadow
-        public string codIntInsertion(bool isBaseTable, IArea area, bool shadow)
+        public string codIntInsertion(IArea area, bool shadow)
         {
             try
             {
                 Field chaveinfo = area.DBFields[area.PrimaryKeyName];
                 if(shadow)
-                    return generatePrimaryKey(area.ShadowTabName, chaveinfo.FieldSize, area.Information.KeyType);
+                    return generatePrimaryKey(area.ShadowTabName, area.ShadowTabKeyName, chaveinfo.FieldSize, area.Information.KeyType);
                 else
-                    return generatePrimaryKey(area.TableName, chaveinfo.FieldSize, area.Information.KeyType);
+                    return generatePrimaryKey(area.TableName, area.PrimaryKeyName, chaveinfo.FieldSize, area.Information.KeyType);
             }
             catch (PersistenceException ex)
             {
@@ -2490,24 +2516,36 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         }
 
         /// <summary>
-        /// Function that returns the internal code to insert a new record
-        /// </summary>
-        /// <param name="area">Name of the area to which the record that will be inserted belongs.
-        /// Does not assume an open connection and closes the connection</param>
-        /// <returns>returns the new internal code</returns>
-        public string codIntInsertion(IArea area, bool shadow)
-        {
-            return codIntInsertion(false, area, shadow);
-        }
-
-        /// <summary>
         /// Gets a new primary key to a particular object
         /// </summary>
-        /// <param name="id_objecto">The object to which you want to generate a key, typically the name of the table</param>
-        /// <param name="tamanho">The size of the key to generate to the case of internal code</param>
-        /// <param name="formato">The key format to generate</param>
+        /// <param name="id_object">The object to which you want to generate a key, typically the name of the table</param>
+        /// <param name="id_field">The field in the object to generate the key for, typically the name of the primary key</param>
+        /// <param name="size">The size of the key to generate to the case of internal code</param>
+        /// <param name="format">The key format to generate</param>
         /// <returns>A single primary key</returns>
-        public abstract string generatePrimaryKey(string id_object, int size, CodeType format);
+        public abstract string generatePrimaryKey(string id_object, string id_field, int size, CodeType format);
+
+        /// <summary>
+        /// Gets a range of new primary keys in bulk to a particular object
+        /// </summary>
+        /// <param name="id_object">The object to which you want to generate a key, typically the name of the table</param>
+        /// <param name="id_field">The field in the object to generate the key for, typically the name of the primary key</param>
+        /// <param name="size">The size of the key to generate to the case of internal code</param>
+        /// <param name="format">The key format to generate</param>
+        /// <param name="range">The number of primary keys to obtain in bulk</param>
+        /// <returns>A single primary key</returns>
+        public virtual List<string> generatePrimaryKey(string id_object, string id_field, int size, CodeType format, int range)
+        {
+            // This is a unoptimized generic version of bulk alocation of primary keys
+            // Each provider is responsible to implement a more efficient version.
+            if (range < 1)
+                throw new ArgumentException("range must be 1 or larger", nameof(range));
+
+            List<string> codes = new List<string>();
+            for (int i = 0; i < range; i++)
+                codes.Add(generatePrimaryKey(id_object, id_field, size, format));
+            return codes;
+        }
 
         public object insertValueDocums(IArea area, string fieldName, string fileName, string extension, byte[] file)
         {
@@ -2516,7 +2554,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             if (area.DBFields[area.PrimaryKeyName].FieldFormat.Equals(FieldFormatting.GUID))
                 primaryKeyValue = primaryKeyValue.ToString().Replace("-", "");
             Field chaveDocums = CSGenioAdocums.GetInformation().DBFields["coddocums"];
-            object valorChavePrimariaDocums = generatePrimaryKey(tabelaDocums, chaveDocums.FieldSize, CSGenioAdocums.GetInformation().KeyType);
+            object valorChavePrimariaDocums = generatePrimaryKey(tabelaDocums, "coddocums", chaveDocums.FieldSize, CSGenioAdocums.GetInformation().KeyType);
 
             //RS(2010.09.16) The table docums starts to gardar several verses and the author of the document
             InsertQuery query = new InsertQuery()
@@ -2542,38 +2580,26 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             return valorChavePrimariaDocums;
         }
 
-        /// <summary>
-        /// Method that duplicates docums table records and updates foreign keys in duplicate area
-        /// </summary>
-        /// <param name="area">Area where the file fields will be replaced in BD</param>
-        /// <param name="valorChavePrimaria">PrimaryKeyValue</param>
-        /// <returns>area changed</returns>
-        public string duplicateFilesDB(IArea area, object primaryKeyValue)
-        {
-            return duplicateFilesDB(area, primaryKeyValue, false);
-        }
 
         /// <summary>
         /// Method that duplicates docums table records and updates foreign keys in duplicate area
         /// </summary>
         /// <param name="area">Area where the file fields will be replaced in BD</param>
-        /// <param name="valorChavePrimaria">PrimaryKeyValue</param>
-        /// <param name="paraCheckout">If the duplication is to checkout of the file or if it is a normal plug duplication</param>
+        /// <param name="forCheckout">If the duplication is to checkout of the file or if it is a normal plug duplication</param>
         /// <param name="documField">Docum field used when forCheckout == true</param>
-        /// <returns>area changed</returns>
-        public string duplicateFilesDB(IArea area, object primaryKeyValue, bool forCheckout, string documField = "")
+        public void duplicateFilesDB(IArea area, bool forCheckout=false, string documField = "")
         {
             try
             {
                 string tabelaDocums = "docums";
-                object valorChavePrimariaDocums  ="";
-
-                object valorChavePrimariaAux = primaryKeyValue;
-                if (area.DBFields[area.PrimaryKeyName].FieldFormat.Equals(FieldFormatting.GUID))
-                    valorChavePrimariaAux = valorChavePrimariaAux.ToString().Replace("-", "");
+                string valorChavePrimariaDocums  ="";
 
                 if (area.Information.DocumsForeignKeys != null)
                 {
+                    object valorChavePrimariaAux = area.QPrimaryKey;
+                    if (area.DBFields[area.PrimaryKeyName].FieldFormat.Equals(FieldFormatting.GUID))
+                        valorChavePrimariaAux = valorChavePrimariaAux.ToString().Replace("-", "");
+
                     var formatacaoChaveDocums = CSGenioAdocums.GetInformation().KeyType;
                     foreach(var documForeignKey in area.Information.DocumsForeignKeys)
                     {
@@ -2584,7 +2610,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                             if (string.IsNullOrEmpty(campoPedido.Value.ToString()) || (forCheckout && !campoPedido.FullName.Equals(documField)) )
                                 continue;
 
-                            valorChavePrimariaDocums = generatePrimaryKey(tabelaDocums, area.DBFields[documForeignKey].FieldSize, formatacaoChaveDocums);
+                            valorChavePrimariaDocums = generatePrimaryKey(tabelaDocums, "coddocums", area.DBFields[documForeignKey].FieldSize, formatacaoChaveDocums);
 
                             SelectQuery qs = new SelectQuery()
                                 .Select(CSGenioAdocums.FldDocumid)
@@ -2602,13 +2628,15 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                             var matrix = this.Execute(qs);
                             if (matrix.NumRows > 0)
                             {
-                                string documid = matrix.GetString(0, CSGenioAdocums.FldDocumid);
+                                // if it's to checkout keeps the documid
+                                // if it is to duplicate the plug the documid is equal to the primary key
+                                string documid = forCheckout ? matrix.GetString(0, CSGenioAdocums.FldDocumid) : valorChavePrimariaDocums;
                                 string extension = matrix.GetString(0, CSGenioAdocums.FldExtensao);
 
                                 //Insert the record with the duplicated values
                                 InsertQuery insert = new InsertQuery().Into(tabelaDocums);
                                 insert.Value(CSGenioAdocums.FldCoddocums, valorChavePrimariaDocums);
-                                insert.Value(CSGenioAdocums.FldDocumid, forCheckout ? documid : valorChavePrimariaDocums);
+                                insert.Value(CSGenioAdocums.FldDocumid, documid);
                                 //This client stores documents in the database
                                 insert.Value(CSGenioAdocums.FldDocument, matrix.GetBinary(0, CSGenioAdocums.FldDocument));
                                 insert.Value(CSGenioAdocums.FldTabela, matrix.GetString(0, CSGenioAdocums.FldTabela));
@@ -2625,21 +2653,46 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                                 insert.Value(CSGenioAdocums.FldExtensao, extension);
                                 Execute(insert);
 
-                                // if it's to checkout keeps the documid
-                                // if it is to duplicate the plug the documid is equal to the primary key
-                                object documsfk = forCheckout ? documid : valorChavePrimariaDocums;
-
-                                area.insertNameValueField(campoPedido.FullName, documsfk);
+                                //update the record that references the document
+                                area.insertNameValueField(campoPedido.FullName, documid);
                             }
                         }
                     }
                 }
-                return valorChavePrimariaDocums.ToString();
             }
             catch(Exception ex)
             {
                 throw new FrameworkException($"Error duplicating documents on table {area.TableName}", "duplicateDocumentDB", ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Updates the Chave field in the Docums table with the primary key of this record.
+        /// This can be necessary when the PK is only knows after the insert operation.
+        /// </summary>
+        public void AfterDuplicateFilesDB(IArea area)
+        {
+            if (area.Information.DocumsForeignKeys == null || area.Information.DocumsForeignKeys.Count == 0)
+                return;
+            
+            List<string> documsFks = new List<string>();
+            foreach (var documForeignKey in area.Information.DocumsForeignKeys)
+            {
+                string fk = area.returnValueField(documForeignKey) as string;
+                if(!string.IsNullOrEmpty(fk))
+                    documsFks.Add(fk);
+            }
+
+            if (documsFks.Count == 0)
+                return;
+
+            UpdateQuery uq = new UpdateQuery()
+                .Update("docums")
+                .Set("chave", area.QPrimaryKey)
+                .Where(CriteriaSet.And()
+                .In("docums", "documid", documsFks));
+
+            Execute(uq);
         }
 
         /*********************************ELIMINAR DADOS*************************************/
@@ -3801,8 +3854,9 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                 select.SelectDatabaseFields(area, fields);
 
                 select.From(area.QSystem, area.TableName, area.Alias);
+                var pk = QueryUtils.ToValidDbValue(internalCodeValue, area.DBFields[area.PrimaryKeyName]);
                 select.Where(CriteriaSet.And()
-                    .Equal(area.Alias, area.PrimaryKeyName, internalCodeValue));
+                    .Equal(area.Alias, area.PrimaryKeyName, pk));
 
                 DataMatrix mx = Execute(select);
                 if (mx.NumRows > 0)

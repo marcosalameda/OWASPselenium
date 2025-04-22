@@ -2051,15 +2051,13 @@ namespace CSGenio.business
 
                 beforeInsert(sp);
 
-                // key primária
-                string codInt = sp.codIntInsertion(this, false);
-
                 // AV(2010/09/20) As fichas novas deixam de ter registos com fields NULL e passam a ter com os Qvalues vazios apropriados
                 removeCalculatedFields();
                 createEmptyFields();
 
                 Zzstate = 1;
-                QPrimaryKey = codInt;
+                if(!sp.DatabaseSidePk)
+                    QPrimaryKey = sp.codIntInsertion(this, false);
 
                 if (UserRecord)
                 {
@@ -2250,15 +2248,13 @@ namespace CSGenio.business
                 //--------------------------------------------------------------------
                 if (Log.IsDebugEnabled) Log.Debug(string.Format("Area.inserir [area] {0}", Alias));
 
-                // key primária
-                string codInt = sp.codIntInsertion(this, false);
-
                 // AV(2010/09/20) As fichas novas deixam de ter registos com fields NULL e passam a ter com os Qvalues vazios apropriados
                 removeCalculatedFields();
                 createEmptyFields();
 
                 Zzstate = 1;
-                QPrimaryKey = codInt;
+                if(!sp.DatabaseSidePk)
+                    QPrimaryKey = sp.codIntInsertion(this, false);
 
                 if (UserRecord)
                 {
@@ -2388,12 +2384,14 @@ namespace CSGenio.business
                 //ir buscar o registo to duplicate
                 object codeValue = condition.Criterias[0].RightTerm;
                 sp.getRecord(this, codeValue);
-                string codInt = sp.codIntInsertion(this, false);
 
                 //zerar os fields declarados com zeroAduplicar
                 zeroDuplicar();
 
-                QPrimaryKey = codInt;
+                if(!sp.DatabaseSidePk)
+                    QPrimaryKey = sp.codIntInsertion(this, false);
+                else
+                    QPrimaryKey = "";
                 Zzstate = 1;
 
                 //1 - preencher carimbo
@@ -2412,15 +2410,19 @@ namespace CSGenio.business
                 //5 - operações internas que dependem de números sequenciais
                 fillInternalOperations(sp, null);
 
-                beforeDuplicate(sp);
-
                 //6 - duplicate os documentos na db
-                sp.duplicateFilesDB(this, codInt, false);
+                sp.duplicateFilesDB(this);
+
+                beforeDuplicate(sp);
 
                 // Executes the encryption formulas associated with the fields before saving the value to the database
                 ExecuteFieldValueEncryption(sp);
 
                 sp.insertPseud(this);
+
+                // With database side pk's the docums Chave field will not have been filled so we need to do it after the insert
+                if (sp.DatabaseSidePk)
+                    sp.AfterDuplicateFilesDB(this);
 
                 //duplicate as fichas relacionadas
                 List<FieldRef> fieldsToUpdate = tambemDuplica(sp, codeValue.ToString());
@@ -2634,7 +2636,6 @@ namespace CSGenio.business
         {
             //TODO: falta o suporte to a duplicação em cascata
             sp.getRecord(this, codIntValue);
-            string codInt = sp.codIntInsertion(this, false);
 
             // Last updated by [CJP] at [2016.06.01]
             // Não deve duplicate os registos filhos com ZZSTATE != 0
@@ -2662,7 +2663,8 @@ namespace CSGenio.business
 
             //zerar os fields declarados com zeroAduplicar
             zeroDuplicar();
-            QPrimaryKey = codInt;
+            if(!sp.DatabaseSidePk)
+                QPrimaryKey = sp.codIntInsertion(this, false);
 
             //1 - preencher carimbo
             fillStampInsert();
@@ -2676,8 +2678,9 @@ namespace CSGenio.business
 
             //5 - operações internas que dependem de números sequenciais
             fillInternalOperations(sp, null);
+
             //Duplicate docums
-            string newcodDocums = sp.duplicateFilesDB(this, codInt, false);
+            sp.duplicateFilesDB(this);
 
             // Executes the encryption formulas associated with the fields before saving the value to the database
             ExecuteFieldValueEncryption(sp);
@@ -2685,19 +2688,12 @@ namespace CSGenio.business
             //RS 24.04.2017 Passa a efectuar todas as regras de business durante a duplicação.
             insert(sp);
 
+            //with database side pk's the docums Chave field will not have been filled so we need to do it after the insert
             //This is not the best way to update the field "chave" from Docums table.
             //May be, we should not use this field because it creates a bidirectionl relationship with other tables.
             //There is one place where the field "chave" is used, but it could be unused if we refactory the content of document ticket. 
-            if (!string.IsNullOrEmpty(newcodDocums))
-            {
-                UpdateQuery uq = new UpdateQuery()
-                .Update("docums")
-                .Set("chave", QPrimaryKey)
-                .Where(CriteriaSet.And()
-                    .Equal("docums", "coddocums", newcodDocums));
-
-                sp.Execute(uq);
-            } 
+            if (sp.DatabaseSidePk)
+                sp.AfterDuplicateFilesDB(this);
 
             return true;
         }
@@ -2705,32 +2701,42 @@ namespace CSGenio.business
         public virtual bool checkoutDocums(PersistentSupport sp, string docField, out string newcodDocums)
         {
             string documField = Alias + "." + docField + "fk";
-			string valorLigacao = returnValueField(documField).ToString();
-            string codtable = QPrimaryKey;
-
+            string valorLigacao = returnValueField(documField).ToString();
             newcodDocums = "";
-            DataMatrix resultados = this.returnValuesDocums(
-				sp,
-                new SelectField[] { new SelectField(SqlFunctions.Count(0), "count") },
-                CriteriaSet.And()
-                    .Equal("docums", "versao", "CHECKOUT")
-                    .Equal("docums", "documid", valorLigacao),
-				null,
-                docField);
 
-            if (DBConversion.ToInteger(resultados.GetDirect(0, 0)) > 0)
+            //validate no one there is no checkout already
+            SelectQuery sql = new SelectQuery()
+                .Select(SqlFunctions.Count(0), "count")
+                .From("docums")
+                .Where(CriteriaSet.And()
+                    .Equal("docums", "versao", "CHECKOUT")
+                    .Equal("docums", "documid", valorLigacao));
+            if (DBConversion.ToInteger(sp.executeScalar(sql)) > 0)
                 return false;
 
-            newcodDocums = sp.duplicateFilesDB(this, codtable, true, documField);
-
-            UpdateQuery uq = new UpdateQuery()
-                .Update("docums")
-                .Set("opercria", user.Name)
+            //get the latest version
+            sql = new SelectQuery()
+                .Select("docums", "coddocums")
+                .From("docums")
                 .Where(CriteriaSet.And()
-                    .Equal("docums", "coddocums", newcodDocums));
+                    .NotEqual("docums", "versao", "CHECKOUT")
+                    .Equal("docums", "documid", valorLigacao))
+                .OrderBy("docums", "versao", SortOrder.Descending)
+                .PageSize(1);
+            var codlastDocums = DBConversion.ToString(sp.executeScalar(sql));
 
-			sp.Execute(uq);
+            if (string.IsNullOrEmpty(codlastDocums))
+                return false;
+            var lastDocum = CSGenioAdocums.search(sp, codlastDocums, user);
 
+            //Force the insert to allocate a new pk
+            lastDocum.QPrimaryKey = "";
+            //Create the checkout version and mark it with this user
+            lastDocum.ValOpercria = user.Name;
+            lastDocum.ValVersao = "CHECKOUT";
+            lastDocum.insertDirect(sp);
+
+            newcodDocums = lastDocum.QPrimaryKey;
             return true;
         }
 
@@ -3078,12 +3084,10 @@ namespace CSGenio.business
                     }
                     else
                     {
-                        //key primária
-                        string codInt = sp.codIntInsertion(this, false);
-
                         //AV(2010/09/20) As fichas novas deixam de ter registos com fields NULL e passam a ter com os Qvalues vazios apropriados
                         createEmptyFields();
-                        QPrimaryKey = codInt;
+                        if(!sp.DatabaseSidePk)
+                            QPrimaryKey = sp.codIntInsertion(this, false);
                         Zzstate = 1;
 
                         //antes de introduce
@@ -3535,7 +3539,8 @@ namespace CSGenio.business
             mqqueue.insertNameValueField("mqqueues.operacao", operation);
 
             mqqueue.Zzstate = 0;
-            mqqueue.QPrimaryKey = sp.codIntInsertion(mqqueue, false);
+            if(!sp.DatabaseSidePk)
+                mqqueue.QPrimaryKey = sp.codIntInsertion(mqqueue, false);
 			sp.DeferQueueToCommit(mqqueue);
             return StatusMessage.OK();
         }

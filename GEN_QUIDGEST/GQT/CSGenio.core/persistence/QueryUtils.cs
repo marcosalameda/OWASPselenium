@@ -188,14 +188,19 @@ namespace CSGenio.persistence
             return newQuery;
         }
 
-        public static void buildQueryInsert(InsertQuery query, IArea area)
+        public static void buildQueryInsert(InsertQuery query, IArea area, bool ouputsPk = false)
         {
             query.Into(area.QSystem, area.TableName);
 
             foreach(var campoPedido in area.Fields.Values) 
                 // Foreign fields (EPHs) can be present in the requested fields list
                 if(area.DBFields.TryGetValue(campoPedido.Name, out var campoBD) && !campoBD.IsVirtual)
-                    query.Value(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
+                {
+                    if(ouputsPk && campoBD.Name == area.Information.PrimaryKeyName)
+                        query.Output(campoPedido.Name);
+                    else
+                        query.Value(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
+                }
         }
 
         public static object getRandomValue(Field Qfield)

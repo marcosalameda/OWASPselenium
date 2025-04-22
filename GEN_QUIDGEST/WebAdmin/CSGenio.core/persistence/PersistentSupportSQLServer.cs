@@ -98,6 +98,37 @@ namespace CSGenio.persistence
             return schema + ".dbo";
         }
 
+        /// <inheritdoc/>
+        public override bool IsErrorTransient(Exception ex)
+        {
+            if(ex is SqlException se)
+            {
+                switch(se.ErrorCode)
+                {
+                    case 1205:  //Deadlock victim
+                    case 4060:  //Cannot open database(transient if due to resource constraints)
+                    case 10928: //Resource limit reached(Azure SQL Database)
+                    case 10929: //Too many sessions(Azure SQL Database)
+                    case 40197: //Azure SQL service error(transient)
+                    case 40501: //Service is busy(transient)
+                    case 233:   //Connection lost(network issue)
+                    case 64:    //Network - related error
+                    case 10053: //Network connection aborted
+                    case 10054: //Connection reset by peer
+                    case 10060: //Network timeout
+                        return true;
+                }
+
+                //Consider query timeout as a transient error.
+                //Note this should only be true for querys that might be temporarily blocked by others.
+                //If a query is consistently slow and you retry it, it will certainly fail again.
+                if(se.Number == -2)
+                    return true;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Instancia um novo adaptador de Sql
         /// </summary>
@@ -109,26 +140,34 @@ namespace CSGenio.persistence
             return new SqlDataAdapter((SqlCommand)command);
         }
 
-        /// <summary>
-        /// Obtem uma nova key primária to um determinado objecto
-        /// </summary>
-        /// <param name="id_objecto">O objecto to o qual se quer gerar uma key, tipicamente o name da table</param>
-        /// <param name="tamanho">O size da key a gerar to o caso de codigo internos</param>
-        /// <param name="formato">O format de key a gerar</param>
-        /// <returns>Uma key primária única</returns>
-        public override string generatePrimaryKey(string id_object, int size, CodeType format)
+        /// <inheritdoc/>
+        public override string generatePrimaryKey(string id_object, string id_field, int size, CodeType format)
         {
 			if (format.Equals(CodeType.GUID_KEY))
                 return Guid.NewGuid().ToString();
 
-            string sql = "dbo.updateCod '" + id_object + "', 1";
-            Int64 codigoNovo = (Int64)executeScalar(sql);
+            //database side keys use sequences instead of the Codigos_Sequenciais table
+            Int64 codigoNovo;
+            if (DatabaseSidePk)
+            {
+                var codParam = new SqlParameter("range_first_value", SqlDbType.Variant) { Direction = ParameterDirection.Output };
+                ExecuteProcedure("sp_sequence_get_range", [
+                    new SqlParameter("sequence_name", "SEQ_"+id_object+"_"+id_field),
+                    new SqlParameter("range_size", 1),
+                    codParam
+                    ]);
+                codigoNovo = Convert.ToInt64(codParam.Value);
+            }
+            else
+            {
+                string sql = "dbo.updateCod '" + id_object + "', 1";
+                codigoNovo = Convert.ToInt64(executeScalar(sql));
+            }
+
             if (codigoNovo < 1)
             {
                 throw new PersistenceException(null, "PersistentSupportSQLServer.generatePrimaryKey", 
 				                               "The primary key generated for object with id " + id_object + ", with size " + size + " and format " + format.ToString() + " is invalid: " + codigoNovo.ToString());
-                // closeConnection();
-                // return null;
             }
 
 			if (format.Equals(CodeType.STRING_KEY))
@@ -137,6 +176,51 @@ namespace CSGenio.persistence
             }
 
             return codigoNovo.ToString();
+        }
+
+        /// <inheritdoc/>
+        public override List<string> generatePrimaryKey(string id_object, string id_field, int size, CodeType format, int range)
+        {
+            if (range < 1)
+                throw new ArgumentException("range must be 1 or larger", nameof(range));
+
+            List<string> codes = new List<string>();
+
+            if (format.Equals(CodeType.GUID_KEY))
+            {
+                for (int i = 0; i < range; i++)
+                    codes.Add(Guid.NewGuid().ToString());
+                return codes;
+            }
+
+            //database side keys use sequences instead of the Codigos_Sequenciais table
+            Int64 codeStart;
+            if (DatabaseSidePk)
+            {
+                var codParam = new SqlParameter("range_first_value", SqlDbType.Variant) { Direction = ParameterDirection.Output };
+                ExecuteProcedure("sp_sequence_get_range", [
+                    new SqlParameter("sequence_name", "SEQ_"+id_object+"_"+id_field),
+                    new SqlParameter("range_size", range),
+                    codParam
+                    ]);
+                codeStart = Convert.ToInt64(codParam.Value);
+            }
+            else
+            {
+                string sql = "dbo.updateCod '" + id_object + "', " + range;
+                codeStart = Convert.ToInt64(executeScalar(sql));
+            }
+
+            for (int i = 0; i < range; i++)
+                codes.Add((codeStart + i).ToString());
+
+            if (format.Equals(CodeType.STRING_KEY))
+            {
+                for (int i = 0; i < range; i++)
+                    codes[i] = codes[i].PadLeft(size);
+            }
+
+            return codes;
         }
 
         /// <inheritdoc/>

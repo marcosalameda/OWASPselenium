@@ -49,6 +49,8 @@ namespace Administration.Models
         [Display(Name = "TIPO_DE_SERVIDOR_DE_25581", ResourceType = typeof(Resources.Resources))]
         public HardCodedLists.DBMS Log_ServerType { get; set; }
 
+        public bool DatabaseSidePk { get; set; }
+
         [Display(Name = "DB Schema")]
         [Required]
         public string Schema { get; set; }

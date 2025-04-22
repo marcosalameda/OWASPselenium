@@ -416,6 +416,9 @@ namespace Quidgest.Persistence.GenericQuery
 
             sql.Append(")");
 
+            if (dialect.SupportsOutput)
+                dialect.AddOutputString(sql, query.Outputs);
+
             return sql.ToString();
         }
 

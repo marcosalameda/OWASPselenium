@@ -2,6 +2,8 @@
 using System.Text;
 using Quidgest.Persistence.GenericQuery;
 using System.Data;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Quidgest.Persistence.Dialects
 {
@@ -26,6 +28,8 @@ namespace Quidgest.Persistence.Dialects
         public override bool SupportsLimit => true;
         /// <inheritdoc/>
         public override bool SupportsLimitOffset => true;
+        /// <inheritdoc/>
+        public override bool SupportsOutput => true;
         /// <inheritdoc/>
         public override bool BindLimitParametersFirst => false;
         /// <inheritdoc/>
@@ -116,6 +120,13 @@ namespace Quidgest.Persistence.Dialects
                 sql.Append(" OFFSET ");
                 sql.Append(offset);
             }
+        }
+
+        /// <inheritdoc/>
+        public override void AddOutputString(StringBuilder sql, IList<ColumnReference> columns)
+        {
+            sql.Append(" RETURNING ");
+            sql.Append(string.Join(",", columns.Select(x => QuoteForColumnName(x.ColumnName))));
         }
 
         /// <inheritdoc/>

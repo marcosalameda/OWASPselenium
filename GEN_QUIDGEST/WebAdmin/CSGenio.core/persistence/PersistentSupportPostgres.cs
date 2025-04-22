@@ -87,6 +87,22 @@ namespace CSGenio.persistence
         }
 
         /// <inheritdoc/>
+        public override bool IsErrorTransient(Exception ex)
+        {
+            if (ex is PostgresException pe)
+            {
+                if(pe.SqlState == "40P01")
+                    return true;
+            }
+            else if(ex is NpgsqlException ne)
+            {
+                if(ne.IsTransient) 
+                    return true;
+            }
+            return false;
+        }
+
+        /// <inheritdoc/>
         public override void openConnection()
         {
             try
@@ -111,39 +127,51 @@ namespace CSGenio.persistence
         }
 
         /// <inheritdoc/>
-        public override string generatePrimaryKey(string id_object, int size, CodeType format)
+        public override string generatePrimaryKey(string id_object, string id_field, int size, CodeType format)
         {
             if (format.Equals(CodeType.GUID_KEY))
                 return Guid.NewGuid().ToString();
 
-            throw new NotImplementedException("Only UUID primary keys implemented.");
+            var command = CreateCommand("select nextval('" + id_object + "_" + id_field + "_seq'::regclass)");
+            Int64 codeStart = Convert.ToInt64(command.ExecuteScalar());
 
-            /*
-            var command = CreateCommand("updateCod") as NpgsqlCommand;
-            command.CommandType = CommandType.StoredProcedure;
-            command.Parameters.Add("@p_Id_objecto", NpgsqlDbType.VarChar).Value = id_object.ToUpper();
-            command.Parameters.Add("@p_Blksize", NpgsqlDbType.Int32).Value = 1;
-            command.Parameters.Add("@o_proximo", NpgsqlDbType.Int32).Direction = ParameterDirection.Output;
+            var res = codeStart.ToString();
 
-            int codigoNovo = 0;
-            command.ExecuteNonQuery();
-            codigoNovo = Convert.ToInt32(command.Parameters["@o_proximo"].Value);
+            if (format.Equals(CodeType.STRING_KEY))
+                res = res.PadLeft(size);
 
-            if (codigoNovo < 1)
+            return res;
+        }
+
+        /// <inheritdoc/>
+        public override List<string> generatePrimaryKey(string id_object, string id_field, int size, CodeType format, int range)
+        {
+            if (range < 1)
+                throw new ArgumentException("range must be 1 or larger", nameof(range));
+
+            List<string> codes = new List<string>();
+
+            if (format.Equals(CodeType.GUID_KEY))
             {
-                throw new PersistenceException(null, "PersistentSupportNpgsql.generatePrimaryKey", 
-				                               "The primary key generated for object with id " + id_object + ", with size " + size + " and format " + format.ToString() + " is invalid: " + codigoNovo.ToString());
-                // closeConnection();
-                // return null;
+                for (int i = 0; i < range; i++)
+                    codes.Add(Guid.NewGuid().ToString());
+                return codes;
+            }
+
+            var command = CreateCommand("select nextval('" + id_object + "_" + id_field + "_seq'::regclass) from generate_series(1, " + range + ")");
+            using(var reader = command.ExecuteReader())
+            {
+                while(reader.Read())
+                    codes.Add(reader.GetValue(0).ToString());
             }
 
             if (format.Equals(CodeType.STRING_KEY))
             {
-                return codigoNovo.ToString().PadLeft(size);
+                for (int i = 0; i < range; i++)
+                    codes[i] = codes[i].PadLeft(size);
             }
 
-            return codigoNovo.ToString();
-            */
+            return codes;
         }
 
         public override int getRecordPos(User user, string module, IArea area, IList<ColumnSort> sorting, string primaryKeyValue, CriteriaSet conditions, string identifier)

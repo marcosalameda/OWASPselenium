@@ -27,6 +27,13 @@ namespace CSGenio.persistence
 			Dialect = new SqliteDialect();
         }
 
+        /// <inheritdoc/>
+        public override bool IsErrorTransient(Exception ex)
+        {
+            //not implemented yet
+            return false;
+        }
+
         protected override void BuildConnection(DataSystemXml dataSystem, string login, string password, int connectionTimeout = 0)
         {
             SQLiteConnectionStringBuilder csb = new SQLiteConnectionStringBuilder();
@@ -61,14 +68,8 @@ namespace CSGenio.persistence
             return new SQLiteDataAdapter((SQLiteCommand)command);
         }
 
-        /// <summary>
-        /// Obtem uma nova key prim�ria to um determinado objecto
-        /// </summary>
-        /// <param name="id_objecto">O objecto to o qual se quer gerar uma key, tipicamente o name da table</param>
-        /// <param name="tamanho">O size da key a gerar to o caso de codigo internos</param>
-        /// <param name="formato">O format de key a gerar</param>
-        /// <returns>Uma key prim�ria �nica</returns>
-        public override string generatePrimaryKey(string id_object, int size, CodeType format)
+        /// <inheritdoc/>
+        public override string generatePrimaryKey(string id_object, string id_field, int size, CodeType format)
         {
             if (format == CodeType.GUID_KEY)
             {

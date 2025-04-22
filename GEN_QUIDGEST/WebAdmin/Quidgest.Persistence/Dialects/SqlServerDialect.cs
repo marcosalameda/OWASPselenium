@@ -134,5 +134,39 @@ namespace Quidgest.Persistence.Dialects
         {
             return string.Format("UPDATE {0} {1} FROM {2} AS {0}", alias, set_Clause, table_name);
         }
+
+        /// <inheritdoc/>
+        public override bool SupportsOutput => true;
+
+        /// <inheritdoc/>
+        public override void AddOutputString(StringBuilder sql, IList<ColumnReference> columns)
+        {
+            if (sql == null)
+                throw new ArgumentNullException(nameof(sql));
+            if (columns == null)
+                throw new ArgumentNullException(nameof(sql));
+            if (columns.Count == 0)
+                return;
+
+            //find the insertion point for the output clause
+            var str = sql.ToString();
+            var ix = str.IndexOf(") VALUES (");
+            if (ix == -1)
+                return;
+
+            //build up the output clause
+            StringBuilder aux = new StringBuilder();
+            aux.Append(" OUTPUT ");
+            foreach (var col in columns)
+            {
+                aux.Append("inserted.");
+                aux.Append(col.ColumnName);
+                aux.Append(",");
+            }
+            aux.Length--;
+
+            //modify the original query
+            sql.Insert(ix+1, aux.ToString());
+        }
     }
 }

@@ -75,12 +75,17 @@ public class GenioDataset
 
         //allocate primary keys for every record
         //guids are ok, but ints and strings should be allocated in block
-        foreach (var row in rows)
         {
-            row.QPrimaryKey = _sp.codIntInsertion(row, false);
-            row.Zzstate = 0; //should it start at 1 instead of zero?
-                                //calc block wont change it after so it would require an additional update
-            row.fillStampInsert();
+            Field chaveinfo = info.DBFields[info.PrimaryKeyName];
+            var prealloc_pks = _sp.generatePrimaryKey(info.TableName, info.PrimaryKeyName, chaveinfo.FieldSize, info.KeyType, rows.Count());
+            int i = 0;
+            foreach (var row in rows)
+            {
+                row.QPrimaryKey = prealloc_pks[i++];
+                row.Zzstate = 0; //should it start at 1 instead of zero?
+                                 //calc block wont change it after so it would require an additional update
+                row.fillStampInsert();
+            }
         }
 
         //rows should be sorted by pk to facilitate matching

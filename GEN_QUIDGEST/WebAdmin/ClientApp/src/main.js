@@ -28,10 +28,51 @@ app.use(i18n)
 
 const router = setupRouter(i18n)
 
-app.use(router)
+function delay(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
-// Init global components
-ComponentsInit(app)
+async function retryWithDelay(maxRetries, timeout, fn) {
+	try {
+		return await fn()
+	} catch (error) {
+		if (maxRetries <= 0) throw error
+		await delay(timeout)
+		return retryWithDelay(maxRetries - 1, timeout, fn)
+	}
+}
+
+function simpleFetch(controller, action, system = '') {
+	const url = `/api/${controller}/${action}?system=${system}`
+	return fetch(url).then((response) => (response.status === 200 ? response.json() : null))
+}
+
+function setAppConfig(data) {
+	window.QGlobal = data
+	store.dispatch('setYears', data.Years)
+	store.dispatch('changeYear', data.defaultSystem)
+	store.dispatch('changeMultiYearStatus', data.Years.length > 1)
+}
+
+//Get the configuration from the backend
+retryWithDelay(5, 1000, () => simpleFetch('Main', 'GetGlobalSettingsJson'))
+	.then((data) => {
+		if (!data) {
+			console.error('ERROR: Unable to start the application!')
+			return
+		}
+
+		setAppConfig(data)
+
+		app.use(router)
+		// Init global components
+		ComponentsInit(app)
+
+		app.mount('#app')
+	})
+	.catch((error) => {
+		console.error('GetConfig error:', error)
+	})
 
 /* Create the Global event bus
 For communicating between the components in different levels */
@@ -41,56 +82,46 @@ app.config.globalProperties.$eventHub = EventBus
 app.mixin({
 	computed: {
 		currentApp: {
-			get: function () {
-				if ($.isEmptyObject(this.$store)) {
-					return ''
-				}
-				return this.$store.getters.App
+			get() {
+				return (this.$store && this.$store.getters.App) || ''
 			},
-			set: function (newValue) {
+			set(newValue) {
 				this.$store.dispatch('changeApp', newValue)
 			}
 		},
-
 		isMultiYearApp: {
-			get: function () {
-				if ($.isEmptyObject(this.$store)) {
-					return ''
-				}
-				return this.$store.getters.MultiYearStatus
+			get() {
+				return (this.$store && this.$store.getters.MultiYearStatus) || ''
 			},
-			set: function (newValue) {
+			set(newValue) {
 				this.$store.dispatch('changeMultiYearStatus', newValue)
 			}
 		},
-
 		currentYear: {
-			get: function () {
+			get() {
 				if ($.isEmptyObject(this.$store)) {
 					return ''
 				}
 				return this.$store.getters.Year
 			},
-			set: function (newValue) {
+			set(newValue) {
 				this.$store.dispatch('changeYear', newValue)
 				this._changeRouteData(this.currentLang, newValue)
 			}
 		},
-
 		currentLang: {
-			get: function () {
+			get() {
 				if ($.isEmptyObject(this.$store)) {
 					return ''
 				}
 				return this.$store.getters.Language
 			},
-			set: function (newValue) {
+			set(newValue) {
 				this.$store.dispatch('changeLanguage', newValue)
 				this._changeRouteData(newValue, this.currentYear)
 			}
 		}
 	},
-
 	created() {
 		if (this.$i18n && this.currentLang !== this.$i18n.locale) {
 			this.currentLang = this.$i18n.locale
@@ -106,10 +137,22 @@ app.mixin({
 				this.currentYear = params.system
 		}
 	},
-
 	methods: {
+		setYears(years, defaultYear) {
+			var vm = this,
+			_years = years || [];
+			vm.Years = [];
+			$.each(_years, function (i, y) {
+				vm.Years.push({ Text: y, Value: y});
+			});
+			vm.DefaultYear = defaultYear;
+			if ($.isEmptyObject(vm.currentYear) || !$.isArray(vm.currentYear, _years)) { vm.currentYear = vm.DefaultYear; }
+
+			vm.isMultiYearApp = vm.Years.length > 1
+		},
 		_changeRouteData(culture, system) {
-			var route = this.$route,
+			var vm = this,
+				route = vm.$route,
 				rName = route.name,
 				rParams = Object.assign({}, route.params)
 
@@ -119,7 +162,7 @@ app.mixin({
 			rParams.culture = culture
 			rParams.system = system
 
-			this.$router.replace(
+			vm.$router.replace(
 				{ name: rName, params: rParams },
 				() => {},
 				() => {}
@@ -127,5 +170,3 @@ app.mixin({
 		}
 	}
 })
-
-app.mount('#app')

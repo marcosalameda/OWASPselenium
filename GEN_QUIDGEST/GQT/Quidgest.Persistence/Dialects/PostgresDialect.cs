@@ -125,6 +125,13 @@ namespace Quidgest.Persistence.Dialects
         /// <inheritdoc/>
         public override void AddOutputString(StringBuilder sql, IList<ColumnReference> columns)
         {
+            if (sql == null)
+                throw new ArgumentNullException(nameof(sql));
+            if (columns == null)
+                throw new ArgumentNullException(nameof(sql));
+            if (columns.Count == 0)
+                return;
+
             sql.Append(" RETURNING ");
             sql.Append(string.Join(",", columns.Select(x => QuoteForColumnName(x.ColumnName))));
         }

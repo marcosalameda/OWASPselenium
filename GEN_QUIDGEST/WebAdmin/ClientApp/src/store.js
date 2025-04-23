@@ -5,41 +5,49 @@ const store = createStore({
 		currentApp: '',
 		currentYear: '',
 		multiYearStatus: false, // True if the application has more than one data system, false otherwise
-		currentLanguage: ''
+		currentLanguage: '',
+		availableYears: []
 	},
 	mutations: {
-		SET_APP: function (state, newValue) {
+		SET_APP(state, newValue) {
 			state.currentApp = newValue
 		},
-		SET_YEAR: function (state, newValue) {
+		SET_YEAR(state, newValue) {
 			state.currentYear = newValue
 		},
-		SET_MULTIYEARSTATUS: function (state, newValue) {
+		SET_YEARS(state, years) {
+			state.years = years.map((y) => ({ Text: y, Value: y }))
+		},
+		SET_MULTIYEARSTATUS(state, newValue) {
 			state.multiYearStatus = newValue
 		},
-		SET_LANGUAGE: function (state, newValue) {
+		SET_LANGUAGE(state, newValue) {
 			state.currentLanguage = newValue
 		}
 	},
 	actions: {
-		changeApp: function (context, newValue) {
+		changeApp(context, newValue) {
 			context.commit('SET_APP', newValue)
 		},
-		changeYear: function (context, newValue) {
+		changeYear(context, newValue) {
 			context.commit('SET_YEAR', newValue)
 		},
-		changeMultiYearStatus: function (context, newValue) {
+		changeMultiYearStatus(context, newValue) {
 			context.commit('SET_MULTIYEARSTATUS', newValue)
 		},
-		changeLanguage: function (context, newValue) {
+		changeLanguage(context, newValue) {
 			context.commit('SET_LANGUAGE', newValue)
+		},
+		setYears(context, years) {
+			context.commit('SET_YEARS', years)
 		}
 	},
 	getters: {
 		App: (state) => state.currentApp,
 		Year: (state) => state.currentYear,
 		MultiYearStatus: (state) => state.multiYearStatus,
-		Language: (state) => state.currentLanguage
+		Language: (state) => state.currentLanguage,
+		Years: (state) => state.availableYears
 	}
 })
 

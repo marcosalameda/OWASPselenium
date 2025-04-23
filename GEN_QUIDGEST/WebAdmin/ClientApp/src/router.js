@@ -1,6 +1,7 @@
 ﻿import { createRouter, createWebHashHistory } from 'vue-router'
 import { loadLocaleMessages } from './plugins/i18n';
 import QGlobal from './global';
+import store from './store';
 import EventBus from './utils/eventBus';
 
 export function setupRouter(i18n) {
@@ -10,8 +11,8 @@ export function setupRouter(i18n) {
     {
         path: '/:pathMatch(.*)*',
         name: 'main',
-        redirect: to => {
-            var dSystem = QGlobal.defaultSystem;//.isEmptyObject(store) ? QGlobal.defaultSystem : store.getters.Year;
+        redirect: () => {
+            var dSystem = store.getters.Year || QGlobal.defaultSystem;
 
             return {
                 name: 'dashboard',

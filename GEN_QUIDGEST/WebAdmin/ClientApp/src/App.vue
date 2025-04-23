@@ -260,6 +260,7 @@ export default {
 		this.$eventHub.off('SET_APPLICATIONS');
 		this.$eventHub.off('fetchSysConfig');
 		this.$eventHub.off('hideDataSystems');
+		this.$eventHub.off('SET_YEARS');
 	},
 	created() {
 		var vm = this;

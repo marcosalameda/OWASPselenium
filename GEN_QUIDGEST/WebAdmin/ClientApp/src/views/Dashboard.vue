@@ -74,7 +74,7 @@
 						<dt>{{ Resources.VERSAO_DOS_INDICES49454 }}</dt>
 						<dd>{{ Model.VersionIdxDbGen }}</dd>
 						<dt>{{ Resources.VERSAO_DE_GENIO44840 }}</dt>
-						<dd>368.61</dd>
+						<dd>368.60</dd>
 						<dt>{{ Resources.GERADO_EM27272 }}</dt>
 						<dd>04/24/2025</dd>
 					</dl>

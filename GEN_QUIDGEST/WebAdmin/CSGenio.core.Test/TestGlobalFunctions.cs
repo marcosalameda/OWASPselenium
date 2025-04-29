@@ -686,5 +686,148 @@ public class TestFuncoesGlobais
         Assert.That(res, Is.EqualTo(60 * 60 * 24 + 1 * 60 * 60 + 60 * 11 + 2));
     }
 
+    private static void tTotalDuration(TimeSpan time, decimal duration, Func<TimeSpan, decimal> Func)
+    {
+        Assert.That(
+            duration,
+            Is.EqualTo(Func(time)).Within(duration/10000) // Tolerance of 0.01% due to infinite fractional values
+        );
+    }
+
+    [Test]
+    public void TestTotalDurationDays()
+    {
+        // Whole time spans
+        tTotalDuration(TimeSpan.FromDays(2), 2m, GenFunctions.DurationTotalDays);
+        tTotalDuration(TimeSpan.FromHours(48), 2m, GenFunctions.DurationTotalDays);
+        tTotalDuration(TimeSpan.FromMinutes(60 * 48), 2m, GenFunctions.DurationTotalDays);
+        tTotalDuration(TimeSpan.FromSeconds(3600 * 48), 2m, GenFunctions.DurationTotalDays);
+        tTotalDuration(TimeSpan.FromMilliseconds(1000 * 3600 * 48), 2m, GenFunctions.DurationTotalDays);
+
+        // Fractional time spans
+        tTotalDuration(TimeSpan.FromDays(12.5), 12.5m, GenFunctions.DurationTotalDays);
+        tTotalDuration(TimeSpan.FromHours(12.5), 0.52083m, GenFunctions.DurationTotalDays);
+        tTotalDuration(TimeSpan.FromMinutes(60 * 12.5), 0.52083m, GenFunctions.DurationTotalDays);
+        tTotalDuration(TimeSpan.FromSeconds(3600 * 12.5), 0.52083m, GenFunctions.DurationTotalDays);
+        tTotalDuration(TimeSpan.FromMilliseconds(1000 * 3600 * 12.5), 0.52083m, GenFunctions.DurationTotalDays);
+        // Microseconds value overflows with a 1.5-day time span - reduced by a factor of 1000
+        tTotalDuration(TimeSpan.FromMicroseconds(1000 * 3600 * 12.5), 0.0005208m, GenFunctions.DurationTotalDays);
+
+        // Negative time spans (for example, when comparing a date with an earlier one)
+        tTotalDuration(TimeSpan.FromDays(-2), -2m, GenFunctions.DurationTotalDays);
+        tTotalDuration(TimeSpan.FromHours(-48), -2m, GenFunctions.DurationTotalDays);
+        tTotalDuration(TimeSpan.FromMinutes(-60 * 48), -2m, GenFunctions.DurationTotalDays);
+        tTotalDuration(TimeSpan.FromSeconds(-3600 * 48), -2m, GenFunctions.DurationTotalDays);
+        tTotalDuration(TimeSpan.FromMilliseconds(-1000 * 3600 * 48), -2m, GenFunctions.DurationTotalDays);
+        tTotalDuration(TimeSpan.FromMicroseconds(-1000 * 3600 * 48), -0.002m, GenFunctions.DurationTotalDays);
+
+        // Zero
+        tTotalDuration(TimeSpan.Zero, 0m, GenFunctions.DurationTotalDays);
+
+        // Very large time spans
+        tTotalDuration(TimeSpan.FromHours(123456789), (123456789m / 24m), GenFunctions.DurationTotalDays);
+    }
+
+    [Test]
+    public void TestTotalDurationHours()
+    {
+        // Whole time spans
+        tTotalDuration(TimeSpan.FromDays(2), 48m, GenFunctions.DurationTotalHours);
+        tTotalDuration(TimeSpan.FromHours(48), 48m, GenFunctions.DurationTotalHours);
+        tTotalDuration(TimeSpan.FromMinutes(60 * 48), 48m, GenFunctions.DurationTotalHours);
+        tTotalDuration(TimeSpan.FromSeconds(3600 * 48), 48m, GenFunctions.DurationTotalHours);
+        tTotalDuration(TimeSpan.FromMilliseconds(1000 * 3600 * 48), 48m, GenFunctions.DurationTotalHours);
+
+        // Fractional time spans
+        tTotalDuration(TimeSpan.FromDays(0.3), 7.2m, GenFunctions.DurationTotalHours);
+        tTotalDuration(TimeSpan.FromHours(0.3), 0.3m, GenFunctions.DurationTotalHours);
+        tTotalDuration(TimeSpan.FromMinutes(60 * 24 * 0.3), 7.2m, GenFunctions.DurationTotalHours);
+        tTotalDuration(TimeSpan.FromSeconds(3600 * 24 * 0.3), 7.2m, GenFunctions.DurationTotalHours);
+        tTotalDuration(TimeSpan.FromMilliseconds(1000 * 3600 * 24 * 0.3), 7.2m, GenFunctions.DurationTotalHours);
+        // Microseconds overflows with a 1.5-day time span - reduced by a factor of 1000
+        tTotalDuration(TimeSpan.FromMicroseconds(1000 * 3600 * 24 * 0.3), 0.0072m, GenFunctions.DurationTotalHours);
+
+        // Negative time spans (for example, when comparing a date with an earlier one)
+        tTotalDuration(TimeSpan.FromDays(-2), -48m, GenFunctions.DurationTotalHours);
+        tTotalDuration(TimeSpan.FromHours(-48), -48m, GenFunctions.DurationTotalHours);
+        tTotalDuration(TimeSpan.FromMinutes(-60 * 48), -48m, GenFunctions.DurationTotalHours);
+        tTotalDuration(TimeSpan.FromSeconds(-3600 * 48), -48m, GenFunctions.DurationTotalHours);
+        tTotalDuration(TimeSpan.FromMilliseconds(-1000 * 3600 * 48), -48m, GenFunctions.DurationTotalHours);
+        tTotalDuration(TimeSpan.FromMicroseconds(-1000 * 3600 * 48), -0.048m, GenFunctions.DurationTotalHours);
+
+        // Zero
+        tTotalDuration(TimeSpan.Zero, 0m, GenFunctions.DurationTotalHours);
+
+        // Very large time spans
+        tTotalDuration(TimeSpan.FromHours(123456789), 123456789m, GenFunctions.DurationTotalHours);
+    }
+
+    [Test]
+    public void TestTotalDurationMinutes()
+    {
+        // Whole time spans
+        tTotalDuration(TimeSpan.FromDays(0.25), 360m, GenFunctions.DurationTotalMinutes);
+        tTotalDuration(TimeSpan.FromHours(6), 360m, GenFunctions.DurationTotalMinutes);
+        tTotalDuration(TimeSpan.FromMinutes(360), 360m, GenFunctions.DurationTotalMinutes);
+        tTotalDuration(TimeSpan.FromSeconds(3600 * 6), 360m, GenFunctions.DurationTotalMinutes);
+        tTotalDuration(TimeSpan.FromMilliseconds(1000 * 3600 * 6), 360m, GenFunctions.DurationTotalMinutes);
+
+        // Fractional time spans
+        tTotalDuration(TimeSpan.FromDays(0.03), 43.2m, GenFunctions.DurationTotalMinutes);
+        tTotalDuration(TimeSpan.FromHours(0.03 * 24), 43.2m, GenFunctions.DurationTotalMinutes);
+        tTotalDuration(TimeSpan.FromMinutes(43.2), 43.2m, GenFunctions.DurationTotalMinutes);
+        tTotalDuration(TimeSpan.FromSeconds(3600 * 24 * 0.03), 43.2m, GenFunctions.DurationTotalMinutes);
+        tTotalDuration(TimeSpan.FromMilliseconds(1000 * 3600 * 24 * 0.03), 43.2m, GenFunctions.DurationTotalMinutes);
+        // Microseconds overflows with a 1.5-day time span - reduced by a factor of 1000
+        tTotalDuration(TimeSpan.FromMicroseconds(1000 * 3600 * 24 * 0.03), 0.0432m, GenFunctions.DurationTotalMinutes);
+
+        // Negative time spans (for example, when comparing a date with an earlier one)
+        tTotalDuration(TimeSpan.FromDays(-0.03), -43.2m, GenFunctions.DurationTotalMinutes);
+        tTotalDuration(TimeSpan.FromHours(-0.03 * 24), -43.2m, GenFunctions.DurationTotalMinutes);
+        tTotalDuration(TimeSpan.FromMinutes(-43.2), -43.2m, GenFunctions.DurationTotalMinutes);
+        tTotalDuration(TimeSpan.FromSeconds(-3600 * 24 * 0.03), -43.2m, GenFunctions.DurationTotalMinutes);
+        tTotalDuration(TimeSpan.FromMilliseconds(-1000 * 3600 * 24 * 0.03), -43.2m, GenFunctions.DurationTotalMinutes);
+        tTotalDuration(TimeSpan.FromMicroseconds(-1000 * 3600 * 24 * 0.03), -0.0432m, GenFunctions.DurationTotalMinutes);
+
+        // Zero
+        tTotalDuration(TimeSpan.Zero, 0m, GenFunctions.DurationTotalMinutes);
+
+        // Very large time spans
+        tTotalDuration(TimeSpan.FromHours(123456789), (123456789m * 60m), GenFunctions.DurationTotalMinutes);
+    }
+
+    [Test]
+    public void TestTotalDurationSeconds()
+    {
+        // Whole time spans
+        tTotalDuration(TimeSpan.FromDays(0.04), 3456m, GenFunctions.DurationTotalSeconds);
+        tTotalDuration(TimeSpan.FromHours(0.04 * 24), 3456m, GenFunctions.DurationTotalSeconds);
+        tTotalDuration(TimeSpan.FromMinutes(0.04 * 24 * 60), 3456m, GenFunctions.DurationTotalSeconds);
+        tTotalDuration(TimeSpan.FromSeconds(3456), 3456m, GenFunctions.DurationTotalSeconds);
+        tTotalDuration(TimeSpan.FromMilliseconds(1000 * 0.04 * 24 * 60 * 60), 3456m, GenFunctions.DurationTotalSeconds);
+
+        // Fractional time spans
+        tTotalDuration(TimeSpan.FromDays(0.043), 3715.2m, GenFunctions.DurationTotalSeconds);
+        tTotalDuration(TimeSpan.FromHours(0.043 * 24), 3715.2m, GenFunctions.DurationTotalSeconds);
+        tTotalDuration(TimeSpan.FromMinutes(0.043 * 24 * 60), 3715.2m, GenFunctions.DurationTotalSeconds);
+        tTotalDuration(TimeSpan.FromSeconds(3715.2), 3715.2m, GenFunctions.DurationTotalSeconds);
+        tTotalDuration(TimeSpan.FromMilliseconds(1000 * 0.043 * 24 * 60 * 60), 3715.2m, GenFunctions.DurationTotalSeconds);
+        // Microseconds overflows with a 1.5-day time span - reduced by a factor of 1000
+        tTotalDuration(TimeSpan.FromMicroseconds(1000 * 0.043 * 24 * 60 * 60), 3.7152m, GenFunctions.DurationTotalSeconds);
+
+        // Negative time spans (for example, when comparing a date with an earlier one)
+        tTotalDuration(TimeSpan.FromDays(-0.043), -3715.2m, GenFunctions.DurationTotalSeconds);
+        tTotalDuration(TimeSpan.FromHours(-0.043 * 24), -3715.2m, GenFunctions.DurationTotalSeconds);
+        tTotalDuration(TimeSpan.FromMinutes(-0.043 * 24 * 60), -3715.2m, GenFunctions.DurationTotalSeconds);
+        tTotalDuration(TimeSpan.FromSeconds(-3715.2), -3715.2m, GenFunctions.DurationTotalSeconds);
+        tTotalDuration(TimeSpan.FromMilliseconds(-1000 * 0.043 * 24 * 60 * 60), -3715.2m, GenFunctions.DurationTotalSeconds);
+        tTotalDuration(TimeSpan.FromMicroseconds(-1000 * 0.043 * 24 * 60 * 60), -3.7152m, GenFunctions.DurationTotalSeconds);
+
+        // Zero
+        tTotalDuration(TimeSpan.Zero, 0m, GenFunctions.DurationTotalSeconds);
+
+        // Very large time spans
+        tTotalDuration(TimeSpan.FromHours(123456789), (123456789m * 60m * 60m), GenFunctions.DurationTotalSeconds);
+    }
 }
 

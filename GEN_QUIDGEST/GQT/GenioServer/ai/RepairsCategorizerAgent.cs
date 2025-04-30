@@ -15,25 +15,16 @@ namespace GenioServer.ai
     {
         public override string AGENT_ID => "RepairsCategorizer";
 
-        public override object JsonSchema => new
-        {
-            type = "object",
-            required = new[] { "Category"},
-            properties = new
-            {
-                Category = new
-                {
-                    type = "string",
-                    description = "A one letter with the correct mapping"
-                }            }
-        };
-
         public RepairsCategorizerAgent(IChatbotService service) : base(service)
         {
         }
 
         private CSGenioArepar repar;
         
+        private PersistentSupport sp;
+        private User user;
+        private string module; 
+
 
         public void LoadRecords(string key, PersistentSupport sp, User user)
         {
@@ -46,30 +37,14 @@ namespace GenioServer.ai
 
         public override void LoadRecords(DbArea area, PersistentSupport sp, User user)
         {
+            this.sp = sp;
+            this.user = user;
+            this.module = user.CurrentModule;
+
             repar = (CSGenioArepar) area;
 
             // Areas dependent on base table
-        }
 
-        public override void Execute(DbArea area, PersistentSupport sp, User user)
-        {
-            LoadRecords(area, sp, user);
-
-            RepairsCategorizerResponse response = base.GetResponse<RepairsCategorizerResponse>(user);
-            if (response == null)
-                throw new FrameworkException("Answer from AI service was empty", "RepairsCategorizerAgent.Execute", "Answer from AI service was empty");
-            SaveResponse(response);
-        }
-
-        public void SaveResponse(RepairsCategorizerResponse response)
-        {
-            Log.Info($"Agent {this.AGENT_ID} responded in Category parameter ${response.Category }");
-            repar.ValTipoarea = response.Category;
-        }
-
-        public override void PersistRecord(PersistentSupport sp)
-        {
-            repar.apply(sp);
         }
 
         public override string BuildUserPrompt()
@@ -90,6 +65,46 @@ namespace GenioServer.ai
                 $"\n"+
                 $"You can't return a letter not in this 4 categories.\n";
         }
+
+        public override void Execute(DbArea area, PersistentSupport sp, User user)
+        {
+            LoadRecords(area, sp, user);
+
+            RepairsCategorizerResponse response = base.GetResponse<RepairsCategorizerResponse>(user);
+            if (response == null)
+                throw new FrameworkException("Answer from AI service was empty", "RepairsCategorizerAgent.Execute", "Answer from AI service was empty");
+            
+            MapResponse(response);
+        }
+
+
+
+
+        public override object JsonSchema => new
+        {
+            type = "object",
+            required = new[] { "Category"},
+            properties = new
+            {
+                Category = new
+                {
+                    type = "string",
+                    description = "A one letter with the correct mapping"
+                }            }
+        };
+
+
+        protected void MapResponse(RepairsCategorizerResponse response)
+        {
+            Log.Info($"Agent {this.AGENT_ID} responded in Category parameter ${response.Category }");
+            repar.ValTipoarea = response.Category;
+        }
+
+        public override void PersistRecord(PersistentSupport sp)
+        {
+            repar.apply(sp);
+        }
+
     }
 
     public class RepairsCategorizerResponse
@@ -97,5 +112,6 @@ namespace GenioServer.ai
         [Newtonsoft.Json.JsonProperty("Category")]         
         public string Category { get; set; }
     }
+
 
 }

@@ -53,7 +53,7 @@ namespace CSGenio.persistence
             csb.Host = dataSystem.Server;
             if (!string.IsNullOrEmpty(dataSystem.Port))
                 csb.Port = int.Parse(dataSystem.Port);
-            csb.Database = IsMaster ? "" : dataSystem.Schemas[0].Schema;
+            csb.Database = IsMaster ? "postgres" : dataSystem.Schemas[0].Schema;
             if (login == null || password == null)
             {
                 csb.Username = dataSystem.LoginDecode();
@@ -222,7 +222,7 @@ namespace CSGenio.persistence
                 return this.Connection;
             }
 
-            builder.Database = "";
+            builder.Database = "postgres";
             NpgsqlConnection connection = new NpgsqlConnection(builder.ConnectionString);
             return connection;
         }

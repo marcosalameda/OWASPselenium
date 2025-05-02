@@ -971,18 +971,26 @@ namespace CSGenio.framework
             int rowCount = 1;
             List<A> results = new List<A>();
 
-			//import by file Type
-            switch (importType)
+            //import by file Type
+            try
             {
-                case ExportType.xlsx:
-                    rows =  ImportExcel(columns, file, ref rowCount);
-                    break;
+                switch (importType)
+                {
+                    case ExportType.xlsx:
+                        rows = ImportExcel(columns, file, ref rowCount);
+                        break;
+                }
+            }
+            catch (FormatException)
+            {
+                throw new FrameworkException(Translations.Get("Ficheiro com dados em formato incorreto"),
+                    "Exports.ImportarListagem", Translations.Get("Ficheiro com dados em formato incorreto"));
             }
 
             if(!this.CheckIfRightFile(rows[0], columns))
             {
-                throw new FrameworkException("Ficheiro com cabeçalho incorrecto",
-                    "Exports.ImportarListagem", "Ficheiro com cabeçalho incorrecto");
+                throw new FrameworkException(Translations.Get("Ficheiro com cabeçalho incorrecto"),
+                    "Exports.ImportarListagem", Translations.Get("Ficheiro com cabeçalho incorrecto"));
             }
 
             Dictionary<String, List<Exports.QColumn>> columnsByArea = this.GetColumnsByArea(columns);

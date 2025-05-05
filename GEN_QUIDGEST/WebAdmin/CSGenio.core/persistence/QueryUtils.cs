@@ -192,7 +192,7 @@ namespace CSGenio.persistence
         {
             query.Into(area.QSystem, area.TableName);
 
-            foreach(var campoPedido in area.Fields.Values) 
+            foreach(var campoPedido in area.Fields.Values)
                 // Foreign fields (EPHs) can be present in the requested fields list
                 if(area.DBFields.TryGetValue(campoPedido.Name, out var campoBD) && !campoBD.IsVirtual)
                 {
@@ -493,54 +493,55 @@ namespace CSGenio.persistence
             query.Distinct(definition.Distinct);
         }
 
-        public static object ToValidDbValue(object value, Field field)
+        public static object ToValidDbValue(object value, FieldType type)
         {
             //Empty keys and dates are represented as null in the database
-            if ((field.isKey() || value is DateTime) && field.isEmptyValue(value))
+            if ((Field.IsKey(type) || value is DateTime) && Field.isEmptyValue(value, type.Formatting))
                 return DBNull.Value;
 
             //Convert keys into their correct database type
-            if (field.isKey())
+            if (Field.IsKey(type))
             {
-                if (field.FieldFormat == FieldFormatting.GUID)
+                if (type.Formatting == FieldFormatting.GUID)
                     return new Guid(value.ToString());
                 //Currently integer keys are formatted as text, so this will never be called here
                 //There would need to exist a new format for integer keys that is internal string and external int.
-                else if (field.FieldFormat == FieldFormatting.INTEIRO)
+                else if (type.Formatting == FieldFormatting.INTEIRO)
                     return int.Parse(value.ToString());
-                else if (field.FieldFormat == FieldFormatting.CARACTERES)
+                else if (type.Formatting == FieldFormatting.CARACTERES)
                     return value;
             }
 
             //Encrypt secure data before sending to database
-            if (field.FieldFormat == FieldFormatting.ENCRYPTED)
+            if (type.Formatting == FieldFormatting.ENCRYPTED)
                 return (value as EncryptedDataType)?.EncryptedValue;
 
             //Truncate time of days of date-only fields
-            if (field.FieldType == FieldType.DATA)
+            if (type == FieldType.DATA)
                 return ((DateTime)value).Date;
 
             //Convert custom type fields
-            if (field.FieldType == FieldType.MEMO_COMP_RTF)
+            if (type == FieldType.MEMO_COMP_RTF)
             {
                 if (string.IsNullOrEmpty(Convert.ToString(value)))
                     return System.Text.Encoding.UTF8.GetBytes("");
-                else
-                    return System.Text.Encoding.UTF8.GetBytes(value.ToString());
+                return System.Text.Encoding.UTF8.GetBytes(value.ToString());
             }
-            if (field.FieldType == FieldType.GEOGRAPHY)
+            if (type == FieldType.GEOGRAPHY)
             {
                 if (string.IsNullOrEmpty(Convert.ToString(value)))
                     return DBNull.Value;
-                else
-                    return GeographicData.GetPointFromText(Convert.ToString(value));
+                return GeographicData.GetPointFromText(Convert.ToString(value));
             }
-            if (field.FieldType == FieldType.GEO_SHAPE || field.FieldType == FieldType.GEOMETRIC)
-            {
-                return value?.ToString();
-            }
+            if (type == FieldType.GEO_SHAPE || type == FieldType.GEOMETRIC)
+                return value.ToString();
 
             return value;
+        }
+
+        public static object ToValidDbValue(object value, Field field)
+        {
+            return ToValidDbValue(value, field.FieldType);
         }
 
         // TODO: As seguintes funções devem ser revistos to poder reaproveitar...

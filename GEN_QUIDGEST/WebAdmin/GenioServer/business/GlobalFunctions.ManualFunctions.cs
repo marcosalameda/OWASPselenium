@@ -132,11 +132,15 @@ return DateTime.Now.ToString("HH:mm");
 		{
 			try
 			{
+				object paramlat = QueryUtils.ToValidDbValue(lat, FieldType.NUMERO);
+				object paramlng = QueryUtils.ToValidDbValue(lng, FieldType.NUMERO);
+
 				SelectQuery query = new SelectQuery()
-					.Select(new SqlFunction(SqlFunctionType.Custom, 
+					.Select(new SqlFunction(SqlFunctionType.Custom,
 						"GetGeoFromLatLng"
-						, lat,lng
+						, paramlat, paramlng
 						), "x");
+
 				var result = sp.ExecuteScalar(query);
 				return DBConversion.ToGeography(result);
 			}

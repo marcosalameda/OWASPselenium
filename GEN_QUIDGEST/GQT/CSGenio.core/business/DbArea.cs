@@ -2565,30 +2565,27 @@ namespace CSGenio.business
                     var filhasParaDuplicar = areasDuplicadas[relacao.TargetTable];
                     string condArea = relacao.AliasTargetTab.ToUpper();
                     foreach (var filha in filhasParaDuplicar)
-                    {
-                        ArrayList duplicacoes = sp.existsChild(relacao.SourceRelField, relacao.SourceIntKey, relacao.SourceSystem, relacao.SourceTable, relacao.AliasSourceTab, filha.Key);
+                    {                        
                         DbArea areaChild = (DbArea)Area.createArea(relacao.AliasSourceTab, User, User.CurrentModule);
 
                         // Load fields to update on the parent table
-                        modelFieldsToUpdate = loadFieldsToUpdate(areaChild);
+                        modelFieldsToUpdate.AddRange(loadFieldsToUpdate(areaChild));
 
                         //RMR(2022-11-11) - If it has more child record to duplicate after, it cannot enforce conditions
-                        areaChild.NeedsValidation = false;
-                        if (cascata.Where(x=>x.TargetTable == relacao.SourceTable).Count() == 0)
-                            areaChild.NeedsValidation = true;
+                        bool needsValidation = cascata.Any(x => x.TargetTable == relacao.SourceTable);
+                        var sourceRecords = LoadAndSortRecords(sp, areaChild, relacao, filha.Key);
+                        if (!sourceRecords.Any())
+                            continue;
 
-                        foreach (var dup in duplicacoes)
+                        foreach (var dup in sourceRecords)
                         {
-							if (!fichasDuplicadas.ContainsKey(dup.ToString()))
+                            if (!fichasDuplicadas.ContainsKey(dup.QPrimaryKey))
                             {
-                                //Fetch current records
-                                //We do this to make sure the duplicate condition is validated
-                                //based on the original values and not the duplicated ones
-                                sp.getRecord(areaChild, dup);
-
+                                areaChild = (DbArea) dup;
+                                areaChild.NeedsValidation = needsValidation;
                                 if (areaChild.ValidateDupConditions(sp, condArea)) //Validate Duplicate Conditions
-                                    if (areaChild.duplicarFilha(sp, dup.ToString(), areasDuplicadas)) //Duplicate Record
-                                        fichasDuplicadas.Add(dup.ToString(), areaChild.QPrimaryKey);
+                                    if (areaChild.duplicarFilha(sp, dup.QPrimaryKey, areasDuplicadas)) //Duplicate Record
+                                        fichasDuplicadas.Add(dup.QPrimaryKey, areaChild.QPrimaryKey);
                             }
                         }
                     }
@@ -2596,6 +2593,35 @@ namespace CSGenio.business
             }
 
             return modelFieldsToUpdate;
+        }
+
+        /// <summary>
+        /// Loads the child records to be duplicated based on the relation and the parent key
+        /// If the table references itself, applies special ordering to handle dependency correctly.
+        /// </summary>
+        /// <param name="sp">Persistent support</param>
+        /// <param name="area">The child DbArea instance (representing the table to query).</param>
+        /// <param name="relation">Relation metadata between parent and child tables.</param>
+        /// <param name="parentKeyValue">The parent key to search</param>
+        /// <returns>List of DbArea instances ready for duplication.</returns>
+        private List<Area> LoadAndSortRecords(PersistentSupport sp, DbArea area, Relation relation, string parentKeyValue)
+        {
+            Log.Debug($"Loading children {relation.AliasSourceTab} of table {relation.AliasTargetTab}");
+
+            var criteria = CriteriaSet.And().
+                    Equal(relation.AliasSourceTab, relation.SourceRelField, parentKeyValue);
+            var records = searchList(area.Alias, sp, user, criteria);
+
+            // If the table references itself, ensure that the referenced records come before the others
+            foreach (var selfRelation in area.ParentTables.Values.Where(parent => parent.TargetTable == area.TableName))
+            {                   
+                //Fields with no foreign key to self come first
+                records = records
+                    .OrderByDescending(r => string.IsNullOrEmpty(r.returnValueField(selfRelation.SourceRelField).ToString()))
+                    .ToList();
+            }
+            
+            return records;
         }
 
 		private List<Relation> CalcularCascataDuplicacao()

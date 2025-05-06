@@ -1456,6 +1456,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 		/// <param name="aliasFilha">alias of daughter table</param>
         /// <param name="valorCodigoMae">value of the primary key of the parent table</param>
         /// <returns>Arraylist with the built-in codes of the daughter tables</returns>
+        [Obsolete]
         public ArrayList existsChild(string relatedField, string childInternalCode, string childSystem, string childTable, string aliasChild, object parentCodeValue)
         {
             try
@@ -1780,11 +1781,13 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 		/// <param name="aliasFilha">alias of daughter table</param>
         /// <param name="valorCodigoMae">primary key value of the daughter table</param>
         /// <returns>string corresponding to SQL question</returns>
+        [Obsolete]
         public SelectQuery queryExistsChild(string relatedField, string childInternalCode, string childTable, string aliasChild, object parentCodeValue)
         {
             return queryExistsChild(relatedField, childInternalCode, null, childTable, aliasChild, parentCodeValue);
         }
 
+        [Obsolete]
         public SelectQuery queryExistsChild(string relatedField, string childInternalCode, string childSystem, string childTable, string aliasChild, object parentCodeValue)
         {
             SelectQuery query = new SelectQuery()

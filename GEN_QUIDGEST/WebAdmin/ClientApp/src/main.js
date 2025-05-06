@@ -43,7 +43,7 @@ async function retryWithDelay(maxRetries, timeout, fn) {
 }
 
 function simpleFetch(controller, action, system = '') {
-	const url = `/api/${controller}/${action}?system=${system}`
+	const url = `api/${controller}/${action}?system=${system}`
 	return fetch(url).then((response) => (response.status === 200 ? response.json() : null))
 }
 

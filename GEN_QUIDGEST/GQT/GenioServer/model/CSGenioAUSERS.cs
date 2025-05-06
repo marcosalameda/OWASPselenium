@@ -103,8 +103,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("perso","perso");
 			info.Pathways.Add("psw","psw");
+			info.Pathways.Add("perso","perso");
 		}
 
 		/// <summary>

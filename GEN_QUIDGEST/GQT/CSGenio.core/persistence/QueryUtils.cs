@@ -534,7 +534,11 @@ namespace CSGenio.persistence
                 return GeographicData.GetPointFromText(Convert.ToString(value));
             }
             if (type == FieldType.GEO_SHAPE || type == FieldType.GEOMETRIC)
+            {
+                if (value == null)
+                    return DBNull.Value;
                 return value.ToString();
+            }
 
             return value;
         }

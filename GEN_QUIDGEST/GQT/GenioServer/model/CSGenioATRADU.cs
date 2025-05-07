@@ -128,8 +128,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("lang1","lang1");
 			info.Pathways.Add("lang2","lang2");
+			info.Pathways.Add("lang1","lang1");
 		}
 
 		/// <summary>

@@ -325,7 +325,12 @@ namespace Administration.Controllers
 
                 finalData.DbDataSet.Tables[0].Rows.Add(objs);
 
-                ModuleRoleModel roleModel = ModuleRoleModel.GetRole(p2Dm.DbDataSet.Tables[0].Rows[i][1].ToString(), p2Dm.DbDataSet.Tables[0].Rows[i][3].ToString(), Convert.ToInt32(p2Dm.DbDataSet.Tables[0].Rows[i][2].ToString()));
+                string module = p2Dm.DbDataSet.Tables[0].Rows[i][1].ToString();
+                string role = p2Dm.DbDataSet.Tables[0].Rows[i][3].ToString();
+                string s_level = p2Dm.DbDataSet.Tables[0].Rows[i][2].ToString();
+                int level = Convert.ToInt32(!string.IsNullOrWhiteSpace(s_level) ? s_level : 0);
+
+                ModuleRoleModel roleModel = ModuleRoleModel.GetRole(module, role, level);
 
                 if (roleModel != null)
                     finalData.DbDataSet.Tables[0].Rows[i][2] = Resources.Resources.ResourceManager.GetString(roleModel.Designation);

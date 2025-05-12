@@ -51,7 +51,7 @@ namespace CSGenio.business
             catch (Exception exc)
             {
                 Log.Error($"[GlobalFunctions] Error in static constructor: {exc.Message}");
-                throw exc;
+                throw;
             }
         }
 
@@ -1337,6 +1337,7 @@ namespace CSGenio.business
         /// <remarks>Retorna null se não existirem queries manuais</remarks>
         public FileInfo CreateDocum(Hashtable kV, string area, string Qfield, string Qvalue)
         {
+#if NETFRAMEWORK
             Area areaObj = Area.createArea(area, user, user.CurrentModule);
             string[] fields = new string[] { area + ".path", area + ".outname", area + ".tpdoc" };
             areaObj.insertNamesFields(fields);
@@ -1352,6 +1353,9 @@ namespace CSGenio.business
             FileInfo info = new FileInfo(output);
 
             return info;
+#else
+            throw new NotImplementedException("DocumentEngine is not available for .Net Core");
+#endif
         }
 
         /// <summary>
@@ -2009,6 +2013,10 @@ namespace CSGenio.business
         /// <returns>Status of the import</returns>
         public StatusMessage ImportUsersFromAD(string domain)
         {
+#if !NETFRAMEWORK
+            if (!OperatingSystem.IsWindows())
+                return StatusMessage.Error("Functionality only available in Windows OS");
+#endif
             if (!CSGenio.framework.Configuration.Security.IdentityProviders.Exists(p => p.Type.Equals("GenioServer.security.LdapIdentityProvider")))
                 return StatusMessage.Error(Translations.Get("O tipo de login não permite a importação a partir de Active directory.", user.Language));
 

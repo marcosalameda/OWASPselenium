@@ -11,6 +11,9 @@ public class Configuration
     public int? ImplicitWait { get; set; }
     public int? ExplicitWait { get; set; }
 
+    public int? WindowWidth { get; set; }
+    public int? WindowHeight { get; set; }
+
     private static Configuration _instance;
 
     //should be private but this is just a quick way to allow the configuration to be deserialized
@@ -28,7 +31,9 @@ public class Configuration
                     BaseUrl = "https://localhost:5173/",
                     Headless = true,
                     ImplicitWait = 100,
-                    ExplicitWait = 1000
+                    ExplicitWait = 1000,
+                    WindowWidth = 1920,
+                    WindowHeight = 1080
                 };
 
                 //config file overrides defaults
@@ -46,6 +51,10 @@ public class Configuration
                         _instance.ImplicitWait = f.ImplicitWait;
                     if(f.ExplicitWait != null)
                         _instance.ExplicitWait = f.ExplicitWait;
+                    if (f.WindowWidth != null)
+                        _instance.WindowWidth = f.WindowWidth;
+                    if (f.WindowHeight != null)
+                        _instance.WindowHeight = f.WindowHeight;
                 }
 
                 //environment variables override file
@@ -64,6 +73,12 @@ public class Configuration
                 var ew = Environment.GetEnvironmentVariable("selenium.explicitwait");
                 if(ew != null)
                     _instance.ExplicitWait = Int32.Parse(ew);
+                var ww = Environment.GetEnvironmentVariable("selenium.windowwidth");
+                if (ww != null)
+                    _instance.WindowWidth = Int32.Parse(ww);
+                var wh = Environment.GetEnvironmentVariable("selenium.windowheight");
+                if (wh != null)
+                    _instance.WindowHeight = Int32.Parse(wh);
             }
             return _instance;
         }

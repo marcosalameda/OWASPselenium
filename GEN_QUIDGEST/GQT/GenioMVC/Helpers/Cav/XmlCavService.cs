@@ -27,6 +27,7 @@ namespace GenioMVC.Helpers.Cav
 			FieldType.KEY_INT,
 			FieldType.KEY_GUID,
 			FieldType.MEMO,
+			FieldType.MEMO_COMP_RTF,
 			FieldType.BINARY,
 			FieldType.BINARY,
 			FieldType.DATETIMESECONDS,
@@ -57,6 +58,7 @@ namespace GenioMVC.Helpers.Cav
 			fieldMapList.Add(FieldType.MEMO, "A");
 			fieldMapList.Add(FieldType.BINARY, "A");
 			fieldMapList.Add(FieldType.MEMO, "A");
+			fieldMapList.Add(FieldType.MEMO_COMP_RTF, "A");
 			fieldMapList.Add(FieldType.IMAGE, "A");
 			fieldMapList.Add(FieldType.DOCUMENT, "A");
 			fieldMapList.Add(FieldType.ARRAY_TEXT, "A");

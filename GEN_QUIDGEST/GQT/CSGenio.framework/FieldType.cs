@@ -51,7 +51,7 @@ namespace CSGenio.framework
             new FieldTypeInfo(FieldType.KEY_INT         , FieldFormatting.INTEIRO       , "EMPTYG", typeof(int)),
             new FieldTypeInfo(FieldType.TEXT            , FieldFormatting.CARACTERES    , "EMPTYC", typeof(string)),
             new FieldTypeInfo(FieldType.MEMO            , FieldFormatting.CARACTERES    , "EMPTYC", typeof(string)),
-            new FieldTypeInfo(FieldType.MEMO_COMP_RTF   , FieldFormatting.BINARIO       , null    , typeof(byte[])),
+            new FieldTypeInfo(FieldType.MEMO_COMP_RTF   , FieldFormatting.CARACTERES    , null    , typeof(string)),
             new FieldTypeInfo(FieldType.PATH            , FieldFormatting.CARACTERES    , "EMPTYC", typeof(string)),
             new FieldTypeInfo(FieldType.TIME_HOURS      , FieldFormatting.TEMPO         , "EMPTYT", typeof(string)),
             new FieldTypeInfo(FieldType.NUMERIC         , FieldFormatting.FLOAT         , "EMPTYN", typeof(decimal)),

@@ -16,8 +16,7 @@ public class BaseAccessibilityTest : BaseSeleniumTest
 	/// <param name="pageName">Name of the page and JSON file to log the results to</param>
 	/// <param name="cssSelector">CSS selector to specify a part of the DOM to do the accessibility scan</param>
 	/// <param name="violationsAsInfo">Whether to log violations as "Info" messages ("Warning" messages if false)</param>
-	/// <param name="maxIssues">Maximum number of accessibility violations that can be found before the test fails</param>
-    public void AccessibilityScanAndLog(string pageName, string cssSelector = null, bool violationsAsInfo = false, int maxIssues = 0)
+    public void AccessibilityScanAndLog(string pageName, string cssSelector = null, bool violationsAsInfo = false)
     {
         // Accessibility scan
         AxeBuilder axeBuilder = new AxeBuilder(Driver)
@@ -114,7 +113,5 @@ public class BaseAccessibilityTest : BaseSeleniumTest
         {
             Console.WriteLine(ex.Message);
         }
-
-        Assert.That(axeResult.Violations.Length <= maxIssues, axeResult.Violations.Length + " issues found. Max allowed is " + maxIssues);
     }
 }

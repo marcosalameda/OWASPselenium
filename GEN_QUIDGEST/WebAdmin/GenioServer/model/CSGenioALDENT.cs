@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codldent", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codldent", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -54,7 +54,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "coddentr", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "coddentr", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -79,7 +79,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codwareh", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codwareh", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">ARMAZEM";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_ARMAZEM43996";
@@ -94,7 +94,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "coditem", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "coditem", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">ARTICLE";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_ARTICLE38266";
@@ -186,8 +186,8 @@ namespace CSGenio.business
 			//------------------------------
 			//Actualiza as seguintes somas relacionadas:
 			info.RelatedSumArgs = new List<RelatedSumArgument>();
-			info.RelatedSumArgs.Add( new RelatedSumArgument("ldent", "item", "entries", "qtdentra", '+', true));
 			info.RelatedSumArgs.Add( new RelatedSumArgument("ldent", "item", "existenc", "qtdentra", '+', true));
+			info.RelatedSumArgs.Add( new RelatedSumArgument("ldent", "item", "entries", "qtdentra", '+', true));
 
 
 

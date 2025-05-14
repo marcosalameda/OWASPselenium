@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codtradu", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codtradu", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -63,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codidio1", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codidio1", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "language";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "LANGUAGE33172";
@@ -81,7 +81,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codidio2", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codidio2", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Language";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "LANGUAGE16872";
@@ -128,8 +128,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("lang2","lang2");
 			info.Pathways.Add("lang1","lang1");
+			info.Pathways.Add("lang2","lang2");
 		}
 
 		/// <summary>

@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codgames", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codgames", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -63,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codeqjgc", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codeqjgc", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">TEAM PLAYING AT HOME";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_TEAM_PLAYING_AT_HOM03863";
@@ -72,7 +72,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codeqjgf", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codeqjgf", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">TEAM PLAYING AWAY";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_TEAM_PLAYING_AWAY39234";

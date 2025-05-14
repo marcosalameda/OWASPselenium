@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codoutpu", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codoutpu", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -54,7 +54,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codoutpt", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codoutpt", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -79,7 +79,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codwareh", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codwareh", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">WAREHOUSE";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_WAREHOUSE19861";
@@ -94,7 +94,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "coditem", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "coditem", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">ARTICLE";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_ARTICLE38266";
@@ -113,7 +113,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "coddocsd", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "coddocsd", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">EXIT DOCUMENT";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_EXIT_DOCUMENT48701";
@@ -182,8 +182,8 @@ namespace CSGenio.business
 			//------------------------------
 			//Actualiza as seguintes somas relacionadas:
 			info.RelatedSumArgs = new List<RelatedSumArgument>();
-			info.RelatedSumArgs.Add( new RelatedSumArgument("outpu", "item", "exits", "exitqnty", '+', true));
 			info.RelatedSumArgs.Add( new RelatedSumArgument("outpu", "item", "existenc", "exitqnty", '-', true));
+			info.RelatedSumArgs.Add( new RelatedSumArgument("outpu", "item", "exits", "exitqnty", '+', true));
 
 
 

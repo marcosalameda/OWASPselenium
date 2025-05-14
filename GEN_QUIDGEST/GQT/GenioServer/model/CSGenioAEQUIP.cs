@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codequip", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codequip", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -54,7 +54,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codempre", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codempre", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">COMPANY";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_COMPANY02087";
@@ -67,7 +67,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpess1", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">COMOMODOR";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_COMOMODOR01469";
@@ -103,7 +103,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codtpequ", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codtpequ", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">TYPE OF EQUIPMENT";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_TYPE_OF_EQUIPMENT35057";
@@ -112,7 +112,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codwareh", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codwareh", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -121,7 +121,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "coditem", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "coditem", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -154,7 +154,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "coddeco", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "coddeco", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -233,7 +233,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codrooms", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codrooms", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -389,14 +389,14 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(12);
 			info.Pathways.Add("decom","decom");
 			info.Pathways.Add("wareh","wareh");
-			info.Pathways.Add("room1","room1");
-			info.Pathways.Add("cmpny","cmpny");
-			info.Pathways.Add("item","item");
 			info.Pathways.Add("tpequ","tpequ");
+			info.Pathways.Add("room1","room1");
+			info.Pathways.Add("item","item");
+			info.Pathways.Add("cmpny","cmpny");
 			info.Pathways.Add("pess1","pess1");
-			info.Pathways.Add("cntry","cmpny");
-			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("famil","tpequ");
+			info.Pathways.Add("gitem","item");
+			info.Pathways.Add("cntry","cmpny");
 			info.Pathways.Add("stake","pess1");
 			info.Pathways.Add("cate2","pess1");
 		}

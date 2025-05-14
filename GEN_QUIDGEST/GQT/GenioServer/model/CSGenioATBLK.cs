@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codtblk", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codtblk", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -54,7 +54,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "fkey1", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "fkey1", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Foreign Key 1";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
@@ -64,7 +64,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "fkey2", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "fkey2", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Foreign Key 2";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
@@ -113,8 +113,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("grpb","grpb");
 			info.Pathways.Add("trsb","trsb");
+			info.Pathways.Add("grpb","grpb");
 		}
 
 		/// <summary>

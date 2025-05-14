@@ -29,8 +29,8 @@ namespace CSGenio.framework
 			//Esta a obter os do cliente e nao os do modulo
 			//PHE in role Query
 			EPHCondition[] eph1 = new EPHCondition[2];
-			eph1[0] = new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
-			eph1[1] = new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
+			eph1[0] = new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
+			eph1[1] = new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
 			ephsPorModulo.Add("1", eph1);
 			niveis = new string[]{ "1" };
 		}

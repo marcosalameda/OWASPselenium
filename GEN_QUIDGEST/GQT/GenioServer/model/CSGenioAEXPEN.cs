@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "coddespe", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "coddespe", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -54,7 +54,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codproje", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codproje", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">PROJECT";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
@@ -64,7 +64,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codyear", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codyear", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">ANO";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
@@ -106,7 +106,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codaggre", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codaggre", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">AGREGADOR";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
@@ -201,8 +201,8 @@ namespace CSGenio.business
 			//Actualiza as seguintes somas que criam registos:
 			info.SumCreateRecords = new SumsCreatesRecords[1];
 
-			info.SumCreateRecords[0] = new SumsCreatesRecords("gqtagreg", "agreg", "codaggre", "codaggre", new string[]{"codyear","codproje"}, new string[]{"codyear","codproje"});
-			info.ObtainAllFields = new string[] {"codyear","codproje"};
+			info.SumCreateRecords[0] = new SumsCreatesRecords("gqtagreg", "agreg", "codaggre", "codaggre", new string[]{"codproje","codyear"}, new string[]{"codproje","codyear"});
+			info.ObtainAllFields = new string[] {"codproje","codyear"};
 
 			info.CheckTableFields = new string[] {
 			 "prevval"

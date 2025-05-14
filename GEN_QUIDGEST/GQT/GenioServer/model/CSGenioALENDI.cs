@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codlendi", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codlendi", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -54,7 +54,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpess1", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">COMOMODOR";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_COMOMODOR01469";
@@ -64,7 +64,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codequip", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codequip", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">EQUIPMENT";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_EQUIPMENT12605";
@@ -74,7 +74,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codpess2", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpess2", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">DADATARY";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_DADATARY21139";
@@ -238,11 +238,11 @@ namespace CSGenio.business
 			info.Pathways.Add("cate2","pess1");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
+			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("item","equip");
-			info.Pathways.Add("tpequ","equip");
-			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("famil","equip");
+			info.Pathways.Add("gitem","equip");
 		}
 
 		/// <summary>

@@ -29,14 +29,14 @@ namespace CSGenio.framework
 			//Esta a obter os do cliente e nao os do modulo
 			//PHE in role Query
 			EPHCondition[] eph1 = new EPHCondition[2];
-			eph1[0] = new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
-			eph1[1] = new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
+			eph1[0] = new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
+			eph1[1] = new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
 			ephsPorModulo.Add("1", eph1);
 			//PHE in role Manager
 			EPHCondition[] eph20 = new EPHCondition[3];
-			eph20[0] = new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
-			eph20[1] = new EPHCondition("REGIAO", "GQT", "gqtpwreg", "pwreg", "codregia", "pwreg", "codregia", FieldType.CHAVE_ESTRANGEIRA_GUID, "LISTA_REGIAO");
-			eph20[2] = new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
+			eph20[0] = new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
+			eph20[1] = new EPHCondition("REGIAO", "GQT", "gqtpwreg", "pwreg", "codregia", "pwreg", "codregia", FieldType.KEY_GUID, "LISTA_REGIAO");
+			eph20[2] = new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
 			ephsPorModulo.Add("20", eph20);
 			niveis = new string[]{ "1","20" };
 		}

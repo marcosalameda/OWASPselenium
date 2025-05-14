@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codcmpki", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codcmpki", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -54,7 +54,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codtpequ", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codtpequ", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "TYPE OF EQUIPMENT";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "TYPE_OF_EQUIPMENT18080";
@@ -79,7 +79,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codtpeq1", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codtpeq1", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "TYPE OF COMPONENT EQUIPMENT";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "TYPE_OF_COMPONENT_EQ16631";

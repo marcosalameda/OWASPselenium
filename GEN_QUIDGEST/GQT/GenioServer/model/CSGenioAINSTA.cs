@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codinsta", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codinsta", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -54,7 +54,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codtpequ", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codtpequ", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">TYPE OF EQUIPMENT";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_TYPE_OF_EQUIPMENT35057";
@@ -63,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codequip", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codequip", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">EQUIPMENT";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_EQUIPMENT12605";
@@ -224,11 +224,11 @@ namespace CSGenio.business
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");
+			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("pess1","equip");
-			info.Pathways.Add("cntry","equip");
 			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("cntry","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}

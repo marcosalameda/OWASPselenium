@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codfeeca", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codfeeca", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -54,7 +54,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codflds", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codflds", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
@@ -107,14 +107,14 @@ namespace CSGenio.business
 			info.Pathways.Add("equip","flds");
 			info.Pathways.Add("decom","flds");
 			info.Pathways.Add("wareh","flds");
-			info.Pathways.Add("room1","flds");
-			info.Pathways.Add("cmpny","flds");
-			info.Pathways.Add("item","flds");
 			info.Pathways.Add("tpequ","flds");
+			info.Pathways.Add("room1","flds");
+			info.Pathways.Add("item","flds");
+			info.Pathways.Add("cmpny","flds");
 			info.Pathways.Add("pess1","flds");
-			info.Pathways.Add("cntry","flds");
-			info.Pathways.Add("gitem","flds");
 			info.Pathways.Add("famil","flds");
+			info.Pathways.Add("gitem","flds");
+			info.Pathways.Add("cntry","flds");
 			info.Pathways.Add("stake","flds");
 			info.Pathways.Add("cate2","flds");
 		}

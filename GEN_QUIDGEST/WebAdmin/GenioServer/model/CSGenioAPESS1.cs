@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codpesso", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codpesso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -54,7 +54,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codempre", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codempre", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">COMPANY";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_COMPANY02087";
@@ -64,7 +64,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codparte", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codparte", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">INTERESTED PARTY";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_INTERESTED_PARTY56973";
@@ -176,7 +176,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codcateg", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codcateg", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">LAST CATEGORY";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "_LAST_CATEGORY61019";
@@ -203,7 +203,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codpaise", FieldType.CHAVE_FALSA_GUID);
+			Qfield = new Field(info.Alias, "codpaise", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -212,7 +212,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codcntry", FieldType.CHAVE_FALSA_GUID);
+			Qfield = new Field(info.Alias, "codcntry", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";
@@ -224,7 +224,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codregia", FieldType.CHAVE_FALSA_GUID);
+			Qfield = new Field(info.Alias, "codregia", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "";

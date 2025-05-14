@@ -56,11 +56,5 @@
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
     <None Include="DebugContent\**" Link="%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-
-  <!-- Wen publishing the solution, use the configuracoes.xml itself -->
-  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
-    <Content Include="Configuracoes.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+  
 </Project>

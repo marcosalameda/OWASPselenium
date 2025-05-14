@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "customeraddressid", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "customeraddressid", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Address";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
@@ -55,7 +55,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "parentid", FieldType.CHAVE_FALSA_GUID);
+			Qfield = new Field(info.Alias, "parentid", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Parent";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;

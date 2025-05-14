@@ -45,7 +45,7 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codpesso", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codpesso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Primary key";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "CHAVE_PRIMARIA61422";
@@ -54,7 +54,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codpsw", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpsw", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Foreign key";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "CHAVE_ESTRANGEIRA25502";
@@ -109,7 +109,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codorgaf", FieldType.CHAVE_FALSA_GUID);
+			Qfield = new Field(info.Alias, "codorgaf", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Foreign key";
 			Qfield.FieldSize =  36;
 			Qfield.CavDesignation = "CHAVE_ESTRANGEIRA25502";
